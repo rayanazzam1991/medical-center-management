@@ -28,7 +28,7 @@ const handleLogin = async () => {
       router.push(redirect)
     } else {
       router.push({
-        name: '/app',
+        name: '/dashboard'
       })
     }
 
@@ -142,8 +142,7 @@ useHead({
                           type="submit"
                           bold
                           fullwidth
-                          raised
-                        >
+                          raised>
                           Sign In
                         </VButton>
                       </div>

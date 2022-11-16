@@ -77,7 +77,7 @@ watch(
     >
       <template #links>
         <li>
-          <RouterLink to="app">
+          <RouterLink to="dashboard">
             <i aria-hidden="true" class="iconify" data-icon="feather:home"></i>
           </RouterLink>
         </li>

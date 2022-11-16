@@ -18,7 +18,7 @@ const emit = defineEmits(['close'])
     <div class="inner" data-simplebar>
       <ul>
         <li>
-          <RouterLink to="app">
+          <RouterLink to="dashboard">
             <i aria-hidden="true" class="lnil lnil-home pr-2"></i>
             Home
           </RouterLink>

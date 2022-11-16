@@ -8,7 +8,7 @@
  * Read more about routing:
  * @see /vite.config.ts
  * @see /src/router.ts
- */
+ * */
 
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
