@@ -36,7 +36,7 @@ export async function createApp() {
     api,
     router,
     head,
-    pinia,
+    pinia
   }
 
   app.provide('vuero', vuero)
