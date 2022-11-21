@@ -6,34 +6,45 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import FlexTableDropdown from '/@src/components/partials/dropdowns/FlexTableDropdown.vue'
 import VFlexTableSortColumn from '/@src/components/base/table/VFlexTableSortColumn.vue'
 import VbuttonIcon from '/@src/components/base/button/VIconButton.vue'
+import { CityConsts } from '/@src/utils/consts/city' 
 
 
 import VIconButton from '/@src/components/base/button/VIconButton.vue'
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
+import { deleteCity } from '/@src/composable/Others/City/deleteCity'
+// import {cities, loadCities} from '/@src/stores/Others/City/cityStore'
+import { useCity } from "/@src/stores/Others/City/cityStore";
+import { City } from '/@src/utils/api/Others/City'
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
-var cities = ref([])
 useHead({
   title: 'City',
 })
+const {cities} = await getCitiesList()
+// var city =  useCity()
+// await city.loadCities()
+// var cities = city.cities
 
-onMounted(() => {
-  cities = ci
-})
-
- const removeCity  = async (id : any ) => {
-    await axios
-    .delete(`city/${id}`)
-    .then((response) => {
-        console.log(response)
-        cities.value.splice(cities.value.findIndex((city) => city[id] === id),1)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-
+const removeCity  = async (cityId :number ) => {
+     await deleteCity(cityId)
+  
 
 }
+
+//  const removeCity  = async (id : any ) => {
+//     await axios
+//     .delete(`city/${id}`)
+//     .then((response) => {
+//         console.log(response)
+//         cities.value.splice(cities.value.findIndex((city) => city[id] === id),1)
+//     })
+//     .catch((error) => {
+//         console.log(error)
+//     })
+
+
+// }
 
 const columns = {
   id: {
@@ -53,15 +64,15 @@ const columns = {
         {
           rounded: true,
           color:
-            row.status === 0
+            row.status === CityConsts.INACTIVE
               ? 'orange'
-              : row.status === 1
+              : row.status === CityConsts.ACTIVE
               ? 'success'
               : undefined,
         },
         {
           default() {
-            return `${row.status}`
+            return CityConsts.showStatusName(row.status)
           },
         }
       ),
@@ -86,8 +97,9 @@ const columns = {
         onSchedule: () => {
           console.log('schedule', row)
         },
+      
         onRemove: () => {
-            removeCity(row.id)
+          removeCity(row.id)
           console.log('remove', row)
         },
       }),

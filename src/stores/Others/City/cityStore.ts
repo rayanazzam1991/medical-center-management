@@ -11,8 +11,7 @@
  import { ref, computed } from 'vue'
  import { acceptHMRUpdate, defineStore } from 'pinia'
  
- import { City, getCities } from '/@src/utils/api/Others/City'
-//  import { fetchConversations, fetchMessages } from '/@src/utils/api/chat'
+ import { City, getCities , deleteCityApi } from '/@src/utils/api/Others/City'
  import { useApi } from '/@src/composable/useApi'
  
  const defaultCity: City = {
@@ -38,49 +37,37 @@
 //      }
 //    })
  
-   async function loadCities(start = 0, limit = 10) {
-     if (loading.value) return
- 
-     loading.value = true
- 
-     try {
-       const response = await getCities(api, start, limit)
-       cities.value = response.cities
-     } finally {
-       loading.value = false
-     }
-   }
- 
-//    async function selectConversastion(conversationId: number) {
-//      if (loading.value) return
- 
-//      loading.value = true
- 
-//      try {
-//        const response = await fetchMessages(api, conversationId)
-//        selectedConversationId.value = conversationId
-//        messages.value = response.messages
-//      } finally {
-//        loading.value = false
-//      }
-//    }
- 
-//    function unselectConversation() {
-//      selectedConversationId.value = 0
-//      messages.value = []
-//    }
- 
-//    function setAddConversationOpen(value: boolean) {
-//      addConversationOpen.value = value
-//    }
- 
-//    function setMobileConversationDetailsOpen(value: boolean) {
-//      mobileConversationDetailsOpen.value = value
-//    }
+async function loadCities(start = 0, limit = 10) {
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const returnedResponse = await getCities(api, start, limit)
+    cities.value = returnedResponse.response.data
+
+  } finally {
+    loading.value = false
+  }
+}
+async function deleteCityStore(cityId : number) {
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const response = await deleteCityApi(api, cityId)
+    cities.value.splice(cities.value.findIndex((city : City) => city.id === cityId),1)
+
+  } finally {
+    loading.value = false
+  }
+}
  
    return {
     cities,
-    loadCities
+    loadCities,
+    deleteCityStore
 } as const
  })
  

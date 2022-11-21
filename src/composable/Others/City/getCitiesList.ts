@@ -1,14 +1,13 @@
 import { useCity } from "/@src/stores/Others/City/cityStore";
+import { City } from "/@src/utils/api/Others/City";
 
 
-export function getCitiesList () {
+export async function getCitiesList   ()  {
     const city =  useCity()
-    // const cities = ref([])
-    // const error = ref(null)
-
-    const cities = ref(city.loadCities())
-  
-
+    await city.loadCities()
+    var cities : City[] = city.cities
+    console.log('comp', cities)  
+    console.log('comp', cities[0])  
     return { cities }
 
 }
