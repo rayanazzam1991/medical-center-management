@@ -42,6 +42,12 @@ declare module 'vue-router/auto/routes' {
     '/city/add': RouteRecordInfo<'/city/add', '/city/add', Record<never, never>, Record<never, never>>,
     '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard/', Record<never, never>, Record<never, never>>,
+    '/department': RouteRecordInfo<'/department', '/department', Record<never, never>, Record<never, never>>,
+    '/department/': RouteRecordInfo<'/department/', '/department/', Record<never, never>, Record<never, never>>,
+    '/department/add': RouteRecordInfo<'/department/add', '/department/add', Record<never, never>, Record<never, never>>,
+    '/room': RouteRecordInfo<'/room', '/room', Record<never, never>, Record<never, never>>,
+    '/room/': RouteRecordInfo<'/room/', '/room/', Record<never, never>, Record<never, never>>,
+    '/room/add': RouteRecordInfo<'/room/add', '/room/add', Record<never, never>, Record<never, never>>,
   }
 }
 
