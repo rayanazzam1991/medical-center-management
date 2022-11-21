@@ -3,6 +3,14 @@ import { CustomResponse } from '../../../response'
 
 export interface Room {
     id: number
+    number: number
+    floor: number
+    department_id: Department
+    status: number
+}
+
+export interface Department {
+    id: number
     name: string
     status: number
 }

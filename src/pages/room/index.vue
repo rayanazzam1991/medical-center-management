@@ -22,9 +22,9 @@ useHead({
 })
 const {rooms} = await getRoomsList()
 
+
 const removeRoom  = async (roomId :number ) => {
      await deleteRoom(roomId)
-  
 
 }
 
@@ -34,10 +34,22 @@ const columns = {
     searchable: true,
     sortable: true,
   },
-  name: {
+  number: {
     sortable: true,
     searchable: true,
 
+  },
+  floor: {
+    sortable: true,
+    searchable: true,
+
+  },
+  department: {
+    sortable: true,
+    searchable: true,
+    label: 'Deoartment',
+    renderRow: (row: any) =>
+      h('span',row.department_id.name)
   },
   status: {
     label: 'Status',

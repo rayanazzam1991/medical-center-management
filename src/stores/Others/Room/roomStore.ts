@@ -11,12 +11,19 @@
 import { ref, computed } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import { Room, getRooms, deleteRoomApi } from '/@src/utils/api/Others/Room'
+import { Department, Room, getRooms, deleteRoomApi } from '/@src/utils/api/Others/Room'
 import { useApi } from '/@src/composable/useApi'
 
-const defaultRoom: Room = {
+const defaultDepartment: Department = {
     id: 0,
     name: '',
+    status: 0
+}
+const defaultRoom: Room = {
+    id: 0,
+    number: 0,
+    floor: 0,
+    department_id: defaultDepartment,
     status: 0,
 }
 
@@ -33,6 +40,7 @@ export const useRoom = defineStore('room', () => {
         try {
             const returnedResponse = await getRooms(api, start, limit)
             rooms.value = returnedResponse.response.data
+            console.log(rooms.value)
 
         } finally {
             loading.value = false
