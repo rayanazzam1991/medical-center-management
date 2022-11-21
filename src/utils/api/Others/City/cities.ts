@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios'
+import { CustomResponse } from '../../../response'
 
 export interface City {
   id: number
@@ -6,16 +7,28 @@ export interface City {
   status: number
 }
 
+
 export async function getCities(
   api: AxiosInstance,
   start = 0,
   limit = 20
-): Promise<{ cities: City[];  }> {
+): Promise<{ response: CustomResponse;  }> {
 
-  const { data: cities, headers } = await api.get<City[]>(
+  const { data: response , headers } = await api.get(
     'city'
   )
+  
+  return { response }
+}
 
+export async function deleteCityApi(
+  api: AxiosInstance,
+  cityId : number
+  ): Promise<{ response: CustomResponse;  }> {
 
-  return { cities }
+  const { data: response, headers } = await api.delete(
+    `city/${cityId}`
+  )
+
+  return { response }
 }
