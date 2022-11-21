@@ -6,8 +6,6 @@ export async function getCitiesList   ()  {
     const city =  useCity()
     await city.loadCities()
     var cities : City[] = city.cities
-    console.log('comp', cities)  
-    console.log('comp', cities[0])  
     return { cities }
 
 }

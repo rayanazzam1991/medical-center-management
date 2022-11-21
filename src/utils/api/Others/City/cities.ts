@@ -18,8 +18,6 @@ export async function getCities(
     'city'
   )
   
-  // const citiesData = cities.data
-  // console.log(cities)
   return { response }
 }
 

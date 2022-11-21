@@ -25,18 +25,6 @@
    const cities = ref<City[]>([])
    const loading = ref(false)
  
-//    const selectedConversation = computed(() => {
-//      const conversation = conversations.value.find(
-//        (item) => item.id === selectedConversationId.value
-//      )
- 
-//      if (!conversation) {
-//        return defaultConversation
-//      } else {
-//        return conversation
-//      }
-//    })
- 
 async function loadCities(start = 0, limit = 10) {
   if (loading.value) return
 

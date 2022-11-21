@@ -22,9 +22,6 @@ useHead({
   title: 'City',
 })
 const {cities} = await getCitiesList()
-// var city =  useCity()
-// await city.loadCities()
-// var cities = city.cities
 
 const removeCity  = async (cityId :number ) => {
      await deleteCity(cityId)
@@ -32,19 +29,6 @@ const removeCity  = async (cityId :number ) => {
 
 }
 
-//  const removeCity  = async (id : any ) => {
-//     await axios
-//     .delete(`city/${id}`)
-//     .then((response) => {
-//         console.log(response)
-//         cities.value.splice(cities.value.findIndex((city) => city[id] === id),1)
-//     })
-//     .catch((error) => {
-//         console.log(error)
-//     })
-
-
-// }
 
 const columns = {
   id: {
@@ -114,17 +98,10 @@ const columns = {
 </script>
 
 <template>
-      <NavbarLayout>
-    <!-- Content Wrapper -->
-    <RouterView v-slot="{ Component }">
-      <Transition name="fade-fast" mode="out-in">
-        <component :is="Component" />
-      </Transition>
-    </RouterView>
+  
     <VIconButton :to="{ name: '/city/add' }" color="danger"  raised icon="feather:plus" />
     <VFlexTableWrapper :data="cities" :columns="columns"  >
         <VFlexTable :clickable="true" ></VFlexTable>
     </VFlexTableWrapper>
-  </NavbarLayout>
 
 </template>
