@@ -1,9 +1,15 @@
 import { Pagination } from "./paginationInterface"
-export interface CustomResponse {
-    success: boolean
-    error_code : string
-    message: string
-    data : Array<any>
-    pagination : Pagination
-  }
-  
+export interface CustomResponseCollection {
+  success: boolean
+  error_code : string
+  message: string
+  data : Array<any>
+  pagination : Pagination
+}
+export interface CustomResponseSingle {
+  success: boolean
+  error_code : string
+  message: string
+  data : any
+  pagination : Pagination
+}

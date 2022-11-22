@@ -11,10 +11,10 @@
  import { ref, computed } from 'vue'
  import { acceptHMRUpdate, defineStore } from 'pinia'
  
- import { City, getCities , deleteCityApi } from '/@src/utils/api/Others/City'
+ import { City, getCities , deleteCityApi, addCityApi , editCityApi } from '/@src/utils/api/Others/City'
  import { useApi } from '/@src/composable/useApi'
  
- const defaultCity: City = {
+ export const defaultCity: City = {
    id: 0,
    name: '',
    status: 0,
@@ -51,11 +51,50 @@ async function deleteCityStore(cityId : number) {
     loading.value = false
   }
 }
+async function addCityStore(city : City) {
+
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const response = await addCityApi(api, city)
+    var returnedCity : City
+    returnedCity = response.response.data 
+    cities.value.push(returnedCity)
+    console.log('store', cities.value)
+
+
+  } finally {
+    loading.value = false
+  }
+}
+async function editCityStore(city : City) {
+
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const response = await editCityApi(api, city)
+    var returnedCity : City
+    returnedCity = response.response.data 
+    cities.value.splice( cities.value.findIndex((cityElement) => cityElement.id = city.id ),1)
+    cities.value.push(returnedCity)
+    console.log('store', cities.value)
+
+
+  } finally {
+    loading.value = false
+  }
+}
  
    return {
     cities,
     loadCities,
-    deleteCityStore
+    deleteCityStore,
+    addCityStore,
+    editCityStore
 } as const
  })
  

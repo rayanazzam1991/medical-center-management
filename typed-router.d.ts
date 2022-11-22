@@ -39,6 +39,8 @@ declare module 'vue-router/auto/routes' {
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
     '/city': RouteRecordInfo<'/city', '/city', Record<never, never>, Record<never, never>>,
     '/city/': RouteRecordInfo<'/city/', '/city/', Record<never, never>, Record<never, never>>,
+    '/city/[id]/': RouteRecordInfo<'/city/[id]/', '/city/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/city/[id]/edit': RouteRecordInfo<'/city/[id]/edit', '/city/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/city/add': RouteRecordInfo<'/city/add', '/city/add', Record<never, never>, Record<never, never>>,
     '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard/', Record<never, never>, Record<never, never>>,
