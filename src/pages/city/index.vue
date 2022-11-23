@@ -5,7 +5,7 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import VFlexTableSortColumn from '/@src/components/base/table/VFlexTableSortColumn.vue'
 import VbuttonIcon from '/@src/components/base/button/VIconButton.vue'
 import { CityConsts } from '/@src/utils/consts/city'
-
+import { defaultSearchFilter } from '/@src/stores/Others/City/cityStore'
 
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
 import { deleteCity } from '/@src/composable/Others/City/deleteCity'
@@ -16,7 +16,10 @@ viewWrapper.setPageTitle('City')
 useHead({
   title: 'City',
 })
-const { cities } = await getCitiesList()
+const searchFilter = ref(defaultSearchFilter)
+const citiesList = ref()
+const { cities } = await getCitiesList(searchFilter.value)
+citiesList.value = cities
 const router = useRouter()
 const removeCity = async (cityId: number) => {
 
@@ -24,20 +27,26 @@ const removeCity = async (cityId: number) => {
 
 
 }
+const search = async (searchFilter: object) => {
+
+  const { cities } = await getCitiesList(searchFilter)
+  console.log(cities)
+  citiesList.value = cities
+
+}
 
 
 const columns = {
   id: {
-    searchable: true,
-    sortable: true,
+    align: 'center'
   },
   name: {
-    sortable: true,
-    searchable: true,
+    align: 'center'
 
   },
   status: {
-    label: 'Status',
+    align: 'center',
+
     renderRow: (row: any) =>
       h(
         VTag,
@@ -56,43 +65,37 @@ const columns = {
           },
         }
       ),
-      renderHeader: () =>
-      h(VFlexTableSortColumn, {
-        label: 'Status',
-        id: 'status',
-      }),
+
   },
   actions: {
-    label: '',
-    align: 'end',
-      renderRow: (row: any) => 
+    align: 'center',
+
+    renderRow: (row: any) =>
       h(MyDropDown, {
-        
+
         onRemove: () => {
           removeCity(row.id)
           console.log('remove', row)
         },
-        onEdit: () => { 
-          router.push({path: `/city/${row.id}`})
+        onEdit: () => {
+          router.push({ path: `/city/${row.id}/edit` })
           console.log('edit', row)
         },
         onView: () => {
+          router.push({ path: `/city/${row.id}` })
           console.log('view', row)
         },
 
       }),
-    renderHeader: () =>
-      h(VbuttonIcon, {
-        to: { name: '/city/add' },
-        color: "primary",
-        icon: "feather:plus",
-      }),
+
   },
 } as const
 </script>
 
 <template>
-  <VFlexTableWrapper :data="cities" :columns="columns">
-    <VFlexTable :clickable="true"></VFlexTable>
+  <CityTableHeader :title="viewWrapper.pageTitle" :button_name="'Add City'" @search="search" />
+  <VFlexTableWrapper>
+
+    <VFlexTable :clickable="true" :separators="true" :columns="columns" :data="citiesList"></VFlexTable>
   </VFlexTableWrapper>
 </template>
