@@ -13,6 +13,7 @@
  
  import {  SearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
  import { useApi } from '/@src/composable/useApi'
+import { Pagination ,defaultPagination } from '/@src/utils/response'
  
  export const defaultCity: City = {
   id: 0,
@@ -23,11 +24,15 @@
 export const defaultSearchFilter: SearchFilter = {
   name: undefined,
   status: undefined,
+  page : undefined,
+  order : undefined,
+  order_by : undefined
 }
 
 export const useCity = defineStore('city', () => {
    const api = useApi()
    const cities = ref<City[]>([])
+   const pagination = ref<Pagination>(defaultPagination)
    const loading = ref(false)
  
 async function deleteCityStore(cityId : number) {
@@ -106,6 +111,7 @@ async function getCities(searchFilter : SearchFilter) {
   try {
     const returnedResponse = await getCitiesApi(api, searchFilter)
     cities.value = returnedResponse.response.data
+    pagination.value = returnedResponse.response.pagination
     
   } finally {
     loading.value = false
@@ -114,6 +120,7 @@ async function getCities(searchFilter : SearchFilter) {
 
    return {
     cities,
+    pagination,
     deleteCityStore,
     addCityStore,
     editCityStore,
