@@ -11,33 +11,25 @@
  import { ref, computed } from 'vue'
  import { acceptHMRUpdate, defineStore } from 'pinia'
  
- import { City, getCities , deleteCityApi, addCityApi , editCityApi } from '/@src/utils/api/Others/City'
+ import {  SearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
  import { useApi } from '/@src/composable/useApi'
  
  export const defaultCity: City = {
-   id: 0,
-   name: '',
-   status: 0,
- }
- 
- export const useCity = defineStore('city', () => {
+  id: 0,
+  name: '',
+  status: 0,
+}
+
+export const defaultSearchFilter: SearchFilter = {
+  name: undefined,
+  status: undefined,
+}
+
+export const useCity = defineStore('city', () => {
    const api = useApi()
    const cities = ref<City[]>([])
    const loading = ref(false)
  
-async function loadCities(start = 0, limit = 10) {
-  if (loading.value) return
-
-  loading.value = true
-
-  try {
-    const returnedResponse = await getCities(api, start, limit)
-    cities.value = returnedResponse.response.data
-
-  } finally {
-    loading.value = false
-  }
-}
 async function deleteCityStore(cityId : number) {
   if (loading.value) return
 
@@ -49,6 +41,22 @@ async function deleteCityStore(cityId : number) {
 
   } finally {
     loading.value = false
+  }
+}
+async function getCityStore(cityId : number) {
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const response = await getCityApi(api, cityId)
+    var returnedCity : City
+    returnedCity = response.response.data 
+    return returnedCity
+
+  } finally {
+    loading.value = false
+
   }
 }
 async function addCityStore(city : City) {
@@ -63,6 +71,7 @@ async function addCityStore(city : City) {
     returnedCity = response.response.data 
     cities.value.push(returnedCity)
     console.log('store', cities.value)
+    return returnedCity
 
 
   } finally {
@@ -88,13 +97,29 @@ async function editCityStore(city : City) {
     loading.value = false
   }
 }
- 
+async function getCities(searchFilter : SearchFilter) {
+
+  if (loading.value) return
+
+  loading.value = true
+
+  try {
+    const returnedResponse = await getCitiesApi(api, searchFilter)
+    cities.value = returnedResponse.response.data
+    
+  } finally {
+    loading.value = false
+  }
+}
+
    return {
     cities,
-    loadCities,
     deleteCityStore,
     addCityStore,
-    editCityStore
+    editCityStore,
+    getCityStore,
+    getCities
+    
 } as const
  })
  

@@ -6,20 +6,12 @@ export interface City {
   name : string
   status: number
 }
-
-
-export async function getCities(
-  api: AxiosInstance,
-  start = 0,
-  limit = 20
-): Promise<{ response: CustomResponseCollection;  }> {
-
-  const { data: response , headers } = await api.get(
-    'city'
-  )
-  
-  return { response }
+export interface SearchFilter {
+  name? : string
+  status?: number
 }
+
+
 
 export async function deleteCityApi(
   api: AxiosInstance,
@@ -56,3 +48,26 @@ export async function editCityApi(
   console.log(response)
   return { response }
 }
+export async function getCityApi(
+  api: AxiosInstance,
+  cityId : number
+  ): Promise<{ response: CustomResponseSingle;  }> {
+
+    const { data: response, headers } = await api.get(
+      `city/${cityId}`
+    )
+  
+  return { response }
+}
+export async function getCitiesApi(
+  api: AxiosInstance,
+  searchFilter : SearchFilter
+  ): Promise<{ response: CustomResponseCollection;  }> {
+    console.log(searchFilter)
+
+  const { data: response , headers  } = await api.get(
+    'city/getCitiesList', { params: searchFilter }
+  )
+  return { response }
+}
+

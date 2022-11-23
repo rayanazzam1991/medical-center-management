@@ -25,14 +25,14 @@ export default defineComponent({
     var submited = false
     const { y } = useWindowScroll()
     const isStuck = computed(() => {
-    return y.value > 30
+      return y.value > 30
     })
     const onSubmit = () => {
       submited = true
-    context.emit('onSubmit',submited)
-    console.log('formheader')
+      context.emit('onSubmit', submited)
+      console.log('formheader')
     }
-    return {isStuck , onSubmit }
+    return { isStuck, onSubmit }
   },
 
 
@@ -44,24 +44,19 @@ export default defineComponent({
 </script>
 
 <template>
-  <form class="form-layout is-split" @submit.prevent="onSubmit">
+  <form class="form-layout " @submit.prevent="onSubmit">
     <div class="form-outer">
       <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
         <div class="form-header-inner">
           <div class="left">
-            <h3>{{title}}</h3>
+            <h3>{{ title }}</h3>
           </div>
           <div class="right">
             <div class="buttons">
-              <VButton
-                icon="lnir lnir-arrow-left rem-100"
-                :to="`${back_route}`"
-                light
-                dark-outlined
-              >
+              <VButton icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light dark-outlined>
                 Back
               </VButton>
-              <VButton type="submit" color="primary" raised> {{form_submit_name}} </VButton>
+              <VButton type="submit" color="primary" raised> {{ form_submit_name }} </VButton>
             </div>
           </div>
         </div>
@@ -81,13 +76,15 @@ export default defineComponent({
 }
 
 .form-layout {
-  max-width: 740px;
+  max-width: 100%;
   margin: 0 auto;
 
   &.is-split {
-    max-width: 840px;
+    // max-width: 840px;
 
     .form-outer {
+      width: 100%;
+
       .form-body {
         padding: 0;
 
@@ -147,7 +144,7 @@ export default defineComponent({
                 cursor: pointer;
 
                 &:checked {
-                  + .radio-pill-inner {
+                  +.radio-pill-inner {
                     background: var(--primary);
                     border-color: var(--primary);
                     box-shadow: var(--primary-box-shadow);
@@ -204,7 +201,7 @@ export default defineComponent({
               .radio-pills {
                 .radio-pill {
                   input {
-                    &:checked + .radio-pill-inner {
+                    &:checked+.radio-pill-inner {
                       border-color: var(--primary);
                       background: var(--primary);
                       box-shadow: var(--primary-box-shadow);
