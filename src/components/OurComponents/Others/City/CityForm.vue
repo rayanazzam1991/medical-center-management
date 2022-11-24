@@ -61,21 +61,53 @@ export default defineComponent({
         )
 
 
+        const validationSchema = toFormValidator(
+            zod
+                .object({
+                    name: zod
+                        .string({
+                            required_error: 'This field is required',
+                        })
+                        .min(1, 'This field is required'),
+                    status: zod
+                        .number({ required_error: 'Please choose one' }),
+                })
 
-        const onSubmitAdd = async () => {
+        )
+
+        const { handleSubmit } = useForm({
+            validationSchema,
+            initialValues: {
+                name: '',
+                status: 0,
+            },
+        })
+
+
+        const onSubmitAdd = handleSubmit(async (values) => {
+            console.log('handle submit')
+            console.table(values)
+
             var cityData = currentCity.value
             cityData = await addCity(cityData) as City
+            // @ts-ignore
             notif.dismissAll()
+            // @ts-ignore
+
             notif.success(`${cityData.name} City was added successfully`)
 
 
             router.push({ path: `/city/${cityData.id}` })
 
-        }
+        })
         const onSubmitEdit = async () => {
             const cityData = currentCity.value
             await editCity(cityData)
+            // @ts-ignore
+
             notif.dismissAll()
+            // @ts-ignore
+
             notif.success(`${cityData.name} City was edited successfully`)
 
             router.push({ path: `/city/${cityData.id}` })
@@ -109,11 +141,15 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField>
+                                <VField id="name" v-slot="{ field }">
                                     <VLabel>City Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCity.name" type="text" placeholder=""
                                             autocomplete="given-name" />
+                                        <p v-if="field?.errorMessage" class="help is-danger">
+                                            {{ field.errorMessage }}
+                                        </p>
+
                                     </VControl>
                                 </VField>
                             </div>
@@ -123,7 +159,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField>
+                                <VField id="status" v-slot="{ field }">
                                     <VControl>
                                         <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
                                             :label="CityConsts.showStatusName(0)" name="outlined_radio"

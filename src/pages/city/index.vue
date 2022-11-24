@@ -31,6 +31,7 @@ const router = useRouter()
 const removeCity = async (cityId: number) => {
 
   await deleteCity(cityId)
+  // @ts-ignore
   notif.success('City was deleted successfully')
 
 }
