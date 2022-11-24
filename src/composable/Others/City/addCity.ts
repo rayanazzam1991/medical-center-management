@@ -6,7 +6,8 @@ export async function addCity  (cityData : City)  {
     console.log('comp')
 
     const city =  useCity()
-    await city.addCityStore(cityData)
+    return await city.addCityStore(cityData)
+    
     
 
 }

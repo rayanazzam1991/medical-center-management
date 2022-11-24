@@ -1,11 +1,14 @@
 import { useCity } from "/@src/stores/Others/City/cityStore";
-import { City } from "/@src/utils/api/Others/City";
+import { City  , SearchFilter} from "/@src/utils/api/Others/City";
+import { Pagination } from "/@src/utils/response";
 
 
-export async function getCitiesList   ()  {
+export async function getCitiesList  (searchFilter : SearchFilter)  {
     const city =  useCity()
-    await city.loadCities()
+    await city.getCities(searchFilter)
+    
     var cities : City[] = city.cities
-    return { cities }
+    var pagination : Pagination = city.pagination
+    return { cities , pagination }
 
 }

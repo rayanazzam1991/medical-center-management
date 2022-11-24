@@ -4,9 +4,11 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import { addCity } from '/@src/composable/Others/City/addCity'
 import { editCity } from '/@src/composable/Others/City/editCity'
 import { City } from '/@src/utils/api/Others/City'
-import { getCityFromStore } from '/@src/composable/Others/City/getCityFromStore'
+import { defaultCity } from '/@src/stores/Others/City/cityStore'
+import { getCity } from '/@src/composable/Others/City/getCity'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { CityConsts } from '/@src/utils/consts/city';
+import { useNotyf } from '/@src/composable/useNotyf';
 
 export default defineComponent({
     props: {
@@ -23,6 +25,7 @@ export default defineComponent({
         const head = useHead({
             title: 'City',
         })
+        const notif = useNotyf()
 
         const formType = ref('')
         formType.value = props.formType
@@ -31,44 +34,49 @@ export default defineComponent({
 
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/city'
+        const currentCity = ref(defaultCity)
         const cityId = ref(0)
-        const cityName = ref('')
-        const cityStatus = ref(0)
         // @ts-ignore
         cityId.value = route.params?.id as number ?? 0
-        const getCity = async () => {
-            console.log('GetCity')
-            const { city } = await getCityFromStore(cityId.value)
-            cityName.value = city.name
-            cityStatus.value = city.status
+        const getCurrentCity = async () => {
+            if (cityId.value === 0) {
+                currentCity.value.name = ''
+                currentCity.value.status = 0
+                return
+            }
+            const city = await getCity(cityId.value)
+            currentCity.value = city != undefined ? city : defaultCity
 
         }
-        onMounted(() => { getCity() })
+        onMounted(() => {
+            getCurrentCity()
+        }
+        )
 
 
 
         const onSubmitAdd = async () => {
-            const cityData: City = {
-                name: cityName.value,
-                status: cityStatus.value,
-            }
-            await addCity(cityData)
-            router.push({name: '/city/'})
+            var cityData = currentCity.value
+            cityData = await addCity(cityData) as City
+            notif.dismissAll()
+            notif.success(`${cityData.name} City was added successfully`)
+
+
+            router.push({ path: `/city/${cityData.id}` })
 
         }
         const onSubmitEdit = async () => {
-            const cityData: City = {
-                id: cityId.value,
-                name: cityName.value,
-                status: cityStatus.value,
-            }
+            const cityData = currentCity.value
             await editCity(cityData)
-            router.push({name: '/city/'})
+            notif.dismissAll()
+            notif.success(`${cityData.name} City was edited successfully`)
+
+            router.push({ path: `/city/${cityData.id}` })
 
 
         }
 
-        return { pageTitle, getCity, onSubmitAdd, onSubmitEdit, cityName, cityStatus, head, backRoute, CityConsts }
+        return { pageTitle, getCity, onSubmitAdd, onSubmitEdit, currentCity, head, backRoute, CityConsts }
     },
 
 
@@ -84,7 +92,7 @@ export default defineComponent({
             @onSubmit="onSubmitAdd" />
         <FormHeader v-if="formType === 'Edit'" :title="pageTitle" :form_submit_name="formType" :back_route="backRoute"
             @onSubmit="onSubmitEdit" />
-        <form class="form-layout is-split">
+        <form class="form-layout">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -97,7 +105,7 @@ export default defineComponent({
                                 <VField>
                                     <VLabel>City Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="cityName" type="text" placeholder=""
+                                        <VInput v-model="currentCity.name" type="text" placeholder=""
                                             autocomplete="given-name" />
                                     </VControl>
                                 </VField>
@@ -110,11 +118,11 @@ export default defineComponent({
                             <div class="column is-12">
                                 <VField>
                                     <VControl>
-                                        <VRadio v-model="cityStatus" :value="CityConsts.INACTIVE"
+                                        <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
                                             :label="CityConsts.showStatusName(0)" name="outlined_radio"
                                             color="warning" />
 
-                                        <VRadio v-model="cityStatus" :value="CityConsts.ACTIVE"
+                                        <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
                                             :label="CityConsts.showStatusName(1)" name="outlined_radio"
                                             color="success" />
 
@@ -132,7 +140,7 @@ export default defineComponent({
 
     </div>
 </template>
-<style lang="scss">
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
@@ -142,16 +150,23 @@ export default defineComponent({
     }
 }
 
-.form-layout {
-    max-width: 740px;
-    margin: 0 auto;
+.filter {
+    margin: 1rem;
+}
 
+.justify-content {
+    display: flex;
+    align-items: baseline;
+}
+
+.form-layout {
     &.is-split {
         max-width: 840px;
 
         .form-outer {
             .form-body {
                 padding: 0;
+                width: 100%;
 
                 .form-section {
                     display: flex;
@@ -175,7 +190,9 @@ export default defineComponent({
                         }
                     }
 
+
                     .left {
+                        width: 20%;
                         position: relative;
                         border-right: 1px solid var(--fade-grey-dark-3);
 
@@ -305,6 +322,7 @@ export default defineComponent({
                             padding-right: 30px;
                             padding-left: 30px;
                         }
+
 
                         .left {
                             border-right: none;
