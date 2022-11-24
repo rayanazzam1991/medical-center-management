@@ -49,7 +49,7 @@ const columns = {
     searchable: true,
     label: 'Deoartment',
     renderRow: (row: any) =>
-      h('span',row.department_id.name)
+      h('span',row.department.name)
   },
   status: {
     label: 'Status',

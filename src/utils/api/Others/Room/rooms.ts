@@ -5,7 +5,7 @@ export interface Room {
     id: number
     number: number
     floor: number
-    department_id: Department
+    department: Department
     status: number
 }
 
