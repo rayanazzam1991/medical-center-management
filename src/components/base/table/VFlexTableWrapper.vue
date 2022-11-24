@@ -120,6 +120,7 @@ export default defineComponent({
       set(value) {
         if (props.sort === undefined) {
           defaultSort.value = value
+          context.emit('update:sort', value)
         } else {
           context.emit('update:sort', value)
         }
@@ -234,9 +235,9 @@ export default defineComponent({
       if (searchTerm.value) {
         const searchableColumns = columns.value
           ? (Object.values(columns.value).filter((column) => {
-              if (!column || typeof column === 'string') return false
-              return column.searchable === true
-            }) as Partial<VFlexTableWrapperColumn>[])
+            if (!column || typeof column === 'string') return false
+            return column.searchable === true
+          }) as Partial<VFlexTableWrapperColumn>[])
           : []
 
         if (searchableColumns.length) {
@@ -279,9 +280,9 @@ export default defineComponent({
 
         const sortingColumn = columns.value
           ? (Object.values(columns.value).find((column) => {
-              if (!column || typeof column === 'string') return false
-              return column.sortable === true && column.key === sortField
-            }) as Partial<VFlexTableWrapperColumn>)
+            if (!column || typeof column === 'string') return false
+            return column.sortable === true && column.key === sortField
+          }) as Partial<VFlexTableWrapperColumn>)
           : null
 
         if (sortingColumn) {
