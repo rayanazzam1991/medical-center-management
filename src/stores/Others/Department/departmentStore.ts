@@ -11,52 +11,129 @@
 import { ref, computed } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
-import { Department, getDepartments, deleteDepartmentApi } from '/@src/utils/api/Others/Department'
+import {
+  SearchFilter,
+  Department,
+  getDepartmentsApi,
+  deleteDepartmentApi,
+  addDepartmentApi,
+  editDepartmentApi,
+  getDepartmentApi,
+} from '/@src/utils/api/Others/Department'
 import { useApi } from '/@src/composable/useApi'
+import { Pagination, defaultPagination } from '/@src/utils/response'
 
-const defaultDepartment: Department = {
-    id: 0,
-    name: '',
-    status: 0,
+export const defaultDepartment: Department = {
+  id: 0,
+  name: '',
+  status: 0,
+}
+
+export const defaultSearchFilter: SearchFilter = {
+  name: undefined,
+  status: undefined,
+  page: undefined,
+  order: undefined,
+  order_by: undefined,
 }
 
 export const useDepartment = defineStore('department', () => {
-    const api = useApi()
-    const departments = ref<Department[]>([])
-    const loading = ref(false)
+  const api = useApi()
+  const departments = ref<Department[]>([])
+  const pagination = ref<Pagination>(defaultPagination)
+  const loading = ref(false)
 
-    async function loadDepartments(start = 0, limit = 10) {
-        if (loading.value) return
+  async function deleteDepartmentStore(departmentId: number) {
+    if (loading.value) return
 
-        loading.value = true
+    loading.value = true
 
-        try {
-            const returnedResponse = await getDepartments(api, start, limit)
-            departments.value = returnedResponse.response.data
-
-        } finally {
-            loading.value = false
-        }
+    try {
+      const response = await deleteDepartmentApi(api, departmentId)
+      departments.value.splice(
+        departments.value.findIndex(
+          (department: Department) => department.id === departmentId
+        ),
+        1
+      )
+    } finally {
+      loading.value = false
     }
-    async function deleteDepartmentStore(departmentId: number) {
-        if (loading.value) return
+  }
+  async function getDepartmentStore(departmentId: number) {
+    if (loading.value) return
 
-        loading.value = true
+    loading.value = true
 
-        try {
-            const response = await deleteDepartmentApi(api, departmentId)
-            departments.value.splice(departments.value.findIndex((department: Department) => department.id === departmentId), 1)
-
-        } finally {
-            loading.value = false
-        }
+    try {
+      const response = await getDepartmentApi(api, departmentId)
+      var returnedDepartment: Department
+      returnedDepartment = response.response.data
+      return returnedDepartment
+    } finally {
+      loading.value = false
     }
+  }
+  async function addDepartmentStore(department: Department) {
+    if (loading.value) return
 
-    return {
-        departments,
-        loadDepartments,
-        deleteDepartmentStore
-    } as const
+    loading.value = true
+
+    try {
+      const response = await addDepartmentApi(api, department)
+      var returnedDepartment: Department
+      returnedDepartment = response.response.data
+      departments.value.push(returnedDepartment)
+      console.log('store', departments.value)
+      return returnedDepartment
+    } finally {
+      loading.value = false
+    }
+  }
+  async function editDepartmentStore(department: Department) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await editDepartmentApi(api, department)
+      var returnedDepartment: Department
+      returnedDepartment = response.response.data
+      departments.value.splice(
+        departments.value.findIndex(
+          (departmentElement) => (departmentElement.id = department.id)
+        ),
+        1
+      )
+      departments.value.push(returnedDepartment)
+      console.log('store', departments.value)
+    } finally {
+      loading.value = false
+    }
+  }
+  async function getDepartmentsStore(searchFilter: SearchFilter) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getDepartmentsApi(api, searchFilter)
+      departments.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+    } finally {
+      loading.value = false
+    }
+  }
+
+  return {
+    departments,
+    pagination,
+    deleteDepartmentStore,
+    addDepartmentStore,
+    editDepartmentStore,
+    getDepartmentStore,
+    getDepartmentsStore,
+  } as const
 })
 
 /**
@@ -66,6 +143,6 @@ export const useDepartment = defineStore('department', () => {
  * @see https://pinia.esm.dev/cookbook/hot-module-replacement.html
  * @see https://vitejs.dev/guide/api-hmr.html
  */
-// if (import.meta.hot) {
-//     import.meta.hot.accept(acceptHMRUpdate(useDepartment, import.meta.hot))
-// }
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useDepartment, import.meta.hot))
+}

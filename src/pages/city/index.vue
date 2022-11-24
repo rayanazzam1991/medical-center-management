@@ -47,8 +47,6 @@ const search = async (searchFilter2: SearchFilter) => {
 const resetFilter = async () => {
   searchFilter.value = defaultSearchFilter
   search(searchFilter.value)
-
-
 }
 
 const getCitiesPerPage = async (pageNum: number) => {
@@ -70,9 +68,6 @@ const citySort: VFlexTableWrapperSortFunction<City> = async ({ order, column }) 
   searchFilter.value.order_by = column.key
   await search(searchFilter.value)
   return 1
-
-
-
 }
 
 const columns = {

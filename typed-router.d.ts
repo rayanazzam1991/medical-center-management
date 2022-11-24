@@ -46,6 +46,8 @@ declare module 'vue-router/auto/routes' {
     '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard/', Record<never, never>, Record<never, never>>,
     '/department': RouteRecordInfo<'/department', '/department', Record<never, never>, Record<never, never>>,
     '/department/': RouteRecordInfo<'/department/', '/department/', Record<never, never>, Record<never, never>>,
+    '/department/[id]/': RouteRecordInfo<'/department/[id]/', '/department/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/department/[id]/edit': RouteRecordInfo<'/department/[id]/edit', '/department/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/department/add': RouteRecordInfo<'/department/add', '/department/add', Record<never, never>, Record<never, never>>,
     '/room': RouteRecordInfo<'/room', '/room', Record<never, never>, Record<never, never>>,
     '/room/': RouteRecordInfo<'/room/', '/room/', Record<never, never>, Record<never, never>>,
