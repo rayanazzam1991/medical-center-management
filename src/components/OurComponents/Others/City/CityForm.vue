@@ -1,43 +1,82 @@
-<script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { SearchFilter } from '/@src/utils/api/Others/City'
-
+<script  lang="ts">
+import { useHead } from '@vueuse/head'
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { addCity } from '/@src/composable/Others/City/addCity'
+import { editCity } from '/@src/composable/Others/City/editCity'
+import { City } from '/@src/utils/api/Others/City'
+import { defaultCity } from '/@src/stores/Others/City/cityStore'
+import { getCity } from '/@src/composable/Others/City/getCity'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { CityConsts } from '/@src/utils/consts/city';
+import { useNotyf } from '/@src/composable/useNotyf';
 
 export default defineComponent({
     props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        button_name: {
+        formType: {
             type: String,
             default: '',
         },
     },
 
+    emits: ['onSubmit'],
     setup(props, context) {
-
-        const title = props.title
-        const form_submit_name = props.button_name
-        var submited = false
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 30
+        const viewWrapper = useViewWrapper()
+        viewWrapper.setPageTitle('City')
+        const head = useHead({
+            title: 'City',
         })
-        const searchName = ref('')
-        const searchStatus = ref()
-        const searchFilter = ref({ name: '', status: -1 })
+        const notif = useNotyf()
 
-        const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value
+        const formType = ref('')
+        formType.value = props.formType
+        const route = useRoute()
+        const router = useRouter()
+
+        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
+        const backRoute = '/city'
+        const currentCity = ref(defaultCity)
+        const cityId = ref(0)
+        // @ts-ignore
+        cityId.value = route.params?.id as number ?? 0
+        const getCurrentCity = async () => {
+            if (cityId.value === 0) {
+                currentCity.value.name = ''
+                currentCity.value.status = 0
+                return
             }
-            context.emit('search', searchFilter.value)
+            const city = await getCity(cityId.value)
+            currentCity.value = city != undefined ? city : defaultCity
 
-            // await filterCity(searchName , searchStatus)
         }
-        return { isStuck, search, searchName, searchStatus, CityConsts }
+        onMounted(() => {
+            getCurrentCity()
+        }
+        )
+
+
+
+        const onSubmitAdd = async () => {
+            var cityData = currentCity.value
+            cityData = await addCity(cityData) as City
+            notif.dismissAll()
+            notif.success(`${cityData.name} City was added successfully`)
+
+
+            router.push({ path: `/city/${cityData.id}` })
+
+        }
+        const onSubmitEdit = async () => {
+            const cityData = currentCity.value
+            await editCity(cityData)
+            notif.dismissAll()
+            notif.success(`${cityData.name} City was edited successfully`)
+
+            router.push({ path: `/city/${cityData.id}` })
+
+
+        }
+
+        return { pageTitle, getCity, onSubmitAdd, onSubmitEdit, currentCity, head, backRoute, CityConsts }
     },
 
 
@@ -45,50 +84,63 @@ export default defineComponent({
 
 
 
-
 </script>
 
 <template>
-    <form class="form-layout" @submit.prevent="">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <VField class="column filter">
-                                <VControl icon="feather:search">
-                                    <input v-model="searchName" type="text" class="input is-rounded"
-                                        placeholder="Name..." />
-                                </VControl>
-                            </VField>
-                            <VField class="column ">
-                                <VControl>
-                                    <VSelect v-model="searchStatus" class="is-rounded">
-                                        <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
+    <div class="page-content-inner">
+        <FormHeader v-if="formType === 'Add'" :title="pageTitle" :form_submit_name="formType" :back_route="backRoute"
+            @onSubmit="onSubmitAdd" />
+        <FormHeader v-if="formType === 'Edit'" :title="pageTitle" :form_submit_name="formType" :back_route="backRoute"
+            @onSubmit="onSubmitEdit" />
+        <form class="form-layout">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
                         </div>
-
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>City Name</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentCity.name" type="text" placeholder=""
+                                            autocomplete="given-name" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
                     </div>
-                    <div class="right  ">
-                        <div class="buttons ">
-                            <VIconButton v-on:click="search" icon="feather:search" color="info" />
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField>
+                                    <VControl>
+                                        <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
+                                            :label="CityConsts.showStatusName(0)" name="outlined_radio"
+                                            color="warning" />
 
-                            <VButton :to="'/city/add'" color="primary" raised> {{ button_name }}
-                            </VButton>
+                                        <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
+                                            :label="CityConsts.showStatusName(1)" name="outlined_radio"
+                                            color="success" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
                         </div>
 
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
