@@ -1,5 +1,10 @@
 <script lang="ts">
 
+import { toFormValidator } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import sleep from '/@src/utils/sleep';
+import { z as zod } from 'zod'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   props: {
@@ -27,7 +32,11 @@ export default defineComponent({
     const isStuck = computed(() => {
       return y.value > 30
     })
+
+
+
     const onSubmit = () => {
+      console.log('handlesubmit')
       submited = true
       context.emit('onSubmit', submited)
       console.log('formheader')
@@ -44,7 +53,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <form class="form-layout " @submit.prevent="onSubmit">
+  <div class="form-layout ">
     <div class="form-outer">
       <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
         <div class="form-header-inner">
@@ -56,13 +65,13 @@ export default defineComponent({
               <VButton icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light dark-outlined>
                 Back
               </VButton>
-              <VButton type="submit" color="primary" raised> {{ form_submit_name }} </VButton>
+              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name }} </VButton>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <style lang="scss">

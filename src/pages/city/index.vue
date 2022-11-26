@@ -12,8 +12,7 @@ import { deleteCity } from '/@src/composable/Others/City/deleteCity'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { City, SearchFilter } from '/@src/utils/api/Others/City'
 import { defaultPagination } from '/@src/utils/response'
-import { VFlexTableWrapperColumn } from '/@src/components/base/table/VFlexTableWrapper.vue'
-import notyf from '/@src/plugins/notyf'
+import { VFlexTableWrapperColumn, VFlexTableWrapperSortFunction } from '/@src/components/base/table/VFlexTableWrapper.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
@@ -28,9 +27,11 @@ const { cities, pagination } = await getCitiesList(searchFilter.value)
 citiesList.value = cities
 paginationVar.value = pagination
 const router = useRouter()
+
 const removeCity = async (cityId: number) => {
 
   await deleteCity(cityId)
+  // @ts-ignore
   notif.success('City was deleted successfully')
 
 }
@@ -54,33 +55,30 @@ const getCitiesPerPage = async (pageNum: number) => {
   console.log(searchFilter.value)
   search(searchFilter.value)
 }
-type VFlexTableWrapperSortFunction<T = any> = (parameters: {
-  key: string
-  column: Partial<VFlexTableWrapperColumn>
-  order: 'asc' | 'desc'
-  a: T
-  b: T
-}) => Promise<number>
+const citySort = async (value: string) => {
+  if (value != undefined) {
+    const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
 
-const citySort: VFlexTableWrapperSortFunction<City> = async ({ order, column }) => {
-  console.log(order)
-  searchFilter.value.order = order
-  searchFilter.value.order_by = column.key
+    searchFilter.value.order_by = sortField
+    searchFilter.value.order = sortOrder
+  }
+  else {
+    searchFilter.value.order = undefined
+    searchFilter.value.order_by = undefined
+  }
   await search(searchFilter.value)
-  return 1
+
 }
 
 const columns = {
   id: {
     align: 'center',
     sortable: true,
-    sort: citySort,
 
   },
   name: {
     align: 'center',
     sortable: true,
-    sort: citySort,
 
 
   },
@@ -135,7 +133,7 @@ const columns = {
 <template>
   <CityTableHeader :title="viewWrapper.pageTitle" :button_name="'Add City'" @search="search"
     @resetFilter="resetFilter" />
-  <VFlexTableWrapper :columns="columns" :data="citiesList">
+  <VFlexTableWrapper :columns="columns" :data="citiesList" @update:sort="citySort">
 
     <VFlexTable v-if="citiesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
     <VFlexPagination v-if="citiesList.length != 0" :current-page="paginationVar.page" class="mt-6"
