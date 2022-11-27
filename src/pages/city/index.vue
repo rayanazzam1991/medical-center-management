@@ -35,13 +35,7 @@ const removeCity = async (cityId: number) => {
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
 }
-const removeCitytest = async (cityId: number) => {
-  console.log('test')
-  // await deleteCity(cityId)
-  // @ts-ignore
-  // notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-}
 const search = async (searchFilter2: CitySearchFilter) => {
 
   const { cities, pagination } = await getCitiesList(searchFilter2)

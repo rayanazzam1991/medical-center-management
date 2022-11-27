@@ -5,7 +5,7 @@ import { Pagination } from "/@src/utils/response";
 
 export async function getCitiesList  (searchFilter : CitySearchFilter)  {
     const city =  useCity()
-    await city.getCities(searchFilter)
+    await city.getCitiesStore(searchFilter)
     
     var cities : City[] = city.cities
     var pagination : Pagination = city.pagination
