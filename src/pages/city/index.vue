@@ -55,8 +55,6 @@ const search = async (searchFilter2: CitySearchFilter) => {
 const resetFilter = async (searchFilter2: CitySearchFilter) => {
   searchFilter.value = searchFilter2
   search(searchFilter.value)
-
-
 }
 
 const getCitiesPerPage = async (pageNum: number) => {

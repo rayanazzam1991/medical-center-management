@@ -21,45 +21,44 @@ export const defaultCitySearchFilter: CitySearchFilter = {
 }
 
 export const useCity = defineStore('city', () => {
-   const api = useApi()
-   const cities = ref<City[]>([])
-   const pagination = ref<Pagination>(defaultPagination)
-   const loading = ref(false)
- 
-async function deleteCityStore(cityId : number) {
-  if (loading.value) return
+  const api = useApi()
+  const cities = ref<City[]>([])
+  const pagination = ref<Pagination>(defaultPagination)
+  const loading = ref(false)
 
-  loading.value = true
+  async function deleteCityStore(cityId: number) {
+    if (loading.value) return
 
-  try {
-    const response = await deleteCityApi(api, cityId)
-    cities.value.splice(cities.value.findIndex((city : City) => city.id === cityId),1)
+    loading.value = true
 
-  } finally {
-    loading.value = false
+    try {
+      const response = await deleteCityApi(api, cityId)
+      cities.value.splice(
+        cities.value.findIndex((city: City) => city.id === cityId),
+        1
+      )
+    } finally {
+      loading.value = false
+    }
   }
-}
-async function getCityStore(cityId : number) {
-  if (loading.value) return
+  async function getCityStore(cityId: number) {
+    if (loading.value) return
 
-  loading.value = true
+    loading.value = true
 
-  try {
-    const response = await getCityApi(api, cityId)
-    var returnedCity : City
-    returnedCity = response.response.data 
-    return returnedCity
-
-  } finally {
-    loading.value = false
-
+    try {
+      const response = await getCityApi(api, cityId)
+      var returnedCity: City
+      returnedCity = response.response.data
+      return returnedCity
+    } finally {
+      loading.value = false
+    }
   }
-}
-async function addCityStore(city : City) {
+  async function addCityStore(city: City) {
+    if (loading.value) return
 
-  if (loading.value) return
-
-  loading.value = true
+    loading.value = true
 
   try {
     const response = await addCityApi(api, city)
@@ -72,12 +71,10 @@ async function addCityStore(city : City) {
   } finally {
     loading.value = false
   }
-}
-async function editCityStore(city : City) {
+  async function editCityStore(city: City) {
+    if (loading.value) return
 
-  if (loading.value) return
-
-  loading.value = true
+    loading.value = true
 
   try {
     const response = await editCityApi(api, city)
@@ -90,43 +87,38 @@ async function editCityStore(city : City) {
   } finally {
     loading.value = false
   }
-}
-async function getCities(searchFilter : CitySearchFilter) {
+  async function getCitiesStore(searchFilter: CitySearchFilter) {
+    if (loading.value) return
 
-  if (loading.value) return
+    loading.value = true
 
-  loading.value = true
-
-  try {
-    const returnedResponse = await getCitiesApi(api, searchFilter)
-    cities.value = returnedResponse.response.data
-    pagination.value = returnedResponse.response.pagination
-    
-  } finally {
-    loading.value = false
+    try {
+      const returnedResponse = await getCitiesApi(api, searchFilter)
+      cities.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-   return {
+  return {
     cities,
     pagination,
     deleteCityStore,
     addCityStore,
     editCityStore,
     getCityStore,
-    getCities
-    
-} as const
- })
- 
- /**
-  * Pinia supports Hot Module replacement so you can edit your stores and
-  * interact with them directly in your app without reloading the page.
-  *
-  * @see https://pinia.esm.dev/cookbook/hot-module-replacement.html
-  * @see https://vitejs.dev/guide/api-hmr.html
-  */
- if (import.meta.hot) {
-   import.meta.hot.accept(acceptHMRUpdate(useCity, import.meta.hot))
- }
- 
+    getCitiesStore,
+  } as const
+})
+
+/**
+ * Pinia supports Hot Module replacement so you can edit your stores and
+ * interact with them directly in your app without reloading the page.
+ *
+ * @see https://pinia.esm.dev/cookbook/hot-module-replacement.html
+ * @see https://vitejs.dev/guide/api-hmr.html
+ */
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useCity, import.meta.hot))
+}
