@@ -1,5 +1,8 @@
 <script lang="ts">
 import { CityConsts } from '/@src/utils/consts/city'
+import { CitySearchFilter } from '/@src/utils/api/Others/City'
+import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
+import { defaultPagination, Pagination } from '/@src/utils/response'
 
 
 export default defineComponent({
@@ -12,26 +15,33 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        pagination: {
+            default: defaultPagination,
+        }
     },
 
     setup(props, context) {
 
         const title = props.title
         const form_submit_name = props.button_name
+        const pagination = props.pagination
         var submited = false
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
             return y.value > 30
         })
         const searchName = ref('')
+        const perPage = ref(pagination.per_page)
         const searchStatus = ref()
-        const searchFilter = ref({ name: '', status: -1 })
+        const searchFilter = ref(defaultCitySearchFilter)
 
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,
-                status: searchStatus.value
+                status: searchStatus.value,
+                per_page: perPage.value
             }
+            console.log(searchFilter.value)
             context.emit('search', searchFilter.value)
 
         }
@@ -39,10 +49,13 @@ export default defineComponent({
         const resetFilter = () => {
             searchName.value = ''
             searchStatus.value = undefined
-            context.emit('resetFilter')
+            searchFilter.value.name = undefined
+            searchFilter.value.status = undefined
+
+            context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, CityConsts }
+        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
     },
 
 
@@ -54,7 +67,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout">
+    <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">
@@ -79,16 +92,45 @@ export default defineComponent({
 
                     </div>
                     <div class="right  ">
-                        <div class="buttons ">
-                            <VIconButton v-on:click="search" icon="feather:search" color="" />
+                        <div class="buttons  ">
+                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
 
                             <VButton to="/city/add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
+                        <div>
+
+                            <VField>
+                                <VControl>
+                                    <div class="select is-rounded">
+                                        <select @change="search" v-model="perPage">
+                                            <option v-if="pagination.per_page * 0.1 == 1"
+                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                                result per page</option>
+                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                    0.1
+                                            }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page">{{ pagination.per_page }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
+                                                results per page</option>
+                                        </select>
+                                    </div>
+                                </VControl>
+                            </VField>
+
+                        </div>
+
 
                     </div>
+
                 </div>
             </div>
         </div>

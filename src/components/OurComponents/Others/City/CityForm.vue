@@ -11,7 +11,6 @@ import { CityConsts } from '/@src/utils/consts/city';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import sleep from '/@src/utils/sleep';
 import { z as zod } from 'zod'
 import { useI18n } from 'vue-i18n'
 
@@ -32,7 +31,6 @@ export default defineComponent({
             title: 'City',
         })
         const notif = useNotyf()
-        const { t } = useI18n()
 
         const formType = ref('')
         formType.value = props.formType

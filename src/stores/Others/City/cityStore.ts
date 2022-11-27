@@ -12,7 +12,7 @@ import { ref, computed } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import {
-  SearchFilter,
+  CitySearchFilter,
   City,
   getCitiesApi,
   deleteCityApi,
@@ -29,12 +29,13 @@ export const defaultCity: City = {
   status: 0,
 }
 
-export const defaultSearchFilter: SearchFilter = {
+export const defaultCitySearchFilter: CitySearchFilter = {
   name: undefined,
   status: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
+  page : undefined,
+  order : undefined,
+  order_by : undefined,
+  per_page : undefined
 }
 
 export const useCity = defineStore('city', () => {
@@ -107,7 +108,7 @@ export const useCity = defineStore('city', () => {
       loading.value = false
     }
   }
-  async function getCitiesStore(searchFilter: SearchFilter) {
+  async function getCitiesStore(searchFilter: CitySearchFilter) {
     if (loading.value) return
 
     loading.value = true
