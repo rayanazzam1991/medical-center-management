@@ -71,6 +71,7 @@ export const useCity = defineStore('city', () => {
   } finally {
     loading.value = false
   }
+}
   async function editCityStore(city: City) {
     if (loading.value) return
 
@@ -87,6 +88,7 @@ export const useCity = defineStore('city', () => {
   } finally {
     loading.value = false
   }
+}
   async function getCitiesStore(searchFilter: CitySearchFilter) {
     if (loading.value) return
 
