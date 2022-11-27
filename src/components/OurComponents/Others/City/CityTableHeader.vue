@@ -106,7 +106,12 @@ export default defineComponent({
                                 <VControl>
                                     <div class="select is-rounded">
                                         <select @change="search" v-model="perPage">
-                                            <option :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                            <option v-if="pagination.per_page * 0.1 == 1"
+                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                                result per page</option>
+                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                    0.1
+                                            }}
                                                 results per page</option>
                                             <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
                                                 results per page</option>
