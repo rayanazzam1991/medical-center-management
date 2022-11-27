@@ -5,12 +5,12 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import VFlexTableSortColumn from '/@src/components/base/table/VFlexTableSortColumn.vue'
 import VbuttonIcon from '/@src/components/base/button/VIconButton.vue'
 import { CityConsts } from '/@src/utils/consts/city'
-import { defaultSearchFilter } from '/@src/stores/Others/City/cityStore'
+import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
 
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
 import { deleteCity } from '/@src/composable/Others/City/deleteCity'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { City, SearchFilter } from '/@src/utils/api/Others/City'
+import { City, CitySearchFilter } from '/@src/utils/api/Others/City'
 import { defaultPagination } from '/@src/utils/response'
 import { VFlexTableWrapperColumn, VFlexTableWrapperSortFunction } from '/@src/components/base/table/VFlexTableWrapper.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -20,7 +20,7 @@ useHead({
   title: 'City',
 })
 const notif = useNotyf()
-const searchFilter = ref(defaultSearchFilter)
+const searchFilter = ref(defaultCitySearchFilter)
 const citiesList = ref()
 const paginationVar = ref(defaultPagination)
 const { cities, pagination } = await getCitiesList(searchFilter.value)
@@ -35,18 +35,19 @@ const removeCity = async (cityId: number) => {
   notif.success('City was deleted successfully')
 
 }
-const search = async (searchFilter2: SearchFilter) => {
+const search = async (searchFilter2: CitySearchFilter) => {
 
   const { cities, pagination } = await getCitiesList(searchFilter2)
 
   citiesList.value = cities
   paginationVar.value = pagination
   searchFilter.value = searchFilter2
+  console.log(paginationVar.value)
 
 }
 
-const resetFilter = async () => {
-  searchFilter.value = defaultSearchFilter
+const resetFilter = async (searchFilter2: CitySearchFilter) => {
+  searchFilter.value = searchFilter2
   search(searchFilter.value)
 
 
@@ -133,7 +134,7 @@ const columns = {
 </script>
 
 <template>
-  <CityTableHeader :title="viewWrapper.pageTitle" :button_name="'Add City'" @search="search"
+  <CityTableHeader :title="viewWrapper.pageTitle" :button_name="'Add City'" @search="search" :pagination="paginationVar"
     @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="citiesList" @update:sort="citySort">
 
@@ -141,12 +142,15 @@ const columns = {
     <VFlexPagination v-if="citiesList.length != 0" :current-page="paginationVar.page" class="mt-6"
       :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getCitiesPerPage" />
-    <h6 v-if="citiesList.length != 0">Showing {{ 1 + ((paginationVar.page - 1) * pagination.count) }} to {{
-        paginationVar.page !=
-          pagination.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total
-    }} of {{ paginationVar.total }} entries</h6>
+    <h6 v-if="citiesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+        ?
+        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+    }} to {{
+    paginationVar.page !=
+      paginationVar.max_page ?
+      paginationVar.page *
+      paginationVar.per_page : paginationVar.total
+}} of {{ paginationVar.total }} entries</h6>
 
     <h1 v-if="citiesList.length == 0">No Data Returned...</h1>
   </VFlexTableWrapper>

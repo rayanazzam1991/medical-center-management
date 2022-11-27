@@ -11,7 +11,7 @@
  import { ref, computed } from 'vue'
  import { acceptHMRUpdate, defineStore } from 'pinia'
  
- import {  SearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
+ import {  CitySearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
  import { useApi } from '/@src/composable/useApi'
 import { Pagination ,defaultPagination } from '/@src/utils/response'
  
@@ -21,12 +21,13 @@ import { Pagination ,defaultPagination } from '/@src/utils/response'
   status: 0,
 }
 
-export const defaultSearchFilter: SearchFilter = {
+export const defaultCitySearchFilter: CitySearchFilter = {
   name: undefined,
   status: undefined,
   page : undefined,
   order : undefined,
-  order_by : undefined
+  order_by : undefined,
+  per_page : undefined
 }
 
 export const useCity = defineStore('city', () => {
@@ -102,7 +103,7 @@ async function editCityStore(city : City) {
     loading.value = false
   }
 }
-async function getCities(searchFilter : SearchFilter) {
+async function getCities(searchFilter : CitySearchFilter) {
 
   if (loading.value) return
 

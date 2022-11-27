@@ -6,10 +6,11 @@ export interface City {
   name : string
   status: number
 }
-export interface SearchFilter {
+export interface CitySearchFilter {
   name? : string
   status?: number
   page? : number
+  per_page? : number
   order_by? : string
   order? : string
 }
@@ -64,7 +65,7 @@ export async function getCityApi(
 }
 export async function getCitiesApi(
   api: AxiosInstance,
-  searchFilter : SearchFilter
+  searchFilter : CitySearchFilter
   ): Promise<{ response: CustomResponseCollection;  }> {
 
   const { data: response , headers  } = await api.get(
