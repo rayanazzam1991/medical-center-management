@@ -3,7 +3,6 @@ import { City } from "/@src/utils/api/Others/City";
 
 
 export async function addCity  (cityData : City)  {
-    console.log('comp')
 
     const city =  useCity()
     return await city.addCityStore(cityData)

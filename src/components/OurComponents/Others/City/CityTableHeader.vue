@@ -22,10 +22,7 @@ export default defineComponent({
 
     setup(props, context) {
 
-        const title = props.title
-        const form_submit_name = props.button_name
         const pagination = props.pagination
-        var submited = false
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
             return y.value > 30
@@ -41,7 +38,6 @@ export default defineComponent({
                 status: searchStatus.value,
                 per_page: perPage.value
             }
-            console.log(searchFilter.value)
             context.emit('search', searchFilter.value)
 
         }

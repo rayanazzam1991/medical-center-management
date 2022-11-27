@@ -1,124 +1,58 @@
-<script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addCity } from '/@src/composable/Others/City/addCity'
-import { editCity } from '/@src/composable/Others/City/editCity'
-import { City } from '/@src/utils/api/Others/City'
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { getCity } from '/@src/composable/Others/City/getCity'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { CityConsts } from '/@src/utils/consts/city';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-import { z as zod } from 'zod'
+<script lang="ts">
+import { CityConsts } from '/@src/utils/consts/city'
+import { CitySearchFilter } from '/@src/utils/api/Others/City'
+import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
+import { defaultPagination, Pagination } from '/@src/utils/response'
+import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
 
 
 export default defineComponent({
     props: {
-        formType: {
+        title: {
             type: String,
             default: '',
         },
+        button_name: {
+            type: String,
+            default: '',
+        },
+        pagination: {
+            default: defaultPagination,
+        }
     },
 
-    emits: ['onSubmit'],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('City')
-        const head = useHead({
-            title: 'City',
+
+        const pagination = props.pagination
+        const { y } = useWindowScroll()
+        const isStuck = computed(() => {
+            return y.value > 30
         })
-        const notif = useNotyf()
+        const searchName = ref('')
+        const perPage = ref(pagination.per_page)
+        const searchStatus = ref()
+        const searchFilter = ref(defaultNationalitySearchFilter)
 
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/city'
-        const currentCity = ref(defaultCity)
-        const cityId = ref(0)
-        // @ts-ignore
-        cityId.value = route.params?.id as number ?? 0
-        const getCurrentCity = async () => {
-            if (cityId.value === 0) {
-                currentCity.value.name = ''
-                currentCity.value.status = 0
-                return
+        const search = () => {
+            searchFilter.value = {
+                name: searchName.value,
+                status: searchStatus.value,
+                per_page: perPage.value
             }
-            const city = await getCity(cityId.value)
-            currentCity.value = city != undefined ? city : defaultCity
-
-        }
-        onMounted(() => {
-            getCurrentCity()
-        }
-        )
-
-
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
-
-        const { handleSubmit } = useForm({
-            validationSchema,
-            initialValues: {
-                name: '',
-                status: 0,
-            },
-        })
-
-        const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
-            }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
-            }
-            else return
-        }
-        const onSubmitAdd = handleSubmit(async (values) => {
-
-            var cityData = currentCity.value
-            cityData = await addCity(cityData) as City
-            // @ts-ignore
-            notif.dismissAll()
-            // @ts-ignore
-
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
-            router.push({ path: `/city/${cityData.id}` })
-
-        })
-        const onSubmitEdit = async () => {
-            const cityData = currentCity.value
-            await editCity(cityData)
-            // @ts-ignore
-
-            notif.dismissAll()
-            // @ts-ignore
-
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
-            router.push({ path: `/city/${cityData.id}` })
-
+            context.emit('search', searchFilter.value)
 
         }
 
-        return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts }
+        const resetFilter = () => {
+            searchName.value = ''
+            searchStatus.value = undefined
+            searchFilter.value.name = undefined
+            searchFilter.value.status = undefined
+
+            context.emit('resetFilter', searchFilter.value)
+
+        }
+        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
     },
 
 
@@ -126,65 +60,81 @@ export default defineComponent({
 
 
 
+
 </script>
 
 <template>
-    <div class="page-content-inner">
-        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
-            <div class="form-outer">
-                <div class="form-body">
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCity.name" type="text" placeholder=""
-                                            autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
-
-                                    <VControl>
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
-                                            :label="CityConsts.showStatusName(0)" name="status" color="warning" />
-
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
-                                            :label="CityConsts.showStatusName(1)" name="status" color="success" />
-
-                                    </VControl>
-                                </VField>
-                            </div>
+    <form class="form-layout" v-on:submit.prevent="search">
+        <div class="form-outer">
+            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+                <div class="form-header-inner">
+                    <div class="left">
+                        <div class="columns justify-content ">
+                            <VField class="column filter">
+                                <VControl icon="feather:search">
+                                    <input v-model="searchName" type="text" class="input is-rounded"
+                                        placeholder="Name..." />
+                                </VControl>
+                            </VField>
+                            <VField class="column ">
+                                <VControl>
+                                    <VSelect v-model="searchStatus" class="is-rounded">
+                                        <VOption value="">Status</VOption>
+                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
+                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
+                                    </VSelect>
+                                </VControl>
+                            </VField>
                         </div>
 
                     </div>
+                    <div class="right  ">
+                        <div class="buttons  ">
+                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
+                            <VButton @click="resetFilter" color="danger" raised>Reset Filters
+                            </VButton>
+
+                            <VButton to="/nationality/add" color="primary" raised> {{ button_name }}
+                            </VButton>
+                        </div>
+                        <div>
+
+                            <VField>
+                                <VControl>
+                                    <div class="select is-rounded">
+                                        <select @change="search" v-model="perPage">
+                                            <option v-if="pagination.per_page * 0.1 == 1"
+                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                                result per page</option>
+                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                    0.1
+                                            }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page">{{ pagination.per_page }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
+                                                results per page</option>
+                                        </select>
+                                    </div>
+                                </VControl>
+                            </VField>
+
+                        </div>
+
+
+                    </div>
+
                 </div>
             </div>
-        </form>
-
-
-
-    </div>
+        </div>
+    </form>
 </template>
-<style  scoped lang="scss">
+
+<style   lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 

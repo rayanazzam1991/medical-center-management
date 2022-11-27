@@ -1,14 +1,4 @@
-/**
- * This is a store that hold the messaging-v1 state
- * It uses the useApi composition component to make the api calls
- *
- * @see /src/pages/messaging-v1.vue
- * @see /src/composable/useApi.ts
- * @see /src/components/partials/chat/*.vue
- * @see /src/utils/api/chat
- */
-
- import { ref, computed } from 'vue'
+ import { ref } from 'vue'
  import { acceptHMRUpdate, defineStore } from 'pinia'
  
  import {  CitySearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
@@ -76,7 +66,6 @@ async function addCityStore(city : City) {
     var returnedCity : City
     returnedCity = response.response.data 
     cities.value.push(returnedCity)
-    console.log('store', cities.value)
     return returnedCity
 
 
@@ -96,7 +85,6 @@ async function editCityStore(city : City) {
     returnedCity = response.response.data 
     cities.value.splice( cities.value.findIndex((cityElement) => cityElement.id = city.id ),1)
     cities.value.push(returnedCity)
-    console.log('store', cities.value)
 
 
   } finally {
