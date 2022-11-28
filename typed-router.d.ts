@@ -56,13 +56,12 @@ declare module 'vue-router/auto/routes' {
     '/nationality/add': RouteRecordInfo<'/nationality/add', '/nationality/add', Record<never, never>, Record<never, never>>,
     '/room': RouteRecordInfo<'/room', '/room', Record<never, never>, Record<never, never>>,
     '/room/': RouteRecordInfo<'/room/', '/room/', Record<never, never>, Record<never, never>>,
-    '/room/[id]/': RouteRecordInfo<'/room/[id]/', '/room/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/room/[id]/edit': RouteRecordInfo<'/room/[id]/edit', '/room/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/room/add': RouteRecordInfo<'/room/add', '/room/add', Record<never, never>, Record<never, never>>,
-    '/userStatus/': RouteRecordInfo<'/userStatus/', '/userStatus/', Record<never, never>, Record<never, never>>,
-    '/userStatus/[id]/': RouteRecordInfo<'/userStatus/[id]/', '/userStatus/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/userStatus/[id]/edit': RouteRecordInfo<'/userStatus/[id]/edit', '/userStatus/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/userStatus/add': RouteRecordInfo<'/userStatus/add', '/userStatus/add', Record<never, never>, Record<never, never>>,
+    '/service': RouteRecordInfo<'/service', '/service', Record<never, never>, Record<never, never>>,
+    '/service/': RouteRecordInfo<'/service/', '/service/', Record<never, never>, Record<never, never>>,
+    '/service/[id]/': RouteRecordInfo<'/service/[id]/', '/service/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/service/[id]/edit': RouteRecordInfo<'/service/[id]/edit', '/service/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/service/add': RouteRecordInfo<'/service/add', '/service/add', Record<never, never>, Record<never, never>>,
   }
 }
 
