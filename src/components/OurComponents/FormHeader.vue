@@ -1,10 +1,5 @@
 <script lang="ts">
 
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-import sleep from '/@src/utils/sleep';
-import { z as zod } from 'zod'
-import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   props: {
@@ -24,9 +19,6 @@ export default defineComponent({
 
   emits: ['onSubmit'],
   setup(props, context) {
-    const title = props.title
-    const form_submit_name = props.form_submit_name
-    const back_route = props.back_route
     var submited = false
     const { y } = useWindowScroll()
     const isStuck = computed(() => {
@@ -36,10 +28,7 @@ export default defineComponent({
 
 
     const onSubmit = () => {
-      console.log('handlesubmit')
-      submited = true
       context.emit('onSubmit', submited)
-      console.log('formheader')
     }
     return { isStuck, onSubmit }
   },

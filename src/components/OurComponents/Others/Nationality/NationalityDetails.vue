@@ -2,47 +2,48 @@
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
 
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { City } from '/@src/utils/api/Others/City';
-import { CityConsts } from '/@src/utils/consts/city';
+import { defaultNationality } from '/@src/stores/Others/Nationality/nationalityStore';
+import { Nationality } from '/@src/utils/api/Others/Nationality';
+
+import { NationalityConsts } from '/@src/utils/consts/nationality';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
-import { getCity } from '/@src/composable/Others/City/getCity';
+import { getNationality } from '/@src/composable/Others/Nationality/getNationality';
 
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('City')
+viewWrapper.setPageTitle('Nationality')
 const head = useHead({
-    title: 'City',
+    title: 'Nationality',
 })
 
 
 
-const cityId = ref(0)
+const nationalityId = ref(0)
 // @ts-ignore
-cityId.value = route.params?.id as number ?? 0
-const currentCity = ref(defaultCity)
-const getCurrentCity = async () => {
-    const city = await getCity(cityId.value)
-    if (city != undefined)
-        currentCity.value = city
-    pageTitle.value = viewWrapper.pageTitle + ': ' + currentCity.value.name
+nationalityId.value = route.params?.id as number ?? 0
+const currentNationality = ref(defaultNationality)
+const getCurrentNationality = async () => {
+    const nationality = await getNationality(nationalityId.value)
+    if (nationality != undefined)
+        currentNationality.value = nationality
+    pageTitle.value = viewWrapper.pageTitle + ': ' + currentNationality.value.name
 
 }
 onMounted(async () => {
-    await getCurrentCity()
+    await getCurrentNationality()
 })
 
 const toEdit = () => {
-    router.push({ path: `/city/${cityId.value}/edit` })
+    router.push({ path: `/nationality/${nationalityId.value}/edit` })
 }
 
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/city'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/nationality'" @onSubmit="toEdit" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -51,13 +52,14 @@ const toEdit = () => {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
-                            <span>{{ currentCity.name }}</span>
+                            <span>{{ currentNationality.name }}</span>
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
                             <span>
-                                <VTag :color="currentCity.status === CityConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ CityConsts.showStatusName(currentCity.status) }}</VTag>
+                                <VTag
+                                    :color="currentNationality.status === NationalityConsts.INACTIVE ? 'danger' : 'success'">
+                                    {{ NationalityConsts.showStatusName(currentNationality.status) }}</VTag>
                             </span>
                         </div>
                     </div>

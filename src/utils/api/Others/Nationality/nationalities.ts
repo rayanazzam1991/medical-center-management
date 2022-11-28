@@ -1,12 +1,12 @@
 import type { AxiosInstance } from 'axios'
 import {CustomResponseCollection,CustomResponseSingle} from '../../../response'
 
-export interface City {
+export interface Nationality {
   id?: number
   name : string
   status: number
 }
-export interface CitySearchFilter {
+export interface NationalitySearchFilter {
   name? : string
   status?: number
   page? : number
@@ -17,56 +17,55 @@ export interface CitySearchFilter {
 
 
 
-export async function deleteCityApi(
+export async function deleteNationalityApi(
   api: AxiosInstance,
-  cityId : number
+  nationalityId : number
   ): Promise<{ response: CustomResponseCollection;  }> {
 
   const { data: response, headers } = await api.delete(
-    `city/${cityId}`
+    `nationality/${nationalityId}`
   )
 
   return { response }
 }
-export async function addCityApi(
+export async function addNationalityApi(
   api: AxiosInstance,
-  city : City
+  nationality : Nationality
   ): Promise<{ response: CustomResponseSingle;  }> {
 
   const { data: response, headers } = await api.post(
-    `city/`,city
+    `nationality/`,nationality
   )
 
   return { response }
 }
-export async function editCityApi(
+export async function editNationalityApi(
   api: AxiosInstance,
-  city : City
+  nationality : Nationality
   ): Promise<{ response: CustomResponseSingle;  }> {
   const { data: response, headers } = await api.put(
-    `city/${city.id}`,city
+    `nationality/${nationality.id}`,nationality
   )
-  console.log(response)
   return { response }
 }
-export async function getCityApi(
+export async function getNationalityApi(
   api: AxiosInstance,
-  cityId : number
+  nationalityId : number
   ): Promise<{ response: CustomResponseSingle;  }> {
 
     const { data: response, headers } = await api.get(
-      `city/${cityId}`
+      `nationality/${nationalityId}`
     )
   
   return { response }
 }
-export async function getCitiesApi(
+export async function getNationalitiesApi(
   api: AxiosInstance,
-  searchFilter : CitySearchFilter
+  searchFilter : NationalitySearchFilter
   ): Promise<{ response: CustomResponseCollection;  }> {
 
   const { data: response , headers  } = await api.get(
-    'city/getCitiesList', { params: searchFilter }
+    'nationality/getNationalitiesList', { params: searchFilter }
   )
   return { response }
 }

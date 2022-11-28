@@ -1,17 +1,17 @@
 <script  lang="ts">
 import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addCity } from '/@src/composable/Others/City/addCity'
-import { editCity } from '/@src/composable/Others/City/editCity'
-import { City } from '/@src/utils/api/Others/City'
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { getCity } from '/@src/composable/Others/City/getCity'
+import { addNationality } from '/@src/composable/Others/Nationality/addNationality'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { CityConsts } from '/@src/utils/consts/city';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { z as zod } from 'zod'
+import { defaultNationality } from '/@src/stores/Others/Nationality/nationalityStore';
+import { getNationality } from '/@src/composable/Others/Nationality/getNationality';
+import { Nationality } from '/@src/utils/api/Others/Nationality';
+import { editNationality } from '/@src/composable/Others/Nationality/editNationality';
+import { NationalityConsts } from '/@src/utils/consts/nationality';
 
 
 export default defineComponent({
@@ -25,9 +25,9 @@ export default defineComponent({
     emits: ['onSubmit'],
     setup(props, context) {
         const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('City')
+        viewWrapper.setPageTitle('Nationality')
         const head = useHead({
-            title: 'City',
+            title: 'Nationality',
         })
         const notif = useNotyf()
 
@@ -37,23 +37,23 @@ export default defineComponent({
         const router = useRouter()
 
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/city'
-        const currentCity = ref(defaultCity)
-        const cityId = ref(0)
+        const backRoute = '/nationality'
+        const currentNationality = ref(defaultNationality)
+        const nationalityId = ref(0)
         // @ts-ignore
-        cityId.value = route.params?.id as number ?? 0
-        const getCurrentCity = async () => {
-            if (cityId.value === 0) {
-                currentCity.value.name = ''
-                currentCity.value.status = 0
+        nationalityId.value = route.params?.id as number ?? 0
+        const getCurrentNationality = async () => {
+            if (nationalityId.value === 0) {
+                currentNationality.value.name = ''
+                currentNationality.value.status = 0
                 return
             }
-            const city = await getCity(cityId.value)
-            currentCity.value = city != undefined ? city : defaultCity
+            const nationality = await getNationality(nationalityId.value)
+            currentNationality.value = nationality != undefined ? nationality : defaultNationality
 
         }
         onMounted(() => {
-            getCurrentCity()
+            getCurrentNationality()
         }
         )
 
@@ -89,36 +89,37 @@ export default defineComponent({
             }
             else return
         }
+
         const onSubmitAdd = handleSubmit(async (values) => {
 
-            var cityData = currentCity.value
-            cityData = await addCity(cityData) as City
+            var nationalityData = currentNationality.value
+            nationalityData = await addNationality(nationalityData) as Nationality
             // @ts-ignore
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was added successfully`)
+            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was added successfully`)
 
 
-            router.push({ path: `/city/${cityData.id}` })
+            router.push({ path: `/nationality/${nationalityData.id}` })
 
         })
         const onSubmitEdit = async () => {
-            const cityData = currentCity.value
-            await editCity(cityData)
+            const nationalityData = currentNationality.value
+            await editNationality(nationalityData)
             // @ts-ignore
 
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`)
+            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`)
 
-            router.push({ path: `/city/${cityData.id}` })
+            router.push({ path: `/nationality/${nationalityData.id}` })
 
 
         }
 
-        return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts }
+        return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts }
     },
 
 
@@ -145,7 +146,7 @@ export default defineComponent({
                                 <VField id="name" v-slot="{ field }">
                                     <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCity.name" type="text" placeholder=""
+                                        <VInput v-model="currentNationality.name" type="text" placeholder=""
                                             autocomplete="given-name" />
                                         <p v-if="field?.errorMessage" class="help is-danger">
                                             {{ field.errorMessage }}
@@ -164,11 +165,14 @@ export default defineComponent({
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
-                                            :label="CityConsts.showStatusName(0)" name="status" color="warning" />
 
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
-                                            :label="CityConsts.showStatusName(1)" name="status" color="success" />
+                                        <VRadio v-model="currentNationality.status" :value="NationalityConsts.INACTIVE"
+                                            :label="NationalityConsts.showStatusName(0)" name="status"
+                                            color="warning" />
+
+                                        <VRadio v-model="currentNationality.status" :value="NationalityConsts.ACTIVE"
+                                            :label="NationalityConsts.showStatusName(1)" name="status"
+                                            color="success" />
 
                                     </VControl>
                                 </VField>

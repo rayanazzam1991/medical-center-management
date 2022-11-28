@@ -2,56 +2,58 @@
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import { CityConsts } from '/@src/utils/consts/city'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
 
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { deleteCity } from '/@src/composable/Others/City/deleteCity'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
 import { defaultPagination } from '/@src/utils/response'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
+import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList'
+import { deleteNationality } from '/@src/composable/Others/Nationality/deleteNationality'
+import { NationalitySearchFilter } from '/@src/utils/api/Others/Nationality'
+import { NationalityConsts } from '/@src/utils/consts/nationality'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('City')
+viewWrapper.setPageTitle('Nationality')
 useHead({
-  title: 'City',
+  title: 'Nationality',
 })
 const notif = useNotyf()
-const searchFilter = ref(defaultCitySearchFilter)
-const citiesList = ref()
-const deleteCityPopup = ref(false)
-const deleteCityId = ref()
+const searchFilter = ref(defaultNationalitySearchFilter)
+const nationalitiesList = ref()
+const deleteNationalityPopup = ref(false)
+const deleteNationalityId = ref()
+
 const paginationVar = ref(defaultPagination)
-const { cities, pagination } = await getCitiesList(searchFilter.value)
-citiesList.value = cities
+const { nationalities, pagination } = await getNationalitiesList(searchFilter.value)
+nationalitiesList.value = nationalities
 paginationVar.value = pagination
 const router = useRouter()
 
-const removeCity = async (cityId: number) => {
+const removeNationality = async (nationalityId: number) => {
 
-  await deleteCity(cityId)
-  deleteCityPopup.value = false
+  await deleteNationality(nationalityId)
+  deleteNationalityPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
 }
+const search = async (searchFilter2: NationalitySearchFilter) => {
 
-const search = async (searchFilter2: CitySearchFilter) => {
+  const { nationalities, pagination } = await getNationalitiesList(searchFilter2)
 
-  const { cities, pagination } = await getCitiesList(searchFilter2)
-
-  citiesList.value = cities
+  nationalitiesList.value = nationalities
   paginationVar.value = pagination
   searchFilter.value = searchFilter2
 
 }
 
-const resetFilter = async (searchFilter2: CitySearchFilter) => {
+const resetFilter = async (searchFilter2: NationalitySearchFilter) => {
   searchFilter.value = searchFilter2
   search(searchFilter.value)
+
+
 }
 
-const getCitiesPerPage = async (pageNum: number) => {
+const getNationalitiesPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
   search(searchFilter.value)
 }
@@ -91,15 +93,15 @@ const columns = {
         {
           rounded: true,
           color:
-            row.status === CityConsts.INACTIVE
+            row.status === NationalityConsts.INACTIVE
               ? 'orange'
-              : row.status === CityConsts.ACTIVE
+              : row.status === NationalityConsts.ACTIVE
                 ? 'success'
                 : undefined,
         },
         {
           default() {
-            return CityConsts.showStatusName(row.status)
+            return NationalityConsts.showStatusName(row.status)
           },
         }
       ),
@@ -112,14 +114,14 @@ const columns = {
       h(MyDropDown, {
 
         onRemove: () => {
-          deleteCityPopup.value = true
-          deleteCityId.value = row.id
+          deleteNationalityPopup.value = true
+          deleteNationalityId.value = row.id
         },
         onEdit: () => {
-          router.push({ path: `/city/${row.id}/edit` })
+          router.push({ path: `/nationality/${row.id}/edit` })
         },
         onView: () => {
-          router.push({ path: `/city/${row.id}` })
+          router.push({ path: `/nationality/${row.id}` })
         },
 
       }),
@@ -129,15 +131,15 @@ const columns = {
 </script>
 
 <template>
-  <CityTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+  <NationalityTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
     :pagination="paginationVar" @resetFilter="resetFilter" />
-  <VFlexTableWrapper :columns="columns" :data="citiesList" @update:sort="citySort">
+  <VFlexTableWrapper :columns="columns" :data="nationalitiesList" @update:sort="citySort">
 
-    <VFlexTable v-if="citiesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-    <VFlexPagination v-if="citiesList.length != 0" :current-page="paginationVar.page" class="mt-6"
+    <VFlexTable v-if="nationalitiesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+    <VFlexPagination v-if="nationalitiesList.length != 0" :current-page="paginationVar.page" class="mt-6"
       :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
-      @update:current-page="getCitiesPerPage" />
-    <h6 v-if="citiesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+      @update:current-page="getNationalitiesPerPage" />
+    <h6 v-if="nationalitiesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
     }} to {{
@@ -147,15 +149,16 @@ const columns = {
       paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-    <h1 v-if="citiesList.length == 0">No Data Returned...</h1>
+    <h1 v-if="nationalitiesList.length == 0">No Data Returned...</h1>
   </VFlexTableWrapper>
-  <VModal title="Remove City" :open="deleteCityPopup" actions="center" @close="deleteCityPopup = false">
+  <VModal title="Remove Nationality" :open="deleteNationalityPopup" actions="center"
+    @close="deleteNationalityPopup = false">
     <template #content>
       <VPlaceholderSection title="Are you sure?"
         :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeCity(deleteCityId)">Confirm</VButton>
+      <VButton color="primary" raised @click="removeNationality(deleteNationalityId)">Confirm</VButton>
     </template>
   </VModal>
 
