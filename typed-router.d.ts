@@ -49,14 +49,20 @@ declare module 'vue-router/auto/routes' {
     '/department/[id]/': RouteRecordInfo<'/department/[id]/', '/department/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/department/[id]/edit': RouteRecordInfo<'/department/[id]/edit', '/department/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/department/add': RouteRecordInfo<'/department/add', '/department/add', Record<never, never>, Record<never, never>>,
-    '/room': RouteRecordInfo<'/room', '/room', Record<never, never>, Record<never, never>>,
-    '/room/': RouteRecordInfo<'/room/', '/room/', Record<never, never>, Record<never, never>>,
-    '/room/add': RouteRecordInfo<'/room/add', '/room/add', Record<never, never>, Record<never, never>>,
     '/nationality': RouteRecordInfo<'/nationality', '/nationality', Record<never, never>, Record<never, never>>,
     '/nationality/': RouteRecordInfo<'/nationality/', '/nationality/', Record<never, never>, Record<never, never>>,
     '/nationality/[id]/': RouteRecordInfo<'/nationality/[id]/', '/nationality/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/nationality/[id]/edit': RouteRecordInfo<'/nationality/[id]/edit', '/nationality/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/nationality/add': RouteRecordInfo<'/nationality/add', '/nationality/add', Record<never, never>, Record<never, never>>,
+    '/room': RouteRecordInfo<'/room', '/room', Record<never, never>, Record<never, never>>,
+    '/room/': RouteRecordInfo<'/room/', '/room/', Record<never, never>, Record<never, never>>,
+    '/room/[id]/': RouteRecordInfo<'/room/[id]/', '/room/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/room/[id]/edit': RouteRecordInfo<'/room/[id]/edit', '/room/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/room/add': RouteRecordInfo<'/room/add', '/room/add', Record<never, never>, Record<never, never>>,
+    '/userStatus/': RouteRecordInfo<'/userStatus/', '/userStatus/', Record<never, never>, Record<never, never>>,
+    '/userStatus/[id]/': RouteRecordInfo<'/userStatus/[id]/', '/userStatus/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/userStatus/[id]/edit': RouteRecordInfo<'/userStatus/[id]/edit', '/userStatus/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/userStatus/add': RouteRecordInfo<'/userStatus/add', '/userStatus/add', Record<never, never>, Record<never, never>>,
   }
 }
 

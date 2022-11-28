@@ -60,6 +60,5 @@ export async function getDepartmentsApi(
   const { data: response, headers } = await api.get('department/getDepartmentsList', {
     params: searchFilter,
   })
-  console.log('lal', response)
   return { response }
 }

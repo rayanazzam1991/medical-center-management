@@ -1,11 +1,12 @@
-import { useRoom } from "/@src/stores/Others/Room/roomStore";
-import { Room } from "/@src/utils/api/Others/Room";
-import { Department } from '/@src/utils/api/Others/Department';
+import { useRoom } from '/@src/stores/Others/Room/roomStore'
+import { Room, SearchFilter } from '/@src/utils/api/Others/Room'
+import { Pagination } from '/@src/utils/response'
 
+export async function getRoomsList(searchFilter: SearchFilter) {
+  const room = useRoom()
+  await room.getRoomsStore(searchFilter)
 
-export async function getRoomsList() {
-    const room = useRoom()
-    await room.loadRooms()
-    var rooms: Room[] = room.rooms
-    return { rooms }
+  var rooms: Room[] = room.rooms
+  var pagination: Pagination = room.pagination
+  return { rooms, pagination }
 }

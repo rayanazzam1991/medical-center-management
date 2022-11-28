@@ -1,7 +1,9 @@
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import { Room } from '/@src/utils/api/Others/Room'
 
-export async function deleteRoom(roomId: number) {
+export async function addRoom(roomData: Room) {
+  console.log('comp')
+
   const room = useRoom()
-  await room.deleteRoomStore(roomId)
+  return await room.addRoomStore(roomData)
 }

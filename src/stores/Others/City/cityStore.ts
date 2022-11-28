@@ -1,11 +1,19 @@
- import { ref } from 'vue'
- import { acceptHMRUpdate, defineStore } from 'pinia'
- 
- import {  CitySearchFilter ,City, getCitiesApi , deleteCityApi, addCityApi , editCityApi , getCityApi } from '/@src/utils/api/Others/City'
- import { useApi } from '/@src/composable/useApi'
-import { Pagination ,defaultPagination } from '/@src/utils/response'
- 
- export const defaultCity: City = {
+import { ref } from 'vue'
+import { acceptHMRUpdate, defineStore } from 'pinia'
+
+import {
+  CitySearchFilter,
+  City,
+  getCitiesApi,
+  deleteCityApi,
+  addCityApi,
+  editCityApi,
+  getCityApi,
+} from '/@src/utils/api/Others/City'
+import { useApi } from '/@src/composable/useApi'
+import { Pagination, defaultPagination } from '/@src/utils/response'
+
+export const defaultCity: City = {
   id: 0,
   name: '',
   status: 0,
@@ -14,10 +22,10 @@ import { Pagination ,defaultPagination } from '/@src/utils/response'
 export const defaultCitySearchFilter: CitySearchFilter = {
   name: undefined,
   status: undefined,
-  page : undefined,
-  order : undefined,
-  order_by : undefined,
-  per_page : undefined
+  page: undefined,
+  order: undefined,
+  order_by: undefined,
+  per_page: undefined,
 }
 
 export const useCity = defineStore('city', () => {
@@ -60,35 +68,34 @@ export const useCity = defineStore('city', () => {
 
     loading.value = true
 
-  try {
-    const response = await addCityApi(api, city)
-    var returnedCity : City
-    returnedCity = response.response.data 
-    cities.value.push(returnedCity)
-    return returnedCity
-
-
-  } finally {
-    loading.value = false
+    try {
+      const response = await addCityApi(api, city)
+      var returnedCity: City
+      returnedCity = response.response.data
+      cities.value.push(returnedCity)
+      return returnedCity
+    } finally {
+      loading.value = false
+    }
   }
-}
   async function editCityStore(city: City) {
     if (loading.value) return
 
     loading.value = true
 
-  try {
-    const response = await editCityApi(api, city)
-    var returnedCity : City
-    returnedCity = response.response.data 
-    cities.value.splice( cities.value.findIndex((cityElement) => cityElement.id = city.id ),1)
-    cities.value.push(returnedCity)
-
-
-  } finally {
-    loading.value = false
+    try {
+      const response = await editCityApi(api, city)
+      var returnedCity: City
+      returnedCity = response.response.data
+      cities.value.splice(
+        cities.value.findIndex((cityElement) => (cityElement.id = city.id)),
+        1
+      )
+      cities.value.push(returnedCity)
+    } finally {
+      loading.value = false
+    }
   }
-}
   async function getCitiesStore(searchFilter: CitySearchFilter) {
     if (loading.value) return
 

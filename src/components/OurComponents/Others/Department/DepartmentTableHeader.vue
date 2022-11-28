@@ -1,5 +1,8 @@
 <script lang="ts">
 import { DepartmentConsts } from '/@src/utils/consts/department'
+import { DepartmentSearchFilter } from '/@src/utils/api/Others/Department'
+import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultPagination, Pagination } from '/@src/utils/response'
 
 
 export default defineComponent({
@@ -12,25 +15,27 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        pagination: {
+            default: defaultPagination,
+        }
     },
-
     setup(props, context) {
 
-        const title = props.title
-        const form_submit_name = props.button_name
-        var submited = false
+        const pagination = props.pagination
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
             return y.value > 30
         })
         const searchName = ref('')
+        const perPage = ref(pagination.per_page)
         const searchStatus = ref()
-        const searchFilter = ref({ name: '', status: -1 })
+        const searchFilter = ref(defaultDepartmentSearchFilter)
 
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,
-                status: searchStatus.value
+                status: searchStatus.value,
+                per_page: perPage.value
             }
             context.emit('search', searchFilter.value)
 
@@ -39,10 +44,13 @@ export default defineComponent({
         const resetFilter = () => {
             searchName.value = ''
             searchStatus.value = undefined
-            context.emit('resetFilter')
+            searchFilter.value.name = undefined
+            searchFilter.value.status = undefined
+
+            context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, DepartmentConsts }
+        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, DepartmentConsts }
     },
 
 
@@ -86,6 +94,31 @@ export default defineComponent({
 
                             <VButton to="/department/add" color="primary" raised> {{ button_name }}
                             </VButton>
+                        </div>
+                        <div>
+                            <VField>
+                                <VControl>
+                                    <div class="select is-rounded">
+                                        <select @change="search" v-model="perPage">
+                                            <option v-if="pagination.per_page * 0.1 == 1"
+                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                                result per page</option>
+                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                    0.1
+                                            }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page">{{ pagination.per_page }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
+                                                results per page</option>
+                                        </select>
+                                    </div>
+                                </VControl>
+                            </VField>
                         </div>
 
                     </div>

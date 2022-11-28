@@ -1,9 +1,12 @@
 <script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
+import { RoomConsts } from '/@src/utils/consts/room'
+import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
+import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
 import { defaultPagination, Pagination } from '/@src/utils/response'
-
+// import Department from '/@src/pages/department.vue'
+import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { Department } from '/@src/utils/api/Others/Department'
+import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 
 export default defineComponent({
     props: {
@@ -27,15 +30,19 @@ export default defineComponent({
         const isStuck = computed(() => {
             return y.value > 30
         })
-        const searchName = ref('')
+        const searchNumber = ref()
+        const searchFloor = ref()
+        const searchDepartment = ref()
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
-        const searchFilter = ref(defaultCitySearchFilter)
+        const searchFilter = ref(defaultRoomSearchFilter)
 
         const search = () => {
             searchFilter.value = {
-                name: searchName.value,
+                number: searchNumber.value,
+                floor: searchFloor.value,
                 status: searchStatus.value,
+                department: searchDepartment.value,
                 per_page: perPage.value
             }
             context.emit('search', searchFilter.value)
@@ -43,15 +50,25 @@ export default defineComponent({
         }
 
         const resetFilter = () => {
-            searchName.value = ''
+            searchNumber.value = undefined
+            searchFloor.value = undefined
+            searchDepartment.value = undefined
             searchStatus.value = undefined
-            searchFilter.value.name = undefined
+            searchFilter.value.number = undefined
+            searchFilter.value.floor = undefined
+            searchFilter.value.department = undefined
             searchFilter.value.status = undefined
 
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
+        const departments2 = ref<Department[]>([])
+        onMounted(async () => {
+            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+            departments2.value = departments
+            console.log(departments2.value)
+        })
+        return { isStuck, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
     },
 
 
@@ -68,19 +85,37 @@ export default defineComponent({
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">
                     <div class="left">
-                        <div class="columns justify-content ">
+                        <div class="columns justify-content">
                             <VField class="column filter">
                                 <VControl icon="feather:search">
-                                    <input v-model="searchName" type="text" class="input is-rounded"
-                                        placeholder="Name..." />
+                                    <input v-model="searchNumber" type="text" class="input is-rounded"
+                                        placeholder="number..." />
+                                </VControl>
+                            </VField>
+                            <VField class="column filter">
+                                <VControl icon="feather:search">
+                                    <input v-model="searchFloor" type="text" class="input is-rounded"
+                                        placeholder="floor..." />
+                                </VControl>
+                            </VField>
+                        </div>
+                        <div class="columns justify-content">
+                            <VField class="column ">
+                                <VControl>
+                                    <VSelect v-model="searchDepartment" class="is-rounded">
+                                        <VOption value="">Department</VOption>
+                                        <VOption v-for="department in departments2" :key="department.id"
+                                            :value="department.id">{{ department.name }}
+                                        </VOption>
+                                    </VSelect>
                                 </VControl>
                             </VField>
                             <VField class="column ">
                                 <VControl>
                                     <VSelect v-model="searchStatus" class="is-rounded">
                                         <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
+                                        <VOption value="0">{{ RoomConsts.showStatusName(0) }}</VOption>
+                                        <VOption value="1">{{ RoomConsts.showStatusName(1) }}</VOption>
                                     </VSelect>
                                 </VControl>
                             </VField>
@@ -93,7 +128,7 @@ export default defineComponent({
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
 
-                            <VButton to="/city/add" color="primary" raised> {{ button_name }}
+                            <VButton to="/room/add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
                         <div>

@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue'
-import { addRoom } from '/@src/composable/Others/Room/addRoom'
-import { Room } from '/@src/utils/api/Others/Room'
+import { addUserStatus } from '/@src/composable/Others/UserStatus/addUserStatus'
+import { UserStatus } from '/@src/utils/api/Others/UserStatus'
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { RoomConsts } from '/@src/utils/consts/room';
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Room')
+viewWrapper.setPageTitle('UserStatus')
 
 const head = useHead({
-    title: 'Add Room',
+    title: 'Add UserStatus',
 })
 
 
 </script>
 
 <template>
-    <RoomForm :formType="'Add'" />
+    <UserStatusForm :formType="'Add'" />
 </template>

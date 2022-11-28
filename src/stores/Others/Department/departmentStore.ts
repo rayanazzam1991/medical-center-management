@@ -1,18 +1,8 @@
-/**
- * This is a store that hold the messaging-v1 state
- * It uses the useApi composition component to make the api calls
- *
- * @see /src/pages/messaging-v1.vue
- * @see /src/composable/useApi.ts
- * @see /src/components/partials/chat/*.vue
- * @see /src/utils/api/chat
- */
-
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import {
-  SearchFilter,
+  DepartmentSearchFilter,
   Department,
   getDepartmentsApi,
   deleteDepartmentApi,
@@ -29,12 +19,13 @@ export const defaultDepartment: Department = {
   status: 0,
 }
 
-export const defaultSearchFilter: SearchFilter = {
+export const defaultDepartmentSearchFilter: DepartmentSearchFilter = {
   name: undefined,
   status: undefined,
   page: undefined,
   order: undefined,
   order_by: undefined,
+  per_page: undefined,
 }
 
 export const useDepartment = defineStore('department', () => {
@@ -84,7 +75,6 @@ export const useDepartment = defineStore('department', () => {
       var returnedDepartment: Department
       returnedDepartment = response.response.data
       departments.value.push(returnedDepartment)
-      console.log('store', departments.value)
       return returnedDepartment
     } finally {
       loading.value = false
@@ -106,12 +96,11 @@ export const useDepartment = defineStore('department', () => {
         1
       )
       departments.value.push(returnedDepartment)
-      console.log('store', departments.value)
     } finally {
       loading.value = false
     }
   }
-  async function getDepartmentsStore(searchFilter: SearchFilter) {
+  async function getDepartmentsStore(searchFilter: DepartmentSearchFilter) {
     if (loading.value) return
 
     loading.value = true
