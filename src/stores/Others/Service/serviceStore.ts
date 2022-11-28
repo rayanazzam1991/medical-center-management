@@ -8,7 +8,7 @@ import { Pagination ,defaultPagination } from '/@src/utils/response'
  export const defaultService: Service = {
   id: 0,
   name: '',
-  status: 0,
+  status: 1,
   description: '',
   duration_minutes : undefined ,
   service_price : undefined
@@ -100,6 +100,7 @@ export const useService = defineStore('service', () => {
     loading.value = true
 
     try {
+
       const returnedResponse = await getServicesApi(api, searchFilter)
       services.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination

@@ -1,16 +1,14 @@
-<script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addCity } from '/@src/composable/Others/City/addCity'
-import { editCity } from '/@src/composable/Others/City/editCity'
-import { City } from '/@src/utils/api/Others/City'
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { getCity } from '/@src/composable/Others/City/getCity'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { CityConsts } from '/@src/utils/consts/city';
+<script  lang="ts">import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { addCustomerGroup } from '/@src/composable/Others/CustomerGroup/addCustomerGroup';
+import { editCustomerGroup } from '/@src/composable/Others/CustomerGroup/editCustomerGroup';
+import { getCustomerGroup } from '/@src/composable/Others/CustomerGroup/getCustomerGroup';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { ErrorMessage, useForm } from 'vee-validate';
+import { defaultCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { CustomerGroupConsts } from '/@src/utils/consts/customerGroup';
 import { z as zod } from 'zod'
 
 
@@ -24,9 +22,9 @@ export default defineComponent({
     emits: ["onSubmit"],
     setup(props, context) {
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("City");
+        viewWrapper.setPageTitle("Customer Group");
         const head = useHead({
-            title: "City",
+            title: "Customer Group",
         });
         const notif = useNotyf();
         const formType = ref("");
@@ -34,23 +32,23 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
         const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-        const backRoute = "/city";
-        const currentCity = ref(defaultCity);
-        const cityId = ref(0);
+        const backRoute = "/customer-group";
+        const currentCustomerGroup = ref(defaultCustomerGroup);
+        const customerGroupId = ref(0);
         // @ts-ignore
-        cityId.value = route.params?.id as number ?? 0;
-        const getCurrentCity = async () => {
-            if (cityId.value === 0) {
-                currentCity.value.name = ''
-                currentCity.value.status = 1
+        customerGroupId.value = route.params?.id as number ?? 0;
+        const getCurrentCustomerGroup = async () => {
+            if (customerGroupId.value === 0) {
+                currentCustomerGroup.value.name = ''
+                currentCustomerGroup.value.status = 1
                 return
             }
 
-            const city = await getCity(cityId.value);
-            currentCity.value = city != undefined ? city : defaultCity;
+            const customerGroup = await getCustomerGroup(customerGroupId.value);
+            currentCustomerGroup.value = customerGroup != undefined ? customerGroup : defaultCustomerGroup;
         };
         onMounted(() => {
-            getCurrentCity();
+            getCurrentCustomerGroup();
         });
         const validationSchema = toFormValidator(zod
             .object({
@@ -80,24 +78,24 @@ export default defineComponent({
                 return;
         };
         const onSubmitAdd = handleSubmit(async (values) => {
-            var cityData = currentCity.value;
-            cityData = await addCity(cityData) as City;
+            var customerGroupData = currentCustomerGroup.value;
+            customerGroupData = await addCustomerGroup(customerGroupData) as CustomerGroup;
             // @ts-ignore
             notif.dismissAll();
             // @ts-ignore
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/city/${cityData.id}` });
+            notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/customer-group/${customerGroupData.id}` });
         });
         const onSubmitEdit = async () => {
-            const cityData = currentCity.value;
-            await editCity(cityData);
+            const customerGroupData = currentCustomerGroup.value;
+            await editCustomerGroup(customerGroupData);
             // @ts-ignore
             notif.dismissAll();
             // @ts-ignore
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/city/${cityData.id}` });
+            notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/customer-group/${customerGroupData.id}` });
         };
-        return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts };
+        return { pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts };
     },
     components: { ErrorMessage }
 })
@@ -123,7 +121,7 @@ export default defineComponent({
                                 <VField id="name" v-slot="{ field }">
                                     <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCity.name" type="text" placeholder=""
+                                        <VInput v-model="currentCustomerGroup.name" type="text" placeholder=""
                                             autocomplete="given-name" />
                                         <ErrorMessage class="help is-danger" name="name" />
 
@@ -140,11 +138,15 @@ export default defineComponent({
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
-                                            :label="CityConsts.showStatusName(0)" name="status" color="warning" />
+                                        <VRadio v-model="currentCustomerGroup.status"
+                                            :value="CustomerGroupConsts.INACTIVE"
+                                            :label="CustomerGroupConsts.showStatusName(0)" name="status"
+                                            color="warning" />
 
-                                        <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
-                                            :label="CityConsts.showStatusName(1)" name="status" color="success" />
+                                        <VRadio v-model="currentCustomerGroup.status"
+                                            :value="CustomerGroupConsts.ACTIVE"
+                                            :label="CustomerGroupConsts.showStatusName(1)" name="status"
+                                            color="success" />
                                         <ErrorMessage class="help is-danger" name="status" />
 
                                     </VControl>

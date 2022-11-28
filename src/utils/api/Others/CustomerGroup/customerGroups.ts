@@ -1,12 +1,12 @@
 import type { AxiosInstance } from 'axios'
 import {CustomResponseCollection,CustomResponseSingle} from '../../../response'
 
-export interface City {
+export interface CustomerGroup {
   id?: number
   name : string
   status: number
 }
-export interface CitySearchFilter {
+export interface CustomerGroupSearchFilter {
   name? : string
   status?: number
   page? : number
@@ -17,55 +17,55 @@ export interface CitySearchFilter {
 
 
 
-export async function deleteCityApi(
+export async function deleteCustomerGroupApi(
   api: AxiosInstance,
-  cityId : number
+  customerGroupId : number
   ): Promise<{ response: CustomResponseCollection;  }> {
 
   const { data: response, headers } = await api.delete(
-    `city/${cityId}`
+    `customerGroup/${customerGroupId}`
   )
 
   return { response }
 }
-export async function addCityApi(
+export async function addCustomerGroupApi(
   api: AxiosInstance,
-  city : City
+  customerGroup : CustomerGroup
   ): Promise<{ response: CustomResponseSingle;  }> {
 
   const { data: response, headers } = await api.post(
-    `city/`,city
+    `customerGroup/`,customerGroup
   )
 
   return { response }
 }
-export async function editCityApi(
+export async function editCustomerGroupApi(
   api: AxiosInstance,
-  city : City
+  customerGroup : CustomerGroup
   ): Promise<{ response: CustomResponseSingle;  }> {
   const { data: response, headers } = await api.put(
-    `city/${city.id}`,city
+    `customerGroup/${customerGroup.id}`,customerGroup
   )
   return { response }
 }
-export async function getCityApi(
+export async function getCustomerGroupApi(
   api: AxiosInstance,
-  cityId : number
+  customerGroupId : number
   ): Promise<{ response: CustomResponseSingle;  }> {
 
     const { data: response, headers } = await api.get(
-      `city/${cityId}`
+      `customerGroup/${customerGroupId}`
     )
   
   return { response }
 }
-export async function getCitiesApi(
+export async function getCustomerGroupsApi(
   api: AxiosInstance,
-  searchFilter : CitySearchFilter
+  searchFilter : CustomerGroupSearchFilter
   ): Promise<{ response: CustomResponseCollection;  }> {
 
   const { data: response , headers  } = await api.get(
-    'city/getCitiesList', { params: searchFilter }
+    'customerGroup/getCustomerGroupsList', { params: searchFilter }
   )
   return { response }
 }

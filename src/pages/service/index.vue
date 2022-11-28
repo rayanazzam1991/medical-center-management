@@ -103,15 +103,15 @@ const columns = {
         {
           rounded: true,
           color:
-            row.status === ServiceConsts.INACTIVE
+            row?.status === ServiceConsts.INACTIVE
               ? 'orange'
-              : row.status === ServiceConsts.ACTIVE
+              : row?.status === ServiceConsts.ACTIVE
                 ? 'success'
                 : undefined,
         },
         {
           default() {
-            return ServiceConsts.showStatusName(row.status)
+            return ServiceConsts.showStatusName(row?.status)
           },
         }
       ),
@@ -125,13 +125,13 @@ const columns = {
 
         onRemove: () => {
           deleteServicePopup.value = true
-          deleteServiceId.value = row.id
+          deleteServiceId.value = row?.id
         },
         onEdit: () => {
-          router.push({ path: `/service/${row.id}/edit` })
+          router.push({ path: `/service/${row?.id}/edit` })
         },
         onView: () => {
-          router.push({ path: `/service/${row.id}` })
+          router.push({ path: `/service/${row?.id}` })
         },
 
       }),

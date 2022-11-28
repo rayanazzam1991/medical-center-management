@@ -1,6 +1,6 @@
 <script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
-import { useForm } from 'vee-validate'
+import { ErrorMessage, useForm } from 'vee-validate'
 import { addService } from '/@src/composable/Others/Services/addService'
 import { editService } from '/@src/composable/Others/Services/editService'
 import { getService } from '/@src/composable/Others/Services/getService'
@@ -18,127 +18,116 @@ export default defineComponent({
     props: {
         formType: {
             type: String,
-            default: '',
+            default: "",
         },
     },
-
-    emits: ['onSubmit'],
+    emits: ["onSubmit"],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Service')
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("Service");
         const head = useHead({
-            title: 'Service',
-        })
-        const notif = useNotyf()
-
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/service'
-        const currentService = ref(defaultService)
-        const serviceId = ref(0)
+            title: "Service",
+        });
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/service";
+        const currentService = ref(defaultService);
+        const serviceId = ref(0);
         // @ts-ignore
-        serviceId.value = route.params?.id as number ?? 0
+        serviceId.value = route.params?.id as number ?? 0;
         const getCurrentService = async () => {
             if (serviceId.value === 0) {
                 currentService.value.name = ''
-                currentService.value.status = 0
-                currentService.value.description = ''
-                currentService.value.duration_minutes = undefined
+                currentService.value.status = 1
+                currentService.value.description = undefined
                 currentService.value.service_price = undefined
+                currentService.value.duration_minutes = undefined
                 return
             }
-            const city = await getService(serviceId.value)
-            currentService.value = city != undefined ? city : defaultService
 
-        }
+            const service = await getService(serviceId.value);
+            currentService.value = service != undefined ? service : defaultService;
+        };
         onMounted(() => {
-            getCurrentService()
-        }
-        )
+            getCurrentService();
+        });
+        const validationSchema = toFormValidator(zod
+            .object({
+                name: zod
+                    .string({
+                        required_error: "This field is required",
+                    })
+                    .min(1, "This field is required"),
+                description: zod.string().optional(),
+                duration_minutes:
+                    zod.preprocess(
+                        (input) => {
+                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                            return processed.success ? processed.data : input;
+                        },
+                        zod
+                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                            .min(0, "Please enter a valid number"),
+                    ),
 
-
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                    duration_minutes: zod
-                        .number({
-                            required_error: 'This field is required',
-                        })
-                        .gt(2, 'Please enter a valid number'),
-                    service_price: zod
-                        .number({
-                            required_error: 'This field is required',
-                        })
-                        .min(0, 'Please enter a valid price'),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
-
+                service_price:
+                    zod.preprocess(
+                        (input) => {
+                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                            return processed.success ? processed.data : input;
+                        },
+                        zod
+                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                            .min(0, "Please enter a valid number"),
+                    ),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: '',
-                status: 0,
-                description: '',
+                name: "",
+                status: 1,
+                description: "",
                 duration_minutes: undefined,
                 service_price: undefined,
-
             },
-        })
-
+        });
         const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
+            if (method == "Add") {
+                await onSubmitAdd();
             }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
+            else if (method == "Edit") {
+                await onSubmitEdit();
             }
-            else return
-        }
+            else
+                return;
+        };
         const onSubmitAdd = handleSubmit(async (values) => {
-
-            var serviceData = currentService.value
-            serviceData = await addService(serviceData) as Service
+            var serviceData = currentService.value;
+            serviceData = await addService(serviceData) as Service;
             // @ts-ignore
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
-            router.push({ path: `/service/${serviceData.id}` })
-
-        })
+            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/service/${serviceData.id}` });
+        });
         const onSubmitEdit = async () => {
-            const serviceData = currentService.value
-            await editService(serviceData)
+            const serviceData = currentService.value;
+            await editService(serviceData);
             // @ts-ignore
-
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
-            router.push({ path: `/service/${serviceData.id}` })
-
-
-        }
-
-        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts }
+            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/service/${serviceData.id}` });
+        };
+        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
     },
-
-
+    components: { ErrorMessage }
 })
 
 
@@ -164,10 +153,7 @@ export default defineComponent({
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentService.name" type="text" placeholder=""
                                             autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
+                                        <ErrorMessage name="name" class="help is-danger" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -196,12 +182,8 @@ export default defineComponent({
                                 <VField id="service_price" v-slot="{ field }">
                                     <VLabel>Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
                                     <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="currentService.service_price" type="number" placeholder=""
-                                            autocomplete="" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
+                                        <VInput v-model="currentService.service_price" type="number" />
+                                        <ErrorMessage name="service_price" class="help is-danger" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -213,11 +195,8 @@ export default defineComponent({
                                 <VField id="duration_minutes" v-slot="{ field }">
                                     <VLabel>Duration</VLabel>
                                     <VControl icon="feather:clock">
-                                        <VInput v-model="currentService.duration_minutes" type="number" placeholder=""
-                                            autocomplete="" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
+                                        <VInput v-model="currentService.duration_minutes" type="number" />
+                                        <ErrorMessage name="duration_minutes" class="help is-danger" />
 
                                     </VControl>
                                 </VField>
@@ -237,6 +216,7 @@ export default defineComponent({
 
                                         <VRadio v-model="currentService.status" :value="ServiceConsts.ACTIVE"
                                             :label="ServiceConsts.showStatusName(1)" name="status" color="success" />
+                                        <ErrorMessage name="status" class="help is-danger" />
 
                                     </VControl>
                                 </VField>
@@ -334,7 +314,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opacity: 0;
+                                opaservice: 0;
                                 cursor: pointer;
 
                                 &:checked {

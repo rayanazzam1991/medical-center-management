@@ -49,8 +49,8 @@ export default defineComponent({
         const resetFilter = () => {
             searchName.value = ''
             searchStatus.value = undefined
-            searchDuration.value = 0
-            searchPrice.value = 0
+            searchDuration.value = undefined
+            searchPrice.value = undefined
             searchFilter.value.name = undefined
             searchFilter.value.status = undefined
             searchFilter.value.duration_minutes = undefined

@@ -91,15 +91,15 @@ const columns = {
         {
           rounded: true,
           color:
-            row.status === CityConsts.INACTIVE
+            row?.status === CityConsts.INACTIVE
               ? 'orange'
-              : row.status === CityConsts.ACTIVE
+              : row?.status === CityConsts.ACTIVE
                 ? 'success'
                 : undefined,
         },
         {
           default() {
-            return CityConsts.showStatusName(row.status)
+            return CityConsts.showStatusName(row?.status)
           },
         }
       ),
@@ -113,13 +113,13 @@ const columns = {
 
         onRemove: () => {
           deleteCityPopup.value = true
-          deleteCityId.value = row.id
+          deleteCityId.value = row?.id
         },
         onEdit: () => {
-          router.push({ path: `/city/${row.id}/edit` })
+          router.push({ path: `/city/${row?.id}/edit` })
         },
         onView: () => {
-          router.push({ path: `/city/${row.id}` })
+          router.push({ path: `/city/${row?.id}` })
         },
 
       }),

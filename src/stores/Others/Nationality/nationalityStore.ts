@@ -10,7 +10,7 @@ import { Pagination ,defaultPagination } from '/@src/utils/response'
  export const defaultNationality: Nationality = {
   id: 0,
   name: '',
-  status: 0,
+  status: 1,
 }
 
 export const defaultNationalitySearchFilter: NationalitySearchFilter = {

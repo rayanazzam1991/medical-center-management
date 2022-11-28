@@ -1,46 +1,44 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { getService } from '/@src/composable/Others/Services/getService';
-
-import { defaultService } from '/@src/stores/Others/Service/serviceStore';
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import { getCustomerGroup } from '/@src/composable/Others/CustomerGroup/getCustomerGroup';
+import { defaultCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { CityConsts } from '/@src/utils/consts/city';
-import { ServiceConsts } from '/@src/utils/consts/service';
+
 
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Service')
+viewWrapper.setPageTitle('Customer Group')
 const head = useHead({
-    title: 'Service',
+    title: 'Customer Group',
 })
 
 
 
-const serviceId = ref(0)
+const customerGroupId = ref(0)
 // @ts-ignore
-serviceId.value = route.params?.id as number ?? 0
-const currentService = ref(defaultService)
-const getCurrentService = async () => {
-    const service = await getService(serviceId.value)
-    if (service != undefined)
-        currentService.value = service
-    pageTitle.value = viewWrapper.pageTitle + ': ' + currentService.value.name
+customerGroupId.value = route.params?.id as number ?? 0
+const currentCustomerGroup = ref(defaultCustomerGroup)
+const getCurrentCustomerGroup = async () => {
+    const customerGroup = await getCustomerGroup(customerGroupId.value)
+    if (customerGroup != undefined)
+        currentCustomerGroup.value = customerGroup
+    pageTitle.value = viewWrapper.pageTitle + ': ' + currentCustomerGroup.value.name
 
 }
 onMounted(async () => {
-    await getCurrentService()
+    await getCurrentCustomerGroup()
 })
 
 const toEdit = () => {
-    router.push({ path: `/service/${serviceId.value}/edit` })
+    router.push({ path: `/customer-group/${customerGroupId.value}/edit` })
 }
 
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/service'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/customer-group'" @onSubmit="toEdit" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -49,26 +47,14 @@ const toEdit = () => {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
-                            <span>{{ currentService.name }}</span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">Description:</h4>
-                            <span v-if="currentService.description"> {{ currentService.description }} </span>
-                            <span v-else> Null </span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">Estimated Duration:</h4>
-                            <span>{{ currentService.duration_minutes }}</span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">Price ({{ ServiceConsts.PRICE_DOLLAR }}):</h4>
-                            <span>{{ currentService.service_price }}</span>
+                            <span>{{ currentCustomerGroup.name }}</span>
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
                             <span>
-                                <VTag :color="currentService.status === CityConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ CityConsts.showStatusName(currentService.status) }}</VTag>
+                                <VTag
+                                    :color="currentCustomerGroup.status === CityConsts.INACTIVE ? 'danger' : 'success'">
+                                    {{ CityConsts.showStatusName(currentCustomerGroup.status) }}</VTag>
                             </span>
                         </div>
                     </div>

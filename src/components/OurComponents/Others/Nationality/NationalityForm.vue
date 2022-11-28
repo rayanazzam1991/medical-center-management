@@ -5,7 +5,7 @@ import { addNationality } from '/@src/composable/Others/Nationality/addNationali
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod'
 import { defaultNationality } from '/@src/stores/Others/Nationality/nationalityStore';
 import { getNationality } from '/@src/composable/Others/Nationality/getNationality';
@@ -18,111 +18,88 @@ export default defineComponent({
     props: {
         formType: {
             type: String,
-            default: '',
+            default: "",
         },
     },
-
-    emits: ['onSubmit'],
+    emits: ["onSubmit"],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Nationality')
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("Nationality");
         const head = useHead({
-            title: 'Nationality',
-        })
-        const notif = useNotyf()
-
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/nationality'
-        const currentNationality = ref(defaultNationality)
-        const nationalityId = ref(0)
+            title: "Nationality",
+        });
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/nationality";
+        const currentNationality = ref(defaultNationality);
+        const nationalityId = ref(0);
         // @ts-ignore
-        nationalityId.value = route.params?.id as number ?? 0
+        nationalityId.value = route.params?.id as number ?? 0;
         const getCurrentNationality = async () => {
             if (nationalityId.value === 0) {
                 currentNationality.value.name = ''
-                currentNationality.value.status = 0
+                currentNationality.value.status = 1
                 return
             }
-            const nationality = await getNationality(nationalityId.value)
-            currentNationality.value = nationality != undefined ? nationality : defaultNationality
 
-        }
+            const nationality = await getNationality(nationalityId.value);
+            currentNationality.value = nationality != undefined ? nationality : defaultNationality;
+        };
         onMounted(() => {
-            getCurrentNationality()
-        }
-        )
-
-
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
-
+            getCurrentNationality();
+        });
+        const validationSchema = toFormValidator(zod
+            .object({
+                name: zod
+                    .string({
+                        required_error: "This field is required",
+                    })
+                    .min(1, "This field is required"),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: '',
-                status: 0,
+                name: "",
+                status: 1,
             },
-        })
-
+        });
         const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
+            if (method == "Add") {
+                await onSubmitAdd();
             }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
+            else if (method == "Edit") {
+                await onSubmitEdit();
             }
-            else return
-        }
-
+            else
+                return;
+        };
         const onSubmitAdd = handleSubmit(async (values) => {
-
-            var nationalityData = currentNationality.value
-            nationalityData = await addNationality(nationalityData) as Nationality
+            var nationalityData = currentNationality.value;
+            nationalityData = await addNationality(nationalityData) as Nationality;
             // @ts-ignore
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
-            router.push({ path: `/nationality/${nationalityData.id}` })
-
-        })
-        const onSubmitEdit = async () => {
-            const nationalityData = currentNationality.value
-            await editNationality(nationalityData)
+            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/nationality/${nationalityData.id}` });
+        });
+        const onSubmitEdit = handleSubmit(async () => {
+            const nationalityData = currentNationality.value;
+            await editNationality(nationalityData);
             // @ts-ignore
-
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
-            router.push({ path: `/nationality/${nationalityData.id}` })
-
-
-        }
-
-        return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts }
+            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/nationality/${nationalityData.id}` });
+        });
+        return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts };
     },
-
-
+    components: { ErrorMessage }
 })
 
 
@@ -148,10 +125,7 @@ export default defineComponent({
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentNationality.name" type="text" placeholder=""
                                             autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
+                                        <ErrorMessage class="help is-danger" name="name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -173,6 +147,7 @@ export default defineComponent({
                                         <VRadio v-model="currentNationality.status" :value="NationalityConsts.ACTIVE"
                                             :label="NationalityConsts.showStatusName(1)" name="status"
                                             color="success" />
+                                        <ErrorMessage class="help is-danger" name="status" />
 
                                     </VControl>
                                 </VField>
