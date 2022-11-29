@@ -1,8 +1,8 @@
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
-import { Room, SearchFilter } from '/@src/utils/api/Others/Room'
+import { Room, RoomSearchFilter } from '/@src/utils/api/Others/Room'
 import { Pagination } from '/@src/utils/response'
 
-export async function getRoomsList(searchFilter: SearchFilter) {
+export async function getRoomsList(searchFilter: RoomSearchFilter) {
   const room = useRoom()
   await room.getRoomsStore(searchFilter)
 

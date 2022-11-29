@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import VTag from '/@src/components/base/tags/VTag.vue'
 import { RoomConsts } from '/@src/utils/consts/room'
 import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
 
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
 import { deleteRoom } from '/@src/composable/Others/Room/deleteRoom'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+
 import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
 import { defaultPagination } from '/@src/utils/response'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
 import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import VTag from '/@src/components/base/tags/VTag.vue'
+import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Room')
 useHead({
@@ -90,9 +91,9 @@ const columns = {
   department: {
     sortable: true,
     searchable: true,
-    label: 'Deoartment',
+    label: 'Department',
     renderRow: (row: any) =>
-      h('span', row.department.name)
+      h('span', row?.department?.name)
   },
   status: {
     align: 'center',

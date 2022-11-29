@@ -6,7 +6,15 @@ export interface Room {
   id?: number
   number: number
   floor: number
-  department: Department
+  department?: Department
+  status: number
+}
+
+export interface CreateUpdateRoom {
+  id?: number
+  number: number
+  floor: number
+  department_id?: number
   status: number
 }
 export interface RoomSearchFilter {
@@ -30,7 +38,7 @@ export async function deleteRoomApi(
 }
 export async function addRoomApi(
   api: AxiosInstance,
-  room: Room
+  room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`room/`, room)
 
@@ -38,7 +46,7 @@ export async function addRoomApi(
 }
 export async function editRoomApi(
   api: AxiosInstance,
-  room: Room
+  room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`room/${room.id}`, room)
   console.log(response)
