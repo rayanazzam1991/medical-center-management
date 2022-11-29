@@ -2,47 +2,46 @@
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
 
-import { defaultRoom } from '/@src/stores/Others/Room/roomStore'
-import { Room } from '/@src/utils/api/Others/Room';
-import { RoomConsts } from '/@src/utils/consts/room';
+import { defaultUserStatus } from '/@src/stores/Others/UserStatus/userStatusStore'
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
-import { getRoom } from '/@src/composable/Others/Room/getRoom';
+import { getUserStatus } from '/@src/composable/Others/UserStatus/getUserStatus';
 
+const panels = usePanels()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('room')
+viewWrapper.setPageTitle('UserStatus')
 const head = useHead({
-    title: 'Room',
+    title: 'UserStatus',
 })
 
 
-
-const roomId = ref(0)
+const userstatusId = ref(0)
 // @ts-ignore
-roomId.value = route.params?.id as number ?? 0
-const currentRoom = ref(defaultRoom)
-const getCurrentRoom = async () => {
-    const room = await getRoom(roomId.value)
-    if (room != undefined)
-        currentRoom.value = room
-    pageTitle.value = viewWrapper.pageTitle + '# ' + currentRoom.value.number
+userstatusId.value = route.params?.id as number ?? 0
+const currentUserStatus = ref(defaultUserStatus)
+const getCurrentUserStatus = async () => {
+    const userstatus = await getUserStatus(userstatusId.value)
+    if (userstatus != undefined)
+        currentUserStatus.value = userstatus
+    pageTitle.value = viewWrapper.pageTitle + ': ' + currentUserStatus.value.name
 
 }
 onMounted(async () => {
-    await getCurrentRoom()
+    await getCurrentUserStatus()
 })
 
 const toEdit = () => {
-    router.push({ path: `/room/${roomId.value}/edit` })
+    router.push({ path: `/userstatus/${userstatusId.value}/edit` })
 }
 
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/userstatus'" @onSubmit="toEdit" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -50,23 +49,8 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} number:</h4>
-                            <span>{{ currentRoom.number }}</span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} floor:</h4>
-                            <span>{{ currentRoom.floor }}</span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} departemnt:</h4>
-                            <span>{{ currentRoom.department?.name }}</span>
-                        </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
-                            <span>
-                                <VTag :color="currentRoom.status === RoomConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ RoomConsts.showStatusName(currentRoom.status) }}</VTag>
-                            </span>
+                            <h4 class="margin-bottom">UserStatus Name:</h4>
+                            <span>{{ currentUserStatus.name }}</span>
                         </div>
                     </div>
                 </div>
@@ -78,7 +62,7 @@ const toEdit = () => {
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/abstracts/all';
 
 .is-navbar {

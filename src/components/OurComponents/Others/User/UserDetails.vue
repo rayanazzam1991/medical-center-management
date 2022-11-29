@@ -2,47 +2,46 @@
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
 
-import { defaultRoom } from '/@src/stores/Others/Room/roomStore'
-import { Room } from '/@src/utils/api/Others/Room';
-import { RoomConsts } from '/@src/utils/consts/room';
+import { defaultUser } from '/@src/stores/Others/User/userStore'
+import { User } from '/@src/utils/api/Others/User';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
-import { getRoom } from '/@src/composable/Others/Room/getRoom';
+import { getUser } from '/@src/composable/Others/User/getUser';
 
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('room')
+viewWrapper.setPageTitle('User')
 const head = useHead({
-    title: 'Room',
+    title: 'User',
 })
 
 
 
-const roomId = ref(0)
+const userId = ref(0)
 // @ts-ignore
-roomId.value = route.params?.id as number ?? 0
-const currentRoom = ref(defaultRoom)
-const getCurrentRoom = async () => {
-    const room = await getRoom(roomId.value)
-    if (room != undefined)
-        currentRoom.value = room
-    pageTitle.value = viewWrapper.pageTitle + '# ' + currentRoom.value.number
+userId.value = route.params?.id as number ?? 0
+const currentUser = ref(defaultUser)
+const getCurrentUser = async () => {
+    const user = await getUser(userId.value)
+    if (user != undefined)
+        currentUser.value = user
+    pageTitle.value = viewWrapper.pageTitle + ':' + currentUser.value.first_name + ' ' + currentUser.value.last_name
 
 }
 onMounted(async () => {
-    await getCurrentRoom()
+    await getCurrentUser()
 })
 
 const toEdit = () => {
-    router.push({ path: `/room/${roomId.value}/edit` })
+    router.push({ path: `/user/${userId.value}/edit` })
 }
 
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/user'" @onSubmit="toEdit" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -50,23 +49,40 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} number:</h4>
-                            <span>{{ currentRoom.number }}</span>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} first name:</h4>
+                            <span>{{ currentUser.first_name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} floor:</h4>
-                            <span>{{ currentRoom.floor }}</span>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} last name:</h4>
+                            <span>{{ currentUser.last_name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} departemnt:</h4>
-                            <span>{{ currentRoom.department?.name }}</span>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} gender:</h4>
+                            <span>{{ currentUser.gender }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
-                            <span>
-                                <VTag :color="currentRoom.status === RoomConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ RoomConsts.showStatusName(currentRoom.status) }}</VTag>
-                            </span>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} birth date:</h4>
+                            <span>{{ currentUser.birth_date }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} phone number:</h4>
+                            <span>{{ currentUser.phone_number }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} address:</h4>
+                            <span>{{ currentUser.address }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} city:</h4>
+                            <span>{{ currentUser.city?.name }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} room:</h4>
+                            <span>{{ currentUser.room?.number }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} status:</h4>
+                            <span>{{ currentUser.status?.name }}</span>
                         </div>
                     </div>
                 </div>
