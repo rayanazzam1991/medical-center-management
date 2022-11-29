@@ -28,7 +28,7 @@ const getCurrentRoom = async () => {
     const room = await getRoom(roomId.value)
     if (room != undefined)
         currentRoom.value = room
-    pageTitle.value = viewWrapper.pageTitle + ': ' + currentRoom.value.name
+    pageTitle.value = viewWrapper.pageTitle + '# ' + currentRoom.value.number
 
 }
 onMounted(async () => {
@@ -50,8 +50,16 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
-                            <span>{{ currentRoom.name }}</span>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} number:</h4>
+                            <span>{{ currentRoom.number }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} floor:</h4>
+                            <span>{{ currentRoom.floor }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} departemnt:</h4>
+                            <span>{{ currentRoom.department?.name }}</span>
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>

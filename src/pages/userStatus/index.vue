@@ -45,7 +45,7 @@ const search = async (searchFilter2: UserStatusSearchFilter) => {
 
 }
 
-const resetFilter = async (searchFilter2: UserStatusearchFilter) => {
+const resetFilter = async (searchFilter2: UserStatusSearchFilter) => {
     searchFilter.value = searchFilter2
     search(searchFilter.value)
 }

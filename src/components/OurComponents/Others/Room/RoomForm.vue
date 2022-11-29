@@ -4,6 +4,7 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import { addRoom } from '/@src/composable/Others/Room/addRoom'
 import { editRoom } from '/@src/composable/Others/Room/editRoom'
 import { Room } from '/@src/utils/api/Others/Room'
+import { CreateUpdateRoom } from '/@src/utils/api/Others/Room'
 import { defaultRoom } from '/@src/stores/Others/Room/RoomStore'
 import { getRoom } from '/@src/composable/Others/Room/getRoom'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -14,7 +15,8 @@ import { useForm, ErrorMessage } from 'vee-validate';
 import { z as zod } from 'zod'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
 import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultCreateUpdateRoom } from '/@src/stores/Others/Room/roomStore';
 
 
 export default defineComponent({
@@ -43,6 +45,7 @@ export default defineComponent({
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/room'
         const currentRoom = ref(defaultRoom)
+        const currentCreateUpdateRoom = ref(defaultCreateUpdateRoom)
         const roomId = ref(0)
         // @ts-ignore
         roomId.value = route.params?.id as number ?? 0
@@ -50,7 +53,7 @@ export default defineComponent({
             if (roomId.value === 0) {
                 currentRoom.value.number = 0
                 currentRoom.value.floor = 0
-                // currentRoom.value.department = 
+                currentRoom.value.department = defaultDepartment
                 currentRoom.value.status = 0
                 return
             }
@@ -70,32 +73,51 @@ export default defineComponent({
         )
 
 
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    number: zod
-                        .string({
-                            required_error: 'This field is required',
-                        }),
-                    floor: zod
-                        .string({
-                            required_error: 'This field is required',
-                        }),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                    department: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
+        const validationSchema = toFormValidator(zod
+            .object({
+                number:
+                    zod
+                        .preprocess(
+                            (input) => {
+                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                                return processed.success ? processed.data : input;
+                            },
+                            zod
+                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                                .min(0, "Please enter a valid number"),
+                        ),
+                floor:
+                    zod
+                        .preprocess(
+                            (input) => {
+                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                                return processed.success ? processed.data : input;
+                            },
+                            zod
+                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                                .min(0, "Please enter a valid number"),
+                        ),
+                department_id: zod
+                    .preprocess(
+                        (input) => {
+                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                            return processed.success ? processed.data : input;
+                        },
+                        zod
+                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                            .min(1, "This field is required"),
+                    ),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
 
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                number: 0,
-                floor: 0,
-                status: 0,
-                department: departments2,
+                number: undefined,
+                floor: undefined,
+                status: 1,
+                department_id: 0,
             },
         })
 
@@ -111,12 +133,17 @@ export default defineComponent({
         const onSubmitAdd = handleSubmit(async (values) => {
 
             var roomData = currentRoom.value
-            roomData = await addRoom(roomData) as Room
+            var roomForm = currentCreateUpdateRoom.value
+            roomForm.floor = roomData.floor
+            roomForm.number = roomData.number
+            roomForm.department_id = roomData.department?.id
+            roomForm.status = roomData.status
+            roomData = await addRoom(roomForm) as Room
             // @ts-ignore
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${roomData.name} ${viewWrapper.pageTitle} was added successfully`)
+            notif.success(` ${viewWrapper.pageTitle} ${roomData.number} was added successfully`)
 
 
             router.push({ path: `/room/${roomData.id}` })
@@ -124,13 +151,20 @@ export default defineComponent({
         })
         const onSubmitEdit = async () => {
             const roomData = currentRoom.value
-            await editRoom(roomData)
+            var roomForm = currentCreateUpdateRoom.value
+            roomForm.id = roomData.id
+            roomForm.floor = roomData.floor
+            roomForm.number = roomData.number
+            roomForm.department_id = roomData.department?.id
+            roomForm.status = roomData.status
+            console.log(roomForm)
+            await editRoom(roomForm)
             // @ts-ignore
 
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${roomData.name} ${viewWrapper.pageTitle} was edited successfully`)
+            notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
 
             router.push({ path: `/room/${roomData.id}` })
 
@@ -161,10 +195,10 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="number" v-slot="{ field }">
+                                <VField id="number">
                                     <VLabel>{{ viewWrapper.pageTitle }} number</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentRoom.number" type="text" placeholder=""
+                                        <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
                                         <ErrorMessage name="number" />
 
@@ -177,14 +211,12 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="floor" v-slot="{ field }">
+                                <VField id="floor">
                                     <VLabel>{{ viewWrapper.pageTitle }} floor</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentRoom.floor" type="text" placeholder=""
+                                        <VInput v-model="currentRoom.floor" type="number" placeholder=""
                                             autocomplete="given-floor" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
+                                        <ErrorMessage name="floor" />
 
                                     </VControl>
                                 </VField>
@@ -195,7 +227,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField class="column ">
+                                <VField class="column " id="department_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} department</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
@@ -204,6 +236,7 @@ export default defineComponent({
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
                                         </VSelect>
+                                        <ErrorMessage name="department_id" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -213,7 +246,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
+                                <VField id="status">
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
@@ -222,7 +255,7 @@ export default defineComponent({
 
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.ACTIVE"
                                             :label="RoomConsts.showStatusName(1)" name="status" color="success" />
-
+                                        <ErrorMessage name="status" />
                                     </VControl>
                                 </VField>
                             </div>

@@ -53,7 +53,8 @@ const toEdit = () => {
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">Description:</h4>
-                            <span>{{ currentService.description }}</span>
+                            <span v-if="currentService.description"> {{ currentService.description }} </span>
+                            <span v-else> Null </span>
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">Estimated Duration:</h4>

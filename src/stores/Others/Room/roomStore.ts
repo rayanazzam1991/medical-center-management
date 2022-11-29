@@ -4,6 +4,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import {
   RoomSearchFilter,
   Room,
+  CreateUpdateRoom,
   getRoomsApi,
   deleteRoomApi,
   addRoomApi,
@@ -18,6 +19,14 @@ export const defaultRoom: Room = {
   number: 0,
   floor: 0,
   department: undefined,
+  status: 0,
+}
+
+export const defaultCreateUpdateRoom: CreateUpdateRoom = {
+  id: 0,
+  number: 0,
+  floor: 0,
+  department_id: undefined,
   status: 0,
 }
 
@@ -67,7 +76,7 @@ export const useRoom = defineStore('room', () => {
       loading.value = false
     }
   }
-  async function addRoomStore(room: Room) {
+  async function addRoomStore(room: CreateUpdateRoom) {
     if (loading.value) return
 
     loading.value = true
@@ -82,7 +91,7 @@ export const useRoom = defineStore('room', () => {
       loading.value = false
     }
   }
-  async function editRoomStore(room: Room) {
+  async function editRoomStore(room: CreateUpdateRoom) {
     if (loading.value) return
 
     loading.value = true

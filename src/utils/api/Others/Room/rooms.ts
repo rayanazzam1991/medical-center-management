@@ -10,7 +10,7 @@ export interface Room {
   status: number
 }
 
-export interface CreateRoom {
+export interface CreateUpdateRoom {
   id?: number
   number: number
   floor: number
@@ -38,7 +38,7 @@ export async function deleteRoomApi(
 }
 export async function addRoomApi(
   api: AxiosInstance,
-  room: CreateRoom
+  room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`room/`, room)
 
@@ -46,7 +46,7 @@ export async function addRoomApi(
 }
 export async function editRoomApi(
   api: AxiosInstance,
-  room: Room
+  room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`room/${room.id}`, room)
   console.log(response)

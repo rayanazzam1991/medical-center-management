@@ -93,15 +93,15 @@ const columns = {
         {
           rounded: true,
           color:
-            row.status === NationalityConsts.INACTIVE
+            row?.status === NationalityConsts.INACTIVE
               ? 'orange'
-              : row.status === NationalityConsts.ACTIVE
+              : row?.status === NationalityConsts.ACTIVE
                 ? 'success'
                 : undefined,
         },
         {
           default() {
-            return NationalityConsts.showStatusName(row.status)
+            return NationalityConsts.showStatusName(row?.status)
           },
         }
       ),
@@ -115,13 +115,13 @@ const columns = {
 
         onRemove: () => {
           deleteNationalityPopup.value = true
-          deleteNationalityId.value = row.id
+          deleteNationalityId.value = row?.id
         },
         onEdit: () => {
-          router.push({ path: `/nationality/${row.id}/edit` })
+          router.push({ path: `/nationality/${row?.id}/edit` })
         },
         onView: () => {
-          router.push({ path: `/nationality/${row.id}` })
+          router.push({ path: `/nationality/${row?.id}` })
         },
 
       }),

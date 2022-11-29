@@ -46,7 +46,6 @@ export async function editCityApi(
   const { data: response, headers } = await api.put(
     `city/${city.id}`,city
   )
-  console.log(response)
   return { response }
 }
 export async function getCityApi(

@@ -16,7 +16,7 @@ import { Pagination, defaultPagination } from '/@src/utils/response'
 export const defaultCity: City = {
   id: 0,
   name: '',
-  status: 0,
+  status: 1,
 }
 
 export const defaultCitySearchFilter: CitySearchFilter = {

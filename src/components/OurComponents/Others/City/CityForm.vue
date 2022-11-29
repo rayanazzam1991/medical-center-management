@@ -10,7 +10,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { CityConsts } from '/@src/utils/consts/city';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod'
 
 
@@ -18,110 +18,88 @@ export default defineComponent({
     props: {
         formType: {
             type: String,
-            default: '',
+            default: "",
         },
     },
-
-    emits: ['onSubmit'],
+    emits: ["onSubmit"],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('City')
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("City");
         const head = useHead({
-            title: 'City',
-        })
-        const notif = useNotyf()
-
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/city'
-        const currentCity = ref(defaultCity)
-        const cityId = ref(0)
+            title: "City",
+        });
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/city";
+        const currentCity = ref(defaultCity);
+        const cityId = ref(0);
         // @ts-ignore
-        cityId.value = route.params?.id as number ?? 0
+        cityId.value = route.params?.id as number ?? 0;
         const getCurrentCity = async () => {
             if (cityId.value === 0) {
                 currentCity.value.name = ''
-                currentCity.value.status = 0
+                currentCity.value.status = 1
                 return
             }
-            const city = await getCity(cityId.value)
-            currentCity.value = city != undefined ? city : defaultCity
 
-        }
+            const city = await getCity(cityId.value);
+            currentCity.value = city != undefined ? city : defaultCity;
+        };
         onMounted(() => {
-            getCurrentCity()
-        }
-        )
-
-
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
-
+            getCurrentCity();
+        });
+        const validationSchema = toFormValidator(zod
+            .object({
+                name: zod
+                    .string({
+                        required_error: "This field is required",
+                    })
+                    .min(1, "This field is required"),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: '',
-                status: 0,
+                name: "",
+                status: 1,
             },
-        })
-
+        });
         const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
+            if (method == "Add") {
+                await onSubmitAdd();
             }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
+            else if (method == "Edit") {
+                await onSubmitEdit();
             }
-            else return
-        }
+            else
+                return;
+        };
         const onSubmitAdd = handleSubmit(async (values) => {
-
-            var cityData = currentCity.value
-            cityData = await addCity(cityData) as City
+            var cityData = currentCity.value;
+            cityData = await addCity(cityData) as City;
             // @ts-ignore
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
-            router.push({ path: `/city/${cityData.id}` })
-
-        })
+            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/city/${cityData.id}` });
+        });
         const onSubmitEdit = async () => {
-            const cityData = currentCity.value
-            await editCity(cityData)
+            const cityData = currentCity.value;
+            await editCity(cityData);
             // @ts-ignore
-
-            notif.dismissAll()
+            notif.dismissAll();
             // @ts-ignore
-
-            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
-            router.push({ path: `/city/${cityData.id}` })
-
-
-        }
-
-        return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts }
+            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/city/${cityData.id}` });
+        };
+        return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts };
     },
-
-
+    components: { ErrorMessage }
 })
 
 
@@ -147,9 +125,7 @@ export default defineComponent({
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCity.name" type="text" placeholder=""
                                             autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
+                                        <ErrorMessage class="help is-danger" name="name" />
 
                                     </VControl>
                                 </VField>
@@ -169,6 +145,7 @@ export default defineComponent({
 
                                         <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
                                             :label="CityConsts.showStatusName(1)" name="status" color="success" />
+                                        <ErrorMessage class="help is-danger" name="status" />
 
                                     </VControl>
                                 </VField>
