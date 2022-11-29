@@ -1,165 +1,194 @@
-<script lang="ts">
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { defaultPagination } from '/@src/utils/response'
-
+<script  lang="ts">
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { z as zod } from 'zod'
+import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { addSocialMedia } from '/@src/composable/CRM/socialMedia/addSocialMedia';
+import { editSocialMedia } from '/@src/composable/CRM/socialMedia/editSocialMedia';
+import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
+import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
 
 
 export default defineComponent({
     props: {
-        title: {
+        formType: {
             type: String,
-            default: '',
+            default: "",
         },
-        button_name: {
-            type: String,
-            default: '',
-        },
-        pagination: {
-            default: defaultPagination,
-        }
     },
-
+    emits: ["onSubmit"],
     setup(props, context) {
-
-        const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 150
-        })
-        const searchName = ref('')
-        const searchPrice = ref()
-        const searchDuration = ref()
-        const perPage = ref(pagination.per_page)
-        const searchStatus = ref()
-        const searchFilter = ref(defaultServiceSearchFilter)
-
-        const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value,
-                duration_minutes: searchDuration.value,
-                service_price: searchPrice.value,
-                per_page: perPage.value
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("Social Media");
+        const head = useHead({
+            title: "Social Media",
+        });
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/social-media";
+        const currentSocialMedia = ref(defaultSocialMedia);
+        const socialMediaId = ref(0);
+        // @ts-ignore
+        socialMediaId.value = route.params?.id as number ?? 0;
+        const getCurrentSocialMedia = async () => {
+            if (socialMediaId.value === 0) {
+                currentSocialMedia.value.name = ''
+                currentSocialMedia.value.status = 1
+                currentSocialMedia.value.icon = ''
+                return
             }
-            context.emit('search', searchFilter.value)
 
-        }
-
-        const resetFilter = () => {
-            searchName.value = ''
-            searchStatus.value = undefined
-            searchDuration.value = undefined
-            searchPrice.value = undefined
-            searchFilter.value.name = undefined
-            searchFilter.value.status = undefined
-            searchFilter.value.duration_minutes = undefined
-            searchFilter.value.service_price = undefined
-
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        return { isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
+            const socialMedia = await getSocialMedia(socialMediaId.value);
+            currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
+        };
+        onMounted(() => {
+            getCurrentSocialMedia();
+        });
+        const validationSchema = toFormValidator(zod
+            .object({
+                name: zod
+                    .string({
+                        required_error: "This field is required",
+                    })
+                    .min(1, "This field is required"),
+                icon: zod
+                    .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
+        const { handleSubmit } = useForm({
+            validationSchema,
+            initialValues: {
+                name: "",
+                icon: "",
+                status: 1,
+            },
+        });
+        const onSubmit = async (method: String) => {
+            if (method == "Add") {
+                await onSubmitAdd();
+            }
+            else if (method == "Edit") {
+                await onSubmitEdit();
+            }
+            else
+                return;
+        };
+        const onSubmitAdd = handleSubmit(async (values) => {
+            var socialMediaData = currentSocialMedia.value;
+            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
+            // @ts-ignore
+            notif.dismissAll();
+            // @ts-ignore
+            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/social-media/${socialMediaData.id}` });
+        });
+        const onSubmitEdit = async () => {
+            const socialMediaData = currentSocialMedia.value;
+            await editSocialMedia(socialMediaData);
+            // @ts-ignore
+            notif.dismissAll();
+            // @ts-ignore
+            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/social-media/${socialMediaData.id}` });
+        };
+        return { pageTitle, onSubmit, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
     },
-
-
+    components: { ErrorMessage }
 })
-
 
 
 
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <div class="column filter">
+    <div class="page-content-inner">
+        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
+            @onSubmit="onSubmit(formType)" />
+        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="name">
+                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
+                                            autocomplete="given-name" />
+                                        <ErrorMessage class="help is-danger" name="name" />
 
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchName" type="text" class="input is-rounded"
-                                            placeholder="Name..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                                            placeholder="Duration..." />
                                     </VControl>
                                 </VField>
                             </div>
-                            <div class="column filter">
+                        </div>
+                    </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <Tippy>
+                                    <VField id="icon">
+                                        <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
+                                        <VControl>
+                                            <VInput v-model="currentSocialMedia.icon" type="text" />
+                                            <ErrorMessage class="help is-danger" name="icon" />
 
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchPrice" type="number" class="input is-rounded"
-                                            placeholder="Price..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter ">
+                                        </VControl>
+                                    </VField>
+
+
+                                    <template #content> Enter an icon url </template>
+                                </Tippy>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="status">
+                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+
                                     <VControl>
-                                        <VSelect v-model="searchStatus" class="is-rounded">
-                                            <VOption value="">Status</VOption>
-                                            <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
-                                            <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
-                                        </VSelect>
+                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
+                                            :label="SocialMediaConsts.showStatusName(0)" name="status"
+                                            color="warning" />
+
+                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
+                                            :label="SocialMediaConsts.showStatusName(1)" name="status"
+                                            color="success" />
+                                        <ErrorMessage class="help is-danger" name="status" />
+
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
 
                     </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
-
-                            <VButton to="/service/add" color="primary" raised> {{ button_name }}
-                            </VButton>
-                        </div>
-                        <div>
-
-                            <VField>
-                                <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-
-                        </div>
-
-
-                    </div>
-
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
@@ -241,7 +270,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opacity: 0;
+                                opasocialMedia: 0;
                                 cursor: pointer;
 
                                 &:checked {

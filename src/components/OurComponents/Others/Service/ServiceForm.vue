@@ -116,7 +116,7 @@ export default defineComponent({
             notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
             router.push({ path: `/service/${serviceData.id}` });
         });
-        const onSubmitEdit = async () => {
+        const onSubmitEdit = handleSubmit(async () => {
             const serviceData = currentService.value;
             await editService(serviceData);
             // @ts-ignore
@@ -124,7 +124,7 @@ export default defineComponent({
             // @ts-ignore
             notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
             router.push({ path: `/service/${serviceData.id}` });
-        };
+        });
         return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
     },
     components: { ErrorMessage }

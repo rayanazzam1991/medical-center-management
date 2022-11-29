@@ -5,6 +5,11 @@ specifiers:
   '@ckeditor/ckeditor5-vue': 4.0.1
   '@commitlint/cli': 17.1.2
   '@commitlint/config-conventional': 17.1.0
+  '@fortawesome/fontawesome-svg-core': ^6.2.1
+  '@fortawesome/free-brands-svg-icons': ^6.2.1
+  '@fortawesome/free-regular-svg-icons': ^6.2.1
+  '@fortawesome/free-solid-svg-icons': ^6.2.1
+  '@fortawesome/vue-fontawesome': ^3.0.2
   '@iconify/iconify': 2.2.1
   '@iconify/json': 2.1.102
   '@intlify/vite-plugin-vue-i18n': 7.0.0-beta.2
@@ -124,6 +129,11 @@ specifiers:
 dependencies:
   '@ckeditor/ckeditor5-build-classic': 35.1.0
   '@ckeditor/ckeditor5-vue': 4.0.1
+  '@fortawesome/fontawesome-svg-core': 6.2.1
+  '@fortawesome/free-brands-svg-icons': 6.2.1
+  '@fortawesome/free-regular-svg-icons': 6.2.1
+  '@fortawesome/free-solid-svg-icons': 6.2.1
+  '@fortawesome/vue-fontawesome': 3.0.2_ypwwsizpexi2rcssjxbduz23ea
   '@iconify/iconify': 2.2.1
   '@mapbox/mapbox-gl-geocoder': 5.0.1_mapbox-gl@2.10.0
   '@popperjs/core': 2.11.6
@@ -1935,6 +1945,54 @@ packages:
       - supports-color
     dev: true
 
+  /@fortawesome/fontawesome-common-types/6.2.1:
+    resolution: {integrity: sha512-Sz07mnQrTekFWLz5BMjOzHl/+NooTdW8F8kDQxjWwbpOJcnoSg4vUDng8d/WR1wOxM0O+CY9Zw0nR054riNYtQ==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
+
+  /@fortawesome/fontawesome-svg-core/6.2.1:
+    resolution: {integrity: sha512-HELwwbCz6C1XEcjzyT1Jugmz2NNklMrSPjZOWMlc+ZsHIVk+XOvOXLGGQtFBwSyqfJDNgRq4xBCwWOaZ/d9DEA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
+    dev: false
+
+  /@fortawesome/free-brands-svg-icons/6.2.1:
+    resolution: {integrity: sha512-L8l4MfdHPmZlJ72PvzdfwOwbwcCAL0vx48tJRnI6u1PJXh+j2f3yDoKyQgO3qjEsgD5Fr2tQV/cPP8F/k6aUig==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
+    dev: false
+
+  /@fortawesome/free-regular-svg-icons/6.2.1:
+    resolution: {integrity: sha512-wiqcNDNom75x+pe88FclpKz7aOSqS2lOivZeicMV5KRwOAeypxEYWAK/0v+7r+LrEY30+qzh8r2XDaEHvoLsMA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
+    dev: false
+
+  /@fortawesome/free-solid-svg-icons/6.2.1:
+    resolution: {integrity: sha512-oKuqrP5jbfEPJWTij4sM+/RvgX+RMFwx3QZCZcK9PrBDgxC35zuc7AOFsyMjMd/PIFPeB2JxyqDr5zs/DZFPPw==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.1
+    dev: false
+
+  /@fortawesome/vue-fontawesome/3.0.2_ypwwsizpexi2rcssjxbduz23ea:
+    resolution: {integrity: sha512-xHVtVY8ASUeEvgcA/7vULUesENhD+pi/EirRHdMBqooHlXBqK+yrV6d8tUye1m5UKQKVgYAHMhUBfOnoiwvc8Q==}
+    peerDependencies:
+      '@fortawesome/fontawesome-svg-core': ~1 || ~6
+      vue: '>= 3.0.0 < 4'
+    dependencies:
+      '@fortawesome/fontawesome-svg-core': 6.2.1
+      vue: 3.2.38
+    dev: false
+
   /@humanwhocodes/config-array/0.10.4:
     resolution: {integrity: sha512-mXAIHxZT3Vcpg83opl1wGlVZ9xydbfZO3r5YfRSH6Gpp2J/PfdBP0wbDa2sO6/qRbcalpoevVyW6A/fI6LfeMw==}
     engines: {node: '>=10.10.0'}
@@ -1993,8 +2051,8 @@ packages:
       vue-i18n:
         optional: true
     dependencies:
-      '@intlify/message-compiler': 9.3.0-beta.7
-      '@intlify/shared': 9.3.0-beta.7
+      '@intlify/message-compiler': 9.3.0-beta.10
+      '@intlify/shared': 9.3.0-beta.10
       jsonc-eslint-parser: 1.4.1
       source-map: 0.6.1
       vue-i18n: 9.3.0-beta.3_vue@3.2.38
@@ -2016,6 +2074,14 @@ packages:
     dependencies:
       '@intlify/shared': 9.3.0-beta.3
 
+  /@intlify/message-compiler/9.3.0-beta.10:
+    resolution: {integrity: sha512-RoOC6yceOykLRhN0NlbkNOBUx1el6iphx3W8NfOx3jHVNtfT1FYokx14/5sU3F1F0uxeG4sp6q+ppKvaF8o+ww==}
+    engines: {node: '>= 14'}
+    dependencies:
+      '@intlify/shared': 9.3.0-beta.10
+      source-map: 0.6.1
+    dev: true
+
   /@intlify/message-compiler/9.3.0-beta.3:
     resolution: {integrity: sha512-j8OwToBQgs01RBMX4GCDNQfcnmw3AiDG3moKIONTrfXcf+1yt/rWznLTYH/DXbKcFMAFijFpCzMYjUmH1jVFYA==}
     engines: {node: '>= 14'}
@@ -2023,22 +2089,14 @@ packages:
       '@intlify/shared': 9.3.0-beta.3
       source-map: 0.6.1
 
-  /@intlify/message-compiler/9.3.0-beta.7:
-    resolution: {integrity: sha512-70r2UNp6DyKtIM4FgYCwdSuBK7xqCx2rVSXLMFiDRQi8pwooBklmOuzA0j7Q8ffbwKlFUJEEr2xPHZz2TJ6NAw==}
+  /@intlify/shared/9.3.0-beta.10:
+    resolution: {integrity: sha512-h93uAanbAt/XgjDHclrVB7xix6r7Uz11wx0iGNOCdHP7aA2LCJjUT3uNbekJjjbo+Fl5jzTSJZdm2SexzoqhRA==}
     engines: {node: '>= 14'}
-    dependencies:
-      '@intlify/shared': 9.3.0-beta.7
-      source-map: 0.6.1
     dev: true
 
   /@intlify/shared/9.3.0-beta.3:
     resolution: {integrity: sha512-Z/0TU4GhFKRxKh+0RbwJExik9zz57gXYgxSYaPn7YQdkQ/pabSioCY/SXnYxQHL6HzULF5tmqarFm6glbGqKhw==}
     engines: {node: '>= 14'}
-
-  /@intlify/shared/9.3.0-beta.7:
-    resolution: {integrity: sha512-weWqKXyv94rdPXbSFYvA4yIwLYDhzgIWfgrVQ6UYARobPFE3BN+woWmjlGmASTyXMzZtTsq21b0LCN9SHN8pxQ==}
-    engines: {node: '>= 14'}
-    dev: true
 
   /@intlify/vite-plugin-vue-i18n/7.0.0-beta.2_volzdo7qm3xl72jtfs77l55igm:
     resolution: {integrity: sha512-vQWxuqfPJvKuxV1ordhCzi4PO5U+do5S13ICtIoJKdxOkBoy9HuiqDmBDIFVcYbcSLh57bixn2RfGoCQARmuUw==}
@@ -2056,7 +2114,7 @@ packages:
         optional: true
     dependencies:
       '@intlify/bundle-utils': 3.4.0_vue-i18n@9.3.0-beta.3
-      '@intlify/shared': 9.3.0-beta.7
+      '@intlify/shared': 9.3.0-beta.10
       '@rollup/pluginutils': 4.2.1
       debug: 4.3.4
       fast-glob: 3.2.11
