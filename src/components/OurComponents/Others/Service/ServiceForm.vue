@@ -1,20 +1,17 @@
-<script  lang="ts">
+<script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addRoom } from '/@src/composable/Others/Room/addRoom'
-import { editRoom } from '/@src/composable/Others/Room/editRoom'
-import { Room } from '/@src/utils/api/Others/Room'
-import { defaultRoom } from '/@src/stores/Others/Room/RoomStore'
-import { getRoom } from '/@src/composable/Others/Room/getRoom'
+import { useForm } from 'vee-validate'
+import { addService } from '/@src/composable/Others/Services/addService'
+import { editService } from '/@src/composable/Others/Services/editService'
+import { getService } from '/@src/composable/Others/Services/getService'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultService } from '/@src/stores/Others/Service/serviceStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { RoomConsts } from '/@src/utils/consts/room';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
+import { Service } from '/@src/utils/api/Others/Service'
+import { ServiceConsts } from '/@src/utils/consts/service'
 import { z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+
+
 
 
 export default defineComponent({
@@ -24,14 +21,13 @@ export default defineComponent({
             default: '',
         },
     },
-    components: { ErrorMessage },
 
     emits: ['onSubmit'],
     setup(props, context) {
         const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Room')
+        viewWrapper.setPageTitle('Service')
         const head = useHead({
-            title: 'Room',
+            title: 'Service',
         })
         const notif = useNotyf()
 
@@ -41,31 +37,26 @@ export default defineComponent({
         const router = useRouter()
 
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/room'
-        const currentRoom = ref(defaultRoom)
-        const roomId = ref(0)
+        const backRoute = '/service'
+        const currentService = ref(defaultService)
+        const serviceId = ref(0)
         // @ts-ignore
-        roomId.value = route.params?.id as number ?? 0
-        const getCurrentRoom = async () => {
-            if (roomId.value === 0) {
-                currentRoom.value.number = 0
-                currentRoom.value.floor = 0
-                // currentRoom.value.department = 
-                currentRoom.value.status = 0
+        serviceId.value = route.params?.id as number ?? 0
+        const getCurrentService = async () => {
+            if (serviceId.value === 0) {
+                currentService.value.name = ''
+                currentService.value.status = 0
+                currentService.value.description = ''
+                currentService.value.duration_minutes = undefined
+                currentService.value.service_price = undefined
                 return
             }
-            const room = await getRoom(roomId.value)
-            console.log("sad", room)
-            currentRoom.value = room != undefined ? room : defaultRoom
+            const city = await getService(serviceId.value)
+            currentService.value = city != undefined ? city : defaultService
 
         }
-        const departments2 = ref<Department[]>([])
-        onMounted(async () => {
-            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
-            departments2.value = departments
-        })
         onMounted(() => {
-            getCurrentRoom()
+            getCurrentService()
         }
         )
 
@@ -73,17 +64,22 @@ export default defineComponent({
         const validationSchema = toFormValidator(
             zod
                 .object({
-                    number: zod
+                    name: zod
                         .string({
                             required_error: 'This field is required',
-                        }),
-                    floor: zod
-                        .string({
+                        })
+                        .min(1, 'This field is required'),
+                    duration_minutes: zod
+                        .number({
                             required_error: 'This field is required',
-                        }),
+                        })
+                        .gt(2, 'Please enter a valid number'),
+                    service_price: zod
+                        .number({
+                            required_error: 'This field is required',
+                        })
+                        .min(0, 'Please enter a valid price'),
                     status: zod
-                        .number({ required_error: 'Please choose one' }),
-                    department: zod
                         .number({ required_error: 'Please choose one' }),
                 })
 
@@ -92,10 +88,12 @@ export default defineComponent({
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                number: 0,
-                floor: 0,
+                name: '',
                 status: 0,
-                department: departments2,
+                description: '',
+                duration_minutes: undefined,
+                service_price: undefined,
+
             },
         })
 
@@ -110,34 +108,34 @@ export default defineComponent({
         }
         const onSubmitAdd = handleSubmit(async (values) => {
 
-            var roomData = currentRoom.value
-            roomData = await addRoom(roomData) as Room
+            var serviceData = currentService.value
+            serviceData = await addService(serviceData) as Service
             // @ts-ignore
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${roomData.name} ${viewWrapper.pageTitle} was added successfully`)
+            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`)
 
 
-            router.push({ path: `/room/${roomData.id}` })
+            router.push({ path: `/service/${serviceData.id}` })
 
         })
         const onSubmitEdit = async () => {
-            const roomData = currentRoom.value
-            await editRoom(roomData)
+            const serviceData = currentService.value
+            await editService(serviceData)
             // @ts-ignore
 
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(`${roomData.name} ${viewWrapper.pageTitle} was edited successfully`)
+            notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`)
 
-            router.push({ path: `/room/${roomData.id}` })
+            router.push({ path: `/service/${serviceData.id}` })
 
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departments2 }
+        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts }
     },
 
 
@@ -161,27 +159,62 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="number" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} number</VLabel>
+                                <VField id="name" v-slot="{ field }">
+                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentRoom.number" type="text" placeholder=""
-                                            autocomplete="given-number" />
-                                        <ErrorMessage name="number" />
+                                        <VInput v-model="currentService.name" type="text" placeholder=""
+                                            autocomplete="given-name" />
+                                        <p v-if="field?.errorMessage" class="help is-danger">
+                                            {{ field.errorMessage }}
+                                        </p>
 
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
                     </div>
-                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="floor" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} floor</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentRoom.floor" type="text" placeholder=""
-                                            autocomplete="given-floor" />
+                                <VField id="description" v-slot="{ field }">
+                                    <VLabel>Description</VLabel>
+                                    <VControl icon="feather:file-text">
+                                        <VInput v-model="currentService.description" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <p v-if="field?.errorMessage" class="help is-danger">
+                                            {{ field.errorMessage }}
+                                        </p>
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="service_price" v-slot="{ field }">
+                                    <VLabel>Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
+                                    <VControl icon="feather:dollar-sign">
+                                        <VInput v-model="currentService.service_price" type="number" placeholder=""
+                                            autocomplete="" />
+                                        <p v-if="field?.errorMessage" class="help is-danger">
+                                            {{ field.errorMessage }}
+                                        </p>
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="duration_minutes" v-slot="{ field }">
+                                    <VLabel>Duration</VLabel>
+                                    <VControl icon="feather:clock">
+                                        <VInput v-model="currentService.duration_minutes" type="number" placeholder=""
+                                            autocomplete="" />
                                         <p v-if="field?.errorMessage" class="help is-danger">
                                             {{ field.errorMessage }}
                                         </p>
@@ -195,40 +228,22 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField class="column ">
-                                    <VLabel>{{ viewWrapper.pageTitle }} department</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
-                                            <VOption value="">Department</VOption>
-                                            <VOption v-for="department in departments2" :key="department.id"
-                                                :value="department.id">{{ department.name }}
-                                            </VOption>
-                                        </VSelect>
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
-                                        <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"
-                                            :label="RoomConsts.showStatusName(0)" name="status" color="warning" />
+                                        <VRadio v-model="currentService.status" :value="ServiceConsts.INACTIVE"
+                                            :label="ServiceConsts.showStatusName(0)" name="status" color="warning" />
 
-                                        <VRadio v-model="currentRoom.status" :value="RoomConsts.ACTIVE"
-                                            :label="RoomConsts.showStatusName(1)" name="status" color="success" />
+                                        <VRadio v-model="currentService.status" :value="ServiceConsts.ACTIVE"
+                                            :label="ServiceConsts.showStatusName(1)" name="status" color="success" />
 
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </form>

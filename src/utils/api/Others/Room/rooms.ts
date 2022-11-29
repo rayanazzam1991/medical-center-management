@@ -6,7 +6,15 @@ export interface Room {
   id?: number
   number: number
   floor: number
-  department: Department
+  department?: Department
+  status: number
+}
+
+export interface CreateRoom {
+  id?: number
+  number: number
+  floor: number
+  department_id?: number
   status: number
 }
 export interface RoomSearchFilter {
@@ -30,7 +38,7 @@ export async function deleteRoomApi(
 }
 export async function addRoomApi(
   api: AxiosInstance,
-  room: Room
+  room: CreateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`room/`, room)
 

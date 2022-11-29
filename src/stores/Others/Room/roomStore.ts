@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
+
 import {
   RoomSearchFilter,
   Room,
@@ -11,13 +12,12 @@ import {
 } from '/@src/utils/api/Others/Room'
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
-import { defaultDepartment } from '../Department/departmentStore'
 
 export const defaultRoom: Room = {
   id: 0,
   number: 0,
   floor: 0,
-  department: defaultDepartment,
+  department: undefined,
   status: 0,
 }
 

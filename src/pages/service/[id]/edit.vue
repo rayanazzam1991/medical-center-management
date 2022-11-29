@@ -3,13 +3,13 @@ import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 const route = useRoute()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('UserStatus')
+viewWrapper.setPageTitle('Service')
 useHead({
-    title: 'UserStatus',
+  title: 'Edit Service',
 })
 </script>
 
 <template>
-    <UserStatusDetails />
-
+  <ServiceForm :formType="'Edit'"/>
+  
 </template>

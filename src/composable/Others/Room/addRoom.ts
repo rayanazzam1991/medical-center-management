@@ -4,6 +4,6 @@ import { Room } from '/@src/utils/api/Others/Room'
 export async function addRoom(roomData: Room) {
   console.log('comp')
 
-  const room = useRoom()
-  return await room.addRoomStore(roomData)
+  const department = useRoom()
+  return await department.addRoomStore(roomData)
 }

@@ -90,9 +90,9 @@ const columns = {
   department: {
     sortable: true,
     searchable: true,
-    label: 'Deoartment',
+    label: 'Department',
     renderRow: (row: any) =>
-      h('span', row.department.name)
+      h('span', row?.department?.name)
   },
   status: {
     align: 'center',
