@@ -2,7 +2,6 @@
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-
 import { getUsersList } from '/@src/composable/Others/User/getUsersList'
 import { deleteUser } from '/@src/composable/Others/User/deleteUser'
 
