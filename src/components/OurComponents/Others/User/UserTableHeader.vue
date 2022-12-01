@@ -36,11 +36,11 @@ export default defineComponent({
     setup(props, context) {
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
-            console.log(searchFilterPop.value)
             context.emit('onOpen', searchFilterPop.value)
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
+            console.log("DASdas", searchFilterPop.value)
         }
         const pagination = props.pagination
         const { y } = useWindowScroll()
@@ -57,30 +57,33 @@ export default defineComponent({
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultUserSearchFilter)
+        const is_reseted = ref(false)
+        const keyTest = ref(0)
 
         const search = () => {
-            searchFilter.value = {
-                first_name: searchFirstName.value,
-                last_name: searchLastName.value,
-                gender: searchGender.value,
-                phone_number: searchPhoneNumber.value,
-                room_id: searchRoom.value,
-                city_id: searchCity.value,
-                user_status_id: searchStatus.value,
-                per_page: perPage.value
-            }
+            searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
-
+        }
+        const search_filter = (value: UserSearchFilter) => {
+            searchFilter.value = value
+            searchFilter.value.per_page = perPage.value
+            context.emit('search', searchFilter.value)
         }
 
         const resetFilter = () => {
-            searchFirstName.value = undefined
-            searchLastName.value = undefined
-            searchGender.value = undefined
-            searchPhoneNumber.value = undefined
-            searchRoom.value = undefined
-            searchCity.value = undefined
-            searchStatus.value = undefined
+            searchFilter.value.first_name = undefined
+            searchFilter.value.last_name = undefined
+            searchFilter.value.gender = undefined
+            searchFilter.value.phone_number = undefined
+            searchFilter.value.room_id = undefined
+            searchFilter.value.city_id = undefined
+            searchFilter.value.user_status_id = undefined
+            is_reseted.value = true
+            keyTest.value++
+            context.emit('resetFilter', searchFilter.value)
+
+        }
+        const resetFilter_popup = (value: UserSearchFilter) => {
             searchFilter.value.first_name = undefined
             searchFilter.value.last_name = undefined
             searchFilter.value.gender = undefined
@@ -89,6 +92,7 @@ export default defineComponent({
             searchFilter.value.city_id = undefined
             searchFilter.value.user_status_id = undefined
 
+            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -103,7 +107,7 @@ export default defineComponent({
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
             statuses2.value = userstatuses
         })
-        return { isStuck, onOpen, rooms2, cities2, popUpTrigger, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
+        return { keyTest, is_reseted, isStuck, onOpen, resetFilter_popup, rooms2, cities2, search_filter, popUpTrigger, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
     },
 
 
@@ -121,27 +125,22 @@ export default defineComponent({
                 <div class="form-header-inner">
                     <div class="left">
                         <div class="columns justify-content">
-
+                            <VButton @click.prevent="onOpen" raised> Search
+                            </VButton>
                         </div>
-
-                        <VButton @click.prevent="onOpen" raised> Search
-                        </VButton>
-
 
                     </div>
                     <div class="right">
                         <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
-
                             <VButton to="/user/add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
                         <div>
                             <VField>
                                 <VControl>
-                                    <div class="select is-rounded">
+                                    <div class="select">
                                         <select @change="search" v-model="perPage">
                                             <option v-if="pagination.per_page * 0.1 == 1"
                                                 :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
@@ -172,7 +171,8 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <SearchFilterModel :search_filter_popup="searchFilterPop" @update:search_filter_popup="popUpTrigger" />
+        <SearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+            @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
