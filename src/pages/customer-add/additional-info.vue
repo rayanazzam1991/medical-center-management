@@ -1,124 +1,135 @@
-<script  lang="ts">
+<script setup  lang="ts">
+
 import VRadio from '/@src/components/base/form/VRadio.vue';
+
 import { z as zod } from 'zod'
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
-import { lineIcons } from '/@src/data/icons/lineIcons'
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { editSocialMedia } from '/@src/composable/CRM/SocialMedia/editSocialMedia';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
 
 
-export default defineComponent({
-    props: {
-        formType: {
-            type: String,
-            default: "",
-        },
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Additional Info')
+const head = useHead({
+    title: 'Customer',
+})
+// const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 2,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        if (isValid) {
+            router.push({
+                name: '/customer-add/profile-picture',
+            })
+
+        }
     },
-    emits: ["onSubmit"],
-    setup(props, context) {
-        const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Social Media");
-        const head = useHead({
-            title: "Social Media",
-        });
-        const notif = useNotyf();
-        const formType = ref("");
-        formType.value = props.formType;
-        const route = useRoute();
-        const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-        const backRoute = "/social-media";
-        const currentSocialMedia = ref(defaultSocialMedia);
-        const socialMediaId = ref(0);
-        // @ts-ignore
-        socialMediaId.value = route.params?.id as number ?? 0;
-        const getCurrentSocialMedia = async () => {
-            if (socialMediaId.value === 0) {
-                currentSocialMedia.value.name = ''
-                currentSocialMedia.value.status = 1
-                currentSocialMedia.value.icon = ''
-                return
-            }
-
-            const socialMedia = await getSocialMedia(socialMediaId.value);
-            currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
-        };
-        onMounted(() => {
-            getCurrentSocialMedia();
-        });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                // icon: zod
-                // .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
-                icon: zod
-                    .string({ required_error: "This field is required" }).min(1, "This field is required"),
-
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
-        const { handleSubmit } = useForm({
-            validationSchema,
-            initialValues: {
-                name: "",
-                icon: "",
-                status: 1,
-            },
-        });
-        const onSubmit = async (method: String) => {
-            if (method == "Add") {
-                await onSubmitAdd();
-            }
-            else if (method == "Edit") {
-                await onSubmitEdit();
-            }
-            else
-                return;
-        };
-        const onSubmitAdd = handleSubmit(async (values) => {
-            var socialMediaData = currentSocialMedia.value;
-            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
-        });
-        const onSubmitEdit = async () => {
-            const socialMediaData = currentSocialMedia.value;
-            await editSocialMedia(socialMediaData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
-        };
-        return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/',
+        })
     },
-    components: { ErrorMessage }
+    skipStepFn: async () => {
+        console.log('test', customerForm.data)
+        currentCustomer.value.customer_group_id = undefined
+        currentCustomer.value.emergency_contact_name = undefined
+        currentCustomer.value.emergency_contact_phone = undefined
+
+        router.push({
+            name: '/customer-add/profile-picture'
+        })
+    }
+
 })
 
+const route = useRoute()
+const router = useRouter()
+
+const pageTitle = 'Step 2: Customer Additional Info'
+const currentCustomer = ref(defaultCreateUpdateCustomer)
+const getCurrentCustomer = () => {
+
+    currentCustomer.value = customerForm.data
 
 
+
+}
+const customerGroups2 = ref<CustomerGroup[]>([])
+onMounted(async () => {
+    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+    customerGroups2.value = customerGroups
+})
+
+onMounted(() => {
+    getCurrentCustomer()
+}
+)
+
+
+const validationSchema = toFormValidator(zod
+    .object({
+        emergency_contact_name:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        emergency_contact_phone:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
+                    },
+                    zod
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                        .min(9, "Please enter a valid number"),
+                ),
+        customer_group_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+    }));
+
+const { handleSubmit } = useForm({
+    validationSchema,
+    initialValues: {
+        emergency_contact_name: currentCustomer.value.emergency_contact_name,
+        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
+        customer_group_id: currentCustomer.value.customer_group_id,
+    },
+})
+
+const onSubmitAdd = handleSubmit(async (values) => {
+    var customerData = currentCustomer.value
+    customerForm.data.emergency_contact_name = customerData.emergency_contact_name
+    customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
+    customerForm.data.customer_group_id = customerData.customer_group_id
+
+    return true
+
+})
 </script>
 
 <template>
     <div class="page-content-inner">
-        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+        <form class="form-layout" @submit.prevent="">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -128,13 +139,12 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                <VField id="emergency_contact_name">
+                                    <VLabel>Emergency Contact Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
-                                            autocomplete="given-name" />
-                                        <ErrorMessage class="help is-danger" name="name" />
-
+                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_name" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -144,45 +154,38 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="icon">
-                                    <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
-                                    <VControl :icon="currentSocialMedia.icon">
-                                        <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
-                                            <VOption value="">Icon</VOption>
-                                            <VOption :value="'lnir lnir-facebook'">facebook</VOption>
-                                            <VOption :value="'lnir lnir-instagram'">Instagram</VOption>
-                                            <VOption :value="'lnir lnir-whatsapp'">Whatsapp</VOption>
-                                            <VOption :value="'lnir lnir-snapchat'">Snapchat</VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="icon" />
+                                <VField id="emergency_contact_phone">
+                                    <VLabel>Emergency Contact Phone</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentCustomer.emergency_contact_phone" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_phone" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_phone" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
                     </div>
+                    <!--Fieldset-->
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
-
+                                <VField id="customer_group_id">
+                                    <VLabel>Customer Group</VLabel>
                                     <VControl>
-                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
-                                            :label="SocialMediaConsts.showStatusName(0)" name="status"
-                                            color="warning" />
-
-                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
-                                            :label="SocialMediaConsts.showStatusName(1)" name="status"
-                                            color="success" />
-                                        <ErrorMessage class="help is-danger" name="status" />
-
+                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
+                                            <VOption value="">Customer Group</VOption>
+                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                                                :value="customerGroup.id">{{ customerGroup.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </form>
@@ -273,7 +276,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opasocialMedia: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

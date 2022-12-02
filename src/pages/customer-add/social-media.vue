@@ -1,114 +1,110 @@
-<script  lang="ts">
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue';
-import { z as zod } from 'zod'
-import { toFormValidator } from '@vee-validate/zod';
-import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
+import { addUser } from '/@src/composable/Others/User/addUser'
+import { editUser } from '/@src/composable/Others/User/editUser'
+import { User } from '/@src/utils/api/Others/User'
+import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { getUser } from '/@src/composable/Others/User/getUser'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { toFormValidator } from '@vee-validate/zod';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { boolean, optional, z as zod } from 'zod'
+import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { Department } from '/@src/utils/api/Others/Department'
+import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
+import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
+import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
+import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
+import { City } from '/@src/utils/api/Others/City';
+import { Room } from '/@src/utils/api/Others/Room';
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
+import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
-import { lineIcons } from '/@src/data/icons/lineIcons'
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { editSocialMedia } from '/@src/composable/CRM/SocialMedia/editSocialMedia';
+import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
+import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
+import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
 
-
-export default defineComponent({
-    props: {
-        formType: {
-            type: String,
-            default: "",
-        },
-    },
-    emits: ["onSubmit"],
-    setup(props, context) {
-        const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Social Media");
-        const head = useHead({
-            title: "Social Media",
-        });
-        const notif = useNotyf();
-        const formType = ref("");
-        formType.value = props.formType;
-        const route = useRoute();
-        const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-        const backRoute = "/social-media";
-        const currentSocialMedia = ref(defaultSocialMedia);
-        const socialMediaId = ref(0);
-        // @ts-ignore
-        socialMediaId.value = route.params?.id as number ?? 0;
-        const getCurrentSocialMedia = async () => {
-            if (socialMediaId.value === 0) {
-                currentSocialMedia.value.name = ''
-                currentSocialMedia.value.status = 1
-                currentSocialMedia.value.icon = ''
-                return
-            }
-
-            const socialMedia = await getSocialMedia(socialMediaId.value);
-            currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
-        };
-        onMounted(() => {
-            getCurrentSocialMedia();
-        });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                // icon: zod
-                // .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
-                icon: zod
-                    .string({ required_error: "This field is required" }).min(1, "This field is required"),
-
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
-        const { handleSubmit } = useForm({
-            validationSchema,
-            initialValues: {
-                name: "",
-                icon: "",
-                status: 1,
-            },
-        });
-        const onSubmit = async (method: String) => {
-            if (method == "Add") {
-                await onSubmitAdd();
-            }
-            else if (method == "Edit") {
-                await onSubmitEdit();
-            }
-            else
-                return;
-        };
-        const onSubmitAdd = handleSubmit(async (values) => {
-            var socialMediaData = currentSocialMedia.value;
-            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
-        });
-        const onSubmitEdit = async () => {
-            const socialMediaData = currentSocialMedia.value;
-            await editSocialMedia(socialMediaData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
-        };
-        return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
-    },
-    components: { ErrorMessage }
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Social Media')
+const head = useHead({
+    title: 'Customer',
 })
+const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 5,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        console.log(isValid)
+        if (isValid) {
+            router.push({
+                name: '/customer-add/preview',
+            })
+        }
+
+    },
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/medical-info',
+        })
+    },
+    skipStepFn: async () => {
+        customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+        router.push({
+            name: '/customer-add/preview'
+        })
+    }
+
+})
+const route = useRoute()
+const router = useRouter()
+const pageTitle = 'Step 5: Customer Social Media'
+const socialMedias2 = ref<SocialMedia[]>([])
+interface SocialMediaChecked {
+    socialMedia: SocialMedia
+    checked: boolean
+    url: string
+}
+const socialMediaChecked = ref<SocialMediaChecked[]>([])
+onMounted(async () => {
+    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+    socialMedias2.value = socialMedias
+    for (let index = 0; index < socialMedias2.value.length; index++) {
+        socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+
+    }
+})
+
+
+
+const onSubmitAdd = async () => {
+
+    for (let i = 0; i < socialMediaChecked.value.length; i++) {
+        if (socialMediaChecked.value[i].checked == true) {
+            customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
+
+        }
+        else {
+        }
+
+    }
+    return true
+}
+
 
 
 
@@ -116,9 +112,7 @@ export default defineComponent({
 
 <template>
     <div class="page-content-inner">
-        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+        <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -128,12 +122,15 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
-                                            autocomplete="given-name" />
-                                        <ErrorMessage class="help is-danger" name="name" />
+
+                                <VField>
+
+                                    <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
+                                        <VCheckbox :label="socialMedia.socialMedia.name"
+                                            :name="socialMedia.socialMedia.id" color="primary"
+                                            :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
+                                        <VIcon :icon="socialMedia.socialMedia.icon"
+                                            class="has-text-primary is-size-5" />
 
                                     </VControl>
                                 </VField>
@@ -144,45 +141,24 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="icon">
-                                    <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
-                                    <VControl :icon="currentSocialMedia.icon">
-                                        <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
-                                            <VOption value="">Icon</VOption>
-                                            <VOption :value="'lnir lnir-facebook'">facebook</VOption>
-                                            <VOption :value="'lnir lnir-instagram'">Instagram</VOption>
-                                            <VOption :value="'lnir lnir-whatsapp'">Whatsapp</VOption>
-                                            <VOption :value="'lnir lnir-snapchat'">Snapchat</VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="icon" />
+                                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
+
+                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
+                                        URL:
+                                    </VLabel>
+                                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                                        <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
+                                            :key="socialMedia.socialMedia.id" />
+
                                     </VControl>
+
                                 </VField>
                             </div>
                         </div>
-
                     </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
-                                    <VControl>
-                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
-                                            :label="SocialMediaConsts.showStatusName(0)" name="status"
-                                            color="warning" />
 
-                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
-                                            :label="SocialMediaConsts.showStatusName(1)" name="status"
-                                            color="success" />
-                                        <ErrorMessage class="help is-danger" name="status" />
 
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </form>
@@ -273,7 +249,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opasocialMedia: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

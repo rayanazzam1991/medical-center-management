@@ -51,8 +51,7 @@ const toEdit = () => {
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Icon:</h4>
-                            <VAvatar :picture="currentSocialMedia.icon" :initials="currentSocialMedia.name"
-                                size="medium" squared color="primary" />
+                            <VIcon :icon="currentSocialMedia.icon" />
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>

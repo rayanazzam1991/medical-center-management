@@ -1,5 +1,6 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import VAvatar from '/@src/components/base/avatar/VAvatar.vue';
+import VIcon from '/@src/components/base/icon/VIcon.vue';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { deleteSocialMedia } from '/@src/composable/CRM/socialMedia/deleteSocialMedia';
@@ -86,13 +87,9 @@ const columns = {
     align: 'center',
     renderRow: (row: any) =>
       h(
-        VAvatar,
+        VIcon,
         {
-          picture: row?.icon,
-          initials: row?.name,
-          size: 'small',
-          color: 'primary',
-          squared: true,
+          icon: row?.icon,
         },
         {
           default() {
