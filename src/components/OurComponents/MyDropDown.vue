@@ -41,11 +41,10 @@ const emits = defineEmits<{
             <hr class="dropdown-divider" />
 
             <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-    () => {
-        emits('remove')
-        close()
-    }
-            ">
+            () => {
+                emits('remove')
+                close()
+            }">
                 <div class="icon">
                     <i aria-hidden="true" class="lnil lnil-trash-can-alt"></i>
                 </div>

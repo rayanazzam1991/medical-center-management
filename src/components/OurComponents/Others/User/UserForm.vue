@@ -191,7 +191,6 @@ export default defineComponent({
             var userForm = currentCreateUpdateUser.value
             userForm.first_name = userData.first_name
             userForm.last_name = userData.last_name
-            userForm.password = userData.password
             userForm.gender = userData.gender
             userForm.birth_date = userData.birth_date
             userForm.phone_number = userData.phone_number
@@ -309,6 +308,7 @@ export default defineComponent({
                                 <VField id="phone_number">
                                     <VLabel>{{ viewWrapper.pageTitle }} phone number </VLabel>
                                     <VControl icon="feather:chevrons-right">
+
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
                                         <ErrorMessage name="phone_number" />
