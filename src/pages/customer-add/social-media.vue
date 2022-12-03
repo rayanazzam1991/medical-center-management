@@ -1,69 +1,109 @@
-<script lang="ts">
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { defaultPagination } from '/@src/utils/response'
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { addUser } from '/@src/composable/Others/User/addUser'
+import { editUser } from '/@src/composable/Others/User/editUser'
+import { User } from '/@src/utils/api/Others/User'
+import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { getUser } from '/@src/composable/Others/User/getUser'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { useNotyf } from '/@src/composable/useNotyf';
+import { toFormValidator } from '@vee-validate/zod';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { boolean, optional, z as zod } from 'zod'
+import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { Department } from '/@src/utils/api/Others/Department'
+import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
+import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
+import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
+import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
+import { City } from '/@src/utils/api/Others/City';
+import { Room } from '/@src/utils/api/Others/Room';
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
+import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
+import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
+import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
+import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
 
-
-
-export default defineComponent({
-    props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        button_name: {
-            type: String,
-            default: '',
-        },
-        pagination: {
-            default: defaultPagination,
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Social Media')
+const head = useHead({
+    title: 'Customer',
+})
+const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 5,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        console.log(isValid)
+        if (isValid) {
+            router.push({
+                name: '/customer-add/preview',
+            })
         }
+
     },
-
-    setup(props, context) {
-
-        const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 150
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/medical-info',
         })
-        const searchName = ref('')
-        const searchPrice = ref()
-        const searchDuration = ref()
-        const perPage = ref(pagination.per_page)
-        const searchStatus = ref()
-        const searchFilter = ref(defaultServiceSearchFilter)
-
-        const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value,
-                duration_minutes: searchDuration.value,
-                service_price: searchPrice.value,
-                per_page: perPage.value
-            }
-            context.emit('search', searchFilter.value)
-
-        }
-
-        const resetFilter = () => {
-            searchName.value = ''
-            searchStatus.value = undefined
-            searchDuration.value = undefined
-            searchPrice.value = undefined
-            searchFilter.value.name = undefined
-            searchFilter.value.status = undefined
-            searchFilter.value.duration_minutes = undefined
-            searchFilter.value.service_price = undefined
-
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        return { isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
     },
-
+    skipStepFn: async () => {
+        customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+        router.push({
+            name: '/customer-add/preview'
+        })
+    }
 
 })
+const route = useRoute()
+const router = useRouter()
+const pageTitle = 'Step 5: Customer Social Media'
+const socialMedias2 = ref<SocialMedia[]>([])
+interface SocialMediaChecked {
+    socialMedia: SocialMedia
+    checked: boolean
+    url: string
+}
+const socialMediaChecked = ref<SocialMediaChecked[]>([])
+onMounted(async () => {
+    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+    socialMedias2.value = socialMedias
+    for (let index = 0; index < socialMedias2.value.length; index++) {
+        socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+
+    }
+})
+
+
+
+const onSubmitAdd = async () => {
+
+    for (let i = 0; i < socialMediaChecked.value.length; i++) {
+        if (socialMediaChecked.value[i].checked == true) {
+            customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
+
+        }
+        else {
+        }
+
+    }
+    return true
+}
 
 
 
@@ -71,95 +111,63 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <div class="column filter">
+    <div class="page-content-inner">
+        <form class="form-layout" @submit.prevent="onSubmitAdd()">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
 
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchName" type="text" class="input is-rounded"
-                                            placeholder="Name..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                                            placeholder="Duration..." />
-                                    </VControl>
-                                </VField>
-                            </div>
-                            <div class="column filter">
+                                <VField>
 
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchPrice" type="number" class="input is-rounded"
-                                            placeholder="Price..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter ">
-                                    <VControl>
-                                        <VSelect v-model="searchStatus" class="is-rounded">
-                                            <VOption value="">Status</VOption>
-                                            <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
-                                            <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
-                                        </VSelect>
+                                    <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
+                                        <VCheckbox :label="socialMedia.socialMedia.name"
+                                            :name="socialMedia.socialMedia.id" color="primary"
+                                            :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
+                                        <VIcon :icon="socialMedia.socialMedia.icon"
+                                            class="has-text-primary is-size-5" />
+
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
                     </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
-                            <VButton to="/service/add" color="primary" raised> {{ button_name }}
-                            </VButton>
+                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
+                                        URL:
+                                    </VLabel>
+                                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                                        <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
+                                            :key="socialMedia.socialMedia.id" />
+
+                                    </VControl>
+
+                                </VField>
+                            </div>
                         </div>
-                        <div>
-
-                            <VField>
-                                <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-
-                        </div>
-
-
                     </div>
+
+
 
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 

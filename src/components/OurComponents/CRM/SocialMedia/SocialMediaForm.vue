@@ -1,17 +1,18 @@
-<script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
-import { useHead } from '@vueuse/head'
-import { ErrorMessage, useForm } from 'vee-validate'
-import { addService } from '/@src/composable/Others/Services/addService'
-import { editService } from '/@src/composable/Others/Services/editService'
-import { getService } from '/@src/composable/Others/Services/getService'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultService } from '/@src/stores/Others/Service/serviceStore'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Service } from '/@src/utils/api/Others/Service'
-import { ServiceConsts } from '/@src/utils/consts/service'
+<script  lang="ts">
+import VRadio from '/@src/components/base/form/VRadio.vue';
 import { z as zod } from 'zod'
-
-
+import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
+import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
+import { lineIcons } from '/@src/data/icons/lineIcons'
+import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
+import { editSocialMedia } from '/@src/composable/CRM/SocialMedia/editSocialMedia';
 
 
 export default defineComponent({
@@ -24,9 +25,9 @@ export default defineComponent({
     emits: ["onSubmit"],
     setup(props, context) {
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Service");
+        viewWrapper.setPageTitle("Social Media");
         const head = useHead({
-            title: "Service",
+            title: "Social Media",
         });
         const notif = useNotyf();
         const formType = ref("");
@@ -34,26 +35,24 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
         const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-        const backRoute = "/service";
-        const currentService = ref(defaultService);
-        const serviceId = ref(0);
+        const backRoute = "/social-media";
+        const currentSocialMedia = ref(defaultSocialMedia);
+        const socialMediaId = ref(0);
         // @ts-ignore
-        serviceId.value = route.params?.id as number ?? 0;
-        const getCurrentService = async () => {
-            if (serviceId.value === 0) {
-                currentService.value.name = ''
-                currentService.value.status = 1
-                currentService.value.description = undefined
-                currentService.value.service_price = undefined
-                currentService.value.duration_minutes = undefined
+        socialMediaId.value = route.params?.id as number ?? 0;
+        const getCurrentSocialMedia = async () => {
+            if (socialMediaId.value === 0) {
+                currentSocialMedia.value.name = ''
+                currentSocialMedia.value.status = 1
+                currentSocialMedia.value.icon = ''
                 return
             }
 
-            const service = await getService(serviceId.value);
-            currentService.value = service != undefined ? service : defaultService;
+            const socialMedia = await getSocialMedia(socialMediaId.value);
+            currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
         };
         onMounted(() => {
-            getCurrentService();
+            getCurrentSocialMedia();
         });
         const validationSchema = toFormValidator(zod
             .object({
@@ -62,28 +61,11 @@ export default defineComponent({
                         required_error: "This field is required",
                     })
                     .min(1, "This field is required"),
-                description: zod.string().optional(),
-                duration_minutes:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
+                // icon: zod
+                // .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
+                icon: zod
+                    .string({ required_error: "This field is required" }).min(1, "This field is required"),
 
-                service_price:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
                 status: zod
                     .number({ required_error: "Please choose one" }),
             }));
@@ -91,10 +73,8 @@ export default defineComponent({
             validationSchema,
             initialValues: {
                 name: "",
+                icon: "",
                 status: 1,
-                description: "",
-                duration_minutes: undefined,
-                service_price: undefined,
             },
         });
         const onSubmit = async (method: String) => {
@@ -108,24 +88,24 @@ export default defineComponent({
                 return;
         };
         const onSubmitAdd = handleSubmit(async (values) => {
-            var serviceData = currentService.value;
-            serviceData = await addService(serviceData) as Service;
+            var socialMediaData = currentSocialMedia.value;
+            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
             // @ts-ignore
             notif.dismissAll();
             // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
+            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
+            router.push({ path: `/social-media/${socialMediaData.id}` });
         });
-        const onSubmitEdit = handleSubmit(async () => {
-            const serviceData = currentService.value;
-            await editService(serviceData);
+        const onSubmitEdit = async () => {
+            const socialMediaData = currentSocialMedia.value;
+            await editSocialMedia(socialMediaData);
             // @ts-ignore
             notif.dismissAll();
             // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
-        });
-        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
+            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/social-media/${socialMediaData.id}` });
+        };
+        return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
     },
     components: { ErrorMessage }
 })
@@ -148,55 +128,12 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="name" v-slot="{ field }">
+                                <VField id="name">
                                     <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentService.name" type="text" placeholder=""
+                                        <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
                                             autocomplete="given-name" />
-                                        <ErrorMessage name="name" class="help is-danger" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="description" v-slot="{ field }">
-                                    <VLabel>Description</VLabel>
-                                    <VControl icon="feather:file-text">
-                                        <VInput v-model="currentService.description" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="service_price" v-slot="{ field }">
-                                    <VLabel>Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
-                                    <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="currentService.service_price" type="number" />
-                                        <ErrorMessage name="service_price" class="help is-danger" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="duration_minutes" v-slot="{ field }">
-                                    <VLabel>Duration</VLabel>
-                                    <VControl icon="feather:clock">
-                                        <VInput v-model="currentService.duration_minutes" type="number" />
-                                        <ErrorMessage name="duration_minutes" class="help is-danger" />
+                                        <ErrorMessage class="help is-danger" name="name" />
 
                                     </VControl>
                                 </VField>
@@ -207,16 +144,38 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
+                                <VField id="icon">
+                                    <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
+                                    <VControl :icon="currentSocialMedia.icon">
+                                        <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
+                                            <VOption value="">Icon</VOption>
+                                            <VOption :value="'lnir lnir-facebook'">facebook</VOption>
+                                            <VOption :value="'lnir lnir-instagram'">Instagram</VOption>
+                                            <VOption :value="'lnir lnir-whatsapp'">Whatsapp</VOption>
+                                            <VOption :value="'lnir lnir-snapchat'">Snapchat</VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="icon" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="status">
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
-                                        <VRadio v-model="currentService.status" :value="ServiceConsts.INACTIVE"
-                                            :label="ServiceConsts.showStatusName(0)" name="status" color="warning" />
+                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
+                                            :label="SocialMediaConsts.showStatusName(0)" name="status"
+                                            color="warning" />
 
-                                        <VRadio v-model="currentService.status" :value="ServiceConsts.ACTIVE"
-                                            :label="ServiceConsts.showStatusName(1)" name="status" color="success" />
-                                        <ErrorMessage name="status" class="help is-danger" />
+                                        <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
+                                            :label="SocialMediaConsts.showStatusName(1)" name="status"
+                                            color="success" />
+                                        <ErrorMessage class="help is-danger" name="status" />
 
                                     </VControl>
                                 </VField>
@@ -314,7 +273,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opaservice: 0;
+                                opasocialMedia: 0;
                                 cursor: pointer;
 
                                 &:checked {

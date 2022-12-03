@@ -26,7 +26,7 @@ export default defineComponent({
         const pagination = props.pagination
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
-            return y.value > 30
+            return y.value > 0
         })
         const searchName = ref('')
         const perPage = ref(pagination.per_page)

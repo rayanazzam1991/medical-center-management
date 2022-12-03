@@ -1,165 +1,200 @@
-<script lang="ts">
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { defaultPagination } from '/@src/utils/response'
+<script setup  lang="ts">
+
+import VRadio from '/@src/components/base/form/VRadio.vue';
+
+import { z as zod } from 'zod'
+import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
 
 
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Additional Info')
+const head = useHead({
+    title: 'Customer',
+})
+// const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 2,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        if (isValid) {
+            router.push({
+                name: '/customer-add/profile-picture',
+            })
 
-export default defineComponent({
-    props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        button_name: {
-            type: String,
-            default: '',
-        },
-        pagination: {
-            default: defaultPagination,
         }
     },
-
-    setup(props, context) {
-
-        const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 150
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/',
         })
-        const searchName = ref('')
-        const searchPrice = ref()
-        const searchDuration = ref()
-        const perPage = ref(pagination.per_page)
-        const searchStatus = ref()
-        const searchFilter = ref(defaultServiceSearchFilter)
-
-        const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value,
-                duration_minutes: searchDuration.value,
-                service_price: searchPrice.value,
-                per_page: perPage.value
-            }
-            context.emit('search', searchFilter.value)
-
-        }
-
-        const resetFilter = () => {
-            searchName.value = ''
-            searchStatus.value = undefined
-            searchDuration.value = undefined
-            searchPrice.value = undefined
-            searchFilter.value.name = undefined
-            searchFilter.value.status = undefined
-            searchFilter.value.duration_minutes = undefined
-            searchFilter.value.service_price = undefined
-
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        return { isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
     },
+    skipStepFn: async () => {
+        console.log('test', customerForm.data)
+        currentCustomer.value.customer_group_id = undefined
+        currentCustomer.value.emergency_contact_name = undefined
+        currentCustomer.value.emergency_contact_phone = undefined
 
+        router.push({
+            name: '/customer-add/profile-picture'
+        })
+    }
 
 })
 
+const route = useRoute()
+const router = useRouter()
+
+const pageTitle = 'Step 2: Customer Additional Info'
+const currentCustomer = ref(defaultCreateUpdateCustomer)
+const getCurrentCustomer = () => {
+
+    currentCustomer.value = customerForm.data
 
 
 
+}
+const customerGroups2 = ref<CustomerGroup[]>([])
+onMounted(async () => {
+    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+    customerGroups2.value = customerGroups
+})
+
+onMounted(() => {
+    getCurrentCustomer()
+}
+)
+
+
+const validationSchema = toFormValidator(zod
+    .object({
+        emergency_contact_name:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        emergency_contact_phone:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
+                    },
+                    zod
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                        .min(9, "Please enter a valid number"),
+                ),
+        customer_group_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+    }));
+
+const { handleSubmit } = useForm({
+    validationSchema,
+    initialValues: {
+        emergency_contact_name: currentCustomer.value.emergency_contact_name,
+        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
+        customer_group_id: currentCustomer.value.customer_group_id,
+    },
+})
+
+const onSubmitAdd = handleSubmit(async (values) => {
+    var customerData = currentCustomer.value
+    customerForm.data.emergency_contact_name = customerData.emergency_contact_name
+    customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
+    customerForm.data.customer_group_id = customerData.customer_group_id
+
+    return true
+
+})
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <div class="column filter">
-
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchName" type="text" class="input is-rounded"
-                                            placeholder="Name..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                                            placeholder="Duration..." />
-                                    </VControl>
-                                </VField>
-                            </div>
-                            <div class="column filter">
-
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchPrice" type="number" class="input is-rounded"
-                                            placeholder="Price..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter ">
-                                    <VControl>
-                                        <VSelect v-model="searchStatus" class="is-rounded">
-                                            <VOption value="">Status</VOption>
-                                            <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
-                                            <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
-                                        </VSelect>
+    <div class="page-content-inner">
+        <form class="form-layout" @submit.prevent="">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="emergency_contact_name">
+                                    <VLabel>Emergency Contact Name</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_name" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_name" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
                     </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
-
-                            <VButton to="/service/add" color="primary" raised> {{ button_name }}
-                            </VButton>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="emergency_contact_phone">
+                                    <VLabel>Emergency Contact Phone</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentCustomer.emergency_contact_phone" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_phone" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_phone" />
+                                    </VControl>
+                                </VField>
+                            </div>
                         </div>
-                        <div>
-
-                            <VField>
-                                <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-
+                    </div>
+                    <!--Fieldset-->
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="customer_group_id">
+                                    <VLabel>Customer Group</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
+                                            <VOption value="">Customer Group</VOption>
+                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                                                :value="customerGroup.id">{{ customerGroup.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
                         </div>
-
-
                     </div>
 
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
