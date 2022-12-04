@@ -2,7 +2,7 @@
 
 import VRadio from '/@src/components/base/form/VRadio.vue';
 
-import { z as zod } from 'zod'
+import { custom, z as zod } from 'zod'
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
@@ -12,6 +12,8 @@ import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerS
 import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer';
+import { useNotyf } from '/@src/composable/useNotyf';
 
 
 const viewWrapper = useViewWrapper()
@@ -40,7 +42,6 @@ customerForm.setStep({
         })
     },
     skipStepFn: async () => {
-        console.log('test', customerForm.data)
         currentCustomer.value.customer_group_id = undefined
         currentCustomer.value.emergency_contact_name = undefined
         currentCustomer.value.emergency_contact_phone = undefined
@@ -54,6 +55,7 @@ customerForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
+const notif = useNotyf()
 
 const pageTitle = 'Step 2: Customer Additional Info'
 const currentCustomer = ref(defaultCreateUpdateCustomer)
@@ -121,8 +123,20 @@ const onSubmitAdd = handleSubmit(async (values) => {
     customerForm.data.emergency_contact_name = customerData.emergency_contact_name
     customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
     customerForm.data.customer_group_id = customerData.customer_group_id
+    const customer = await addCustomer(customerForm.data, customerForm.userForm)
+    if (customer.success) {
+        // @ts-ignore
 
-    return true
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(customer.success)
+
+    }
 
 })
 </script>

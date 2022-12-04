@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { defaultCustomerGroup } from "../../Others/CustomerGroup/customerGroupStore"
-import { defaultUser } from "../../Others/User/userStore"
+import { defaultCreateUpdateUser, defaultUser } from "../../Others/User/userStore"
 import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
 import { useApi } from "/@src/composable/useApi"
 import { CreateUpdateCustomer, Customer, addCustomerApi, editCustomerApi } from "/@src/utils/api/CRM/Customer"
@@ -11,9 +11,9 @@ export const defaultCreateUpdateCustomer: CreateUpdateCustomer = {
   id: 0,
   emergency_contact_name: '',
   emergency_contact_phone: '',
-  user_id: 0,
-  medical_info_id: 0,
-  customer_group_id: 0,
+  user: defaultCreateUpdateUser,
+  medical_info_id: undefined,
+  customer_group_id: 1,
   social_medias: []
 }
 export const defaultCustomer: Customer = {
@@ -32,7 +32,9 @@ export const useCustomer = defineStore('customer', () => {
   const api = useApi()
   const customers = ref<Customer[]>([])
   const pagination = ref<Pagination>(defaultPagination)
-  
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
   const loading = ref(false)
 
   async function addCustomerStore(customer: CreateUpdateCustomer) {
@@ -45,6 +47,9 @@ export const useCustomer = defineStore('customer', () => {
 
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
       customers.value.push(returnedCustomer)
       return returnedCustomer
     } 
@@ -74,6 +79,9 @@ export const useCustomer = defineStore('customer', () => {
   }
 
   return {
+    success,
+    error_code,
+    message,
     customers,
     pagination,
     addCustomerStore,

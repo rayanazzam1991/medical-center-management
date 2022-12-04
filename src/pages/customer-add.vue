@@ -33,12 +33,14 @@ useHead({
                     <VButton type="submit" class="wizard-button-previous"
                         :disabled="customerForm.validateStepFn === null"
                         :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                        {{ customerForm.getStep() == 6 ? 'Add Customer' : 'Next' }}
+                        {{ customerForm.getStep() == 6 ? 'Add Customer' : customerForm.getStep() == 2 ? 'Submit & Next'
+                                : 'Next'
+                        }}
                     </VButton>
                     <VButton class="wizard-button-previous" :disabled="customerForm.skipable === false"
                         :color="customerForm.skipable === true ? 'dark' : 'dark'"
                         @click="() => customerForm?.skipStepFn?.()">
-                        Skip
+                        {{ customerForm.getStep() == 2 ? 'Skip & Submit' : 'Skip' }}
                     </VButton>
                 </div>
             </div>

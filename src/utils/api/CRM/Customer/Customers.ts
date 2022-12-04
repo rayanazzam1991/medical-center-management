@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
 import { CustomerGroup } from '../../Others/CustomerGroup'
-import { User } from '../../Others/User'
+import { CreateUpdateUser, User } from '../../Others/User'
 import { MedicalInfo } from '../MedicalInfo'
 import { SocialMedia } from '../SocialMedia'
 
@@ -19,8 +19,8 @@ export interface CreateUpdateCustomer {
   id?: number
   emergency_contact_name?: string
   emergency_contact_phone?: string
-  user_id: number
-  medical_info_id: number
+  user: CreateUpdateUser
+  medical_info_id?: number
   customer_group_id?: number
   social_medias: Array<CreateUpdateCustomerSocialMediaHelper>
 }

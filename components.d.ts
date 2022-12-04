@@ -19,7 +19,6 @@ declare module '@vue/runtime-core' {
     ComponentsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ComponentsMobileSubsidebar.vue')['default']
     ComponentsSubnav: typeof import('./src/layouts/navbar-items/ComponentsSubnav.vue')['default']
     ContactWidget: typeof import('./src/components/partials/widgets/ui-creative/ContactWidget.vue')['default']
-    CustomerForm: typeof import('./src/components/OurComponents/CRM/Customer/CustomerForm.vue')['default']
     CustomerFormNavigation: typeof import('./src/components/OurComponents/CRM/Customer/CustomerFormNavigation.vue')['default']
     CustomerGroupDetails: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupDetails.vue')['default']
     CustomerGroupForm: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupForm.vue')['default']

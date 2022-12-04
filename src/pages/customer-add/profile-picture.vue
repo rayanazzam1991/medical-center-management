@@ -29,11 +29,6 @@ customerForm.setStep({
         }
 
     },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/additional-info',
-        })
-    },
     skipStepFn: async () => {
 
         router.push({

@@ -6,6 +6,7 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
 import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
@@ -16,6 +17,7 @@ import { City } from '/@src/utils/api/Others/City';
 import { Room } from '/@src/utils/api/Others/Room';
 import { UserStatus } from '/@src/utils/api/Others/UserStatus';
 import { z as zod } from 'zod';
+import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
 
 
 
@@ -45,6 +47,7 @@ const route = useRoute()
 const router = useRouter()
 
 const pageTitle = 'Step 1: Customer Main Info'
+const phoneCheck = ref<string>('')
 const currentUser = ref(defaultCreateUpdateUser)
 const getCurrentUser = () => {
 
@@ -167,19 +170,26 @@ const { handleSubmit } = useForm({
 const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
+    const { result } = await phoneExistsCheck(userData.phone_number)
+    phoneCheck.value = result as string
+    if (phoneCheck.value === 'false') {
 
-    customerForm.userForm.first_name = userData.first_name
-    customerForm.userForm.last_name = userData.last_name
-    customerForm.userForm.password = userData.password
-    customerForm.userForm.gender = userData.gender
-    customerForm.userForm.birth_date = userData.birth_date
-    customerForm.userForm.phone_number = userData.phone_number
-    customerForm.userForm.address = userData.address
-    customerForm.userForm.room_id = userData.room_id
-    customerForm.userForm.city_id = userData.city_id
-    customerForm.userForm.user_status_id = userData.user_status_id
-    return true
 
+        customerForm.userForm.first_name = userData.first_name
+        customerForm.userForm.last_name = userData.last_name
+        customerForm.userForm.password = userData.password
+        customerForm.userForm.gender = userData.gender
+        customerForm.userForm.birth_date = userData.birth_date
+        customerForm.userForm.phone_number = userData.phone_number
+        customerForm.userForm.address = userData.address
+        customerForm.userForm.room_id = userData.room_id
+        customerForm.userForm.city_id = userData.city_id
+        customerForm.userForm.user_status_id = userData.user_status_id
+        return true
+    }
+    else {
+        return false
+    }
 })
 
 
@@ -247,10 +257,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-12">
                                 <VField id="phone_number">
                                     <VLabel>phone number </VLabel>
-                                    <VControl icon="feather:chevrons-right">
+                                    <VControl :class="phoneCheck != '' ? 'has-validation has-error' : ''"
+                                        icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
+
                                         <ErrorMessage class="help is-danger" name="phone_number" />
+                                        <p v-if="phoneCheck != ''" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
                                 </VField>
                             </div>
@@ -286,7 +299,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <ErrorMessage class="help is-danger" name="gender" />
                                     </VControl>
                                 </VField>
-                                {{ currentUser.gender }}
                             </div>
                         </div>
                     </div>

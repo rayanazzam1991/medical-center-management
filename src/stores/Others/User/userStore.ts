@@ -10,6 +10,7 @@ import {
   addUserApi,
   editUserApi,
   getUserApi,
+  phoneExistsCheckApi,
 } from '/@src/utils/api/Others/User'
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
@@ -139,6 +140,19 @@ export const useUser = defineStore('user', () => {
       loading.value = false
     }
   }
+  async function phoneExistsCheckStore(phone_number: string) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await phoneExistsCheckApi(api, phone_number)
+      return returnedResponse.response.data as string 
+  
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
     users,
@@ -148,6 +162,7 @@ export const useUser = defineStore('user', () => {
     editUserStore,
     getUserStore,
     getUsersStore,
+    phoneExistsCheckStore,
   } as const
 })
 
