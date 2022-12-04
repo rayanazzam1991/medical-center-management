@@ -97,7 +97,7 @@ const validationSchema = toFormValidator(zod
                         invalid_type_error: "That's not a date!",
                     }),
                 ),
-
+        gender: zod.string(),
         phone_number:
             zod
                 .preprocess(
@@ -279,13 +279,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                            color="warning" />
+                                            color="success" />
 
                                         <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
                                             color="success" />
                                         <ErrorMessage class="help is-danger" name="gender" />
                                     </VControl>
                                 </VField>
+                                {{ currentUser.gender }}
                             </div>
                         </div>
                     </div>

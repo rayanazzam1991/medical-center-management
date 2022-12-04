@@ -14,11 +14,20 @@ const customerForm = useCustomerForm()
 
 <template>
   <nav class="wizard-navigation">
+    <!-- 
     <RouterLink to="/" class="wizard-brand">
       <AnimatedLogo width="38px" height="38px" />
-    </RouterLink>
+    </RouterLink> -->
 
-    <div class="navbar-item is-wizard-title">
+    <div class="">
+      <span class="title-wrap">
+        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="#" darkOutlined
+          color="white">
+          Back to previous page
+        </VButton>
+      </span>
+    </div>
+    <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
         Step {{ customerForm.step }}: <span>{{ customerForm.stepTitle }}</span>
       </span>
@@ -57,7 +66,6 @@ const customerForm = useCustomerForm()
         </RouterLink>
       </template>
     </VDropdown>
-
     <div class="navbar-item is-dark-mode">
       <div class="navbar-icon">
         <label class="dark-mode">
