@@ -13,6 +13,7 @@ export type SubnavId =
   | 'elements'
   | 'components'
   | 'search'
+'others'
 
 const props = withDefaults(
   defineProps<{
@@ -177,12 +178,12 @@ watch(
       <template #links>
         <div class="centered-links" :class="[activeSubnav === 'search' && 'is-hidden']">
           <a :class="[
-            (activeSubnav === 'home' || route.path.startsWith('/navbar/dashboards')) &&
+            (activeSubnav === 'others' || route.path.startsWith('/navbar/dashboards')) &&
             'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('home')"
-            @click="toggleSubnav('home')">
+          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('otherss')"
+            @click="toggleSubnav('others')">
             <i aria-hidden="true" class="iconify" data-icon="feather:activity"></i>
-            <span>Dashboards</span>
+            <span>Others</span>
           </a>
           <a :class="[
             (activeSubnav === 'layouts' || route.path.startsWith('/navbar/layouts')) &&
@@ -240,6 +241,8 @@ watch(
         <div :class="[
           !(activeSubnav === 'closed' || activeSubnav === 'search') && 'is-active',
         ]" class="navbar-subnavbar">
+
+          <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" />
           <DashboardsSubnav :class="[activeSubnav === 'home' && 'is-active']" />
 
           <LayoutsSubnav :class="[activeSubnav === 'layouts' && 'is-active']" />
