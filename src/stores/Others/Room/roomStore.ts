@@ -33,7 +33,7 @@ export const defaultCreateUpdateRoom: CreateUpdateRoom = {
 export const defaultRoomSearchFilter: RoomSearchFilter = {
   number: undefined,
   floor: undefined,
-  department: undefined,
+  department_id: undefined,
   status: undefined,
   page: undefined,
   order: undefined,

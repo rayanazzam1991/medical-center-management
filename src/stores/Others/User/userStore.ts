@@ -43,8 +43,7 @@ export const defaultUser: User = {
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
-  first_name: undefined,
-  last_name: undefined,
+  name: undefined,
   gender: undefined,
   phone_number: undefined,
   room_id: undefined,

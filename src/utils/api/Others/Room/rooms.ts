@@ -20,7 +20,7 @@ export interface CreateUpdateRoom {
 export interface RoomSearchFilter {
   number?: number
   floor?: number
-  department?: number
+  department_id?: number
   status?: number
   page?: number
   per_page?: number
