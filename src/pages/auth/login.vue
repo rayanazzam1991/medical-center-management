@@ -5,6 +5,9 @@ import { useDarkmode } from '/@src/stores/darkmode'
 import { useUserSession } from '/@src/stores/userSession'
 import { useNotyf } from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
+import {signIn} from "/@src/composable/Others/User/Auth/signIn";
+import {SignInRequest} from "/@src/utils/api/Others/User/auth";
+import {defaultSignInRequest} from "/@src/stores/Others/User/authStore";
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -13,6 +16,7 @@ const route = useRoute()
 const notif = useNotyf()
 const userSession = useUserSession()
 const redirect = route.query.redirect as string
+const signRequest = ref(defaultSignInRequest);
 
 const handleLogin = async () => {
   if (!isLoading.value) {
@@ -24,13 +28,19 @@ const handleLogin = async () => {
     notif.dismissAll()
     notif.success('Welcome back, Erik Kovalsky')
 
-    if (redirect) {
-      router.push(redirect)
-    } else {
-      router.push({
-        name: '/dashboard'
-      })
-    }
+    const loggedUser = await signIn(signRequest.value).then(response =>{
+      return response;
+    }).catch(error =>{
+      console.log(error)
+    })
+    console.log("loggedUser",loggedUser)
+    // if (redirect) {
+    //   router.push(redirect)
+    // } else {
+    //   router.push({
+    //     name: '/dashboard'
+    //   })
+    // }
 
     isLoading.value = false
   }
@@ -97,9 +107,9 @@ useHead({
                 <div class="auth-content">
                   <h2>Welcome Back.</h2>
                   <p>Please sign in to your account</p>
-                  <RouterLink to="/auth/signup-2">
-                    I do not have an account yet
-                  </RouterLink>
+<!--                  <RouterLink to="/auth/signup-2">-->
+<!--                    I do not have an account yet-->
+<!--                  </RouterLink>-->
                 </div>
                 <div class="auth-form-wrapper">
                   <!-- Login Form -->
@@ -108,7 +118,7 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput
+                          <VInput v-model="signRequest.phone_number"
                             type="text"
                             placeholder="Username"
                             autocomplete="username"
@@ -119,7 +129,7 @@ useHead({
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput
+                          <VInput v-model="signRequest.password"
                             type="password"
                             placeholder="Password"
                             autocomplete="current-password"
@@ -127,12 +137,12 @@ useHead({
                         </VControl>
                       </VField>
 
-                      <!-- Switch -->
-                      <VField>
-                        <VControl class="setting-item">
-                          <VCheckbox label="Remember me" paddingless />
-                        </VControl>
-                      </VField>
+<!--                      &lt;!&ndash; Switch &ndash;&gt;-->
+<!--                      <VField>-->
+<!--                        <VControl class="setting-item">-->
+<!--                          <VCheckbox label="Remember me" paddingless />-->
+<!--                        </VControl>-->
+<!--                      </VField>-->
 
                       <!-- Submit -->
                       <div class="login">
@@ -147,9 +157,9 @@ useHead({
                         </VButton>
                       </div>
 
-                      <div class="forgot-link has-text-centered">
-                        <a>Forgot Password?</a>
-                      </div>
+<!--                      <div class="forgot-link has-text-centered">-->
+<!--                        <a>Forgot Password?</a>-->
+<!--                      </div>-->
                     </div>
                   </form>
                 </div>

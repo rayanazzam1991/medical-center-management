@@ -1,7 +1,10 @@
-<route lang="yaml">
-meta: requiresAuth: false
+<route lang="json">
+{
+"meta": {
+"requiresAuth": false
+}
+}
 </route>
-
 <script setup lang="ts">
 const route = useRoute()
 const renderKey = ref(0)
