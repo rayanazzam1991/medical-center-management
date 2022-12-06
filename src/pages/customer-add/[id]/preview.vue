@@ -7,7 +7,6 @@ import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer'
 import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
-import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore'
 import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore'
 import { defaultSocialMediaSearchFilter, useSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore'
 import { useCity } from '/@src/stores/Others/City/cityStore'
@@ -42,7 +41,7 @@ const customerGroups = customerGroup.customerGroups
 const socialMedias = socialMedia.socialMedias
 
 customerForm.setStep({
-    number: 6,
+    number: 5,
     canNavigate: true,
     skipable: false,
     validateStepFn: async () => {
@@ -50,7 +49,7 @@ customerForm.setStep({
     },
     previousStepFn: async () => {
         router.push({
-            name: '/customer-add/social-media',
+            path: '/customer-add/social-media',
         })
     },
 
@@ -62,7 +61,7 @@ const pageTitle = 'Customer Add Review'
 
 const onSubmitAdd = async () => {
 
-    const customer = await addCustomer(customerForm.data, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    // const customer = await addCustomer(customerForm.data, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
     // @ts-ignore
     notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
 }

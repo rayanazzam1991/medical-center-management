@@ -33,7 +33,7 @@ const customerForm = useCustomerForm()
       </span>
     </div>
 
-    <VDropdown class="wizard-dropdown">
+    <!-- <VDropdown class="wizard-dropdown">
       <template #button="{ toggle }">
         <div tabindex="0" class="is-trigger" @click="toggle" @keydown.space.prevent="toggle">
           <i aria-hidden="true" class="iconify" data-icon="feather:chevron-down"></i>
@@ -65,7 +65,7 @@ const customerForm = useCustomerForm()
           Step 6: Preview
         </RouterLink>
       </template>
-    </VDropdown>
+    </VDropdown> -->
     <div class="navbar-item is-dark-mode">
       <div class="navbar-icon">
         <label class="dark-mode">

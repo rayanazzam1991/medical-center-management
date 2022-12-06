@@ -32,11 +32,18 @@ import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
 import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
 import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
-import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
 import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
+import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
+import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
 import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
 
 const viewWrapper = useViewWrapper()
+const route = useRoute()
+const router = useRouter()
+const customerId = ref<number>(0)
+// @ts-ignore
+customerId.value = route.params?.id
+
 viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
     title: 'Customer',
@@ -44,7 +51,7 @@ const head = useHead({
 const notif = useNotyf()
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 5,
+    number: 4,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
@@ -52,26 +59,19 @@ customerForm.setStep({
         console.log(isValid)
         if (isValid) {
             router.push({
-                name: '/customer-add/preview',
+                name: '/',
             })
         }
 
     },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/medical-info',
-        })
-    },
     skipStepFn: async () => {
         customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
         router.push({
-            name: '/customer-add/preview'
+            name: '/'
         })
     }
 
 })
-const route = useRoute()
-const router = useRouter()
 const pageTitle = 'Step 5: Customer Social Media'
 const socialMedias2 = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
@@ -102,7 +102,22 @@ const onSubmitAdd = async () => {
         }
 
     }
-    return true
+    customerForm.dataUpdate.is_completed = true
+    const customer = await addSocialMediasToCustomer(customerId.value, customerForm.customerSocialMediaForm)
+
+    if (customer.success) {
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was edited successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(customer.success)
+
+    }
+
 }
 
 

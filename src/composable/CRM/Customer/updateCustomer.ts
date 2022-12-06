@@ -1,27 +1,29 @@
 import { addUser } from "../../Others/User/addUser"
 import { defaultCustomer, useCustomer } from "/@src/stores/CRM/Customer/customerStore"
-import { CreateCustomer, CreateUpdateCustomerSocialMediaHelper, Customer } from "/@src/utils/api/CRM/Customer"
+import {  CreateUpdateCustomerSocialMediaHelper, Customer, UpdateCustomer } from "/@src/utils/api/CRM/Customer"
 import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
 import { CreateUpdateUser } from "/@src/utils/api/Others/User"
 
 
-export async function addCustomer(
-    customerData: CreateCustomer ,
+export async function updateCustomer(
+    customer_id : number,
+    customerData: UpdateCustomer ,
     userData : CreateUpdateUser ,
+    medicalData : MedicalInfo,
+    customerSocialMedia : Array<CreateUpdateCustomerSocialMediaHelper>
      ) {
-    userData.password = '1231313'
 
-    const newCustomerData : CreateCustomer = {
+    const newCustomerData : UpdateCustomer = {
         emergency_contact_phone: customerData.emergency_contact_phone,
         emergency_contact_name : customerData.emergency_contact_name,
         customer_group_id : customerData.customer_group_id,
-        medical_info_id : undefined ,
+        medical_info : medicalData ,
         user : userData,
-        social_medias : []
+        social_medias : customerSocialMedia
     }
     const customerResponse =  useCustomer()
-
-    var customer : Customer = await customerResponse.addCustomerStore(newCustomerData) ?? defaultCustomer
+    console.log(newCustomerData)
+    var customer : Customer = await customerResponse.updateCustomerStore(customer_id ,newCustomerData) ?? defaultCustomer
 
     var success : boolean = customerResponse.success ?? false
     var error_code : string = customerResponse.error_code ?? ''

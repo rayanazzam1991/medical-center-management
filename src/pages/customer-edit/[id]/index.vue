@@ -24,7 +24,9 @@ import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/get
 import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
 import { useNotyf } from '/@src/composable/useNotyf';
-
+import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
+import { updateCustomer } from '/@src/composable/CRM/Customer/updateCustomer';
+import { UpdateCustomer } from '/@src/utils/api/CRM/Customer';
 
 
 
@@ -38,16 +40,22 @@ const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 1,
     canNavigate: true,
-    skipable: false,
+    skipable: true,
     validateStepFn: async () => {
-        var isValid = await onSubmitAdd()
+        var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-add/${customerForm.data.id}/profile-picture`,
+                path: `/customer-edit/${customerForm.dataUpdate.id}/profile-picture`,
             })
 
         }
     },
+    skipStepFn: async () => {
+        router.push({
+            path: `/customer-edit/${customerForm.dataUpdate.id}/profile-picture`,
+        })
+
+    }
 })
 
 const route = useRoute()
@@ -57,13 +65,58 @@ const pageTitle = 'Step 1: Customer Main Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
-const getCurrentCustomer = () => {
+const customerId = ref(0)
+// @ts-ignore
+customerId.value = route.params.id
+const fetchCustomer = async () => {
+    const { customer } = await getCustomer(customerId.value)
+    currentUser.value.first_name = customer.user.first_name
+    currentUser.value.last_name = customer.user.last_name
+    currentUser.value.gender = customer.user.gender
+    currentUser.value.birth_date = customer.user.birth_date
+    currentUser.value.phone_number = customer.user.phone_number
+    currentUser.value.address = customer.user.address
+    currentUser.value.city_id = customer.user.city.id
+    currentUser.value.room_id = customer.user.room.id
+    currentUser.value.user_status_id = customer.user.status.id
+    currentCustomer.value.customer_group_id = customer.customer_group.id
+    currentCustomer.value.emergency_contact_name = customer.emergency_contact_name
+    currentCustomer.value.emergency_contact_phone = customer.emergency_contact_phone
+    currentCustomer.value.id = customer.id
+    currentCustomer.value.medical_info_id = customer.medical_info.id
+    currentCustomer.value.social_medias = customer.social_medias
+    currentCustomer.value.user = customer.user
 
-    currentUser.value = customerForm.userForm
-    currentCustomer.value = customerForm.data
+    customerForm.userForm.id = customer.user.id
+    customerForm.userForm.first_name = currentUser.value.first_name
+    customerForm.userForm.last_name = currentUser.value.last_name
+    customerForm.userForm.gender = currentUser.value.gender
+    customerForm.userForm.birth_date = currentUser.value.birth_date
+    customerForm.userForm.phone_number = currentUser.value.phone_number
+    customerForm.userForm.address = currentUser.value.address
+    customerForm.userForm.room_id = currentUser.value.room_id
+    customerForm.userForm.city_id = currentUser.value.city_id
+    customerForm.userForm.user_status_id = currentUser.value.user_status_id
+    customerForm.dataUpdate.emergency_contact_name = currentCustomer.value.emergency_contact_name
+    customerForm.dataUpdate.emergency_contact_phone = currentCustomer.value.emergency_contact_phone
+    customerForm.dataUpdate.customer_group_id = currentCustomer.value.customer_group_id
+    customerForm.dataUpdate.id = currentCustomer.value.id
+    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+    customerForm.medicalInfoForm.id = customer.medical_info.id
+    for (let i = 0; i < customer.social_medias.length; i++) {
+        // @ts-ignore
+        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
 
+
+    }
 
 }
+
 const cities2 = ref<City[]>([])
 const rooms2 = ref<Room[]>([])
 const statuses2 = ref<UserStatus[]>([])
@@ -78,12 +131,10 @@ onMounted(async () => {
     statuses2.value = userstatuses
     const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
     customerGroups2.value = customerGroups
+    await fetchCustomer()
 
 })
-onMounted(() => {
-    getCurrentCustomer()
-}
-)
+
 
 
 const validationSchema = toFormValidator(zod
@@ -209,47 +260,42 @@ const { handleSubmit } = useForm({
 })
 
 
-const onSubmitAdd = handleSubmit(async (values) => {
+const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
-    const { result } = await phoneExistsCheck(userData.phone_number)
-    phoneCheck.value = result as string
-    if (phoneCheck.value === 'false') {
-        var customerData = currentCustomer.value
-        customerForm.data.emergency_contact_name = customerData.emergency_contact_name
-        customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
-        customerForm.data.customer_group_id = customerData.customer_group_id
-        customerForm.userForm.first_name = userData.first_name
-        customerForm.userForm.last_name = userData.last_name
-        customerForm.userForm.password = userData.password
-        customerForm.userForm.gender = userData.gender
-        customerForm.userForm.birth_date = userData.birth_date
-        customerForm.userForm.phone_number = userData.phone_number
-        customerForm.userForm.address = userData.address
-        customerForm.userForm.room_id = userData.room_id
-        customerForm.userForm.city_id = userData.city_id
-        customerForm.userForm.user_status_id = userData.user_status_id
-        const customer = await addCustomer(customerForm.data, customerForm.userForm)
-        if (customer.success) {
-            customerForm.data.id = customer.customer.id
-            // @ts-ignore
-            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+    var customerData = currentCustomer.value
+    customerForm.dataUpdate.emergency_contact_name = customerData.emergency_contact_name
+    customerForm.dataUpdate.emergency_contact_phone = customerData.emergency_contact_phone
+    customerForm.dataUpdate.customer_group_id = customerData.customer_group_id
 
-            return true
-        }
-        else {
-            // @ts-ignore
+    customerForm.userForm.first_name = userData.first_name
+    customerForm.userForm.last_name = userData.last_name
+    customerForm.userForm.password = userData.password
+    customerForm.userForm.gender = userData.gender
+    customerForm.userForm.birth_date = userData.birth_date
+    customerForm.userForm.phone_number = userData.phone_number
+    customerForm.userForm.address = userData.address
+    customerForm.userForm.room_id = userData.room_id
+    customerForm.userForm.city_id = userData.city_id
+    customerForm.userForm.user_status_id = userData.user_status_id
+    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    if (customer.success) {
+        customerForm.dataUpdate.id = customer.customer.id
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
 
-            notif.error(customer.success)
-            return false
-
-
-        }
-
+        return true
     }
     else {
+        // @ts-ignore
+
+        notif.error(customer.success)
         return false
+
+
     }
+
+
 })
 
 
@@ -319,7 +365,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel>phone number </VLabel>
                                     <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                        <VInput disabled v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
 
                                         <ErrorMessage class="help is-danger" name="phone_number" />

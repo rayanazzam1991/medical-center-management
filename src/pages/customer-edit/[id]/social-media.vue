@@ -10,7 +10,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { optional, z as zod } from 'zod'
+import { boolean, optional, z as zod } from 'zod'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
 import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
@@ -28,123 +28,154 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
 import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
 import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
+import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
+import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
+import { defaultUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
 import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
-
+import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
+import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
+import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
+import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
+import { updateCustomer } from '/@src/composable/CRM/Customer/updateCustomer';
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Medical Info')
+const route = useRoute()
+const router = useRouter()
+const customerId = ref<number>(0)
+// @ts-ignore
+customerId.value = route.params?.id
+
+viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
     title: 'Customer',
 })
+const notif = useNotyf()
 const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 4,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
-        var isValid = await onSubmitAdd()
+        var isValid = await onSubmitEdit()
+        console.log(isValid)
         if (isValid) {
             router.push({
-                name: '/customer-add/social-media',
+                name: '/',
             })
         }
 
     },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/profile-picture',
-        })
-    },
     skipStepFn: async () => {
-        customerForm.medicalInfoForm.allergic = ''
-        customerForm.medicalInfoForm.blood_type = ''
-        customerForm.medicalInfoForm.chronic_diseases = ''
-        customerForm.medicalInfoForm.infectious_diseases = ''
-        customerForm.medicalInfoForm.smoking = 0
-        customerForm.medicalInfoForm.any_other_info = ''
+        customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
         router.push({
-            name: '/customer-add/social-media',
+            name: '/'
         })
     }
 
 })
-const getCurrentMedicalInfo = () => {
+const pageTitle = 'Step 5: Customer Social Media'
+const socialMedias2 = ref<SocialMedia[]>([])
+interface SocialMediaChecked {
+    socialMedia: SocialMedia
+    checked: boolean
+    url: string
+}
 
-    currentMedicalInfo.value = customerForm.medicalInfoForm
+const fetchCustomer = async () => {
+
+    const { customer } = await getCustomer(customerId.value)
+    for (let i = 0; i < customer.social_medias.length; i++) {
+        // @ts-ignore
+
+        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
+
+    }
+
+    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+    customerForm.medicalInfoForm.id = customer.medical_info.id
+
+    customerForm.userForm.id = customer.user.id
+    customerForm.userForm.first_name = customer.user.first_name
+    customerForm.userForm.last_name = customer.user.last_name
+    customerForm.userForm.gender = customer.user.gender
+    customerForm.userForm.birth_date = customer.user.birth_date
+    customerForm.userForm.phone_number = customer.user.phone_number
+    customerForm.userForm.address = customer.user.address
+    customerForm.userForm.room_id = customer.user.room.id
+    customerForm.userForm.city_id = customer.user.status.id
+    customerForm.userForm.user_status_id = customer.user.status.id
+    customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
+    customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
+    customerForm.dataUpdate.customer_group_id = customer.customer_group.id
+    customerForm.dataUpdate.id = customerId.value
 
 
 
 }
 
-const currentMedicalInfo = ref(defaultMedicalInfo)
-const route = useRoute()
-const router = useRouter()
-const pageTitle = 'Step 4: Customer Medical Info'
-onMounted(() => {
-    getCurrentMedicalInfo
+
+
+const socialMediaChecked = ref<SocialMediaChecked[]>([])
+onMounted(async () => {
+    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+    socialMedias2.value = socialMedias
+    if (customerForm.dataUpdate.id != customerId.value) {
+
+        await fetchCustomer()
+    }
+
+
+    for (let index = 0; index < socialMedias2.value.length; index++) {
+        // @ts-ignore
+        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMedias2.value[index].id)
+        if (socialMedia) {
+
+            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: true, url: socialMedia.url })
+        }
+        else {
+            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+        }
+
+    }
+
+
+})
+
+
+
+const onSubmitEdit = async () => {
+    customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+    for (let i = 0; i < socialMediaChecked.value.length; i++) {
+        if (socialMediaChecked.value[i].checked == true) {
+            customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
+
+        }
+
+    }
+    customerForm.dataUpdate.is_completed = true
+    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    if (customer.success) {
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(customer.success)
+
+    }
+
 }
-)
 
-
-const validationSchema = toFormValidator(zod
-    .object({
-        blood_type:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-
-        allergic:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        chronic_diseases:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        infectious_diseases:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        smoking: zod.number().optional(),
-        any_other_info: zod.string({
-            invalid_type_error: "Invalid Type",
-        }).optional()
-    }));
-
-const { handleSubmit } = useForm({
-    validationSchema,
-    initialValues: {
-        blood_type: currentMedicalInfo.value.blood_type,
-        allergic: currentMedicalInfo.value.allergic,
-        chronic_diseases: currentMedicalInfo.value.chronic_diseases,
-        infectious_diseases: currentMedicalInfo.value.infectious_diseases,
-        smoking: currentMedicalInfo.value.smoking,
-        any_other_info: currentMedicalInfo.value.allergic,
-    },
-})
-
-const onSubmitAdd = handleSubmit(async (values) => {
-    var medicalInfoData = currentMedicalInfo.value
-    customerForm.medicalInfoForm.allergic = medicalInfoData.allergic
-    customerForm.medicalInfoForm.blood_type = medicalInfoData.blood_type
-    customerForm.medicalInfoForm.chronic_diseases = medicalInfoData.chronic_diseases
-    customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
-    customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
-    customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
-
-    return true
-
-})
 
 
 
@@ -152,7 +183,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 <template>
     <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="onSubmitAdd()">
+        <form class="form-layout" @submit.prevent="onSubmitEdit()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -162,16 +193,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="blood_type">
-                                    <VLabel>Blood Type</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
-                                            <VOption value="">Blood Type</VOption>
-                                            <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES"
-                                                :key="blood_type" :value="blood_type">{{ blood_type }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="blood_type" />
+
+                                <VField>
+
+                                    <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
+                                        <VCheckbox :label="socialMedia.socialMedia.name"
+                                            :name="socialMedia.socialMedia.id" color="primary"
+                                            :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
+                                        <VIcon :icon="socialMedia.socialMedia.icon"
+                                            class="has-text-primary is-size-5" />
+
                                     </VControl>
                                 </VField>
                             </div>
@@ -181,78 +212,24 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="allergic">
-                                    <VLabel>Allergic Reactions:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.allergic" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="allergic" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="chronic_diseases">
-                                    <VLabel>Chronic Diseases:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="infectious_diseases">
-                                    <VLabel>Infectious Diseases:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
-                                            placeholder="" autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="infectious_diseases" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="smooking">
-                                    <VLabel>Smoke?</VLabel>
+                                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
-                                    <VControl>
-                                        <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
-                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.FALSE)"
-                                            name="smooking" color="warning" />
+                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
+                                        URL:
+                                    </VLabel>
+                                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                                        <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
+                                            :key="socialMedia.socialMedia.id" />
 
-                                        <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.TRUE"
-                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.TRUE)"
-                                            name="smooking" color="success" />
-                                        <ErrorMessage class="help is-danger" name="smooking" />
                                     </VControl>
+
                                 </VField>
                             </div>
                         </div>
                     </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="any_other_info">
-                                    <VLabel>Other Info:</VLabel>
-                                    <VControl>
-                                        <VTextarea v-model="currentMedicalInfo.any_other_info" />
-                                        <ErrorMessage class="help is-danger" name="any_other_info" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
+
+
+
                 </div>
             </div>
         </form>
