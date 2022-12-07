@@ -21,9 +21,9 @@ const customerForm = useCustomerForm()
 
     <div class="">
       <span class="title-wrap">
-        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="#" darkOutlined
+        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/customer" darkOutlined
           color="white">
-          Back to previous page
+          Back to customers page
         </VButton>
       </span>
     </div>

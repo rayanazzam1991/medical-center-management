@@ -99,18 +99,18 @@ const validationSchema = toFormValidator(zod
                 .string({
                     required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
         birth_date:
             zod
                 .preprocess(
                     (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+                        const processed = zod.string({}).regex(/(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
 
                     },
                     zod.date({
-                        required_error: "Please select a date and time",
                         invalid_type_error: "That's not a date!",
-                    }),
+                    }).optional(),
                 ),
         gender: zod.string(),
         phone_number:
@@ -129,7 +129,7 @@ const validationSchema = toFormValidator(zod
                 .string({
                     required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
 
         city_id: zod
             .preprocess(
@@ -171,7 +171,7 @@ const validationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
                         return processed.success ? processed.data : input;
                     },
                     zod
@@ -181,7 +181,7 @@ const validationSchema = toFormValidator(zod
         customer_group_id: zod
             .preprocess(
                 (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
                     return processed.success ? processed.data : input;
                 },
                 zod.number()

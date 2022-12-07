@@ -3,7 +3,7 @@ import { defaultCustomerGroup } from "../../Others/CustomerGroup/customerGroupSt
 import { defaultCreateUpdateUser, defaultUser } from "../../Others/User/userStore"
 import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
 import { useApi } from "/@src/composable/useApi"
-import { CreateCustomer,UpdateCustomer, Customer, addCustomerApi, addMedicalInfoApi, CreateUpdateCustomerSocialMediaHelper, addSocialMediaApi, getCustomerApi, updateCustomerApi } from "/@src/utils/api/CRM/Customer"
+import { CreateCustomer,UpdateCustomer, Customer, addCustomerApi, addMedicalInfoApi, CreateUpdateCustomerSocialMediaHelper, addSocialMediaApi, getCustomerApi, updateCustomerApi, CustomerSearchFilter, getCustomersApi } from "/@src/utils/api/CRM/Customer"
 import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
@@ -17,6 +17,7 @@ export const defaultCreateCustomer: CreateCustomer = {
   customer_group_id: 1,
   social_medias: [],
   is_completed : false,
+  
 }
 export const defaultUpdateCustomer: UpdateCustomer = {
   id: 0,
@@ -30,16 +31,34 @@ export const defaultUpdateCustomer: UpdateCustomer = {
 
 }
 export const defaultCustomer: Customer = {
-    id: 0,
-    emergency_contact_name: '',
-    emergency_contact_phone: '',
-    user: defaultUser,
-    medical_info: defaultMedicalInfo,
-    customer_group: defaultCustomerGroup,
-    social_medias: [],
-    is_completed : false,
+  id: 0,
+  emergency_contact_name: '',
+  emergency_contact_phone: '',
+  user: defaultUser,
+  medical_info: defaultMedicalInfo,
+  customer_group: defaultCustomerGroup,
+  social_medias: [],
+  is_completed : false,
 
-  }
+}
+
+export const defaultCustomerSearchFilter: CustomerSearchFilter = {
+  name : undefined,
+  phone : undefined,
+  gender : undefined,
+  date_between : undefined ,
+  from : undefined,
+  to : undefined ,
+  city_id : undefined,
+  customer_group_id : undefined,
+  is_completed : undefined,
+  user_status_id: undefined,
+  page : undefined,
+  per_page : undefined,
+  order_by : undefined,
+  order : undefined,
+
+}
 
 
 
@@ -96,24 +115,21 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  // async function editCustomerStore(customer: CreateUpdateCustomer) {
-  //   if (loading.value) return
+  async function getCustomersStore(searchFilter: CustomerSearchFilter) {
+    if (loading.value) return
 
-  //   loading.value = true
+    loading.value = true
 
-  //   try {
-  //     const response = await editCustomerApi(api, customer)
-  //     var returnedCustomer: Customer
-  //     returnedCustomer = response.response.data
-  //     customers.value.splice(
-  //       customers.value.findIndex((userElement) => (userElement.id = customer.id)),
-  //       1
-  //     )
-  //     customers.value.push(returnedCustomer)
-  //   } finally {
-  //     loading.value = false
-  //   }
-  // }
+    try {
+      const returnedResponse = await getCustomersApi(api, searchFilter)
+      customers.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+    } finally {
+      loading.value = false
+    }
+  }
+
+
   async function addMedicalInfoStore(customer_id: number , medical_info : MedicalInfo) {
     if (loading.value) return
 
@@ -181,7 +197,8 @@ export const useCustomer = defineStore('customer', () => {
     addSocialMediaStore,
     addMedicalInfoStore,
     getCustomerStore,
-    updateCustomerStore
+    updateCustomerStore,
+    getCustomersStore
   } as const
 })
 

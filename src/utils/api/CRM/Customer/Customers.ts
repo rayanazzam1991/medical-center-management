@@ -42,6 +42,22 @@ export interface CreateUpdateCustomerSocialMediaHelper {
   social_media_id: number
   url: string
 }
+export interface CustomerSearchFilter {
+  name? : string
+  phone? : number
+  gender? : string
+  date_between? : string 
+  from? : string
+  to? : string 
+  city_id? : number
+  customer_group_id? : number
+  is_completed? : boolean
+  user_status_id?: number
+  page? : number
+  per_page? : number
+  order_by? : string
+  order? : string
+}
 
 export async function addCustomerApi(
   api: AxiosInstance,
@@ -90,6 +106,17 @@ export async function getCustomerApi(
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`customer/${customer_id}`)
 
+  return { response }
+}
+
+export async function getCustomersApi(
+  api: AxiosInstance,
+  searchFilter : CustomerSearchFilter
+  ): Promise<{ response: CustomResponseCollection;  }> {
+
+  const { data: response , headers  } = await api.get(
+    'customer/getCustomersList', { params: searchFilter }
+  )
   return { response }
 }
 

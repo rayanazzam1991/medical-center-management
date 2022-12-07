@@ -29,7 +29,8 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   room_id: 0,
   city_id: 0,
   user_status_id: 0,
-  password: '0000000000'
+  password: '0000000000',
+  role: 'Reception',
 }
 export const defaultUser: User = {
   id: 0,
@@ -42,7 +43,9 @@ export const defaultUser: User = {
   room: defaultRoom,
   city: defaultCity,
   status: defaultUserStatus,
-  password: ''
+  password: '',
+  role: 'Reception',
+
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
