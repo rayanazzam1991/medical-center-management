@@ -1,62 +1,83 @@
-<script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
+<script setup  lang="ts">import { useHead } from '@vueuse/head';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
-export default defineComponent({
-    props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        button_name: {
-            type: String,
-            default: '',
-        },
-        pagination: {
-            default: defaultPagination,
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Profile Picture')
+const head = useHead({
+    title: 'Customer',
+})
+const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 3,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        if (fileError.value != '') {
+            // @ts-ignore
+            notif.error(fileError.value)
         }
+        else {
+            console.log('valid')
+            router.push({
+                name: '/customer-add/medical-info'
+            })
+
+        }
+
     },
-
-    setup(props, context) {
-
-        const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 0
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/additional-info',
         })
-        const searchName = ref('')
-        const perPage = ref(pagination.per_page)
-        const searchStatus = ref()
-        const searchFilter = ref(defaultNationalitySearchFilter)
-
-        const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value,
-                per_page: perPage.value
-            }
-            context.emit('search', searchFilter.value)
-
-        }
-
-        const resetFilter = () => {
-            searchName.value = ''
-            searchStatus.value = undefined
-            searchFilter.value.name = undefined
-            searchFilter.value.status = undefined
-
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
     },
+    skipStepFn: async () => {
 
+        router.push({
+            name: '/customer-add/medical-info'
+        })
+    }
 
 })
+
+const route = useRoute()
+const router = useRouter()
+const fileError = ref('')
+const pageTitle = 'Step 3: Customer Profile Picture'
+const onAddFile = (error: any, fileInfo: any) => {
+    if (error) {
+        // @ts-ignore
+        notif.error(`${error.main}: ${error.sub}`)
+        console.error(error)
+        fileError.value = error.main + ':' + error.sub
+        return
+
+    }
+
+    const _file = fileInfo.file as File
+    if (_file) {
+        // wizard.data.logo = _file
+    }
+}
+
+const onRemoveFile = (error: any, fileInfo: any) => {
+    fileError.value = ''
+    if (error) {
+        // @ts-ignore
+        notif.error(error)
+        console.error(error)
+        return
+    }
+
+    console.log(fileInfo)
+
+    // wizard.data.logo = null
+}
+
+
 
 
 
@@ -64,77 +85,46 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <VField class="column filter">
-                                <VControl icon="feather:search">
-                                    <input v-model="searchName" type="text" class="input is-rounded"
-                                        placeholder="Name..." />
-                                </VControl>
-                            </VField>
-                            <VField class="column ">
-                                <VControl>
-                                    <VSelect v-model="searchStatus" class="is-rounded">
-                                        <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                        </div>
-
-                    </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised>Reset Filters
-                            </VButton>
-
-                            <VButton to="/nationality/add" color="primary" raised> {{ button_name }}
-                            </VButton>
-                        </div>
-                        <div>
-
-                            <VField>
-                                <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-
-                        </div>
-
-
+    <div class="page-content-inner">
+        <form class="form-layout" @submit.prevent="">
+            <div id="wizard-step-1" class="inner-wrapper is-active">
+                <div class="step-content">
+                    <div class="step-title">
+                        <h2 class="dark-inverted">{{ pageTitle }}</h2>
                     </div>
 
+                    <div class="project-info">
+                        <div class="project-info-head">
+                            <div class="project-avatar-upload">
+                                <VField>
+                                    <VControl>
+                                        <VFilePond size="large" class="profile-filepond" name="profile_filepond"
+                                            :chunk-retry-delays="[500, 1000, 3000]"
+                                            label-idle="<i class='lnil lnil-cloud-upload'></i>"
+                                            :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']"
+                                            :image-preview-height="140" :image-resize-target-width="140"
+                                            :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
+                                            style-panel-layout="compact circle"
+                                            style-load-indicator-position="center bottom"
+                                            style-progress-indicator-position="right bottom"
+                                            style-button-remove-item-position="left bottom"
+                                            style-button-process-item-position="right bottom" @addfile="onAddFile"
+                                            @removefile="onRemoveFile" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 

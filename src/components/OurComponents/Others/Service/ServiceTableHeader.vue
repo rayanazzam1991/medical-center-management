@@ -34,7 +34,7 @@ export default defineComponent({
         const pagination = props.pagination
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
-            return y.value > 30
+            return y.value > 150
         })
         const searchFilterPop = ref(false)
         const searchName = ref('')

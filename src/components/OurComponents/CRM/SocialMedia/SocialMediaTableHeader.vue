@@ -1,9 +1,7 @@
-<script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
+<script lang="ts">import { defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore'
+import { SocialMediaConsts } from '/@src/utils/consts/socialMedia'
+import { defaultPagination } from '/@src/utils/response'
+
 
 
 export default defineComponent({
@@ -31,7 +29,7 @@ export default defineComponent({
         const searchName = ref('')
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
-        const searchFilter = ref(defaultNationalitySearchFilter)
+        const searchFilter = ref(defaultSocialMediaSearchFilter)
 
         const search = () => {
             searchFilter.value = {
@@ -52,7 +50,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
+        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, SocialMediaConsts }
     },
 
 
@@ -80,8 +78,8 @@ export default defineComponent({
                                 <VControl>
                                     <VSelect v-model="searchStatus" class="is-rounded">
                                         <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
+                                        <VOption value="0">{{ SocialMediaConsts.showStatusName(0) }}</VOption>
+                                        <VOption value="1">{{ SocialMediaConsts.showStatusName(1) }}</VOption>
                                     </VSelect>
                                 </VControl>
                             </VField>
@@ -91,14 +89,13 @@ export default defineComponent({
                     <div class="right  ">
                         <div class="buttons  ">
                             <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised>Reset Filters
+                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
 
-                            <VButton to="/nationality/add" color="primary" raised> {{ button_name }}
+                            <VButton to="/social-media/add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
                         <div>
-
                             <VField>
                                 <VControl>
                                     <div class="select is-rounded">
@@ -122,7 +119,6 @@ export default defineComponent({
                                     </div>
                                 </VControl>
                             </VField>
-
                         </div>
 
 

@@ -1,246 +1,188 @@
-<script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addUser } from '/@src/composable/Others/User/addUser'
-import { editUser } from '/@src/composable/Others/User/editUser'
-import { User } from '/@src/utils/api/Others/User'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { getUser } from '/@src/composable/Others/User/getUser'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { useNotyf } from '/@src/composable/useNotyf';
+<script setup  lang="ts">
 import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
-import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
+import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
+import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
+import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { City } from '/@src/utils/api/Others/City';
+import { Room } from '/@src/utils/api/Others/Room';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { z as zod } from 'zod';
 
 
-export default defineComponent({
-    props: {
-        formType: {
-            type: String,
-            default: '',
-        },
+
+
+
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Main Info')
+const head = useHead({
+    title: 'Customer',
+})
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 1,
+    canNavigate: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        if (isValid) {
+            router.push({
+                name: '/customer-add/additional-info',
+            })
+
+        }
     },
-    components: { ErrorMessage },
+})
 
-    emits: ['onSubmit'],
-    setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('User')
-        const head = useHead({
-            title: 'User',
-        })
-        const notif = useNotyf()
+const route = useRoute()
+const router = useRouter()
 
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
+const pageTitle = 'Step 1: Customer Main Info'
+const currentUser = ref(defaultCreateUpdateUser)
+const getCurrentUser = () => {
 
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/user'
-        const currentUser = ref(defaultUser)
-        const currentCreateUpdateUser = ref(defaultCreateUpdateUser)
-        const userId = ref(0)
-        // @ts-ignore
-        userId.value = route.params?.id as number ?? 0
-        const getCurrentUser = async () => {
-            if (userId.value === 0) {
-                currentUser.value.first_name = ''
-                currentUser.value.last_name = ''
-                currentUser.value.gender = ''
-                currentUser.value.birth_date = ''
-                currentUser.value.phone_number = ''
-                currentUser.value.address = ''
-                currentUser.value.room = defaultRoom
-                currentUser.value.city = defaultCity
-                currentUser.value.status = defaultUserStatus
-                return
-            }
-            const user = await getUser(userId.value)
-            currentUser.value = user != undefined ? user : defaultUser
-
-        }
-        const cities2 = ref<City[]>([])
-        const rooms2 = ref<Room[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        onMounted(async () => {
-            const { cities } = await getCitiesList(defaultCitySearchFilter)
-            cities2.value = cities
-            const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-            rooms2.value = rooms
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
-        })
-
-        onMounted(() => {
-            getCurrentUser()
-        }
-        )
+    currentUser.value = customerForm.userForm
 
 
-        const validationSchema = toFormValidator(zod
-            .object({
-                first_name:
+
+}
+const cities2 = ref<City[]>([])
+const rooms2 = ref<Room[]>([])
+const statuses2 = ref<UserStatus[]>([])
+onMounted(async () => {
+    const { cities } = await getCitiesList(defaultCitySearchFilter)
+    cities2.value = cities
+    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+    rooms2.value = rooms
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statuses2.value = userstatuses
+})
+
+onMounted(() => {
+    getCurrentUser()
+}
+)
+
+
+const validationSchema = toFormValidator(zod
+    .object({
+        first_name:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        last_name:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        birth_date:
+            zod
+                .preprocess(
+                    (input) => {
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
+                    },
+                    zod.date({
+                        required_error: "Please select a date and time",
+                        invalid_type_error: "That's not a date!",
+                    }),
+                ),
+
+        phone_number:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
+                    },
                     zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                last_name:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                // birth_date:
-                //     zod
-                //         .date({
-                //             required_error: "This field is required",
-                //         }),
-                phone_number:
-                    zod
-                        .preprocess(
-                            (input) => {
-                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                                return processed.success ? processed.data : input;
-                            },
-                            zod
-                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                                .min(9, "Please enter a valid number"),
-                        ),
-                address:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                        .min(9, "Please enter a valid number"),
+                ),
+        address:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
 
-                city_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                room_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                user_status_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-            }));
+        city_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+        room_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+        user_status_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+    }));
 
-        const { handleSubmit } = useForm({
-            validationSchema,
-            initialValues: {
-                first_name: '',
-                last_name: '',
-                gender: 'Female',
-                birth_date: '',
-                phone_number: '',
-                address: '',
-                room_id: 0,
-                city_id: 0,
-                user_status_id: 0,
-            },
-        })
-
-        const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
-            }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
-            }
-            else return
-        }
-        const onSubmitAdd = handleSubmit(async (values) => {
-
-            var userData = currentUser.value
-            console.log(userData)
-            var userForm = currentCreateUpdateUser.value
-            userForm.first_name = userData.first_name
-            userForm.last_name = userData.last_name
-            userForm.gender = userData.gender
-            userForm.birth_date = userData.birth_date
-            userForm.phone_number = userData.phone_number
-            userForm.address = userData.address
-            userForm.room_id = userData.room?.id
-            userForm.city_id = userData.city?.id
-            userForm.user_status_id = userData.status?.id
-            userData = await addUser(userForm) as User
-            // @ts-ignore
-            notif.dismissAll()
-            // @ts-ignore
-
-            notif.success(` ${viewWrapper.pageTitle} ${userData.number} was added successfully`)
-
-
-            router.push({ path: `/user/${userData.id}` })
-
-        })
-        const onSubmitEdit = async () => {
-            const userData = currentUser.value
-            var userForm = currentCreateUpdateUser.value
-            userForm.id = userData.id
-            userForm.first_name = userData.first_name
-            userForm.last_name = userData.last_name
-            userForm.gender = userData.gender
-            userForm.birth_date = userData.birth_date
-            userForm.phone_number = userData.phone_number
-            userForm.address = userData.address
-            userForm.room_id = userData.room?.id
-            userForm.city_id = userData.city?.id
-            userForm.user_status_id = userData.status?.id
-            console.log(userForm)
-            await editUser(userForm)
-            // @ts-ignore
-
-            notif.dismissAll()
-            // @ts-ignore
-
-            notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
-
-            router.push({ path: `/user/${userData.id}` })
-
-
-        }
-
-        return { pageTitle, onSubmit, currentUser, viewWrapper, backRoute, cities2, rooms2, statuses2 }
+const { handleSubmit } = useForm({
+    validationSchema,
+    initialValues: {
+        first_name: currentUser.value.first_name,
+        last_name: currentUser.value.last_name,
+        gender: currentUser.value.gender,
+        birth_date: currentUser.value.birth_date,
+        phone_number: currentUser.value.phone_number,
+        address: currentUser.value.address,
+        room_id: currentUser.value.room_id,
+        city_id: currentUser.value.city_id,
+        user_status_id: currentUser.value.user_status_id,
     },
+})
 
+
+const onSubmitAdd = handleSubmit(async (values) => {
+
+    var userData = currentUser.value
+
+    customerForm.userForm.first_name = userData.first_name
+    customerForm.userForm.last_name = userData.last_name
+    customerForm.userForm.password = userData.password
+    customerForm.userForm.gender = userData.gender
+    customerForm.userForm.birth_date = userData.birth_date
+    customerForm.userForm.phone_number = userData.phone_number
+    customerForm.userForm.address = userData.address
+    customerForm.userForm.room_id = userData.room_id
+    customerForm.userForm.city_id = userData.city_id
+    customerForm.userForm.user_status_id = userData.user_status_id
+    return true
 
 })
+
+
 
 
 
@@ -248,9 +190,7 @@ export default defineComponent({
 
 <template>
     <div class="page-content-inner">
-        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+        <form class="form-layout" @submit.prevent="">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -261,11 +201,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="first_name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} first name</VLabel>
+                                    <VLabel>first name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
-                                        <ErrorMessage name="first_name" />
+                                        <ErrorMessage class="help is-danger" name="first_name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -276,11 +216,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} last name</VLabel>
+                                    <VLabel>last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
-                                        <ErrorMessage name="last_name" />
+                                        <ErrorMessage class="help is-danger" name="last_name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -291,11 +231,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel>{{ viewWrapper.pageTitle }} birth date </VLabel>
+                                    <VLabel>birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
-                                        <ErrorMessage name="birth_date" />
+                                        <ErrorMessage class="help is-danger" name="birth_date" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -306,12 +246,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="phone_number">
-                                    <VLabel>{{ viewWrapper.pageTitle }} phone number </VLabel>
+                                    <VLabel>phone number </VLabel>
                                     <VControl icon="feather:chevrons-right">
-
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
-                                        <ErrorMessage name="phone_number" />
+                                        <ErrorMessage class="help is-danger" name="phone_number" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -322,10 +261,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel>{{ viewWrapper.pageTitle }} address </VLabel>
+                                    <VLabel>address </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VTextarea v-model="currentUser.address" />
-                                        <ErrorMessage name="address" />
+                                        <ErrorMessage class="help is-danger" name="address" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -336,7 +275,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="gender">
-                                    <VLabel>{{ viewWrapper.pageTitle }} gender</VLabel>
+                                    <VLabel>gender</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -344,7 +283,7 @@ export default defineComponent({
 
                                         <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
                                             color="success" />
-                                        <ErrorMessage name="gender" />
+                                        <ErrorMessage class="help is-danger" name="gender" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -355,16 +294,16 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="room_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} room</VLabel>
+                                    <VLabel>room</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser.room" v-model="currentUser.room.id">
-                                            <VOption value="">Department</VOption>
+                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
+                                            <VOption value="">Room</VOption>
                                             <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage name="room_id" />
+                                        <ErrorMessage class="help is-danger" name="room_id" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -375,16 +314,16 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="city_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} city</VLabel>
+                                    <VLabel>city</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser.city" v-model="currentUser.city.id">
-                                            <VOption value="">Department</VOption>
+                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                            <VOption value="">City</VOption>
                                             <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage name="city_id" />
+                                        <ErrorMessage class="help is-danger" name="city_id" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -395,16 +334,16 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="user_status_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel>status</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser.status" v-model="currentUser.status.id">
-                                            <VOption value="">Department</VOption>
+                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                            <VOption value="">Status</VOption>
                                             <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
                                                     status.name
                                             }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage name="user_status_id" />
+                                        <ErrorMessage class="help is-danger" name="user_status_id" />
                                     </VControl>
                                 </VField>
                             </div>

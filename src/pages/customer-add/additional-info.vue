@@ -1,144 +1,135 @@
-<script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
-import { useHead } from '@vueuse/head'
-import { ErrorMessage, useForm } from 'vee-validate'
-import { addService } from '/@src/composable/Others/Services/addService'
-import { editService } from '/@src/composable/Others/Services/editService'
-import { getService } from '/@src/composable/Others/Services/getService'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultService } from '/@src/stores/Others/Service/serviceStore'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Service } from '/@src/utils/api/Others/Service'
-import { ServiceConsts } from '/@src/utils/consts/service'
+<script setup  lang="ts">
+
+import VRadio from '/@src/components/base/form/VRadio.vue';
+
 import { z as zod } from 'zod'
+import { toFormValidator } from '@vee-validate/zod';
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
 
 
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle('Customer Additional Info')
+const head = useHead({
+    title: 'Customer',
+})
+// const notif = useNotyf()
+const customerForm = useCustomerForm()
+customerForm.setStep({
+    number: 2,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        if (isValid) {
+            router.push({
+                name: '/customer-add/profile-picture',
+            })
 
-
-export default defineComponent({
-    props: {
-        formType: {
-            type: String,
-            default: "",
-        },
+        }
     },
-    emits: ["onSubmit"],
-    setup(props, context) {
-        const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Service");
-        const head = useHead({
-            title: "Service",
-        });
-        const notif = useNotyf();
-        const formType = ref("");
-        formType.value = props.formType;
-        const route = useRoute();
-        const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-        const backRoute = "/service";
-        const currentService = ref(defaultService);
-        const serviceId = ref(0);
-        // @ts-ignore
-        serviceId.value = route.params?.id as number ?? 0;
-        const getCurrentService = async () => {
-            if (serviceId.value === 0) {
-                currentService.value.name = ''
-                currentService.value.status = 1
-                currentService.value.description = undefined
-                currentService.value.service_price = undefined
-                currentService.value.duration_minutes = undefined
-                return
-            }
-
-            const service = await getService(serviceId.value);
-            currentService.value = service != undefined ? service : defaultService;
-        };
-        onMounted(() => {
-            getCurrentService();
-        });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                description: zod.string().optional(),
-                duration_minutes:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
-
-                service_price:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
-        const { handleSubmit } = useForm({
-            validationSchema,
-            initialValues: {
-                name: "",
-                status: 1,
-                description: "",
-                duration_minutes: undefined,
-                service_price: undefined,
-            },
-        });
-        const onSubmit = async (method: String) => {
-            if (method == "Add") {
-                await onSubmitAdd();
-            }
-            else if (method == "Edit") {
-                await onSubmitEdit();
-            }
-            else
-                return;
-        };
-        const onSubmitAdd = handleSubmit(async (values) => {
-            var serviceData = currentService.value;
-            serviceData = await addService(serviceData) as Service;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
-        });
-        const onSubmitEdit = handleSubmit(async () => {
-            const serviceData = currentService.value;
-            await editService(serviceData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
-        });
-        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
+    previousStepFn: async () => {
+        router.push({
+            name: '/customer-add/',
+        })
     },
-    components: { ErrorMessage }
+    skipStepFn: async () => {
+        console.log('test', customerForm.data)
+        currentCustomer.value.customer_group_id = undefined
+        currentCustomer.value.emergency_contact_name = undefined
+        currentCustomer.value.emergency_contact_phone = undefined
+
+        router.push({
+            name: '/customer-add/profile-picture'
+        })
+    }
+
 })
 
+const route = useRoute()
+const router = useRouter()
+
+const pageTitle = 'Step 2: Customer Additional Info'
+const currentCustomer = ref(defaultCreateUpdateCustomer)
+const getCurrentCustomer = () => {
+
+    currentCustomer.value = customerForm.data
 
 
+
+}
+const customerGroups2 = ref<CustomerGroup[]>([])
+onMounted(async () => {
+    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+    customerGroups2.value = customerGroups
+})
+
+onMounted(() => {
+    getCurrentCustomer()
+}
+)
+
+
+const validationSchema = toFormValidator(zod
+    .object({
+        emergency_contact_name:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        emergency_contact_phone:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
+                    },
+                    zod
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
+                        .min(9, "Please enter a valid number"),
+                ),
+        customer_group_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+    }));
+
+const { handleSubmit } = useForm({
+    validationSchema,
+    initialValues: {
+        emergency_contact_name: currentCustomer.value.emergency_contact_name,
+        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
+        customer_group_id: currentCustomer.value.customer_group_id,
+    },
+})
+
+const onSubmitAdd = handleSubmit(async (values) => {
+    var customerData = currentCustomer.value
+    customerForm.data.emergency_contact_name = customerData.emergency_contact_name
+    customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
+    customerForm.data.customer_group_id = customerData.customer_group_id
+
+    return true
+
+})
 </script>
 
 <template>
     <div class="page-content-inner">
-        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+        <form class="form-layout" @submit.prevent="">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -148,56 +139,12 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                <VField id="emergency_contact_name">
+                                    <VLabel>Emergency Contact Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentService.name" type="text" placeholder=""
-                                            autocomplete="given-name" />
-                                        <ErrorMessage name="name" class="help is-danger" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="description" v-slot="{ field }">
-                                    <VLabel>Description</VLabel>
-                                    <VControl icon="feather:file-text">
-                                        <VInput v-model="currentService.description" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
-
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="service_price" v-slot="{ field }">
-                                    <VLabel>Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
-                                    <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="currentService.service_price" type="number" />
-                                        <ErrorMessage name="service_price" class="help is-danger" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="duration_minutes" v-slot="{ field }">
-                                    <VLabel>Duration</VLabel>
-                                    <VControl icon="feather:clock">
-                                        <VInput v-model="currentService.duration_minutes" type="number" />
-                                        <ErrorMessage name="duration_minutes" class="help is-danger" />
-
+                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_name" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -207,23 +154,38 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
-
-                                    <VControl>
-                                        <VRadio v-model="currentService.status" :value="ServiceConsts.INACTIVE"
-                                            :label="ServiceConsts.showStatusName(0)" name="status" color="warning" />
-
-                                        <VRadio v-model="currentService.status" :value="ServiceConsts.ACTIVE"
-                                            :label="ServiceConsts.showStatusName(1)" name="status" color="success" />
-                                        <ErrorMessage name="status" class="help is-danger" />
-
+                                <VField id="emergency_contact_phone">
+                                    <VLabel>Emergency Contact Phone</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentCustomer.emergency_contact_phone" type="text"
+                                            placeholder="" autocomplete="given-emergency_contact_phone" />
+                                        <ErrorMessage class="help is-danger" name="emergency_contact_phone" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
                     </div>
+                    <!--Fieldset-->
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="customer_group_id">
+                                    <VLabel>Customer Group</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
+                                            <VOption value="">Customer Group</VOption>
+                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                                                :value="customerGroup.id">{{ customerGroup.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </form>
@@ -314,7 +276,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opaservice: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

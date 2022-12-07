@@ -18,7 +18,7 @@ import { defaultUserStatus } from '../UserStatus/userStatusStore'
 import { defaultRoom } from '../Room/roomStore'
 
 export const defaultCreateUpdateUser: CreateUpdateUser = {
-  id: 0,
+  id: undefined,
   first_name: '',
   last_name: '',
   gender: '',
@@ -28,6 +28,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   room_id: 0,
   city_id: 0,
   user_status_id: 0,
+  password: '0000000000'
 }
 export const defaultUser: User = {
   id: 0,
@@ -40,6 +41,7 @@ export const defaultUser: User = {
   room: defaultRoom,
   city: defaultCity,
   status: defaultUserStatus,
+  password: ''
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
