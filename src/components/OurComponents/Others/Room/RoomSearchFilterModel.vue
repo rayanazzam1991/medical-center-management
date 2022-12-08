@@ -1,0 +1,121 @@
+<script lang="ts">
+import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
+import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
+import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
+import { Room } from '/@src/utils/api/Others/Room'
+import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { boolean } from 'zod'
+import { Department } from '/@src/utils/api/Others/Department'
+import { RoomConsts } from '/@src/utils/consts/room'
+
+
+export default defineComponent({
+    props: {
+        title: {
+            type: String,
+            default: '',
+        },
+        button_name: {
+            type: String,
+            default: '',
+        },
+        search_filter_popup: {
+            default: false,
+        },
+        is_reseted: {
+            type: Boolean,
+            default: false,
+        }
+    },
+    emits: ['search_filter_popup', 'search', 'resetFilter'],
+    setup(props, context) {
+        const searchNumber = ref()
+        const searchFloor = ref()
+        const searchDepartment = ref()
+        const searchStatus = ref()
+        const searchFilter = ref(defaultRoomSearchFilter)
+        const test = ref()
+        let search_filter_popup = computed({
+            get: () => props.search_filter_popup as boolean,
+            set(value) {
+                value = false
+                context.emit('search_filter_popup', value)
+            },
+        })
+        const search = () => {
+            searchFilter.value = {
+                number: searchNumber.value,
+                floor: searchFloor.value,
+                department_id: searchDepartment.value,
+                status: searchStatus.value,
+            }
+            context.emit('search', searchFilter.value)
+            search_filter_popup.value = false
+        }
+        const resetFilter = () => {
+            searchNumber.value = undefined
+            searchFloor.value = undefined
+            searchDepartment.value = undefined
+            searchStatus.value = undefined
+            searchFilter.value.number = undefined
+            searchFilter.value.floor = undefined
+            searchFilter.value.department_id = undefined
+            searchFilter.value.status = undefined
+
+            context.emit('resetFilter', searchFilter.value)
+        }
+        const departments2 = ref<Department[]>([])
+        onMounted(async () => {
+            console.log('testt')
+            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+            departments2.value = departments
+        })
+        return { RoomConsts, search, resetFilter, departments2, search_filter_popup, searchNumber, searchFloor, searchDepartment, searchStatus }
+    },
+})
+</script>
+
+<template>
+    <VModal title="Search Room" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <VField class="column filter">
+                    <VControl icon="feather:search">
+                        <input v-model="searchNumber" type="text" class="input is-rounded" placeholder="number..." />
+                    </VControl>
+                </VField>
+                <VField class="column filter">
+                    <VControl icon="feather:search">
+                        <input v-model="searchFloor" type="text" class="input is-rounded" placeholder="floor..." />
+                    </VControl>
+                </VField>
+                <VField class="column filter">
+                    <VControl>
+                        <VSelect v-model="searchDepartment" class="is-rounded">
+                            <VOption value="">Department</VOption>
+                            <VOption v-for="department in departments2" :key="department.id" :value="department.id">{{
+                                    department.name
+                            }}
+                            </VOption>
+                        </VSelect>
+                    </VControl>
+                </VField>
+                <VField class="column filter">
+                    <VControl>
+                        <VSelect v-model="searchStatus" class="is-rounded">
+                            <VOption value="">Status</VOption>
+                            <VOption value="0">{{ RoomConsts.showStatusName(0) }}</VOption>
+                            <VOption value="1">{{ RoomConsts.showStatusName(1) }}</VOption>
+                        </VSelect>
+                    </VControl>
+                </VField>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="search">Ok..</VButton>
+        </template>
+    </VModal>
+</template>
+
+   

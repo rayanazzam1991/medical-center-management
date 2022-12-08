@@ -32,8 +32,7 @@ export interface CreateUpdateUser {
   user_status_id?: number
 }
 export interface UserSearchFilter {
-  first_name?: string
-  last_name?: string
+  name?: string
   gender?: string
   phone_number?: string
   room_id?: number
