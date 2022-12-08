@@ -11,8 +11,14 @@ const head = useHead({
 })
 const notif = useNotyf()
 const customerForm = useCustomerForm()
+const route = useRoute()
+const router = useRouter()
+const customerId = ref()
+// @ts-ignore
+
+customerId.value = route.params?.id
 customerForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
@@ -23,28 +29,21 @@ customerForm.setStep({
         else {
             console.log('valid')
             router.push({
-                name: '/customer-add/medical-info'
+                path: `/customer-add/${customerId.value}/medical-info`
             })
 
         }
 
     },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/additional-info',
-        })
-    },
     skipStepFn: async () => {
 
         router.push({
-            name: '/customer-add/medical-info'
+            path: `/customer-add/${customerId.value}/medical-info`
         })
     }
 
 })
 
-const route = useRoute()
-const router = useRouter()
 const fileError = ref('')
 const pageTitle = 'Step 3: Customer Profile Picture'
 const onAddFile = (error: any, fileInfo: any) => {
@@ -98,6 +97,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                             <div class="project-avatar-upload">
                                 <VField>
                                     <VControl>
+                                        
                                         <VFilePond size="large" class="profile-filepond" name="profile_filepond"
                                             :chunk-retry-delays="[500, 1000, 3000]"
                                             label-idle="<i class='lnil lnil-cloud-upload'></i>"

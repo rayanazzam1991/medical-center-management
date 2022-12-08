@@ -1,10 +1,11 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { defaultCreateUpdateUser } from '../../Others/User/userStore'
 import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
-import { defaultCreateUpdateCustomer } from './customerStore'
+import { defaultCreateCustomer, defaultUpdateCustomer } from './customerStore'
 import {
-  CreateUpdateCustomer,
+  CreateCustomer,
   CreateUpdateCustomerSocialMediaHelper,
+  UpdateCustomer,
 } from '/@src/utils/api/CRM/Customer'
 import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
 import { CreateUpdateUser } from '/@src/utils/api/Others/User'
@@ -26,7 +27,8 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   const previousStepFn = shallowRef<CustomerFormStepOptions['previousStepFn'] | null>()
   const validateStepFn = shallowRef<CustomerFormStepOptions['validateStepFn'] | null>()
   const skipStepFn = shallowRef<CustomerFormStepOptions['skipStepFn'] | null>()
-  const data = ref<CreateUpdateCustomer>(defaultCreateUpdateCustomer)
+  const data = ref<CreateCustomer>(defaultCreateCustomer)
+  const dataUpdate = ref<UpdateCustomer>(defaultUpdateCustomer)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
   const medicalInfoForm = ref<MedicalInfo>(defaultMedicalInfo)
   const customerSocialMediaForm = ref<Array<CreateUpdateCustomerSocialMediaHelper>>([])
@@ -35,15 +37,11 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
       case 1:
         return 'Main Info'
       case 2:
-        return 'Additional Info'
-      case 3:
         return 'Profile Picture'
-      case 4:
+      case 3:
         return 'Medical Info'
-      case 5:
+      case 4:
         return 'Social Media'
-      case 6:
-        return 'Preview'
       default:
         return 'Customer Form'
     }
@@ -73,7 +71,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   }
 
   function reset() {
-    data.value = defaultCreateUpdateCustomer
+    data.value = defaultCreateCustomer
   }
 
   return {
@@ -86,6 +84,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     loading,
     stepTitle,
     data,
+    dataUpdate,
     userForm,
     medicalInfoForm,
     customerSocialMediaForm,

@@ -32,11 +32,21 @@ import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
 import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
 import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
-import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
 import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
+import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
+import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
+import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
 import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
+import { updateCustomer } from '/@src/composable/CRM/Customer/updateCustomer';
 
 const viewWrapper = useViewWrapper()
+const route = useRoute()
+const router = useRouter()
+const customerId = ref<number>(0)
+// @ts-ignore
+customerId.value = route.params?.id
+
 viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
     title: 'Customer',
@@ -44,34 +54,27 @@ const head = useHead({
 const notif = useNotyf()
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 5,
+    number: 4,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
-        var isValid = await onSubmitAdd()
+        var isValid = await onSubmitEdit()
         console.log(isValid)
         if (isValid) {
             router.push({
-                name: '/customer-add/preview',
+                path: `/customer/${customerId.value}`,
             })
         }
 
     },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/medical-info',
-        })
-    },
     skipStepFn: async () => {
         customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
         router.push({
-            name: '/customer-add/preview'
+            path: `/customer/${customerId.value}`,
         })
     }
 
 })
-const route = useRoute()
-const router = useRouter()
 const pageTitle = 'Step 5: Customer Social Media'
 const socialMedias2 = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
@@ -79,30 +82,98 @@ interface SocialMediaChecked {
     checked: boolean
     url: string
 }
+
+const fetchCustomer = async () => {
+
+    const { customer } = await getCustomer(customerId.value)
+    for (let i = 0; i < customer.social_medias.length; i++) {
+        // @ts-ignore
+
+        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
+
+    }
+
+    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+    customerForm.medicalInfoForm.id = customer.medical_info.id
+
+    customerForm.userForm.id = customer.user.id
+    customerForm.userForm.first_name = customer.user.first_name
+    customerForm.userForm.last_name = customer.user.last_name
+    customerForm.userForm.gender = customer.user.gender
+    customerForm.userForm.birth_date = customer.user.birth_date
+    customerForm.userForm.phone_number = customer.user.phone_number
+    customerForm.userForm.address = customer.user.address
+    customerForm.userForm.room_id = customer.user.room.id
+    customerForm.userForm.city_id = customer.user.status.id
+    customerForm.userForm.user_status_id = customer.user.status.id
+    customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
+    customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
+    customerForm.dataUpdate.customer_group_id = customer.customer_group.id
+    customerForm.dataUpdate.id = customerId.value
+
+
+
+}
+
+
+
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
     const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
     socialMedias2.value = socialMedias
+    if (customerForm.dataUpdate.id != customerId.value) {
+
+        await fetchCustomer()
+    }
+
+
     for (let index = 0; index < socialMedias2.value.length; index++) {
-        socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+        // @ts-ignore
+        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMedias2.value[index].id)
+        if (socialMedia) {
+
+            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: true, url: socialMedia.url })
+        }
+        else {
+            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+        }
 
     }
+
+
 })
 
 
 
-const onSubmitAdd = async () => {
-
+const onSubmitEdit = async () => {
+    customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
     for (let i = 0; i < socialMediaChecked.value.length; i++) {
         if (socialMediaChecked.value[i].checked == true) {
             customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
 
         }
-        else {
-        }
 
     }
-    return true
+    customerForm.dataUpdate.is_completed = true
+    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    if (customer.success) {
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(customer.success)
+
+    }
+
 }
 
 
@@ -112,7 +183,7 @@ const onSubmitAdd = async () => {
 
 <template>
     <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="onSubmitAdd()">
+        <form class="form-layout" @submit.prevent="onSubmitEdit()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->

@@ -16,6 +16,7 @@ export interface User {
   room: Room
   city: City
   status: UserStatus
+  role: string
 }
 export interface CreateUpdateUser {
   id?: number
@@ -29,6 +30,7 @@ export interface CreateUpdateUser {
   room_id?: number
   city_id?: number
   user_status_id?: number
+  role: string
 }
 export interface UserSearchFilter {
   name?: string

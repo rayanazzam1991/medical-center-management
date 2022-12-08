@@ -23,6 +23,8 @@ declare module '@vue/runtime-core' {
     CustomerGroupDetails: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupDetails.vue')['default']
     CustomerGroupForm: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupForm.vue')['default']
     CustomerGroupTableHeader: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupTableHeader.vue')['default']
+    CustomerSearchFilterModal: typeof import('./src/components/OurComponents/CRM/Customer/CustomerSearchFilterModal.vue')['default']
+    CustomerTableHeader: typeof import('./src/components/OurComponents/CRM/Customer/CustomerTableHeader.vue')['default']
     DashboardsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/DashboardsMobileSubsidebar.vue')['default']
     DashboardsSubnav: typeof import('./src/layouts/navbar-items/DashboardsSubnav.vue')['default']
     DashboardsSubsidebar: typeof import('./src/layouts/sidebar-subsidebar/DashboardsSubsidebar.vue')['default']
