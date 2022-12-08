@@ -44,7 +44,7 @@ export interface CreateUpdateCustomerSocialMediaHelper {
 }
 export interface CustomerSearchFilter {
   name? : string
-  phone? : number
+  phone_number? : number
   gender? : string
   date_between? : string 
   from? : string

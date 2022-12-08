@@ -1,165 +1,172 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { City } from '/@src/utils/api/Others/City'
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import { addServicesToContractor } from '/@src/composable/Contractor/addServicesToContractor';
+import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
+import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Service } from '/@src/utils/api/Others/Service';
 
 
-export default defineComponent({
-    props: {
-        title: {
-            type: String,
-            default: '',
-        },
-        button_name: {
-            type: String,
-            default: '',
-        },
-        pagination: {
-            default: defaultPagination,
+const viewWrapper = useViewWrapper()
+const route = useRoute()
+const router = useRouter()
+const contractorId = ref<number>(0)
+// @ts-ignore
+contractorId.value = route.params?.id
+
+viewWrapper.setPageTitle('Contractor Services')
+const head = useHead({
+    title: 'Contractor',
+})
+const notif = useNotyf()
+const contractorForm = useContractorForm()
+contractorForm.setStep({
+    number: 3,
+    canNavigate: true,
+    skipable: true,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        console.log(isValid)
+        if (isValid) {
+            router.push({
+                path: `/contractor/${contractorId.value}`,
+            })
         }
+
     },
-
-
-    setup(props, context) {
-        const onOpen = () => {
-            searchFilterPop.value = !searchFilterPop.value
-            context.emit('onOpen', searchFilterPop.value)
-        }
-        const popUpTrigger = (value: boolean) => {
-            searchFilterPop.value = value
-        }
-        const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 30
+    skipStepFn: async () => {
+        contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
+        router.push({
+            path: `/contractor/${contractorId.value}`,
         })
-        const searchFilterPop = ref(false)
-        const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultCustomerSearchFilter)
-        const is_reseted = ref(false)
-        const keyTest = ref(0)
+    }
 
-        const search = () => {
-            searchFilter.value.per_page = perPage.value
-            context.emit('search', searchFilter.value)
-        }
-        const search_filter = (value: CustomerSearchFilter) => {
-            searchFilter.value = value
-            searchFilter.value.per_page = perPage.value
-            context.emit('search', searchFilter.value)
-        }
+})
+const pageTitle = 'Step 3: Contractor Services'
+const services2 = ref<Service[]>([])
+interface ServicesChecked {
+    service: Service
+    checked: boolean
+    price: number
+    contractor_service_amount: number
+}
+const servicesChecked = ref<ServicesChecked[]>([])
+onMounted(async () => {
+    const { services } = await getServicesList(defaultServiceSearchFilter)
+    services2.value = services
+    for (let index = 0; index < services2.value.length; index++) {
+        servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
 
-        const resetFilter = () => {
-            searchFilter.value.name = undefined
-            searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
-            searchFilter.value.date_between = undefined
-            searchFilter.value.from = undefined
-            searchFilter.value.to = undefined
-            searchFilter.value.customer_group_id = undefined
-            searchFilter.value.is_completed = undefined
-            searchFilter.value.user_status_id = undefined
-            searchFilter.value.city_id = undefined
-            is_reseted.value = true
-            keyTest.value++
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        const resetFilter_popup = (value: CustomerSearchFilter) => {
-            searchFilter.value.name = undefined
-            searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
-            searchFilter.value.date_between = undefined
-            searchFilter.value.from = undefined
-            searchFilter.value.to = undefined
-            searchFilter.value.customer_group_id = undefined
-            searchFilter.value.is_completed = undefined
-            searchFilter.value.user_status_id = undefined
-            searchFilter.value.city_id = undefined
-
-
-            console.log(searchFilter)
-            context.emit('resetFilter', searchFilter.value)
-
-        }
-        return { keyTest, is_reseted, isStuck, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
-    },
-
-
+    }
 })
 
 
 
+const onSubmitAdd = async () => {
 
+    for (let i = 0; i < servicesChecked.value.length; i++) {
+        if (servicesChecked.value[i].checked == true) {
+            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
+
+        }
+        else {
+        }
+
+    }
+    contractorForm.data.is_completed = true
+    const contractor = await addServicesToContractor(contractorId.value, contractorForm.contractorServicesForm)
+
+    if (contractor.success) {
+        // @ts-ignore
+        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(contractor.success)
+
+    }
+
+
+
+}
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
-        <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
-                <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content">
-                            <VButton @click.prevent="onOpen" raised> Search
-                            </VButton>
+    <div class="page-content-inner">
+        <form class="form-layout" @submit.prevent="onSubmitAdd()">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
                         </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
 
+                                <VField>
+
+                                    <VControl v-for="service in servicesChecked" raw nogrow subcontrol>
+                                        <VCheckbox :label="service.service.name" :name="service.service.id"
+                                            color="primary" :key="service.service.id" v-model="service.checked" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
                     </div>
-                    <div class="right">
-                        <div class="buttons  ">
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
-                            <VButton to="/customer-add" color="primary" raised> {{ button_name }}
-                            </VButton>
-                        </div>
-                        <div>
-                            <VField>
-                                <VControl>
-                                    <div class="select">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page
-                                                    *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-                        </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-5">
+                                <VField v-for="service in servicesChecked" :id="service.service.name">
 
+                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                        Price:
+                                    </VLabel>
+                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                        <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
+                                            :key="service.service.id" />
 
+                                    </VControl>
+
+                                </VField>
+                            </div>
+                            <div class="column is-7">
+                                <VField v-for="service in servicesChecked" :id="service.service.name">
+
+                                    <VLabel class="is-flex-wrap-nowrap" v-if="service.checked">Contractor's {{
+                                            service.service.name
+                                    }}
+                                        Service amount:
+                                    </VLabel>
+                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                        <VInput disabled type="number"
+                                            :value="(service.price * (contractorForm.data.payment_percentage as number / 100 ?? 0))"
+                                            v-bind="service.price" v-model="service.contractor_service_amount"
+                                            :key="service.service.id" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
                     </div>
+
+
 
                 </div>
             </div>
-        </div>
-        <CustomerSearchFilterModal :key="keyTest" :search_filter_popup="searchFilterPop"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
-    </form>
-</template>
+        </form>
 
-<style   lang="scss">
+
+
+    </div>
+</template>
+<style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 

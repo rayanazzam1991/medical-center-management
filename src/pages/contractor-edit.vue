@@ -1,40 +1,41 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { RouterView } from 'vue-router';
+import { useContractorForm } from '../stores/Contractor/contractorFormSteps';
 
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
-const customerForm = useCustomerForm()
+const contractorForm = useContractorForm()
 
 useHead({
-    title: computed(() => `${customerForm.stepTitle} - Customer`),
+    title: computed(() => `${contractorForm.stepTitle} - Contractor`),
 })
 </script>
 
 <template>
     <MinimalLayout>
         <!--Wizard Navbar-->
-        <CustomerFormNavigation v-model:step="customerForm.step" :title="customerForm.stepTitle" />
+        <ContractorFormNavigation v-model:step="contractorForm.step" :title="contractorForm.stepTitle" />
 
         <!--Wizard Progress Bar-->
         <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(customerForm.step / 4) * 100" :max="100" />
+            :value="(contractorForm.step / 3) * 100" :max="100" />
 
         <!--Main Wrapper-->
-        <form class="wizard-v1-wrapper" @submit.prevent="() => customerForm?.validateStepFn?.()">
+        <form class="wizard-v1-wrapper" @submit.prevent="() => contractorForm?.validateStepFn?.()">
             <RouterView />
 
             <!--Wizard Navigation Buttons-->
-            <div class="wizard-buttons" :class="[customerForm.canNavigate && 'is-active']">
+            <div class="wizard-buttons" :class="[contractorForm.canNavigate && 'is-active']">
                 <div class="wizard-buttons-inner">
                     <VButton type="submit" class="wizard-button-previous"
-                        :disabled="customerForm.validateStepFn === null"
-                        :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                        {{ customerForm.getStep() == 4 ? 'Submit & Finish' : 'Submit & Next'
+                        :disabled="contractorForm.validateStepFn === null"
+                        :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
+                        {{ contractorForm.getStep() == 3 ? 'Submit & Finish' : 'Submit & Next'
                         }}
                     </VButton>
-                    <VButton class="wizard-button-previous" :disabled="customerForm.skipable === false"
-                        :color="customerForm.skipable === true ? 'dark' : 'dark'"
-                        @click="() => customerForm?.skipStepFn?.()">
-                        {{ customerForm.getStep() == 4 ? 'Skip & Finish' : 'Skip'
+                    <VButton class="wizard-button-previous" :disabled="contractorForm.skipable === false"
+                        :color="contractorForm.skipable === true ? 'dark' : 'dark'"
+                        @click="() => contractorForm?.skipStepFn?.()">
+                        {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
                         }}
                     </VButton>
                 </div>
@@ -1103,7 +1104,7 @@ useHead({
             }
         }
 
-        .project-customer {
+        .project-contractor {
             background: var(--white);
             padding: 16px;
             border: 1px solid var(--fade-grey-dark-3);
@@ -1479,7 +1480,7 @@ useHead({
                 }
             }
 
-            .project-customer {
+            .project-contractor {
                 background: var(--dark-sidebar-light-6);
                 border-color: var(--dark-sidebar-light-12);
 

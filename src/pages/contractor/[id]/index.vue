@@ -1,29 +1,24 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { capitalize } from 'vue';
-import { routerKey, RouterLink } from 'vue-router';
-import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
-import { defaultCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { usePanels } from '/@src/stores/panels';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Customer } from '/@src/utils/api/CRM/Customer';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo';
-import { onceImageErrored } from '/@src/utils/via-placeholder'
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import { getContractor } from '/@src/composable/Contractor/getContractor';
+import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Contractor } from '/@src/utils/api/Contractor';
+
 
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
-const currentCustomer = ref<Customer>(defaultCustomer)
-const customerId = ref(0)
+const currentContractor = ref<Contractor>(defaultContractor)
+const contractorId = ref(0)
 // @ts-ignore
-customerId.value = route.params.id
-viewWrapper.setPageTitle(`Customer`)
+contractorId.value = route.params.id
+viewWrapper.setPageTitle(`Contractor`)
 useHead({
-    title: 'Customer',
+    title: 'Contractor',
 })
 const props = withDefaults(
     defineProps<{
-        activeTab?: 'Details' | 'Medical Info' | 'Social Media'
+        activeTab?: 'Details' | 'Services'
     }>(),
     {
         activeTab: 'Details',
@@ -32,25 +27,19 @@ const props = withDefaults(
 const tab = ref(props.activeTab)
 
 onMounted(async () => {
-    const { customer } = await getCustomer(customerId.value)
-    currentCustomer.value = customer
-    console.log(currentCustomer.value)
+    const { contractor } = await getContractor(contractorId.value)
+    currentContractor.value = contractor
 
 })
 
-const onClickEditSocialMedia = () => {
+const onClickEditServices = () => {
     router.push({
-        path: `/customer-edit/${customerId.value}/social-media`
+        path: `/contractor-edit/${contractorId.value}/services`
     })
 }
 const onClickEditMainInfo = () => {
     router.push({
-        path: `/customer-edit/${customerId.value}/`
-    })
-}
-const onClickEditMedicalInfo = () => {
-    router.push({
-        path: `/customer-edit/${customerId.value}/medical-info`
+        path: `/contractor-edit/${contractorId.value}/`
     })
 }
 
@@ -61,30 +50,26 @@ const onClickEditMedicalInfo = () => {
             <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
                 badge="/images/icons/flags/united-states-of-america.svg" />
 
-            <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
-                {{ currentCustomer.user.last_name }}</h3>
+            <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
+                {{ currentContractor.user.last_name }}</h3>
             <div class="profile-stats">
                 <div class="profile-stat">
-                    <i aria-hidden="true" class="lnil lnil-p"></i>
-                    <span>{{ currentCustomer.user.city.name }}</span>
+                    <i aria-hidden="true" class="fas fa-city"></i>
+                    <span>{{ currentContractor.user.city.name }}</span>
                 </div>
                 <div class="separator"></div>
                 <div class="profile-stat">
                     <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
                     <span>Status: <span
-                            :class="currentCustomer.user.status.name == 'Pending' ? 'has-text-warning' : 'has-text-primary'">{{
-                                    currentCustomer.user.status.name
+                            :class="currentContractor.user.status.name == 'Busy' ? 'has-text-danger' : 'has-text-primary'">{{
+                                    currentContractor.user.status.name
                             }}</span></span>
                 </div>
                 <div class="separator"></div>
-                <div class="socials">
-                    <a v-for="socialMedia in currentCustomer.social_medias"><i aria-hidden="true"
-                            :class="socialMedia.icon"></i></a>
-                </div>
             </div>
         </div>
         <div class="project-details">
-            <div class="tabs-wrapper is-triple-slider">
+            <div class="tabs-wrapper is-slider">
 
                 <div class="tabs-inner">
                     <div class="tabs ">
@@ -93,13 +78,9 @@ const onClickEditMedicalInfo = () => {
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
                                     @click="tab = 'Details'"><span>Details</span></a>
                             </li>
-                            <li :class="[tab === 'Medical Info' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'Medical Info'"
-                                    @click="tab = 'Medical Info'"><span>Medical Info </span></a>
-                            </li>
-                            <li :class="[tab === 'Social Media' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'Social Media'"
-                                    @click="tab = 'Social Media'"><span>Social Media </span></a>
+                            <li :class="[tab === 'Services' && 'is-active']">
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Services'"
+                                    @click="tab = 'Services'"><span>Services </span></a>
                             </li>
                             <li class="tab-naver"></li>
                         </ul>
@@ -121,30 +102,37 @@ const onClickEditMedicalInfo = () => {
                                 <div class="project-features">
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-user"></i>
-                                        <h4>Customer Name</h4>
+                                        <h4>Contractor Name</h4>
                                         <p>
-                                            {{ currentCustomer.user.first_name }} {{ currentCustomer.user.last_name }}.
+                                            {{ currentContractor.user.first_name }} {{ currentContractor.user.last_name
+                                            }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true"
-                                            :class="currentCustomer.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
+                                            :class="currentContractor.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
                                         <h4>Gender</h4>
                                         <p>
-                                            {{ currentCustomer.user.gender }}.
+                                            {{ currentContractor.user.gender }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-calendar"></i>
                                         <h4>Birth Date</h4>
                                         <p>
-                                            {{ currentCustomer.user.birth_date }}.
+                                            {{ currentContractor.user.birth_date }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-phone"></i>
                                         <h4>Phone Number</h4>
-                                        <p> {{ currentCustomer.user.phone_number }}.
+                                        <p> {{ currentContractor.user.phone_number }}.
+                                        </p>
+                                    </div>
+                                    <div class="project-feature">
+                                        <i aria-hidden="true" class="fas fa-percentage"></i>
+                                        <h4>Payment Percentage</h4>
+                                        <p> {{ currentContractor.payment_percentage }}%
                                         </p>
                                     </div>
                                 </div>
@@ -155,9 +143,9 @@ const onClickEditMedicalInfo = () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Customer Group</span>
+                                                    <span>Starting Date</span>
                                                     <span>
-                                                        {{ currentCustomer.customer_group.name }}
+                                                        {{ currentContractor.starting_date }}
                                                     </span>
                                                 </div>
 
@@ -168,7 +156,7 @@ const onClickEditMedicalInfo = () => {
                                                 <div class="meta">
                                                     <span>Address</span>
                                                     <span>
-                                                        {{ currentCustomer.user.address }}
+                                                        {{ currentContractor.user.address }}
                                                     </span>
                                                 </div>
 
@@ -179,7 +167,7 @@ const onClickEditMedicalInfo = () => {
                                                 <div class="meta">
                                                     <span>City</span>
                                                     <span>
-                                                        {{ currentCustomer.user.city.name }}
+                                                        {{ currentContractor.user.city.name }}
                                                     </span>
                                                 </div>
 
@@ -190,7 +178,7 @@ const onClickEditMedicalInfo = () => {
                                                 <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
-                                                        {{ currentCustomer.user.room.number }}
+                                                        {{ currentContractor.user.room.number }}
                                                     </span>
                                                 </div>
 
@@ -201,29 +189,7 @@ const onClickEditMedicalInfo = () => {
                                                 <div class="meta">
                                                     <span>Room Floor</span>
                                                     <span>
-                                                        {{ currentCustomer.user.room.floor }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Emergency Contact Name</span>
-                                                    <span>
-                                                        {{ currentCustomer.emergency_contact_name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Emergency Contact Phone</span>
-                                                    <span>
-                                                        {{ currentCustomer.emergency_contact_phone }}
+                                                        {{ currentContractor.user.room.floor }}
                                                     </span>
                                                 </div>
 
@@ -237,124 +203,33 @@ const onClickEditMedicalInfo = () => {
 
                     </div>
                 </div>
-                <div v-if="tab === 'Medical Info'" class="tab-content is-active">
+                <div v-if="tab === 'Services'" class="tab-content is-active">
                     <div class="columns project-details-inner">
                         <div class="column is-12">
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>Customer Medical Info</h3>
+                                        <h3>Contractor Services</h3>
                                     </div>
 
                                     <VIconButton size="small" icon="feather:edit-3" tabindex="0"
-                                        @click="onClickEditMedicalInfo" />
+                                        @click="onClickEditServices" />
                                 </div>
 
                                 <div class="project-features">
-                                    <div class="project-feature">
-                                        <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
-                                        <h4>Blood Type</h4>
-                                        <p>
-                                            {{ currentCustomer.medical_info.blood_type }}
+                                    <div v-for="service in currentContractor.services" class="project-feature">
+                                        <h4>{{ service.name }}</h4>
+                                        <p class="has-text-centered">Contractor Price:
+                                            <span class="has-text-primary">{{ service.price }}</span>
+                                        </p>
+                                        <p class="has-text-centered">Contractor service amount:
+                                            <span class="has-text-primary">{{ service.contractor_service_amount
+                                            }}</span>
                                         </p>
                                     </div>
-                                    <div class="project-feature">
-                                        <i aria-hidden="true" class="lnir lnir-grow"></i>
-                                        <h4>Smoke</h4>
-                                        <p>
-                                            {{ MedicalInfoConsts.showBoolean(currentCustomer.medical_info.smoking) }}.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="project-files">
-                                    <h4>More Info</h4>
-                                    <div class="columns is-multiline">
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Customer Group</span>
-                                                    <span>
-                                                        {{ currentCustomer.customer_group.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Allergic</span>
-                                                    <span>
-                                                        {{ currentCustomer.medical_info.allergic }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Chronic Diseases</span>
-                                                    <span>
-                                                        {{ currentCustomer.medical_info.chronic_diseases }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Infectious Diseases</span>
-                                                    <span>
-                                                        {{ currentCustomer.medical_info.infectious_diseases }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Other Medical Info</span>
-                                                    <span>
-                                                        {{ currentCustomer.medical_info.any_other_info }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div v-if="tab === 'Social Media'" class="tab-content is-active">
-                    <div class="columns project-details-inner">
-                        <div class="column is-12">
-                            <div class="project-details-card">
-                                <div class="card-head">
-                                    <div class="title-wrap">
-                                        <h3>Customer Social Media</h3>
-                                    </div>
-
-                                    <VIconButton size="small" icon="feather:edit-3" tabindex="0"
-                                        @click="onClickEditSocialMedia" />
-                                </div>
-
-                                <div class="project-features">
-                                    <div v-for="socialMedia in currentCustomer.social_medias" class="project-feature">
-                                        <i aria-hidden="true" :class="socialMedia.icon"></i>
-                                        <h4>{{ socialMedia.name }}</h4>
-                                        <p class="has-text-centered">Customer URL:
-                                            <span class="has-text-primary">{{ socialMedia.url }}</span>
-                                        </p>
-                                    </div>
-                                    <div v-if="(currentCustomer.social_medias.length == 0)" class="project-feature">
+                                    <div v-if="(currentContractor.services.length == 0)" class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                                        <h4>Customer have no social media...</h4>
+                                        <h4>Contractor have no services for now...</h4>
                                     </div>
 
                                 </div>
