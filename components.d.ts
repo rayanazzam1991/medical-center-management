@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     DepartmentTableHeader: typeof import('./src/components/OurComponents/Others/Department/DepartmentTableHeader.vue')['default']
     ElementsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ElementsMobileSubsidebar.vue')['default']
     ElementsSubnav: typeof import('./src/layouts/navbar-items/ElementsSubnav.vue')['default']
+    EmployeeFormNavigation: typeof import('./src/components/OurComponents/Employee/EmployeeFormNavigation.vue')['default']
     FlexTableDropdown: typeof import('./src/components/partials/dropdowns/FlexTableDropdown.vue')['default']
     FlightResultsDropdown: typeof import('./src/components/partials/dropdowns/FlightResultsDropdown.vue')['default']
     FlightsDashboard: typeof import('./src/components/pages/dashboards/business/FlightsDashboard.vue')['default']

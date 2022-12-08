@@ -6,7 +6,7 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-// import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
+import { phoneExistsCheck } from '../../composable/Others/User/phoneExistsCheck';
 import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
 import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
 import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
@@ -230,44 +230,44 @@ const { handleSubmit } = useForm({
 const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
-    // const { result } = await phoneExistsCheck(userData.phone_number)
-    // phoneCheck.value = result as string
-    // if (phoneCheck.value === 'false') {
-    //     var employeeData = currentEmployee.value
-    //     employeeForm.data.starting_date = employeeData.starting_date
-    //     employeeForm.data.end_date = employeeData.end_date
-    //     employeeForm.data.nationality_id = employeeData.nationality_id
-    //     employeeForm.userForm.first_name = userData.first_name
-    //     employeeForm.userForm.last_name = userData.last_name
-    //     employeeForm.userForm.password = userData.password
-    //     employeeForm.userForm.gender = userData.gender
-    //     employeeForm.userForm.birth_date = userData.birth_date
-    //     employeeForm.userForm.phone_number = userData.phone_number
-    //     employeeForm.userForm.address = userData.address
-    //     employeeForm.userForm.room_id = userData.room_id
-    //     employeeForm.userForm.city_id = userData.city_id
-    //     employeeForm.userForm.user_status_id = userData.user_status_id
-    //     const employee = await addEmployee(employeeForm.data, employeeForm.userForm)
-    //     if (employee.success) {
-    //         employeeForm.data.id = employee.employee.id
-    //         // @ts-ignore
-    //         notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
+    const { result } = await phoneExistsCheck(userData.phone_number)
+    phoneCheck.value = result as string
+    if (phoneCheck.value === 'false') {
+        var employeeData = currentEmployee.value
+        employeeForm.data.starting_date = employeeData.starting_date
+        employeeForm.data.end_date = employeeData.end_date
+        employeeForm.data.nationality_id = employeeData.nationality_id
+        employeeForm.userForm.first_name = userData.first_name
+        employeeForm.userForm.last_name = userData.last_name
+        employeeForm.userForm.password = userData.password
+        employeeForm.userForm.gender = userData.gender
+        employeeForm.userForm.birth_date = userData.birth_date
+        employeeForm.userForm.phone_number = userData.phone_number
+        employeeForm.userForm.address = userData.address
+        employeeForm.userForm.room_id = userData.room_id
+        employeeForm.userForm.city_id = userData.city_id
+        employeeForm.userForm.user_status_id = userData.user_status_id
+        const employee = await addEmployee(employeeForm.data, employeeForm.userForm)
+        if (employee.success) {
+            employeeForm.data.id = employee.employee.id
+            // @ts-ignore
+            notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
 
-    //         return true
-    //     }
-    //     else {
-    //         // @ts-ignore
+            return true
+        }
+        else {
+            // @ts-ignore
 
-    //         notif.error(employee.success)
-    //         return false
+            notif.error(employee.success)
+            return false
 
 
-    //     }
+        }
 
-    // }
-    // else {
-    //     return false
-    // }
+    }
+    else {
+        return false
+    }
 })
 
 

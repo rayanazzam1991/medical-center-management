@@ -10,6 +10,7 @@ import {
   addUserApi,
   editUserApi,
   getUserApi,
+  phoneExistsCheckApi,
 } from '/@src/utils/api/Others/User'
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
@@ -28,7 +29,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   room_id: 0,
   city_id: 0,
   user_status_id: 0,
-  password: '0000000000'
+  password: '0000000000',
 }
 export const defaultUser: User = {
   id: 0,
@@ -41,7 +42,7 @@ export const defaultUser: User = {
   room: defaultRoom,
   city: defaultCity,
   status: defaultUserStatus,
-  password: ''
+  password: '',
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
@@ -138,6 +139,18 @@ export const useUser = defineStore('user', () => {
       loading.value = false
     }
   }
+  async function phoneExistsCheckStore(phone_number: string) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await phoneExistsCheckApi(api, phone_number)
+      return returnedResponse.response.data as string
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
     users,
@@ -147,6 +160,7 @@ export const useUser = defineStore('user', () => {
     editUserStore,
     getUserStore,
     getUsersStore,
+    phoneExistsCheckStore,
   } as const
 })
 

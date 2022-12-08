@@ -83,3 +83,12 @@ export async function getUsersApi(
   })
   return { response }
 }
+export async function phoneExistsCheckApi(
+  api: AxiosInstance,
+  phone_number: string
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(`user/phoneCheck`, {
+    phone_number: phone_number,
+  })
+  return { response }
+}
