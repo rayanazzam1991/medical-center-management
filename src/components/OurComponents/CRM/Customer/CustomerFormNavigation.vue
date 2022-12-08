@@ -14,17 +14,26 @@ const customerForm = useCustomerForm()
 
 <template>
   <nav class="wizard-navigation">
+    <!-- 
     <RouterLink to="/" class="wizard-brand">
       <AnimatedLogo width="38px" height="38px" />
-    </RouterLink>
+    </RouterLink> -->
 
-    <div class="navbar-item is-wizard-title">
+    <div class="">
+      <span class="title-wrap">
+        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/customer" darkOutlined
+          color="white">
+          Back to customers page
+        </VButton>
+      </span>
+    </div>
+    <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
         Step {{ customerForm.step }}: <span>{{ customerForm.stepTitle }}</span>
       </span>
     </div>
 
-    <VDropdown class="wizard-dropdown">
+    <!-- <VDropdown class="wizard-dropdown">
       <template #button="{ toggle }">
         <div tabindex="0" class="is-trigger" @click="toggle" @keydown.space.prevent="toggle">
           <i aria-hidden="true" class="iconify" data-icon="feather:chevron-down"></i>
@@ -56,8 +65,7 @@ const customerForm = useCustomerForm()
           Step 6: Preview
         </RouterLink>
       </template>
-    </VDropdown>
-
+    </VDropdown> -->
     <div class="navbar-item is-dark-mode">
       <div class="navbar-icon">
         <label class="dark-mode">

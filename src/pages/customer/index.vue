@@ -14,49 +14,54 @@ import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
+import { getCustomersList } from '/@src/composable/CRM/Customer/getCustomersList'
+import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
+import { CustomerConsts } from '/@src/utils/consts/customer'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('User')
+viewWrapper.setPageTitle('Customer')
 useHead({
-    title: 'User',
+    title: 'Customer',
 })
 const notif = useNotyf()
-const searchFilter = ref(defaultUserSearchFilter)
-const usersList = ref()
+const searchFilter = ref(defaultCustomerSearchFilter)
+const customersList = ref()
 const deleteUserPopup = ref(false)
 const deleteUserId = ref()
 const paginationVar = ref(defaultPagination)
-const { users, pagination } = await getUsersList(searchFilter.value)
-usersList.value = users
+const { customers, pagination } = await getCustomersList(searchFilter.value)
+customersList.value = customers
 paginationVar.value = pagination
 const router = useRouter()
 
-const removeUser = async (userId: number) => {
+// const removeUser = async (userId: number) => {
 
-    await deleteUser(userId)
-    deleteUserPopup.value = false
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+//     await deleteUser(userId)
+//     deleteUserPopup.value = false
+//     // @ts-ignore
+//     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-}
-const search = async (searchFilter2: UserSearchFilter) => {
+// }
 
-    const { users, pagination } = await getUsersList(searchFilter2)
+const search = async (searchFilter2: CustomerSearchFilter) => {
 
-    usersList.value = users
+    const { customers, pagination } = await getCustomersList(searchFilter2)
+
+    customersList.value = customers
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
 }
 
-const resetFilter = async (searchFilter2: UserSearchFilter) => {
+const resetFilter = async (searchFilter2: CustomerSearchFilter) => {
     searchFilter.value = searchFilter2
     search(searchFilter.value)
 }
 
-const getUsersPerPage = async (pageNum: number) => {
+const getCustomersPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     search(searchFilter.value)
 }
-const userSort = async (value: string) => {
+const customerSort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
 
@@ -74,52 +79,178 @@ const userSort = async (value: string) => {
 
 const columns = {
     id: {
-        searchable: true,
-        sortable: true,
-    },
-    first_name: {
-        sortable: true,
-        searchable: true,
+        align: 'center',
 
+        searchable: true,
+        sortable: true,
     },
-    last_name: {
+    name: {
+        align: 'center',
+
+        label: 'Name',
+        grow: 'lg',
+        renderRow: (row: any) =>
+            h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
+
         sortable: true,
         searchable: true,
 
     },
     gender: {
-        sortable: true,
+        align: 'center',
+
+        label: 'Gender',
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.user.gender === 'Male'
+                            ? 'primary'
+                            : row?.user.gender === 'Female'
+                                ? 'orange'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return row?.user.gender
+                    },
+                }
+            ),
+
+
         searchable: true,
 
     },
     phone_number: {
-        sortable: true,
-        searchable: true,
-
-    },
-    room: {
-        sortable: true,
-        searchable: true,
-        label: 'Room',
+        align: 'center',
+        grow: true,
+        label: 'Phone',
         renderRow: (row: any) =>
-            h('span', row?.room?.number)
-    },
+            h('span', row?.user?.phone_number),
 
-    city: {
         sortable: true,
         searchable: true,
+
+
+    },
+    birth_date: {
+        align: 'center',
+
+        label: 'Birth date',
+        renderRow: (row: any) =>
+            h('span', row?.user?.birth_date),
+
+        searchable: true,
+
+
+    },
+    city: {
+        align: 'center',
+
         label: 'City',
         renderRow: (row: any) =>
-            h('span', row?.city?.name)
+            h('span', row?.user?.city.name),
+
+        searchable: true,
+
+
     },
     status: {
-        sortable: true,
-        searchable: true,
-        label: 'UserStatus',
+        align: 'center',
+
+        label: 'status',
         renderRow: (row: any) =>
-            h('span', row?.status?.name)
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.user.status.name === 'Pending'
+                            ? 'orange'
+                            : row?.user.status.name === 'Waiting'
+                                ? 'blue'
+                                : row?.user.status.name === 'Approved'
+                                    ? 'green'
+                                    : row?.user.status.name === 'Deleted'
+                                        ? 'warning'
+                                        : row?.user.status.name === 'Busy'
+                                            ? 'danger'
+                                            : undefined,
+                },
+                {
+                    default() {
+                        return row?.user.status.name
+                    },
+                }
+            ),
+        searchable: true,
+
+
     },
 
+    customer_group: {
+        align: 'center',
+
+        label: 'Group',
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.customer_group.name === 'normal'
+                            ? 'primary'
+                            : row?.customer_group.name === 'vip'
+                                ? 'blue'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return row?.customer_group.name
+                    },
+                }
+            ),
+        searchable: true,
+
+
+    },
+    is_completed: {
+        align: 'center',
+
+        label: 'completed',
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.is_completed === CustomerConsts.TRUE
+                            ? 'primary'
+                            : row?.is_completed === CustomerConsts.FALSE
+                                ? 'warning'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return CustomerConsts.showBoolean(row?.is_completed)
+                    },
+                }
+            ),
+        searchable: true,
+
+
+    },
+    created_at: {
+        align: 'center',
+
+        label: 'Create Date',
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+
+    },
     actions: {
         align: 'center',
 
@@ -131,10 +262,10 @@ const columns = {
                     deleteUserId.value = row.id
                 },
                 onEdit: () => {
-                    router.push({ path: `/user/${row.id}/edit` })
+                    router.push({ path: `/customer-edit/${row.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/user/${row.id}` })
+                    router.push({ path: `/customer/${row.id}` })
                 },
 
             }),
@@ -144,15 +275,15 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <CustomerTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="usersList" @update:sort="userSort">
+    <VFlexTableWrapper :columns="columns" :data="customersList" @update:sort="customerSort">
 
-        <VFlexTable v-if="usersList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-        <VFlexPagination v-if="usersList.length != 0" :current-page="paginationVar.page" class="mt-6"
+        <VFlexTable v-if="customersList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+        <VFlexPagination v-if="customersList.length != 0" :current-page="paginationVar.page" class="mt-6"
             :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
-            no-router @update:current-page="getUsersPerPage" />
-        <h6 v-if="usersList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+            no-router @update:current-page="getCustomersPerPage" />
+        <h6 v-if="customersList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
         }} to {{
@@ -162,9 +293,9 @@ const columns = {
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-        <h1 v-if="usersList.length == 0">No Data Returned...</h1>
+        <h1 v-if="customersList.length == 0">No Data Returned...</h1>
     </VFlexTableWrapper>
-    <VModal title="Remove User" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
+    <!-- <VModal title="Remove Customer" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
         <template #content>
             <VPlaceholderSection title="Are you sure?"
                 :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
@@ -172,6 +303,6 @@ const columns = {
         <template #action="{ close }">
             <VButton color="primary" raised @click="removeUser(deleteUserId)">Confirm</VButton>
         </template>
-    </VModal>
+    </VModal> -->
 
 </template>

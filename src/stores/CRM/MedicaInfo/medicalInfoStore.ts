@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { MedicalInfo, addMedicalInfoApi } from "/@src/utils/api/CRM/MedicalInfo"
+import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 export const defaultMedicalInfo: MedicalInfo = {
@@ -22,26 +22,25 @@ export const useMedicalInfo = defineStore('medicalInfo', () => {
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
 
-  async function addMedicalInfoStore(medicalInfo: MedicalInfo) {
-    if (loading.value) return
+  // async function addMedicalInfoStore(medicalInfo: MedicalInfo) {
+  //   if (loading.value) return
 
-    loading.value = true
+  //   loading.value = true
 
-    try {
-      const response = await addMedicalInfoApi(api, medicalInfo)
-      var returnedMedicalInfo: MedicalInfo
-      returnedMedicalInfo = response.response.data
-      medicalInfos.value.push(returnedMedicalInfo)
-      return returnedMedicalInfo
-    } finally {
-      loading.value = false
-    }
-  }
+  //   try {
+  //     const response = await addMedicalInfoApi(api, medicalInfo)
+  //     var returnedMedicalInfo: MedicalInfo
+  //     returnedMedicalInfo = response.response.data
+  //     medicalInfos.value.push(returnedMedicalInfo)
+  //     return returnedMedicalInfo
+  //   } finally {
+  //     loading.value = false
+  //   }
+  // }
 
   return {
     medicalInfos,
     pagination,
-    addMedicalInfoStore,
   } as const
 })
 

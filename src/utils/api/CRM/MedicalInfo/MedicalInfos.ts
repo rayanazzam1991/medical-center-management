@@ -13,12 +13,3 @@ export interface MedicalInfo {
 } 
 
 
-
-export async function addMedicalInfoApi(
-  api: AxiosInstance,
-  medicalInfo: MedicalInfo
-): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`medicalInfo/`, medicalInfo)
-
-  return { response }
-}

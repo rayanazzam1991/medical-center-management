@@ -1,135 +1,177 @@
-<script setup  lang="ts">
-
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue';
-
-import { z as zod } from 'zod'
+import { addUser } from '/@src/composable/Others/User/addUser'
+import { editUser } from '/@src/composable/Others/User/editUser'
+import { User } from '/@src/utils/api/Others/User'
+import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { getUser } from '/@src/composable/Others/User/getUser'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { optional, z as zod } from 'zod'
+import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { Department } from '/@src/utils/api/Others/Department'
+import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
+import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
+import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
+import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
+import { City } from '/@src/utils/api/Others/City';
+import { Room } from '/@src/utils/api/Others/Room';
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { defaultCreateUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
+import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { defaultCreateCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
+import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
+import { addMedicalInfo } from '/@src/composable/CRM/Customer/addMedicalInfo';
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Additional Info')
+const route = useRoute()
+const router = useRouter()
+const notif = useNotyf()
+
+const customerId = ref<number>(0)
+// @ts-ignore
+customerId.value = route.params?.id
+
+viewWrapper.setPageTitle('Customer Medical Info')
 const head = useHead({
     title: 'Customer',
 })
-// const notif = useNotyf()
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 2,
+    number: 3,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                name: '/customer-add/profile-picture',
+                path: `/customer-add/${customerId.value}/social-media`,
             })
-
         }
-    },
-    previousStepFn: async () => {
-        router.push({
-            name: '/customer-add/',
-        })
+
     },
     skipStepFn: async () => {
-        console.log('test', customerForm.data)
-        currentCustomer.value.customer_group_id = undefined
-        currentCustomer.value.emergency_contact_name = undefined
-        currentCustomer.value.emergency_contact_phone = undefined
-
+        customerForm.medicalInfoForm.allergic = ''
+        customerForm.medicalInfoForm.blood_type = ''
+        customerForm.medicalInfoForm.chronic_diseases = ''
+        customerForm.medicalInfoForm.infectious_diseases = ''
+        customerForm.medicalInfoForm.smoking = 0
+        customerForm.medicalInfoForm.any_other_info = ''
         router.push({
-            name: '/customer-add/profile-picture'
+            path: `/customer-add/${customerId.value}/social-media`,
         })
+
     }
 
 })
+const getCurrentMedicalInfo = () => {
 
-const route = useRoute()
-const router = useRouter()
-
-const pageTitle = 'Step 2: Customer Additional Info'
-const currentCustomer = ref(defaultCreateUpdateCustomer)
-const getCurrentCustomer = () => {
-
-    currentCustomer.value = customerForm.data
+    currentMedicalInfo.value = customerForm.medicalInfoForm
 
 
 
 }
-const customerGroups2 = ref<CustomerGroup[]>([])
-onMounted(async () => {
-    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-    customerGroups2.value = customerGroups
-})
 
+const currentMedicalInfo = ref(defaultMedicalInfo)
+const pageTitle = 'Step 4: Customer Medical Info'
 onMounted(() => {
-    getCurrentCustomer()
+    getCurrentMedicalInfo()
 }
 )
 
 
 const validationSchema = toFormValidator(zod
     .object({
-        emergency_contact_name:
+        blood_type:
             zod
                 .string({
                     required_error: "This field is required",
                 })
                 .min(1, "This field is required"),
-        emergency_contact_phone:
+
+        allergic:
             zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        customer_group_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        chronic_diseases:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        infectious_diseases:
+            zod
+                .string({
+                    required_error: "This field is required",
+                })
+                .min(1, "This field is required"),
+        smoking: zod.number().optional(),
+        any_other_info: zod.string({
+            invalid_type_error: "Invalid Type",
+        }).optional()
     }));
 
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        emergency_contact_name: currentCustomer.value.emergency_contact_name,
-        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
-        customer_group_id: currentCustomer.value.customer_group_id,
+        blood_type: currentMedicalInfo.value.blood_type,
+        allergic: currentMedicalInfo.value.allergic,
+        chronic_diseases: currentMedicalInfo.value.chronic_diseases,
+        infectious_diseases: currentMedicalInfo.value.infectious_diseases,
+        smoking: currentMedicalInfo.value.smoking,
+        any_other_info: currentMedicalInfo.value.allergic,
     },
 })
 
 const onSubmitAdd = handleSubmit(async (values) => {
-    var customerData = currentCustomer.value
-    customerForm.data.emergency_contact_name = customerData.emergency_contact_name
-    customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
-    customerForm.data.customer_group_id = customerData.customer_group_id
+    var medicalInfoData = currentMedicalInfo.value
+    customerForm.medicalInfoForm.allergic = medicalInfoData.allergic
+    customerForm.medicalInfoForm.blood_type = medicalInfoData.blood_type
+    customerForm.medicalInfoForm.chronic_diseases = medicalInfoData.chronic_diseases
+    customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
+    customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
+    customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
+    const customer = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
 
-    return true
+    if (customer.success) {
+
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was added successfully`)
+
+        return true
+    }
+    else {
+        console.log(customer)
+
+        // @ts-ignore
+
+        notif.error(customer.success)
+
+    }
+
 
 })
+
+
+
 </script>
 
 <template>
     <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="">
+        <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
@@ -139,53 +181,97 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="emergency_contact_name">
-                                    <VLabel>Emergency Contact Name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
-                                            placeholder="" autocomplete="given-emergency_contact_name" />
-                                        <ErrorMessage class="help is-danger" name="emergency_contact_name" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="emergency_contact_phone">
-                                    <VLabel>Emergency Contact Phone</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCustomer.emergency_contact_phone" type="text"
-                                            placeholder="" autocomplete="given-emergency_contact_phone" />
-                                        <ErrorMessage class="help is-danger" name="emergency_contact_phone" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="customer_group_id">
-                                    <VLabel>Customer Group</VLabel>
+                                <VField id="blood_type">
+                                    <VLabel>Blood Type</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
-                                            <VOption value="">Customer Group</VOption>
-                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
-                                                :value="customerGroup.id">{{ customerGroup.name }}
+                                        <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
+                                            <VOption value="">Blood Type</VOption>
+                                            <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES"
+                                                :key="blood_type" :value="blood_type">{{ blood_type }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
+                                        <ErrorMessage class="help is-danger" name="blood_type" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
                     </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="allergic">
+                                    <VLabel>Allergic Reactions:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.allergic" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="allergic" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="chronic_diseases">
+                                    <VLabel>Chronic Diseases:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="infectious_diseases">
+                                    <VLabel>Infectious Diseases:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
+                                            placeholder="" autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="infectious_diseases" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="smooking">
+                                    <VLabel>Smoke?</VLabel>
 
+                                    <VControl>
+                                        <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
+                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.FALSE)"
+                                            name="smooking" color="warning" />
+
+                                        <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.TRUE"
+                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.TRUE)"
+                                            name="smooking" color="success" />
+                                        <ErrorMessage class="help is-danger" name="smooking" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="any_other_info">
+                                    <VLabel>Other Info:</VLabel>
+                                    <VControl>
+                                        <VTextarea v-model="currentMedicalInfo.any_other_info" />
+                                        <ErrorMessage class="help is-danger" name="any_other_info" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
