@@ -35,8 +35,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
-        const searchFirstName = ref()
-        const searchLastName = ref()
+        const searchName = ref()
         const searchGender = ref()
         const searchPhoneNumber = ref()
         const searchRoom = ref()
@@ -60,8 +59,7 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value = {
-                first_name: searchFirstName.value,
-                last_name: searchLastName.value,
+                name: searchName.value,
                 gender: searchGender.value,
                 phone_number: searchPhoneNumber.value,
                 room_id: searchRoom.value,
@@ -75,15 +73,13 @@ export default defineComponent({
 
         }
         const resetFilter = () => {
-            searchFirstName.value = undefined
-            searchLastName.value = undefined
+            searchName.value = undefined
             searchGender.value = undefined
             searchPhoneNumber.value = undefined
             searchRoom.value = undefined
             searchCity.value = undefined
             searchStatus.value = undefined
-            searchFilter.value.first_name = undefined
-            searchFilter.value.last_name = undefined
+            searchFilter.value.name = undefined
             searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
             searchFilter.value.room_id = undefined
@@ -106,7 +102,7 @@ export default defineComponent({
         })
 
 
-        return { search, resetFilter, rooms2, cities2, search_filter_popup, statuses2, searchFirstName, searchLastName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber }
+        return { search, resetFilter, rooms2, cities2, search_filter_popup, statuses2, searchName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber }
 
 
 
@@ -127,14 +123,7 @@ export default defineComponent({
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchFirstName" type="text" class="input is-rounded"
-                            placeholder="first_name..." />
-                    </VControl>
-                </VField>
-                <VField class="column filter">
-                    <VControl icon="feather:user">
-                        <input v-model="searchLastName" type="text" class="input is-rounded"
-                            placeholder="last_name..." />
+                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="name..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
@@ -187,14 +176,6 @@ export default defineComponent({
         <template #action="{ close }">
             <VButton color="primary" raised @click="search">Ok..</VButton>
         </template>
-
-
-
-        <VField class="column filter">
-            <VControl icon="feather:search">
-                <input v-model="searchPhoneNumber" type="text" class="input is-rounded" placeholder="phone_number..." />
-            </VControl>
-        </VField>
     </VModal>
 </template>
 

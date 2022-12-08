@@ -7,6 +7,7 @@ import { defaultPagination, Pagination } from '/@src/utils/response'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
 import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
+import RoomSearchFilterModelVue from './RoomSearchFilterModel.vue'
 
 export default defineComponent({
     props: {
@@ -24,41 +25,56 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const onOpen = () => {
+            searchFilterPop.value = !searchFilterPop.value
+            context.emit('onOpen', searchFilterPop.value)
+        }
+        const popUpTrigger = (value: boolean) => {
+            searchFilterPop.value = value
+            console.log("DASdas", searchFilterPop.value)
+        }
 
         const pagination = props.pagination
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
             return y.value > 30
         })
+        const searchFilterPop = ref(false)
         const searchNumber = ref()
         const searchFloor = ref()
         const searchDepartment = ref()
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultRoomSearchFilter)
+        const is_reseted = ref(false)
+        const keyTest = ref(0)
 
         const search = () => {
-            searchFilter.value = {
-                number: searchNumber.value,
-                floor: searchFloor.value,
-                status: searchStatus.value,
-                department: searchDepartment.value,
-                per_page: perPage.value
-            }
+            searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
-
+        }
+        const search_filter = (value: RoomSearchFilter) => {
+            searchFilter.value = value
+            searchFilter.value.per_page = perPage.value
+            context.emit('search', searchFilter.value)
         }
 
         const resetFilter = () => {
-            searchNumber.value = undefined
-            searchFloor.value = undefined
-            searchDepartment.value = undefined
-            searchStatus.value = undefined
             searchFilter.value.number = undefined
             searchFilter.value.floor = undefined
-            searchFilter.value.department = undefined
+            searchFilter.value.department_id = undefined
             searchFilter.value.status = undefined
+            is_reseted.value = true
+            keyTest.value++
+            context.emit('resetFilter', searchFilter.value)
 
+        }
+        const resetFilter_popup = (value: RoomSearchFilter) => {
+            searchFilter.value.number = undefined
+            searchFilter.value.floor = undefined
+            searchFilter.value.department_id = undefined
+            searchFilter.value.status = undefined
+            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -68,7 +84,7 @@ export default defineComponent({
             departments2.value = departments
             console.log(departments2.value)
         })
-        return { isStuck, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
+        return { keyTest, searchFilterPop, popUpTrigger, onOpen, resetFilter_popup, search_filter, isStuck, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
     },
 
 
@@ -85,56 +101,20 @@ export default defineComponent({
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">
                     <div class="left">
-                        <div class="columns justify-content">
-                            <VField class="column filter">
-                                <VControl icon="feather:search">
-                                    <input v-model="searchNumber" type="text" class="input is-rounded"
-                                        placeholder="number..." />
-                                </VControl>
-                            </VField>
-                            <VField class="column filter">
-                                <VControl icon="feather:search">
-                                    <input v-model="searchFloor" type="text" class="input is-rounded"
-                                        placeholder="floor..." />
-                                </VControl>
-                            </VField>
-                        </div>
-                        <div class="columns justify-content">
-                            <VField class="column ">
-                                <VControl>
-                                    <VSelect v-model="searchDepartment" class="is-rounded">
-                                        <VOption value="">Department</VOption>
-                                        <VOption v-for="department in departments2" :key="department.id"
-                                            :value="department.id">{{ department.name }}
-                                        </VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                            <VField class="column ">
-                                <VControl>
-                                    <VSelect v-model="searchStatus" class="is-rounded">
-                                        <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ RoomConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ RoomConsts.showStatusName(1) }}</VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                        </div>
-
+                        <VButton @click.prevent="onOpen" raised> Search
+                        </VButton>
                     </div>
                     <div class="right  ">
                         <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
-
                             <VButton to="/room/add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
                         <div>
                             <VField>
                                 <VControl>
-                                    <div class="select is-rounded">
+                                    <div class="select">
                                         <select @change="search" v-model="perPage">
                                             <option v-if="pagination.per_page * 0.1 == 1"
                                                 :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
@@ -163,6 +143,8 @@ export default defineComponent({
                 </div>
             </div>
         </div>
+        <RoomSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+            @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 

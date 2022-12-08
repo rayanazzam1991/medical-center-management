@@ -15,7 +15,7 @@ import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
 import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import SearchFilterModelVue from './SearchFilterModel.vue'
+import UserSearchFilterModelVue from './UserSearchFilterModel.vue'
 
 export default defineComponent({
     props: {
@@ -71,8 +71,7 @@ export default defineComponent({
         }
 
         const resetFilter = () => {
-            searchFilter.value.first_name = undefined
-            searchFilter.value.last_name = undefined
+            searchFilter.value.name = undefined
             searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
             searchFilter.value.room_id = undefined
@@ -84,8 +83,7 @@ export default defineComponent({
 
         }
         const resetFilter_popup = (value: UserSearchFilter) => {
-            searchFilter.value.first_name = undefined
-            searchFilter.value.last_name = undefined
+            searchFilter.value.name = undefined
             searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
             searchFilter.value.room_id = undefined
@@ -124,7 +122,7 @@ export default defineComponent({
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">
                     <div class="left">
-                        <div class="columns justify-content">
+                        <div>
                             <VButton @click.prevent="onOpen" raised> Search
                             </VButton>
                         </div>
@@ -171,7 +169,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <SearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+        <UserSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
             @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

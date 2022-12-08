@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
+import { ServiceSearchFilter } from '/@src/utils/api/Others/Service/services'
 import { ServiceConsts } from '/@src/utils/consts/service'
 import { defaultPagination } from '/@src/utils/response'
 
@@ -21,45 +22,61 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const onOpen = () => {
+            searchFilterPop.value = !searchFilterPop.value
+            context.emit('onOpen', searchFilterPop.value)
+        }
+        const popUpTrigger = (value: boolean) => {
+            searchFilterPop.value = value
+            console.log("DASdas", searchFilterPop.value)
+        }
 
         const pagination = props.pagination
         const { y } = useWindowScroll()
         const isStuck = computed(() => {
             return y.value > 150
         })
+        const searchFilterPop = ref(false)
         const searchName = ref('')
         const searchPrice = ref()
         const searchDuration = ref()
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultServiceSearchFilter)
+        const is_reseted = ref(false)
+        const keyTest = ref(0)
 
         const search = () => {
-            searchFilter.value = {
-                name: searchName.value,
-                status: searchStatus.value,
-                duration_minutes: searchDuration.value,
-                service_price: searchPrice.value,
-                per_page: perPage.value
-            }
+            searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
+        }
+        const search_filter = (value: ServiceSearchFilter) => {
+            searchFilter.value = value
+            searchFilter.value.per_page = perPage.value
+            context.emit('search', searchFilter.value)
+        }
+        const resetFilter = () => {
+            searchFilter.value.name = undefined
+            searchFilter.value.status = undefined
+            searchFilter.value.duration_minutes = undefined
+            searchFilter.value.service_price = undefined
+            is_reseted.value = true
+            keyTest.value++
+            context.emit('resetFilter', searchFilter.value)
 
         }
-
-        const resetFilter = () => {
-            searchName.value = ''
-            searchStatus.value = undefined
-            searchDuration.value = undefined
-            searchPrice.value = undefined
+        const resetFilter_popup = (value: ServiceSearchFilter) => {
             searchFilter.value.name = undefined
             searchFilter.value.status = undefined
             searchFilter.value.duration_minutes = undefined
             searchFilter.value.service_price = undefined
 
+            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
+
+        return { searchFilterPop, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
     },
 
 
@@ -76,46 +93,14 @@ export default defineComponent({
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">
                     <div class="left">
-                        <div class="columns justify-content ">
-                            <div class="column filter">
-
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchName" type="text" class="input is-rounded"
-                                            placeholder="Name..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                                            placeholder="Duration..." />
-                                    </VControl>
-                                </VField>
-                            </div>
-                            <div class="column filter">
-
-                                <VField class="column filter">
-                                    <VControl icon="feather:search">
-                                        <input v-model="searchPrice" type="number" class="input is-rounded"
-                                            placeholder="Price..." />
-                                    </VControl>
-                                </VField>
-                                <VField class="column filter ">
-                                    <VControl>
-                                        <VSelect v-model="searchStatus" class="is-rounded">
-                                            <VOption value="">Status</VOption>
-                                            <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
-                                            <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
-                                        </VSelect>
-                                    </VControl>
-                                </VField>
-                            </div>
+                        <div>
+                            <VButton @click.prevent="onOpen" raised> Search
+                            </VButton>
                         </div>
 
                     </div>
                     <div class="right  ">
                         <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
 
@@ -126,7 +111,7 @@ export default defineComponent({
 
                             <VField>
                                 <VControl>
-                                    <div class="select is-rounded">
+                                    <div class="select ">
                                         <select @change="search" v-model="perPage">
                                             <option v-if="pagination.per_page * 0.1 == 1"
                                                 :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
@@ -156,6 +141,9 @@ export default defineComponent({
                 </div>
             </div>
         </div>
+
+        <ServiceSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop"
+            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
