@@ -1,22 +1,32 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultUser } from '../Others/User/userStore'
+import { defaultCreateUpdateUser, defaultUser } from '../Others/User/userStore'
 import { defaultNationality } from '../Others/Nationality/nationalityStore'
 import { useApi } from '/@src/composable/useApi'
 import {
-  CreateUpdateEmployee,
+  CreateEmployee,
+  UpdateEmployee,
   Employee,
   addEmployeeApi,
-  editEmployeeApi,
   getEmployeesApi,
   EmployeeSearchFilter,
+  getEmployeeApi,
+  updateEmployeeApi,
 } from '/@src/utils/api/Employee'
 import { Pagination, defaultPagination } from '/@src/utils/response'
 
-export const defaultCreateUpdateEmployee: CreateUpdateEmployee = {
+export const defaultCreateEmployee: CreateEmployee = {
   id: 0,
   starting_date: '',
   end_date: '',
-  user_id: 0,
+  user: defaultCreateUpdateUser,
+  nationality_id: 0,
+  basic_salary: 0,
+}
+export const defaultUpdateEmployee: UpdateEmployee = {
+  id: 0,
+  starting_date: '',
+  end_date: '',
+  user: defaultCreateUpdateUser,
   nationality_id: 0,
   basic_salary: 0,
 }
@@ -28,15 +38,32 @@ export const defaultEmployee: Employee = {
   basic_salary: 0,
   user: defaultUser,
 }
+export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
+  name: undefined,
+  phone_number: undefined,
+  gender: undefined,
+  date_between: undefined,
+  from: undefined,
+  to: undefined,
+  city_id: undefined,
+  nationality_id: undefined,
+  user_status_id: undefined,
+  page: undefined,
+  per_page: undefined,
+  order_by: undefined,
+  order: undefined,
+}
 
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
   const pagination = ref<Pagination>(defaultPagination)
-
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
   const loading = ref(false)
 
-  async function addEmployeeStore(employee: CreateUpdateEmployee) {
+  async function addEmployeeStore(employee: CreateEmployee) {
     if (loading.value) return
 
     loading.value = true
@@ -46,26 +73,47 @@ export const useEmployee = defineStore('employee', () => {
 
       var returnedEmployee: Employee
       returnedEmployee = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
       employees.value.push(returnedEmployee)
       return returnedEmployee
     } finally {
       loading.value = false
     }
   }
-  async function editEmployeeStore(employee: CreateUpdateEmployee) {
+  async function getEmployeeStore(employee_id: number) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await editEmployeeApi(api, employee)
+      const response = await getEmployeeApi(api, employee_id)
       var returnedEmployee: Employee
       returnedEmployee = response.response.data
-      employees.value.splice(
-        employees.value.findIndex((userElement) => (userElement.id = employee.id)),
-        1
-      )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedEmployee
+    } finally {
+      loading.value = false
+    }
+  }
+  async function updateEmployeeStore(employeeId: number, employee: UpdateEmployee) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await updateEmployeeApi(api, employeeId, employee)
+
+      var returnedEmployee: Employee
+      returnedEmployee = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
       employees.value.push(returnedEmployee)
+      return returnedEmployee
     } finally {
       loading.value = false
     }
@@ -88,8 +136,12 @@ export const useEmployee = defineStore('employee', () => {
     employees,
     pagination,
     addEmployeeStore,
-    editEmployeeStore,
     getEmployeesStore,
+    updateEmployeeStore,
+    getEmployeeStore,
+    success,
+    error_code,
+    message,
   } as const
 })
 

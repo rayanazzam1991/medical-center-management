@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
 import { City } from '../City'
+import { Department } from '../Department'
 import { Room } from '../Room'
 import { UserStatus } from '../UserStatus'
 

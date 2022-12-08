@@ -1,7 +1,7 @@
 import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-import { Nationality } from '../../Others/Nationality'
-import { User } from '../../Others/User'
+import { CustomResponseCollection, CustomResponseSingle } from '../../response'
+import { Nationality } from '../Others/Nationality'
+import { CreateUpdateUser, User } from '../Others/User'
 
 export interface Employee {
   id?: number
@@ -11,18 +11,32 @@ export interface Employee {
   user: User
   nationality: Nationality
 }
-export interface CreateUpdateEmployee {
+export interface CreateEmployee {
   id?: number
   starting_date?: string
   end_date?: string
-  user_id: number
-  basic_salary: number
+  user: CreateUpdateUser
+  basic_salary?: number
+  nationality_id?: number
+}
+export interface UpdateEmployee {
+  id?: number
+  starting_date?: string
+  end_date?: string
+  user: CreateUpdateUser
+  basic_salary?: number
   nationality_id?: number
 }
 export interface EmployeeSearchFilter {
   name?: string
   phone_number?: number
-  status?: number
+  gender?: string
+  date_between?: string
+  from?: string
+  to?: string
+  city_id?: number
+  nationality_id?: number
+  user_status_id?: number
   page?: number
   per_page?: number
   order_by?: string
@@ -31,19 +45,31 @@ export interface EmployeeSearchFilter {
 
 export async function addEmployeeApi(
   api: AxiosInstance,
-  employee: CreateUpdateEmployee
+  employee: CreateEmployee
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`employee/`, employee)
+  console.log(response)
+  return { response }
+}
+export async function updateEmployeeApi(
+  api: AxiosInstance,
+  employeeId: number,
+  employee: UpdateEmployee
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(`employee/${employeeId}`, employee)
+  console.log(response)
 
   return { response }
 }
-export async function editEmployeeApi(
+export async function getEmployeeApi(
   api: AxiosInstance,
-  employee: CreateUpdateEmployee
+  employee_id: number
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.put(`employee/${employee.id}`, employee)
+  const { data: response, headers } = await api.get(`employee/${employee_id}`)
+
   return { response }
 }
+
 export async function getEmployeesApi(
   api: AxiosInstance,
   searchFilter: EmployeeSearchFilter

@@ -1,12 +1,8 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../../Others/User/userStore'
-import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
+import { defaultCreateUpdateUser } from '../Others/User/userStore'
 import { defaultCreateEmployee, defaultUpdateEmployee } from './employeeStore'
-import {
-  CreateEmployee,
-  CreateUpdateEmployeeSocialMediaHelper,
-  UpdateEmployee,
-} from '/@src/utils/api/CRM/Employee'
+import { CreateEmployee } from '/@src/utils/api/Employee'
+import { UpdateEmployee } from '/@src/utils/api/Employee'
 import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
 import { CreateUpdateUser } from '/@src/utils/api/Others/User'
 

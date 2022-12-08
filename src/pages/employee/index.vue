@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultEmployeeSearchFilter } from '/@src/stores/Others/Employee/userStore'
-
-import { getEmployeesList } from '/@src/composable/Employee/getEmployeesList'
-import { EmployeeSearchFilter } from '/@src/utils/api/Employee'
+import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
+import { getUsersList } from '/@src/composable/Others/User/getUsersList'
+import { UserSearchFilter } from '/@src/utils/api/Others/User'
 import { defaultPagination } from '/@src/utils/response'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
@@ -12,6 +11,9 @@ import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import { EmployeeSearchFilter } from '/@src/utils/api/Employee'
+import { getEmployeesList } from '/@src/composable/Employee/getEmployeesList'
+import { defaultEmployeeSearchFilter } from '/@src/stores/Employee/employeeStore'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Employee')
 useHead({
@@ -25,7 +27,6 @@ const { employees, pagination } = await getEmployeesList(searchFilter.value)
 employeesList.value = employees
 paginationVar.value = pagination
 const router = useRouter()
-
 
 const search = async (searchFilter2: EmployeeSearchFilter) => {
 
@@ -41,11 +42,11 @@ const resetFilter = async (searchFilter2: EmployeeSearchFilter) => {
     search(searchFilter.value)
 }
 
-const getUsersPerPage = async (pageNum: number) => {
+const getEmployeesPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     search(searchFilter.value)
 }
-const userSort = async (value: string) => {
+const employeeSort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
 
@@ -63,59 +64,152 @@ const userSort = async (value: string) => {
 
 const columns = {
     id: {
-        searchable: true,
-        sortable: true,
-    },
-    first_name: {
-        sortable: true,
-        searchable: true,
+        align: 'center',
 
+        searchable: true,
+        sortable: true,
     },
-    last_name: {
+    name: {
+        align: 'center',
+
+        label: 'Name',
+        grow: 'lg',
+        renderRow: (row: any) =>
+            h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
+
         sortable: true,
         searchable: true,
 
     },
     gender: {
-        sortable: true,
+        align: 'center',
+
+        label: 'Gender',
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.user.gender === 'Male'
+                            ? 'primary'
+                            : row?.user.gender === 'Female'
+                                ? 'orange'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return row?.user.gender
+                    },
+                }
+            ),
+
+
         searchable: true,
 
     },
     phone_number: {
+        align: 'center',
+        grow: true,
+        label: 'Phone',
+        renderRow: (row: any) =>
+            h('span', row?.user?.phone_number),
+
         sortable: true,
         searchable: true,
+
+
+    },
+    starting_date: {
+        align: 'center',
+
+        label: 'Starting date',
+        renderRow: (row: any) =>
+            h('span', row?.starting_date),
+
+        searchable: true,
+
+
+    },
+    nationality: {
+        align: 'center',
+
+        label: 'Nationality',
+        renderRow: (row: any) =>
+            h('span', row?.nationality.name),
+
+        searchable: true,
+
+
+    },
+    department: {
+        align: 'center',
+        grow: true,
+        label: 'Department',
+        renderRow: (row: any) =>
+            h('span', row?.user.room.department.name),
+
+        searchable: true,
+
 
     },
     room: {
-        sortable: true,
-        searchable: true,
+        align: 'center',
         label: 'Room',
         renderRow: (row: any) =>
-            h('span', row?.room?.number)
-    },
+            h('span', row?.user.room.number),
 
-    city: {
-        sortable: true,
         searchable: true,
-        label: 'City',
-        renderRow: (row: any) =>
-            h('span', row?.city?.name)
+
+
     },
     status: {
-        sortable: true,
-        searchable: true,
-        label: 'UserStatus',
-        renderRow: (row: any) =>
-            h('span', row?.status?.name)
-    },
-
-    actions: {
         align: 'center',
 
+        label: 'status',
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.user.status.name === 'Pending'
+                            ? 'orange'
+                            : row?.user.status.name === 'Waiting'
+                                ? 'blue'
+                                : row?.user.status.name === 'Approved'
+                                    ? 'green'
+                                    : row?.user.status.name === 'Deleted'
+                                        ? 'warning'
+                                        : row?.user.status.name === 'Busy'
+                                            ? 'danger'
+                                            : undefined,
+                },
+                {
+                    default() {
+                        return row?.user.status.name
+                    },
+                }
+            ),
+        searchable: true,
+
+
+    },
+    created_at: {
+        align: 'center',
+
+        label: 'Create Date',
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+
+    },
+    actions: {
+        align: 'center',
         renderRow: (row: any) =>
             h(MyDropDown, {
                 onEdit: () => {
-                    router.push({ path: `/employee/${row.id}/edit` })
+                    router.push({ path: `/employee-edit/${row.id}/` })
                 },
                 onView: () => {
                     router.push({ path: `/employee/${row.id}` })
@@ -128,14 +222,15 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <EmployeeTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="employeesList" @update:sort="userSort">
+    <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
+        @update:sort="employeeSort">
 
         <VFlexTable v-if="employeesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
         <VFlexPagination v-if="employeesList.length != 0" :current-page="paginationVar.page" class="mt-6"
             :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
-            no-router @update:current-page="getUsersPerPage" />
+            no-router @update:current-page="getEmployeesPerPage" />
         <h6 v-if="employeesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total

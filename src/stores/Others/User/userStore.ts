@@ -17,6 +17,7 @@ import { Pagination, defaultPagination } from '/@src/utils/response'
 import { defaultCity } from '../City/cityStore'
 import { defaultUserStatus } from '../UserStatus/userStatusStore'
 import { defaultRoom } from '../Room/roomStore'
+import { defaultDepartment } from '../Department/departmentStore'
 
 export const defaultCreateUpdateUser: CreateUpdateUser = {
   id: undefined,

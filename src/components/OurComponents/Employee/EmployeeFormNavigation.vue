@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDropdown } from '/@src/composable/useDropdown'
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
+import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps'
 import { useDarkmode } from '/@src/stores/darkmode'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
@@ -9,38 +9,29 @@ const darkmode = useDarkmode()
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
 
-const customerForm = useCustomerForm()
+const employeeForm = useEmployeeForm()
 </script>
 
 <template>
   <nav class="wizard-navigation">
+    <!-- 
     <RouterLink to="/" class="wizard-brand">
       <AnimatedLogo width="38px" height="38px" />
-    </RouterLink>
+    </RouterLink> -->
 
-    <div class="navbar-item is-wizard-title">
+    <div class="">
       <span class="title-wrap">
-        Step {{ customerForm.step }}: <span>{{ customerForm.stepTitle }}</span>
+        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/employee" darkOutlined
+          color="white">
+          Back to employees page
+        </VButton>
       </span>
     </div>
-
-    <VDropdown class="wizard-dropdown">
-      <template #button="{ toggle }">
-        <div tabindex="0" class="is-trigger" @click="toggle" @keydown.space.prevent="toggle">
-          <i aria-hidden="true" class="iconify" data-icon="feather:chevron-down"></i>
-        </div>
-      </template>
-      <template #content="{ close }">
-        <RouterLink :class="[customerForm.step < 1 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add" @click.passive="close">
-          Step 1: Main Info
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 2 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/additional-info" @click.passive="close">
-          Step 2: Profile Picture
-        </RouterLink>
-      </template>
-    </VDropdown>
+    <div class="navbar-item is-wizard-title wizard-brand">
+      <span class="title-wrap">
+        Step {{ employeeForm.step }}: <span>{{ employeeForm.stepTitle }}</span>
+      </span>
+    </div>
 
     <div class="navbar-item is-dark-mode">
       <div class="navbar-icon">

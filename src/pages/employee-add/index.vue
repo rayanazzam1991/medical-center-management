@@ -16,13 +16,14 @@ import { City } from '/@src/utils/api/Others/City';
 import { Room } from '/@src/utils/api/Others/Room';
 import { UserStatus } from '/@src/utils/api/Others/UserStatus';
 import { custom, z as zod } from 'zod';
-// import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateUpdateEmployee } from '/@src/stores/Employee/employeeStore';
+import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
+import { defaultCreateEmployee, defaultUpdateEmployee } from '/@src/stores/Employee/employeeStore';
 import { addEmployee } from '/@src/composable/Employee/addEmployee';
 import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList';
 import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore';
 import { Nationality } from '/@src/utils/api/Others/Nationality';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 
 
 
@@ -33,21 +34,21 @@ viewWrapper.setPageTitle('Employee Info')
 const head = useHead({
     title: 'Employee',
 })
-// const employeeForm = useEmployeeForm()
-// employeeForm.setStep({
-//     number: 1,
-//     canNavigate: true,
-//     skipable: false,
-//     validateStepFn: async () => {
-//         var isValid = await onSubmitAdd()
-//         if (isValid) {
-//             router.push({
-//                 path: `/employee-add/${employeeForm.data.id}/profile-picture`,
-//             })
+const employeeForm = useEmployeeForm()
+employeeForm.setStep({
+    number: 1,
+    canNavigate: true,
+    skipable: false,
+    validateStepFn: async () => {
+        var isValid = await onSubmitAdd()
+        if (isValid) {
+            router.push({
+                path: `/employee-add/${employeeForm.data.id}/profile-picture`,
+            })
 
-//         }
-//     },
-// })
+        }
+    },
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -55,14 +56,11 @@ const notif = useNotyf()
 const pageTitle = 'Step 1: Employee Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
-const currentEmployee = ref(defaultCreateUpdateEmployee)
-// const getCurrentEmployee = () => {
-
-//     currentUser.value = employeeForm.userForm
-//     currentEmployee.value = employeeForm.data
-
-
-// }
+const currentEmployee = ref(defaultCreateEmployee)
+const getCurrentEmployee = () => {
+    currentUser.value = employeeForm.userForm
+    currentEmployee.value = employeeForm.data
+}
 const cities2 = ref<City[]>([])
 const rooms2 = ref<Room[]>([])
 const statuses2 = ref<UserStatus[]>([])
@@ -79,10 +77,10 @@ onMounted(async () => {
     nationality2.value = nationalities
 
 })
-// onMounted(() => {
-//     getCurrentEmployee()
-// }
-// )
+onMounted(() => {
+    getCurrentEmployee()
+}
+)
 
 
 const validationSchema = toFormValidator(zod
@@ -248,6 +246,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
         const employee = await addEmployee(employeeForm.data, employeeForm.userForm)
+        console.log(employee)
         if (employee.success) {
             employeeForm.data.id = employee.employee.id
             // @ts-ignore
@@ -277,10 +276,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'add'" :back_route="'backRoute'" type="submit"
-        @onSubmit="onSubmit(formType)" />
     <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="onSubmit(formType)">
+        <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
