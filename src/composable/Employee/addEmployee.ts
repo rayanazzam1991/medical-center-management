@@ -1,6 +1,6 @@
-import { addUser } from '../../Others/User/addUser'
+import { addUser } from '../Others/User/addUser'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
-import { CreateUpdateEmployee } from '/@src/utils/api/Employee/Employee'
+import { CreateUpdateEmployee } from '/@src/utils/api/Employee'
 import { CreateUpdateUser } from '/@src/utils/api/Others/User'
 
 export async function addEmployee(
