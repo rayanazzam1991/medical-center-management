@@ -1,16 +1,12 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../../Others/User/userStore'
-import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
-import { defaultCreateCustomer, defaultUpdateCustomer } from './customerStore'
-import {
-  CreateCustomer,
-  CreateUpdateCustomerSocialMediaHelper,
-  UpdateCustomer,
-} from '/@src/utils/api/CRM/Customer'
+import { defaultCreateUpdateUser } from '../Others/User/userStore'
+import { defaultCreateEmployee, defaultUpdateEmployee } from './employeeStore'
+import { CreateEmployee } from '/@src/utils/api/Employee'
+import { UpdateEmployee } from '/@src/utils/api/Employee'
 import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
 import { CreateUpdateUser } from '/@src/utils/api/Others/User'
 
-interface CustomerFormStepOptions {
+interface EmployeeFormStepOptions {
   number: number
   canNavigate?: boolean
   skipable?: boolean
@@ -19,38 +15,32 @@ interface CustomerFormStepOptions {
   skipStepFn?: () => Promise<void>
 }
 
-export const useCustomerForm = defineStore('CustomerForm', () => {
+export const useEmployeeForm = defineStore('EmployeeForm', () => {
   const step = ref(1)
   const loading = ref(false)
   const canNavigate = ref(false)
   const skipable = ref(false)
-  const previousStepFn = shallowRef<CustomerFormStepOptions['previousStepFn'] | null>()
-  const validateStepFn = shallowRef<CustomerFormStepOptions['validateStepFn'] | null>()
-  const skipStepFn = shallowRef<CustomerFormStepOptions['skipStepFn'] | null>()
-  const data = ref<CreateCustomer>(defaultCreateCustomer)
-  const dataUpdate = ref<UpdateCustomer>(defaultUpdateCustomer)
+  const previousStepFn = shallowRef<EmployeeFormStepOptions['previousStepFn'] | null>()
+  const validateStepFn = shallowRef<EmployeeFormStepOptions['validateStepFn'] | null>()
+  const skipStepFn = shallowRef<EmployeeFormStepOptions['skipStepFn'] | null>()
+  const data = ref<CreateEmployee>(defaultCreateEmployee)
+  const dataUpdate = ref<UpdateEmployee>(defaultUpdateEmployee)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
-  const medicalInfoForm = ref<MedicalInfo>(defaultMedicalInfo)
-  const customerSocialMediaForm = ref<Array<CreateUpdateCustomerSocialMediaHelper>>([])
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
         return 'Main Info'
       case 2:
         return 'Profile Picture'
-      case 3:
-        return 'Medical Info'
-      case 4:
-        return 'Social Media'
       default:
-        return 'Customer Form'
+        return 'Main Info'
     }
   })
 
   function setLoading(value: boolean) {
     loading.value = value
   }
-  function setStep(options?: CustomerFormStepOptions) {
+  function setStep(options?: EmployeeFormStepOptions) {
     step.value = options?.number || 1
     canNavigate.value = options?.canNavigate ?? false
     skipable.value = options?.skipable ?? false
@@ -71,7 +61,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   }
 
   function reset() {
-    data.value = defaultCreateCustomer
+    data.value = defaultCreateEmployee
   }
 
   return {
@@ -86,8 +76,6 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     data,
     dataUpdate,
     userForm,
-    medicalInfoForm,
-    customerSocialMediaForm,
     setLoading,
     setStep,
     getStep,
@@ -105,5 +93,5 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
  * @see https://vitejs.dev/guide/api-hmr.html
  */
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useCustomerForm, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useEmployeeForm, import.meta.hot))
 }

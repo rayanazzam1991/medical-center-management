@@ -1,4 +1,4 @@
-import { useUser } from "/@src/stores/Others/User/userStore"
+import { useUser } from '/@src/stores/Others/User/userStore'
 
 export async function phoneExistsCheck(phone_number: string) {
   const user = useUser()

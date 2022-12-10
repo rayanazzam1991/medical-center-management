@@ -17,6 +17,7 @@ import { Pagination, defaultPagination } from '/@src/utils/response'
 import { defaultCity } from '../City/cityStore'
 import { defaultUserStatus } from '../UserStatus/userStatusStore'
 import { defaultRoom } from '../Room/roomStore'
+import { defaultDepartment } from '../Department/departmentStore'
 
 export const defaultCreateUpdateUser: CreateUpdateUser = {
   id: undefined,
@@ -30,6 +31,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   city_id: 0,
   user_status_id: 0,
   password: '0000000000',
+  role: 'Reception',
 }
 export const defaultUser: User = {
   id: 0,
@@ -43,7 +45,7 @@ export const defaultUser: User = {
   city: defaultCity,
   status: defaultUserStatus,
   password: '',
-
+  role: 'Reception',
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
@@ -147,8 +149,7 @@ export const useUser = defineStore('user', () => {
 
     try {
       const returnedResponse = await phoneExistsCheckApi(api, phone_number)
-      return returnedResponse.response.data as string 
-  
+      return returnedResponse.response.data as string
     } finally {
       loading.value = false
     }

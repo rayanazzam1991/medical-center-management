@@ -14,6 +14,9 @@ export type SubnavId =
   | 'components'
   | 'search'
 'others'
+'CRM'
+'employee'
+'conractor'
 
 const props = withDefaults(
   defineProps<{
@@ -180,28 +183,28 @@ watch(
           <a :class="[
             (activeSubnav === 'others' || route.path.startsWith('/navbar/dashboards')) &&
             'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('otherss')"
+          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
             <i aria-hidden="true" class="iconify" data-icon="feather:activity"></i>
             <span>Others</span>
           </a>
           <a :class="[
-            (activeSubnav === 'layouts' || route.path.startsWith('/navbar/layouts')) &&
+            (activeSubnav === 'CRM' || route.path.startsWith('/navbar/CRM')) &&
             'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('layouts')"
-            @click="toggleSubnav('layouts')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-            <span>Layouts</span>
+          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
+            @click="toggleSubnav('CRM')">
+            <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
+            <span>CRM</span>
           </a>
-          <a :class="[activeSubnav === 'elements' && 'is-active']" class="centered-link centered-link-toggle"
-            tabindex="0" @keydown.space.prevent="toggleSubnav('elements')" @click="toggleSubnav('elements')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:box"></i>
-            <span>Elements</span>
+          <a :class="[activeSubnav === 'contractor' && 'is-active']" class="centered-link centered-link-toggle"
+            tabindex="0" @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+            <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
+            <span>Contractors</span>
           </a>
-          <a :class="[activeSubnav === 'components' && 'is-active']" class="centered-link centered-link-toggle"
-            tabindex="0" @keydown.space.prevent="toggleSubnav('components')" @click="toggleSubnav('components')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:cpu"></i>
-            <span>Components</span>
+          <a :class="[activeSubnav === 'employee' && 'is-active']" class="centered-link centered-link-toggle"
+            tabindex="0" @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
+            <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
+            <span>Employees</span>
           </a>
           <a class="centered-link centered-link-search" tabindex="0" @keydown.space.prevent="toggleSubnav('search')"
             @click="toggleSubnav('search')">
@@ -245,11 +248,11 @@ watch(
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" />
           <DashboardsSubnav :class="[activeSubnav === 'home' && 'is-active']" />
 
-          <LayoutsSubnav :class="[activeSubnav === 'layouts' && 'is-active']" />
+          <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" />
 
-          <ElementsSubnav :class="[activeSubnav === 'elements' && 'is-active']" />
+          <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" />
 
-          <ComponentsSubnav :class="[activeSubnav === 'components' && 'is-active']" />
+          <EmployeeSubnav :class="[activeSubnav === 'employee' && 'is-active']" />
         </div>
       </template>
     </Navbar>

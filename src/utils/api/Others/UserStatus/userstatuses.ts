@@ -8,6 +8,7 @@ export interface UserStatus {
 export interface UserStatusSearchFilter {
   name?: string
   page?: number
+  per_page?: number
   order_by?: string
   order?: string
   per_page?:undefined
