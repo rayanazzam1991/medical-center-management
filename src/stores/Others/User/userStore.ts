@@ -46,6 +46,7 @@ export const defaultUser: User = {
   status: defaultUserStatus,
   password: '',
   role: 'Reception',
+  token:undefined
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {

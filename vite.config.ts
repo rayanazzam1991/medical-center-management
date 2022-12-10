@@ -37,7 +37,7 @@ export default defineConfig({
   // development server configuration
   server: {
     // Vite 3 now defaults to 5173, but you can override it with the port option.
-    port: 3000,
+    port: 5000,
   },
   /**
    * By default, Vite will crawl your index.html to detect dependencies that

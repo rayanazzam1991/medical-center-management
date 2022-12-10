@@ -18,6 +18,7 @@ export interface User {
   city: City
   status: UserStatus
   role: string
+  token?: string
 }
 export interface CreateUpdateUser {
   id?: number
