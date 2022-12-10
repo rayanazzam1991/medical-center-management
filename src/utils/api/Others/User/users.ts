@@ -15,7 +15,8 @@ export interface User {
   address: string
   room: Room
   city: City
-  status: UserStatus
+  status: UserStatus,
+  token?: string
 }
 export interface CreateUpdateUser {
   id?: number

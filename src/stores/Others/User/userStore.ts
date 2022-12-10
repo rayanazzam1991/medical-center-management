@@ -41,7 +41,8 @@ export const defaultUser: User = {
   room: defaultRoom,
   city: defaultCity,
   status: defaultUserStatus,
-  password: ''
+  password: '',
+  token:undefined
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
