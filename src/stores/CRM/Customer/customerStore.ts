@@ -44,7 +44,7 @@ export const defaultCustomer: Customer = {
 
 export const defaultCustomerSearchFilter: CustomerSearchFilter = {
   name : undefined,
-  phone : undefined,
+  phone_number : undefined,
   gender : undefined,
   date_between : undefined ,
   from : undefined,
@@ -54,7 +54,7 @@ export const defaultCustomerSearchFilter: CustomerSearchFilter = {
   is_completed : undefined,
   user_status_id: undefined,
   page : undefined,
-  per_page : undefined,
+  per_page : 50,
   order_by : undefined,
   order : undefined,
 

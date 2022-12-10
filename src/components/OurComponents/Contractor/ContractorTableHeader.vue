@@ -1,15 +1,17 @@
 <script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
 import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList'
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
+import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore'
 import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
 import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
+import { ContractorSearchFilter } from '/@src/utils/api/Contractor'
 import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
 import { City } from '/@src/utils/api/Others/City'
 import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup'
 import { UserStatus } from '/@src/utils/api/Others/UserStatus'
 import { defaultPagination } from '/@src/utils/response'
+
 
 
 export default defineComponent({
@@ -43,7 +45,7 @@ export default defineComponent({
         })
         const searchFilterPop = ref(false)
         const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultCustomerSearchFilter)
+        const searchFilter = ref(defaultContractorSearchFilter)
         const is_reseted = ref(false)
         const keyTest = ref(0)
 
@@ -51,7 +53,7 @@ export default defineComponent({
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
         }
-        const search_filter = (value: CustomerSearchFilter) => {
+        const search_filter = (value: ContractorSearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
@@ -64,10 +66,9 @@ export default defineComponent({
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.customer_group_id = undefined
             searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
-            searchFilter.value.city_id = undefined
+            searchFilter.value.room_id = undefined
             is_reseted.value = true
             keyTest.value++
             context.emit('resetFilter', searchFilter.value)
@@ -80,10 +81,9 @@ export default defineComponent({
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.customer_group_id = undefined
             searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
-            searchFilter.value.city_id = undefined
+            searchFilter.value.room_id = undefined
 
 
             console.log(searchFilter)
@@ -114,10 +114,10 @@ export default defineComponent({
 
                     </div>
                     <div class="right">
-                        <div class="buttons  ">
+                        <div class="buttons">
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
-                            <VButton to="/customer-add" color="primary" raised> {{ button_name }}
+                            <VButton to="/contractor-add" color="primary" raised> {{ button_name }}
                             </VButton>
                         </div>
                         <div>

@@ -1,60 +1,30 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addUser } from '/@src/composable/Others/User/addUser'
-import { editUser } from '/@src/composable/Others/User/editUser'
-import { User } from '/@src/utils/api/Others/User'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { getUser } from '/@src/composable/Others/User/getUser'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import { getContractor } from '/@src/composable/Contractor/getContractor';
+import { updateContractor } from '/@src/composable/Contractor/updateContractor';
+import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { boolean, optional, z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
-import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
-import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
-import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
-import { defaultUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
-import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
-import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
-import { updateCustomer } from '/@src/composable/CRM/Customer/updateCustomer';
+import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
+import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Service } from '/@src/utils/api/Others/Service';
+
+
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
-const customerId = ref<number>(0)
+const contractorId = ref<number>(0)
 // @ts-ignore
-customerId.value = route.params?.id
+contractorId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle('Contractor Services')
 const head = useHead({
-    title: 'Customer',
+    title: 'Contractor',
 })
 const notif = useNotyf()
-const customerForm = useCustomerForm()
-customerForm.setStep({
-    number: 4,
+const contractorForm = useContractorForm()
+contractorForm.setStep({
+    number: 3,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
@@ -62,85 +32,78 @@ customerForm.setStep({
         console.log(isValid)
         if (isValid) {
             router.push({
-                path: `/customer/${customerId.value}`,
+                path: `/contractor/${contractorId.value}`,
             })
         }
 
     },
     skipStepFn: async () => {
-        customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+        contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
         router.push({
-            path: `/customer/${customerId.value}`,
+            path: `/contractor/${contractorId.value}`,
         })
     }
 
 })
-const pageTitle = 'Step 4: Customer Social Media'
-const socialMedias2 = ref<SocialMedia[]>([])
-interface SocialMediaChecked {
-    socialMedia: SocialMedia
+const pageTitle = 'Step 3: Contractor Services'
+const services2 = ref<Service[]>([])
+interface ServicesChecked {
+    service: Service
     checked: boolean
-    url: string
+    price: number
+    contractor_service_amount: number
 }
 
-const fetchCustomer = async () => {
+const fetchContractor = async () => {
 
-    const { customer } = await getCustomer(customerId.value)
-    for (let i = 0; i < customer.social_medias.length; i++) {
+    const { contractor } = await getContractor(contractorId.value)
+    console.log(contractor.payment_percentage)
+    for (let i = 0; i < contractor.services.length; i++) {
         // @ts-ignore
 
-        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
+        contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
 
     }
 
-    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
-    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
-    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
-    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
-    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
-    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
-    customerForm.medicalInfoForm.id = customer.medical_info.id
 
-    customerForm.userForm.id = customer.user.id
-    customerForm.userForm.first_name = customer.user.first_name
-    customerForm.userForm.last_name = customer.user.last_name
-    customerForm.userForm.gender = customer.user.gender
-    customerForm.userForm.birth_date = customer.user.birth_date
-    customerForm.userForm.phone_number = customer.user.phone_number
-    customerForm.userForm.address = customer.user.address
-    customerForm.userForm.room_id = customer.user.room.id
-    customerForm.userForm.city_id = customer.user.status.id
-    customerForm.userForm.user_status_id = customer.user.status.id
-    customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
-    customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
-    customerForm.dataUpdate.customer_group_id = customer.customer_group.id
-    customerForm.dataUpdate.id = customerId.value
+    contractorForm.userForm.id = contractor.user.id
+    contractorForm.userForm.first_name = contractor.user.first_name
+    contractorForm.userForm.last_name = contractor.user.last_name
+    contractorForm.userForm.gender = contractor.user.gender
+    contractorForm.userForm.birth_date = contractor.user.birth_date
+    contractorForm.userForm.phone_number = contractor.user.phone_number
+    contractorForm.userForm.address = contractor.user.address
+    contractorForm.userForm.room_id = contractor.user.room.id
+    contractorForm.userForm.city_id = contractor.user.status.id
+    contractorForm.userForm.user_status_id = contractor.user.status.id
+    contractorForm.dataUpdate.starting_date = contractor.starting_date
+    contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
+    contractorForm.dataUpdate.id = contractorId.value
 
-
+    console.log(contractorForm.dataUpdate)
 
 }
 
 
 
-const socialMediaChecked = ref<SocialMediaChecked[]>([])
+const servicesChecked = ref<ServicesChecked[]>([])
 onMounted(async () => {
-    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
-    socialMedias2.value = socialMedias
-    if (customerForm.dataUpdate.id != customerId.value) {
+    const { services } = await getServicesList(defaultServiceSearchFilter)
+    services2.value = services
+    if (contractorForm.dataUpdate.id != contractorId.value) {
 
-        await fetchCustomer()
+        await fetchContractor()
     }
 
 
-    for (let index = 0; index < socialMedias2.value.length; index++) {
-        // @ts-ignore
-        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMedias2.value[index].id)
-        if (socialMedia) {
+    for (let index = 0; index < services2.value.length; index++) {
+        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == services2.value[index].id)
+        if (service) {
 
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: true, url: socialMedia.url })
+            servicesChecked.value.push({ service: services2.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
         }
         else {
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+            servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
         }
 
     }
@@ -151,26 +114,27 @@ onMounted(async () => {
 
 
 const onSubmitEdit = async () => {
-    customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
-    for (let i = 0; i < socialMediaChecked.value.length; i++) {
-        if (socialMediaChecked.value[i].checked == true) {
-            customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
+    contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
+    for (let i = 0; i < servicesChecked.value.length; i++) {
+        if (servicesChecked.value[i].checked == true) {
+            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
 
         }
 
     }
-    customerForm.dataUpdate.is_completed = true
-    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-    if (customer.success) {
+    contractorForm.dataUpdate.is_completed = true
+    const contractor = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
+    if (contractor.success) {
         // @ts-ignore
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
 
         return true
     }
     else {
+        console.log('asd')
         // @ts-ignore
 
-        notif.error(customer.success)
+        notif.error(contractor.success)
 
     }
 
@@ -196,13 +160,9 @@ const onSubmitEdit = async () => {
 
                                 <VField>
 
-                                    <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
-                                        <VCheckbox :label="socialMedia.socialMedia.name"
-                                            :name="socialMedia.socialMedia.id" color="primary"
-                                            :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
-                                        <VIcon :icon="socialMedia.socialMedia.icon"
-                                            class="has-text-primary is-size-5" />
-
+                                    <VControl v-for="service in servicesChecked" raw nogrow subcontrol>
+                                        <VCheckbox :label="service.service.name" :name="service.service.id"
+                                            color="primary" :key="service.service.id" v-model="service.checked" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -211,20 +171,36 @@ const onSubmitEdit = async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
+                            <div class="column is-5">
+                                <VField v-for="service in servicesChecked" :id="service.service.name">
 
-                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
-                                        URL:
+                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                        Price:
                                     </VLabel>
-                                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
-                                        <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
-                                            :key="socialMedia.socialMedia.id" />
+                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                        <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
+                                            :key="service.service.id" />
 
                                     </VControl>
 
                                 </VField>
                             </div>
+                            <div class="column is-7">
+                                <VField v-for="service in servicesChecked" :id="service.service.name">
+
+                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                        Service amount:
+                                    </VLabel>
+                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                        <VInput disabled type="number"
+                                            :value="(service.price * (contractorForm.dataUpdate.payment_percentage as number / 100 ?? 0))"
+                                            v-bind="service.price" v-model="service.contractor_service_amount"
+                                            :key="service.service.id" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
+
                         </div>
                     </div>
 

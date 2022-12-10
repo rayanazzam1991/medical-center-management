@@ -134,7 +134,7 @@ const columns = {
   <VFlexTableWrapper :columns="columns" :data="customerGroupsList" @update:sort="customerGroupSort">
 
     <VFlexTable v-if="customerGroupsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-    <VFlexPagination v-if="customerGroupsList.length != 0" :current-page="paginationVar.page" class="mt-6"
+    <VFlexPagination v-if="(customerGroupsList.length != 0  && paginationVar.max_page != 1)" :current-page="paginationVar.page" class="mt-6"
       :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getcustomerGroupsPerPage" />
     <h6 v-if="customerGroupsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page

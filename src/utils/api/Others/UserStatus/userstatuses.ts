@@ -5,11 +5,12 @@ export interface UserStatus {
   id?: number
   name: string
 }
-export interface SearchFilter {
+export interface UserStatusSearchFilter {
   name?: string
   page?: number
   order_by?: string
   order?: string
+  per_page?:undefined
 }
 
 export async function deleteUserStatusApi(
@@ -53,7 +54,7 @@ export async function getUserStatusApi(
 }
 export async function getUserStatusesApi(
   api: AxiosInstance,
-  searchFilter: SearchFilter
+  searchFilter: UserStatusSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
   const { data: response, headers } = await api.get('userstatus/getStatusList', {
     params: searchFilter,

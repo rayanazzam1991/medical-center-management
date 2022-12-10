@@ -1,13 +1,14 @@
-<script setup  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
+<script setup  lang="ts">import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
+import { getContractor } from '/@src/composable/Contractor/getContractor';
+import { updateContractor } from '/@src/composable/Contractor/updateContractor';
 import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
+import { defaultCreateContractor } from '/@src/stores/Contractor/contractorStore';
 import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
 import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
 import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
@@ -16,58 +17,89 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { City } from '/@src/utils/api/Others/City';
 import { Room } from '/@src/utils/api/Others/Room';
 import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { useNotyf } from '/@src/composable/useNotyf';
-
-
+import { z as zod } from 'zod';
 
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Main Info')
+viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
-    title: 'Customer',
+    title: 'Contractor',
 })
-const customerForm = useCustomerForm()
-customerForm.setStep({
+const contractorForm = useContractorForm()
+contractorForm.setStep({
     number: 1,
     canNavigate: true,
-    skipable: false,
+    skipable: true,
     validateStepFn: async () => {
-        var isValid = await onSubmitAdd()
+        var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-add/${customerForm.data.id}/profile-picture`,
+                path: `/contractor-edit/${contractorForm.dataUpdate.id}/profile-picture`,
             })
 
         }
     },
+    skipStepFn: async () => {
+        router.push({
+            path: `/contractor-edit/${contractorForm.dataUpdate.id}/profile-picture`,
+        })
+
+    }
 })
 
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
-const pageTitle = 'Step 1: Customer Main Info'
+const pageTitle = 'Step 1: Contractor Main Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
-const currentCustomer = ref(defaultCreateCustomer)
-const getCurrentCustomer = () => {
+const currentContractor = ref(defaultCreateContractor)
+const contractorId = ref(0)
+// @ts-ignore
+contractorId.value = route.params.id
+const fetchContractor = async () => {
+    const { contractor } = await getContractor(contractorId.value)
+    currentUser.value.first_name = contractor.user.first_name
+    currentUser.value.last_name = contractor.user.last_name
+    currentUser.value.gender = contractor.user.gender
+    currentUser.value.birth_date = contractor.user.birth_date
+    currentUser.value.phone_number = contractor.user.phone_number
+    currentUser.value.address = contractor.user.address
+    currentUser.value.city_id = contractor.user.city.id
+    currentUser.value.room_id = contractor.user.room.id
+    currentUser.value.user_status_id = contractor.user.status.id
+    currentContractor.value.starting_date = contractor.starting_date
+    currentContractor.value.payment_percentage = contractor.payment_percentage
+    currentContractor.value.id = contractor.id
+    currentContractor.value.services = contractor.services
+    currentContractor.value.user = contractor.user
 
-    currentUser.value = customerForm.userForm
-    currentCustomer.value = customerForm.data
+    contractorForm.userForm.id = contractor.user.id
+    contractorForm.userForm.first_name = currentUser.value.first_name
+    contractorForm.userForm.last_name = currentUser.value.last_name
+    contractorForm.userForm.gender = currentUser.value.gender
+    contractorForm.userForm.birth_date = currentUser.value.birth_date
+    contractorForm.userForm.phone_number = currentUser.value.phone_number
+    contractorForm.userForm.address = currentUser.value.address
+    contractorForm.userForm.room_id = currentUser.value.room_id
+    contractorForm.userForm.city_id = currentUser.value.city_id
+    contractorForm.userForm.user_status_id = currentUser.value.user_status_id
+    contractorForm.dataUpdate.starting_date = currentContractor.value.starting_date
+    contractorForm.dataUpdate.payment_percentage = currentContractor.value.payment_percentage
+    contractorForm.dataUpdate.id = currentContractor.value.id
+    for (let i = 0; i < contractor.services.length; i++) {
+        // @ts-ignore
+        contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
 
+
+    }
 
 }
+
 const cities2 = ref<City[]>([])
 const rooms2 = ref<Room[]>([])
 const statuses2 = ref<UserStatus[]>([])
-const customerGroups2 = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
@@ -76,14 +108,10 @@ onMounted(async () => {
     rooms2.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statuses2.value = userstatuses
-    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-    customerGroups2.value = customerGroups
+    await fetchContractor()
 
 })
-onMounted(() => {
-    getCurrentCustomer()
-}
-)
+
 
 
 const validationSchema = toFormValidator(zod
@@ -160,32 +188,28 @@ const validationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        emergency_contact_name:
-            zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
-        emergency_contact_phone:
+        starting_date:
             zod
                 .preprocess(
                     (input) => {
-                        const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
+                    },
+                    zod.date({
+                        invalid_type_error: "That's not a date!",
+                    }).optional(),
+                ),
+        payment_percentage:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
                         return processed.success ? processed.data : input;
                     },
                     zod
                         .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
+                        .min(0, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
                 ),
-        customer_group_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number()
-                    .optional(),
-            ),
 
     }));
 
@@ -201,54 +225,47 @@ const { handleSubmit } = useForm({
         room_id: currentUser.value.room_id,
         city_id: currentUser.value.city_id,
         user_status_id: currentUser.value.user_status_id,
-        emergency_contact_name: currentCustomer.value.emergency_contact_name,
-        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
-        customer_group_id: currentCustomer.value.customer_group_id
+        starting_date: currentContractor.value.starting_date,
+        payment_percentage: currentContractor.value.payment_percentage,
     },
 })
 
 
-const onSubmitAdd = handleSubmit(async (values) => {
+const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
-    const { result } = await phoneExistsCheck(userData.phone_number)
-    phoneCheck.value = result as string
-    if (phoneCheck.value === 'false') {
-        var customerData = currentCustomer.value
-        customerForm.data.emergency_contact_name = customerData.emergency_contact_name
-        customerForm.data.emergency_contact_phone = customerData.emergency_contact_phone
-        customerForm.data.customer_group_id = customerData.customer_group_id
-        customerForm.userForm.first_name = userData.first_name
-        customerForm.userForm.last_name = userData.last_name
-        customerForm.userForm.password = userData.password
-        customerForm.userForm.gender = userData.gender
-        customerForm.userForm.birth_date = userData.birth_date
-        customerForm.userForm.phone_number = userData.phone_number
-        customerForm.userForm.address = userData.address
-        customerForm.userForm.room_id = userData.room_id
-        customerForm.userForm.city_id = userData.city_id
-        customerForm.userForm.user_status_id = userData.user_status_id
-        const customer = await addCustomer(customerForm.data, customerForm.userForm)
-        if (customer.success) {
-            customerForm.data.id = customer.customer.id
-            // @ts-ignore
-            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+    var contractorData = currentContractor.value
+    contractorForm.dataUpdate.starting_date = contractorData.starting_date
+    contractorForm.dataUpdate.payment_percentage = contractorData.payment_percentage
 
-            return true
-        }
-        else {
-            // @ts-ignore
+    contractorForm.userForm.first_name = userData.first_name
+    contractorForm.userForm.last_name = userData.last_name
+    contractorForm.userForm.password = userData.password
+    contractorForm.userForm.gender = userData.gender
+    contractorForm.userForm.birth_date = userData.birth_date
+    contractorForm.userForm.phone_number = userData.phone_number
+    contractorForm.userForm.address = userData.address
+    contractorForm.userForm.room_id = userData.room_id
+    contractorForm.userForm.city_id = userData.city_id
+    contractorForm.userForm.user_status_id = userData.user_status_id
+    const contractor = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
+    if (contractor.success) {
+        contractorForm.dataUpdate.id = contractor.contractor.id
+        // @ts-ignore
+        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was updated successfully`)
 
-            notif.error(customer.success)
-            return false
-
-
-        }
-
+        return true
     }
     else {
+        // @ts-ignore
+
+        notif.error(contractor.success)
         return false
+
+
     }
+
+
 })
 
 
@@ -270,7 +287,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="first_name">
-                                    <VLabel>first name</VLabel>
+                                    <VLabel>First name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
@@ -285,7 +302,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel>last name</VLabel>
+                                    <VLabel>Last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -300,7 +317,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel>birth date </VLabel>
+                                    <VLabel>Birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -315,10 +332,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="phone_number">
-                                    <VLabel>phone number </VLabel>
+                                    <VLabel>Phone number </VLabel>
                                     <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                        <VInput disabled v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
 
                                         <ErrorMessage class="help is-danger" name="phone_number" />
@@ -333,7 +350,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel>address </VLabel>
+                                    <VLabel>Address </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
@@ -347,7 +364,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="gender">
-                                    <VLabel>gender</VLabel>
+                                    <VLabel>Gender</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -366,7 +383,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="room_id">
-                                    <VLabel>room</VLabel>
+                                    <VLabel>Room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption value="">Room</VOption>
@@ -386,7 +403,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="city_id">
-                                    <VLabel>city</VLabel>
+                                    <VLabel>City</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
@@ -406,7 +423,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="user_status_id">
-                                    <VLabel>status</VLabel>
+                                    <VLabel>Status</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
@@ -424,12 +441,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="emergency_contact_name">
-                                    <VLabel>Emergency Contact Name</VLabel>
+                                <VField id="starting_date">
+                                    <VLabel>Starting date </VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
-                                            placeholder="" autocomplete="given-emergency_contact_name" />
-                                        <ErrorMessage class="help is-danger" name="emergency_contact_name" />
+                                        <VInput v-model="currentContractor.starting_date" type="date" />
+                                        <ErrorMessage class="help is-danger" name="starting_date" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -439,37 +455,19 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="emergency_contact_phone">
-                                    <VLabel>Emergency Contact Phone</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCustomer.emergency_contact_phone" type="number"
-                                            placeholder="" autocomplete="given-emergency_contact_phone" />
-                                        <ErrorMessage class="help is-danger" name="emergency_contact_phone" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="customer_group_id">
-                                    <VLabel>Customer Group</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
-                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
-                                                :value="customerGroup.id">{{ customerGroup.name }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
+                                <VField v-slot="{ id }" class="has-curved-tooltip" id="payment_percentage">
+                                    <VLabel>Payment Percentage</VLabel>
 
+                                    <VControl>
+                                        <Slider :id="id" v-model="currentContractor.payment_percentage" />
+                                        <ErrorMessage class="help is-danger" name="payment_percentage" />
+
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Fieldset-->
                 </div>
             </div>
         </form>

@@ -102,12 +102,12 @@ const onSubmitAdd = async () => {
         }
 
     }
-    customerForm.dataUpdate.is_completed = true
+    customerForm.data.is_completed = true
     const customer = await addSocialMediasToCustomer(customerId.value, customerForm.customerSocialMediaForm)
 
     if (customer.success) {
         // @ts-ignore
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was edited successfully`)
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
         return true
     }

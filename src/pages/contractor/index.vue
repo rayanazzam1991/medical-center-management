@@ -1,36 +1,28 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import VTag from '/@src/components/base/tags/VTag.vue';
+import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
+import { getContractorsList } from '/@src/composable/Contractor/getContractorsList';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { ContractorSearchFilter } from '/@src/utils/api/Contractor';
+import { CustomerConsts } from '/@src/utils/consts/customer';
+import { defaultPagination } from '/@src/utils/response';
 
-import { getUsersList } from '/@src/composable/Others/User/getUsersList'
-import { deleteUser } from '/@src/composable/Others/User/deleteUser'
 
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { getCustomersList } from '/@src/composable/CRM/Customer/getCustomersList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { CustomerConsts } from '/@src/utils/consts/customer'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer')
+viewWrapper.setPageTitle('Contractor')
 useHead({
-    title: 'Customer',
+    title: 'Contractor',
 })
 const notif = useNotyf()
-const searchFilter = ref(defaultCustomerSearchFilter)
-const customersList = ref()
+const searchFilter = ref(defaultContractorSearchFilter)
+const contractorsList = ref()
 const deleteUserPopup = ref(false)
 const deleteUserId = ref()
 const paginationVar = ref(defaultPagination)
-const { customers, pagination } = await getCustomersList(searchFilter.value)
-customersList.value = customers
+const { contractors, pagination } = await getContractorsList(searchFilter.value)
+contractorsList.value = contractors
 paginationVar.value = pagination
 const router = useRouter()
 
@@ -43,25 +35,25 @@ const router = useRouter()
 
 // }
 
-const search = async (searchFilter2: CustomerSearchFilter) => {
+const search = async (searchFilter2: ContractorSearchFilter) => {
 
-    const { customers, pagination } = await getCustomersList(searchFilter2)
+    const { contractors, pagination } = await getContractorsList(searchFilter2)
 
-    customersList.value = customers
+    contractorsList.value = contractors
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
 }
 
-const resetFilter = async (searchFilter2: CustomerSearchFilter) => {
+const resetFilter = async (searchFilter2: ContractorSearchFilter) => {
     searchFilter.value = searchFilter2
     search(searchFilter.value)
 }
 
-const getCustomersPerPage = async (pageNum: number) => {
+const getContractorsPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     search(searchFilter.value)
 }
-const customerSort = async (value: string) => {
+const contractorSort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
 
@@ -146,12 +138,12 @@ const columns = {
 
 
     },
-    city: {
+    room: {
         align: 'center',
 
-        label: 'City',
+        label: 'Room',
         renderRow: (row: any) =>
-            h('span', row?.user?.city.name),
+            h('span', row?.user?.room.number),
 
         searchable: true,
 
@@ -182,33 +174,6 @@ const columns = {
                 {
                     default() {
                         return row?.user.status.name
-                    },
-                }
-            ),
-        searchable: true,
-
-
-    },
-
-    customer_group: {
-        align: 'center',
-
-        label: 'Group',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.customer_group.name === 'normal'
-                            ? 'primary'
-                            : row?.customer_group.name === 'vip'
-                                ? 'blue'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row?.customer_group.name
                     },
                 }
             ),
@@ -262,10 +227,10 @@ const columns = {
                     deleteUserId.value = row.id
                 },
                 onEdit: () => {
-                    router.push({ path: `/customer-edit/${row.id}/` })
+                    router.push({ path: `/contractor-edit/${row.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/customer/${row.id}` })
+                    router.push({ path: `/contractor/${row.id}` })
                 },
 
             }),
@@ -275,17 +240,17 @@ const columns = {
 </script>
 
 <template>
-    <CustomerTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <ContractorTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="customersList" :limit="searchFilter.per_page"
-        @update:sort="customerSort">
+    <VFlexTableWrapper :columns="columns" :data="contractorsList" :limit="searchFilter.per_page"
+        @update:sort="contractorSort">
 
-        <VFlexTable v-if="(customersList.length != 0)" :clickable="true" :separators="true"></VFlexTable>
-        <VFlexPagination v-if="(customersList.length != 0 && paginationVar.max_page != 1cmd)"
+        <VFlexTable v-if="contractorsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+        <VFlexPagination v-if="(contractorsList.length != 0 && paginationVar.max_page != 1)"
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
-            @update:current-page="getCustomersPerPage" />
-        <h6 v-if="customersList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+            @update:current-page="getContractorsPerPage" />
+        <h6 v-if="contractorsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
         }} to {{
@@ -295,7 +260,7 @@ const columns = {
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-        <h1 v-if="customersList.length == 0">No Data Returned...</h1>
+        <h1 v-if="contractorsList.length == 0">No Data Returned...</h1>
     </VFlexTableWrapper>
     <!-- <VModal title="Remove Customer" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
         <template #content>

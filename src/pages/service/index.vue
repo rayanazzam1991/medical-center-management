@@ -145,7 +145,7 @@ const columns = {
     :pagination="paginationVar" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort">
 
-    <VFlexTable v-if="servicesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+    <VFlexTable v-if="(servicesList.length != 0  && paginationVar.max_page != 1)" :clickable="true" :separators="true"></VFlexTable>
     <VFlexPagination v-if="servicesList.length != 0" :current-page="paginationVar.page" class="mt-6"
       :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getServicesPerPage" />
