@@ -67,6 +67,9 @@ export const useContractorForm = defineStore('ContractorForm', () => {
 
   function reset() {
     data.value = defaultCreateContractor
+    dataUpdate.value = defaultUpdateContractor
+    userForm.value = defaultCreateUpdateUser
+    contractorServicesForm.value = []
   }
 
   return {

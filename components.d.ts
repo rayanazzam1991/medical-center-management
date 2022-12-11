@@ -72,6 +72,7 @@ declare module '@vue/runtime-core' {
     NavbarLayout: typeof import('./src/layouts/NavbarLayout.vue')['default']
     NavbarLayoutsDropdown: typeof import('./src/layouts/navbar-dropdown-items/NavbarLayoutsDropdown.vue')['default']
     NavbarSearch: typeof import('./src/components/navigation/desktop/NavbarSearch.vue')['default']
+    NoDeleteDropDown: typeof import('./src/components/OurComponents/NoDeleteDropDown.vue')['default']
     NotificationsMobileDropdown: typeof import('./src/components/partials/dropdowns/NotificationsMobileDropdown.vue')['default']
     OthersSubnav: typeof import('./src/layouts/navbar-items/OthersSubnav.vue')['default']
     ProjectCardDropdown: typeof import('./src/components/partials/dropdowns/ProjectCardDropdown.vue')['default']

@@ -289,7 +289,7 @@ const onClickEditMedicalInfo = () => {
                                         @click="onClickEditMedicalInfo" />
                                 </div>
 
-                                <div class="project-features">
+                                <div v-if="currentCustomer.medical_info" class="project-features">
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
                                         <h4>Blood Type</h4>
@@ -305,8 +305,15 @@ const onClickEditMedicalInfo = () => {
                                         </p>
                                     </div>
                                 </div>
+                                <div v-else class="project-features">
+                                    <div class="project-feature">
+                                        <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                                        <h4>Customer have no medical info...</h4>
+                                    </div>
+                                </div>
 
-                                <div class="project-files">
+
+                                <div v-if="currentCustomer.medical_info" class="project-files">
                                     <h4>More Info</h4>
                                     <div class="columns is-multiline">
                                         <div class="column is-12">
@@ -364,6 +371,8 @@ const onClickEditMedicalInfo = () => {
                                         </div>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
 

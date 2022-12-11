@@ -12,12 +12,13 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
 import { Department } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
 import { getCustomersList } from '/@src/composable/CRM/Customer/getCustomersList'
 import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
 import { CustomerConsts } from '/@src/utils/consts/customer'
+import VTag from '/@src/components/base/tags/VTag.vue'
+import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
@@ -34,14 +35,6 @@ customersList.value = customers
 paginationVar.value = pagination
 const router = useRouter()
 
-// const removeUser = async (userId: number) => {
-
-//     await deleteUser(userId)
-//     deleteUserPopup.value = false
-//     // @ts-ignore
-//     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
-
-// }
 
 const search = async (searchFilter2: CustomerSearchFilter) => {
 
@@ -84,7 +77,7 @@ const columns = {
         searchable: true,
         sortable: true,
     },
-    name: {
+    "users.name": {
         align: 'center',
 
         label: 'Name',
@@ -96,9 +89,9 @@ const columns = {
         searchable: true,
 
     },
-    gender: {
+    "users.gender": {
         align: 'center',
-
+        sortable: true,
         label: 'Gender',
         renderRow: (row: any) =>
             h(
@@ -123,7 +116,7 @@ const columns = {
         searchable: true,
 
     },
-    phone_number: {
+    'users.phone_number': {
         align: 'center',
         grow: true,
         label: 'Phone',
@@ -135,7 +128,7 @@ const columns = {
 
 
     },
-    birth_date: {
+    "users.birth_date": {
         align: 'center',
 
         label: 'Birth date',
@@ -143,6 +136,7 @@ const columns = {
             h('span', row?.user?.birth_date),
 
         searchable: true,
+        sortable: true,
 
 
     },
@@ -239,6 +233,7 @@ const columns = {
                 }
             ),
         searchable: true,
+        sortable: true
 
 
     },
@@ -249,18 +244,14 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
-
+        sortable: true
     },
     actions: {
         align: 'center',
 
         renderRow: (row: any) =>
-            h(MyDropDown, {
+            h(NoDeleteDropDown, {
 
-                onRemove: () => {
-                    deleteUserPopup.value = true
-                    deleteUserId.value = row.id
-                },
                 onEdit: () => {
                     router.push({ path: `/customer-edit/${row.id}/` })
                 },
@@ -297,14 +288,5 @@ const columns = {
 
         <h1 v-if="customersList.length == 0">No Data Returned...</h1>
     </VFlexTableWrapper>
-    <!-- <VModal title="Remove Customer" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
-        <template #content>
-            <VPlaceholderSection title="Are you sure?"
-                :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
-        </template>
-        <template #action="{ close }">
-            <VButton color="primary" raised @click="removeUser(deleteUserId)">Confirm</VButton>
-        </template>
-    </VModal> -->
 
 </template>
