@@ -79,7 +79,6 @@ declare module '@vue/runtime-core' {
     RoomTableHeader: typeof import('./src/components/OurComponents/Others/Room/RoomTableHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SearchFilterModel: typeof import('./src/components/OurComponents/Others/Room/SearchFilterModel.vue')['default']
     SearchPanel: typeof import('./src/components/partials/panels/SearchPanel.vue')['default']
     ServiceDetails: typeof import('./src/components/OurComponents/Others/Service/ServiceDetails.vue')['default']
     ServiceForm: typeof import('./src/components/OurComponents/Others/Service/ServiceForm.vue')['default']
