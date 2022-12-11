@@ -4,14 +4,14 @@ import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 export const defaultMedicalInfo: MedicalInfo = {
-    id: 0,
-    blood_type: '',
-    allergic: '',
-    chronic_diseases: '',
-    infectious_diseases: '',
-    any_other_info: '',
+    id: undefined,
+    blood_type: undefined,
+    allergic: undefined,
+    chronic_diseases: undefined,
+    infectious_diseases: undefined,
+    any_other_info: undefined,
     status: 1,
-    smoking: 0,
+    smoking: undefined,
     }
   
 

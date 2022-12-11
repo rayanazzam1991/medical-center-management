@@ -96,28 +96,25 @@ const validationSchema = toFormValidator(zod
         blood_type:
             zod
                 .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+
+                }).optional()
+        ,
 
         allergic:
             zod
                 .string({
-                    required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
         chronic_diseases:
             zod
                 .string({
-                    required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
         infectious_diseases:
             zod
                 .string({
-                    required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
         smoking: zod.number().optional(),
         any_other_info: zod.string({
             invalid_type_error: "Invalid Type",

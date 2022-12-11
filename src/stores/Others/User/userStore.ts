@@ -31,7 +31,6 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   city_id: 0,
   user_status_id: 0,
   password: '0000000000',
-  role: 'Reception',
 }
 export const defaultUser: User = {
   id: 0,
@@ -45,7 +44,6 @@ export const defaultUser: User = {
   city: defaultCity,
   status: defaultUserStatus,
   password: '',
-  role: 'Reception',
   token:undefined
 }
 

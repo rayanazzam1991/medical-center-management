@@ -29,6 +29,8 @@ contractorForm.setStep({
         var isValid = await onSubmitAdd()
         console.log(isValid)
         if (isValid) {
+            contractorForm.reset()
+
             router.push({
                 path: `/contractor/${contractorId.value}`,
             })
@@ -36,7 +38,7 @@ contractorForm.setStep({
 
     },
     skipStepFn: async () => {
-        contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
+        contractorForm.reset()
         router.push({
             path: `/contractor/${contractorId.value}`,
         })
@@ -67,7 +69,7 @@ const onSubmitAdd = async () => {
 
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
-            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
+            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) })
 
         }
         else {
@@ -110,7 +112,7 @@ const onSubmitAdd = async () => {
 
                                 <VField>
 
-                                    <VControl v-for="service in servicesChecked" raw nogrow subcontrol>
+                                    <VControl :key="service.service.id" v-for="service in servicesChecked" raw nogrow subcontrol>
                                         <VCheckbox :label="service.service.name" :name="service.service.id"
                                             color="primary" :key="service.service.id" v-model="service.checked" />
 
@@ -123,7 +125,7 @@ const onSubmitAdd = async () => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-5">
-                                <VField v-for="service in servicesChecked" :id="service.service.name">
+                                <VField :key="service.service.id" v-for="service in servicesChecked" :id="service.service.name">
 
                                     <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
                                         Price:
@@ -137,7 +139,7 @@ const onSubmitAdd = async () => {
                                 </VField>
                             </div>
                             <div class="column is-7">
-                                <VField v-for="service in servicesChecked" :id="service.service.name">
+                                <VField :key="service.service.id" v-for="service in servicesChecked" :id="service.service.name">
 
                                     <VLabel class="is-flex-wrap-nowrap" v-if="service.checked">Contractor's {{
                                             service.service.name
@@ -146,7 +148,7 @@ const onSubmitAdd = async () => {
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
                                         <VInput disabled type="number"
-                                            :value="(service.price * (contractorForm.data.payment_percentage as number / 100 ?? 0))"
+                                            :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
                                             v-bind="service.price" v-model="service.contractor_service_amount"
                                             :key="service.service.id" />
 

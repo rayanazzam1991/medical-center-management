@@ -2,7 +2,6 @@
 const emits = defineEmits<{
     (e: 'view'): void
     (e: 'edit'): void
-    (e: 'remove'): void
 }>()
 </script>
 
@@ -24,10 +23,10 @@ const emits = defineEmits<{
             </a>
 
             <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-                () => {
-                    emits('edit')
-                    close()
-                }
+    () => {
+        emits('edit')
+        close()
+    }
             ">
                 <div class="icon">
 
@@ -38,20 +37,6 @@ const emits = defineEmits<{
                 </div>
             </a>
 
-            <hr class="dropdown-divider" />
-
-            <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-            () => {
-                emits('remove')
-                close()
-            }">
-                <div class="icon">
-                    <i aria-hidden="true" class="lnil lnil-trash-can-alt"></i>
-                </div>
-                <div class="meta">
-                    <span>Remove</span>
-                </div>
-            </a>
         </template>
     </VDropdown>
 </template>
