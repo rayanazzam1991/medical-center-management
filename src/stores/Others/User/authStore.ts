@@ -20,6 +20,9 @@ export const useAuth = defineStore('userAuth', () => {
     user.value = newUser
   }
 
+  function getUser () : Partial<User>{
+    return user.value as User;
+  }
   function setToken(newToken: string) {
     token.value = newToken
   }
@@ -31,7 +34,6 @@ export const useAuth = defineStore('userAuth', () => {
   async function logoutUser() {
     token.value = undefined
     user.value = undefined
-    setToken(token.value)
   }
 
   async function signInAuthStore(credentials: SignInRequest) {
@@ -39,9 +41,15 @@ export const useAuth = defineStore('userAuth', () => {
     try {
       // await logoutUser();
       const response = await signIn(api, credentials);
+
       // @ts-ignore
-      token.value = response?.response?.data?.token;
+      token.value = response?.response?.data?.token as string;
+      // @ts-ignore
+      user.value = response?.response?.data as User;
+
       setToken(token.value)
+      setUser(user.value)
+
       return response.response.data
     } catch (e : any) {
       throw e
@@ -50,7 +58,7 @@ export const useAuth = defineStore('userAuth', () => {
     }
   }
 
-  return {signInAuthStore,setUser, setToken, setLoading, logoutUser, user,token,isLoggedIn} as const
+  return {signInAuthStore,setUser, setToken, setLoading, logoutUser,getUser, user,token,isLoggedIn} as const
 });
 
 if (import.meta.hot) {
