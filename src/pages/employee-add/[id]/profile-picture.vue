@@ -28,18 +28,18 @@ employeeForm.setStep({
         }
         else {
             console.log('valid')
-            // router.push({
-            //     path: `/employee-add/${employeeId.value}/medical-info`
-            // })
+            router.push({
+                path: `/employee/${employeeId.value}`
+            })
 
         }
 
     },
     skipStepFn: async () => {
 
-        // router.push({
-        //     path: `/employee-add/${employeeId.value}/medical-info`
-        // })
+        router.push({
+            path: `/employee/${employeeId.value}`
+        })
     }
 
 })

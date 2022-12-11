@@ -16,11 +16,13 @@ export async function addEmployee(
     nationality_id: employeeData.nationality_id,
     user: userData,
   }
+  console.log(newEmployeeData)
   const employeeResponse = useEmployee()
+  console.log(employeeResponse)
 
   var employee: Employee =
     (await employeeResponse.addEmployeeStore(newEmployeeData)) ?? defaultEmployee
-
+  console.log(employee)
   var success: boolean = employeeResponse.success ?? false
   var error_code: string = employeeResponse.error_code ?? ''
   var message: string = employeeResponse.message ?? ''

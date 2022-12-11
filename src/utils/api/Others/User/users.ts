@@ -17,7 +17,6 @@ export interface User {
   room: Room
   city: City
   status: UserStatus
-  role: string
   token?: string
 }
 export interface CreateUpdateUser {
@@ -32,7 +31,10 @@ export interface CreateUpdateUser {
   room_id?: number
   city_id?: number
   user_status_id?: number
-  role: string
+}
+export interface ChangeUserStatus {
+  id?: number
+  user_status_id?: number
 }
 export interface UserSearchFilter {
   name?: string
@@ -60,7 +62,6 @@ export async function addUserApi(
   user: CreateUpdateUser
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`user/`, user)
-
   return { response }
 }
 export async function editUserApi(
@@ -68,6 +69,16 @@ export async function editUserApi(
   user: CreateUpdateUser
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`user/${user.id}`, user)
+  return { response }
+}
+export async function changeUserStatusApi(
+  api: AxiosInstance,
+  user: ChangeUserStatus
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(
+    `user/${user.id}/changeUserStatus`,
+    user
+  )
   return { response }
 }
 export async function getUserApi(
@@ -93,6 +104,15 @@ export async function phoneExistsCheckApi(
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`user/phoneCheck`, {
     phone_number: phone_number,
+  })
+  return { response }
+}
+export async function getRolesApi(
+  api: AxiosInstance,
+  searchFilter: UserSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('user/getUserList', {
+    params: searchFilter,
   })
   return { response }
 }

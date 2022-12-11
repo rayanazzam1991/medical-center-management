@@ -228,7 +228,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.room_id = userData.room_id
         customerForm.userForm.city_id = userData.city_id
         customerForm.userForm.user_status_id = userData.user_status_id
+        console.log(customerForm.userForm)
+
         const customer = await addCustomer(customerForm.data, customerForm.userForm)
+        console.log(customer)
         if (customer.success) {
             customerForm.data.id = customer.customer.id
             // @ts-ignore

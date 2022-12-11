@@ -11,6 +11,8 @@ import {
   editUserApi,
   getUserApi,
   phoneExistsCheckApi,
+  ChangeUserStatus,
+  changeUserStatusApi,
 } from '/@src/utils/api/Others/User'
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
@@ -31,7 +33,10 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   city_id: 0,
   user_status_id: 0,
   password: '0000000000',
-  role: 'Reception',
+}
+export const defaultChangeStatusUser: ChangeUserStatus = {
+  id: undefined,
+  user_status_id: 0,
 }
 export const defaultUser: User = {
   id: 0,
@@ -45,8 +50,7 @@ export const defaultUser: User = {
   city: defaultCity,
   status: defaultUserStatus,
   password: '',
-  role: 'Reception',
-  token:undefined
+  token: undefined,
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {
@@ -130,6 +134,24 @@ export const useUser = defineStore('user', () => {
       loading.value = false
     }
   }
+  async function changeUserStatusStore(user: ChangeUserStatus) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await changeUserStatusApi(api, user)
+      var returnedUser: User
+      returnedUser = response.response.data
+      users.value.splice(
+        users.value.findIndex((userElement) => (userElement.id = user.id)),
+        1
+      )
+      users.value.push(returnedUser)
+    } finally {
+      loading.value = false
+    }
+  }
   async function getUsersStore(searchFilter: UserSearchFilter) {
     if (loading.value) return
 
@@ -165,6 +187,7 @@ export const useUser = defineStore('user', () => {
     getUserStore,
     getUsersStore,
     phoneExistsCheckStore,
+    changeUserStatusStore,
   } as const
 })
 

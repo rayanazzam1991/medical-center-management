@@ -148,9 +148,9 @@ const columns = {
   <VFlexTableWrapper :columns="columns" :data="roomsList" @update:sort="roomSort">
 
     <VFlexTable v-if="roomsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-    <VFlexPagination v-if="roomsList.length != 0" :current-page="paginationVar.page" class="mt-6"
-      :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
-      @update:current-page="getRoomsPerPage" />
+    <VFlexPagination v-if="(roomsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
+      class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+      no-router @update:current-page="getRoomsPerPage" />
     <h6 v-if="roomsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
