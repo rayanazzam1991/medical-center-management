@@ -1,6 +1,6 @@
 <script lang="ts">
 import { DepartmentConsts } from '/@src/utils/consts/department'
-import { DepartmentSearchFilter } from '/@src/utils/api/Others/Department'
+import { SearchFilter } from '/@src/utils/api/Others/Department'
 import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 import { defaultPagination, Pagination } from '/@src/utils/response'
 

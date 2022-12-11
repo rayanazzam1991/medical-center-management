@@ -20,7 +20,7 @@ export interface CitySearchFilter {
 export async function deleteCityApi(
   api: AxiosInstance,
   cityId : number
-  ): Promise<{ response: CustomResponseCollection;  }> {
+  ): Promise<{ response: CustomResponseCollection  }> {
 
   const { data: response, headers } = await api.delete(
     `city/${cityId}`
@@ -56,7 +56,7 @@ export async function getCityApi(
     const { data: response, headers } = await api.get(
       `city/${cityId}`
     )
-  
+
   return { response }
 }
 export async function getCitiesApi(

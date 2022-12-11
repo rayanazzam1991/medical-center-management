@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
+import {useHead} from '@vueuse/head'
 
-import { useDarkmode } from '/@src/stores/darkmode'
-import { useUserSession } from '/@src/stores/userSession'
-import { useNotyf } from '/@src/composable/useNotyf'
+import {useDarkmode} from '/@src/stores/darkmode'
+import {useUserSession} from '/@src/stores/userSession'
+import {useNotyf} from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
+import {signIn} from "/@src/composable/Others/User/Auth/signIn";
+import {SignInRequest} from "/@src/utils/api/Others/User/auth";
+import {defaultSignInRequest, useAuth} from "/@src/stores/Others/User/authStore";
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -13,26 +16,45 @@ const route = useRoute()
 const notif = useNotyf()
 const userSession = useUserSession()
 const redirect = route.query.redirect as string
+const signRequest = ref(defaultSignInRequest);
+const userAuth = useAuth();
+onBeforeMount(()=>{
+  if(userAuth.isLoggedIn){
+    router.push({
+      name:"/dashboard/"
+    })
+  }
+})
 
 const handleLogin = async () => {
   if (!isLoading.value) {
     isLoading.value = true
-
-    await sleep(2000)
-    userSession.setToken('logged-in')
-
     notif.dismissAll()
-    notif.success('Welcome back, Erik Kovalsky')
+    try {
 
-    if (redirect) {
-      router.push(redirect)
-    } else {
-      router.push({
-        name: '/dashboard'
-      })
+      const loggedUser = await signIn(signRequest.value);
+      console.log("loggedUser", loggedUser)
+      if (userAuth.isLoggedIn) {
+
+        router.push({
+          name: '/dashboard/'
+        })
+      }
+      notif.success('Welcome back')
+    } catch (err: any) {
+      if (err.response?.status !== undefined) {
+        if (err.response.status !== 401) throw err
+        {
+          notif.error({
+            message: err?.response?.data?.message,
+            duration: 5000,
+          })
+        }
+      }
+    } finally {
+      isLoading.value = false
     }
 
-    isLoading.value = false
   }
 }
 
@@ -86,7 +108,7 @@ useHead({
           </label>
           <div class="auth-logo">
             <RouterLink to="/">
-              <AnimatedLogo width="36px" height="36px" />
+              <AnimatedLogo width="36px" height="36px"/>
             </RouterLink>
           </div>
         </div>
@@ -97,9 +119,9 @@ useHead({
                 <div class="auth-content">
                   <h2>Welcome Back.</h2>
                   <p>Please sign in to your account</p>
-                  <RouterLink to="/auth/signup-2">
-                    I do not have an account yet
-                  </RouterLink>
+                  <!--                  <RouterLink to="/auth/signup-2">-->
+                  <!--                    I do not have an account yet-->
+                  <!--                  </RouterLink>-->
                 </div>
                 <div class="auth-form-wrapper">
                   <!-- Login Form -->
@@ -108,10 +130,10 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput
-                            type="text"
-                            placeholder="Username"
-                            autocomplete="username"
+                          <VInput v-model="signRequest.phone_number"
+                                  type="text"
+                                  placeholder="Username"
+                                  autocomplete="username"
                           />
                         </VControl>
                       </VField>
@@ -119,20 +141,20 @@ useHead({
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput
-                            type="password"
-                            placeholder="Password"
-                            autocomplete="current-password"
+                          <VInput v-model="signRequest.password"
+                                  type="password"
+                                  placeholder="Password"
+                                  autocomplete="current-password"
                           />
                         </VControl>
                       </VField>
 
-                      <!-- Switch -->
-                      <VField>
-                        <VControl class="setting-item">
-                          <VCheckbox label="Remember me" paddingless />
-                        </VControl>
-                      </VField>
+                      <!--                      &lt;!&ndash; Switch &ndash;&gt;-->
+                      <!--                      <VField>-->
+                      <!--                        <VControl class="setting-item">-->
+                      <!--                          <VCheckbox label="Remember me" paddingless />-->
+                      <!--                        </VControl>-->
+                      <!--                      </VField>-->
 
                       <!-- Submit -->
                       <div class="login">
@@ -147,9 +169,9 @@ useHead({
                         </VButton>
                       </div>
 
-                      <div class="forgot-link has-text-centered">
-                        <a>Forgot Password?</a>
-                      </div>
+                      <!--                      <div class="forgot-link has-text-centered">-->
+                      <!--                        <a>Forgot Password?</a>-->
+                      <!--                      </div>-->
                     </div>
                   </form>
                 </div>

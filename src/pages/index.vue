@@ -4,6 +4,12 @@ import { useHead } from '@vueuse/head'
 useHead({
   title: 'Vuero - A complete Vue 3 design system',
 })
+const router = useRouter();
+onBeforeMount(()=>{
+  router.push({
+    name:'/dashboard/'
+  })
+})
 </script>
 
 <template>

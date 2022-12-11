@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
 import { City } from '../City'
+import { Department } from '../Department'
 import { Room } from '../Room'
 import { UserStatus } from '../UserStatus'
 
@@ -16,7 +17,8 @@ export interface User {
   room: Room
   city: City
   status: UserStatus
-
+  role: string
+  token?: string
 }
 export interface CreateUpdateUser {
   id?: number
@@ -30,6 +32,7 @@ export interface CreateUpdateUser {
   room_id?: number
   city_id?: number
   user_status_id?: number
+  role: string
 }
 export interface UserSearchFilter {
   name?: string
@@ -88,6 +91,8 @@ export async function phoneExistsCheckApi(
   api: AxiosInstance,
   phone_number: string
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`user/phoneCheck`, {phone_number : phone_number})
+  const { data: response, headers } = await api.post(`user/phoneCheck`, {
+    phone_number: phone_number,
+  })
   return { response }
 }

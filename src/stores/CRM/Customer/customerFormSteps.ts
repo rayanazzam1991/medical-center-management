@@ -1,12 +1,14 @@
-import { defineStore, acceptHMRUpdate } from "pinia"
-import { defaultCreateUpdateUser } from "../../Others/User/userStore"
-import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
-import { defaultCreateCustomer, defaultUpdateCustomer } from "./customerStore"
-import { CreateCustomer, CreateUpdateCustomerSocialMediaHelper, UpdateCustomer } from "/@src/utils/api/CRM/Customer"
-import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
-import { CreateUpdateUser } from "/@src/utils/api/Others/User"
-
-
+import { defineStore, acceptHMRUpdate } from 'pinia'
+import { defaultCreateUpdateUser } from '../../Others/User/userStore'
+import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
+import { defaultCreateCustomer, defaultUpdateCustomer } from './customerStore'
+import {
+  CreateCustomer,
+  CreateUpdateCustomerSocialMediaHelper,
+  UpdateCustomer,
+} from '/@src/utils/api/CRM/Customer'
+import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
+import { CreateUpdateUser } from '/@src/utils/api/Others/User'
 
 interface CustomerFormStepOptions {
   number: number
@@ -15,7 +17,6 @@ interface CustomerFormStepOptions {
   previousStepFn?: () => Promise<void>
   validateStepFn?: () => Promise<void>
   skipStepFn?: () => Promise<void>
-
 }
 
 export const useCustomerForm = defineStore('CustomerForm', () => {
@@ -26,8 +27,8 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   const previousStepFn = shallowRef<CustomerFormStepOptions['previousStepFn'] | null>()
   const validateStepFn = shallowRef<CustomerFormStepOptions['validateStepFn'] | null>()
   const skipStepFn = shallowRef<CustomerFormStepOptions['skipStepFn'] | null>()
-  const data = ref<CreateCustomer >(defaultCreateCustomer)
-  const dataUpdate = ref<UpdateCustomer >(defaultUpdateCustomer)
+  const data = ref<CreateCustomer>(defaultCreateCustomer)
+  const dataUpdate = ref<UpdateCustomer>(defaultUpdateCustomer)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
   const medicalInfoForm = ref<MedicalInfo>(defaultMedicalInfo)
   const customerSocialMediaForm = ref<Array<CreateUpdateCustomerSocialMediaHelper>>([])
