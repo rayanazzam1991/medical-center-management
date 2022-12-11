@@ -143,12 +143,13 @@ const columns = {
 <template>
   <ServiceTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
     :pagination="paginationVar" @resetFilter="resetFilter" />
-  <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort">
+  <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
 
-    <VFlexTable v-if="(servicesList.length != 0  && paginationVar.max_page != 1)" :clickable="true" :separators="true"></VFlexTable>
-    <VFlexPagination v-if="servicesList.length != 0" :current-page="paginationVar.page" class="mt-6"
-      :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
-      @update:current-page="getServicesPerPage" />
+    <VFlexTable v-if="servicesList.length != 0" :clickable="true" :separators="true">
+    </VFlexTable>
+    <VFlexPagination v-if="servicesList.length != 0 && paginationVar.max_page != 1" :current-page="paginationVar.page"
+      class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+      no-router @update:current-page="getServicesPerPage" />
     <h6 v-if="servicesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total

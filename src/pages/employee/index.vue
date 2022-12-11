@@ -14,6 +14,7 @@ import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { EmployeeSearchFilter } from '/@src/utils/api/Employee'
 import { getEmployeesList } from '/@src/composable/Employee/getEmployeesList'
 import { defaultEmployeeSearchFilter } from '/@src/stores/Employee/employeeStore'
+import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Employee')
 useHead({
@@ -69,7 +70,7 @@ const columns = {
         searchable: true,
         sortable: true,
     },
-    name: {
+    "users.name": {
         align: 'center',
 
         label: 'Name',
@@ -81,7 +82,7 @@ const columns = {
         searchable: true,
 
     },
-    gender: {
+    "users.gender": {
         align: 'center',
 
         label: 'Gender',
@@ -106,9 +107,10 @@ const columns = {
 
 
         searchable: true,
+        sortable: true
 
     },
-    phone_number: {
+    "users.phone_number": {
         align: 'center',
         grow: true,
         label: 'Phone',
@@ -120,7 +122,7 @@ const columns = {
 
 
     },
-    starting_date: {
+    "users.starting_date": {
         align: 'center',
 
         label: 'Starting date',
@@ -202,12 +204,13 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
+        sortable: true,
 
     },
     actions: {
         align: 'center',
         renderRow: (row: any) =>
-            h(MyDropDown, {
+            h(NoDeleteDropDown, {
                 onEdit: () => {
                     router.push({ path: `/employee-edit/${row.id}/` })
                 },

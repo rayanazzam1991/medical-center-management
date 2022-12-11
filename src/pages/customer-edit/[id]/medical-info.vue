@@ -81,13 +81,16 @@ customerForm.setStep({
 
 const fetchCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
-    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
-    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
-    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
-    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
-    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
-    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
-    customerForm.medicalInfoForm.id = customer.medical_info.id
+    if (customer.medical_info) {
+        customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+        customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+        customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+        customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+        customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+        customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+        customerForm.medicalInfoForm.id = customer.medical_info.id
+
+    }
 
     customerForm.userForm.id = customer.user.id
     customerForm.userForm.first_name = customer.user.first_name
@@ -99,12 +102,13 @@ const fetchCustomer = async () => {
     customerForm.userForm.room_id = customer.user.room.id
     customerForm.userForm.city_id = customer.user.status.id
     customerForm.userForm.user_status_id = customer.user.status.id
+    customerForm.dataUpdate.user.id = customer.user.id
     customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
     customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
     customerForm.dataUpdate.customer_group_id = customer.customer_group.id
     customerForm.dataUpdate.id = customerId.value
     for (let i = 0; i < customer.social_medias.length; i++) {
-                // @ts-ignore
+        // @ts-ignore
 
         customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
 
@@ -138,32 +142,21 @@ const validationSchema = toFormValidator(zod
         blood_type:
             zod
                 .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+
+                }).optional()
+        ,
 
         allergic:
             zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+                .any().optional(),
         chronic_diseases:
             zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+                .any().optional(),
         infectious_diseases:
             zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+                .any().optional(),
         smoking: zod.number().optional(),
-        any_other_info: zod.string({
-            invalid_type_error: "Invalid Type",
-        }).optional()
+        any_other_info: zod.any().optional(),
     }));
 
 const { handleSubmit } = useForm({
@@ -186,7 +179,16 @@ const onSubmitEdit = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
-    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    var customer
+    if (customerForm.dataUpdate.medical_info.id) {
+
+        customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    }
+    else {
+        console.log('true')
+        customer = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
+
+    }
 
     if (customer.success) {
         // @ts-ignore
