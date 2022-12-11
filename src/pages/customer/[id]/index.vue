@@ -3,18 +3,29 @@ import { useHead } from '@vueuse/head'
 import { capitalize } from 'vue';
 import { routerKey, RouterLink } from 'vue-router';
 import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
+import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
+import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { usePanels } from '/@src/stores/panels';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { Customer } from '/@src/utils/api/CRM/Customer';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
 import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo';
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
 const route = useRoute()
 const router = useRouter()
+const changeStatus = ref()
+const currentChangeStatusUser = ref(defaultChangeStatusUser)
+const changeStatusPopup = ref(false)
 const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
+const notif = useNotyf()
+
 // @ts-ignore
 customerId.value = route.params.id
 viewWrapper.setPageTitle(`Customer`)
@@ -31,12 +42,37 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
+const statuses2 = ref<UserStatus[]>([])
 onMounted(async () => {
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statuses2.value = userstatuses
+})
+onMounted(async () => {
+    await getCurrentCustomer()
+})
+const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
     currentCustomer.value = customer
-    console.log(currentCustomer.value)
 
-})
+}
+
+const onOpen = () => {
+    changeStatusPopup.value = !changeStatusPopup.value
+}
+const changestatusUser = async () => {
+    const userData = currentCustomer.value
+    var userForm = currentChangeStatusUser.value
+    userForm.id = userData.user.id
+    userForm.user_status_id = userData.user.status?.id
+    await changeUserStatus(userForm)
+    getCurrentCustomer()
+    // @ts-ignore
+    notif.dismissAll()
+    // @ts-ignore
+    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    // router.push({ path: `/employee/${userData.id}` })
+    changeStatusPopup.value = false
+}
 
 const onClickEditSocialMedia = () => {
     router.push({
@@ -113,9 +149,12 @@ const onClickEditMedicalInfo = () => {
                                     <div class="title-wrap">
                                         <h3>Main Details</h3>
                                     </div>
-
-                                    <VIconButton size="small" icon="feather:edit-3" tabindex="0"
-                                        @click="onClickEditMainInfo" />
+                                    <div class="buttons">
+                                        <VButton @click.prevent="onOpen" color="dark"> Change User Status
+                                        </VButton>
+                                        <VIconButton size="small" icon="feather:edit-3" tabindex="0"
+                                            @click="onClickEditMainInfo" />
+                                    </div>
                                 </div>
 
                                 <div class="project-features">
@@ -369,6 +408,36 @@ const onClickEditMedicalInfo = () => {
             </div>
         </div>
     </div>
+    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="user_status_id">
+                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VSelect v-if="currentCustomer.user.status"
+                                        v-model="currentCustomer.user.status.id">
+                                        <VOption value="">User Status</VOption>
+                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                                status.name
+                                        }}
+                                        </VOption>
+                                    </VSelect>
+                                    <ErrorMessage name="user_status_id" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+        </template>
+    </VModal>
 </template>
   
 <style scoped lang="scss">

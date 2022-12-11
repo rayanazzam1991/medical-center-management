@@ -110,9 +110,10 @@ const columns = {
     <VFlexTableWrapper :columns="columns" :data="userstatusesList" @update:sort="userstatusSort">
 
         <VFlexTable v-if="userstatusesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-        <VFlexPagination v-if="userstatusesList.length != 0" :current-page="paginationVar.page" class="mt-6"
-            :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
-            no-router @update:current-page="getUserStatusPerPage" />
+        <VFlexPagination v-if="(userstatusesList.length != 0 && paginationVar.max_page != 1)"
+            :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
+            :total-items="paginationVar.total" :max-links-displayed="3" no-router
+            @update:current-page="getUserStatusPerPage" />
         <h6 v-if="userstatusesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total

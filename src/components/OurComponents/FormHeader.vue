@@ -51,6 +51,7 @@ export default defineComponent({
           </div>
           <div class="right">
             <div class="buttons">
+
               <VButton icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light dark-outlined>
                 Back
               </VButton>
