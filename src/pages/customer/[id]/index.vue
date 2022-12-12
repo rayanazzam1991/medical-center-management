@@ -52,6 +52,7 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentCustomer()
+    await getCurrentProfilePic()
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)

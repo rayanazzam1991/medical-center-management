@@ -7,7 +7,7 @@ import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
 import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
-import { defaultContractor, defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
+import { defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Contractor } from '/@src/utils/api/Contractor';
 import { UserStatus } from '/@src/utils/api/Others/UserStatus';
@@ -48,11 +48,12 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentContractor()
+    await getCurrentPersonalId()
+
 })
 const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
-    await getCurrentPersonalId()
 
 }
 const onOpen = () => {

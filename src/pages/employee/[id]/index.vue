@@ -49,12 +49,17 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentEmployee()
+    await getCurrentPersonalId()
+
 })
 const getCurrentEmployee = async () => {
     const { employee } = await getEmployee(employeeId.value)
     currentEmployee.value = employee
-    await getCurrentPersonalId()
 
+}
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(employeeId.value)
+    employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 
 const onClickEditMainInfo = () => {
