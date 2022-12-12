@@ -101,16 +101,7 @@ const validationSchema = toFormValidator(zod
                 })
                 .optional(),
         birth_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        invalid_type_error: "That's not a date!",
-                    }).optional(),
-                ),
+            zod.string().optional(),
         gender: zod.string(),
         phone_number:
             zod

@@ -10,16 +10,7 @@
       <!-- Feature -->
       <div class="columns is-vcentered side-feature">
         <div class="column is-6 has-text-centered">
-          <img
-            class="light-image-l featured-image"
-            src="/@src/assets/illustrations/landing/feature-1.webp"
-            alt=""
-          />
-          <img
-            class="dark-image-l featured-image"
-            src="/@src/assets/illustrations/landing/feature-1-dark.webp"
-            alt=""
-          />
+
         </div>
         <div class="column is-5">
           <h2 class="title m-b-10 is-centered-tablet-portrait">Incredible UI</h2>

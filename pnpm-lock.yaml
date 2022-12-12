@@ -27,7 +27,7 @@ specifiers:
   '@types/vivus': 0.4.4
   '@typescript-eslint/eslint-plugin': 5.36.1
   '@typescript-eslint/parser': 5.36.1
-  '@vee-validate/zod': 4.6.7
+  '@vee-validate/zod': 4.7.3
   '@vitejs/plugin-vue': 3.1.0
   '@vueform/multiselect': 2.5.2
   '@vueform/slider': 2.1.2
@@ -124,7 +124,7 @@ specifiers:
   vue-tsc: 0.40.6
   vue3-apexcharts: 1.4.1
   yorkie: 2.0.0
-  zod: 3.18.0
+  zod: '3.20'
 
 dependencies:
   '@ckeditor/ckeditor5-build-classic': 35.1.0
@@ -137,7 +137,7 @@ dependencies:
   '@iconify/iconify': 2.2.1
   '@mapbox/mapbox-gl-geocoder': 5.0.1_mapbox-gl@2.10.0
   '@popperjs/core': 2.11.6
-  '@vee-validate/zod': 4.6.7_muqanr7cxal6fvzrziehqllulu
+  '@vee-validate/zod': 4.7.3_ehbxrihgdpyakew3ygi2npdsma
   '@vueform/multiselect': 2.5.2
   '@vueform/slider': 2.1.2
   '@vueuse/core': 9.1.1_vue@3.2.38
@@ -185,7 +185,7 @@ dependencies:
   vue-scrollto: 2.20.0
   vue-tippy: 6.0.0-alpha.63_vue@3.2.38
   vue3-apexcharts: 1.4.1_pzo2uwmueqbdjnfljvsxuiuhxq
-  zod: 3.18.0
+  zod: 3.20.0
 
 devDependencies:
   '@commitlint/cli': 17.1.2
@@ -2767,14 +2767,14 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vee-validate/zod/4.6.7_muqanr7cxal6fvzrziehqllulu:
-    resolution: {integrity: sha512-xWsJKJsFlk1v113YfPy9/8ymxudsZRSzhTxHHYyttDcZ8VsQLoZwMmCMoWkR8XzpkKmnmI3MBkF69QLfN/OXfQ==}
+  /@vee-validate/zod/4.7.3_ehbxrihgdpyakew3ygi2npdsma:
+    resolution: {integrity: sha512-81yqHk9fbrZy+BaU6SEevEmJlABl6UCZ0Tv3/zY6T9wosubV7/uErf4Gw3Rpi2GFUpSQKYlD3dLSt1rzndrf+Q==}
     peerDependencies:
       vee-validate: ^4.4.0
       zod: ^3.1.0
     dependencies:
       vee-validate: 4.6.7_vue@3.2.38
-      zod: 3.18.0
+      zod: 3.20.0
     dev: false
 
   /@vitejs/plugin-vue/3.1.0_vite@3.1.0+vue@3.2.38:
@@ -11864,6 +11864,6 @@ packages:
       strip-indent: 2.0.0
     dev: true
 
-  /zod/3.18.0:
-    resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
+  /zod/3.20.0:
+    resolution: {integrity: sha512-ZWxs7oM5ixoo1BMoxTNeDMYSih/F/FUnExsnRtHT04rG6q0Bd74TKS45RGXw07TOalOZyyzdKaYH38k8yTEv9A==}
     dev: false
