@@ -36,7 +36,7 @@ const logoutUser = async () => {
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg"/>
 
         <div class="meta">
-          <span>{{user.first_name +' '+ user.last_name}}</span>
+          <span>{{user?.first_name +' '+ user?.last_name}}</span>
           <span>Product Manager</span>
         </div>
       </div>

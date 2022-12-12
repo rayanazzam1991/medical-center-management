@@ -12,7 +12,6 @@ declare module '@vue/runtime-core' {
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
-    ChangeUserStatus: typeof import('./src/components/OurComponents/Others/User/ChangeUserStatus.vue')['default']
     CityDetails: typeof import('./src/components/OurComponents/Others/City/CityDetails.vue')['default']
     CityForm: typeof import('./src/components/OurComponents/Others/City/CityForm.vue')['default']
     CityTableHeader: typeof import('./src/components/OurComponents/Others/City/CityTableHeader.vue')['default']
