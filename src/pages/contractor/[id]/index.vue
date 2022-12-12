@@ -1,17 +1,29 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { getContractor } from '/@src/composable/Contractor/getContractor';
+import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
+import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
+import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
 import { defaultContractor, defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Contractor } from '/@src/utils/api/Contractor';
+import { UserStatus } from '/@src/utils/api/Others/UserStatus';
 
 
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
+const changeStatus = ref()
+const currentChangeStatusUser = ref(defaultChangeStatusUser)
+const changeStatusPopup = ref(false)
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
 const contractorPersonalId = ref(defaultContractorPersonalId)
+
+const notif = useNotyf()
 
 // @ts-ignore
 contractorId.value = route.params.id
@@ -29,12 +41,38 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
+const statuses2 = ref<UserStatus[]>([])
 onMounted(async () => {
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statuses2.value = userstatuses
+})
+onMounted(async () => {
+    await getCurrentContractor()
+})
+const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
     await getCurrentPersonalId()
 
-})
+}
+const onOpen = () => {
+    changeStatusPopup.value = !changeStatusPopup.value
+}
+const changestatusUser = async () => {
+    const userData = currentContractor.value
+    var userForm = currentChangeStatusUser.value
+    userForm.id = userData.user.id
+    userForm.user_status_id = userData.user.status?.id
+    console.log(userForm)
+    await changeUserStatus(userForm)
+    getCurrentContractor()
+    // @ts-ignore
+    notif.dismissAll()
+    // @ts-ignore
+    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    // router.push({ path: `/contractor/${userData.id}` })
+    changeStatusPopup.value = false
+}
 
 const onClickEditServices = () => {
     router.push({
@@ -101,9 +139,12 @@ const getCurrentPersonalId = async () => {
                                     <div class="title-wrap">
                                         <h3>Main Details</h3>
                                     </div>
-
-                                    <VIconButton size="small" icon="feather:edit-3" tabindex="0"
-                                        @click="onClickEditMainInfo" />
+                                    <div class="buttons">
+                                        <VButton @click.prevent="onOpen" color="dark"> Change User Status
+                                        </VButton>
+                                        <VIconButton size="small" icon="feather:edit-3" tabindex="0"
+                                            @click="onClickEditMainInfo" />
+                                    </div>
                                 </div>
 
                                 <div class="project-features">
@@ -251,6 +292,36 @@ const getCurrentPersonalId = async () => {
             </div>
         </div>
     </div>
+    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="user_status_id">
+                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VSelect v-if="currentContractor.user.status"
+                                        v-model="currentContractor.user.status.id">
+                                        <VOption value="">User Status</VOption>
+                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                                status.name
+                                        }}
+                                        </VOption>
+                                    </VSelect>
+                                    <ErrorMessage name="user_status_id" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+        </template>
+    </VModal>
 </template>
   
 <style scoped lang="scss">

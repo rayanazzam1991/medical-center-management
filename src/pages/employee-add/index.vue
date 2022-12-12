@@ -93,10 +93,8 @@ const validationSchema = toFormValidator(zod
                 .min(1, "This field is required"),
         last_name:
             zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
+                .string({})
+                .optional(),
         birth_date:
             zod
                 .preprocess(
@@ -228,6 +226,7 @@ const { handleSubmit } = useForm({
 const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
+    console.log(userData)
     const { result } = await phoneExistsCheck(userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
@@ -240,13 +239,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.password = userData.password
         employeeForm.userForm.gender = userData.gender
         employeeForm.userForm.birth_date = userData.birth_date
-        employeeForm.userForm.phone_number = userData.phone_number
+        employeeForm.userForm.phone_number = '964' + userData.phone_number
         employeeForm.userForm.address = userData.address
         employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
+        console.log(employeeForm.userForm)
+
         const employee = await addEmployee(employeeForm.data, employeeForm.userForm)
         console.log(employee)
+
         if (employee.success) {
             employeeForm.data.id = employee.employee.id
             // @ts-ignore
@@ -330,15 +332,18 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="phone_number">
-                                    <VLabel>phone number </VLabel>
-                                    <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
+                        <div class="columns is-multiline ">
+                            <label class="lab">phone number </label>
+                            <div class="columns column is-12">
+                                <div class="column is-2 ">
+                                    <input class="input" type="text" placeholder="+964" readonly />
+                                </div>
+                                <VField class="column is-10 " id="phone_number">
+                                    <VControl class="Vi"
+                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
-
                                         <ErrorMessage class="help is-danger" name="phone_number" />
                                         <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
@@ -352,7 +357,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-12">
                                 <VField id="address">
                                     <VLabel>address </VLabel>
-                                    <VControl icon="feather:chevrons-right">
+                                    <VControl>
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
                                     </VControl>
@@ -491,6 +496,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel>Nationality</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                            <VOption value="">Nationality</VOption>
                                             <VOption v-for="nationality in nationality2" :key="nationality.id"
                                                 :value="nationality.id">{{ nationality.name }}
                                             </VOption>
@@ -510,6 +516,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.Vi {
+    width: 28.5em;
+}
+
+.lab {
+    margin-left: .77em;
+    margin-bottom: .27em;
+    display: block;
+}
 
 .is-navbar {
     .form-layout {

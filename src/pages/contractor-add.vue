@@ -1,3 +1,10 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true
+    }
+}
+</route>
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { RouterView } from 'vue-router';
 import { useContractorForm } from '../stores/Contractor/contractorFormSteps';

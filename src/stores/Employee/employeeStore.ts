@@ -80,7 +80,7 @@ export const useEmployee = defineStore('employee', () => {
 
     try {
       const response = await addEmployeeApi(api, employee)
-
+      console.log(response.response)
       var returnedEmployee: Employee
       returnedEmployee = response.response.data
       success.value = response.response.success

@@ -223,12 +223,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.password = userData.password
         customerForm.userForm.gender = userData.gender
         customerForm.userForm.birth_date = userData.birth_date
-        customerForm.userForm.phone_number = userData.phone_number
+        customerForm.userForm.phone_number = '964' + userData.phone_number
         customerForm.userForm.address = userData.address
         customerForm.userForm.room_id = userData.room_id
         customerForm.userForm.city_id = userData.city_id
         customerForm.userForm.user_status_id = userData.user_status_id
+        console.log(customerForm.userForm)
+
         const customer = await addCustomer(customerForm.data, customerForm.userForm)
+        console.log(customer)
         if (customer.success) {
             customerForm.data.id = customer.customer.id
             // @ts-ignore
@@ -312,15 +315,18 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="phone_number">
-                                    <VLabel>phone number </VLabel>
-                                    <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
+                        <div class="columns is-multiline ">
+                            <label class="lab">phone number </label>
+                            <div class="columns column is-12">
+                                <div class="column is-2 ">
+                                    <input class="input" type="text" placeholder="+964" readonly />
+                                </div>
+                                <VField class="column is-10 " id="phone_number">
+                                    <VControl class="Vi"
+                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
-
                                         <ErrorMessage class="help is-danger" name="phone_number" />
                                         <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
@@ -481,6 +487,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.Vi {
+    width: 28.5em;
+}
+
+.lab {
+    margin-left: .77em;
+    margin-bottom: .27em;
+    display: block;
+}
 
 .is-navbar {
     .form-layout {

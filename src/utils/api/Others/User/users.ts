@@ -17,6 +17,7 @@ export interface User {
   room: Room
   city: City
   status: UserStatus
+  role: string
   token?: string
 }
 export interface CreateUpdateUser {
@@ -30,6 +31,10 @@ export interface CreateUpdateUser {
   address: string
   room_id?: number
   city_id?: number
+  user_status_id?: number
+}
+export interface ChangeUserStatus {
+  id?: number
   user_status_id?: number
 }
 export interface UserSearchFilter {
@@ -68,6 +73,16 @@ export async function editUserApi(
   const { data: response, headers } = await api.put(`user/${user.id}`, user)
   return { response }
 }
+export async function changeUserStatusApi(
+  api: AxiosInstance,
+  user: ChangeUserStatus
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(
+    `user/${user.id}/changeUserStatus`,
+    user
+  )
+  return { response }
+}
 export async function getUserApi(
   api: AxiosInstance,
   userId: number
@@ -91,6 +106,15 @@ export async function phoneExistsCheckApi(
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`user/phoneCheck`, {
     phone_number: phone_number,
+  })
+  return { response }
+}
+export async function getRolesApi(
+  api: AxiosInstance,
+  searchFilter: UserSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('user/getUserList', {
+    params: searchFilter,
   })
   return { response }
 }

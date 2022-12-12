@@ -16,7 +16,7 @@ import { Pagination, defaultPagination } from '/@src/utils/response'
 export const defaultDepartment: Department = {
   id: 0,
   name: '',
-  status: 0,
+  status: 1,
 }
 
 export const defaultDepartmentSearchFilter: DepartmentSearchFilter = {

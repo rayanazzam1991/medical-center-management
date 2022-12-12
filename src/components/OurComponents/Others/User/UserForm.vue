@@ -203,7 +203,7 @@ export default defineComponent({
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(` ${viewWrapper.pageTitle} ${userData.number} was added successfully`)
+            notif.success(` ${viewWrapper.pageTitle} was added successfully`)
 
 
             router.push({ path: `/user/${userData.id}` })
@@ -398,7 +398,7 @@ export default defineComponent({
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser.status" v-model="currentUser.status.id">
-                                            <VOption value="">Department</VOption>
+                                            <VOption value="">User Status</VOption>
                                             <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
                                                     status.name
                                             }}

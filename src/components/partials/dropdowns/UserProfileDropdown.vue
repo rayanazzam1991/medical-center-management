@@ -29,14 +29,13 @@ const logoutUser = async () => {
     <template #content>
       <div class="dropdown-head">
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
-
         <div class="meta">
-          <!-- <span>{{user.first_name +' '+ user.last_name}}</span> -->
+          <span>{{ user?.first_name + ' ' + user?.last_name }}</span>
           <span>Product Manager</span>
         </div>
       </div>
 
-      <a href="#" role="menuitem" class="dropdown-item is-media">
+      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-user-alt"></i>
         </div>
@@ -44,9 +43,9 @@ const logoutUser = async () => {
           <span>Profile</span>
           <span>View your profile</span>
         </div>
-      </a>
+      </a> -->
 
-      <hr class="dropdown-divider" />
+      <!-- <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -56,9 +55,9 @@ const logoutUser = async () => {
           <span>Projects</span>
           <span>All my projects</span>
         </div>
-      </a>
+      </a> -->
 
-      <a href="#" role="menuitem" class="dropdown-item is-media">
+      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-users-alt"></i>
         </div>
@@ -66,9 +65,9 @@ const logoutUser = async () => {
           <span>Team</span>
           <span>Manage your team</span>
         </div>
-      </a>
+      </a> -->
 
-      <hr class="dropdown-divider" />
+      <!-- <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -78,7 +77,7 @@ const logoutUser = async () => {
           <span>Settings</span>
           <span>Account settings</span>
         </div>
-      </a>
+      </a> -->
 
       <hr class="dropdown-divider" />
 

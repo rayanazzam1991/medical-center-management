@@ -48,7 +48,6 @@ export async function addEmployeeApi(
   employee: CreateEmployee
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`employee/`, employee)
-  console.log(response)
   return { response }
 }
 export async function updateEmployeeApi(
@@ -57,8 +56,6 @@ export async function updateEmployeeApi(
   employee: UpdateEmployee
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`employee/${employeeId}`, employee)
-  console.log(response)
-
   return { response }
 }
 export async function getEmployeeApi(
@@ -66,7 +63,6 @@ export async function getEmployeeApi(
   employee_id: number
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`employee/${employee_id}`)
-
   return { response }
 }
 
