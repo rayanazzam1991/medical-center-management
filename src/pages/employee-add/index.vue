@@ -96,17 +96,16 @@ const validationSchema = toFormValidator(zod
                 .string({})
                 .optional(),
         birth_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+            zod.preprocess(
+                (input) => {
+                    if (typeof input == "string" || input instanceof Date) return new Date(input)
 
-                    },
-                    zod.date({
-                        required_error: "Please select a date and time",
-                        invalid_type_error: "That's not a date!",
-                    }),
-                ),
+                },
+                zod.date({
+                    required_error: "Please select a date and time",
+                    invalid_type_error: "That's not a date!",
+                }),
+            ),
         gender: zod.string(),
         phone_number:
             zod
@@ -172,13 +171,11 @@ const validationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
+                        if (typeof input == "string" || input instanceof Date) return undefined
                     },
                     zod.date({
-                        required_error: "Please select a date and time",
                         invalid_type_error: "That's not a date!",
-                    }),
+                    }).optional(),
                 ),
         basic_salary:
             zod
