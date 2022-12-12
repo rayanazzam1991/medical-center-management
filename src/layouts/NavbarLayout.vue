@@ -16,7 +16,7 @@ export type SubnavId =
 'others'
 'CRM'
 'employee'
-'conractor'
+'contractor'
 
 const props = withDefaults(
   defineProps<{
@@ -158,19 +158,19 @@ watch(
 
         <div class="separator"></div>
 
-        <ProjectsQuickDropdown />
+        <!-- <ProjectsQuickDropdown /> -->
         <h1 class="title is-5">{{ viewWrapper.pageTitle }}</h1>
       </template>
 
       <!-- Custom navbar toolbar -->
       <template #toolbar>
         <Toolbar class="desktop-toolbar">
-          <ToolbarNotification />
+          <!-- <ToolbarNotification /> -->
 
-          <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
+          <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
             @click="panels.setActive('activity')">
             <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-          </a>
+          </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -185,7 +185,7 @@ watch(
             'is-active',
           ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:activity"></i>
+            <i class="iconify" data-icon="feather:layers" aria-hidden="true"></i>
             <span>Others</span>
           </a>
           <a :class="[
@@ -198,21 +198,16 @@ watch(
           </a>
           <a :class="[activeSubnav === 'contractor' && 'is-active']" class="centered-link centered-link-toggle"
             tabindex="0" @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
+            <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
             <span>Contractors</span>
           </a>
           <a :class="[activeSubnav === 'employee' && 'is-active']" class="centered-link centered-link-toggle"
             tabindex="0" @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
+            <i class="iconify" data-icon="feather:users" aria-hidden="true"></i>
             <span>Employees</span>
           </a>
-          <a class="centered-link centered-link-search" tabindex="0" @keydown.space.prevent="toggleSubnav('search')"
-            @click="toggleSubnav('search')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
-            <span>Search</span>
-          </a>
         </div>
-
+        <!-- 
         <div class="centered-search" :class="[activeSubnav !== 'search' && 'is-hidden']">
           <div class="field">
             <div class="control has-icon">
@@ -236,7 +231,7 @@ watch(
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </template>
 
       <!-- Custom navbar sub navigation -->
@@ -246,7 +241,6 @@ watch(
         ]" class="navbar-subnavbar">
 
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" />
-          <DashboardsSubnav :class="[activeSubnav === 'home' && 'is-active']" />
 
           <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" />
 
@@ -257,9 +251,9 @@ watch(
       </template>
     </Navbar>
 
-    <LanguagesPanel />
-    <ActivityPanel />
-    <TaskPanel />
+    <!-- <LanguagesPanel /> -->
+    <!-- <ActivityPanel /> -->
+    <!-- <TaskPanel /> -->
 
     <VViewWrapper top-nav>
       <VPageContentWrapper>
@@ -274,14 +268,14 @@ watch(
                 <h1 class="title is-4">{{ viewWrapper.pageTitle }}</h1>
               </div>
 
-              <Toolbar class="mobile-toolbar">
+              <!-- <Toolbar class="mobile-toolbar">
                 <ToolbarNotification />
 
                 <a class="toolbar-link right-panel-trigger" tabindex="0"
                   @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
                   <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
                 </a>
-              </Toolbar>
+              </Toolbar> -->
             </div>
 
             <slot></slot>

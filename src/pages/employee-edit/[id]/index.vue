@@ -75,6 +75,7 @@ const fetchEmployee = async () => {
     currentUser.value.gender = employee.user.gender
     currentUser.value.birth_date = employee.user.birth_date
     currentUser.value.phone_number = employee.user.phone_number
+    console.log(employee.user.phone_number)
     currentUser.value.address = employee.user.address
     currentUser.value.city_id = employee.user.city.id
     currentUser.value.room_id = employee.user.room.id
@@ -200,23 +201,40 @@ const validationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        emergency_contact_name:
-            zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
-        emergency_contact_phone:
+        starting_date:
             zod
                 .preprocess(
                     (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
                     },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
+                    zod.date({
+                        required_error: "Please select a date and time",
+                        invalid_type_error: "That's not a date!",
+                    }),
                 ),
+        end_date:
+            zod
+                .preprocess(
+                    (input) => {
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
+                    },
+                    zod.date({
+                        required_error: "Please select a date and time",
+                        invalid_type_error: "That's not a date!",
+                    }),
+                ),
+        basic_salary:
+            zod.preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid salary number" })
+                    .min(0, "Please enter a valid salary number"),
+            ),
         nationality_id: zod
             .preprocess(
                 (input) => {
@@ -352,13 +370,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="column is-12">
                                 <VField id="phone_number">
                                     <VLabel>phone number </VLabel>
-                                    <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                        icon="feather:chevrons-right">
+                                    <VControl icon="feather:chevrons-right">
                                         <VInput disabled v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-phone_number" />
-
-                                        <ErrorMessage class="help is-danger" name="phone_number" />
-                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
                                 </VField>
                             </div>
@@ -509,6 +523,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VLabel>Nationality</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                            <VOption value="">Nationality</VOption>
                                             <VOption v-for="nationality in nationalities2" :key="nationality.id"
                                                 :value="nationality.id">{{ nationality.name }}
                                             </VOption>

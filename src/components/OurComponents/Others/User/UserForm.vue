@@ -203,7 +203,7 @@ export default defineComponent({
             notif.dismissAll()
             // @ts-ignore
 
-            notif.success(` ${viewWrapper.pageTitle} ${userData.number} was added successfully`)
+            notif.success(` ${viewWrapper.pageTitle} was added successfully`)
 
 
             router.push({ path: `/user/${userData.id}` })

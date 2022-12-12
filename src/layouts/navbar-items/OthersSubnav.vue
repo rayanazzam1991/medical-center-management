@@ -13,7 +13,24 @@ const activeTab = ref<TabId>('others')
                     <div class="center has-slimscroll">
                         <div class="columns">
                             <div class="column is-3">
-                                <h4 class="column-heading">User</h4>
+                                <h4 class="column-heading">Nationality</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/nationality">
+                                            <i aria-hidden="true" class="lnil lnil-pizza"></i>
+                                            <span>All Nationality</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                    <li>
+                                        <RouterLink to="/nationality/add">
+                                            <i aria-hidden="true" class="lnil lnil-map"></i>
+                                            <span>Create Nationality</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul><br />
+                                <!-- <h4 class="column-heading">User</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/user">
@@ -29,7 +46,7 @@ const activeTab = ref<TabId>('others')
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
-                                </ul><br />
+                                </ul><br /> -->
                                 <h4 class="column-heading">User Status</h4>
                                 <ul>
                                     <li>
@@ -134,23 +151,6 @@ const activeTab = ref<TabId>('others')
                                         <RouterLink to="/customer-group/add">
                                             <i aria-hidden="true" class="lnil lnil-map"></i>
                                             <span>Create Customer Group</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul><br />
-                                <h4 class="column-heading">Nationality</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/nationality">
-                                            <i aria-hidden="true" class="lnil lnil-pizza"></i>
-                                            <span>All Nationality</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/nationality/add">
-                                            <i aria-hidden="true" class="lnil lnil-map"></i>
-                                            <span>Create Nationality</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
