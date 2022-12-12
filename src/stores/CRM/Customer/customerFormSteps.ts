@@ -1,13 +1,14 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { defaultCreateUpdateUser } from '../../Others/User/userStore'
 import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
-import { defaultCreateCustomer, defaultUpdateCustomer } from './customerStore'
+import { defaultCreateCustomer, defaultCustomerProfilePic, defaultUpdateCustomer } from './customerStore'
 import {
   CreateCustomer,
   CreateUpdateCustomerSocialMediaHelper,
   UpdateCustomer,
 } from '/@src/utils/api/CRM/Customer'
 import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
+import { Media } from '/@src/utils/api/Others/Media'
 import { CreateUpdateUser } from '/@src/utils/api/Others/User'
 
 interface CustomerFormStepOptions {
@@ -31,6 +32,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   const dataUpdate = ref<UpdateCustomer>(defaultUpdateCustomer)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
   const medicalInfoForm = ref<MedicalInfo>(defaultMedicalInfo)
+  const profilePicture = ref<Media>(defaultCustomerProfilePic)
   const customerSocialMediaForm = ref<Array<CreateUpdateCustomerSocialMediaHelper>>([])
   const stepTitle = computed(() => {
     switch (step.value) {
@@ -91,6 +93,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     userForm,
     medicalInfoForm,
     customerSocialMediaForm,
+    profilePicture,
     setLoading,
     setStep,
     getStep,

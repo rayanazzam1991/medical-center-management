@@ -2,8 +2,9 @@
 import { useHead } from '@vueuse/head'
 import { capitalize } from 'vue';
 import { routerKey, RouterLink } from 'vue-router';
+import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
 import { getEmployee } from '/@src/composable/Employee/getEmployee';
-import { defaultEmployee } from '/@src/stores/Employee/employeeStore';
+import { defaultEmployee, defaultEmployeePersonalId } from '/@src/stores/Employee/employeeStore';
 import { usePanels } from '/@src/stores/panels';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { Employee } from '/@src/utils/api/Employee';
@@ -14,6 +15,8 @@ const router = useRouter()
 const viewWrapper = useViewWrapper()
 const currentEmployee = ref<Employee>(defaultEmployee)
 const employeeId = ref(0)
+const employeePersonalId = ref(defaultEmployeePersonalId)
+
 // @ts-ignore
 employeeId.value = route.params.id
 viewWrapper.setPageTitle(`Employee`)
@@ -33,7 +36,7 @@ const tab = ref(props.activeTab)
 onMounted(async () => {
     const { employee } = await getEmployee(employeeId.value)
     currentEmployee.value = employee
-    console.log(currentEmployee.value)
+    await getCurrentPersonalId()
 
 })
 
@@ -42,12 +45,16 @@ const onClickEditMainInfo = () => {
         path: `/employee-edit/${employeeId.value}/`
     })
 }
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(employeeId.value)
+    employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
+}
+
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VAvatar size="xl" :picture="employeePersonalId.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentEmployee.user.first_name }}
                 {{ currentEmployee.user.last_name }}</h3>

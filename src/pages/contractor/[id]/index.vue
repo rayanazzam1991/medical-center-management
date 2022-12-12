@@ -1,6 +1,7 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
+import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
+import { defaultContractor, defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Contractor } from '/@src/utils/api/Contractor';
 
@@ -10,6 +11,8 @@ const router = useRouter()
 const viewWrapper = useViewWrapper()
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
+const contractorPersonalId = ref(defaultContractorPersonalId)
+
 // @ts-ignore
 contractorId.value = route.params.id
 viewWrapper.setPageTitle(`Contractor`)
@@ -29,6 +32,7 @@ const tab = ref(props.activeTab)
 onMounted(async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
+    await getCurrentPersonalId()
 
 })
 
@@ -42,13 +46,16 @@ const onClickEditMainInfo = () => {
         path: `/contractor-edit/${contractorId.value}/`
     })
 }
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(contractorId.value)
+    contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
+}
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VAvatar size="xl" :picture="contractorPersonalId.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
                 {{ currentContractor.user.last_name }}</h3>

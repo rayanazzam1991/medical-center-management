@@ -1,4 +1,7 @@
-<script setup  lang="ts">import { useHead } from '@vueuse/head';
+<script setup  lang="ts">
+import { file } from '@babel/types';
+import { useHead } from '@vueuse/head';
+import { addProfilePicture } from '/@src/composable/CRM/Customer/addProfilePicture';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -14,6 +17,7 @@ const customerForm = useCustomerForm()
 const route = useRoute()
 const router = useRouter()
 const customerId = ref()
+const profile_picture = ref()
 // @ts-ignore
 
 customerId.value = route.params?.id
@@ -27,10 +31,14 @@ customerForm.setStep({
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            router.push({
-                path: `/customer-add/${customerId.value}/medical-info`
-            })
+            var isValid = await onSubmitAdd()
+            if (isValid) {
+                router.push({
+                    path: `/customer-add/${customerId.value}/medical-info`
+                })
+            }
+
+
 
         }
 
@@ -46,6 +54,28 @@ customerForm.setStep({
 
 const fileError = ref('')
 const pageTitle = 'Step 3: Customer Profile Picture'
+const onSubmitAdd = async () => {
+
+    let formData = new FormData();
+    if (profile_picture.value != undefined)
+        formData.append('images[]', profile_picture.value);
+
+    const media = await addProfilePicture(customerId.value, formData)
+
+    if (media.success) {
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Profile Picture was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(media.success)
+
+    }
+
+}
 const onAddFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
@@ -58,7 +88,7 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        profile_picture.value = _file
     }
 }
 
@@ -67,7 +97,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
         notif.error(error)
-        console.error(error)
+        fileError.value = error
         return
     }
 
@@ -97,7 +127,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                             <div class="project-avatar-upload">
                                 <VField>
                                     <VControl>
-                                        
+
                                         <VFilePond size="large" class="profile-filepond" name="profile_filepond"
                                             :chunk-retry-delays="[500, 1000, 3000]"
                                             label-idle="<i class='lnil lnil-cloud-upload'></i>"

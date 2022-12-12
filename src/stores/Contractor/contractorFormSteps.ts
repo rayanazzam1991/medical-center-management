@@ -34,7 +34,7 @@ export const useContractorForm = defineStore('ContractorForm', () => {
       case 1:
         return 'Main Info'
       case 2:
-        return 'Profile Picture'
+        return 'Personal ID'
       case 3:
         return 'Services'
       default:

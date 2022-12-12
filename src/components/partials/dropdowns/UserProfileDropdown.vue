@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {useAuth} from "/@src/stores/Others/User/authStore";
-import {User} from "/@src/utils/api/Others/User";
+import { useAuth } from "/@src/stores/Others/User/authStore";
+import { User } from "/@src/utils/api/Others/User";
 
 const userAuth = useAuth();
 const router = useRouter();
@@ -11,7 +11,7 @@ const logoutUser = async () => {
     await router.push({
       name: '/auth/login'
     })
-  }catch (err :any){
+  } catch (err: any) {
     throw err;
   }
 
@@ -20,23 +20,18 @@ const logoutUser = async () => {
 <template>
   <VDropdown right spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
-      <a
-        tabindex="0"
-        class="is-trigger dropdown-trigger"
-        aria-haspopup="true"
-        @keydown.space.prevent="toggle"
-        @click="toggle"
-      >
-        <VAvatar picture="/images/avatars/svg/vuero-1.svg"/>
+      <a tabindex="0" class="is-trigger dropdown-trigger" aria-haspopup="true" @keydown.space.prevent="toggle"
+        @click="toggle">
+        <VAvatar picture="/images/avatars/svg/vuero-1.svg" />
       </a>
     </template>
 
     <template #content>
       <div class="dropdown-head">
-        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg"/>
+        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
 
         <div class="meta">
-          <span>{{user.first_name +' '+ user.last_name}}</span>
+          <!-- <span>{{user.first_name +' '+ user.last_name}}</span> -->
           <span>Product Manager</span>
         </div>
       </div>
@@ -51,7 +46,7 @@ const logoutUser = async () => {
         </div>
       </a>
 
-      <hr class="dropdown-divider"/>
+      <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -73,7 +68,7 @@ const logoutUser = async () => {
         </div>
       </a>
 
-      <hr class="dropdown-divider"/>
+      <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -85,18 +80,11 @@ const logoutUser = async () => {
         </div>
       </a>
 
-      <hr class="dropdown-divider"/>
+      <hr class="dropdown-divider" />
 
       <div class="dropdown-item is-button">
-        <VButton
-          class="logout-button"
-          icon="feather:log-out"
-          color="primary"
-          role="menuitem"
-          @click="logoutUser"
-          raised
-          fullwidth
-        >
+        <VButton class="logout-button" icon="feather:log-out" color="primary" role="menuitem" @click="logoutUser" raised
+          fullwidth>
           Logout
         </VButton>
       </div>

@@ -1,11 +1,12 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
+import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Employee Profile Picture')
+viewWrapper.setPageTitle('Employee Personal ID')
 const head = useHead({
     title: 'Employee',
 })
@@ -14,6 +15,8 @@ const employeeForm = useEmployeeForm()
 const route = useRoute()
 const router = useRouter()
 const employeeId = ref()
+const personal_id = ref()
+
 // @ts-ignore
 
 employeeId.value = route.params?.id
@@ -27,25 +30,50 @@ employeeForm.setStep({
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            // router.push({
-            //     path: `/employee-add/${employeeId.value}/medical-info`
-            // })
+            var isValid = await onSubmitAdd()
+            if (isValid) {
+
+                router.push({
+                    path: `/employee/${employeeId.value}`,
+                })
+            }
 
         }
 
     },
     skipStepFn: async () => {
 
-        // router.push({
-        //     path: `/employee-add/${employeeId.value}/medical-info`
-        // })
+        router.push({
+            path: `/employee/${employeeId.value}`
+        })
     }
 
 })
 
 const fileError = ref('')
-const pageTitle = 'Step 2: Employee Profile Picture'
+const pageTitle = 'Step 2: Employee Personal ID'
+const onSubmitAdd = async () => {
+
+    let formData = new FormData();
+    if (personal_id.value != undefined)
+        formData.append('images[]', personal_id.value);
+
+    const media = await addPersonalId(employeeId.value, formData)
+
+    if (media.success) {
+        // @ts-ignore
+        notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} Personal ID was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(media.success)
+
+    }
+
+}
 const onAddFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
@@ -58,7 +86,7 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        personal_id.value = _file
     }
 }
 
