@@ -99,15 +99,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.gender === 'Male'
+                        row?.user?.gender === 'Male'
                             ? 'primary'
-                            : row?.user.gender === 'Female'
+                            : row?.user?.gender === 'Female'
                                 ? 'orange'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.user.gender
+                        return row?.user?.gender
                     },
                 }
             ),
@@ -145,7 +145,7 @@ const columns = {
 
         label: 'City',
         renderRow: (row: any) =>
-            h('span', row?.user?.city.name),
+            h('span', row?.user?.city?.name),
 
         searchable: true,
 
@@ -161,21 +161,21 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.status.name === 'Pending'
+                        row?.user?.status?.name === 'Pending'
                             ? 'orange'
-                            : row?.user.status.name === 'Waiting'
+                            : row?.user?.status?.name === 'Waiting'
                                 ? 'blue'
-                                : row?.user.status.name === 'Approved'
+                                : row?.user?.status?.name === 'Approved'
                                     ? 'green'
-                                    : row?.user.status.name === 'Deleted'
+                                    : row?.user?.status?.name === 'Deleted'
                                         ? 'warning'
-                                        : row?.user.status.name === 'Busy'
+                                        : row?.user?.status?.name === 'Busy'
                                             ? 'danger'
                                             : undefined,
                 },
                 {
                     default() {
-                        return row?.user.status.name
+                        return row?.user?.status?.name
                     },
                 }
             ),
@@ -194,15 +194,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.customer_group.name === 'normal'
+                        row?.customer_group?.name === 'normal'
                             ? 'primary'
-                            : row?.customer_group.name === 'vip'
+                            : row?.customer_group?.name === 'vip'
                                 ? 'blue'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.customer_group.name
+                        return row?.customer_group?.name
                     },
                 }
             ),
@@ -253,10 +253,10 @@ const columns = {
             h(NoDeleteDropDown, {
 
                 onEdit: () => {
-                    router.push({ path: `/customer-edit/${row.id}/` })
+                    router.push({ path: `/customer-edit/${row?.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/customer/${row.id}` })
+                    router.push({ path: `/customer/${row?.id}` })
                 },
 
             }),

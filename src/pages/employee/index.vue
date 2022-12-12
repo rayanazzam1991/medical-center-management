@@ -92,15 +92,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.gender === 'Male'
+                        row?.user?.gender === 'Male'
                             ? 'primary'
-                            : row?.user.gender === 'Female'
+                            : row?.user?.gender === 'Female'
                                 ? 'orange'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.user.gender
+                        return row?.user?.gender
                     },
                 }
             ),
@@ -138,7 +138,7 @@ const columns = {
 
         label: 'Nationality',
         renderRow: (row: any) =>
-            h('span', row?.nationality.name),
+            h('span', row?.nationality?.name),
 
         searchable: true,
 
@@ -149,7 +149,7 @@ const columns = {
         grow: true,
         label: 'Department',
         renderRow: (row: any) =>
-            h('span', row?.user.room.department.name),
+            h('span', row?.user?.room?.department?.name),
 
         searchable: true,
 
@@ -159,7 +159,7 @@ const columns = {
         align: 'center',
         label: 'Room',
         renderRow: (row: any) =>
-            h('span', row?.user.room.number),
+            h('span', row?.user?.room?.number),
 
         searchable: true,
 
@@ -175,21 +175,21 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.status.name === 'Pending'
+                        row?.user?.status?.name === 'Pending'
                             ? 'orange'
-                            : row?.user.status.name === 'Waiting'
+                            : row?.user?.status?.name === 'Waiting'
                                 ? 'blue'
-                                : row?.user.status.name === 'Approved'
+                                : row?.user?.status?.name === 'Approved'
                                     ? 'green'
-                                    : row?.user.status.name === 'Deleted'
+                                    : row?.user?.status?.name === 'Deleted'
                                         ? 'warning'
-                                        : row?.user.status.name === 'Busy'
+                                        : row?.user?.status?.name === 'Busy'
                                             ? 'danger'
                                             : undefined,
                 },
                 {
                     default() {
-                        return row?.user.status.name
+                        return row?.user?.status?.name
                     },
                 }
             ),
@@ -212,10 +212,10 @@ const columns = {
         renderRow: (row: any) =>
             h(NoDeleteDropDown, {
                 onEdit: () => {
-                    router.push({ path: `/employee-edit/${row.id}/` })
+                    router.push({ path: `/employee-edit/${row?.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/employee/${row.id}` })
+                    router.push({ path: `/employee/${row?.id}` })
                 },
 
             }),
