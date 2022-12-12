@@ -61,6 +61,8 @@ customerForm.setStep({
         var isValid = await onSubmitEdit()
         console.log(isValid)
         if (isValid) {
+            customerForm.reset()
+
             router.push({
                 path: `/customer/${customerId.value}`,
             })
@@ -68,7 +70,9 @@ customerForm.setStep({
 
     },
     skipStepFn: async () => {
-        customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+        
+        customerForm.reset()
+    
         router.push({
             path: `/customer/${customerId.value}`,
         })

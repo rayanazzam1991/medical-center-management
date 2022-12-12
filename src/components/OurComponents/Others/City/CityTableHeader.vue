@@ -87,8 +87,8 @@ export default defineComponent({
                         </div>
 
                     </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
+                    <div class="right">
+                        <div class="buttons">
                             <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
@@ -99,24 +99,24 @@ export default defineComponent({
                         <div>
                             <VField>
                                 <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
+                                    <div class="select">
+                                        <VSelect @change="search" v-model="perPage">
+                                            <VOption v-if="pagination.per_page * 0.1 == 1"
                                                 :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                result per page</VOption>
+                                            <VOption v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
                                                     0.1
                                             }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
+                                                results per page</VOption>
+                                            <VOption :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
+                                                results per page</VOption>
+                                            <VOption :value="pagination.per_page">{{ pagination.per_page }}
+                                                results per page</VOption>
+                                            <VOption :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
+                                                results per page</VOption>
+                                            <VOption :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
+                                                results per page</VOption>
+                                        </VSelect>
                                     </div>
                                 </VControl>
                             </VField>
@@ -178,6 +178,11 @@ export default defineComponent({
                             font-size: 0.95rem;
                             color: var(--dark-text);
                             margin-bottom: 20px;
+                        }
+
+                        .buttons {
+                            margin: 0px;
+                            padding: 0px;
                         }
                     }
 

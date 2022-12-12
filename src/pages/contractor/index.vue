@@ -1,6 +1,7 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
+import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue';
 import { getContractorsList } from '/@src/composable/Contractor/getContractorsList';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore';
@@ -18,22 +19,12 @@ useHead({
 const notif = useNotyf()
 const searchFilter = ref(defaultContractorSearchFilter)
 const contractorsList = ref()
-const deleteUserPopup = ref(false)
-const deleteUserId = ref()
 const paginationVar = ref(defaultPagination)
 const { contractors, pagination } = await getContractorsList(searchFilter.value)
 contractorsList.value = contractors
 paginationVar.value = pagination
 const router = useRouter()
 
-// const removeUser = async (userId: number) => {
-
-//     await deleteUser(userId)
-//     deleteUserPopup.value = false
-//     // @ts-ignore
-//     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
-
-// }
 
 const search = async (searchFilter2: ContractorSearchFilter) => {
 
@@ -76,7 +67,7 @@ const columns = {
         searchable: true,
         sortable: true,
     },
-    name: {
+    "users.name": {
         align: 'center',
 
         label: 'Name',
@@ -88,7 +79,7 @@ const columns = {
         searchable: true,
 
     },
-    gender: {
+    "users.gender": {
         align: 'center',
 
         label: 'Gender',
@@ -111,11 +102,11 @@ const columns = {
                 }
             ),
 
-
+        sortable: true,
         searchable: true,
 
     },
-    phone_number: {
+    "users.phone_number": {
         align: 'center',
         grow: true,
         label: 'Phone',
@@ -127,7 +118,7 @@ const columns = {
 
 
     },
-    birth_date: {
+    "users.birth_date": {
         align: 'center',
 
         label: 'Birth date',
@@ -135,6 +126,7 @@ const columns = {
             h('span', row?.user?.birth_date),
 
         searchable: true,
+        sortable: true
 
 
     },
@@ -206,6 +198,7 @@ const columns = {
         searchable: true,
 
 
+
     },
     created_at: {
         align: 'center',
@@ -214,18 +207,15 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
+        sortable: true,
 
     },
     actions: {
         align: 'center',
 
         renderRow: (row: any) =>
-            h(MyDropDown, {
+            h(NoDeleteDropDown, {
 
-                onRemove: () => {
-                    deleteUserPopup.value = true
-                    deleteUserId.value = row.id
-                },
                 onEdit: () => {
                     router.push({ path: `/contractor-edit/${row.id}/` })
                 },
@@ -262,14 +252,5 @@ const columns = {
 
         <h1 v-if="contractorsList.length == 0">No Data Returned...</h1>
     </VFlexTableWrapper>
-    <!-- <VModal title="Remove Customer" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
-        <template #content>
-            <VPlaceholderSection title="Are you sure?"
-                :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
-        </template>
-        <template #action="{ close }">
-            <VButton color="primary" raised @click="removeUser(deleteUserId)">Confirm</VButton>
-        </template>
-    </VModal> -->
 
 </template>

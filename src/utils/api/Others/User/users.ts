@@ -17,6 +17,7 @@ export interface User {
   room: Room
   city: City
   status: UserStatus
+  role: string
   token?: string
 }
 export interface CreateUpdateUser {
@@ -62,6 +63,7 @@ export async function addUserApi(
   user: CreateUpdateUser
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`user/`, user)
+
   return { response }
 }
 export async function editUserApi(

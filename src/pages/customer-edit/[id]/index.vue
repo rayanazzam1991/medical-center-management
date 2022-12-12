@@ -79,13 +79,17 @@ const fetchCustomer = async () => {
     currentUser.value.city_id = customer.user.city.id
     currentUser.value.room_id = customer.user.room.id
     currentUser.value.user_status_id = customer.user.status.id
+    currentUser.value.id = customer.user.id
+    console.log(currentUser.value.id)
     currentCustomer.value.customer_group_id = customer.customer_group.id
     currentCustomer.value.emergency_contact_name = customer.emergency_contact_name
     currentCustomer.value.emergency_contact_phone = customer.emergency_contact_phone
     currentCustomer.value.id = customer.id
-    currentCustomer.value.medical_info_id = customer.medical_info.id
+    if (customer.medical_info)
+        currentCustomer.value.medical_info_id = customer.medical_info.id
     currentCustomer.value.social_medias = customer.social_medias
     currentCustomer.value.user = customer.user
+
 
     customerForm.userForm.id = customer.user.id
     customerForm.userForm.first_name = currentUser.value.first_name
@@ -101,13 +105,17 @@ const fetchCustomer = async () => {
     customerForm.dataUpdate.emergency_contact_phone = currentCustomer.value.emergency_contact_phone
     customerForm.dataUpdate.customer_group_id = currentCustomer.value.customer_group_id
     customerForm.dataUpdate.id = currentCustomer.value.id
-    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
-    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
-    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
-    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
-    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
-    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
-    customerForm.medicalInfoForm.id = customer.medical_info.id
+    customerForm.dataUpdate.user.id = currentUser.value.id
+    if(customer.medical_info) {
+
+        customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+        customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+        customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+        customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+        customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+        customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+        customerForm.medicalInfoForm.id = customer.medical_info.id
+    }
     for (let i = 0; i < customer.social_medias.length; i++) {
         // @ts-ignore
         customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })

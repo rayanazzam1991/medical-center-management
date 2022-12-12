@@ -72,6 +72,9 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
 
   function reset() {
     data.value = defaultCreateCustomer
+    dataUpdate.value = defaultUpdateCustomer
+    userForm.value = defaultCreateUpdateUser
+    customerSocialMediaForm.value = []
   }
 
   return {

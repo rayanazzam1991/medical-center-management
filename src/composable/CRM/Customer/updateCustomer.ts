@@ -21,6 +21,7 @@ export async function updateCustomer(
         user : userData,
         social_medias : customerSocialMedia
     }
+    console.log(newCustomerData)
     const customerResponse =  useCustomer()
     console.log(newCustomerData)
     var customer : Customer = await customerResponse.updateCustomerStore(customer_id ,newCustomerData) ?? defaultCustomer
