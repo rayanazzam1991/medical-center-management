@@ -157,7 +157,6 @@ export default defineComponent({
             roomForm.number = roomData.number
             roomForm.department_id = roomData.department?.id
             roomForm.status = roomData.status
-            console.log(roomForm)
             await editRoom(roomForm)
             // @ts-ignore
 
@@ -200,7 +199,7 @@ export default defineComponent({
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
-                                        <ErrorMessage name="number" />
+                                        <ErrorMessage class="help is-danger" name="number" />
 
                                     </VControl>
                                 </VField>
@@ -214,10 +213,8 @@ export default defineComponent({
                                 <VField id="floor">
                                     <VLabel>{{ viewWrapper.pageTitle }} floor</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentRoom.floor" type="number" placeholder=""
-                                            autocomplete="given-floor" />
-                                        <ErrorMessage name="floor" />
-
+                                        <VInput v-model="currentRoom.floor" type="number" autocomplete="given-floor" />
+                                        <ErrorMessage class="help is-danger" name="floor" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -236,7 +233,7 @@ export default defineComponent({
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage name="department_id" />
+                                        <ErrorMessage class="help is-danger" name="department_id" />
                                     </VControl>
                                 </VField>
                             </div>

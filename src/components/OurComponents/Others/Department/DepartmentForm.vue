@@ -10,108 +10,91 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { DepartmentConsts } from '/@src/utils/consts/department';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod'
 
 export default defineComponent({
     props: {
         formType: {
             type: String,
-            default: '',
+            default: "",
         },
     },
-
-    emits: ['onSubmit'],
+    emits: ["onSubmit"],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Department')
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("Department");
         const head = useHead({
-            title: 'Department',
-        })
-        const notif = useNotyf()
-
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/department'
-        const currentDepartment = ref(defaultDepartment)
-        const departmentId = ref(0)
+            title: "Department",
+        });
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/department";
+        const currentDepartment = ref(defaultDepartment);
+        const departmentId = ref(0);
         // @ts-ignore
-        departmentId.value = route.params?.id as number ?? 0
+        departmentId.value = route.params?.id as number ?? 0;
         const getCurrentDepartment = async () => {
             if (departmentId.value === 0) {
-                currentDepartment.value.name = ''
-                currentDepartment.value.status = 0
-                return
+                currentDepartment.value.name = "";
+                currentDepartment.value.status = 0;
+                return;
             }
-            const department = await getDepartment(departmentId.value)
-            currentDepartment.value = department != undefined ? department : defaultDepartment
-
-        }
+            const department = await getDepartment(departmentId.value);
+            currentDepartment.value = department != undefined ? department : defaultDepartment;
+        };
         onMounted(() => {
-            getCurrentDepartment()
-        })
-
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                    status: zod
-                        .number({ required_error: 'Please choose one' }),
-                })
-
-        )
-
+            getCurrentDepartment();
+        });
+        const validationSchema = toFormValidator(zod
+            .object({
+                name: zod
+                    .string({
+                        required_error: "This field is required",
+                    }),
+                status: zod
+                    .number({ required_error: "Please choose one" }),
+            }));
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: '',
-                status: 0,
+                name: undefined,
+                status: 1,
             },
-        })
-
+        });
         const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
+            if (method == "Add") {
+                await onSubmitAdd();
             }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
+            else if (method == "Edit") {
+                await onSubmitEdit();
             }
-            else return
-        }
-
-        const onSubmitAdd = async () => {
-            var departmentData = currentDepartment.value
-            departmentData = await addDepartment(departmentData) as Department
-            notif.dismissAll()
-            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
-            router.push({ path: `/department/${departmentData.id}` })
-
-        }
+            else
+                return;
+        };
+        const onSubmitAdd = handleSubmit(async (values) => {
+            var departmentData = currentDepartment.value;
+            departmentData = await addDepartment(departmentData) as Department;
+            notif.dismissAll();
+            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was added successfully`);
+            // @ts-ignore
+            notif.success(` ${viewWrapper.pageTitle} ${roomData.number} was added successfully`);
+            router.push({ path: `/department/${departmentData.id}` });
+        });
         const onSubmitEdit = async () => {
-            const departmentData = currentDepartment.value
-            await editDepartment(departmentData)
-            notif.dismissAll()
-            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
-            router.push({ path: `/department/${departmentData.id}` })
-
-
-        }
-
-        return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts }
+            const departmentData = currentDepartment.value;
+            await editDepartment(departmentData);
+            notif.dismissAll();
+            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            router.push({ path: `/department/${departmentData.id}` });
+        };
+        return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts };
     },
-
-
+    components: { ErrorMessage }
 })
 
 
@@ -132,14 +115,12 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="name" v-slot="{ field }">
+                                <VField id="name">
                                     <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentDepartment.name" type="text" placeholder=""
+                                        <VInput v-model="currentDepartment.name" type="text"
                                             autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
+                                        <ErrorMessage class="help is-danger" name="name" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -149,7 +130,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
+                                <VField id="status">
                                     <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>

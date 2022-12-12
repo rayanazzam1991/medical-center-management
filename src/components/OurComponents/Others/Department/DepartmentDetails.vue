@@ -71,7 +71,7 @@ const toEdit = () => {
 
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 
 .is-navbar {
