@@ -87,14 +87,15 @@ const onClickEditMainInfo = () => {
 }
 const getCurrentPersonalId = async () => {
     var personal_id = await getPersonalId(contractorId.value)
-    contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
+    if (personal_id.media.length != 1)
+        contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="contractorPersonalId.relative_path" squared />
+            <VAvatar size="xl" :picture="contractorPersonalId?.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
                 {{ currentContractor.user.last_name }}</h3>
