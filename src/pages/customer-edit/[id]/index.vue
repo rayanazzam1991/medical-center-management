@@ -156,9 +156,8 @@ const validationSchema = toFormValidator(zod
         last_name:
             zod
                 .string({
-                    required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
         birth_date:
             zod
                 .preprocess(
@@ -181,9 +180,8 @@ const validationSchema = toFormValidator(zod
         address:
             zod
                 .string({
-                    required_error: "This field is required",
                 })
-                .min(1, "This field is required"),
+                .optional(),
 
         city_id: zod
             .preprocess(
@@ -195,16 +193,13 @@ const validationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        room_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
+        room_id:
+            zod
+                .preprocess(
+                    val => val === "" ? undefined : val,
+                    zod
+                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                        .optional()),
         user_status_id: zod
             .preprocess(
                 (input) => {
@@ -224,14 +219,10 @@ const validationSchema = toFormValidator(zod
         emergency_contact_phone:
             zod
                 .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
-                ),
+                    val => val === "" ? undefined : val,
+                    zod.string({})
+                        .regex(/\d+/, 'Please enter a valid number')
+                        .optional()),
         customer_group_id: zod
             .preprocess(
                 (input) => {
@@ -239,7 +230,6 @@ const validationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod.number()
-                    .optional(),
             ),
 
     }));
@@ -419,7 +409,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VLabel>room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption value="">Room</VOption>
+                                            <VOption>Room</VOption>
                                             <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}

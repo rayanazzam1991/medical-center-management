@@ -29,7 +29,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
   birth_date: '',
   phone_number: '',
   address: '',
-  room_id: 0,
+  room_id: undefined,
   city_id: 0,
   user_status_id: 0,
   password: '0000000000',
