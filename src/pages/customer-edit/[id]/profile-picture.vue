@@ -2,6 +2,11 @@
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { getProfilePicture } from '/@src/composable/CRM/Customer/getProfilePicture';
+import { addProfilePicture } from '/@src/composable/CRM/Customer/addProfilePicture';
+import { deleteProfilePicture } from '/@src/composable/CRM/Customer/deleteProfilePicture';
+import { defaultCustomerProfilePic } from '/@src/stores/CRM/Customer/customerStore';
+
 
 
 const viewWrapper = useViewWrapper()
@@ -14,6 +19,9 @@ const customerForm = useCustomerForm()
 const route = useRoute()
 const router = useRouter()
 const customerId = ref()
+const currentProfilePicture = ref(defaultCustomerProfilePic)
+const profile_picture = ref()
+
 // @ts-ignore
 
 customerId.value = route.params?.id
@@ -27,10 +35,14 @@ customerForm.setStep({
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            router.push({
-                path: `/customer-edit/${customerId.value}/medical-info`
-            })
+            var isValid = await onSubmitEdit()
+            if (isValid) {
+                router.push({
+                    path: `/customer-edit/${customerId.value}/medical-info`
+                })
+            }
+
+
 
         }
 
@@ -45,7 +57,7 @@ customerForm.setStep({
 })
 
 const fileError = ref('')
-const pageTitle = 'Step 3: Customer Profile Picture'
+const pageTitle = 'Step 2: Customer Profile Picture'
 const onAddFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
@@ -58,10 +70,40 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        profile_picture.value = _file
     }
 }
+const onSubmitEdit = async () => {
+    if(currentProfilePicture.value.id != undefined)
+    await deleteProfilePicture(currentProfilePicture.value.id)
+    let formData = new FormData();
+    if (profile_picture.value != undefined)
+        formData.append('images[]', profile_picture.value);
 
+    const media = await addProfilePicture(customerId.value, formData)
+
+    if (media.success) {
+        // @ts-ignore
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Profile Picture was edited successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(media.success)
+
+    }
+
+}
+
+onMounted(async () => {
+    await getCurrentProfilePic()
+})
+const getCurrentProfilePic = async () => {
+    var profile_pic = await getProfilePicture(customerId.value)
+    currentProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+}
 const onRemoveFile = (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
@@ -112,6 +154,25 @@ const onRemoveFile = (error: any, fileInfo: any) => {
 
                                     </VControl>
                                 </VField>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="wizard-step-1" class="inner-wrapper is-active">
+                <div class="step-content">
+                    <div class="step-title">
+                        <h2 class="dark-inverted">Current Profile Picture :</h2>
+                    </div>
+
+                    <div class="project-info">
+                        <div class="project-info-head">
+                            <div class="project-avatar-upload">
+                                <VAvatar :picture="currentProfilePicture.relative_path" size="xl" />
+
+
                             </div>
                         </div>
                     </div>

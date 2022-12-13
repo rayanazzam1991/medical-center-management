@@ -31,7 +31,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
       case 1:
         return 'Main Info'
       case 2:
-        return 'Profile Picture'
+        return 'Personal ID'
       default:
         return 'Main Info'
     }

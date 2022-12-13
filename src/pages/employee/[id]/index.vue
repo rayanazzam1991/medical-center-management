@@ -2,11 +2,12 @@
 import { useHead } from '@vueuse/head'
 import { capitalize } from 'vue';
 import { routerKey, RouterLink } from 'vue-router';
+import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
 import { getEmployee } from '/@src/composable/Employee/getEmployee';
 import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultEmployee } from '/@src/stores/Employee/employeeStore';
+import { defaultEmployee, defaultEmployeePersonalId } from '/@src/stores/Employee/employeeStore';
 import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { usePanels } from '/@src/stores/panels';
@@ -24,6 +25,8 @@ const viewWrapper = useViewWrapper()
 const currentEmployee = ref<Employee>(defaultEmployee)
 const employeeId = ref(0)
 const notif = useNotyf()
+const employeePersonalId = ref(defaultEmployeePersonalId)
+
 // @ts-ignore
 employeeId.value = route.params.id
 viewWrapper.setPageTitle(`Employee`)
@@ -46,11 +49,17 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentEmployee()
+    await getCurrentPersonalId()
+
 })
 const getCurrentEmployee = async () => {
     const { employee } = await getEmployee(employeeId.value)
     currentEmployee.value = employee
 
+}
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(employeeId.value)
+    employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 
 const onClickEditMainInfo = () => {
@@ -80,8 +89,7 @@ const changestatusUser = async () => {
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VAvatar size="xl" :picture="employeePersonalId.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentEmployee.user.first_name }}
                 {{ currentEmployee.user.last_name }}</h3>

@@ -6,6 +6,8 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
 import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
+import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
+import { defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Contractor } from '/@src/utils/api/Contractor';
 import { UserStatus } from '/@src/utils/api/Others/UserStatus';
@@ -19,6 +21,8 @@ const currentChangeStatusUser = ref(defaultChangeStatusUser)
 const changeStatusPopup = ref(false)
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
+const contractorPersonalId = ref(defaultContractorPersonalId)
+
 const notif = useNotyf()
 
 // @ts-ignore
@@ -44,6 +48,8 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentContractor()
+    await getCurrentPersonalId()
+
 })
 const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
@@ -79,13 +85,16 @@ const onClickEditMainInfo = () => {
         path: `/contractor-edit/${contractorId.value}/`
     })
 }
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(contractorId.value)
+    contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
+}
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VAvatar size="xl" :picture="contractorPersonalId.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
                 {{ currentContractor.user.last_name }}</h3>

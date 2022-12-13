@@ -1,6 +1,10 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
+import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
+import { deletePersonalId } from '/@src/composable/Contractor/deletePersonalId';
+import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
+import { defaultEmployeePersonalId } from '/@src/stores/Employee/employeeStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
@@ -14,6 +18,9 @@ const employeeForm = useEmployeeForm()
 const route = useRoute()
 const router = useRouter()
 const employeeId = ref()
+const currentPersonalId = ref(defaultEmployeePersonalId)
+const personal_id = ref()
+
 // @ts-ignore
 
 employeeId.value = route.params?.id
@@ -27,18 +34,20 @@ employeeForm.setStep({
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            router.push({
-                path: `/employee`
-            })
+            var isValid = await onSubmitEdit()
+            if (isValid) {
+                router.push({
+                    path: `/employee/${employeeId.value}`
+                })
 
+            }
         }
 
     },
     skipStepFn: async () => {
 
         router.push({
-            path: `/employee`
+            path: `/employee/${employeeId.value}`
         })
     }
 
@@ -58,8 +67,39 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        personal_id.value = _file
     }
+}
+
+const onSubmitEdit = async () => {
+    if (currentPersonalId.value.id != undefined)
+        await deletePersonalId(currentPersonalId.value.id)
+    let formData = new FormData();
+    if (personal_id.value != undefined)
+        formData.append('images[]', personal_id.value);
+
+    const media = await addPersonalId(employeeId.value, formData)
+
+    if (media.success) {
+        // @ts-ignore
+        notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} Personal ID was edited successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(media.success)
+
+    }
+
+}
+onMounted(async () => {
+    await getCurrentPersonalId()
+})
+const getCurrentPersonalId = async () => {
+    var personalId = await getPersonalId(employeeId.value)
+    currentPersonalId.value = personalId.media[personalId.media.length - 1]
 }
 
 const onRemoveFile = (error: any, fileInfo: any) => {
@@ -117,6 +157,24 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                     </div>
                 </div>
             </div>
+            <div id="wizard-step-1" class="inner-wrapper is-active">
+                <div class="step-content">
+                    <div class="step-title">
+                        <h2 class="dark-inverted">Current Personal ID :</h2>
+                    </div>
+
+                    <div class="project-info">
+                        <div class="project-info-head">
+                            <div class="project-avatar-upload">
+                                <VAvatar :picture="currentPersonalId.relative_path" size="xl" />
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </form>
 
 

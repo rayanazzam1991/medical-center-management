@@ -6,7 +6,8 @@ import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
 import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultCustomer } from '/@src/stores/CRM/Customer/customerStore';
+import { getProfilePicture } from '/@src/composable/CRM/Customer/getProfilePicture';
+import { defaultCustomer, defaultCustomerProfilePic } from '/@src/stores/CRM/Customer/customerStore';
 import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
 import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { usePanels } from '/@src/stores/panels';
@@ -25,6 +26,8 @@ const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
 const notif = useNotyf()
+
+const customerProfilePicture = ref(defaultCustomerProfilePic)
 
 // @ts-ignore
 customerId.value = route.params.id
@@ -49,6 +52,7 @@ onMounted(async () => {
 })
 onMounted(async () => {
     await getCurrentCustomer()
+    await getCurrentProfilePic()
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
@@ -89,16 +93,21 @@ const onClickEditMedicalInfo = () => {
         path: `/customer-edit/${customerId.value}/medical-info`
     })
 }
+const getCurrentProfilePic = async () => {
+    var profile_pic = await getProfilePicture(customerId.value)
+    customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+}
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VAvatar size="xl" :picture="customerProfilePicture.relative_path" />
+
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
                 {{ currentCustomer.user.last_name }}</h3>
+
             <div class="profile-stats">
                 <div class="profile-stat">
                     <i aria-hidden="true" class="lnil lnil-p"></i>
