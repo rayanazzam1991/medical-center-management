@@ -30,24 +30,24 @@ const activeTab = ref<TabId>('others')
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <!-- <h4 class="column-heading">User</h4>
+                                <h4 class="column-heading">Service</h4>
                                 <ul>
                                     <li>
-                                        <RouterLink to="/user">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>All User</span>
+                                        <RouterLink to="/service">
+                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
+                                            <span>All Service</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
-                                        <RouterLink to="/user/add">
-                                            <i aria-hidden="true" class="lnil lnil-pie-chart"></i>
-                                            <span>Create User</span>
+                                        <RouterLink to="/service/add">
+                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
+                                            <span>Create Service</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
-                                </ul><br /> -->
-                                <h4 class="column-heading">User Status</h4>
+                                </ul>
+                                <!-- <h4 class="column-heading">User Status</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/userstatus">
@@ -63,7 +63,7 @@ const activeTab = ref<TabId>('others')
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
                             <div class="column is-3">
                                 <h4 class="column-heading">Department</h4>
@@ -115,42 +115,6 @@ const activeTab = ref<TabId>('others')
                                         <RouterLink to="/city/add">
                                             <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
                                             <span>Create City</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul><br />
-                                <h4 class="column-heading">Service</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/service">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
-                                            <span>All Service</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/service/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
-                                            <span>Create Service</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="column is-3">
-                                <h4 class="column-heading">Customer Group</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/customer-group">
-                                            <i aria-hidden="true" class="lnil lnil-pizza"></i>
-                                            <span>All Customer Group</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/customer-group/add">
-                                            <i aria-hidden="true" class="lnil lnil-map"></i>
-                                            <span>Create Customer Group</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>

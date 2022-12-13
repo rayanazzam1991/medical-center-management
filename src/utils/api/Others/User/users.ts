@@ -11,7 +11,7 @@ export interface User {
   last_name: string
   password: string
   gender: string
-  birth_date: string
+  birth_date?: string
   phone_number: string
   address: string
   room: Room

@@ -27,7 +27,24 @@ const activeTab = ref<TabId>('CRM')
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
+                <h4 class="column-heading">Customer Group</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/customer-group">
+                      <i aria-hidden="true" class="lnil lnil-pizza"></i>
+                      <span>All Customer Group</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/customer-group/add">
+                      <i aria-hidden="true" class="lnil lnil-map"></i>
+                      <span>Create Customer Group</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul><br />
               </div>
             </div>
           </div>

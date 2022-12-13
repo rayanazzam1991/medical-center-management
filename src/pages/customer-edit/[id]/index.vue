@@ -106,7 +106,7 @@ const fetchCustomer = async () => {
     customerForm.dataUpdate.customer_group_id = currentCustomer.value.customer_group_id
     customerForm.dataUpdate.id = currentCustomer.value.id
     customerForm.dataUpdate.user.id = currentUser.value.id
-    if(customer.medical_info) {
+    if (customer.medical_info) {
 
         customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
         customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
@@ -162,15 +162,10 @@ const validationSchema = toFormValidator(zod
         birth_date:
             zod
                 .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        required_error: "Please select a date and time",
-                        invalid_type_error: "That's not a date!",
-                    }),
-                ),
+                    val => val === "" ? undefined : val,
+                    zod.string({})
+                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
+                        .optional()),
         gender: zod.string(),
         phone_number:
             zod
