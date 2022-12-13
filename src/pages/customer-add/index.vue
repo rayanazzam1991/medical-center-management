@@ -103,14 +103,10 @@ const validationSchema = toFormValidator(zod
         birth_date:
             zod
                 .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        invalid_type_error: "That's not a date!",
-                    }).optional(),
-                ),
+                    val => val === "" ? undefined : val,
+                    zod.string({})
+                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
+                        .optional()),
         gender: zod.string(),
         phone_number:
             zod
@@ -325,8 +321,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl class="Vi"
                                         :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
-                                            autocomplete="given-phone_number" />
+                                        <VIMaskInput class="input" v-model="currentUser.phone_number" type="number"
+                                            placeholder="" autocomplete="given-phone_number" :options="{
+                                                mask: '000000000',
+                                            }" />
                                         <ErrorMessage class="help is-danger" name="phone_number" />
                                         <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
