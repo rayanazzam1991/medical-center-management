@@ -145,7 +145,7 @@ const columns = {
 
         label: 'City',
         renderRow: (row: any) =>
-            h('span', row?.user?.city.name),
+            h('span', row?.user?.city?.name),
 
         searchable: true,
 
@@ -161,21 +161,21 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.status.name === 'Pending'
+                        row?.user?.status?.name === 'Pending'
                             ? 'orange'
-                            : row?.user.status.name === 'Waiting'
+                            : row?.user?.status?.name === 'Waiting'
                                 ? 'blue'
-                                : row?.user.status.name === 'Approved'
+                                : row?.user?.status?.name === 'Approved'
                                     ? 'green'
-                                    : row?.user.status.name === 'Deleted'
+                                    : row?.user?.status?.name === 'Deleted'
                                         ? 'warning'
-                                        : row?.user.status.name === 'Busy'
+                                        : row?.user?.status?.name === 'Busy'
                                             ? 'danger'
                                             : undefined,
                 },
                 {
                     default() {
-                        return row?.user.status.name
+                        return row?.user?.status?.name
                     },
                 }
             ),
