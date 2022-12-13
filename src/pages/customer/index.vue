@@ -99,15 +99,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.gender === 'Male'
+                        row?.user?.gender === 'Male'
                             ? 'primary'
-                            : row?.user.gender === 'Female'
+                            : row?.user?.gender === 'Female'
                                 ? 'orange'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.user.gender
+                        return row?.user?.gender
                     },
                 }
             ),
@@ -194,15 +194,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.customer_group.name === 'normal'
+                        row?.customer_group?.name === 'normal'
                             ? 'primary'
-                            : row?.customer_group.name === 'vip'
+                            : row?.customer_group?.name === 'vip'
                                 ? 'blue'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.customer_group.name
+                        return row?.customer_group?.name
                     },
                 }
             ),
@@ -253,10 +253,10 @@ const columns = {
             h(NoDeleteDropDown, {
 
                 onEdit: () => {
-                    router.push({ path: `/customer-edit/${row.id}/` })
+                    router.push({ path: `/customer-edit/${row?.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/customer/${row.id}` })
+                    router.push({ path: `/customer/${row?.id}` })
                 },
 
             }),

@@ -5,6 +5,8 @@ import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
 import { useApi } from "/@src/composable/useApi"
 import { CreateCustomer,UpdateCustomer, Customer, addCustomerApi, addMedicalInfoApi, CreateUpdateCustomerSocialMediaHelper, addSocialMediaApi, getCustomerApi, updateCustomerApi, CustomerSearchFilter, getCustomersApi } from "/@src/utils/api/CRM/Customer"
 import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
+import { deleteMediaApi, getMediaApi, Media, uploadMediaApi } from "/@src/utils/api/Others/Media"
+import { MediaConsts } from "/@src/utils/consts/media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
   
@@ -41,6 +43,14 @@ export const defaultCustomer: Customer = {
   is_completed : false,
 
 }
+export const defaultCustomerProfilePic: Media = {
+  id: undefined,
+  model_id: 0,
+  model_type: MediaConsts.CUSTOMER_MODEL_ROUTE,
+  relative_path: undefined,
+  is_featured : '0',
+
+}
 
 export const defaultCustomerSearchFilter: CustomerSearchFilter = {
   name : undefined,
@@ -64,6 +74,7 @@ export const defaultCustomerSearchFilter: CustomerSearchFilter = {
 
 export const useCustomer = defineStore('customer', () => {
   const api = useApi()
+
   const customers = ref<Customer[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const success = ref<boolean>()
@@ -149,6 +160,45 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
+  async function addCustomerProfilePictureStore(media : FormData) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await uploadMediaApi(api , media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedMedia
+
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function getCustomerProfilePicture(media : Media) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await getMediaApi(api , media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedMedia
+
+    } finally {
+      loading.value = false
+    }
+  }
   async function addSocialMediaStore(customer_id: number , social_medias : Array<CreateUpdateCustomerSocialMediaHelper>) {
     if (loading.value) return
 
@@ -186,7 +236,23 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  
+  async function deleteCustomerProfilePicture(picture_id: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await deleteMediaApi(api, picture_id )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return response
+
+    } finally {
+      loading.value = false
+    }
+}
+
   return {
     success,
     error_code,
@@ -198,7 +264,10 @@ export const useCustomer = defineStore('customer', () => {
     addMedicalInfoStore,
     getCustomerStore,
     updateCustomerStore,
-    getCustomersStore
+    getCustomersStore,
+    addCustomerProfilePictureStore,
+    getCustomerProfilePicture,
+    deleteCustomerProfilePicture
   } as const
 })
 

@@ -2,11 +2,11 @@
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-
+import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Contractor Profile Picture')
+viewWrapper.setPageTitle('Contractor Personal ID')
 const head = useHead({
     title: 'Contractor',
 })
@@ -15,6 +15,8 @@ const contractorForm = useContractorForm()
 const route = useRoute()
 const router = useRouter()
 const contractorId = ref()
+const personal_id = ref()
+
 // @ts-ignore
 
 contractorId.value = route.params?.id
@@ -28,10 +30,13 @@ contractorForm.setStep({
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            router.push({
-                path: `/contractor-add/${contractorId.value}/services`
-            })
+            var isValid = await onSubmitAdd()
+            if (isValid) {
+
+                router.push({
+                    path: `/contractor-add/${contractorId.value}/services`
+                })
+            }
 
         }
 
@@ -46,7 +51,30 @@ contractorForm.setStep({
 })
 
 const fileError = ref('')
-const pageTitle = 'Step 2: Contractor Profile Picture'
+const pageTitle = 'Step 2: Contractor Personal ID'
+const onSubmitAdd = async () => {
+
+    let formData = new FormData();
+    if (personal_id.value != undefined)
+        formData.append('images[]', personal_id.value);
+
+    const media = await addPersonalId(contractorId.value, formData)
+
+    if (media.success) {
+        // @ts-ignore
+        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} Personal ID was added successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+
+        notif.error(media.success)
+
+    }
+
+}
+
 const onAddFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
@@ -59,7 +87,7 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        personal_id.value = _file
     }
 }
 
@@ -68,13 +96,10 @@ const onRemoveFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
         notif.error(error)
-        console.error(error)
         return
     }
 
-    console.log(fileInfo)
 
-    // wizard.data.logo = null
 }
 
 
@@ -99,7 +124,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                                 <VField>
                                     <VControl>
 
-                                        <VFilePond size="large" class="profile-filepond" name="profile_filepond"
+                                        <VFilePond size="xl" class="profile-filepond" name="profile_filepond"
                                             :chunk-retry-delays="[500, 1000, 3000]"
                                             label-idle="<i class='lnil lnil-cloud-upload'></i>"
                                             :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']"
