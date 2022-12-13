@@ -59,7 +59,8 @@ const getCurrentEmployee = async () => {
 }
 const getCurrentPersonalId = async () => {
     var personal_id = await getPersonalId(employeeId.value)
-    employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
+    if (personal_id.media.length != 0)
+        employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 
 const onClickEditMainInfo = () => {
@@ -89,7 +90,7 @@ const changestatusUser = async () => {
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="employeePersonalId.relative_path" squared />
+            <VAvatar size="xl" :picture="employeePersonalId?.relative_path" squared />
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentEmployee.user.first_name }}
                 {{ currentEmployee.user.last_name }}</h3>

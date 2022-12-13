@@ -197,6 +197,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     const { result } = await phoneExistsCheck(userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
+        
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
         contractorForm.data.payment_percentage = customerData.payment_percentage
@@ -210,7 +211,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
         contractorForm.userForm.room_id = userData.room_id
         contractorForm.userForm.city_id = userData.city_id
         contractorForm.userForm.user_status_id = userData.user_status_id
+
         const contractor = await addContractor(contractorForm.data, contractorForm.userForm)
+
         if (contractor.success) {
             contractorForm.data.id = contractor.contractor.id
             // @ts-ignore
@@ -223,9 +226,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
             notif.error(contractor.success)
             return false
-
-
         }
+
 
     }
     else {
@@ -438,7 +440,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                     </div>
                     <!--Fieldset-->
-
                 </div>
             </div>
         </form>
