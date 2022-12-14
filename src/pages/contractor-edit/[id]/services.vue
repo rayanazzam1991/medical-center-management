@@ -74,7 +74,7 @@ const fetchContractor = async () => {
     contractorForm.userForm.phone_number = contractor.user.phone_number
     contractorForm.userForm.address = contractor.user.address
     contractorForm.userForm.room_id = contractor.user.room.id
-    contractorForm.userForm.city_id = contractor.user.status.id
+    contractorForm.userForm.city_id = contractor.user.city.id
     contractorForm.userForm.user_status_id = contractor.user.status.id
     contractorForm.dataUpdate.starting_date = contractor.starting_date
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
