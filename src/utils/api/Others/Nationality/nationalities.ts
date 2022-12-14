@@ -56,7 +56,7 @@ export async function getNationalityApi(
     const { data: response, headers } = await api.get(
       `nationality/${nationalityId}`
     )
-  
+
   return { response }
 }
 export async function getNationalitiesApi(

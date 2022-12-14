@@ -9,15 +9,17 @@ const notyf = useNotyf()
 
 export function createApi() {
   // Here we set the base URL for all requests made to the api
+  axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
   api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
     withCredentials: false,
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
+      'Access-Control-Allow-Origin': '*'
     },
   })
+
 
   // We set an interceptor for each request to
   // include Bearer token to the request if user is logged in

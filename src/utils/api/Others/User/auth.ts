@@ -10,6 +10,6 @@ export async function signIn(
   api: AxiosInstance,
   credentials: SignInRequest
 ): Promise<{ response: CustomResponseCollection }> {
-  const {data: response, headers} = await api.post('auth/signIn/', credentials);
+  const {data: response, headers} = await api.post('auth/signIn', credentials);
   return {response}
 }
