@@ -62,7 +62,7 @@ export async function addUserApi(
   api: AxiosInstance,
   user: CreateUpdateUser
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`user/`, user)
+  const { data: response, headers } = await api.post(`user`, user)
 
   return { response }
 }
