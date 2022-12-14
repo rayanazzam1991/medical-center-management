@@ -60,7 +60,7 @@ export async function addCustomerApi(
   api: AxiosInstance,
   customer: CreateCustomer
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`customer/`, customer)
+  const { data: response, headers } = await api.post(`customer`, customer)
   console.log(response)
   return { response }
 }
