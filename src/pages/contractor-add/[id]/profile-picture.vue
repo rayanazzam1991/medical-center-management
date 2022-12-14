@@ -1,8 +1,8 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { addPersonalId } from '/@src/services/Contractor/contractorService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
 
 
 const viewWrapper = useViewWrapper()

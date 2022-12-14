@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
-
-import { defaultDepartment } from '/@src/stores/Others/Department/departmentStore'
-import { Department } from '/@src/utils/api/Others/Department';
-import { DepartmentConsts } from '/@src/utils/consts/department';
+import { getDepartment } from '/@src/composable/Others/Department/getDepartment'
+import { defaultDepartment } from '/@src/models/Others/Department/department'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-
-import { getDepartment } from '/@src/composable/Others/Department/getDepartment';
-
+import { DepartmentConsts } from '/@src/models/Others/Department/department'
 const panels = usePanels()
 const route = useRoute()
 const router = useRouter()

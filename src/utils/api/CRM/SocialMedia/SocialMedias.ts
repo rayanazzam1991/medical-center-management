@@ -1,20 +1,8 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
+import { AxiosInstance } from "axios"
+import { SocialMedia, SocialMediaSearchFilter } from "/@src/models/CRM/SocialMedia/socialMedia"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
-export interface SocialMedia {
-  id?: number
-  name: string
-  icon: string
-  status: number
-}
-export interface SocialMediaSearchFilter {
-  name?: string
-  status?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+
 
 export async function deleteSocialMediaApi(
   api: AxiosInstance,

@@ -1,9 +1,8 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
-import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { defaultSocialMedia } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { getSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
-
+import { SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
 
 const route = useRoute()
 const router = useRouter()

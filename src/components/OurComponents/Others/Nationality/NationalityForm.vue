@@ -1,19 +1,12 @@
 <script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addNationality } from '/@src/composable/Others/Nationality/addNationality'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { ErrorMessage, useForm } from 'vee-validate';
-import { z as zod } from 'zod'
-import { defaultNationality } from '/@src/stores/Others/Nationality/nationalityStore';
-import { getNationality } from '/@src/composable/Others/Nationality/getNationality';
-import { Nationality } from '/@src/utils/api/Others/Nationality';
-import { editNationality } from '/@src/composable/Others/Nationality/editNationality';
-import { NationalityConsts } from '/@src/utils/consts/nationality';
-
-
+import { useHead } from '@vueuse/head'
+import { useForm, ErrorMessage } from 'vee-validate';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultNationality, Nationality, NationalityConsts } from '/@src/models/Others/Nationality/nationality';
+import { getNationality, addNationality, editNationality } from '/@src/services/Others/Nationality/nationalityService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { z as zod } from 'zod';
 export default defineComponent({
     props: {
         formType: {

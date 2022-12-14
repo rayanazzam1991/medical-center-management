@@ -1,13 +1,7 @@
-import type { AxiosInstance } from 'axios'
-import {CustomResponseCollection,CustomResponseSingle} from '../../../response'
+import { AxiosInstance } from "axios";
+import { Media } from "/@src/models/Others/Media/media";
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response";
 
-export interface Media {
-  id?: number
-  model_id : unknown
-  model_type: string
-  relative_path?: string 
-  is_featured?: string  
-}
 
 export async function uploadMediaApi(
   api: AxiosInstance,

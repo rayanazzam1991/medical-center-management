@@ -4,13 +4,10 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import VTag from '/@src/components/base/tags/VTag.vue'
 
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { defaultPagination } from '/@src/utils/response'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
-import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList'
-import { deleteNationality } from '/@src/composable/Others/Nationality/deleteNationality'
-import { NationalitySearchFilter } from '/@src/utils/api/Others/Nationality'
-import { NationalityConsts } from '/@src/utils/consts/nationality'
+import { defaultNationalitySearchFilter, NationalitySearchFilter, NationalityConsts } from '/@src/models/Others/Nationality/nationality'
+import { getNationalitiesList, deleteNationality } from '/@src/services/Others/Nationality/nationalityService'
+import { defaultPagination } from '/@src/utils/response'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Nationality')
 useHead({

@@ -1,8 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { defaultCreateUpdateUser } from "../Others/User/userStore"
-import { defaultCreateContractor, defaultUpdateContractor } from "./contractorStore"
-import { CreateContractor, CreateUpdateServicesHelper, UpdateContractor } from "/@src/utils/api/Contractor"
-import { CreateUpdateUser } from "/@src/utils/api/Others/User"
+import { CreateContractor, defaultCreateContractor, UpdateContractor, defaultUpdateContractor, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 
 

@@ -1,16 +1,8 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { ContractorSearchFilter } from '/@src/utils/api/Contractor'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { City } from '/@src/utils/api/Others/City'
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
+
+<script lang="ts">
+import { defaultContractorSearchFilter, ContractorSearchFilter } from "/@src/models/Contractor/contractor"
+import { CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
+import { defaultPagination } from "/@src/utils/response"
 
 
 

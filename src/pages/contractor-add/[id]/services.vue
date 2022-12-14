@@ -1,11 +1,11 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
-import { addServicesToContractor } from '/@src/composable/Contractor/addServicesToContractor';
-import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { addServicesToContractor } from '/@src/services/Contractor/contractorService';
+import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Service } from '/@src/utils/api/Others/Service';
 
 
 const viewWrapper = useViewWrapper()

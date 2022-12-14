@@ -1,66 +1,12 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { defaultCreateUpdateUser, defaultUser } from "../Others/User/userStore"
 import { useApi } from "/@src/composable/useApi"
-import { addContractorApi, addServicesApi, Contractor, ContractorSearchFilter, CreateContractor, CreateUpdateServicesHelper, getContractorApi, getContractorsApi, UpdateContractor, updateContractorApi } from "/@src/utils/api/Contractor"
-import { uploadMediaApi, Media, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
-import { MediaConsts } from "/@src/utils/consts/media"
+import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { Media } from "/@src/models/Others/Media/media"
+import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
+import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
   
-export const defaultCreateContractor: CreateContractor = {
-  id: 0,
-  starting_date: '',
-  payment_percentage: 0,
-  user: defaultCreateUpdateUser,
-  services: [],
-  is_completed : false,
-
-  
-}
-export const defaultUpdateContractor: UpdateContractor = {
-  id: 0,
-  starting_date: '',
-  payment_percentage: 0,
-  user: defaultCreateUpdateUser,
-  services: [],
-  is_completed : false,
-
-}
-export const defaultContractor: Contractor = {
-  id: 0,
-  starting_date: '',
-  payment_percentage: 0,
-  user: defaultUser,
-  services: [],
-  is_completed : false,
-
-}
-
-export const defaultContractorSearchFilter: ContractorSearchFilter = {
-  name : undefined,
-  phone_number : undefined,
-  gender : undefined,
-  date_between : undefined ,
-  from : undefined,
-  to : undefined ,
-  room_id : undefined,
-  is_completed : undefined,
-  user_status_id: undefined,
-  page : undefined,
-  per_page : 50,
-  order_by : undefined,
-  order : undefined,
-
-}
-
-export const defaultContractorPersonalId: Media = {
-  id: undefined,
-  model_id: 0,
-  model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
-  relative_path: undefined,
-  is_featured : '0',
-
-}
 
 
 export const useContractor = defineStore('contractor', () => {

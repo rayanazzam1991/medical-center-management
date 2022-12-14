@@ -1,12 +1,11 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
+import { addPersonalId } from '/@src/composable/Employee/addPersonalId';
+import { deletePersonalId } from '/@src/composable/Employee/deletePersonalId';
+import { getPersonalId } from '/@src/composable/Employee/getPersonalId';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultContractorPersonalId } from '/@src/models/Contractor/contractor';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
-import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
-import { deletePersonalId } from '/@src/composable/Contractor/deletePersonalId';
-
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Profile Picture')

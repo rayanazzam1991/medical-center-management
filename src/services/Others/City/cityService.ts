@@ -1,5 +1,6 @@
-import { useCity } from "/@src/stores/Others/City/cityStore";
-import { City } from "/@src/utils/api/Others/City";
+import { City, CitySearchFilter } from "/@src/models/Others/City/city"
+import { useCity } from "/@src/stores/Others/City/cityStore"
+import { Pagination } from "/@src/utils/response"
 
 
 export async function addCity  (cityData : City)  {

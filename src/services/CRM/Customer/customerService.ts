@@ -1,6 +1,9 @@
-import { defaultCustomer, useCustomer } from "/@src/stores/CRM/Customer/customerStore"
-import { Customer } from "/@src/utils/api/CRM/Customer"
-import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
+import { Customer, defaultCustomer, CreateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter, defaultCustomerProfilePic, UpdateCustomer } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { MediaConsts, Media } from "/@src/models/Others/Media/media"
+import { CreateUpdateUser } from "/@src/models/Others/User/user"
+import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
+import { Pagination } from "/@src/utils/response"
 
 
 export async function addMedicalInfo (customer_id : number,medicalInfoData : MedicalInfo)  {

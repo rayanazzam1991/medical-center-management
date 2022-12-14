@@ -1,6 +1,6 @@
+import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { useCustomerGroup } from "/@src/stores/Others/CustomerGroup/customerGroupStore"
-import { CustomerGroup } from "/@src/utils/api/Others/CustomerGroup"
-
+import { Pagination } from "/@src/utils/response"
 
 export async function addCustomerGroup  (customerGroupData : CustomerGroup)  {
     const customerGroup =  useCustomerGroup()

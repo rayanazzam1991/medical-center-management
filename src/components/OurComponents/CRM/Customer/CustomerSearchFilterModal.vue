@@ -1,22 +1,12 @@
-<script lang="ts">
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
 
-import { City } from '/@src/utils/api/Others/City'
-import { Room } from '/@src/utils/api/Others/Room'
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { boolean } from 'zod'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup'
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList'
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
+<script lang="ts">
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { defaultCustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
+import { City, defaultCitySearchFilter } from "/@src/models/Others/City/city"
+import { CustomerGroup, defaultCustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getCitiesList } from "/@src/services/Others/City/cityService"
+import { getCustomerGroupsList } from "/@src/services/Others/CustomerGroup/customerGroupService"
 
 export default defineComponent({
     props: {

@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-import { getUsersList } from '/@src/composable/Others/User/getUsersList'
-import { deleteUser } from '/@src/composable/Others/User/deleteUser'
-
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import { deleteUser } from '/@src/composable/Others/User/deleteUser'
+import { getUsersList } from '/@src/composable/Others/User/getUsersList'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultUserSearchFilter, UserSearchFilter } from '/@src/models/Others/User/user'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { defaultPagination } from '/@src/utils/response'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('User')
 useHead({

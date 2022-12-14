@@ -1,41 +1,11 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addUser } from '/@src/composable/Others/User/addUser'
-import { editUser } from '/@src/composable/Others/User/editUser'
-import { User } from '/@src/utils/api/Others/User'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { getUser } from '/@src/composable/Others/User/getUser'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { boolean, optional, z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
-import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { SocialMedia, defaultSocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { addSocialMediasToCustomer } from '/@src/services/CRM/Customer/customerService';
+import { getSocialMediasList } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
-import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
-import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
-import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
-import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()

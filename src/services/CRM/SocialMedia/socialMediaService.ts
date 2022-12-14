@@ -1,5 +1,6 @@
-import { useSocialMedia } from "/@src/stores/CRM/SocialMedia/socialMediaStore";
-import { SocialMedia } from "/@src/utils/api/CRM/SocialMedia";
+import { SocialMedia, SocialMediaSearchFilter } from "/@src/models/CRM/SocialMedia/socialMedia"
+import { useSocialMedia } from "/@src/stores/CRM/SocialMedia/socialMediaStore"
+import { Pagination } from "/@src/utils/response"
 
 
 export async function addSocialMedia  (socialMediaData : SocialMedia)  {

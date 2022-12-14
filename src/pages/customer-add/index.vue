@@ -1,31 +1,26 @@
 <script setup  lang="ts">
+
+
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { useForm } from 'vee-validate';
 import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useNotyf } from '/@src/composable/useNotyf';
-
-
+import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { addCustomer } from '/@src/services/CRM/Customer/customerService';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 

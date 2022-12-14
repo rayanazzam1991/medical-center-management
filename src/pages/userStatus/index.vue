@@ -1,15 +1,14 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
 
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { deleteUserStatus } from '/@src/composable/Others/UserStatus/deleteUserStatus'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { UserStatusSearchFilter } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
+<script setup lang="ts">
+import { useHead } from "@vueuse/head"
+import MyDropDown from "/@src/components/OurComponents/MyDropDown.vue"
+import { deleteUserStatus } from "/@src/composable/Others/UserStatus/deleteUserStatus"
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { defaultPagination } from "/@src/utils/response"
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('UserStatus')
 useHead({

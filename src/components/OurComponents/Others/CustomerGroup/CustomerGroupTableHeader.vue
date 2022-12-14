@@ -1,7 +1,7 @@
+
 <script lang="ts">
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
-import { CustomerGroupConsts } from '/@src/utils/consts/customerGroup'
-import { defaultPagination } from '/@src/utils/response'
+import { defaultCustomerGroupSearchFilter, CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { defaultPagination } from "/@src/utils/response"
 
 
 

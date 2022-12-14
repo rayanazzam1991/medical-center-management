@@ -1,18 +1,13 @@
 <script  lang="ts">
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { z as zod } from 'zod'
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { getSocialMedia } from '/@src/composable/CRM/socialMedia/getSocialMedia';
+import { z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { lineIcons } from '/@src/data/icons/lineIcons';
+import { defaultSocialMedia, SocialMedia, SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
-import { lineIcons } from '/@src/data/icons/lineIcons'
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { editSocialMedia } from '/@src/composable/CRM/SocialMedia/editSocialMedia';
 
 
 export default defineComponent({
@@ -273,7 +268,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opasocialMedia: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

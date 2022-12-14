@@ -1,13 +1,9 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
+<script lang="ts">
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { City } from '/@src/utils/api/Others/City'
-import { Room } from '/@src/utils/api/Others/Room'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
+import { defaultContractorSearchFilter } from '/@src/models/Contractor/contractor'
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 
 
 export default defineComponent({

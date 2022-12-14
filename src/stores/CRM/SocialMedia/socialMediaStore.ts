@@ -1,9 +1,6 @@
 import { ref } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
-
 import {
-  SocialMediaSearchFilter,
-  SocialMedia,
   getSocialMediasApi,
   deleteSocialMediaApi,
   addSocialMediaApi,
@@ -12,22 +9,7 @@ import {
 } from '/@src/utils/api/CRM/SocialMedia'
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultSocialMedia: SocialMedia = {
-  id: 0,
-  name: '',
-  icon : '',
-  status: 1,
-}
-
-export const defaultSocialMediaSearchFilter: SocialMediaSearchFilter = {
-  name: undefined,
-  status: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
+import { SocialMedia, SocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia'
 
 export const useSocialMedia = defineStore('socialMedia', () => {
   const api = useApi()

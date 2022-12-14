@@ -1,10 +1,6 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../Others/User/userStore'
-import { defaultCreateEmployee, defaultUpdateEmployee } from './employeeStore'
-import { CreateEmployee } from '/@src/utils/api/Employee'
-import { UpdateEmployee } from '/@src/utils/api/Employee'
-import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { CreateEmployee, defaultCreateEmployee, UpdateEmployee, defaultUpdateEmployee } from "/@src/models/Employee/employee"
+import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 interface EmployeeFormStepOptions {
   number: number

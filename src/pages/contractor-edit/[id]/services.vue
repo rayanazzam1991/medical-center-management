@@ -1,12 +1,10 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { updateContractor } from '/@src/composable/Contractor/updateContractor';
-import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { getContractor, updateContractor } from '/@src/services/Contractor/contractorService';
+import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Service } from '/@src/utils/api/Others/Service';
 
 
 

@@ -1,16 +1,15 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
-import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
-import { defaultContractorPersonalId } from '/@src/stores/Contractor/contractorStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Contractor } from '/@src/utils/api/Contractor';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+
+<script setup lang="ts">
+
+import { useHead } from "@vueuse/head"
+import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { Contractor, defaultContractor, defaultContractorPersonalId } from "/@src/models/Contractor/contractor"
+import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getContractor, getPersonalId } from "/@src/services/Contractor/contractorService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 
 const route = useRoute()
@@ -267,7 +266,8 @@ const getCurrentPersonalId = async () => {
                                 </div>
 
                                 <div class="project-features">
-                                    <div v-for="service in currentContractor.services" class="project-feature">
+                                    <div :key="service.id" v-for="service in currentContractor.services"
+                                        class="project-feature">
                                         <h4>{{ service.name }}</h4>
                                         <p class="has-text-centered">Contractor Price:
                                             <span class="has-text-primary">{{ service.price }}</span>
