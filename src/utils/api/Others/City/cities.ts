@@ -27,7 +27,7 @@ export async function addCityApi(
   api: AxiosInstance,
   city: City
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`city/`, city)
+  const { data: response, headers } = await api.post(`city`, city)
 
   return { response }
 }
