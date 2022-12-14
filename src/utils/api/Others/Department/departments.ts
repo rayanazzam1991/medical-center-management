@@ -28,7 +28,7 @@ export async function addDepartmentApi(
 ): Promise<{ response: CustomResponseSingle }> {
   console.log('api', department)
 
-  const { data: response, headers } = await api.post(`department/`, department)
+  const { data: response, headers } = await api.post(`department`, department)
 
   return { response }
 }

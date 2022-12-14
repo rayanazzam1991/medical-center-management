@@ -32,7 +32,7 @@ export async function addServiceApi(
   api: AxiosInstance,
   service: Service
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`service/`, service)
+  const { data: response, headers } = await api.post(`service`, service)
 
   return { response }
 }

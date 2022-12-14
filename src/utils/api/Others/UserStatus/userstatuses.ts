@@ -11,7 +11,7 @@ export interface UserStatusSearchFilter {
   per_page?: number
   order_by?: string
   order?: string
-  per_page?:undefined
+  per_page?: undefined
 }
 
 export async function deleteUserStatusApi(
@@ -28,7 +28,7 @@ export async function addUserStatusApi(
 ): Promise<{ response: CustomResponseSingle }> {
   console.log('api', userstatus)
 
-  const { data: response, headers } = await api.post(`userstatus/`, userstatus)
+  const { data: response, headers } = await api.post(`userstatus`, userstatus)
 
   return { response }
 }

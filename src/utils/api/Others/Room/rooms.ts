@@ -40,7 +40,7 @@ export async function addRoomApi(
   api: AxiosInstance,
   room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`room/`, room)
+  const { data: response, headers } = await api.post(`room`, room)
 
   return { response }
 }
