@@ -46,7 +46,7 @@ contractorForm.setStep({
 
 })
 const pageTitle = 'Step 3: Contractor Services'
-const services2 = ref<Service[]>([])
+const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
     checked: boolean
@@ -56,9 +56,9 @@ interface ServicesChecked {
 const servicesChecked = ref<ServicesChecked[]>([])
 onMounted(async () => {
     const { services } = await getServicesList(defaultServiceSearchFilter)
-    services2.value = services
-    for (let index = 0; index < services2.value.length; index++) {
-        servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
+    servicesList.value = services
+    for (let index = 0; index < servicesList.value.length; index++) {
+        servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0, contractor_service_amount: 0 })
 
     }
 })
@@ -112,7 +112,8 @@ const onSubmitAdd = async () => {
 
                                 <VField>
 
-                                    <VControl :key="service.service.id" v-for="service in servicesChecked" raw nogrow subcontrol>
+                                    <VControl :key="service.service.id" v-for="service in servicesChecked" raw nogrow
+                                        subcontrol>
                                         <VCheckbox :label="service.service.name" :name="service.service.id"
                                             color="primary" :key="service.service.id" v-model="service.checked" />
 
@@ -125,7 +126,8 @@ const onSubmitAdd = async () => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-5">
-                                <VField :key="service.service.id" v-for="service in servicesChecked" :id="service.service.name">
+                                <VField :key="service.service.id" v-for="service in servicesChecked"
+                                    :id="service.service.name">
 
                                     <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
                                         Price:
@@ -139,7 +141,8 @@ const onSubmitAdd = async () => {
                                 </VField>
                             </div>
                             <div class="column is-7">
-                                <VField :key="service.service.id" v-for="service in servicesChecked" :id="service.service.name">
+                                <VField :key="service.service.id" v-for="service in servicesChecked"
+                                    :id="service.service.name">
 
                                     <VLabel class="is-flex-wrap-nowrap" v-if="service.checked">Contractor's {{
                                             service.service.name

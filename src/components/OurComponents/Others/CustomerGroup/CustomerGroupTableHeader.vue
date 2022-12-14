@@ -215,7 +215,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opaCustomerGroup: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

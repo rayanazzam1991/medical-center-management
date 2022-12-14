@@ -125,20 +125,20 @@ const fetchCustomer = async () => {
 
 }
 
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const customerGroups2 = ref<CustomerGroup[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
+const customerGroupsList = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
+    citiesList.value = cities
     const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
     const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-    customerGroups2.value = customerGroups
+    customerGroupsList.value = customerGroups
     await fetchCustomer()
 
 })
@@ -410,7 +410,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -430,7 +430,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -450,7 +450,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                                     status.name
                                             }}
                                             </VOption>
@@ -499,7 +499,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VLabel>Customer Group</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
-                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                                            <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
                                                 :value="customerGroup.id">{{ customerGroup.name }}
                                             </VOption>
                                         </VSelect>

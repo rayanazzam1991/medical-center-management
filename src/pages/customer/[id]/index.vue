@@ -45,10 +45,10 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
-const statuses2 = ref<UserStatus[]>([])
+const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
 })
 onMounted(async () => {
     await getCurrentCustomer()
@@ -440,7 +440,7 @@ const getCurrentProfilePic = async () => {
                                     <VSelect v-if="currentCustomer.user.status"
                                         v-model="currentCustomer.user.status.id">
                                         <VOption value="">User Status</VOption>
-                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                                 status.name
                                         }}
                                         </VOption>

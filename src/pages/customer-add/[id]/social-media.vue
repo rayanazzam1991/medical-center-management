@@ -77,7 +77,7 @@ customerForm.setStep({
 
 })
 const pageTitle = 'Step 5: Customer Social Media'
-const socialMedias2 = ref<SocialMedia[]>([])
+const socialMediasList = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
     socialMedia: SocialMedia
     checked: boolean
@@ -86,9 +86,9 @@ interface SocialMediaChecked {
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
     const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
-    socialMedias2.value = socialMedias
-    for (let index = 0; index < socialMedias2.value.length; index++) {
-        socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+    socialMediasList.value = socialMedias
+    for (let index = 0; index < socialMediasList.value.length; index++) {
+        socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
     }
 })

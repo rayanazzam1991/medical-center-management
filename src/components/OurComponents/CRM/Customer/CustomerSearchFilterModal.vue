@@ -109,21 +109,21 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        const cities2 = ref<City[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        const customerGroups2 = ref<CustomerGroup[]>([])
+        const citiesList = ref<City[]>([])
+        const statusesList = ref<UserStatus[]>([])
+        const customerGroupsList = ref<CustomerGroup[]>([])
         onMounted(async () => {
             const { cities } = await getCitiesList(defaultCitySearchFilter)
-            cities2.value = cities
+            citiesList.value = cities
             const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-            customerGroups2.value = customerGroups
+            customerGroupsList.value = customerGroups
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
+            statusesList.value = userstatuses
 
         })
 
 
-        return { search, resetFilter, customerGroups2, cities2, search_filter_popup, statuses2, searchName, searchGender, searchPhoneNumber, searchCity, searchStatus, searchDateBetween, searchFrom, searchTo, searchCustomerGroup, searchComplete }
+        return { search, resetFilter, customerGroupsList, citiesList, search_filter_popup, statusesList, searchName, searchGender, searchPhoneNumber, searchCity, searchStatus, searchDateBetween, searchFrom, searchTo, searchCustomerGroup, searchComplete }
 
 
 
@@ -166,7 +166,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchCity" class="is-rounded">
                             <VOption value="">City</VOption>
-                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{ city.name }}
+                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{ city.name }}
                             </VOption>
                         </VSelect>
                     </VControl>
@@ -175,7 +175,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchCustomerGroup" class="is-rounded">
                             <VOption value="">Group</VOption>
-                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                            <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
                                 :value="customerGroup.id">{{ customerGroup.name }}
                             </VOption>
                         </VSelect>
@@ -185,7 +185,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchStatus" class="is-rounded">
                             <VOption value="">Status</VOption>
-                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
                             </VOption>

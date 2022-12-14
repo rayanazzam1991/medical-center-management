@@ -80,7 +80,7 @@ customerForm.setStep({
 
 })
 const pageTitle = 'Step 4: Customer Social Media'
-const socialMedias2 = ref<SocialMedia[]>([])
+const socialMediasList = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
     socialMedia: SocialMedia
     checked: boolean
@@ -129,22 +129,22 @@ const fetchCustomer = async () => {
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
     const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
-    socialMedias2.value = socialMedias
+    socialMediasList.value = socialMedias
     if (customerForm.dataUpdate.id != customerId.value) {
 
         await fetchCustomer()
     }
 
 
-    for (let index = 0; index < socialMedias2.value.length; index++) {
+    for (let index = 0; index < socialMediasList.value.length; index++) {
         // @ts-ignore
-        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMedias2.value[index].id)
+        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
         if (socialMedia) {
 
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: true, url: socialMedia.url })
+            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url })
         }
         else {
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
         }
 
     }

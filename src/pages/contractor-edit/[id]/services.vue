@@ -48,7 +48,7 @@ contractorForm.setStep({
 
 })
 const pageTitle = 'Step 3: Contractor Services'
-const services2 = ref<Service[]>([])
+const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
     checked: boolean
@@ -91,21 +91,21 @@ const fetchContractor = async () => {
 const servicesChecked = ref<ServicesChecked[]>([])
 onMounted(async () => {
     const { services } = await getServicesList(defaultServiceSearchFilter)
-    services2.value = services
+    servicesList.value = services
     if (contractorForm.dataUpdate.id != contractorId.value) {
 
         await fetchContractor()
     }
 
 
-    for (let index = 0; index < services2.value.length; index++) {
-        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == services2.value[index].id)
+    for (let index = 0; index < servicesList.value.length; index++) {
+        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == servicesList.value[index].id)
         if (service) {
 
-            servicesChecked.value.push({ service: services2.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
         }
         else {
-            servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0, contractor_service_amount: 0 })
         }
 
     }
