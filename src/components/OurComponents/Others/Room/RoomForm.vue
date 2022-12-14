@@ -50,7 +50,6 @@ export default defineComponent({
                 return
             }
             const room = await getRoom(roomId.value)
-            console.log("sad", room)
             currentRoom.value = room != undefined ? room : defaultRoom
 
         }
@@ -216,7 +215,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField class="column " id="department_id">
+                                <VField id="department_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} department</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">

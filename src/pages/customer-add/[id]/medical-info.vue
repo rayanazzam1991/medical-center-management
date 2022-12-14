@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
-import { useForm } from 'vee-validate'
+import { ErrorMessage, useForm } from 'vee-validate'
 import { optional, z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultMedicalInfo } from '/@src/models/CRM/MedicalInfo/medicalInfo'

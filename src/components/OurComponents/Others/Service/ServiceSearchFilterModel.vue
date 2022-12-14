@@ -80,7 +80,7 @@ export default defineComponent({
 <template>
     <VModal title="Search Service" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
-            <form class="form-layout" @submit.prevent="">
+            <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
                         <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
@@ -106,10 +106,12 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search" icon="feather:search">Ok..</VButton>
+            <VButton color="primary" raised @click="search" icon="feather:search">Search</VButton>
         </template>
     </VModal>
 </template>

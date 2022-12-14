@@ -176,6 +176,8 @@ export default defineComponent({
                         </VControl>
                     </VField>
                 </div>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">

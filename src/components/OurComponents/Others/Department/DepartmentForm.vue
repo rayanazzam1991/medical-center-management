@@ -40,7 +40,7 @@ export default defineComponent({
         const getCurrentDepartment = async () => {
             if (departmentId.value === 0) {
                 currentDepartment.value.name = "";
-                currentDepartment.value.status = 0;
+                currentDepartment.value.status = 1;
                 return;
             }
             const department = await getDepartment(departmentId.value);
@@ -54,7 +54,7 @@ export default defineComponent({
                 name: zod
                     .string({
                         required_error: "This field is required",
-                    }),
+                    }).min(1, "This field is required"),
                 status: zod
                     .number({ required_error: "Please choose one" }),
             }));
@@ -79,7 +79,6 @@ export default defineComponent({
             var departmentData = currentDepartment.value;
             departmentData = await addDepartment(departmentData) as Department;
             notif.dismissAll();
-            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was added successfully`);
             // @ts-ignore
             notif.success(` ${viewWrapper.pageTitle} ${departmentData.name} was added successfully`);
             router.push({ path: `/department/${departmentData.id}` });

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { User } from "/@src/models/Others/User/user";
 import { useAuth } from "/@src/stores/Others/User/authStore";
-import { User } from "/@src/utils/api/Others/User";
 
 const userAuth = useAuth();
 const router = useRouter();
 const user = ref<Partial<User>>(userAuth.getUser());
+const userFullName = ref('')
+userFullName.value = userAuth.getUserFulLName()
 const logoutUser = async () => {
   try {
     await userAuth.logoutUser();
@@ -30,7 +32,7 @@ const logoutUser = async () => {
       <div class="dropdown-head">
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
         <div class="meta">
-          <span>{{ user?.first_name + ' ' + user?.last_name }}</span>
+          <span>{{ userFullName }}</span>
           <span>Product Manager</span>
         </div>
       </div>

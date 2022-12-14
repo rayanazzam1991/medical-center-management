@@ -14,6 +14,7 @@ import { getContractor, updateContractor } from '/@src/services/Contractor/contr
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 
 
 

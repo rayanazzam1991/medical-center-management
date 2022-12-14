@@ -3,7 +3,7 @@ import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import { optional, z as zod } from 'zod';
 import { toFormValidator } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultMedicalInfo } from '/@src/models/CRM/MedicalInfo/medicalInfo';
 import { getCustomer, updateCustomer, addMedicalInfo } from '/@src/services/CRM/Customer/customerService';

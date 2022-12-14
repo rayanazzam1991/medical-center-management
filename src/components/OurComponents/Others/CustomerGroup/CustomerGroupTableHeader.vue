@@ -88,7 +88,7 @@ export default defineComponent({
                     </div>
                     <div class="right  ">
                         <div class="buttons  ">
-                            <VIconButton type="submit" v-on:click="search" icon="feather:search" color="" />
+                            <VIconButton type="submit" v-on:click="search" icon="feather:search" />
                             <VButton @click="resetFilter" color="danger" raised> Reset Filters
                             </VButton>
 

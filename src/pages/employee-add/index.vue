@@ -3,7 +3,7 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import { custom, z as zod } from 'zod';
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { addEmployee } from '/@src/services/Employee/employeeService';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { phoneExistsCheck } from '/@src/services/Others/User/userService';

@@ -34,6 +34,7 @@ export default defineComponent({
         const cityId = ref(0);
         // @ts-ignore
         cityId.value = route.params?.id as number ?? 0;
+
         const getCurrentCity = async () => {
             if (cityId.value === 0) {
                 currentCity.value.name = ''
@@ -44,9 +45,11 @@ export default defineComponent({
             const city = await getCity(cityId.value);
             currentCity.value = city != undefined ? city : defaultCity;
         };
+
         onMounted(() => {
             getCurrentCity();
         });
+
         const validationSchema = toFormValidator(zod
             .object({
                 name: zod

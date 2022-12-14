@@ -46,6 +46,7 @@ onMounted(async () => {
 onMounted(async () => {
     await getCurrentCustomer()
     await getCurrentProfilePic()
+    console.log(currentCustomer.value)
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
@@ -88,8 +89,10 @@ const onClickEditMedicalInfo = () => {
 }
 const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
-    if (profile_pic.media.length != 1)
+    if (profile_pic.media.length != 0) {
+
         customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+    }
 }
 
 </script>
@@ -98,9 +101,9 @@ const getCurrentProfilePic = async () => {
         <div class="profile-header has-text-centered">
             <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
 
-
             <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
-                {{ currentCustomer.user.last_name }}</h3>
+                {{ currentCustomer.user.last_name }}
+            </h3>
 
             <div class="profile-stats">
                 <div class="profile-stat">
@@ -117,8 +120,13 @@ const getCurrentProfilePic = async () => {
                 </div>
                 <div class="separator"></div>
                 <div class="socials">
-                    <a v-for="socialMedia in currentCustomer.social_medias"><i aria-hidden="true"
-                            :class="socialMedia.icon"></i></a>
+                    <a v-for="socialMedia in currentCustomer.social_medias">
+                        <Tippy>
+                            <i aria-hidden="true" :class="socialMedia.icon"></i>
+                            <template #content>URL: {{ socialMedia?.url }} </template>
+                        </Tippy>
+
+                    </a>
                 </div>
             </div>
         </div>
