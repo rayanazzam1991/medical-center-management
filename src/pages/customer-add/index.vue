@@ -116,8 +116,8 @@ const validationSchema = toFormValidator(zod
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
+                        .number({ required_error: 'This field is required' })
+
                 ),
         address:
             zod
@@ -136,16 +136,13 @@ const validationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        room_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
+        room_id:
+            zod
+                .preprocess(
+                    val => val === "" ? undefined : val,
+                    zod
+                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                        .optional()),
         user_status_id: zod
             .preprocess(
                 (input) => {
@@ -321,10 +318,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl class="Vi"
                                         :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
-                                        <VIMaskInput class="input" v-model="currentUser.phone_number" type="number"
+                                        <VInput type="number" v-model="currentUser.phone_number" />
+                                        <!-- <VIMaskInput class="input" v-model="currentUser.phone_number" type="number"
                                             placeholder="" autocomplete="given-phone_number" :options="{
                                                 mask: '000000000',
-                                            }" />
+                                            }" /> -->
                                         <ErrorMessage class="help is-danger" name="phone_number" />
                                         <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
@@ -373,7 +371,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel>room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption value="">Room</VOption>
+                                            <VOption>Room</VOption>
                                             <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
