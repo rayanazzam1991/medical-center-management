@@ -27,6 +27,7 @@ const router = useRouter()
 const removeDepartment = async (departmentId: number) => {
 
   await deleteDepartment(departmentId)
+  await search(searchFilter.value)
   deleteDepartmentPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
@@ -34,6 +35,7 @@ const removeDepartment = async (departmentId: number) => {
 }
 
 const search = async (searchFilter2: DepartmentSearchFilter) => {
+  console.log('123')
 
   const { departments, pagination } = await getDepartmentsList(searchFilter2)
 

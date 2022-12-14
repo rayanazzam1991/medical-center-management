@@ -143,7 +143,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <CustomerSearchFilterModal :key="keyTest" :search_filter_popup="searchFilterPop"
+        <ContractorSearchFilterModal :key="keyTest" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

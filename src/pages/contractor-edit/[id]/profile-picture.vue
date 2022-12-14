@@ -1,5 +1,5 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
-import { addPersonalId, deletePersonalId, getPersonalId } from '/@src/services/Employee/employeeService';
+import { addPersonalId, deletePersonalId, getPersonalId } from '/@src/services/Contractor/contractorService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorPersonalId } from '/@src/models/Contractor/contractor';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
@@ -97,7 +97,9 @@ onMounted(async () => {
 })
 const getCurrentPersonalId = async () => {
     var personalId = await getPersonalId(contractorId.value)
-    currentPersonalId.value = personalId.media[personalId.media.length - 1]
+    console
+    if (personalId.media.length > 0)
+        currentPersonalId.value = personalId.media[personalId.media.length - 1]
 }
 const onRemoveFile = (error: any, fileInfo: any) => {
     fileError.value = ''
@@ -161,7 +163,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                     <div class="project-info">
                         <div class="project-info-head">
                             <div class="project-avatar-upload">
-                                <VAvatar :picture="currentPersonalId.relative_path" size="xl" />
+                                <VAvatar :picture="currentPersonalId?.relative_path" size="xl" />
 
 
                             </div>

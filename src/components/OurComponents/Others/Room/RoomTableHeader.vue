@@ -45,6 +45,7 @@ export default defineComponent({
         const keyTest = ref(0)
 
         const search = () => {
+
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
         }
@@ -111,8 +112,9 @@ export default defineComponent({
                                 <VControl>
                                     <div class="select">
                                         <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                            <option v-if="pagination.per_page * 0.1 == 1" :value="pagination.per_page * 0.1">{{
+                                                    pagination.per_page * 0.1
+                                            }}
                                                 result per page</option>
                                             <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
                                                     0.1

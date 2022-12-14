@@ -26,6 +26,8 @@ const router = useRouter()
 const removeService = async (serviceId: number) => {
 
   await deleteService(serviceId)
+  await search(searchFilter.value)
+
   deleteServicePopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

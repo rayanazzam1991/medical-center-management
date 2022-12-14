@@ -26,6 +26,7 @@ const router = useRouter()
 const removeRoom = async (roomId: number) => {
 
   await deleteRoom(roomId)
+  await search(searchFilter.value)
   deleteRoomPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

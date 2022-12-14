@@ -27,6 +27,8 @@ const router = useRouter()
 const removeNationality = async (nationalityId: number) => {
 
   await deleteNationality(nationalityId)
+  await search(searchFilter.value)
+
   deleteNationalityPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

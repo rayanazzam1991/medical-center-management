@@ -2,13 +2,13 @@
 <script setup lang="ts">
 
 import { useHead } from "@vueuse/head"
-import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { Contractor, defaultContractor, defaultContractorPersonalId } from "/@src/models/Contractor/contractor"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getContractor, getPersonalId } from "/@src/services/Contractor/contractorService"
+import { changeUserStatus } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 
@@ -53,6 +53,7 @@ onMounted(async () => {
 const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
+    console.log(currentContractor.value)
 
 }
 const onOpen = () => {
@@ -86,7 +87,7 @@ const onClickEditMainInfo = () => {
 }
 const getCurrentPersonalId = async () => {
     var personal_id = await getPersonalId(contractorId.value)
-    if (personal_id.media.length != 1)
+    if (personal_id.media.length != 0)
         contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 

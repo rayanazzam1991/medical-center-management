@@ -209,7 +209,7 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
-
+                <VButton type="submit" @click="search" class="is-hidden" />
             </form>
         </template>
         <template #action="{ close }">

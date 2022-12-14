@@ -18,6 +18,7 @@ export const useDepartment = defineStore('department', () => {
 
     try {
       const response = await deleteDepartmentApi(api, departmentId)
+      console.log(response.response)
       departments.value.splice(
         departments.value.findIndex(
           (department: Department) => department.id === departmentId

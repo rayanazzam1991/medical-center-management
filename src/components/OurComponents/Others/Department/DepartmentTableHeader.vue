@@ -59,7 +59,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout">
+    <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">

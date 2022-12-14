@@ -104,10 +104,12 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Ok..</VButton>
+            <VButton color="primary" raised @click="search">Search</VButton>
         </template>
     </VModal>
 </template>

@@ -29,7 +29,6 @@ contractorForm.setStep({
         var isValid = await onSubmitEdit()
         console.log(isValid)
         if (isValid) {
-            contractorForm.reset()
             router.push({
                 path: `/contractor/${contractorId.value}`,
             })
@@ -37,7 +36,7 @@ contractorForm.setStep({
 
     },
     skipStepFn: async () => {
-        contractorForm.reset()
+
         router.push({
 
             path: `/contractor/${contractorId.value}`,
@@ -60,11 +59,12 @@ const fetchContractor = async () => {
     console.log(contractor.payment_percentage)
     for (let i = 0; i < contractor.services.length; i++) {
         // @ts-ignore
-
         contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
+
 
     }
 
+    console.log(contractorForm.contractorServicesForm)
 
     contractorForm.userForm.id = contractor.user.id
     contractorForm.userForm.first_name = contractor.user.first_name
@@ -74,7 +74,7 @@ const fetchContractor = async () => {
     contractorForm.userForm.phone_number = contractor.user.phone_number
     contractorForm.userForm.address = contractor.user.address
     contractorForm.userForm.room_id = contractor.user.room.id
-    contractorForm.userForm.city_id = contractor.user.status.id
+    contractorForm.userForm.city_id = contractor.user.city.id
     contractorForm.userForm.user_status_id = contractor.user.status.id
     contractorForm.dataUpdate.starting_date = contractor.starting_date
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
@@ -118,7 +118,7 @@ const onSubmitEdit = async () => {
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
             contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
-
+            console.log(contractorForm.contractorServicesForm)
         }
 
     }

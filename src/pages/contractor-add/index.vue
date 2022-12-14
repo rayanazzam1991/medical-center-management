@@ -1,7 +1,7 @@
 <script setup  lang="ts">
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { phoneExistsCheck } from '/@src/services/Others/User/userService';

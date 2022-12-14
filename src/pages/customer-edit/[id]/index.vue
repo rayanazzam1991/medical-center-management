@@ -1,7 +1,7 @@
 <script setup  lang="ts">
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { custom, z as zod } from 'zod';
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';

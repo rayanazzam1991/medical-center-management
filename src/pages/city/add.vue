@@ -4,8 +4,9 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
+const route = useRoute()
 
-const head =useHead({
+const head = useHead({
   title: 'Add City',
 })
 
@@ -13,5 +14,5 @@ const head =useHead({
 </script>
 
 <template>
-  <CityForm :formType="'Add'"/>
+  <CityForm :formType="'Add'" />
 </template>

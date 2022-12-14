@@ -1,7 +1,7 @@
 <script setup  lang="ts">
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { custom, z as zod } from 'zod';
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
@@ -109,7 +109,7 @@ const validationSchema = toFormValidator(zod
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ required_error: 'This field is required' })
+                        .number({ required_error: 'This field is required', invalid_type_error: 'This field is required' })
 
                 ),
         address:

@@ -28,6 +28,8 @@ const router = useRouter()
 const removeSocialMedia = async (socialMediaId: number) => {
 
   await deleteSocialMedia(socialMediaId)
+  await search(searchFilter.value)
+
   deleteSocialMediaPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
