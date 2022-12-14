@@ -1,9 +1,7 @@
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import MyDropDown from "/@src/components/OurComponents/MyDropDown.vue"
-import { deleteUserStatus } from "/@src/composable/Others/UserStatus/deleteUserStatus"
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { deleteUserStatus, getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"

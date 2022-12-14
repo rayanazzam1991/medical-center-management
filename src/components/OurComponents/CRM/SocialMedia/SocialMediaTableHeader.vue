@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { defaultSocialMediaSearchFilter, SocialMediaConsts } from "/@src/models/CRM/SocialMedia/socialMedia"
 import { defaultPagination } from "/@src/utils/response"

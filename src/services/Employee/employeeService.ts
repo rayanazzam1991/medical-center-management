@@ -1,18 +1,15 @@
 import { addUser } from '../Others/User/userService'
-import {
-  defaultEmployee,
-  useEmployee,
-  defaultEmployeePersonalId,
-} from '/@src/stores/Employee/employeeStore'
+import { useEmployee } from '/@src/stores/Employee/employeeStore'
 import {
   CreateEmployee,
+  defaultEmployeePersonalId,
   EmployeeSearchFilter,
   Employee,
   UpdateEmployee,
-} from '/@src/utils/api/Employee'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { Media } from '/@src/utils/api/Others/Media'
-import { MediaConsts } from '/@src/utils/consts/media'
+  defaultEmployee
+} from '/@src/models/Employee/employee'
+import { CreateUpdateUser } from '/@src/models/Others/User/user'
+import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 
 export async function addEmployee(

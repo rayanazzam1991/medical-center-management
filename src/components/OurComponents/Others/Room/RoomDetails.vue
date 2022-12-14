@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
-import { getRoom } from "/@src/composable/Others/Room/getRoom"
+import { getRoom } from "/@src/services/Others/Room/roomSevice"
 import { defaultRoom } from "/@src/models/Others/Room/room"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-
+import { RoomConsts } from "/@src/models/Others/Room/room"
 
 const route = useRoute()
 const router = useRouter()

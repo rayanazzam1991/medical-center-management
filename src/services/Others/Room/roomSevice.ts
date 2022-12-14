@@ -1,7 +1,6 @@
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
-import { Room, RoomSearchFilter } from '/@src/utils/api/Others/Room'
+import { Room, RoomSearchFilter, CreateUpdateRoom } from '/@src/models/Others/Room/room'
 import { Pagination } from '/@src/utils/response'
-import { CreateUpdateRoom } from '/@src/utils/api/Others/Room'
 
 export async function addRoom(roomData: CreateUpdateRoom) {
   const room = useRoom()

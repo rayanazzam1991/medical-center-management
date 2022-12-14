@@ -2,7 +2,6 @@
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import VTag from '/@src/components/base/tags/VTag.vue'
-
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultNationalitySearchFilter, NationalitySearchFilter, NationalityConsts } from '/@src/models/Others/Nationality/nationality'
@@ -133,8 +132,9 @@ const columns = {
   <VFlexTableWrapper :columns="columns" :data="nationalitiesList" @update:sort="citySort">
 
     <VFlexTable v-if="nationalitiesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
-    <VFlexPagination v-if="(nationalitiesList.length != 0  && paginationVar.max_page != 1)" :current-page="paginationVar.page" class="mt-6"
-      :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3" no-router
+    <VFlexPagination v-if="(nationalitiesList.length != 0 && paginationVar.max_page != 1)"
+      :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
+      :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getNationalitiesPerPage" />
     <h6 v-if="nationalitiesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
         ?

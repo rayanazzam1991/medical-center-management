@@ -1,5 +1,5 @@
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
-import { Department, SearchFilter } from '/@src/utils/api/Others/Department'
+import { Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
 import { Pagination } from '/@src/utils/response'
 
 export async function addDepartment(departmentData: Department) {
@@ -21,7 +21,7 @@ export async function deleteDepartment(departmentId: number) {
   const department = useDepartment()
   await department.deleteDepartmentStore(departmentId)
 }
-export async function getDepartmentsList(searchFilter: SearchFilter) {
+export async function getDepartmentsList(searchFilter: DepartmentSearchFilter) {
   const department = useDepartment()
   await department.getDepartmentsStore(searchFilter)
 

@@ -1,10 +1,8 @@
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
-import { getEmployee } from "/@src/composable/Employee/getEmployee"
-import { getPersonalId } from "/@src/composable/Employee/getPersonalId"
-import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { getEmployee, getPersonalId } from "/@src/services/Employee/employeeService"
+import { changeUserStatus } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { Employee, defaultEmployee, defaultEmployeePersonalId } from "/@src/models/Employee/employee"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"

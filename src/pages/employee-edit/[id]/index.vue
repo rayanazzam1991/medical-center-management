@@ -1,14 +1,12 @@
 <script setup  lang="ts">
-
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import { custom, z as zod } from 'zod';
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm } from 'vee-validate';
-import { getEmployee } from '/@src/composable/Employee/getEmployee';
-import { updateEmployee } from '/@src/composable/Employee/updateEmployee';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { getEmployee, updateEmployee } from '/@src/services/Employee/employeeService';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
 import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';

@@ -1,7 +1,5 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
-import { addPersonalId } from '/@src/composable/Employee/addPersonalId';
-import { deletePersonalId } from '/@src/composable/Employee/deletePersonalId';
-import { getPersonalId } from '/@src/composable/Employee/getPersonalId';
+import { addPersonalId, deletePersonalId, getPersonalId } from '/@src/services/Employee/employeeService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultEmployeePersonalId } from '/@src/models/Employee/employee';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';

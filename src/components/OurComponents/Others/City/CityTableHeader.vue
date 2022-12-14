@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { defaultCitySearchFilter, CityConsts } from "/@src/models/Others/City/city"
 import { defaultPagination } from "/@src/utils/response"

@@ -1,6 +1,4 @@
-
 <script lang="ts">
-
 import { defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { defaultPagination } from "/@src/utils/response"
 

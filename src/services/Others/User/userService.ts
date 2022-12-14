@@ -1,7 +1,5 @@
 import { useUser } from '/@src/stores/Others/User/userStore'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { ChangeUserStatus } from '/@src/utils/api/Others/User'
-import { User, UserSearchFilter } from '/@src/utils/api/Others/User'
+import { CreateUpdateUser, ChangeUserStatus, User, UserSearchFilter } from '/@src/models/Others/User/user'
 import { Pagination } from '/@src/utils/response'
 
 export async function addUser(userData: CreateUpdateUser) {

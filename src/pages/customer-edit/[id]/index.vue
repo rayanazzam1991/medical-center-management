@@ -4,8 +4,8 @@ import { useHead } from '@vueuse/head';
 import { useForm } from 'vee-validate';
 import { custom, z as zod } from 'zod';
 import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
 import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
@@ -442,9 +442,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />

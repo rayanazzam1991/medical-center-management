@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
-import { getDepartment } from '/@src/composable/Others/Department/getDepartment'
+import { getDepartment } from '/@src/services/Others/Department/departmentService'
 import { defaultDepartment } from '/@src/models/Others/Department/department'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { DepartmentConsts } from '/@src/models/Others/Department/department'

@@ -3,9 +3,11 @@ import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head'
 import { useForm, ErrorMessage } from 'vee-validate';
 import { z as zod } from 'zod'
-import { addDepartment } from '/@src/composable/Others/Department/addDepartment';
-import { editDepartment } from '/@src/composable/Others/Department/editDepartment';
-import { getDepartment } from '/@src/composable/Others/Department/getDepartment';
+import {
+    addDepartment,
+    editDepartment,
+    getDepartment
+} from '/@src/services/Others/Department/departmentService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultDepartment, Department, DepartmentConsts } from '/@src/models/Others/Department/department';
 import { useViewWrapper } from '/@src/stores/viewWrapper';

@@ -1,7 +1,4 @@
-
-
 <script lang="ts">
-
 import { defaultDepartmentSearchFilter, DepartmentConsts } from "/@src/models/Others/Department/department"
 import { defaultPagination } from "/@src/utils/response"
 

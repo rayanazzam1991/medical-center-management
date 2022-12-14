@@ -1,6 +1,4 @@
-
 <script lang="ts">
-
 import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
 import { defaultPagination } from "/@src/utils/response"

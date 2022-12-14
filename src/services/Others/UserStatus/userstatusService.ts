@@ -1,5 +1,5 @@
 import { useUserStatus } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { UserStatus, UserStatusSearchFilter } from '/@src/utils/api/Others/UserStatus'
+import { UserStatus, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { Pagination } from '/@src/utils/response'
 
 export async function addUserStatus(userstatusData: UserStatus) {

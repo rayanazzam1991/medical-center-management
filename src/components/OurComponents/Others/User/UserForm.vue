@@ -3,11 +3,9 @@ import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { addUser } from '/@src/composable/Others/User/addUser';
-import { editUser } from '/@src/composable/Others/User/editUser';
-import { getUser } from '/@src/composable/Others/User/getUser';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { addUser, getUser, editUser } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCity, City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { defaultRoom, Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
