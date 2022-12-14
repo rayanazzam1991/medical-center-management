@@ -19,7 +19,7 @@ export async function deleteCityApi(
   api: AxiosInstance,
   cityId: number
 ): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.delete(`city${cityId}`)
+  const { data: response, headers } = await api.delete(`city/${cityId}`)
 
   return { response }
 }

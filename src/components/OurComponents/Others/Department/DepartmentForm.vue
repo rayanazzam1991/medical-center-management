@@ -82,7 +82,7 @@ export default defineComponent({
             notif.dismissAll();
             notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was added successfully`);
             // @ts-ignore
-            notif.success(` ${viewWrapper.pageTitle} ${roomData.number} was added successfully`);
+            notif.success(` ${viewWrapper.pageTitle} ${departmentData.name} was added successfully`);
             router.push({ path: `/department/${departmentData.id}` });
         });
         const onSubmitEdit = async () => {
