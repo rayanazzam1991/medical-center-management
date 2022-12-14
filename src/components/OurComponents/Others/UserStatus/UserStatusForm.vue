@@ -44,7 +44,6 @@ export default defineComponent({
         const getCurrentUserStatus = async () => {
             if (userstatusId.value === 0) {
                 currentUserStatus.value.name = ''
-                currentUserStatus.value.status = 0
                 return
             }
             const userstatus = await getUserStatus(userstatusId.value)

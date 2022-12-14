@@ -106,20 +106,20 @@ const fetchEmployee = async () => {
 
 }
 
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const nationalities2 = ref<Nationality[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
+const nationalitiesList = ref<Nationality[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
+    citiesList.value = cities
     const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
     const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-    nationalities2.value = nationalities
+    nationalitiesList.value = nationalities
     await fetchEmployee()
 
 })
@@ -405,7 +405,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -425,7 +425,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -445,9 +445,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />
@@ -509,7 +510,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
                                             <VOption value="">Nationality</VOption>
-                                            <VOption v-for="nationality in nationalities2" :key="nationality.id"
+                                            <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
                                                 :value="nationality.id">{{ nationality.name }}
                                             </VOption>
                                         </VSelect>

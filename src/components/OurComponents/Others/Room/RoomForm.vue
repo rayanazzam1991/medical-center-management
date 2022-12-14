@@ -62,10 +62,10 @@ export default defineComponent({
             currentRoom.value = room != undefined ? room : defaultRoom
 
         }
-        const departments2 = ref<Department[]>([])
+        const departmentsList = ref<Department[]>([])
         onMounted(async () => {
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
-            departments2.value = departments
+            departmentsList.value = departments
         })
         onMounted(() => {
             getCurrentRoom()
@@ -170,7 +170,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departments2 }
+        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList }
     },
 
 
@@ -229,7 +229,7 @@ export default defineComponent({
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
                                             <VOption value="">Department</VOption>
-                                            <VOption v-for="department in departments2" :key="department.id"
+                                            <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
                                         </VSelect>
