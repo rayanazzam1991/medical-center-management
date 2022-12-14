@@ -1,13 +1,9 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
+<script lang="ts">
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { City } from '/@src/utils/api/Others/City'
-import { Room } from '/@src/utils/api/Others/Room'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
+import { defaultContractorSearchFilter } from '/@src/models/Contractor/contractor'
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 
 
 export default defineComponent({
@@ -95,22 +91,19 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        const cities2 = ref<City[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        const rooms2 = ref<Room[]>([])
+        const statusesList = ref<UserStatus[]>([])
+        const roomsList = ref<Room[]>([])
 
         onMounted(async () => {
-            const { cities } = await getCitiesList(defaultCitySearchFilter)
-            cities2.value = cities
             const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-            rooms2.value = rooms
+            roomsList.value = rooms
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
+            statusesList.value = userstatuses
 
         })
 
 
-        return { search, resetFilter, rooms2, cities2, search_filter_popup, statuses2, searchName, searchGender, searchPhoneNumber, searchRoom, searchStatus, searchDateBetween, searchFrom, searchTo, searchComplete }
+        return { search, resetFilter, roomsList, search_filter_popup, statusesList, searchName, searchGender, searchPhoneNumber, searchRoom, searchStatus, searchDateBetween, searchFrom, searchTo, searchComplete }
 
 
 
@@ -153,7 +146,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchRoom" class="is-rounded">
                             <VOption value="">Room Number</VOption>
-                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{ room.number }}
+                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{ room.number }}
                             </VOption>
                         </VSelect>
                     </VControl>
@@ -162,7 +155,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchStatus" class="is-rounded">
                             <VOption value="">Status</VOption>
-                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
                             </VOption>

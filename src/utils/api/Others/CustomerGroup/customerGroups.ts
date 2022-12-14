@@ -1,19 +1,7 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
+import { AxiosInstance } from "axios"
+import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
-export interface CustomerGroup {
-  id?: number
-  name: string
-  status: number
-}
-export interface CustomerGroupSearchFilter {
-  name?: string
-  status?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
 
 export async function deleteCustomerGroupApi(
   api: AxiosInstance,

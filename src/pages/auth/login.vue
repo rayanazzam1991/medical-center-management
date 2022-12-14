@@ -6,8 +6,8 @@ import {useUserSession} from '/@src/stores/userSession'
 import {useNotyf} from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
 import {signIn} from "/@src/composable/Others/User/Auth/signIn";
-import {SignInRequest} from "/@src/utils/api/Others/User/auth";
-import {defaultSignInRequest, useAuth} from "/@src/stores/Others/User/authStore";
+import { defaultSignInRequest } from '/@src/models/Others/User/auth'
+import { useAuth } from '/@src/stores/Others/User/authStore'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()

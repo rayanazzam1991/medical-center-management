@@ -1,8 +1,6 @@
+
 <script lang="ts">
-import { ServiceSearchFilter } from '/@src/utils/api/Others/Service'
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { boolean } from 'zod'
+import { defaultServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 
 export default defineComponent({
     props: {

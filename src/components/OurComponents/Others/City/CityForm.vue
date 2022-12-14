@@ -1,17 +1,12 @@
 <script  lang="ts">
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addCity } from '/@src/composable/Others/City/addCity'
-import { editCity } from '/@src/composable/Others/City/editCity'
-import { City } from '/@src/utils/api/Others/City'
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { getCity } from '/@src/composable/Others/City/getCity'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { CityConsts } from '/@src/utils/consts/city';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod'
+import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
+import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 export default defineComponent({

@@ -1,13 +1,11 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import VTag from '/@src/components/base/tags/VTag.vue';
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue';
-import { getContractorsList } from '/@src/composable/Contractor/getContractorsList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultContractorSearchFilter } from '/@src/stores/Contractor/contractorStore';
+import { defaultContractorSearchFilter, ContractorSearchFilter } from '/@src/models/Contractor/contractor';
+import { CustomerConsts } from '/@src/models/CRM/Customer/customer';
+import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { ContractorSearchFilter } from '/@src/utils/api/Contractor';
-import { CustomerConsts } from '/@src/utils/consts/customer';
 import { defaultPagination } from '/@src/utils/response';
 
 

@@ -1,23 +1,21 @@
-<script setup  lang="ts">import { toFormValidator } from '@vee-validate/zod';
+<script setup  lang="ts">
+import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { addContractor } from '/@src/composable/Contractor/addContractor';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
+import { useForm } from 'vee-validate';
+import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
 import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCreateContractor } from '/@src/models/Contractor/contractor';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { addContractor } from '/@src/services/Contractor/contractorService';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultCreateContractor } from '/@src/stores/Contractor/contractorStore';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { z as zod } from 'zod';
 
 
 
@@ -59,17 +57,17 @@ const getCurrentContractor = () => {
 
 
 }
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
+    citiesList.value = cities
     const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
 
 })
 onMounted(() => {
@@ -194,7 +192,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     const { result } = await phoneExistsCheck(userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
-        
+
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
         contractorForm.data.payment_percentage = customerData.payment_percentage
@@ -353,7 +351,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -373,7 +371,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -393,9 +391,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />

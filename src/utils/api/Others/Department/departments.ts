@@ -1,18 +1,6 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-
-export interface Department {
-  id?: number
-  name: string
-  status: number
-}
-export interface SearchFilter {
-  name?: string
-  status?: number
-  page?: number
-  order_by?: string
-  order?: string
-}
+import { AxiosInstance } from "axios"
+import { Department, DepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteDepartmentApi(
   api: AxiosInstance,
@@ -55,7 +43,7 @@ export async function getDepartmentApi(
 }
 export async function getDepartmentsApi(
   api: AxiosInstance,
-  searchFilter: SearchFilter
+  searchFilter: DepartmentSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
   const { data: response, headers } = await api.get('department/getDepartmentsList', {
     params: searchFilter,

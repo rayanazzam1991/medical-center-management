@@ -1,8 +1,7 @@
+
 <script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
+import { defaultCitySearchFilter, CityConsts } from "/@src/models/Others/City/city"
+import { defaultPagination } from "/@src/utils/response"
 
 
 export default defineComponent({

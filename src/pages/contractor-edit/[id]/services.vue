@@ -1,12 +1,10 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { updateContractor } from '/@src/composable/Contractor/updateContractor';
-import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { getContractor, updateContractor } from '/@src/services/Contractor/contractorService';
+import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Service } from '/@src/utils/api/Others/Service';
 
 
 
@@ -48,7 +46,7 @@ contractorForm.setStep({
 
 })
 const pageTitle = 'Step 3: Contractor Services'
-const services2 = ref<Service[]>([])
+const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
     checked: boolean
@@ -91,21 +89,21 @@ const fetchContractor = async () => {
 const servicesChecked = ref<ServicesChecked[]>([])
 onMounted(async () => {
     const { services } = await getServicesList(defaultServiceSearchFilter)
-    services2.value = services
+    servicesList.value = services
     if (contractorForm.dataUpdate.id != contractorId.value) {
 
         await fetchContractor()
     }
 
 
-    for (let index = 0; index < services2.value.length; index++) {
-        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == services2.value[index].id)
+    for (let index = 0; index < servicesList.value.length; index++) {
+        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == servicesList.value[index].id)
         if (service) {
 
-            servicesChecked.value.push({ service: services2.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
         }
         else {
-            servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0, contractor_service_amount: 0 })
         }
 
     }

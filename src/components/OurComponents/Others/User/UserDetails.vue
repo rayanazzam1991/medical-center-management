@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { usePanels } from '/@src/stores/panels'
-import { useHead } from '@vueuse/head'
-import { defaultChangeStatusUser, defaultUser } from '/@src/stores/Others/User/userStore'
-import { ChangeUserStatus, User } from '/@src/utils/api/Others/User';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus'
-import { getUser } from '/@src/composable/Others/User/getUser';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useNotyf } from '/@src/composable/useNotyf';
+import { useHead } from "@vueuse/head"
+import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
+import { getUser } from "/@src/composable/Others/User/getUser"
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { defaultChangeStatusUser, defaultUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 const notif = useNotyf()
 const route = useRoute()

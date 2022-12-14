@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { usePanels } from '/@src/stores/panels'
-import { useHead } from '@vueuse/head'
+import { useHead } from "@vueuse/head"
+import { getRoom } from "/@src/composable/Others/Room/getRoom"
+import { defaultRoom } from "/@src/models/Others/Room/room"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
-import { defaultRoom } from '/@src/stores/Others/Room/roomStore'
-import { Room } from '/@src/utils/api/Others/Room';
-import { RoomConsts } from '/@src/utils/consts/room';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-
-import { getRoom } from '/@src/composable/Others/Room/getRoom';
 
 const route = useRoute()
 const router = useRouter()

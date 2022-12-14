@@ -1,7 +1,7 @@
+
 <script lang="ts">
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
-import { CustomerGroupConsts } from '/@src/utils/consts/customerGroup'
-import { defaultPagination } from '/@src/utils/response'
+import { defaultCustomerGroupSearchFilter, CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { defaultPagination } from "/@src/utils/response"
 
 
 
@@ -215,7 +215,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opaCustomerGroup: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

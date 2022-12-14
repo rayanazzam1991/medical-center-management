@@ -1,10 +1,9 @@
-<script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
 
+<script lang="ts">
+
+import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
+import { defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {
@@ -52,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, CityConsts }
+        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, NationalityConsts }
     },
 
 
@@ -80,8 +79,8 @@ export default defineComponent({
                                 <VControl>
                                     <VSelect v-model="searchStatus" class="is-rounded">
                                         <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
+                                        <VOption value="0">{{ NationalityConsts.showStatusName(0) }}</VOption>
+                                        <VOption value="1">{{ NationalityConsts.showStatusName(1) }}</VOption>
                                     </VSelect>
                                 </VControl>
                             </VField>

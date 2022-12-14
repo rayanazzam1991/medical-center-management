@@ -1,17 +1,14 @@
 <script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addDepartment } from '/@src/composable/Others/Department/addDepartment'
-import { editDepartment } from '/@src/composable/Others/Department/editDepartment'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment } from '/@src/stores/Others/Department/departmentStore'
-import { getDepartment } from '/@src/composable/Others/Department/getDepartment'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { DepartmentConsts } from '/@src/utils/consts/department';
-import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { ErrorMessage, useForm } from 'vee-validate';
+import { useHead } from '@vueuse/head'
+import { useForm, ErrorMessage } from 'vee-validate';
 import { z as zod } from 'zod'
+import { addDepartment } from '/@src/composable/Others/Department/addDepartment';
+import { editDepartment } from '/@src/composable/Others/Department/editDepartment';
+import { getDepartment } from '/@src/composable/Others/Department/getDepartment';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultDepartment, Department, DepartmentConsts } from '/@src/models/Others/Department/department';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 export default defineComponent({
     props: {

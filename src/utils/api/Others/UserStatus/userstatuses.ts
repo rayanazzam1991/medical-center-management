@@ -1,18 +1,7 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
+import { AxiosInstance } from "axios"
+import { UserStatus, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
-export interface UserStatus {
-  id?: number
-  name: string
-}
-export interface UserStatusSearchFilter {
-  name?: string
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-  per_page?: undefined
-}
 
 export async function deleteUserStatusApi(
   api: AxiosInstance,

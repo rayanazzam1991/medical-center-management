@@ -1,51 +1,8 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseSingle, CustomResponseCollection } from '../../response'
-import { User, CreateUpdateUser } from '../Others/User'
+import { AxiosInstance } from "axios"
+import { CustomResponseSingle, CustomResponseCollection } from "../../response"
+import { CreateContractor, UpdateContractor, CreateUpdateServicesHelper, ContractorSearchFilter } from "/@src/models/Contractor/contractor"
 
-export interface Contractor {
-  id?: number
-  starting_date: string
-  payment_percentage: number
-  user: User
-  services: Array<CreateUpdateServicesHelper>
-  is_completed?: boolean
-}
-export interface CreateContractor {
-  id?: number
-  starting_date?: string
-  payment_percentage?: number
-  user: CreateUpdateUser
-  services: Array<CreateUpdateServicesHelper>
-  is_completed?: boolean
-}
-export interface UpdateContractor {
-  id?: number
-  starting_date?: string
-  payment_percentage?: number
-  user: CreateUpdateUser
-  services: Array<CreateUpdateServicesHelper>
-  is_completed?: boolean
-}
-export interface CreateUpdateServicesHelper {
-  service_id: number
-  price: number
-  contractor_service_amount: number
-}
-export interface ContractorSearchFilter {
-  name?: string
-  phone_number?: number
-  gender?: string
-  date_between?: string
-  from?: string
-  to?: string
-  room_id?: number
-  is_completed?: boolean
-  user_status_id?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+
 
 export async function addContractorApi(
   api: AxiosInstance,

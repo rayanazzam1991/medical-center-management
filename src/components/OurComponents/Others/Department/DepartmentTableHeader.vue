@@ -1,9 +1,9 @@
-<script lang="ts">
-import { DepartmentConsts } from '/@src/utils/consts/department'
-import { SearchFilter } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
 
+
+<script lang="ts">
+
+import { defaultDepartmentSearchFilter, DepartmentConsts } from "/@src/models/Others/Department/department"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {
