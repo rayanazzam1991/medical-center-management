@@ -1,13 +1,10 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
-import { deleteCustomerGroup } from '/@src/composable/Others/CustomerGroup/deleteCustomerGroup';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
+import { defaultCustomerGroupSearchFilter, CustomerGroupSearchFilter, CustomerGroupConsts } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { getCustomerGroupsList, deleteCustomerGroup } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { CustomerGroupSearchFilter } from '/@src/utils/api/Others/CustomerGroup';
-import { CustomerGroupConsts } from '/@src/utils/consts/customerGroup';
 import { defaultPagination } from '/@src/utils/response';
 
 

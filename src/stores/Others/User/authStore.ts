@@ -1,12 +1,9 @@
-import {acceptHMRUpdate, defineStore} from "pinia";
-import {signIn, SignInRequest} from "/@src/utils/api/Others/User/auth";
-import {useApi} from "/@src/composable/useApi";
-import {User} from "/@src/utils/api/Others/User";
+import { defineStore, acceptHMRUpdate } from "pinia";
+import { useApi } from "/@src/composable/useApi";
+import { SignInRequest } from "/@src/models/Others/User/auth";
+import { User } from "/@src/models/Others/User/user";
+import { signIn } from "/@src/utils/api/Others/User/auth";
 
-export const defaultSignInRequest: SignInRequest = {
-  phone_number: undefined,
-  password: undefined
-}
 export const useAuth = defineStore('userAuth', () => {
 
   const api = useApi();

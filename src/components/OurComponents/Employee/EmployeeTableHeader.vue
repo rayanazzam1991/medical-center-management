@@ -1,15 +1,12 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultEmployeeSearchFilter } from '/@src/stores/Employee/employeeStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { EmployeeSearchFilter } from '/@src/utils/api/Employee'
-import { City } from '/@src/utils/api/Others/City'
-import { Nationality } from '/@src/utils/api/Others/Nationality'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
+
+<script lang="ts">
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { defaultEmployeeSearchFilter, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { City } from "/@src/models/Others/City/city"
+import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
+import { defaultPagination } from "/@src/utils/response"
 
 
 export default defineComponent({

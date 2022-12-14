@@ -1,32 +1,27 @@
 <script setup  lang="ts">
+
+
+import VRadio from '/@src/components/base/form/VRadio.vue';
+
+import { custom, z as zod } from 'zod';
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '../../composable/Others/User/phoneExistsCheck';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateEmployee, defaultUpdateEmployee } from '/@src/stores/Employee/employeeStore';
+import { useForm } from 'vee-validate';
 import { addEmployee } from '/@src/composable/Employee/addEmployee';
-import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList';
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore';
-import { Nationality } from '/@src/utils/api/Others/Nationality';
+import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
+import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCreateEmployee } from '/@src/models/Employee/employee';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
-
-
-
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 const viewWrapper = useViewWrapper()

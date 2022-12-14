@@ -1,10 +1,10 @@
+
 <script setup  lang="ts">
-import { file } from '@babel/types';
-import { useHead } from '@vueuse/head';
-import { addProfilePicture } from '/@src/composable/CRM/Customer/addProfilePicture';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { useHead } from "@vueuse/head"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { addProfilePicture } from "/@src/services/CRM/Customer/customerService"
+import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 
 const viewWrapper = useViewWrapper()

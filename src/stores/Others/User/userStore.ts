@@ -1,70 +1,9 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
+import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi } from "/@src/utils/api/Others/User"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
-import {
-  UserSearchFilter,
-  User,
-  CreateUpdateUser,
-  getUsersApi,
-  deleteUserApi,
-  addUserApi,
-  editUserApi,
-  getUserApi,
-  phoneExistsCheckApi,
-  ChangeUserStatus,
-  changeUserStatusApi,
-} from '/@src/utils/api/Others/User'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-import { defaultCity } from '../City/cityStore'
-import { defaultUserStatus } from '../UserStatus/userStatusStore'
-import { defaultRoom } from '../Room/roomStore'
-import { defaultDepartment } from '../Department/departmentStore'
-
-export const defaultCreateUpdateUser: CreateUpdateUser = {
-  id: undefined,
-  first_name: '',
-  last_name: '',
-  gender: '',
-  birth_date: '',
-  phone_number: '',
-  address: '',
-  room_id: undefined,
-  city_id: 0,
-  user_status_id: 0,
-  password: '0000000000',
-}
-export const defaultChangeStatusUser: ChangeUserStatus = {
-  id: undefined,
-  user_status_id: 0,
-}
-export const defaultUser: User = {
-  id: 0,
-  first_name: '',
-  last_name: '',
-  gender: '',
-  birth_date: '',
-  phone_number: '',
-  address: '',
-  room: defaultRoom,
-  city: defaultCity,
-  status: defaultUserStatus,
-  password: '',
-  token: undefined,
-}
-
-export const defaultUserSearchFilter: UserSearchFilter = {
-  name: undefined,
-  gender: undefined,
-  phone_number: undefined,
-  room_id: undefined,
-  city_id: undefined,
-  user_status_id: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
 
 export const useUser = defineStore('user', () => {
   const api = useApi()

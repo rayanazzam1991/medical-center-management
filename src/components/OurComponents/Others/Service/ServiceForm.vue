@@ -1,15 +1,11 @@
 <script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
-import { useHead } from '@vueuse/head'
-import { ErrorMessage, useForm } from 'vee-validate'
-import { addService } from '/@src/composable/Others/Services/addService'
-import { editService } from '/@src/composable/Others/Services/editService'
-import { getService } from '/@src/composable/Others/Services/getService'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultService } from '/@src/stores/Others/Service/serviceStore'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Service } from '/@src/utils/api/Others/Service'
-import { ServiceConsts } from '/@src/utils/consts/service'
+import { useHead } from '@vueuse/head';
+import { useForm, ErrorMessage } from 'vee-validate';
 import { z as zod } from 'zod'
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultService, Service, ServiceConsts } from '/@src/models/Others/Service/service';
+import { getService, addService, editService } from '/@src/services/Others/Service/serviceService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 
@@ -314,7 +310,7 @@ export default defineComponent({
                                 left: 0;
                                 height: 100%;
                                 width: 100%;
-                                opaservice: 0;
+                                opacity: 0;
                                 cursor: pointer;
 
                                 &:checked {

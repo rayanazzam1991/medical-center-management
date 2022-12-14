@@ -1,37 +1,9 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
+import { deleteServiceApi, getServiceApi, addServiceApi, editServiceApi, getServicesApi } from "/@src/utils/api/Others/Service"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
-import {
-  ServiceSearchFilter,
-  Service,
-  addServiceApi,
-  deleteServiceApi,
-  editServiceApi,
-  getServiceApi,
-  getServicesApi,
-} from '/@src/utils/api/Others/Service'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultService: Service = {
-  id: 0,
-  name: '',
-  status: 1,
-  description: '',
-  duration_minutes: undefined,
-  service_price: undefined,
-}
-
-export const defaultServiceSearchFilter: ServiceSearchFilter = {
-  name: undefined,
-  status: undefined,
-  duration_minutes: undefined,
-  service_price: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
 
 export const useService = defineStore('service', () => {
   const api = useApi()

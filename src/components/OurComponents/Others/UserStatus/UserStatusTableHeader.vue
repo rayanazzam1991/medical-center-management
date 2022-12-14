@@ -1,8 +1,8 @@
-<script lang="ts">
-import { UserStatusSearchFilter } from '/@src/utils/api/Others/UserStatus'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
 
+<script lang="ts">
+
+import { defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {

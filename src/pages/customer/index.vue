@@ -1,24 +1,13 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-
-import { getUsersList } from '/@src/composable/Others/User/getUsersList'
-import { deleteUser } from '/@src/composable/Others/User/deleteUser'
-
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { getCustomersList } from '/@src/composable/CRM/Customer/getCustomersList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { CustomerConsts } from '/@src/utils/consts/customer'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultCustomerSearchFilter, CustomerSearchFilter, CustomerConsts } from '/@src/models/CRM/Customer/customer'
+import { getCustomersList } from '/@src/services/CRM/Customer/customerService'
+import { defaultPagination } from '/@src/utils/response'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({

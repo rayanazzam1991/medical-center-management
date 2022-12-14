@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { usePanels } from '/@src/stores/panels'
 import { useHead } from '@vueuse/head'
-
-import { defaultCity } from '/@src/stores/Others/City/cityStore'
-import { City } from '/@src/utils/api/Others/City';
-import { CityConsts } from '/@src/utils/consts/city';
+import { defaultCity } from '/@src/models/Others/City/city'
+import { getCity } from '/@src/services/Others/City/cityService'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-
-import { getCity } from '/@src/composable/Others/City/getCity';
-
+import { CityConsts } from '/@src/models/Others/City/city'
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')

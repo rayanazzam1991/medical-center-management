@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import { getService } from '/@src/composable/Others/Services/getService';
-
-import { defaultService } from '/@src/stores/Others/Service/serviceStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { CityConsts } from '/@src/utils/consts/city';
-import { ServiceConsts } from '/@src/utils/consts/service';
-
+import { defaultService } from '/@src/models/Others/Service/service'
+import { getService } from '/@src/services/Others/Service/serviceService'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { ServiceConsts } from '/@src/models/Others/Service/service'
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -67,8 +64,8 @@ const toEdit = () => {
                         <div class="column is-12">
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
                             <span>
-                                <VTag :color="currentService.status === CityConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ CityConsts.showStatusName(currentService.status) }}</VTag>
+                                <VTag :color="currentService.status === ServiceConsts.INACTIVE ? 'danger' : 'success'">
+                                    {{ ServiceConsts.showStatusName(currentService.status) }}</VTag>
                             </span>
                         </div>
                     </div>

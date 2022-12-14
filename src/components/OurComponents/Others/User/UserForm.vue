@@ -1,29 +1,20 @@
 <script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addUser } from '/@src/composable/Others/User/addUser'
-import { editUser } from '/@src/composable/Others/User/editUser'
-import { User } from '/@src/utils/api/Others/User'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { getUser } from '/@src/composable/Others/User/getUser'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
-import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
+import { useHead } from '@vueuse/head';
+import { ErrorMessage, useForm } from 'vee-validate';
+import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
+import { addUser } from '/@src/composable/Others/User/addUser';
+import { editUser } from '/@src/composable/Others/User/editUser';
+import { getUser } from '/@src/composable/Others/User/getUser';
 import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCity, City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { defaultRoom, Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultUser, defaultCreateUpdateUser, User } from '/@src/models/Others/User/user';
+import { defaultUserStatus, UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 export default defineComponent({

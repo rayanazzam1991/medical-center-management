@@ -1,5 +1,5 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
-import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
+import { addPersonalId } from '/@src/composable/Employee/addPersonalId';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';

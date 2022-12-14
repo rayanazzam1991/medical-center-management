@@ -1,23 +1,9 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { CustomerGroup, CustomerGroupSearchFilter, deleteCustomerGroupApi, getCustomerGroupApi, addCustomerGroupApi, editCustomerGroupApi, getCustomerGroupsApi } from "/@src/utils/api/Others/CustomerGroup"
+import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { deleteCustomerGroupApi, getCustomerGroupApi, addCustomerGroupApi, editCustomerGroupApi, getCustomerGroupsApi } from "/@src/utils/api/Others/CustomerGroup"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
- 
- export const defaultCustomerGroup: CustomerGroup = {
-  id: 0,
-  name: '',
-  status: 1,
-}
-
-export const defaultCustomerGroupSearchFilter: CustomerGroupSearchFilter = {
-  name: undefined,
-  status: undefined,
-  page : undefined,
-  order : undefined,
-  order_by : undefined,
-  per_page : undefined
-}
 
 export const useCustomerGroup = defineStore('customerGroup', () => {
   const api = useApi()

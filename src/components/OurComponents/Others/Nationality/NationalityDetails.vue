@@ -1,15 +1,10 @@
+
 <script setup lang="ts">
-import { usePanels } from '/@src/stores/panels'
-import { useHead } from '@vueuse/head'
-
-import { defaultNationality } from '/@src/stores/Others/Nationality/nationalityStore';
-import { Nationality } from '/@src/utils/api/Others/Nationality';
-
-import { NationalityConsts } from '/@src/utils/consts/nationality';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-
-import { getNationality } from '/@src/composable/Others/Nationality/getNationality';
-
+import { useHead } from "@vueuse/head"
+import { defaultNationality } from "/@src/models/Others/Nationality/nationality"
+import { getNationality } from "/@src/services/Others/Nationality/nationalityService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')

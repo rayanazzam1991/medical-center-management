@@ -1,15 +1,8 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../../Others/User/userStore'
-import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
-import { defaultCreateCustomer, defaultCustomerProfilePic, defaultUpdateCustomer } from './customerStore'
-import {
-  CreateCustomer,
-  CreateUpdateCustomerSocialMediaHelper,
-  UpdateCustomer,
-} from '/@src/utils/api/CRM/Customer'
-import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
-import { Media } from '/@src/utils/api/Others/Media'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { CreateCustomer, defaultCreateCustomer, UpdateCustomer, defaultUpdateCustomer, defaultCustomerProfilePic, CreateUpdateCustomerSocialMediaHelper } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo, defaultMedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { Media } from "/@src/models/Others/Media/media"
+import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 interface CustomerFormStepOptions {
   number: number

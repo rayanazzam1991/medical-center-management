@@ -1,32 +1,7 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-import { Department } from '../Department'
+import { AxiosInstance } from "axios"
+import { CreateUpdateRoom, RoomSearchFilter } from "/@src/models/Others/Room/room"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
-export interface Room {
-  id?: number
-  number: number
-  floor: number
-  department?: Department
-  status: number
-}
-
-export interface CreateUpdateRoom {
-  id?: number
-  number: number
-  floor: number
-  department_id?: number
-  status: number
-}
-export interface RoomSearchFilter {
-  number?: number
-  floor?: number
-  department_id?: number
-  status?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
 
 export async function deleteRoomApi(
   api: AxiosInstance,

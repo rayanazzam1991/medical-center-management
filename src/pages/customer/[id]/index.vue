@@ -1,22 +1,15 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { capitalize } from 'vue';
-import { routerKey, RouterLink } from 'vue-router';
-import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { getProfilePicture } from '/@src/composable/CRM/Customer/getProfilePicture';
-import { defaultCustomer, defaultCustomerProfilePic } from '/@src/stores/CRM/Customer/customerStore';
-import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { usePanels } from '/@src/stores/panels';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Customer } from '/@src/utils/api/CRM/Customer';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo';
-import { onceImageErrored } from '/@src/utils/via-placeholder'
 
+<script setup lang="ts">
+import { useHead } from "@vueuse/head"
+import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
+import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { Customer, defaultCustomer, defaultCustomerProfilePic } from "/@src/models/CRM/Customer/customer"
+import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getCustomer, getProfilePicture } from "/@src/services/CRM/Customer/customerService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -45,10 +38,10 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
-const statuses2 = ref<UserStatus[]>([])
+const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
 })
 onMounted(async () => {
     await getCurrentCustomer()
@@ -440,7 +433,7 @@ const getCurrentProfilePic = async () => {
                                     <VSelect v-if="currentCustomer.user.status"
                                         v-model="currentCustomer.user.status.id">
                                         <VOption value="">User Status</VOption>
-                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                                 status.name
                                         }}
                                         </VOption>

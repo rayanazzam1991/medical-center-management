@@ -1,60 +1,8 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-import { CustomerGroup } from '../../Others/CustomerGroup'
-import { CreateUpdateUser, User } from '../../Others/User'
-import { MedicalInfo } from '../MedicalInfo'
-import { SocialMedia } from '../SocialMedia'
+import { AxiosInstance } from "axios"
+import { CreateCustomer, UpdateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { CustomResponseSingle, CustomResponseCollection } from "/@src/utils/response"
 
-export interface Customer {
-  id?: number
-  emergency_contact_name: string
-  emergency_contact_phone: string
-  user: User
-  medical_info: MedicalInfo
-  customer_group: CustomerGroup
-  social_medias: Array<CreateUpdateCustomerSocialMediaHelper>
-  is_completed?: boolean
-}
-export interface CreateCustomer {
-  id?: number
-  emergency_contact_name?: string
-  emergency_contact_phone?: string
-  user: CreateUpdateUser
-  medical_info_id?: number
-  customer_group_id?: number
-  social_medias: Array<CreateUpdateCustomerSocialMediaHelper>
-  is_completed?: boolean
-}
-export interface UpdateCustomer {
-  id?: number
-  emergency_contact_name?: string
-  emergency_contact_phone?: string
-  user: CreateUpdateUser
-  medical_info: MedicalInfo
-  customer_group_id?: number
-  social_medias: Array<CreateUpdateCustomerSocialMediaHelper>
-  is_completed?: boolean
-}
-export interface CreateUpdateCustomerSocialMediaHelper {
-  social_media_id: number
-  url: string
-}
-export interface CustomerSearchFilter {
-  name?: string
-  phone_number?: number
-  gender?: string
-  date_between?: string
-  from?: string
-  to?: string
-  city_id?: number
-  customer_group_id?: number
-  is_completed?: boolean
-  user_status_id?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
 
 export async function addCustomerApi(
   api: AxiosInstance,
