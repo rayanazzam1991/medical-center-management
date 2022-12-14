@@ -47,7 +47,7 @@ export async function addEmployeeApi(
   api: AxiosInstance,
   employee: CreateEmployee
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`employee/`, employee)
+  const { data: response, headers } = await api.post(`employee`, employee)
   return { response }
 }
 export async function updateEmployeeApi(
