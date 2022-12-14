@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { defaultNationality } from "/@src/models/Others/Nationality/nationality"

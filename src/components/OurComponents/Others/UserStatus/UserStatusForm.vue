@@ -2,9 +2,7 @@
 import { toFormValidator } from "@vee-validate/zod"
 import { useHead } from "@vueuse/head"
 import { useForm } from "vee-validate"
-import { addUserStatus } from "/@src/composable/Others/UserStatus/addUserStatus"
-import { editUserStatus } from "/@src/composable/Others/UserStatus/editUserStatus"
-import { getUserStatus } from "/@src/composable/Others/UserStatus/getUserStatus"
+import { addUserStatus, editUserStatus, getUserStatus } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultUserStatus, UserStatus } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
@@ -41,7 +39,6 @@ export default defineComponent({
         const getCurrentUserStatus = async () => {
             if (userstatusId.value === 0) {
                 currentUserStatus.value.name = ''
-                currentUserStatus.value.status = 0
                 return
             }
             const userstatus = await getUserStatus(userstatusId.value)

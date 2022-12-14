@@ -1,11 +1,8 @@
 <script setup lang="ts">
-
-
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useHead } from '@vueuse/head'
-import { deleteDepartment } from '/@src/composable/Others/Department/deleteDepartment'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
+import { deleteDepartment, getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts } from '/@src/models/Others/Department/department'
 import { useViewWrapper } from '/@src/stores/viewWrapper'

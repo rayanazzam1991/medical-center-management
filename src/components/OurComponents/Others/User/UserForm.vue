@@ -3,11 +3,9 @@ import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { z as zod } from 'zod';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { addUser } from '/@src/composable/Others/User/addUser';
-import { editUser } from '/@src/composable/Others/User/editUser';
-import { getUser } from '/@src/composable/Others/User/getUser';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { addUser, getUser, editUser } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCity, City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { defaultRoom, Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
@@ -64,16 +62,16 @@ export default defineComponent({
             currentUser.value = user != undefined ? user : defaultUser
 
         }
-        const cities2 = ref<City[]>([])
-        const rooms2 = ref<Room[]>([])
-        const statuses2 = ref<UserStatus[]>([])
+        const citiesList = ref<City[]>([])
+        const roomsList = ref<Room[]>([])
+        const statusesList = ref<UserStatus[]>([])
         onMounted(async () => {
             const { cities } = await getCitiesList(defaultCitySearchFilter)
-            cities2.value = cities
+            citiesList.value = cities
             const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-            rooms2.value = rooms
+            roomsList.value = rooms
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
+            statusesList.value = userstatuses
         })
 
         onMounted(() => {
@@ -227,7 +225,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentUser, viewWrapper, backRoute, cities2, rooms2, statuses2 }
+        return { pageTitle, onSubmit, currentUser, viewWrapper, backRoute, citiesList, roomsList, statusesList }
     },
 
 
@@ -350,7 +348,7 @@ export default defineComponent({
                                     <VControl>
                                         <VSelect v-if="currentUser.room" v-model="currentUser.room.id">
                                             <VOption value="">Department</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -370,7 +368,7 @@ export default defineComponent({
                                     <VControl>
                                         <VSelect v-if="currentUser.city" v-model="currentUser.city.id">
                                             <VOption value="">Department</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -390,9 +388,10 @@ export default defineComponent({
                                     <VControl>
                                         <VSelect v-if="currentUser.status" v-model="currentUser.status.id">
                                             <VOption value="">User Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage name="user_status_id" />

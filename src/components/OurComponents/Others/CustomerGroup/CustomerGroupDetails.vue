@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { defaultCustomerGroup } from "/@src/models/Others/CustomerGroup/customerGroup"

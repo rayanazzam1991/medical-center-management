@@ -1,6 +1,5 @@
-
 <script lang="ts">
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultEmployeeSearchFilter, EmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
 import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"

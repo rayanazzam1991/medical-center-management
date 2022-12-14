@@ -1,8 +1,6 @@
-
 <script lang="ts">
 import { defaultCustomerSearchFilter, CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
 import { defaultPagination } from "/@src/utils/response"
-
 
 export default defineComponent({
     props: {

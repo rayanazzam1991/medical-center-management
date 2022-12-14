@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
-import { getUserStatus } from "/@src/composable/Others/UserStatus/getUserStatus"
+import { getUserStatus } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultUserStatus } from "/@src/models/Others/UserStatus/userStatus"
 import { usePanels } from "/@src/stores/panels"
 import { useViewWrapper } from "/@src/stores/viewWrapper"

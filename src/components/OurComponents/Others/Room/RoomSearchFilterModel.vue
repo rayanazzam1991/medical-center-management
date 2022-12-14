@@ -1,6 +1,5 @@
-
 <script lang="ts">
-import { getDepartmentsList } from "/@src/composable/Others/Department/getDepartmentsList"
+import { getDepartmentsList } from "/@src/services/Others/Department/departmentService"
 import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
 import { defaultRoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
 

@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { defaultCustomerGroupSearchFilter, CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { defaultPagination } from "/@src/utils/response"

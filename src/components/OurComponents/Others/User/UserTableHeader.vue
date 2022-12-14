@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getRoomsList } from "/@src/composable/Others/Room/getRoomsList"
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { City, defaultCitySearchFilter } from "/@src/models/Others/City/city"
 import { Room, defaultRoomSearchFilter } from "/@src/models/Others/Room/room"
 import { defaultUserSearchFilter, UserSearchFilter } from "/@src/models/Others/User/user"

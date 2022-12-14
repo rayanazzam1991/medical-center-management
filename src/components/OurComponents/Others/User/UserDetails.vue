@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
-import { changeUserStatus } from "/@src/composable/Others/User/changeUserStatus"
-import { getUser } from "/@src/composable/Others/User/getUser"
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { changeUserStatus, getUser } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultChangeStatusUser, defaultUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"

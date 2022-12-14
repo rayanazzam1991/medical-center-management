@@ -3,10 +3,8 @@ import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
 import { ErrorMessage, useForm } from 'vee-validate'
 import { z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { addRoom } from '/@src/composable/Others/Room/addRoom'
-import { editRoom } from '/@src/composable/Others/Room/editRoom'
-import { getRoom } from '/@src/composable/Others/Room/getRoom'
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
 import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts } from '/@src/models/Others/Room/room'
@@ -56,10 +54,10 @@ export default defineComponent({
             currentRoom.value = room != undefined ? room : defaultRoom
 
         }
-        const departments2 = ref<Department[]>([])
+        const departmentsList = ref<Department[]>([])
         onMounted(async () => {
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
-            departments2.value = departments
+            departmentsList.value = departments
         })
         onMounted(() => {
             getCurrentRoom()
@@ -164,7 +162,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departments2 }
+        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList }
     },
 
 
@@ -223,7 +221,7 @@ export default defineComponent({
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
                                             <VOption value="">Department</VOption>
-                                            <VOption v-for="department in departments2" :key="department.id"
+                                            <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
                                         </VSelect>

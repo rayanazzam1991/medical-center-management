@@ -1,6 +1,6 @@
 
 <script lang="ts">
-import { getUserStatusesList } from "/@src/composable/Others/UserStatus/getUserStatusesList"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultCustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
 import { City, defaultCitySearchFilter } from "/@src/models/Others/City/city"
 import { CustomerGroup, defaultCustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
