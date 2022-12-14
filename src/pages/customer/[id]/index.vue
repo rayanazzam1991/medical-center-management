@@ -95,14 +95,15 @@ const onClickEditMedicalInfo = () => {
 }
 const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
-    customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+    if (profile_pic.media.length != 1)
+        customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
 }
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="customerProfilePicture.relative_path" />
+            <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
 
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
