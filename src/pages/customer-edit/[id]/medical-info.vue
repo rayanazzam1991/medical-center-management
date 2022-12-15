@@ -76,7 +76,7 @@ const fetchCustomer = async () => {
     customerForm.userForm.phone_number = customer.user.phone_number
     customerForm.userForm.address = customer.user.address
     customerForm.userForm.room_id = customer.user.room.id
-    customerForm.userForm.city_id = customer.user.status.id
+    customerForm.userForm.city_id = customer.user.city.id
     customerForm.userForm.user_status_id = customer.user.status.id
     customerForm.dataUpdate.user.id = customer.user.id
     customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
