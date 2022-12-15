@@ -28,6 +28,7 @@ customerForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
         if (isValid) {
+            customerForm.reset()
             router.push({
                 path: `/customer/${customerId.value}`,
             })
@@ -35,9 +36,7 @@ customerForm.setStep({
 
     },
     skipStepFn: async () => {
-
         customerForm.reset()
-
         router.push({
             path: `/customer/${customerId.value}`,
         })

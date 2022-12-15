@@ -63,9 +63,9 @@ const fetchContractor = async () => {
     currentUser.value.birth_date = contractor.user.birth_date
     currentUser.value.phone_number = contractor.user.phone_number
     currentUser.value.address = contractor.user.address
-    currentUser.value.city_id = contractor.user.city.id
-    currentUser.value.room_id = contractor.user.room.id
-    currentUser.value.user_status_id = contractor.user.status.id
+    currentUser.value.city_id = contractor.user.city?.id
+    currentUser.value.room_id = contractor.user.room?.id
+    currentUser.value.user_status_id = contractor.user.status?.id
     currentContractor.value.starting_date = contractor.starting_date
     currentContractor.value.payment_percentage = contractor.payment_percentage
     currentContractor.value.id = contractor.id

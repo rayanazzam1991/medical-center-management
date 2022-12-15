@@ -68,6 +68,20 @@ export const useContractorForm = defineStore('ContractorForm', () => {
     data.value.user.city_id = 0
     data.value.user.room_id = 0
     data.value.user.user_status_id = 0
+    dataUpdate.value.user.first_name = ''
+    dataUpdate.value.payment_percentage = 0
+    dataUpdate.value.starting_date = ''
+    dataUpdate.value.is_completed = false
+    dataUpdate.value.starting_date = ''
+    dataUpdate.value.user.first_name = ''
+    dataUpdate.value.user.last_name = ''
+    dataUpdate.value.user.gender = ''
+    dataUpdate.value.user.address = ''
+    dataUpdate.value.user.birth_date = ''
+    dataUpdate.value.user.phone_number = ''
+    dataUpdate.value.user.city_id = 0
+    dataUpdate.value.user.room_id = 0
+    dataUpdate.value.user.user_status_id = 0
     contractorServicesForm.value = []
 
   }
