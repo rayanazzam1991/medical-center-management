@@ -86,11 +86,11 @@ export default defineComponent({
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: "",
-                status: 1,
-                description: "",
-                duration_minutes: undefined,
-                service_price: undefined,
+                name: currentService.value.name ?? "",
+                status: currentService.value.status ?? 1,
+                description: currentService.value.description ?? undefined,
+                duration_minutes: currentService.value.duration_minutes ?? undefined,
+                service_price: currentService.value.service_price ?? undefined,
             },
         });
         const onSubmit = async (method: String) => {

@@ -65,13 +65,13 @@ const fetchCustomer = async () => {
 
     }
 
-    customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
-    customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
-    customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
-    customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
-    customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
-    customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
-    customerForm.medicalInfoForm.id = customer.medical_info.id
+    customerForm.medicalInfoForm.allergic = customer?.medical_info?.allergic ?? undefined
+    customerForm.medicalInfoForm.any_other_info = customer?.medical_info?.any_other_info ?? undefined
+    customerForm.medicalInfoForm.blood_type = customer?.medical_info?.blood_type ?? undefined
+    customerForm.medicalInfoForm.chronic_diseases = customer?.medical_info?.chronic_diseases ?? undefined
+    customerForm.medicalInfoForm.infectious_diseases = customer?.medical_info?.infectious_diseases ?? undefined
+    customerForm.medicalInfoForm.smoking = customer?.medical_info?.smoking ?? undefined
+    customerForm.medicalInfoForm.id = customer?.medical_info?.id ?? undefined
 
     customerForm.userForm.id = customer.user.id
     customerForm.userForm.first_name = customer.user.first_name

@@ -105,10 +105,10 @@ export default defineComponent({
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                number: undefined,
-                floor: undefined,
-                status: 1,
-                department_id: 0,
+                number: currentRoom.value.number ?? undefined,
+                floor: currentRoom.value.floor ?? undefined,
+                status: currentRoom.value.status ?? 1,
+                department_id: currentRoom.value?.department?.id ?? 0,
             },
         })
 
