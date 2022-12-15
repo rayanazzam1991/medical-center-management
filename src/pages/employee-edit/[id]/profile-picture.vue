@@ -70,8 +70,11 @@ const onAddFile = (error: any, fileInfo: any) => {
 }
 
 const onSubmitEdit = async () => {
-    if (currentPersonalId.value.id != undefined)
-        await deletePersonalId(currentPersonalId.value.id)
+    if (currentPersonalId.value != undefined)
+        if (currentPersonalId.value.id != undefined)
+            await deletePersonalId(currentPersonalId.value.id)
+
+
     let formData = new FormData();
     if (personal_id.value != undefined)
         formData.append('images[]', personal_id.value);
@@ -164,7 +167,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                     <div class="project-info">
                         <div class="project-info-head">
                             <div class="project-avatar-upload">
-                                <VAvatar :picture="currentPersonalId.relative_path" size="xl" />
+                                <VAvatar :picture="currentPersonalId?.relative_path" size="xl" />
 
 
                             </div>
