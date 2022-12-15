@@ -26,10 +26,8 @@ customerForm.setStep({
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
-        console.log(isValid)
         if (isValid) {
             customerForm.reset()
-            console.log(customerForm.data)
             router.push({
                 path: `/customer/${customerId.value}`,
             })

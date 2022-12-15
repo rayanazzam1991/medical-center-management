@@ -10,7 +10,6 @@ import { Pagination, defaultPagination } from "/@src/utils/response"
 
 export const useCustomer = defineStore('customer', () => {
   const api = useApi()
-
   const customers = ref<Customer[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const success = ref<boolean>()
@@ -33,20 +32,18 @@ export const useCustomer = defineStore('customer', () => {
       message.value = response.response.message
       customers.value.push(returnedCustomer)
       return returnedCustomer
-    } 
-    
-    
+    }
     finally {
       loading.value = false
     }
   }
-  async function updateCustomerStore(customerId : number ,customer: UpdateCustomer) {
+  async function updateCustomerStore(customerId: number, customer: UpdateCustomer) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await updateCustomerApi(api,customerId, customer)
+      const response = await updateCustomerApi(api, customerId, customer)
 
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
@@ -55,9 +52,9 @@ export const useCustomer = defineStore('customer', () => {
       message.value = response.response.message
       customers.value.push(returnedCustomer)
       return returnedCustomer
-    } 
-    
-    
+    }
+
+
     finally {
       loading.value = false
     }
@@ -77,13 +74,13 @@ export const useCustomer = defineStore('customer', () => {
   }
 
 
-  async function addMedicalInfoStore(customer_id: number , medical_info : MedicalInfo) {
+  async function addMedicalInfoStore(customer_id: number, medical_info: MedicalInfo) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await addMedicalInfoApi(api, customer_id , medical_info)
+      const response = await addMedicalInfoApi(api, customer_id, medical_info)
       console.log(response)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
@@ -96,13 +93,13 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function addCustomerProfilePictureStore(media : FormData) {
+  async function addCustomerProfilePictureStore(media: FormData) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await uploadMediaApi(api , media)
+      const response = await uploadMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -116,13 +113,13 @@ export const useCustomer = defineStore('customer', () => {
     }
   }
 
-  async function getCustomerProfilePicture(media : Media) {
+  async function getCustomerProfilePicture(media: Media) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await getMediaApi(api , media)
+      const response = await getMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -135,13 +132,13 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function addSocialMediaStore(customer_id: number , social_medias : Array<CreateUpdateCustomerSocialMediaHelper>) {
+  async function addSocialMediaStore(customer_id: number, social_medias: Array<CreateUpdateCustomerSocialMediaHelper>) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await addSocialMediaApi(api, customer_id , social_medias)
+      const response = await addSocialMediaApi(api, customer_id, social_medias)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
@@ -153,14 +150,14 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  
+
   async function getCustomerStore(customer_id: number) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await getCustomerApi(api, customer_id )
+      const response = await getCustomerApi(api, customer_id)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
@@ -178,7 +175,7 @@ export const useCustomer = defineStore('customer', () => {
     loading.value = true
 
     try {
-      const response = await deleteMediaApi(api, picture_id )
+      const response = await deleteMediaApi(api, picture_id)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
@@ -187,7 +184,7 @@ export const useCustomer = defineStore('customer', () => {
     } finally {
       loading.value = false
     }
-}
+  }
 
   return {
     success,

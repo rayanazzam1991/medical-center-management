@@ -32,7 +32,6 @@ contractorForm.setStep({
         else {
             var isValid = await onSubmitAdd()
             if (isValid) {
-
                 router.push({
                     path: `/contractor-add/${contractorId.value}/services`
                 })
@@ -42,7 +41,6 @@ contractorForm.setStep({
 
     },
     skipStepFn: async () => {
-
         router.push({
             path: `/contractor-add/${contractorId.value}/services`
         })
