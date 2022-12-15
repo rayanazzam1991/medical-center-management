@@ -1,8 +1,6 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { addUser, getUser, editUser } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
@@ -13,6 +11,7 @@ import { defaultUser, defaultCreateUpdateUser, User } from '/@src/models/Others/
 import { defaultUserStatus, UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { uservalidationSchema } from '/@src/rules/Others/User/userValidation';
 
 
 export default defineComponent({
@@ -80,75 +79,7 @@ export default defineComponent({
         )
 
 
-        const validationSchema = toFormValidator(zod
-            .object({
-                first_name:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                last_name:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                // birth_date:
-                //     zod
-                //         .date({
-                //             required_error: "This field is required",
-                //         }),
-                phone_number:
-                    zod
-                        .preprocess(
-                            (input) => {
-                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                                return processed.success ? processed.data : input;
-                            },
-                            zod
-                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                                .min(9, "Please enter a valid number"),
-                        ),
-                address:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-
-                city_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                room_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                user_status_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-            }));
-
+        const validationSchema = uservalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {

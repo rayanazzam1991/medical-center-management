@@ -1,12 +1,11 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head'
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultNationality, Nationality, NationalityConsts } from '/@src/models/Others/Nationality/nationality';
+import { nationalityvalidationSchema } from '/@src/rules/Others/Nationality/nationalityValidation';
 import { getNationality, addNationality, editNationality } from '/@src/services/Others/Nationality/nationalityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { z as zod } from 'zod';
 export default defineComponent({
     props: {
         formType: {
@@ -45,16 +44,7 @@ export default defineComponent({
         onMounted(() => {
             getCurrentNationality();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = nationalityvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {

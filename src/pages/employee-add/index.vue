@@ -1,7 +1,4 @@
 <script setup  lang="ts">
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { custom, z as zod } from 'zod';
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { addEmployee } from '/@src/services/Employee/employeeService';
@@ -19,6 +16,7 @@ import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
 
 
 const viewWrapper = useViewWrapper()
@@ -75,110 +73,7 @@ onMounted(() => {
 )
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({})
-                .optional(),
-        birth_date:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({})
-                .optional(),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        starting_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        required_error: "Please select a date and time",
-                        invalid_type_error: "That's not a date!",
-                    }),
-                ),
-        end_date:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        basic_salary:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
-                ),
-        nationality_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number()
-                    .optional(),
-            ),
-
-    }));
+const validationSchema = employeeAddvalidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,

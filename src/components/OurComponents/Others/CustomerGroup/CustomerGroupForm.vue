@@ -1,9 +1,9 @@
-<script  lang="ts">import { toFormValidator } from '@vee-validate/zod';
+<script  lang="ts">
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCustomerGroup, CustomerGroup, CustomerGroupConsts } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { customergroupvalidationSchema } from '/@src/rules/Others/CustomerGroup/customergroupValidation';
 import { getCustomerGroup, addCustomerGroup, editCustomerGroup } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
@@ -46,20 +46,11 @@ export default defineComponent({
         onMounted(() => {
             getCurrentCustomerGroup();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = customergroupvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name:  currentCustomerGroup.value.name ?? "",
+                name: currentCustomerGroup.value.name ?? "",
                 status: currentCustomerGroup.value.status ?? 1,
             },
         });

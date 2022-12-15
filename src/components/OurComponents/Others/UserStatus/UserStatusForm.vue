@@ -1,12 +1,11 @@
 <script  lang="ts">
-import { toFormValidator } from "@vee-validate/zod"
 import { useHead } from "@vueuse/head"
 import { useForm } from "vee-validate"
 import { addUserStatus, editUserStatus, getUserStatus } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultUserStatus, UserStatus } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-import { z as zod } from 'zod'
+import { userstatusvalidationSchema } from "/@src/rules/Others/UserStatus/userstatusValidation"
 
 export default defineComponent({
     props: {
@@ -49,17 +48,7 @@ export default defineComponent({
             getCurrentUserStatus()
         })
 
-        const validationSchema = toFormValidator(
-            zod
-                .object({
-                    name: zod
-                        .string({
-                            required_error: 'This field is required',
-                        })
-                        .min(1, 'This field is required'),
-                })
-
-        )
+        const validationSchema = userstatusvalidationSchema
 
         const { handleSubmit } = useForm({
             validationSchema,

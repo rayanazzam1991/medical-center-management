@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
 import { ErrorMessage, useForm } from 'vee-validate'
-import { optional, z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultMedicalInfo } from '/@src/models/CRM/MedicalInfo/medicalInfo'
 import { addMedicalInfo } from '/@src/services/CRM/Customer/customerService'
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo'
+import { medicalinfoAddValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoAddValidation'
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -67,35 +66,7 @@ onMounted(() => {
 )
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        blood_type:
-            zod
-                .string({
-
-                }).optional()
-        ,
-
-        allergic:
-            zod
-                .string({
-                })
-                .optional(),
-        chronic_diseases:
-            zod
-                .string({
-                })
-                .optional(),
-        infectious_diseases:
-            zod
-                .string({
-                })
-                .optional(),
-        smoking: zod.number().optional(),
-        any_other_info: zod.string({
-            invalid_type_error: "Invalid Type",
-        }).optional()
-    }));
+const validationSchema = medicalinfoAddValidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VRadio from '/@src/components/base/form/VRadio.vue';
-import { optional, z as zod } from 'zod';
-import { toFormValidator } from '@vee-validate/zod';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultMedicalInfo } from '/@src/models/CRM/MedicalInfo/medicalInfo';
@@ -10,6 +8,7 @@ import { getCustomer, updateCustomer, addMedicalInfo } from '/@src/services/CRM/
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo';
+import { medicalinfoEditValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoEditValidation';
 
 
 
@@ -107,27 +106,7 @@ onMounted(async () => {
 )
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        blood_type:
-            zod
-                .string({
-
-                }).optional()
-        ,
-
-        allergic:
-            zod
-                .any().optional(),
-        chronic_diseases:
-            zod
-                .any().optional(),
-        infectious_diseases:
-            zod
-                .any().optional(),
-        smoking: zod.number().optional(),
-        any_other_info: zod.any().optional(),
-    }));
+const validationSchema = medicalinfoEditValidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,

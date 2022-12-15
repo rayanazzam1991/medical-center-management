@@ -1,11 +1,10 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { lineIcons } from '/@src/data/icons/lineIcons';
 import { defaultSocialMedia, SocialMedia, SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { socialmediavalidationSchema } from '../../../../rules/CRM/SocialMedia/socialmediaValidation';
 import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
@@ -49,21 +48,7 @@ export default defineComponent({
         onMounted(() => {
             getCurrentSocialMedia();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                // icon: zod
-                // .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
-                icon: zod
-                    .string({ required_error: "This field is required" }).min(1, "This field is required"),
-
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = socialmediavalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {

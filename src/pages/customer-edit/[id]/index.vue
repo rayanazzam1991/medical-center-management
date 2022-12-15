@@ -1,8 +1,6 @@
 <script setup  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { custom, z as zod } from 'zod';
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
@@ -18,6 +16,7 @@ import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { customerEditvalidationSchema } from '/@src/rules/CRM/Customer/customerEditValidation';
 
 
 
@@ -137,94 +136,7 @@ onMounted(async () => {
 
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({
-                })
-                .optional(),
-        birth_date:
-            zod
-                .preprocess(
-                    val => val == undefined ? "" : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({
-                })
-                .optional(),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        emergency_contact_name:
-            zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
-        emergency_contact_phone:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod.string({})
-                        .regex(/\d+/, 'Please enter a valid number')
-                        .optional()),
-        customer_group_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number()
-            ),
-
-    }));
+const validationSchema = customerEditvalidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,
