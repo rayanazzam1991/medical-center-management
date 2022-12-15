@@ -1,14 +1,13 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
 import { ErrorMessage, useForm } from 'vee-validate'
-import { z as zod } from 'zod'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
 import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
 
 
 export default defineComponent({
@@ -64,43 +63,7 @@ export default defineComponent({
         )
 
 
-        const validationSchema = toFormValidator(zod
-            .object({
-                number:
-                    zod
-                        .preprocess(
-                            (input) => {
-                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                                return processed.success ? processed.data : input;
-                            },
-                            zod
-                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                                .min(0, "Please enter a valid number"),
-                        ),
-                floor:
-                    zod
-                        .preprocess(
-                            (input) => {
-                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                                return processed.success ? processed.data : input;
-                            },
-                            zod
-                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                                .min(0, "Please enter a valid number"),
-                        ),
-                department_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = roomvalidationSchema
 
         const { handleSubmit } = useForm({
             validationSchema,

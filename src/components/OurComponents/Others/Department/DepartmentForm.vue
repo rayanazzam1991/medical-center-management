@@ -1,8 +1,6 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head'
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
 import {
     addDepartment,
     editDepartment,
@@ -11,6 +9,7 @@ import {
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultDepartment, Department, DepartmentConsts } from '/@src/models/Others/Department/department';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { departmentvalidationSchema } from '/@src/rules/Others/Department/departmentValidation';
 
 export default defineComponent({
     props: {
@@ -49,20 +48,12 @@ export default defineComponent({
         onMounted(() => {
             getCurrentDepartment();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    }).min(1, "This field is required"),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = departmentvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
                 name: currentDepartment.value.name ?? "",
-                status: currentDepartment.value.status ??  1,
+                status: currentDepartment.value.status ?? 1,
             },
         });
         const onSubmit = async (method: String) => {

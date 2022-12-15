@@ -1,12 +1,11 @@
 <script  lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { z as zod } from 'zod'
 import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
 import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 
 
 export default defineComponent({
@@ -50,16 +49,7 @@ export default defineComponent({
             getCurrentCity();
         });
 
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = cityvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {

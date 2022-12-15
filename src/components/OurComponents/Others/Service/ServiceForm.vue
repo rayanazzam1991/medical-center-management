@@ -1,9 +1,9 @@
-<script  lang="ts">import { toFormValidator } from '@vee-validate/zod'
+<script  lang="ts">
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultService, Service, ServiceConsts } from '/@src/models/Others/Service/service';
+import { servicevalidationSchema } from '/@src/rules/Others/Service/serviceValidation';
 import { getService, addService, editService } from '/@src/services/Others/Service/serviceService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
@@ -51,38 +51,7 @@ export default defineComponent({
         onMounted(() => {
             getCurrentService();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                description: zod.string().optional(),
-                duration_minutes:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
-
-                service_price:
-                    zod.preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                            .min(0, "Please enter a valid number"),
-                    ),
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = servicevalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {

@@ -15,6 +15,7 @@ import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
+import { contractorEditvalidationSchema } from '/@src/rules/Contractor/contractorEditValidation';
 
 
 
@@ -111,97 +112,7 @@ onMounted(async () => {
 
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-        birth_date:
-            zod
-                .preprocess(
-                    val => val == undefined ? "" : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        starting_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        invalid_type_error: "That's not a date!",
-                    }).optional(),
-                ),
-        payment_percentage:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .min(0, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
-                ),
-
-    }));
+const validationSchema = contractorEditvalidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,
