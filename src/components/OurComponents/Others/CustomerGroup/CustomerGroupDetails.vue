@@ -1,10 +1,9 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getCustomerGroup } from '/@src/composable/Others/CustomerGroup/getCustomerGroup';
-import { defaultCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { CityConsts } from '/@src/utils/consts/city';
-
-
+<script setup lang="ts">
+import { useHead } from "@vueuse/head"
+import { defaultCustomerGroup } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { getCustomerGroup } from "/@src/services/Others/CustomerGroup/customerGroupService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -53,8 +52,8 @@ const toEdit = () => {
                             <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
                             <span>
                                 <VTag
-                                    :color="currentCustomerGroup.status === CityConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ CityConsts.showStatusName(currentCustomerGroup.status) }}</VTag>
+                                    :color="currentCustomerGroup.status === CustomerGroupConsts.INACTIVE ? 'danger' : 'success'">
+                                    {{ CustomerGroupConsts.showStatusName(currentCustomerGroup.status) }}</VTag>
                             </span>
                         </div>
                     </div>

@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue'
-import { addRoom } from '/@src/composable/Others/Room/addRoom'
-import { Room } from '/@src/utils/api/Others/Room'
-
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { RoomConsts } from '/@src/utils/consts/room';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Room')

@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
+import { useHead } from "@vueuse/head"
+import MyDropDown from "/@src/components/OurComponents/MyDropDown.vue"
+import { deleteUserStatus, getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { defaultPagination } from "/@src/utils/response"
 
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { deleteUserStatus } from '/@src/composable/Others/UserStatus/deleteUserStatus'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { UserStatusSearchFilter } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('UserStatus')
 useHead({
@@ -29,6 +26,8 @@ const router = useRouter()
 const removeUserStatus = async (userstatusId: number) => {
 
     await deleteUserStatus(userstatusId)
+    await search(searchFilter.value)
+
     deleteUserStatusPopup.value = false
     // @ts-ignore
     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

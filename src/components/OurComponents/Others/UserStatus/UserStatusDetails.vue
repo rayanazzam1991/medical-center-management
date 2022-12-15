@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { usePanels } from '/@src/stores/panels'
-import { useHead } from '@vueuse/head'
+import { useHead } from "@vueuse/head"
+import { getUserStatus } from "/@src/services/Others/UserStatus/userstatusService"
+import { defaultUserStatus } from "/@src/models/Others/UserStatus/userStatus"
+import { usePanels } from "/@src/stores/panels"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
-import { defaultUserStatus } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-
-import { getUserStatus } from '/@src/composable/Others/UserStatus/getUserStatus';
 
 const panels = usePanels()
 const route = useRoute()

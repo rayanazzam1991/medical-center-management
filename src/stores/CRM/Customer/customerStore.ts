@@ -1,80 +1,15 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { defaultCustomerGroup } from "../../Others/CustomerGroup/customerGroupStore"
-import { defaultCreateUpdateUser, defaultUser } from "../../Others/User/userStore"
-import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
 import { useApi } from "/@src/composable/useApi"
-import { CreateCustomer,UpdateCustomer, Customer, addCustomerApi, addMedicalInfoApi, CreateUpdateCustomerSocialMediaHelper, addSocialMediaApi, getCustomerApi, updateCustomerApi, CustomerSearchFilter, getCustomersApi } from "/@src/utils/api/CRM/Customer"
-import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
-import { deleteMediaApi, getMediaApi, Media, uploadMediaApi } from "/@src/utils/api/Others/Media"
-import { MediaConsts } from "/@src/utils/consts/media"
+import { Customer, CreateCustomer, UpdateCustomer, CustomerSearchFilter, CreateUpdateCustomerSocialMediaHelper } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { Media } from "/@src/models/Others/Media/media"
+import { addCustomerApi, updateCustomerApi, getCustomersApi, addMedicalInfoApi, addSocialMediaApi, getCustomerApi } from "/@src/utils/api/CRM/Customer"
+import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
-
-  
-export const defaultCreateCustomer: CreateCustomer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultCreateUpdateUser,
-  medical_info_id: undefined,
-  customer_group_id: 1,
-  social_medias: [],
-  is_completed : false,
-  
-}
-export const defaultUpdateCustomer: UpdateCustomer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultCreateUpdateUser,
-  medical_info: defaultMedicalInfo,
-  customer_group_id: 1,
-  social_medias: [],
-  is_completed : false,
-
-}
-export const defaultCustomer: Customer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultUser,
-  medical_info: defaultMedicalInfo,
-  customer_group: defaultCustomerGroup,
-  social_medias: [],
-  is_completed : false,
-
-}
-export const defaultCustomerProfilePic: Media = {
-  id: undefined,
-  model_id: 0,
-  model_type: MediaConsts.CUSTOMER_MODEL_ROUTE,
-  relative_path: undefined,
-  is_featured : '0',
-
-}
-
-export const defaultCustomerSearchFilter: CustomerSearchFilter = {
-  name : undefined,
-  phone_number : undefined,
-  gender : undefined,
-  date_between : undefined ,
-  from : undefined,
-  to : undefined ,
-  city_id : undefined,
-  customer_group_id : undefined,
-  is_completed : undefined,
-  user_status_id: undefined,
-  page : undefined,
-  per_page : 50,
-  order_by : undefined,
-  order : undefined,
-
-}
-
 
 
 export const useCustomer = defineStore('customer', () => {
   const api = useApi()
-
   const customers = ref<Customer[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const success = ref<boolean>()
@@ -97,20 +32,18 @@ export const useCustomer = defineStore('customer', () => {
       message.value = response.response.message
       customers.value.push(returnedCustomer)
       return returnedCustomer
-    } 
-    
-    
+    }
     finally {
       loading.value = false
     }
   }
-  async function updateCustomerStore(customerId : number ,customer: UpdateCustomer) {
+  async function updateCustomerStore(customerId: number, customer: UpdateCustomer) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await updateCustomerApi(api,customerId, customer)
+      const response = await updateCustomerApi(api, customerId, customer)
 
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
@@ -119,9 +52,9 @@ export const useCustomer = defineStore('customer', () => {
       message.value = response.response.message
       customers.value.push(returnedCustomer)
       return returnedCustomer
-    } 
-    
-    
+    }
+
+
     finally {
       loading.value = false
     }
@@ -141,13 +74,13 @@ export const useCustomer = defineStore('customer', () => {
   }
 
 
-  async function addMedicalInfoStore(customer_id: number , medical_info : MedicalInfo) {
+  async function addMedicalInfoStore(customer_id: number, medical_info: MedicalInfo) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await addMedicalInfoApi(api, customer_id , medical_info)
+      const response = await addMedicalInfoApi(api, customer_id, medical_info)
       console.log(response)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
@@ -160,13 +93,13 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function addCustomerProfilePictureStore(media : FormData) {
+  async function addCustomerProfilePictureStore(media: FormData) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await uploadMediaApi(api , media)
+      const response = await uploadMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -180,13 +113,13 @@ export const useCustomer = defineStore('customer', () => {
     }
   }
 
-  async function getCustomerProfilePicture(media : Media) {
+  async function getCustomerProfilePicture(media: Media) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await getMediaApi(api , media)
+      const response = await getMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -199,13 +132,13 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function addSocialMediaStore(customer_id: number , social_medias : Array<CreateUpdateCustomerSocialMediaHelper>) {
+  async function addSocialMediaStore(customer_id: number, social_medias: Array<CreateUpdateCustomerSocialMediaHelper>) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await addSocialMediaApi(api, customer_id , social_medias)
+      const response = await addSocialMediaApi(api, customer_id, social_medias)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
@@ -217,14 +150,14 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  
+
   async function getCustomerStore(customer_id: number) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await getCustomerApi(api, customer_id )
+      const response = await getCustomerApi(api, customer_id)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
@@ -242,7 +175,7 @@ export const useCustomer = defineStore('customer', () => {
     loading.value = true
 
     try {
-      const response = await deleteMediaApi(api, picture_id )
+      const response = await deleteMediaApi(api, picture_id)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
@@ -251,7 +184,7 @@ export const useCustomer = defineStore('customer', () => {
     } finally {
       loading.value = false
     }
-}
+  }
 
   return {
     success,

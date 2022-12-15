@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { RoomConsts } from '/@src/utils/consts/room'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { deleteRoom } from '/@src/composable/Others/Room/deleteRoom'
-
-import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import { deleteRoom, getRoomsList } from '/@src/services/Others/Room/roomSevice'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts } from '/@src/models/Others/Room/room'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { defaultPagination } from '/@src/utils/response'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Room')
 useHead({
@@ -34,6 +26,7 @@ const router = useRouter()
 const removeRoom = async (roomId: number) => {
 
   await deleteRoom(roomId)
+  await search(searchFilter.value)
   deleteRoomPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

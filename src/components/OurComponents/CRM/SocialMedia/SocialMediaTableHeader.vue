@@ -1,7 +1,6 @@
-<script lang="ts">import { defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore'
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia'
-import { defaultPagination } from '/@src/utils/response'
-
+<script lang="ts">
+import { defaultSocialMediaSearchFilter, SocialMediaConsts } from "/@src/models/CRM/SocialMedia/socialMedia"
+import { defaultPagination } from "/@src/utils/response"
 
 
 export default defineComponent({

@@ -1,32 +1,9 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { City, CitySearchFilter } from "/@src/models/Others/City/city"
+import { deleteCityApi, getCityApi, addCityApi, editCityApi, getCitiesApi } from "/@src/utils/api/Others/City"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
-import {
-  CitySearchFilter,
-  City,
-  getCitiesApi,
-  deleteCityApi,
-  addCityApi,
-  editCityApi,
-  getCityApi,
-} from '/@src/utils/api/Others/City'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultCity: City = {
-  id: 0,
-  name: '',
-  status: 1,
-}
-
-export const defaultCitySearchFilter: CitySearchFilter = {
-  name: undefined,
-  status: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
 
 export const useCity = defineStore('city', () => {
   const api = useApi()
@@ -109,6 +86,8 @@ export const useCity = defineStore('city', () => {
       loading.value = false
     }
   }
+
+
 
   return {
     cities,

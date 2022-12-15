@@ -1,8 +1,6 @@
+
 <script lang="ts">
-import { ServiceSearchFilter } from '/@src/utils/api/Others/Service'
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { boolean } from 'zod'
+import { defaultServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 
 export default defineComponent({
     props: {
@@ -82,7 +80,7 @@ export default defineComponent({
 <template>
     <VModal title="Search Service" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
-            <form class="form-layout" @submit.prevent="">
+            <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
                         <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
@@ -108,10 +106,12 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search" icon="feather:search">Ok..</VButton>
+            <VButton color="primary" raised @click="search" icon="feather:search">Search</VButton>
         </template>
     </VModal>
 </template>

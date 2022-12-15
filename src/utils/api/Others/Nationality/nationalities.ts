@@ -1,19 +1,6 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-
-export interface Nationality {
-  id?: number
-  name: string
-  status: number
-}
-export interface NationalitySearchFilter {
-  name?: string
-  status?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+import { AxiosInstance } from "axios"
+import { Nationality, NationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteNationalityApi(
   api: AxiosInstance,

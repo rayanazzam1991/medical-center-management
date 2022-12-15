@@ -1,9 +1,6 @@
 <script lang="ts">
-import { DepartmentConsts } from '/@src/utils/consts/department'
-import { SearchFilter } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-
+import { defaultDepartmentSearchFilter, DepartmentConsts } from "/@src/models/Others/Department/department"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {
@@ -62,7 +59,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout">
+    <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
                 <div class="form-header-inner">

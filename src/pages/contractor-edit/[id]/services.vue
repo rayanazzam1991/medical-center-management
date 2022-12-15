@@ -1,12 +1,10 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { updateContractor } from '/@src/composable/Contractor/updateContractor';
-import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { getContractor, updateContractor } from '/@src/services/Contractor/contractorService';
+import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Service } from '/@src/utils/api/Others/Service';
 
 
 
@@ -41,14 +39,13 @@ contractorForm.setStep({
     skipStepFn: async () => {
         contractorForm.reset()
         router.push({
-
             path: `/contractor/${contractorId.value}`,
         })
     }
 
 })
 const pageTitle = 'Step 3: Contractor Services'
-const services2 = ref<Service[]>([])
+const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
     checked: boolean
@@ -62,11 +59,12 @@ const fetchContractor = async () => {
     console.log(contractor.payment_percentage)
     for (let i = 0; i < contractor.services.length; i++) {
         // @ts-ignore
-
         contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
+
 
     }
 
+    console.log(contractorForm.contractorServicesForm)
 
     contractorForm.userForm.id = contractor.user.id
     contractorForm.userForm.first_name = contractor.user.first_name
@@ -76,7 +74,7 @@ const fetchContractor = async () => {
     contractorForm.userForm.phone_number = contractor.user.phone_number
     contractorForm.userForm.address = contractor.user.address
     contractorForm.userForm.room_id = contractor.user.room.id
-    contractorForm.userForm.city_id = contractor.user.status.id
+    contractorForm.userForm.city_id = contractor.user.city.id
     contractorForm.userForm.user_status_id = contractor.user.status.id
     contractorForm.dataUpdate.starting_date = contractor.starting_date
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
@@ -91,21 +89,21 @@ const fetchContractor = async () => {
 const servicesChecked = ref<ServicesChecked[]>([])
 onMounted(async () => {
     const { services } = await getServicesList(defaultServiceSearchFilter)
-    services2.value = services
+    servicesList.value = services
     if (contractorForm.dataUpdate.id != contractorId.value) {
 
         await fetchContractor()
     }
 
 
-    for (let index = 0; index < services2.value.length; index++) {
-        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == services2.value[index].id)
+    for (let index = 0; index < servicesList.value.length; index++) {
+        var service = contractorForm.contractorServicesForm.find((element) => element.service_id == servicesList.value[index].id)
         if (service) {
 
-            servicesChecked.value.push({ service: services2.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: true, price: service.price, contractor_service_amount: service.contractor_service_amount })
         }
         else {
-            servicesChecked.value.push({ service: services2.value[index], checked: false, price: 0, contractor_service_amount: 0 })
+            servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0, contractor_service_amount: 0 })
         }
 
     }
@@ -120,7 +118,7 @@ const onSubmitEdit = async () => {
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
             contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
-
+            console.log(contractorForm.contractorServicesForm)
         }
 
     }

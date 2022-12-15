@@ -1,34 +1,23 @@
 <script setup  lang="ts">
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { custom, z as zod } from 'zod';
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateEmployee } from '/@src/stores/Employee/employeeStore';
-import { addEmployee } from '/@src/composable/Employee/addEmployee';
-import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList';
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore';
-import { Nationality } from '/@src/utils/api/Others/Nationality';
+import { ErrorMessage, useForm } from 'vee-validate';
+import { getEmployee, updateEmployee } from '/@src/services/Employee/employeeService';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { getEmployee } from '/@src/composable/Employee/getEmployee';
-import { updateEmployee } from '/@src/composable/Employee/updateEmployee';
-import { UpdateEmployee } from '/@src/utils/api/Employee';
-
-
+import { defaultCreateEmployee } from '/@src/models/Employee/employee';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
+import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 const viewWrapper = useViewWrapper()
@@ -106,20 +95,20 @@ const fetchEmployee = async () => {
 
 }
 
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const nationalities2 = ref<Nationality[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
+const nationalitiesList = ref<Nationality[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
+    citiesList.value = cities
     const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
     const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-    nationalities2.value = nationalities
+    nationalitiesList.value = nationalities
     await fetchEmployee()
 
 })
@@ -405,7 +394,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -425,7 +414,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -445,9 +434,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />
@@ -509,7 +499,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
                                             <VOption value="">Nationality</VOption>
-                                            <VOption v-for="nationality in nationalities2" :key="nationality.id"
+                                            <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
                                                 :value="nationality.id">{{ nationality.name }}
                                             </VOption>
                                         </VSelect>

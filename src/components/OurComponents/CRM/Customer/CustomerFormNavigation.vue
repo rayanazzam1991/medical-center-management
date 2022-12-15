@@ -14,11 +14,6 @@ const customerForm = useCustomerForm()
 
 <template>
   <nav class="wizard-navigation">
-    <!-- 
-    <RouterLink to="/" class="wizard-brand">
-      <AnimatedLogo width="38px" height="38px" />
-    </RouterLink> -->
-
     <div class="">
       <span class="title-wrap">
         <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/customer" darkOutlined
@@ -32,40 +27,6 @@ const customerForm = useCustomerForm()
         Step {{ customerForm.step }}: <span>{{ customerForm.stepTitle }}</span>
       </span>
     </div>
-
-    <!-- <VDropdown class="wizard-dropdown">
-      <template #button="{ toggle }">
-        <div tabindex="0" class="is-trigger" @click="toggle" @keydown.space.prevent="toggle">
-          <i aria-hidden="true" class="iconify" data-icon="feather:chevron-down"></i>
-        </div>
-      </template>
-      <template #content="{ close }">
-        <RouterLink :class="[customerForm.step < 1 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add" @click.passive="close">
-          Step 1: Main Info
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 2 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/additional-info" @click.passive="close">
-          Step 2: Additional Info
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 3 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/profile-picture" @click.passive="close">
-          Step 3: Profile Picture
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 4 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/medical-info" @click.passive="close">
-          Step 4: Medical Info
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 5 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/social-media" @click.passive="close">
-          Step 5: Social Media
-        </RouterLink>
-        <RouterLink :class="[customerForm.step < 5 && 'is-disabled']" class="dropdown-item kill-drop" tabindex="0"
-          to="/customer-add/preview" @click.passive="close">
-          Step 6: Preview
-        </RouterLink>
-      </template>
-    </VDropdown> -->
     <div class="navbar-item is-dark-mode">
       <div class="navbar-icon">
         <label class="dark-mode">
@@ -74,7 +35,6 @@ const customerForm = useCustomerForm()
         </label>
       </div>
     </div>
-
   </nav>
 </template>
 

@@ -1,15 +1,9 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../../Others/User/userStore'
-import { defaultMedicalInfo } from '../MedicaInfo/medicalInfoStore'
-import { defaultCreateCustomer, defaultCustomerProfilePic, defaultUpdateCustomer } from './customerStore'
-import {
-  CreateCustomer,
-  CreateUpdateCustomerSocialMediaHelper,
-  UpdateCustomer,
-} from '/@src/utils/api/CRM/Customer'
-import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
-import { Media } from '/@src/utils/api/Others/Media'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { date } from "zod"
+import { CreateCustomer, defaultCreateCustomer, UpdateCustomer, defaultUpdateCustomer, defaultCustomerProfilePic, CreateUpdateCustomerSocialMediaHelper } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo, defaultMedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { Media } from "/@src/models/Others/Media/media"
+import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 interface CustomerFormStepOptions {
   number: number
@@ -73,10 +67,40 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   }
 
   function reset() {
-    data.value = defaultCreateCustomer
-    dataUpdate.value = defaultUpdateCustomer
-    userForm.value = defaultCreateUpdateUser
+    data.value.emergency_contact_name = ''
+    data.value.emergency_contact_phone = ''
+    data.value.customer_group_id = 1
+    data.value.is_completed = false
+    data.value.user.first_name = ''
+    data.value.user.last_name = ''
+    data.value.user.gender = ''
+    data.value.user.address = ''
+    data.value.user.birth_date = ''
+    data.value.user.phone_number = ''
+    data.value.user.city_id = 0
+    data.value.user.room_id = 0
+    data.value.user.user_status_id = 0
+    data.value.medical_info_id = 0
+    medicalInfoForm.value.allergic = ''
+    medicalInfoForm.value.blood_type = ''
+    medicalInfoForm.value.chronic_diseases = ''
+    medicalInfoForm.value.any_other_info = ''
+    medicalInfoForm.value.infectious_diseases = ''
+    medicalInfoForm.value.id = 0
     customerSocialMediaForm.value = []
+    dataUpdate.value.emergency_contact_name = ''
+    dataUpdate.value.emergency_contact_phone = ''
+    dataUpdate.value.customer_group_id = 1
+    dataUpdate.value.is_completed = false
+    dataUpdate.value.user.first_name = ''
+    dataUpdate.value.user.last_name = ''
+    dataUpdate.value.user.gender = ''
+    dataUpdate.value.user.address = ''
+    dataUpdate.value.user.birth_date = ''
+    dataUpdate.value.user.phone_number = ''
+    dataUpdate.value.user.city_id = 0
+    dataUpdate.value.user.room_id = 0
+    dataUpdate.value.user.user_status_id = 0
   }
 
   return {

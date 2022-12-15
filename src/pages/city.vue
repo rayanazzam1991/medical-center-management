@@ -13,6 +13,6 @@ const route = useRoute()
 
 <template>
   <NavbarLayout>
-    <RouterView />
+    <RouterView :key="$route.fullPath" />
   </NavbarLayout>
 </template>

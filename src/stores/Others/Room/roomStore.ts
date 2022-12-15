@@ -1,45 +1,9 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { Room, CreateUpdateRoom, RoomSearchFilter } from "/@src/models/Others/Room/room"
+import { deleteRoomApi, getRoomApi, addRoomApi, editRoomApi, getRoomsApi } from "/@src/utils/api/Others/Room"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
-import {
-  RoomSearchFilter,
-  Room,
-  CreateUpdateRoom,
-  getRoomsApi,
-  deleteRoomApi,
-  addRoomApi,
-  editRoomApi,
-  getRoomApi,
-} from '/@src/utils/api/Others/Room'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultRoom: Room = {
-  id: 0,
-  number: 0,
-  floor: 0,
-  department: undefined,
-  status: 0,
-}
-
-export const defaultCreateUpdateRoom: CreateUpdateRoom = {
-  id: 0,
-  number: 0,
-  floor: 0,
-  department_id: undefined,
-  status: 0,
-}
-
-export const defaultRoomSearchFilter: RoomSearchFilter = {
-  number: undefined,
-  floor: undefined,
-  department_id: undefined,
-  status: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
 
 export const useRoom = defineStore('room', () => {
   const api = useApi()

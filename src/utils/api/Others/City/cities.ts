@@ -1,25 +1,12 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-
-export interface City {
-  id?: number
-  name: string
-  status: number
-}
-export interface CitySearchFilter {
-  name?: string
-  status?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+import { AxiosInstance } from "axios"
+import { City, CitySearchFilter } from "/@src/models/Others/City/city"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteCityApi(
   api: AxiosInstance,
   cityId: number
 ): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.delete(`city${cityId}`)
+  const { data: response, headers } = await api.delete(`city/${cityId}`)
 
   return { response }
 }

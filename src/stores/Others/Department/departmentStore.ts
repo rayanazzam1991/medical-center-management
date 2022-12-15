@@ -1,32 +1,9 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { Department, DepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { deleteDepartmentApi, getDepartmentApi, addDepartmentApi, editDepartmentApi, getDepartmentsApi } from "/@src/utils/api/Others/Department"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
-import {
-  DepartmentSearchFilter,
-  Department,
-  getDepartmentsApi,
-  deleteDepartmentApi,
-  addDepartmentApi,
-  editDepartmentApi,
-  getDepartmentApi,
-} from '/@src/utils/api/Others/Department'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultDepartment: Department = {
-  id: 0,
-  name: '',
-  status: 1,
-}
-
-export const defaultDepartmentSearchFilter: DepartmentSearchFilter = {
-  name: undefined,
-  status: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
 
 export const useDepartment = defineStore('department', () => {
   const api = useApi()
@@ -41,6 +18,7 @@ export const useDepartment = defineStore('department', () => {
 
     try {
       const response = await deleteDepartmentApi(api, departmentId)
+      console.log(response.response)
       departments.value.splice(
         departments.value.findIndex(
           (department: Department) => department.id === departmentId

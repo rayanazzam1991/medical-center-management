@@ -3,13 +3,10 @@ import VAvatar from '/@src/components/base/avatar/VAvatar.vue';
 import VIcon from '/@src/components/base/icon/VIcon.vue';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
-import { deleteSocialMedia } from '/@src/composable/CRM/socialMedia/deleteSocialMedia';
-import { getSocialMediasList } from '/@src/composable/CRM/socialMedia/getSocialMediasList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
+import { defaultSocialMediaSearchFilter, SocialMediaSearchFilter, SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { getSocialMediasList, deleteSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { SocialMediaSearchFilter } from '/@src/utils/api/CRM/SocialMedia';
-import { SocialMediaConsts } from '/@src/utils/consts/socialMedia';
 import { defaultPagination } from '/@src/utils/response';
 
 const viewWrapper = useViewWrapper()
@@ -31,6 +28,8 @@ const router = useRouter()
 const removeSocialMedia = async (socialMediaId: number) => {
 
   await deleteSocialMedia(socialMediaId)
+  await search(searchFilter.value)
+
   deleteSocialMediaPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

@@ -1,15 +1,11 @@
 <script  lang="ts">import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { addCustomerGroup } from '/@src/composable/Others/CustomerGroup/addCustomerGroup';
-import { editCustomerGroup } from '/@src/composable/Others/CustomerGroup/editCustomerGroup';
-import { getCustomerGroup } from '/@src/composable/Others/CustomerGroup/getCustomerGroup';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { CustomerGroupConsts } from '/@src/utils/consts/customerGroup';
 import { z as zod } from 'zod'
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCustomerGroup, CustomerGroup, CustomerGroupConsts } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { getCustomerGroup, addCustomerGroup, editCustomerGroup } from '/@src/services/Others/CustomerGroup/customerGroupService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 export default defineComponent({

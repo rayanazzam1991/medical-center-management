@@ -1,31 +1,24 @@
 <script setup  lang="ts">
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { phoneExistsCheck } from '/@src/services/Others/User/userService';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
-
-
+import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { addCustomer } from '/@src/services/CRM/Customer/customerService';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 
@@ -58,26 +51,23 @@ const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const getCurrentCustomer = () => {
-
     currentUser.value = customerForm.userForm
     currentCustomer.value = customerForm.data
-
-
 }
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const customerGroups2 = ref<CustomerGroup[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
+const customerGroupsList = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
+    citiesList.value = cities
     const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
     const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-    customerGroups2.value = customerGroups
+    customerGroupsList.value = customerGroups
 
 })
 onMounted(() => {
@@ -116,7 +106,7 @@ const validationSchema = toFormValidator(zod
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ required_error: 'This field is required' })
+                        .number({ required_error: 'This field is required', invalid_type_error: 'This field is required' })
 
                 ),
         address:
@@ -222,23 +212,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.city_id = userData.city_id
         customerForm.userForm.user_status_id = userData.user_status_id
         console.log(customerForm.userForm)
-
         const customer = await addCustomer(customerForm.data, customerForm.userForm)
-        console.log(customer)
         if (customer.success) {
             customerForm.data.id = customer.customer.id
             // @ts-ignore
             notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
-
             return true
         }
         else {
             // @ts-ignore
-
             notif.error(customer.success)
             return false
-
-
         }
 
     }
@@ -372,7 +356,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
                                             </VOption>
@@ -392,7 +376,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -412,9 +396,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />
@@ -461,7 +446,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel>Customer Group</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
-                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
+                                            <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
                                                 :value="customerGroup.id">{{ customerGroup.name }}
                                             </VOption>
                                         </VSelect>

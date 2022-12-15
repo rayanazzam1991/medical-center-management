@@ -1,21 +1,12 @@
 <script lang="ts">
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-// import Department from '/@src/pages/department.vue'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-import { City } from '/@src/utils/api/Others/City'
-import { Room } from '/@src/utils/api/Others/Room'
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import UserSearchFilterModelVue from './UserSearchFilterModel.vue'
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { City, defaultCitySearchFilter } from "/@src/models/Others/City/city"
+import { Room, defaultRoomSearchFilter } from "/@src/models/Others/Room/room"
+import { defaultUserSearchFilter, UserSearchFilter } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getCitiesList } from "/@src/services/Others/City/cityService"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {

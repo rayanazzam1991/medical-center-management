@@ -1,44 +1,12 @@
+
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addUser } from '/@src/composable/Others/User/addUser'
-import { editUser } from '/@src/composable/Others/User/editUser'
-import { User } from '/@src/utils/api/Others/User'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
-import { getUser } from '/@src/composable/Others/User/getUser'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
-import { boolean, optional, z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateUser, defaultUser } from '/@src/stores/Others/User/userStore';
-import { defaultCity, defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoom, defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultUserStatus, defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo'
-import { defaultSocialMedia, defaultSocialMediaSearchFilter } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
-import { SocialMedia } from '/@src/utils/api/CRM/SocialMedia';
-import { CreateUpdateCustomerSocialMediaHelper } from '/@src/utils/api/CRM/Customer';
-import { defaultUpdateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { defaultMedicalInfo } from '/@src/stores/CRM/MedicaInfo/medicalInfoStore';
-import { addSocialMedia } from '/@src/composable/CRM/SocialMedia/addSocialMedia';
-import { addSocialMediasToCustomer } from '/@src/composable/CRM/Customer/addSocialMediasToCustomer';
-import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
-import { getSocialMediasList } from '/@src/composable/CRM/SocialMedia/getSocialMediasList';
-import { updateCustomer } from '/@src/composable/CRM/Customer/updateCustomer';
+import { useHead } from "@vueuse/head"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { SocialMedia, defaultSocialMediaSearchFilter } from "/@src/models/CRM/SocialMedia/socialMedia"
+import { getCustomer, updateCustomer } from "/@src/services/CRM/Customer/customerService"
+import { getSocialMediasList } from "/@src/services/CRM/SocialMedia/socialMediaService"
+import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -59,10 +27,8 @@ customerForm.setStep({
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
-        console.log(isValid)
         if (isValid) {
             customerForm.reset()
-
             router.push({
                 path: `/customer/${customerId.value}`,
             })
@@ -70,9 +36,7 @@ customerForm.setStep({
 
     },
     skipStepFn: async () => {
-        
         customerForm.reset()
-    
         router.push({
             path: `/customer/${customerId.value}`,
         })
@@ -80,7 +44,7 @@ customerForm.setStep({
 
 })
 const pageTitle = 'Step 4: Customer Social Media'
-const socialMedias2 = ref<SocialMedia[]>([])
+const socialMediasList = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
     socialMedia: SocialMedia
     checked: boolean
@@ -113,7 +77,7 @@ const fetchCustomer = async () => {
     customerForm.userForm.phone_number = customer.user.phone_number
     customerForm.userForm.address = customer.user.address
     customerForm.userForm.room_id = customer.user.room.id
-    customerForm.userForm.city_id = customer.user.status.id
+    customerForm.userForm.city_id = customer.user.city.id
     customerForm.userForm.user_status_id = customer.user.status.id
     customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
     customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
@@ -129,22 +93,22 @@ const fetchCustomer = async () => {
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
     const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
-    socialMedias2.value = socialMedias
+    socialMediasList.value = socialMedias
     if (customerForm.dataUpdate.id != customerId.value) {
 
         await fetchCustomer()
     }
 
 
-    for (let index = 0; index < socialMedias2.value.length; index++) {
+    for (let index = 0; index < socialMediasList.value.length; index++) {
         // @ts-ignore
-        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMedias2.value[index].id)
+        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
         if (socialMedia) {
 
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: true, url: socialMedia.url })
+            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url })
         }
         else {
-            socialMediaChecked.value.push({ socialMedia: socialMedias2.value[index], checked: false, url: '' })
+            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
         }
 
     }
@@ -164,6 +128,7 @@ const onSubmitEdit = async () => {
 
     }
     customerForm.dataUpdate.is_completed = true
+    console.log(customerForm.userForm)
     const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
     if (customer.success) {
         // @ts-ignore

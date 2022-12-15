@@ -1,22 +1,15 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { capitalize } from 'vue';
-import { routerKey, RouterLink } from 'vue-router';
-import { getCustomer } from '/@src/composable/CRM/Customer/getCustomer';
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { getProfilePicture } from '/@src/composable/CRM/Customer/getProfilePicture';
-import { defaultCustomer, defaultCustomerProfilePic } from '/@src/stores/CRM/Customer/customerStore';
-import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { usePanels } from '/@src/stores/panels';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Customer } from '/@src/utils/api/CRM/Customer';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { MedicalInfoConsts } from '/@src/utils/consts/medicalInfo';
-import { onceImageErrored } from '/@src/utils/via-placeholder'
 
+<script setup lang="ts">
+import { useHead } from "@vueuse/head"
+import { changeUserStatus } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { Customer, defaultCustomer, defaultCustomerProfilePic } from "/@src/models/CRM/Customer/customer"
+import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getCustomer, getProfilePicture } from "/@src/services/CRM/Customer/customerService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -45,14 +38,15 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
-const statuses2 = ref<UserStatus[]>([])
+const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
 })
 onMounted(async () => {
     await getCurrentCustomer()
     await getCurrentProfilePic()
+    console.log(currentCustomer.value)
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
@@ -95,8 +89,10 @@ const onClickEditMedicalInfo = () => {
 }
 const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
-    if (profile_pic.media.length != 1)
+    if (profile_pic.media.length != 0) {
+
         customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+    }
 }
 
 </script>
@@ -105,9 +101,9 @@ const getCurrentProfilePic = async () => {
         <div class="profile-header has-text-centered">
             <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
 
-
             <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
-                {{ currentCustomer.user.last_name }}</h3>
+                {{ currentCustomer.user.last_name }}
+            </h3>
 
             <div class="profile-stats">
                 <div class="profile-stat">
@@ -124,8 +120,13 @@ const getCurrentProfilePic = async () => {
                 </div>
                 <div class="separator"></div>
                 <div class="socials">
-                    <a v-for="socialMedia in currentCustomer.social_medias"><i aria-hidden="true"
-                            :class="socialMedia.icon"></i></a>
+                    <a v-for="socialMedia in currentCustomer.social_medias">
+                        <Tippy>
+                            <i aria-hidden="true" :class="socialMedia.icon"></i>
+                            <template #content>URL: {{ socialMedia?.url }} </template>
+                        </Tippy>
+
+                    </a>
                 </div>
             </div>
         </div>
@@ -440,7 +441,7 @@ const getCurrentProfilePic = async () => {
                                     <VSelect v-if="currentCustomer.user.status"
                                         v-model="currentCustomer.user.status.id">
                                         <VOption value="">User Status</VOption>
-                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                                 status.name
                                         }}
                                         </VOption>

@@ -1,30 +1,8 @@
-import { ref } from 'vue'
-import { acceptHMRUpdate, defineStore } from 'pinia'
-
-import {
-  UserStatusSearchFilter,
-  UserStatus,
-  getUserStatusesApi,
-  deleteUserStatusApi,
-  addUserStatusApi,
-  editUserStatusApi,
-  getUserStatusApi,
-} from '/@src/utils/api/Others/UserStatus'
-import { useApi } from '/@src/composable/useApi'
-import { Pagination, defaultPagination } from '/@src/utils/response'
-
-export const defaultUserStatus: UserStatus = {
-  id: 0,
-  name: '',
-}
-
-export const defaultUserStatusSearchFilter: UserStatusSearchFilter = {
-  name: undefined,
-  page: undefined,
-  order: undefined,
-  order_by: undefined,
-  per_page: undefined,
-}
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { UserStatus, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { deleteUserStatusApi, getUserStatusApi, addUserStatusApi, editUserStatusApi, getUserStatusesApi } from "/@src/utils/api/Others/UserStatus"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
 export const useUserStatus = defineStore('userstatus', () => {
   const api = useApi()

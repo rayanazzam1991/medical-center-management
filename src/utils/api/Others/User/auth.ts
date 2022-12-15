@@ -1,10 +1,6 @@
 import {CustomResponseCollection} from "/@src/utils/response";
 import {AxiosInstance} from "axios";
-
-export interface SignInRequest {
-  phone_number?: string,
-  password?: string
-}
+import { SignInRequest } from "/@src/models/Others/User/auth";
 
 export async function signIn(
   api: AxiosInstance,

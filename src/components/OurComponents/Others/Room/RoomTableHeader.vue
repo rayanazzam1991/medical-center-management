@@ -1,13 +1,8 @@
 <script lang="ts">
-import { RoomConsts } from '/@src/utils/consts/room'
-import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
-// import Department from '/@src/pages/department.vue'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import RoomSearchFilterModelVue from './RoomSearchFilterModel.vue'
+import { getDepartmentsList } from "/@src/services/Others/Department/departmentService"
+import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {
@@ -50,6 +45,7 @@ export default defineComponent({
         const keyTest = ref(0)
 
         const search = () => {
+
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
         }
@@ -116,8 +112,9 @@ export default defineComponent({
                                 <VControl>
                                     <div class="select">
                                         <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
+                                            <option v-if="pagination.per_page * 0.1 == 1" :value="pagination.per_page * 0.1">{{
+                                                    pagination.per_page * 0.1
+                                            }}
                                                 result per page</option>
                                             <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
                                                     0.1

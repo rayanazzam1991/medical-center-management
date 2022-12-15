@@ -1,10 +1,6 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser } from '../Others/User/userStore'
-import { defaultCreateEmployee, defaultUpdateEmployee } from './employeeStore'
-import { CreateEmployee } from '/@src/utils/api/Employee'
-import { UpdateEmployee } from '/@src/utils/api/Employee'
-import { MedicalInfo } from '/@src/utils/api/CRM/MedicalInfo'
-import { CreateUpdateUser } from '/@src/utils/api/Others/User'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { CreateEmployee, defaultCreateEmployee, UpdateEmployee, defaultUpdateEmployee } from "/@src/models/Employee/employee"
+import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 interface EmployeeFormStepOptions {
   number: number
@@ -51,7 +47,34 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   function getStep() {
     return step.value
   }
-
+  function reset() {
+    data.value.basic_salary = 0
+    data.value.end_date = ''
+    data.value.nationality_id = 0
+    data.value.starting_date = ''
+    data.value.user.first_name = ''
+    data.value.user.last_name = ''
+    data.value.user.gender = ''
+    data.value.user.address = ''
+    data.value.user.birth_date = ''
+    data.value.user.phone_number = ''
+    data.value.user.city_id = 0
+    data.value.user.room_id = 0
+    data.value.user.user_status_id = 0
+    dataUpdate.value.basic_salary = 0
+    dataUpdate.value.end_date = ''
+    dataUpdate.value.nationality_id = 0
+    dataUpdate.value.starting_date = ''
+    dataUpdate.value.user.first_name = ''
+    dataUpdate.value.user.last_name = ''
+    dataUpdate.value.user.gender = ''
+    dataUpdate.value.user.address = ''
+    dataUpdate.value.user.birth_date = ''
+    dataUpdate.value.user.phone_number = ''
+    dataUpdate.value.user.city_id = 0
+    dataUpdate.value.user.room_id = 0
+    dataUpdate.value.user.user_status_id = 0
+  }
   async function save() {
     loading.value = true
 
@@ -60,9 +83,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     loading.value = false
   }
 
-  function reset() {
-    data.value = defaultCreateEmployee
-  }
 
   return {
     canNavigate,

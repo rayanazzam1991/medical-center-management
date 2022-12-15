@@ -2,15 +2,11 @@
 import { useHead } from '@vueuse/head';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
-import { deleteService } from '/@src/composable/Others/Services/deleteService';
-import { getServicesList } from '/@src/composable/Others/Services/getServicesList';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore';
+import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts } from '/@src/models/Others/Service/service';
+import { getServicesList, deleteService } from '/@src/services/Others/Service/serviceService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { ServiceSearchFilter } from '/@src/utils/api/Others/Service';
-import { ServiceConsts } from '/@src/utils/consts/service';
 import { defaultPagination } from '/@src/utils/response';
-
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Service')
 useHead({
@@ -30,6 +26,8 @@ const router = useRouter()
 const removeService = async (serviceId: number) => {
 
   await deleteService(serviceId)
+  await search(searchFilter.value)
+
   deleteServicePopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)

@@ -1,10 +1,8 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
-import { addPersonalId } from '/@src/composable/Contractor/addPersonalId';
-import { deletePersonalId } from '/@src/composable/Contractor/deletePersonalId';
-import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
+import { addPersonalId, deletePersonalId, getPersonalId } from '/@src/services/Employee/employeeService';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultEmployeePersonalId } from '/@src/models/Employee/employee';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
-import { defaultEmployeePersonalId } from '/@src/stores/Employee/employeeStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
@@ -36,6 +34,7 @@ employeeForm.setStep({
         else {
             var isValid = await onSubmitEdit()
             if (isValid) {
+                employeeForm.reset()
                 router.push({
                     path: `/employee/${employeeId.value}`
                 })
@@ -45,7 +44,7 @@ employeeForm.setStep({
 
     },
     skipStepFn: async () => {
-
+        employeeForm.reset()
         router.push({
             path: `/employee/${employeeId.value}`
         })

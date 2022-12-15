@@ -1,11 +1,9 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCustomerProfilePic } from '/@src/models/CRM/Customer/customer';
+import { deleteProfilePicture, addProfilePicture, getProfilePicture } from '/@src/services/CRM/Customer/customerService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { getProfilePicture } from '/@src/composable/CRM/Customer/getProfilePicture';
-import { addProfilePicture } from '/@src/composable/CRM/Customer/addProfilePicture';
-import { deleteProfilePicture } from '/@src/composable/CRM/Customer/deleteProfilePicture';
-import { defaultCustomerProfilePic } from '/@src/stores/CRM/Customer/customerStore';
 
 
 
@@ -74,8 +72,11 @@ const onAddFile = (error: any, fileInfo: any) => {
     }
 }
 const onSubmitEdit = async () => {
-    if(currentProfilePicture.value.id != undefined)
-    await deleteProfilePicture(currentProfilePicture.value.id)
+    if (currentProfilePicture.value != undefined) {
+        if (currentProfilePicture.value.id != undefined)
+            await deleteProfilePicture(currentProfilePicture.value.id)
+    }
+
     let formData = new FormData();
     if (profile_picture.value != undefined)
         formData.append('images[]', profile_picture.value);
@@ -170,7 +171,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                     <div class="project-info">
                         <div class="project-info-head">
                             <div class="project-avatar-upload">
-                                <VAvatar :picture="currentProfilePicture.relative_path" size="xl" />
+                                <VAvatar :picture="currentProfilePicture?.relative_path" size="xl" />
 
 
                             </div>

@@ -1,18 +1,12 @@
 <script lang="ts">
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-
-import { City } from '/@src/utils/api/Others/City'
-import { Room } from '/@src/utils/api/Others/Room'
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
 import { boolean } from 'zod'
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city'
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
+import { defaultUserSearchFilter } from '/@src/models/Others/User/user'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { getCitiesList } from '/@src/services/Others/City/cityService'
 
 export default defineComponent({
     props: {
@@ -171,10 +165,12 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Ok..</VButton>
+            <VButton color="primary" raised @click="search">Search</VButton>
         </template>
     </VModal>
 </template>

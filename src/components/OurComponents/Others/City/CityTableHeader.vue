@@ -1,8 +1,6 @@
 <script lang="ts">
-import { CityConsts } from '/@src/utils/consts/city'
-import { CitySearchFilter } from '/@src/utils/api/Others/City'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultPagination, Pagination } from '/@src/utils/response'
+import { defaultCitySearchFilter, CityConsts } from "/@src/models/Others/City/city"
+import { defaultPagination } from "/@src/utils/response"
 
 
 export default defineComponent({
@@ -31,7 +29,7 @@ export default defineComponent({
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultCitySearchFilter)
-
+        console.log(pagination.per_page)
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,
@@ -99,24 +97,24 @@ export default defineComponent({
                         <div>
                             <VField>
                                 <VControl>
-                                    <div class="select">
-                                        <VSelect @change="search" v-model="perPage">
-                                            <VOption v-if="pagination.per_page * 0.1 == 1"
+                                    <div class="select is-rounded">
+                                        <select @change="search" v-model="perPage">
+                                            <option v-if="pagination.per_page * 0.1 == 1"
                                                 :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</VOption>
-                                            <VOption v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
+                                                result per page</option>
+                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
                                                     0.1
                                             }}
-                                                results per page</VOption>
-                                            <VOption :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</VOption>
-                                            <VOption :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</VOption>
-                                            <VOption :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</VOption>
-                                            <VOption :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</VOption>
-                                        </VSelect>
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page">{{ pagination.per_page }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
+                                                results per page</option>
+                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
+                                                results per page</option>
+                                        </select>
                                     </div>
                                 </VControl>
                             </VField>

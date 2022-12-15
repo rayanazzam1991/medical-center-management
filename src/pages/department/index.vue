@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import { DepartmentConsts } from '/@src/utils/consts/department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { deleteDepartment } from '/@src/composable/Others/Department/deleteDepartment'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { DepartmentSearchFilter } from '/@src/utils/api/Others/Department'
-import { defaultPagination } from '/@src/utils/response'
+import VTag from '/@src/components/base/tags/VTag.vue'
+import { useHead } from '@vueuse/head'
+import { deleteDepartment, getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts } from '/@src/models/Others/Department/department'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { defaultPagination } from '/@src/utils/response'
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Department')
 useHead({
@@ -30,6 +27,7 @@ const router = useRouter()
 const removeDepartment = async (departmentId: number) => {
 
   await deleteDepartment(departmentId)
+  await search(searchFilter.value)
   deleteDepartmentPopup.value = false
   // @ts-ignore
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
@@ -37,6 +35,7 @@ const removeDepartment = async (departmentId: number) => {
 }
 
 const search = async (searchFilter2: DepartmentSearchFilter) => {
+  console.log('123')
 
   const { departments, pagination } = await getDepartmentsList(searchFilter2)
 

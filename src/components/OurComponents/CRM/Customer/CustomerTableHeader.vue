@@ -1,16 +1,6 @@
-<script lang="ts">import { getCitiesList } from '/@src/composable/Others/City/getCitiesList'
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList'
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore'
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore'
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { City } from '/@src/utils/api/Others/City'
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup'
-import { UserStatus } from '/@src/utils/api/Others/UserStatus'
-import { defaultPagination } from '/@src/utils/response'
-
+<script lang="ts">
+import { defaultCustomerSearchFilter, CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
+import { defaultPagination } from "/@src/utils/response"
 
 export default defineComponent({
     props: {

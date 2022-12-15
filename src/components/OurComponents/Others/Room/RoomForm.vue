@@ -1,22 +1,14 @@
 <script  lang="ts">
+import { toFormValidator } from '@vee-validate/zod'
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addRoom } from '/@src/composable/Others/Room/addRoom'
-import { editRoom } from '/@src/composable/Others/Room/editRoom'
-import { Room } from '/@src/utils/api/Others/Room'
-import { CreateUpdateRoom } from '/@src/utils/api/Others/Room'
-import { defaultRoom } from '/@src/stores/Others/Room/RoomStore'
-import { getRoom } from '/@src/composable/Others/Room/getRoom'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { RoomConsts } from '/@src/utils/consts/room';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { toFormValidator } from '@vee-validate/zod';
-import { useForm, ErrorMessage } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate'
 import { z as zod } from 'zod'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment, defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { defaultCreateUpdateRoom } from '/@src/stores/Others/Room/roomStore';
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts } from '/@src/models/Others/Room/room'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
 
 
 export default defineComponent({
@@ -58,14 +50,13 @@ export default defineComponent({
                 return
             }
             const room = await getRoom(roomId.value)
-            console.log("sad", room)
             currentRoom.value = room != undefined ? room : defaultRoom
 
         }
-        const departments2 = ref<Department[]>([])
+        const departmentsList = ref<Department[]>([])
         onMounted(async () => {
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
-            departments2.value = departments
+            departmentsList.value = departments
         })
         onMounted(() => {
             getCurrentRoom()
@@ -170,7 +161,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departments2 }
+        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList }
     },
 
 
@@ -224,12 +215,12 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField class="column " id="department_id">
+                                <VField id="department_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} department</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
                                             <VOption value="">Department</VOption>
-                                            <VOption v-for="department in departments2" :key="department.id"
+                                            <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
                                         </VSelect>

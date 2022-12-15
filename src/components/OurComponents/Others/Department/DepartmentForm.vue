@@ -1,17 +1,16 @@
 <script  lang="ts">
-import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { addDepartment } from '/@src/composable/Others/Department/addDepartment'
-import { editDepartment } from '/@src/composable/Others/Department/editDepartment'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartment } from '/@src/stores/Others/Department/departmentStore'
-import { getDepartment } from '/@src/composable/Others/Department/getDepartment'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { DepartmentConsts } from '/@src/utils/consts/department';
-import { useNotyf } from '/@src/composable/useNotyf';
 import { toFormValidator } from '@vee-validate/zod';
-import { ErrorMessage, useForm } from 'vee-validate';
+import { useHead } from '@vueuse/head'
+import { useForm, ErrorMessage } from 'vee-validate';
 import { z as zod } from 'zod'
+import {
+    addDepartment,
+    editDepartment,
+    getDepartment
+} from '/@src/services/Others/Department/departmentService';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultDepartment, Department, DepartmentConsts } from '/@src/models/Others/Department/department';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 export default defineComponent({
     props: {
@@ -41,7 +40,7 @@ export default defineComponent({
         const getCurrentDepartment = async () => {
             if (departmentId.value === 0) {
                 currentDepartment.value.name = "";
-                currentDepartment.value.status = 0;
+                currentDepartment.value.status = 1;
                 return;
             }
             const department = await getDepartment(departmentId.value);
@@ -55,7 +54,7 @@ export default defineComponent({
                 name: zod
                     .string({
                         required_error: "This field is required",
-                    }),
+                    }).min(1, "This field is required"),
                 status: zod
                     .number({ required_error: "Please choose one" }),
             }));
@@ -80,9 +79,8 @@ export default defineComponent({
             var departmentData = currentDepartment.value;
             departmentData = await addDepartment(departmentData) as Department;
             notif.dismissAll();
-            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was added successfully`);
             // @ts-ignore
-            notif.success(` ${viewWrapper.pageTitle} ${roomData.number} was added successfully`);
+            notif.success(` ${viewWrapper.pageTitle} ${departmentData.name} was added successfully`);
             router.push({ path: `/department/${departmentData.id}` });
         });
         const onSubmitEdit = async () => {

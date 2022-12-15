@@ -1,20 +1,13 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { capitalize } from 'vue';
-import { routerKey, RouterLink } from 'vue-router';
-import { getPersonalId } from '/@src/composable/Contractor/getPersonalId';
-import { getEmployee } from '/@src/composable/Employee/getEmployee';
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultEmployee, defaultEmployeePersonalId } from '/@src/stores/Employee/employeeStore';
-import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { usePanels } from '/@src/stores/panels';
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { Employee } from '/@src/utils/api/Employee';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { onceImageErrored } from '/@src/utils/via-placeholder'
+import { useHead } from "@vueuse/head"
+import { getEmployee, getPersonalId } from "/@src/services/Employee/employeeService"
+import { changeUserStatus } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { Employee, defaultEmployee, defaultEmployeePersonalId } from "/@src/models/Employee/employee"
+import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
 
 const route = useRoute()
 const router = useRouter()

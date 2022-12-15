@@ -1,13 +1,7 @@
 <script lang="ts">
-import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { Room } from '/@src/utils/api/Others/Room'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { boolean } from 'zod'
-import { Department } from '/@src/utils/api/Others/Department'
-import { RoomConsts } from '/@src/utils/consts/room'
+import { getDepartmentsList } from "/@src/services/Others/Department/departmentService"
+import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { defaultRoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
 
 
 export default defineComponent({
@@ -110,10 +104,12 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Ok..</VButton>
+            <VButton color="primary" raised @click="search">Search</VButton>
         </template>
     </VModal>
 </template>
