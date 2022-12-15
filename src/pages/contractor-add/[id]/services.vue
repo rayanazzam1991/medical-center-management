@@ -30,7 +30,6 @@ contractorForm.setStep({
         console.log(isValid)
         if (isValid) {
             contractorForm.reset()
-
             router.push({
                 path: `/contractor/${contractorId.value}`,
             })
