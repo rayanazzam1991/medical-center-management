@@ -72,11 +72,9 @@ const onAddFile = (error: any, fileInfo: any) => {
     }
 }
 const onSubmitEdit = async () => {
-    if (currentProfilePicture.value != undefined) {
+    if (currentProfilePicture.value != undefined)
         if (currentProfilePicture.value.id != undefined)
             await deleteProfilePicture(currentProfilePicture.value.id)
-    }
-
     let formData = new FormData();
     if (profile_picture.value != undefined)
         formData.append('images[]', profile_picture.value);
@@ -172,8 +170,6 @@ const onRemoveFile = (error: any, fileInfo: any) => {
                         <div class="project-info-head">
                             <div class="project-avatar-upload">
                                 <VAvatar :picture="currentProfilePicture?.relative_path" size="xl" />
-
-
                             </div>
                         </div>
                     </div>

@@ -64,7 +64,7 @@ export default defineComponent({
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
-                name: '',
+                name: currentUserStatus.value.name ?? '',
             },
         })
 
