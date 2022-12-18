@@ -20,7 +20,7 @@ const serviceId = ref(0)
 serviceId.value = route.params?.id as number ?? 0
 const currentService = ref(defaultService)
 const getCurrentService = async () => {
-    const service = await getService(serviceId.value)
+    const { service } = await getService(serviceId.value)
     if (service != undefined)
         currentService.value = service
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentService.value.name
@@ -80,5 +80,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>

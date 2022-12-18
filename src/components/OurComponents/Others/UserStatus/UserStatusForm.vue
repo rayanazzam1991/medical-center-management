@@ -40,8 +40,8 @@ export default defineComponent({
                 currentUserStatus.value.name = ''
                 return
             }
-            const userstatus = await getUserStatus(userstatusId.value)
-            currentUserStatus.value = userstatus != undefined ? userstatus : defaultUserStatus
+            const { userStatus } = await getUserStatus(userstatusId.value)
+            currentUserStatus.value = userStatus != undefined ? userStatus : defaultUserStatus
 
         }
         onMounted(() => {
@@ -69,21 +69,33 @@ export default defineComponent({
 
         const onSubmitAdd = async () => {
             var userstatusData = currentUserStatus.value
-            userstatusData = await addUserStatus(userstatusData) as UserStatus
-            notif.dismissAll()
-            notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was added successfully`)
+            const { userStatus, message, success } = await addUserStatus(userstatusData)
+            if (success) {
+
+                notif.dismissAll()
+                notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`)
 
 
-            router.push({ path: `/userstatus/${userstatusData.id}` })
+                router.push({ path: `/userstatus/${userStatus.id}` })
 
+            }
+            else {
+                notif.error(message)
+            }
         }
         const onSubmitEdit = async () => {
             const userstatusData = currentUserStatus.value
-            await editUserStatus(userstatusData)
-            notif.dismissAll()
-            notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`)
+            const { message, success } = await editUserStatus(userstatusData)
+            if (success) {
 
-            router.push({ path: `/userstatus/${userstatusData.id}` })
+                notif.dismissAll()
+                notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`)
+
+                router.push({ path: `/userstatus/${userstatusData.id}` })
+            }
+            else {
+                notif.error(message)
+            }
 
 
         }
@@ -135,5 +147,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

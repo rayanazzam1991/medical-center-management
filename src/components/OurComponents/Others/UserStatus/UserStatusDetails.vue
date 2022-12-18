@@ -22,9 +22,9 @@ const userstatusId = ref(0)
 userstatusId.value = route.params?.id as number ?? 0
 const currentUserStatus = ref(defaultUserStatus)
 const getCurrentUserStatus = async () => {
-    const userstatus = await getUserStatus(userstatusId.value)
-    if (userstatus != undefined)
-        currentUserStatus.value = userstatus
+    const { userStatus } = await getUserStatus(userstatusId.value)
+    if (userStatus != undefined)
+        currentUserStatus.value = userStatus
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentUserStatus.value.name
 
 }
@@ -62,5 +62,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>

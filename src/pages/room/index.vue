@@ -4,9 +4,10 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { deleteRoom, getRoomsList } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts } from '/@src/models/Others/Room/room'
+import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts, Room } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
+import { useRoom } from '/@src/stores/Others/Room/roomStore'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Room')
 useHead({
@@ -14,25 +15,35 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultRoomSearchFilter)
-const roomsList = ref()
+const roomsList = ref<Array<Room>>([])
 const deleteRoomPopup = ref(false)
 const deleteRoomId = ref()
 const paginationVar = ref(defaultPagination)
-const { rooms, pagination } = await getRoomsList(searchFilter.value)
-roomsList.value = rooms
-paginationVar.value = pagination
 const router = useRouter()
+const roomStore = useRoom()
+const keyIncrement = ref(0)
+onMounted(async () => {
+  const { rooms, pagination } = await getRoomsList(searchFilter.value)
+  roomsList.value = rooms
+  paginationVar.value = pagination
+  keyIncrement.value = keyIncrement.value + 1
+});
 
 const removeRoom = async (roomId: number) => {
 
-  await deleteRoom(roomId)
+  const { message, success } = await deleteRoom(roomId)
   await search(searchFilter.value)
   deleteRoomPopup.value = false
-  // @ts-ignore
-  notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  if (success) {
+
+    // @ts-ignore
+    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  }
+  else notif.error(message)
 
 }
 const search = async (searchFilter2: RoomSearchFilter) => {
+  paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
   const { rooms, pagination } = await getRoomsList(searchFilter2)
 
@@ -43,12 +54,12 @@ const search = async (searchFilter2: RoomSearchFilter) => {
 
 const resetFilter = async (searchFilter2: RoomSearchFilter) => {
   searchFilter.value = searchFilter2
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 
 const getRoomsPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 const roomSort = async (value: string) => {
   if (value != undefined) {
@@ -136,15 +147,29 @@ const columns = {
 </script>
 
 <template>
-  <RoomTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-    :pagination="paginationVar" @resetFilter="resetFilter" />
+  <RoomTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
+    @search="search" :pagination="paginationVar" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="roomsList" @update:sort="roomSort">
-
-    <VFlexTable v-if="roomsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+    <VFlexTable separators clickable>
+      <template #body>
+        <div v-if="roomStore?.loading" class="flex-list-inner">
+          <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+            <VFlexTableCell>
+              <VPlaceload />
+            </VFlexTableCell>
+          </div>
+        </div>
+        <div v-else-if="roomsList.length === 0" class="flex-list-inner">
+          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          </VPlaceholderSection>
+        </div>
+      </template>
+    </VFlexTable>
     <VFlexPagination v-if="(roomsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getRoomsPerPage" />
-    <h6 v-if="roomsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+    <h6 v-if="roomsList.length != 0 && !roomStore?.loading">Showing {{ paginationVar.page !=
+        paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
     }} to {{
@@ -154,7 +179,7 @@ const columns = {
       paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-    <h1 v-if="roomsList.length == 0">No Data Returned...</h1>
+    <VPlaceloadText v-if="roomStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
   <VModal title="Remove Room" :open="deleteRoomPopup" actions="center" @close="deleteRoomPopup = false">
     <template #content>

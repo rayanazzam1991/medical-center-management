@@ -19,8 +19,6 @@ import { contractorAddvalidationSchema } from '/@src/rules/Contractor/contractor
 
 
 
-
-
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
@@ -115,10 +113,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
         contractorForm.userForm.city_id = userData.city_id
         contractorForm.userForm.user_status_id = userData.user_status_id
 
-        const contractor = await addContractor(contractorForm.data, contractorForm.userForm)
+        const { success, message, contractor } = await addContractor(contractorForm.data, contractorForm.userForm)
 
-        if (contractor.success) {
-            contractorForm.data.id = contractor.contractor.id
+        if (success) {
+            contractorForm.data.id = contractor.id
             // @ts-ignore
             notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was added successfully`)
 
@@ -127,7 +125,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         else {
             // @ts-ignore
 
-            notif.error(contractor.success)
+            notif.error(message)
             return false
         }
 

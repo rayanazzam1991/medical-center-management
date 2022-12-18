@@ -5,9 +5,10 @@ import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { getEmployeesList } from '/@src/services/Employee/employeeService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultEmployeeSearchFilter, EmployeeSearchFilter } from '/@src/models/Employee/employee'
+import { defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
+import { useEmployee } from '/@src/stores/Employee/employeeStore'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Employee')
 useHead({
@@ -15,12 +16,20 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultEmployeeSearchFilter)
-const employeesList = ref()
+const employeesList = ref<Array<Employee>>([])
 const paginationVar = ref(defaultPagination)
-const { employees, pagination } = await getEmployeesList(searchFilter.value)
-employeesList.value = employees
-paginationVar.value = pagination
 const router = useRouter()
+const employeeStore = useEmployee()
+
+const keyIncrement = ref(0)
+
+onMounted(async () => {
+    const { employees, pagination } = await getEmployeesList(searchFilter.value)
+    employeesList.value = employees
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+});
+
 
 const search = async (searchFilter2: EmployeeSearchFilter) => {
 
@@ -218,17 +227,36 @@ const columns = {
 </script>
 
 <template>
-    <EmployeeTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-        :pagination="paginationVar" @resetFilter="resetFilter" />
+    <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
         @update:sort="employeeSort">
 
-        <VFlexTable v-if="employeesList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+        <VFlexTable separators clickable>
+            <template #body>
+                <div v-if="employeeStore?.loading" class="flex-list-inner">
+                    <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+                        <VFlexTableCell>
+                            <VPlaceload />
+                        </VFlexTableCell>
+
+                    </div>
+                </div>
+                <div v-else-if="employeesList.length === 0" class="flex-list-inner">
+                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                        class="my-6">
+                    </VPlaceholderSection>
+                </div>
+
+            </template>
+        </VFlexTable>
         <VFlexPagination v-if="(employeesList.length != 0 && paginationVar.max_page != 1)"
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getEmployeesPerPage" />
-        <h6 v-if="employeesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+        <h6 v-if="employeesList.length != 0 && !employeeStore?.loading">Showing {{ paginationVar.page !=
+                paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
         }} to {{
@@ -238,7 +266,7 @@ const columns = {
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-        <h1 v-if="employeesList.length == 0">No Data Returned...</h1>
+        <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
 
 </template>

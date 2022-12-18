@@ -129,8 +129,8 @@ const onSubmitEdit = async () => {
     }
     customerForm.dataUpdate.is_completed = true
     console.log(customerForm.userForm)
-    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-    if (customer.success) {
+    const {customer , message , success} = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    if (success) {
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
@@ -139,7 +139,7 @@ const onSubmitEdit = async () => {
     else {
         // @ts-ignore
 
-        notif.error(customer.success)
+        notif.error(message)
 
     }
 

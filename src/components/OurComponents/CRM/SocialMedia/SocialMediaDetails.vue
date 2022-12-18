@@ -20,9 +20,9 @@ const socialMediaId = ref(0)
 socialMediaId.value = route.params?.id as number ?? 0
 const currentSocialMedia = ref(defaultSocialMedia)
 const getCurrentSocialMedia = async () => {
-    const city = await getSocialMedia(socialMediaId.value)
-    if (city != undefined)
-        currentSocialMedia.value = city
+    const { socialMedia } = await getSocialMedia(socialMediaId.value)
+    if (socialMedia != undefined)
+        currentSocialMedia.value = socialMedia
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentSocialMedia.value.name
 
 }

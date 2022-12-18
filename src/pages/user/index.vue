@@ -24,12 +24,17 @@ paginationVar.value = pagination
 const router = useRouter()
 
 const removeUser = async (userId: number) => {
-
-    await deleteUser(userId)
+    const { message, success } = await deleteUser(userId)
     await search(searchFilter.value)
+
     deleteUserPopup.value = false
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    if (success) {
+
+        // @ts-ignore
+        notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+
+    } else notif.error(message)
+
 
 }
 const search = async (searchFilter2: UserSearchFilter) => {

@@ -30,9 +30,16 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-      customers.value.push(returnedCustomer)
+
       return returnedCustomer
     }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
     finally {
       loading.value = false
     }
@@ -47,12 +54,20 @@ export const useCustomer = defineStore('customer', () => {
 
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
+      customers.value.push(returnedCustomer)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-      customers.value.push(returnedCustomer)
+
       return returnedCustomer
     }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
 
 
     finally {
@@ -68,7 +83,19 @@ export const useCustomer = defineStore('customer', () => {
       const returnedResponse = await getCustomersApi(api, searchFilter)
       customers.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -87,9 +114,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -106,9 +142,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedMedia
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -126,9 +171,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedMedia
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -144,9 +198,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -163,9 +226,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -179,9 +251,18 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return response
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
@@ -192,6 +273,7 @@ export const useCustomer = defineStore('customer', () => {
     message,
     customers,
     pagination,
+    loading,
     addCustomerStore,
     addSocialMediaStore,
     addMedicalInfoStore,

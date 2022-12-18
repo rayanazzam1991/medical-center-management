@@ -4,8 +4,9 @@ import VIcon from '/@src/components/base/icon/VIcon.vue';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultSocialMediaSearchFilter, SocialMediaSearchFilter, SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { defaultSocialMediaSearchFilter, SocialMediaSearchFilter, SocialMediaConsts, SocialMedia } from '/@src/models/CRM/SocialMedia/socialMedia';
 import { getSocialMediasList, deleteSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
+import { useSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 
@@ -16,27 +17,36 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultSocialMediaSearchFilter)
-const socialMediasList = ref()
+const socialMediasList = ref<Array<SocialMedia>>([])
 const deleteSocialMediaPopup = ref(false)
 const deleteSocialMediaId = ref()
 const paginationVar = ref(defaultPagination)
-const { socialMedias, pagination } = await getSocialMediasList(searchFilter.value)
-socialMediasList.value = socialMedias
-paginationVar.value = pagination
 const router = useRouter()
+const socialMediaStore = useSocialMedia()
+const keyIncrement = ref(0)
+onMounted(async () => {
+  const { socialMedias, pagination } = await getSocialMediasList(searchFilter.value)
+  socialMediasList.value = socialMedias
+  paginationVar.value = pagination
+  keyIncrement.value = keyIncrement.value + 1
+});
 
 const removeSocialMedia = async (socialMediaId: number) => {
-
-  await deleteSocialMedia(socialMediaId)
+const { message, success } =  await deleteSocialMedia(socialMediaId)
   await search(searchFilter.value)
 
   deleteSocialMediaPopup.value = false
-  // @ts-ignore
-  notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  if (success) {
+
+// @ts-ignore
+notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+
+} else notif.error(message)
 
 }
 
 const search = async (searchFilter2: SocialMediaSearchFilter) => {
+  paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
   const { socialMedias, pagination } = await getSocialMediasList(searchFilter2)
 
@@ -48,12 +58,12 @@ const search = async (searchFilter2: SocialMediaSearchFilter) => {
 
 const resetFilter = async (searchFilter2: SocialMediaSearchFilter) => {
   searchFilter.value = searchFilter2
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 
 const getSocialMediasPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 const socialMediaSort = async (value: string) => {
   if (value != undefined) {
@@ -145,16 +155,31 @@ const columns = {
 </script>
 
 <template>
-  <SocialMediaTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-    :pagination="paginationVar" @resetFilter="resetFilter" />
+  <SocialMediaTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="socialMediasList" @update:sort="socialMediaSort">
-
-    <VFlexTable v-if="socialMediasList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+    <VFlexTable separators clickable>
+      <template #body>
+        <div v-if="socialMediaStore?.loading" class="flex-list-inner">
+          <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+            <VFlexTableCell>
+              <VPlaceload />
+            </VFlexTableCell>
+          </div>
+        </div>
+        <div v-else-if="socialMediasList.length === 0" class="flex-list-inner">
+          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          </VPlaceholderSection>
+        </div>
+      </template>
+    </VFlexTable>
     <VFlexPagination v-if="(socialMediasList.length != 0 && paginationVar.max_page != 1)"
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getSocialMediasPerPage" />
-    <h6 v-if="socialMediasList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+    <h6 v-if="socialMediasList.length != 0 && !socialMediaStore?.loading">Showing {{ paginationVar.page !=
+        paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
     }} to {{
@@ -164,7 +189,7 @@ const columns = {
       paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
-    <h1 v-if="socialMediasList.length == 0">No Data Returned...</h1>
+    <VPlaceloadText v-if="socialMediaStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
   <VModal title="Remove SocialMedia" :open="deleteSocialMediaPopup" actions="center"
     @close="deleteSocialMediaPopup = false">

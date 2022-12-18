@@ -45,7 +45,6 @@ export async function updateEmployee(
     user: userData,
   }
   const employeeResponse = useEmployee()
-  console.log(newEmployeeData)
   var employee: Employee =
     (await employeeResponse.updateEmployeeStore(employee_id, newEmployeeData)) ??
     defaultEmployee

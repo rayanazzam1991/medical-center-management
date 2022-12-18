@@ -40,7 +40,7 @@ export default defineComponent({
                 return
             }
 
-            const customerGroup = await getCustomerGroup(customerGroupId.value);
+            const { customerGroup } = await getCustomerGroup(customerGroupId.value);
             currentCustomerGroup.value = customerGroup != undefined ? customerGroup : defaultCustomerGroup;
         };
         onMounted(() => {
@@ -66,21 +66,31 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var customerGroupData = currentCustomerGroup.value;
-            customerGroupData = await addCustomerGroup(customerGroupData) as CustomerGroup;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/customer-group/${customerGroupData.id}` });
+            const { customerGroup, message, success } = await addCustomerGroup(customerGroupData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${customerGroup.name} ${viewWrapper.pageTitle} was added successfully`);
+                router.push({ path: `/customer-group/${customerGroup.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         const onSubmitEdit = async () => {
             const customerGroupData = currentCustomerGroup.value;
-            await editCustomerGroup(customerGroupData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/customer-group/${customerGroupData.id}` });
+            const { success, message } = await editCustomerGroup(customerGroupData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                router.push({ path: `/customer-group/${customerGroupData.id}` });
+            } else {
+                notif.error(message)
+            }
         };
         return { pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts };
     },

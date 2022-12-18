@@ -76,9 +76,9 @@ const onSubmitAdd = async () => {
 
     }
     contractorForm.data.is_completed = true
-    const contractor = await addServicesToContractor(contractorId.value, contractorForm.contractorServicesForm)
+    const { success, message, contractor } = await addServicesToContractor(contractorId.value, contractorForm.contractorServicesForm)
 
-    if (contractor.success) {
+    if (success) {
         // @ts-ignore
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
 
@@ -87,7 +87,7 @@ const onSubmitAdd = async () => {
     else {
         // @ts-ignore
 
-        notif.error(contractor.success)
+        notif.error(message)
 
     }
 

@@ -16,6 +16,10 @@ export const useSocialMedia = defineStore('socialMedia', () => {
   const socialMedias = ref<SocialMedia[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
+
 
   async function deleteSocialMediaStore(socialMediaId: number) {
     if (loading.value) return
@@ -28,7 +32,18 @@ export const useSocialMedia = defineStore('socialMedia', () => {
         socialMedias.value.findIndex((socialMedia: SocialMedia) => socialMedia.id === socialMediaId),
         1
       )
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -41,8 +56,19 @@ export const useSocialMedia = defineStore('socialMedia', () => {
       const response = await getSocialMediaApi(api, socialMediaId)
       var returnedSocialMedia: SocialMedia
       returnedSocialMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedSocialMedia
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -56,8 +82,19 @@ export const useSocialMedia = defineStore('socialMedia', () => {
       var returnedSocialMedia: SocialMedia
       returnedSocialMedia = response.response.data
       socialMedias.value.push(returnedSocialMedia)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedSocialMedia
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -75,7 +112,18 @@ export const useSocialMedia = defineStore('socialMedia', () => {
         1
       )
       socialMedias.value.push(returnedSocialMedia)
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -88,14 +136,29 @@ export const useSocialMedia = defineStore('socialMedia', () => {
       const returnedResponse = await getSocialMediasApi(api, searchFilter)
       socialMedias.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     socialMedias,
     pagination,
+    loading,
     deleteSocialMediaStore,
     addSocialMediaStore,
     editSocialMediaStore,

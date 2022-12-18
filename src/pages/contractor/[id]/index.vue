@@ -71,7 +71,6 @@ const changestatusUser = async () => {
     notif.dismissAll()
     // @ts-ignore
     notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
-    // router.push({ path: `/contractor/${userData.id}` })
     changeStatusPopup.value = false
 }
 

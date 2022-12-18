@@ -154,9 +154,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
-    const employee = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
-    if (employee.success) {
-        employeeForm.dataUpdate.id = employee.employee.id
+    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
+    if (success) {
+        employeeForm.dataUpdate.id = employee.id
         // @ts-ignore
         notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was updated successfully`)
 
@@ -165,7 +165,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     else {
         // @ts-ignore
 
-        notif.error(employee.success)
+        notif.error(message)
         return false
 
 

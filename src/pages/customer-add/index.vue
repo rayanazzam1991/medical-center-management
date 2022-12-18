@@ -116,16 +116,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.city_id = userData.city_id
         customerForm.userForm.user_status_id = userData.user_status_id
         console.log(customerForm.userForm)
-        const customer = await addCustomer(customerForm.data, customerForm.userForm)
-        if (customer.success) {
-            customerForm.data.id = customer.customer.id
+        const { customer, message, success } = await addCustomer(customerForm.data, customerForm.userForm)
+        if (success) {
+            customerForm.data.id = customer.id
             // @ts-ignore
             notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
             return true
         }
         else {
             // @ts-ignore
-            notif.error(customer.success)
+            notif.error(message)
             return false
         }
 

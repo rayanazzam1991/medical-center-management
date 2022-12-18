@@ -10,6 +10,9 @@ export const useRoom = defineStore('room', () => {
   const rooms = ref<Room[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
 
   async function deleteRoomStore(roomId: number) {
     if (loading.value) return
@@ -22,7 +25,16 @@ export const useRoom = defineStore('room', () => {
         rooms.value.findIndex((room: Room) => room.id === roomId),
         1
       )
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -35,8 +47,17 @@ export const useRoom = defineStore('room', () => {
       const response = await getRoomApi(api, roomId)
       var returnedRoom: Room
       returnedRoom = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedRoom
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -50,8 +71,17 @@ export const useRoom = defineStore('room', () => {
       var returnedRoom: Room
       returnedRoom = response.response.data
       rooms.value.push(returnedRoom)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedRoom
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -69,7 +99,16 @@ export const useRoom = defineStore('room', () => {
         1
       )
       rooms.value.push(returnedRoom)
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -82,14 +121,27 @@ export const useRoom = defineStore('room', () => {
       const returnedResponse = await getRoomsApi(api, searchFilter)
       rooms.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     rooms,
     pagination,
+    loading,
     deleteRoomStore,
     addRoomStore,
     editRoomStore,

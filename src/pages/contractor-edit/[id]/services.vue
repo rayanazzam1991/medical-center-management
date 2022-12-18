@@ -123,18 +123,17 @@ const onSubmitEdit = async () => {
 
     }
     contractorForm.dataUpdate.is_completed = true
-    const contractor = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
-    if (contractor.success) {
+    const { success, message, contractor } = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
+    if (success) {
         // @ts-ignore
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
 
         return true
     }
     else {
-        console.log('asd')
         // @ts-ignore
 
-        notif.error(contractor.success)
+        notif.error(message)
 
     }
 
@@ -222,5 +221,4 @@ const onSubmitEdit = async () => {
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
 }
-
 </style>

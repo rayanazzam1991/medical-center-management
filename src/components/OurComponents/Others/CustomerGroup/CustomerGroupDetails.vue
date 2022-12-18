@@ -20,7 +20,7 @@ const customerGroupId = ref(0)
 customerGroupId.value = route.params?.id as number ?? 0
 const currentCustomerGroup = ref(defaultCustomerGroup)
 const getCurrentCustomerGroup = async () => {
-    const customerGroup = await getCustomerGroup(customerGroupId.value)
+    const { customerGroup } = await getCustomerGroup(customerGroupId.value)
     if (customerGroup != undefined)
         currentCustomerGroup.value = customerGroup
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentCustomerGroup.value.name
