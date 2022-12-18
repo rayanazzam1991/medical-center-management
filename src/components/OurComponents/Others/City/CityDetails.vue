@@ -5,6 +5,8 @@ import { defaultCity } from '/@src/models/Others/City/city'
 import { getCity } from '/@src/services/Others/City/cityService'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { CityConsts } from '/@src/models/Others/City/city'
+import { useCity } from '/@src/stores/Others/City/cityStore'
+import sleep from '/@src/utils/sleep'
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -15,13 +17,15 @@ const head = useHead({
 })
 
 
-
+const cityStore = useCity()
 const cityId = ref(0)
 // @ts-ignore
 cityId.value = route.params?.id as number ?? 0
 const currentCity = ref(defaultCity)
 const getCurrentCity = async () => {
     const city = await getCity(cityId.value)
+    sleep(500)
+
     if (city != undefined)
         currentCity.value = city
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentCity.value.name
@@ -38,7 +42,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/city'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/city'" @onSubmit="toEdit"
+        :isLoading="cityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

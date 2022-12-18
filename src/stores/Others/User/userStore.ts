@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
 import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi } from "/@src/utils/api/Others/User"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useUser = defineStore('user', () => {
@@ -30,7 +31,7 @@ export const useUser = defineStore('user', () => {
     if (loading.value) return
 
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getUserApi(api, userId)
       var returnedUser: User
@@ -43,8 +44,7 @@ export const useUser = defineStore('user', () => {
   async function addUserStore(user: CreateUpdateUser) {
     if (loading.value) return
 
-    loading.value = true
-
+    sleep(2000)
     try {
       const response = await addUserApi(api, user)
       var returnedUser: User
@@ -57,9 +57,8 @@ export const useUser = defineStore('user', () => {
   }
   async function editUserStore(user: CreateUpdateUser) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editUserApi(api, user)
       var returnedUser: User
@@ -127,6 +126,7 @@ export const useUser = defineStore('user', () => {
     getUsersStore,
     phoneExistsCheckStore,
     changeUserStatusStore,
+    loading
   } as const
 })
 

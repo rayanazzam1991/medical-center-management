@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Nationality, NationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
 import { deleteNationalityApi, getNationalityApi, addNationalityApi, editNationalityApi, getNationalitiesApi } from "/@src/utils/api/Others/Nationality"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useNationality = defineStore('nationality', () => {
@@ -26,9 +27,8 @@ export const useNationality = defineStore('nationality', () => {
   }
   async function getNationalityStore(nationalityId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getNationalityApi(api, nationalityId)
       var returnedNationality: Nationality
@@ -43,9 +43,8 @@ export const useNationality = defineStore('nationality', () => {
   async function addNationalityStore(nationality: Nationality) {
 
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addNationalityApi(api, nationality)
       var returnedNationality: Nationality
@@ -61,9 +60,8 @@ export const useNationality = defineStore('nationality', () => {
   async function editNationalityStore(nationality: Nationality) {
 
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editNationalityApi(api, nationality)
       var returnedNationality: Nationality
@@ -99,7 +97,8 @@ export const useNationality = defineStore('nationality', () => {
     addNationalityStore,
     editNationalityStore,
     getNationalityStore,
-    getNationalities
+    getNationalities,
+    loading
 
   } as const
 })

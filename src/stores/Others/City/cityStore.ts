@@ -31,6 +31,8 @@ export const useCity = defineStore('city', () => {
     if (loading.value) return
 
     loading.value = true
+    sleep(2000)
+
 
     try {
       const response = await getCityApi(api, cityId)
@@ -43,10 +45,8 @@ export const useCity = defineStore('city', () => {
   }
   async function addCityStore(city: City) {
     if (loading.value) return
-
     loading.value = true
     sleep(2000)
-
     try {
       const response = await addCityApi(api, city)
       var returnedCity: City
@@ -59,9 +59,8 @@ export const useCity = defineStore('city', () => {
   }
   async function editCityStore(city: City) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editCityApi(api, city)
       var returnedCity: City

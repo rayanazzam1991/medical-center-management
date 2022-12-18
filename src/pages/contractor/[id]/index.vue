@@ -1,6 +1,4 @@
-
 <script setup lang="ts">
-
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { Contractor, defaultContractor, defaultContractorPersonalId } from "/@src/models/Contractor/contractor"
@@ -10,6 +8,8 @@ import { getContractor, getPersonalId } from "/@src/services/Contractor/contract
 import { changeUserStatus } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { useContractor } from "/@src/stores/Contractor/contractorStore"
+import sleep from "/@src/utils/sleep"
 
 
 const route = useRoute()
@@ -30,6 +30,7 @@ viewWrapper.setPageTitle(`Contractor`)
 useHead({
     title: 'Contractor',
 })
+const contractorStore = useContractor()
 const props = withDefaults(
     defineProps<{
         activeTab?: 'Details' | 'Services'
@@ -87,6 +88,7 @@ const onClickEditMainInfo = () => {
 }
 const getCurrentPersonalId = async () => {
     var personal_id = await getPersonalId(contractorId.value)
+    await sleep(500)
     if (personal_id.media.length != 0)
         contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
@@ -95,7 +97,9 @@ const getCurrentPersonalId = async () => {
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="contractorPersonalId?.relative_path" squared />
+            <VLoader size="large" class="v-avatar" :active="contractorStore.loading">
+                <VAvatar size="xl" :picture="contractorPersonalId?.relative_path" squared />
+            </VLoader>
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
                 {{ currentContractor.user.last_name }}</h3>

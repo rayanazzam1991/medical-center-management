@@ -12,7 +12,8 @@ import { defaultUserStatus, UserStatus, defaultUserStatusSearchFilter } from '/@
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { uservalidationSchema } from '/@src/rules/Others/User/userValidation';
-
+import { useUser } from '/@src/stores/Others/User/userStore';
+import sleep from '/@src/utils/sleep';
 
 export default defineComponent({
     props: {
@@ -30,8 +31,8 @@ export default defineComponent({
         const head = useHead({
             title: 'User',
         })
+        const userStore = useUser()
         const notif = useNotyf()
-
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
@@ -124,8 +125,7 @@ export default defineComponent({
             // @ts-ignore
 
             notif.success(` ${viewWrapper.pageTitle} was added successfully`)
-
-
+            await sleep(500)
             router.push({ path: `/user/${userData.id}` })
 
         })
@@ -148,15 +148,14 @@ export default defineComponent({
 
             notif.dismissAll()
             // @ts-ignore
-
             notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
-
+            await sleep(500)
             router.push({ path: `/user/${userData.id}` })
 
 
         }
 
-        return { pageTitle, onSubmit, currentUser, viewWrapper, backRoute, citiesList, roomsList, statusesList }
+        return { pageTitle, onSubmit, currentUser, userStore, viewWrapper, backRoute, citiesList, roomsList, statusesList }
     },
 
 
@@ -169,7 +168,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="userStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">
@@ -342,5 +341,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

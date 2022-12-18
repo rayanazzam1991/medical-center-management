@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
 import { deleteServiceApi, getServiceApi, addServiceApi, editServiceApi, getServicesApi } from "/@src/utils/api/Others/Service"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useService = defineStore('service', () => {
@@ -28,9 +29,8 @@ export const useService = defineStore('service', () => {
   }
   async function getServiceStore(serviceId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getServiceApi(api, serviceId)
       var returnedService: Service
@@ -42,9 +42,8 @@ export const useService = defineStore('service', () => {
   }
   async function addServiceStore(service: Service) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addServiceApi(api, service)
       var returnedService: Service
@@ -57,9 +56,8 @@ export const useService = defineStore('service', () => {
   }
   async function editServiceStore(service: Service) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editServiceApi(api, service)
       var returnedService: Service
@@ -95,6 +93,7 @@ export const useService = defineStore('service', () => {
     editServiceStore,
     getServiceStore,
     getServicesStore,
+    loading
   } as const
 })
 

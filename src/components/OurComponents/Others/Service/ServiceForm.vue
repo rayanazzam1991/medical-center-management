@@ -6,8 +6,8 @@ import { defaultService, Service, ServiceConsts } from '/@src/models/Others/Serv
 import { servicevalidationSchema } from '/@src/rules/Others/Service/serviceValidation';
 import { getService, addService, editService } from '/@src/services/Others/Service/serviceService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-
-
+import sleep from '/@src/utils/sleep';
+import { useService } from '/@src/stores/Others/Service/serviceStore';
 
 
 export default defineComponent({
@@ -24,6 +24,7 @@ export default defineComponent({
         const head = useHead({
             title: "Service",
         });
+        const serviceStore = useService()
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -79,6 +80,7 @@ export default defineComponent({
             notif.dismissAll();
             // @ts-ignore
             notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
+            await sleep(500)
             router.push({ path: `/service/${serviceData.id}` });
         });
         const onSubmitEdit = handleSubmit(async () => {
@@ -88,9 +90,10 @@ export default defineComponent({
             notif.dismissAll();
             // @ts-ignore
             notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
+            await sleep(500)
             router.push({ path: `/service/${serviceData.id}` });
         });
-        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
+        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts, serviceStore };
     },
     components: { ErrorMessage }
 })
@@ -102,7 +105,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="serviceStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">
@@ -199,5 +202,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

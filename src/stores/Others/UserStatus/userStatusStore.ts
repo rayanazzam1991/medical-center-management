@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { UserStatus, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { deleteUserStatusApi, getUserStatusApi, addUserStatusApi, editUserStatusApi, getUserStatusesApi } from "/@src/utils/api/Others/UserStatus"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
 
 export const useUserStatus = defineStore('userstatus', () => {
   const api = useApi()
@@ -29,9 +30,8 @@ export const useUserStatus = defineStore('userstatus', () => {
   }
   async function getUserStatusStore(userstatusId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getUserStatusApi(api, userstatusId)
       var returnedUserStatus: UserStatus
@@ -43,9 +43,8 @@ export const useUserStatus = defineStore('userstatus', () => {
   }
   async function addUserStatusStore(userstatus: UserStatus) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addUserStatusApi(api, userstatus)
       var returnedUserStatus: UserStatus
@@ -58,9 +57,8 @@ export const useUserStatus = defineStore('userstatus', () => {
   }
   async function editUserStatusStore(userstatus: UserStatus) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editUserStatusApi(api, userstatus)
       var returnedUserStatus: UserStatus
@@ -98,6 +96,7 @@ export const useUserStatus = defineStore('userstatus', () => {
     editUserStatusStore,
     getUserStatusStore,
     getUserStatusesStore,
+    loading
   } as const
 })
 

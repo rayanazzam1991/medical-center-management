@@ -10,6 +10,8 @@ import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/U
 import { getCustomer, getProfilePicture } from "/@src/services/CRM/Customer/customerService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
+import sleep from "/@src/utils/sleep"
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -28,6 +30,7 @@ viewWrapper.setPageTitle(`Customer`)
 useHead({
     title: 'Customer',
 })
+const customerStore = useCustomer()
 const props = withDefaults(
     defineProps<{
         activeTab?: 'Details' | 'Medical Info' | 'Social Media'
@@ -89,6 +92,7 @@ const onClickEditMedicalInfo = () => {
 }
 const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
+    await sleep(500)
     if (profile_pic.media.length != 0) {
 
         customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
@@ -99,8 +103,9 @@ const getCurrentProfilePic = async () => {
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
-
+            <VLoader size="large" class="v-avatar" :active="customerStore.loading">
+                <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
+            </VLoader>
             <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
                 {{ currentCustomer.user.last_name }}
             </h3>

@@ -5,8 +5,9 @@ import { Media } from "/@src/models/Others/Media/media"
 import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
-  
+
 
 
 export const useContractor = defineStore('contractor', () => {
@@ -20,9 +21,8 @@ export const useContractor = defineStore('contractor', () => {
 
   async function addContractorStore(contractor: CreateContractor) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addContractorApi(api, contractor)
 
@@ -33,20 +33,19 @@ export const useContractor = defineStore('contractor', () => {
       message.value = response.response.message
       contractors.value.push(returnedContractor)
       return returnedContractor
-    } 
-    
-    
+    }
+
+
     finally {
       loading.value = false
     }
   }
-  async function updateContractorStore(contractorId : number ,contractor: UpdateContractor) {
+  async function updateContractorStore(contractorId: number, contractor: UpdateContractor) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await updateContractorApi(api,contractorId, contractor)
+      const response = await updateContractorApi(api, contractorId, contractor)
 
       var returnedContractor: Contractor
       returnedContractor = response.response.data
@@ -55,18 +54,16 @@ export const useContractor = defineStore('contractor', () => {
       message.value = response.response.message
       contractors.value.push(returnedContractor)
       return returnedContractor
-    } 
-    
-    
+    }
+
+
     finally {
       loading.value = false
     }
   }
   async function getContractorsStore(searchFilter: ContractorSearchFilter) {
     if (loading.value) return
-
     loading.value = true
-
     try {
       const returnedResponse = await getContractorsApi(api, searchFilter)
       contractors.value = returnedResponse.response.data
@@ -76,13 +73,12 @@ export const useContractor = defineStore('contractor', () => {
     }
   }
 
-  async function addServicesStore(contractor_id: number , services : Array<CreateUpdateServicesHelper>) {
+  async function addServicesStore(contractor_id: number, services: Array<CreateUpdateServicesHelper>) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await addServicesApi(api, contractor_id , services)
+      const response = await addServicesApi(api, contractor_id, services)
       var returnedContractor: Contractor
       returnedContractor = response.response.data
       success.value = response.response.success
@@ -94,14 +90,13 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
-  
+
   async function getContractorStore(contractor_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await getContractorApi(api, contractor_id )
+      const response = await getContractorApi(api, contractor_id)
       var returnedContractor: Contractor
       returnedContractor = response.response.data
       success.value = response.response.success
@@ -113,13 +108,12 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
-  async function addContractorPersonalId(media : FormData) {
+  async function addContractorPersonalId(media: FormData) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await uploadMediaApi(api , media)
+      const response = await uploadMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -133,13 +127,12 @@ export const useContractor = defineStore('contractor', () => {
     }
   }
 
-  async function getContractorPersonalId(media : Media) {
+  async function getContractorPersonalId(media: Media) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await getMediaApi(api , media)
+      const response = await getMediaApi(api, media)
       console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
@@ -158,7 +151,7 @@ export const useContractor = defineStore('contractor', () => {
     loading.value = true
 
     try {
-      const response = await deleteMediaApi(api, picture_id )
+      const response = await deleteMediaApi(api, picture_id)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
@@ -167,9 +160,9 @@ export const useContractor = defineStore('contractor', () => {
     } finally {
       loading.value = false
     }
-}
+  }
 
-  
+
   return {
     success,
     error_code,
@@ -183,7 +176,8 @@ export const useContractor = defineStore('contractor', () => {
     getContractorsStore,
     addContractorPersonalId,
     getContractorPersonalId,
-    deleteContractorPersonalId
+    deleteContractorPersonalId,
+    loading
   } as const
 })
 

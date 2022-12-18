@@ -3,6 +3,8 @@ import { useApi } from "/@src/composable/useApi"
 import { Room, CreateUpdateRoom, RoomSearchFilter } from "/@src/models/Others/Room/room"
 import { deleteRoomApi, getRoomApi, addRoomApi, editRoomApi, getRoomsApi } from "/@src/utils/api/Others/Room"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
+
 
 
 export const useRoom = defineStore('room', () => {
@@ -28,9 +30,8 @@ export const useRoom = defineStore('room', () => {
   }
   async function getRoomStore(roomId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getRoomApi(api, roomId)
       var returnedRoom: Room
@@ -42,9 +43,8 @@ export const useRoom = defineStore('room', () => {
   }
   async function addRoomStore(room: CreateUpdateRoom) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addRoomApi(api, room)
       var returnedRoom: Room
@@ -57,9 +57,8 @@ export const useRoom = defineStore('room', () => {
   }
   async function editRoomStore(room: CreateUpdateRoom) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editRoomApi(api, room)
       var returnedRoom: Room
@@ -95,6 +94,7 @@ export const useRoom = defineStore('room', () => {
     editRoomStore,
     getRoomStore,
     getRoomsStore,
+    loading
   } as const
 })
 

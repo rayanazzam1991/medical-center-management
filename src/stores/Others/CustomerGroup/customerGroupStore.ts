@@ -3,6 +3,8 @@ import { useApi } from "/@src/composable/useApi"
 import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { deleteCustomerGroupApi, getCustomerGroupApi, addCustomerGroupApi, editCustomerGroupApi, getCustomerGroupsApi } from "/@src/utils/api/Others/CustomerGroup"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
+
 
 
 export const useCustomerGroup = defineStore('customerGroup', () => {
@@ -44,36 +46,40 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
     if (loading.value) return
 
     loading.value = true
-
-  try {
-    const response = await addCustomerGroupApi(api, customerGroup)
-    var returnedCustomerGroup : CustomerGroup
-    returnedCustomerGroup = response.response.data 
-    customerGroups.value.push(returnedCustomerGroup)
-    return returnedCustomerGroup
+    sleep(2000)
 
 
-  } finally {
-    loading.value = false
+    try {
+      const response = await addCustomerGroupApi(api, customerGroup)
+      var returnedCustomerGroup: CustomerGroup
+      returnedCustomerGroup = response.response.data
+      customerGroups.value.push(returnedCustomerGroup)
+      return returnedCustomerGroup
+
+
+    } finally {
+      loading.value = false
+    }
   }
-}
   async function editCustomerGroupStore(customerGroup: CustomerGroup) {
     if (loading.value) return
 
     loading.value = true
-
-  try {
-    const response = await editCustomerGroupApi(api, customerGroup)
-    var returnedCustomerGroup : CustomerGroup
-    returnedCustomerGroup = response.response.data 
-    customerGroups.value.splice( customerGroups.value.findIndex((customerGroupElement) => customerGroupElement.id = customerGroup.id ),1)
-    customerGroups.value.push(returnedCustomerGroup)
+    sleep(2000)
 
 
-  } finally {
-    loading.value = false
+    try {
+      const response = await editCustomerGroupApi(api, customerGroup)
+      var returnedCustomerGroup: CustomerGroup
+      returnedCustomerGroup = response.response.data
+      customerGroups.value.splice(customerGroups.value.findIndex((customerGroupElement) => customerGroupElement.id = customerGroup.id), 1)
+      customerGroups.value.push(returnedCustomerGroup)
+
+
+    } finally {
+      loading.value = false
+    }
   }
-}
   async function getCustomerGroupsStore(searchFilter: CustomerGroupSearchFilter) {
     if (loading.value) return
 
@@ -96,6 +102,7 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
     editCustomerGroupStore,
     getCustomerGroupStore,
     getCustomerGroupsStore,
+    loading
   } as const
 })
 

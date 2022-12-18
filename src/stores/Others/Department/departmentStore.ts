@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Department, DepartmentSearchFilter } from "/@src/models/Others/Department/department"
 import { deleteDepartmentApi, getDepartmentApi, addDepartmentApi, editDepartmentApi, getDepartmentsApi } from "/@src/utils/api/Others/Department"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useDepartment = defineStore('department', () => {
@@ -31,9 +32,8 @@ export const useDepartment = defineStore('department', () => {
   }
   async function getDepartmentStore(departmentId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getDepartmentApi(api, departmentId)
       var returnedDepartment: Department
@@ -45,9 +45,8 @@ export const useDepartment = defineStore('department', () => {
   }
   async function addDepartmentStore(department: Department) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addDepartmentApi(api, department)
       var returnedDepartment: Department
@@ -60,9 +59,8 @@ export const useDepartment = defineStore('department', () => {
   }
   async function editDepartmentStore(department: Department) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editDepartmentApi(api, department)
       var returnedDepartment: Department
@@ -100,6 +98,7 @@ export const useDepartment = defineStore('department', () => {
     editDepartmentStore,
     getDepartmentStore,
     getDepartmentsStore,
+    loading
   } as const
 })
 

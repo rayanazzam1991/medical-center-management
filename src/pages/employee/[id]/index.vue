@@ -8,7 +8,8 @@ import { Employee, defaultEmployee, defaultEmployeePersonalId } from "/@src/mode
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-
+import { useEmployee } from "/@src/stores/Employee/employeeStore"
+import sleep from "/@src/utils/sleep"
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -26,6 +27,7 @@ viewWrapper.setPageTitle(`Employee`)
 useHead({
     title: 'Employee',
 })
+const employeeStore = useEmployee()
 const props = withDefaults(
     defineProps<{
         activeTab?: 'Details' | '' | ''
@@ -52,6 +54,7 @@ const getCurrentEmployee = async () => {
 }
 const getCurrentPersonalId = async () => {
     var personal_id = await getPersonalId(employeeId.value)
+    await sleep(500)
     if (personal_id.media.length != 0)
         employeePersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
@@ -69,7 +72,6 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
     userForm.user_status_id = userData.user.status?.id
-    console.log(userForm)
     await changeUserStatus(userForm)
     getCurrentEmployee()
     // @ts-ignore
@@ -83,7 +85,9 @@ const changestatusUser = async () => {
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" :picture="employeePersonalId?.relative_path" squared />
+            <VLoader size="large" class="v-avatar" :active="employeeStore.loading">
+                <VAvatar size="xl" :picture="employeePersonalId?.relative_path" squared />
+            </VLoader>
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentEmployee.user.first_name }}
                 {{ currentEmployee.user.last_name }}</h3>

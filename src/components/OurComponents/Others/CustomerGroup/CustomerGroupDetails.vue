@@ -4,6 +4,8 @@ import { defaultCustomerGroup } from "/@src/models/Others/CustomerGroup/customer
 import { getCustomerGroup } from "/@src/services/Others/CustomerGroup/customerGroupService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { useCustomerGroup } from "/@src/stores/Others/CustomerGroup/customerGroupStore"
+import sleep from "/@src/utils/sleep"
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -14,13 +16,14 @@ const head = useHead({
 })
 
 
-
+const customerGroupStore = useCustomerGroup()
 const customerGroupId = ref(0)
 // @ts-ignore
 customerGroupId.value = route.params?.id as number ?? 0
 const currentCustomerGroup = ref(defaultCustomerGroup)
 const getCurrentCustomerGroup = async () => {
     const customerGroup = await getCustomerGroup(customerGroupId.value)
+    sleep(500)
     if (customerGroup != undefined)
         currentCustomerGroup.value = customerGroup
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentCustomerGroup.value.name
@@ -37,7 +40,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/customer-group'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/customer-group'" @onSubmit="toEdit"
+        :isLoading="customerGroupStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

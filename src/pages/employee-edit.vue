@@ -9,6 +9,8 @@
 import { useHead } from '@vueuse/head'
 
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps'
+import { useEmployee } from '../stores/Employee/employeeStore';
+const employeeStore = useEmployee()
 const employeeForm = useEmployeeForm()
 
 useHead({
@@ -32,12 +34,14 @@ useHead({
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[employeeForm.canNavigate && 'is-active']">
                 <div class="wizard-buttons-inner">
-                    <VButton type="submit" class="wizard-button-previous"
-                        :disabled="employeeForm.validateStepFn === null"
-                        :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                        {{ employeeForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
-                        }}
-                    </VButton>
+                    <VLoader size="small" :active="employeeStore.loading">
+                        <VButton type="submit" class="wizard-button-previous"
+                            :disabled="employeeForm.validateStepFn === null"
+                            :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
+                            {{ employeeForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
+                            }}
+                        </VButton>
+                    </VLoader>
                     <VButton class="wizard-button-previous" :disabled="employeeForm.skipable === false"
                         :color="employeeForm.skipable === true ? 'dark' : 'dark'"
                         @click="() => employeeForm?.skipStepFn?.()">

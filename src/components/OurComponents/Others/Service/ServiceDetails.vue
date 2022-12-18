@@ -4,6 +4,8 @@ import { defaultService } from '/@src/models/Others/Service/service'
 import { getService } from '/@src/services/Others/Service/serviceService'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { ServiceConsts } from '/@src/models/Others/Service/service'
+import { useService } from '/@src/stores/Others/Service/serviceStore'
+import sleep from '/@src/utils/sleep'
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -14,13 +16,14 @@ const head = useHead({
 })
 
 
-
+const serviceStore = useService()
 const serviceId = ref(0)
 // @ts-ignore
 serviceId.value = route.params?.id as number ?? 0
 const currentService = ref(defaultService)
 const getCurrentService = async () => {
     const service = await getService(serviceId.value)
+    await sleep(500)
     if (service != undefined)
         currentService.value = service
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentService.value.name
@@ -37,7 +40,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/service'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/service'" @onSubmit="toEdit"
+        :isLoading="serviceStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -80,5 +84,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>
