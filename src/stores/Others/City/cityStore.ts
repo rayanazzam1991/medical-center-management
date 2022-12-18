@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { City, CitySearchFilter } from "/@src/models/Others/City/city"
 import { deleteCityApi, getCityApi, addCityApi, editCityApi, getCitiesApi } from "/@src/utils/api/Others/City"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
 
 
 export const useCity = defineStore('city', () => {
@@ -44,6 +45,7 @@ export const useCity = defineStore('city', () => {
     if (loading.value) return
 
     loading.value = true
+    sleep(2000)
 
     try {
       const response = await addCityApi(api, city)
@@ -97,6 +99,7 @@ export const useCity = defineStore('city', () => {
     editCityStore,
     getCityStore,
     getCitiesStore,
+    loading
   } as const
 })
 
