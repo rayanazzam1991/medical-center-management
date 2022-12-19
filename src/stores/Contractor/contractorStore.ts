@@ -6,6 +6,7 @@ import { Media } from "/@src/models/Others/Media/media"
 import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -21,9 +22,8 @@ export const useContractor = defineStore('contractor', () => {
 
   async function addContractorStore(contractor: CreateContractor) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addContractorApi(api, contractor)
 
@@ -35,13 +35,12 @@ export const useContractor = defineStore('contractor', () => {
       message.value = response.response.message
 
       return returnedContractor
-    } catch (error: any) {
+    }catch (error: any) {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
 
     }
-
 
     finally {
       loading.value = false
@@ -49,9 +48,8 @@ export const useContractor = defineStore('contractor', () => {
   }
   async function updateContractorStore(contractorId: number, contractor: UpdateContractor) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await updateContractorApi(api, contractorId, contractor)
 
@@ -78,9 +76,7 @@ export const useContractor = defineStore('contractor', () => {
   }
   async function getContractorsStore(searchFilter: ContractorSearchFilter) {
     if (loading.value) return
-
     loading.value = true
-
     try {
       const returnedResponse = await getContractorsApi(api, searchFilter)
       contractors.value = returnedResponse.response.data
@@ -103,9 +99,8 @@ export const useContractor = defineStore('contractor', () => {
 
   async function addServicesStore(contractor_id: number, services: Array<CreateUpdateServicesHelper>) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addServicesApi(api, contractor_id, services)
       var returnedContractor: Contractor
@@ -130,9 +125,8 @@ export const useContractor = defineStore('contractor', () => {
 
   async function getContractorStore(contractor_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getContractorApi(api, contractor_id)
       var returnedContractor: Contractor
@@ -156,9 +150,8 @@ export const useContractor = defineStore('contractor', () => {
   }
   async function addContractorPersonalId(media: FormData) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
       console.log(response)
@@ -183,9 +176,8 @@ export const useContractor = defineStore('contractor', () => {
 
   async function getContractorPersonalId(media: Media) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getMediaApi(api, media)
       console.log(response)

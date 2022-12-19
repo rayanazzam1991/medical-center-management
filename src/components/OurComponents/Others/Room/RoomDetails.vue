@@ -4,6 +4,8 @@ import { getRoom } from "/@src/services/Others/Room/roomSevice"
 import { defaultRoom } from "/@src/models/Others/Room/room"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { RoomConsts } from "/@src/models/Others/Room/room"
+import { useRoom } from "/@src/stores/Others/Room/roomStore"
+import sleep from "/@src/utils/sleep"
 
 const route = useRoute()
 const router = useRouter()
@@ -15,11 +17,12 @@ const head = useHead({
 })
 
 
-
+const roomStore = useRoom()
 const roomId = ref(0)
 // @ts-ignore
 roomId.value = route.params?.id as number ?? 0
 const currentRoom = ref(defaultRoom)
+await sleep(500)
 const getCurrentRoom = async () => {
     const { room } = await getRoom(roomId.value)
     if (room != undefined)
@@ -38,7 +41,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit"
+        :isLoading="roomStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

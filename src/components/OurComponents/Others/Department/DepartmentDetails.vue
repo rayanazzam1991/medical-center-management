@@ -5,6 +5,8 @@ import { getDepartment } from '/@src/services/Others/Department/departmentServic
 import { defaultDepartment } from '/@src/models/Others/Department/department'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { DepartmentConsts } from '/@src/models/Others/Department/department'
+import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
+import sleep from '/@src/utils/sleep'
 const panels = usePanels()
 const route = useRoute()
 const router = useRouter()
@@ -15,13 +17,14 @@ const head = useHead({
     title: 'Department',
 })
 
-
+const departmentStore = useDepartment()
 const departmentId = ref(0)
 // @ts-ignore
 departmentId.value = route.params?.id as number ?? 0
 const currentDepartment = ref(defaultDepartment)
 const getCurrentDepartment = async () => {
     const { department } = await getDepartment(departmentId.value)
+    await sleep(500)
     if (department != undefined)
         currentDepartment.value = department
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentDepartment.value.name
@@ -38,7 +41,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/department'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/department'" @onSubmit="toEdit"
+        :isLoading="departmentStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

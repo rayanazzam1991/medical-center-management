@@ -4,6 +4,8 @@ import { defaultNationality } from "/@src/models/Others/Nationality/nationality"
 import { getNationality } from "/@src/services/Others/Nationality/nationalityService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
+import { useNationality } from "/@src/stores/Others/Nationality/nationalityStore"
+import sleep from "/@src/utils/sleep"
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -14,13 +16,14 @@ const head = useHead({
 })
 
 
-
+const nationalityStore = useNationality()
 const nationalityId = ref(0)
 // @ts-ignore
 nationalityId.value = route.params?.id as number ?? 0
 const currentNationality = ref(defaultNationality)
 const getCurrentNationality = async () => {
     const { nationality } = await getNationality(nationalityId.value)
+    await sleep(500)
     if (nationality != undefined)
         currentNationality.value = nationality
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentNationality.value.name
@@ -37,7 +40,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/nationality'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/nationality'" @onSubmit="toEdit"
+        :isLoading="nationalityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

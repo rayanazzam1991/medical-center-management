@@ -6,6 +6,7 @@ import { Media } from "/@src/models/Others/Media/media"
 import { addCustomerApi, updateCustomerApi, getCustomersApi, addMedicalInfoApi, addSocialMediaApi, getCustomerApi } from "/@src/utils/api/CRM/Customer"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useCustomer = defineStore('customer', () => {
@@ -79,6 +80,7 @@ export const useCustomer = defineStore('customer', () => {
 
     loading.value = true
 
+
     try {
       const returnedResponse = await getCustomersApi(api, searchFilter)
       customers.value = returnedResponse.response.data
@@ -103,9 +105,8 @@ export const useCustomer = defineStore('customer', () => {
 
   async function addMedicalInfoStore(customer_id: number, medical_info: MedicalInfo) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addMedicalInfoApi(api, customer_id, medical_info)
       console.log(response)
@@ -131,9 +132,8 @@ export const useCustomer = defineStore('customer', () => {
   }
   async function addCustomerProfilePictureStore(media: FormData) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
       console.log(response)
@@ -160,9 +160,8 @@ export const useCustomer = defineStore('customer', () => {
 
   async function getCustomerProfilePicture(media: Media) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getMediaApi(api, media)
       console.log(response)
@@ -188,9 +187,8 @@ export const useCustomer = defineStore('customer', () => {
   }
   async function addSocialMediaStore(customer_id: number, social_medias: Array<CreateUpdateCustomerSocialMediaHelper>) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addSocialMediaApi(api, customer_id, social_medias)
       var returnedCustomer: Customer
@@ -216,9 +214,8 @@ export const useCustomer = defineStore('customer', () => {
 
   async function getCustomerStore(customer_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getCustomerApi(api, customer_id)
       var returnedCustomer: Customer
@@ -243,9 +240,8 @@ export const useCustomer = defineStore('customer', () => {
   }
   async function deleteCustomerProfilePicture(picture_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await deleteMediaApi(api, picture_id)
       success.value = response.response.success
@@ -282,7 +278,8 @@ export const useCustomer = defineStore('customer', () => {
     getCustomersStore,
     addCustomerProfilePictureStore,
     getCustomerProfilePicture,
-    deleteCustomerProfilePicture
+    deleteCustomerProfilePicture,
+    loading
   } as const
 })
 

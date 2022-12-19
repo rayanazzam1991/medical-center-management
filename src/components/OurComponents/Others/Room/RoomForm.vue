@@ -8,6 +8,8 @@ import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@
 import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
+import sleep from "/@src/utils/sleep"
+import { useRoom } from '/@src/stores/Others/Room/roomStore'
 
 
 export default defineComponent({
@@ -26,8 +28,8 @@ export default defineComponent({
         const head = useHead({
             title: 'Room',
         })
+        const roomStore = useRoom()
         const notif = useNotyf()
-
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
@@ -67,11 +69,16 @@ export default defineComponent({
 
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 number: currentRoom.value.number ?? undefined,
                 floor: currentRoom.value.floor ?? undefined,
                 status: currentRoom.value.status ?? 1,
                 department_id: currentRoom.value?.department?.id ?? 0,
+            } : {
+                number: 0,
+                floor: 0,
+                status: 1,
+                department_id: 0,
             },
         })
 
@@ -100,8 +107,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
-
-
+            await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
                 notif.error(message)
@@ -125,7 +131,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
-
+await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {
                 notif.error(message)
@@ -134,7 +140,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList }
+        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
     },
 
 
@@ -147,7 +153,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="roomStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">

@@ -10,6 +10,7 @@ import {
 import { useApi } from '/@src/composable/useApi'
 import { Pagination, defaultPagination } from '/@src/utils/response'
 import { SocialMedia, SocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia'
+import sleep from '/@src/utils/sleep'
 
 export const useSocialMedia = defineStore('socialMedia', () => {
   const api = useApi()
@@ -49,9 +50,8 @@ export const useSocialMedia = defineStore('socialMedia', () => {
   }
   async function getSocialMediaStore(socialMediaId: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getSocialMediaApi(api, socialMediaId)
       var returnedSocialMedia: SocialMedia
@@ -74,9 +74,8 @@ export const useSocialMedia = defineStore('socialMedia', () => {
   }
   async function addSocialMediaStore(socialMedia: SocialMedia) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addSocialMediaApi(api, socialMedia)
       var returnedSocialMedia: SocialMedia
@@ -100,9 +99,8 @@ export const useSocialMedia = defineStore('socialMedia', () => {
   }
   async function editSocialMediaStore(socialMedia: SocialMedia) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editSocialMediaApi(api, socialMedia)
       var returnedSocialMedia: SocialMedia
@@ -164,6 +162,7 @@ export const useSocialMedia = defineStore('socialMedia', () => {
     editSocialMediaStore,
     getSocialMediaStore,
     getSocialMediasStore,
+    loading
   } as const
 })
 

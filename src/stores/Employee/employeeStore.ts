@@ -5,6 +5,7 @@ import { Media } from "/@src/models/Others/Media/media"
 import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useEmployee = defineStore('employee', () => {
@@ -18,9 +19,8 @@ export const useEmployee = defineStore('employee', () => {
 
   async function addEmployeeStore(employee: CreateEmployee) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addEmployeeApi(api, employee)
       console.log(response.response)
@@ -45,9 +45,8 @@ export const useEmployee = defineStore('employee', () => {
   }
   async function getEmployeeStore(employee_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getEmployeeApi(api, employee_id)
       var returnedEmployee: Employee
@@ -69,9 +68,8 @@ export const useEmployee = defineStore('employee', () => {
   }
   async function updateEmployeeStore(employeeId: number, employee: UpdateEmployee) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await updateEmployeeApi(api, employeeId, employee)
 
@@ -119,9 +117,8 @@ export const useEmployee = defineStore('employee', () => {
   }
   async function addEmployeePersonalId(media: FormData) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
       console.log(response)
@@ -146,9 +143,8 @@ export const useEmployee = defineStore('employee', () => {
 
   async function getEmployeePersonalId(media: Media) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getMediaApi(api, media)
       console.log(response)
@@ -208,6 +204,7 @@ export const useEmployee = defineStore('employee', () => {
     success,
     error_code,
     message,
+    loading
   } as const
 })
 

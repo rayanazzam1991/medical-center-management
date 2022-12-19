@@ -10,6 +10,8 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultDepartment, Department, DepartmentConsts } from '/@src/models/Others/Department/department';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { departmentvalidationSchema } from '/@src/rules/Others/Department/departmentValidation';
+import sleep from '/@src/utils/sleep';
+import { useDepartment } from '/@src/stores/Others/Department/departmentStore';
 
 export default defineComponent({
     props: {
@@ -25,6 +27,7 @@ export default defineComponent({
         const head = useHead({
             title: "Department",
         });
+        const departmentStore = useDepartment()
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -51,9 +54,12 @@ export default defineComponent({
         const validationSchema = departmentvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentDepartment.value.name ?? "",
                 status: currentDepartment.value.status ?? 1,
+            } : {
+                name: "",
+                status: 1,
             },
         });
         const onSubmit = async (method: String) => {
@@ -75,7 +81,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
-                router.push({ path: `/department/${department.id}` });
+                await sleep(500)
+            router.push({ path: `/department/${department.id}` });
             } else {
                 notif.error(message)
             }
@@ -89,12 +96,12 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                router.push({ path: `/department/${departmentData.id}` });
+                await sleep(500)router.push({ path: `/department/${departmentData.id}` });
             } else {
                 notif.error(message)
             }
         };
-        return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts };
+        return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts, departmentStore };
     },
     components: { ErrorMessage }
 })
@@ -106,7 +113,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="departmentStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">

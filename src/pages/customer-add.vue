@@ -7,9 +7,12 @@
 </route>
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
+import { useCustomer } from '../stores/CRM/Customer/customerStore';
+
+const customerStore = useCustomer()
 const customerForm = useCustomerForm()
+
 
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
@@ -32,12 +35,14 @@ useHead({
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[customerForm.canNavigate && 'is-active']">
                 <div class="wizard-buttons-inner">
-                    <VButton type="submit" class="wizard-button-previous"
-                        :disabled="customerForm.validateStepFn === null"
-                        :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                        {{ customerForm.getStep() == 4 ? 'Submit & Finish' : 'Submit & Next'
-                        }}
-                    </VButton>
+                    <VLoader size="small" :active="customerStore.loading">
+                        <VButton type="submit" class="wizard-button-previous"
+                            :disabled="customerForm.validateStepFn === null"
+                            :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
+                            {{ customerForm.getStep() == 4 ? 'Submit & Finish' : 'Submit & Next'
+                            }}
+                        </VButton>
+                    </VLoader>
                     <VButton class="wizard-button-previous" :disabled="customerForm.skipable === false"
                         :color="customerForm.skipable === true ? 'dark' : 'dark'"
                         @click="() => customerForm?.skipStepFn?.()">

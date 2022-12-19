@@ -6,6 +6,8 @@ import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultUserStatus, UserStatus } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { userstatusvalidationSchema } from "/@src/rules/Others/UserStatus/userstatusValidation"
+import sleep from "/@src/utils/sleep"
+import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 
 export default defineComponent({
     props: {
@@ -22,8 +24,8 @@ export default defineComponent({
         const head = useHead({
             title: 'UserStatus',
         })
+        const userStatusStore = useUserStatus()
         const notif = useNotyf()
-
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
@@ -52,8 +54,10 @@ export default defineComponent({
 
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentUserStatus.value.name ?? '',
+            } : {
+                name: ""
             },
         })
 
@@ -74,8 +78,7 @@ export default defineComponent({
 
                 notif.dismissAll()
                 notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`)
-
-
+            await sleep(500)
                 router.push({ path: `/userstatus/${userStatus.id}` })
 
             }
@@ -90,7 +93,7 @@ export default defineComponent({
 
                 notif.dismissAll()
                 notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`)
-
+            await sleep(500)
                 router.push({ path: `/userstatus/${userstatusData.id}` })
             }
             else {
@@ -100,7 +103,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute }
+        return { pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute, userStatusStore }
     },
 
 
@@ -113,7 +116,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="userStatusStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">

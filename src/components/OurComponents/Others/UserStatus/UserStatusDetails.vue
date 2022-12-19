@@ -4,6 +4,8 @@ import { getUserStatus } from "/@src/services/Others/UserStatus/userstatusServic
 import { defaultUserStatus } from "/@src/models/Others/UserStatus/userStatus"
 import { usePanels } from "/@src/stores/panels"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
+import sleep from "/@src/utils/sleep"
 
 
 const panels = usePanels()
@@ -16,13 +18,14 @@ const head = useHead({
     title: 'UserStatus',
 })
 
-
+const userStatusStore = useUserStatus()
 const userstatusId = ref(0)
 // @ts-ignore
 userstatusId.value = route.params?.id as number ?? 0
 const currentUserStatus = ref(defaultUserStatus)
 const getCurrentUserStatus = async () => {
     const { userStatus } = await getUserStatus(userstatusId.value)
+    await sleep(500)
     if (userStatus != undefined)
         currentUserStatus.value = userStatus
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentUserStatus.value.name
@@ -39,7 +42,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/userstatus'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/userstatus'" @onSubmit="toEdit"
+        :isLoading="userStatusStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

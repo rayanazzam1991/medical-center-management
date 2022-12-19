@@ -6,6 +6,8 @@ import { defaultCustomerGroup, CustomerGroup, CustomerGroupConsts } from '/@src/
 import { customergroupvalidationSchema } from '/@src/rules/Others/CustomerGroup/customergroupValidation';
 import { getCustomerGroup, addCustomerGroup, editCustomerGroup } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep";
+import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 
 
 export default defineComponent({
@@ -22,6 +24,7 @@ export default defineComponent({
         const head = useHead({
             title: "Customer Group",
         });
+        const customerGroupStore = useCustomerGroup()
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -49,9 +52,12 @@ export default defineComponent({
         const validationSchema = customergroupvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentCustomerGroup.value.name ?? "",
                 status: currentCustomerGroup.value.status ?? 1,
+            } : {
+                name: "",
+                status: 1,
             },
         });
         const onSubmit = async (method: String) => {
@@ -73,7 +79,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${customerGroup.name} ${viewWrapper.pageTitle} was added successfully`);
-                router.push({ path: `/customer-group/${customerGroup.id}` });
+                await sleep(500)
+            router.push({ path: `/customer-group/${customerGroup.id}` });
             } else {
                 notif.error(message)
             }
@@ -87,12 +94,12 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                router.push({ path: `/customer-group/${customerGroupData.id}` });
+                await sleep(500)router.push({ path: `/customer-group/${customerGroupData.id}` });
             } else {
                 notif.error(message)
             }
         };
-        return { pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts };
+        return { pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts, customerGroupStore };
     },
     components: { ErrorMessage }
 })
@@ -104,7 +111,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="customerGroupStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">

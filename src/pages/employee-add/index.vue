@@ -78,19 +78,19 @@ const validationSchema = employeeAddvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        first_name: currentUser.value.first_name,
-        last_name: currentUser.value.last_name,
-        gender: currentUser.value.gender,
-        birth_date: currentUser.value.birth_date,
-        phone_number: currentUser.value.phone_number,
-        address: currentUser.value.address,
-        room_id: currentUser.value.room_id,
-        city_id: currentUser.value.city_id,
-        user_status_id: currentUser.value.user_status_id,
-        starting_date: currentEmployee.value.starting_date,
-        end_date: currentEmployee.value.end_date,
-        basic_salary: currentEmployee.value.basic_salary,
-        nationality_id: currentEmployee.value.nationality_id
+        first_name: "",
+        last_name: "",
+        gender: "",
+        birth_date: "",
+        phone_number: "",
+        address: "",
+        room_id: "",
+        city_id: "",
+        user_status_id: "",
+        starting_date: "",
+        end_date: "",
+        basic_salary: 0,
+        nationality_id: ""
     },
 })
 
@@ -111,7 +111,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.password = userData.password
         employeeForm.userForm.gender = userData.gender
         employeeForm.userForm.birth_date = userData.birth_date
-        employeeForm.userForm.phone_number = '964' + userData.phone_number
+        employeeForm.userForm.phone_number = userData.phone_number
         employeeForm.userForm.address = userData.address
         employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id

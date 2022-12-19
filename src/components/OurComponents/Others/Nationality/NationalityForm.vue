@@ -6,6 +6,8 @@ import { defaultNationality, Nationality, NationalityConsts } from '/@src/models
 import { nationalityvalidationSchema } from '/@src/rules/Others/Nationality/nationalityValidation';
 import { getNationality, addNationality, editNationality } from '/@src/services/Others/Nationality/nationalityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep";
+import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore';
 export default defineComponent({
     props: {
         formType: {
@@ -20,6 +22,7 @@ export default defineComponent({
         const head = useHead({
             title: "Nationality",
         });
+        const nationalityStore = useNationality()
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -47,9 +50,12 @@ export default defineComponent({
         const validationSchema = nationalityvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentNationality.value.name ?? "",
                 status: currentNationality.value.status ?? 1,
+            } : {
+                name: "",
+                status: 1,
             },
         });
         const onSubmit = async (method: String) => {
@@ -71,7 +77,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${nationality.name} ${viewWrapper.pageTitle} was added successfully`);
-                router.push({ path: `/nationality/${nationality.id}` });
+                await sleep(500)
+            router.push({ path: `/nationality/${nationality.id}` });
             } else {
                 notif.error(message)
             }
@@ -85,13 +92,12 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                router.push({ path: `/nationality/${nationalityData.id}` });
+                await sleep(500)router.push({ path: `/nationality/${nationalityData.id}` });
             } else {
                 notif.error(message)
             }
-
         });
-        return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts };
+        return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts, nationalityStore };
     },
     components: { ErrorMessage }
 })
@@ -103,7 +109,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="nationalityStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">

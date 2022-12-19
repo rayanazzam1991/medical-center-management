@@ -11,47 +11,46 @@ import { useCity } from "/@src/stores/Others/City/cityStore";
 
 
 export default defineComponent({
-  props: {
-    formType: {
-      type: String,
-      default: "",
+    props: {
+        formType: {
+            type: String,
+            default: "",
+        },
     },
-  },
-  emits: ["onSubmit"],
-  setup(props, context) {
-    const viewWrapper = useViewWrapper();
-    viewWrapper.setPageTitle("City");
-    const head = useHead({
-      title: "City",
-    });
-    const cityStore = useCity()
-    const notif = useNotyf();
-    const formType = ref("");
-    formType.value = props.formType;
-    const route = useRoute();
-    const router = useRouter();
-    const pageTitle = formType.value + " " + viewWrapper.pageTitle;
-    const backRoute = "/city";
-    const currentCity = ref(defaultCity);
-    const cityId = ref(0);
+    emits: ["onSubmit"],
+    setup(props, context) {
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("City");
+        const head = useHead({
+            title: "City",
+        });
+        const cityStore = useCity()
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/city";
+        const currentCity = ref(defaultCity);
+        const cityId = ref(0);
 
-    // @ts-ignore
-    cityId.value = route.params?.id as number ?? 0;
+        // @ts-ignore
+        cityId.value = route.params?.id as number ?? 0;
 
-    const getCurrentCity = async () => {
-      if (cityId.value === 0) {
-        currentCity.value.name = ''
-        currentCity.value.status = 1
-        return
-      }
+        const getCurrentCity = async () => {
+            if (cityId.value === 0) {
+                currentCity.value.name = ''
+                currentCity.value.status = 1
+                return
+            }
+            const { city } = await getCity(cityId.value);
+            currentCity.value = city != undefined ? city : defaultCity;
+        };
 
-      const { city } = await getCity(cityId.value);
-      currentCity.value = city != undefined ? city : defaultCity;
-    };
-
-    onMounted(() => {
-      getCurrentCity();
-    });
+        onMounted(() => {
+            getCurrentCity();
+        });
 
     const validationSchema = cityvalidationSchema
     const { handleSubmit } = useForm({
@@ -131,17 +130,17 @@ export default defineComponent({
                     <VInput v-model="currentCity.name" type="text" placeholder="" autocomplete="given-name" />
                     <ErrorMessage class="help is-danger" name="name" />
 
-                  </VControl>
-                </VField>
-              </div>
-            </div>
-          </div>
-          <!--Fieldset-->
-          <div class="form-fieldset">
-            <div class="columns is-multiline">
-              <div class="column is-12">
-                <VField id="status" v-slot="{ field }">
-                  <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="status" v-slot="{ field }">
+                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
 
                   <VControl>
                     <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
@@ -151,18 +150,18 @@ export default defineComponent({
                       :label="CityConsts.showStatusName(1)" name="status" color="success" />
                     <ErrorMessage class="help is-danger" name="status" />
 
-                  </VControl>
-                </VField>
-              </div>
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-          </div>
-        </div>
-      </div>
-    </form>
+        </form>
 
 
-  </div>
+    </div>
 </template>
 <style scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';

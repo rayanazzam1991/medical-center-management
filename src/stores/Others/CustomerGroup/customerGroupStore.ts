@@ -3,6 +3,8 @@ import { useApi } from "/@src/composable/useApi"
 import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { deleteCustomerGroupApi, getCustomerGroupApi, addCustomerGroupApi, editCustomerGroupApi, getCustomerGroupsApi } from "/@src/utils/api/Others/CustomerGroup"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
+
 
 
 export const useCustomerGroup = defineStore('customerGroup', () => {
@@ -65,6 +67,8 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
     if (loading.value) return
 
     loading.value = true
+    sleep(2000)
+
 
     try {
       const response = await addCustomerGroupApi(api, customerGroup)
@@ -91,6 +95,8 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
     if (loading.value) return
 
     loading.value = true
+    sleep(2000)
+
 
     try {
       const response = await editCustomerGroupApi(api, customerGroup)
