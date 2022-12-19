@@ -88,9 +88,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
-    const customer = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
+    const { customer, message, success } = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
 
-    if (customer.success) {
+    if (success) {
 
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was added successfully`)
@@ -98,11 +98,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
         return true
     }
     else {
-        console.log(customer)
 
         // @ts-ignore
 
-        notif.error(customer.success)
+        notif.error(message)
 
     }
 

@@ -2,9 +2,10 @@
 import VTag from '/@src/components/base/tags/VTag.vue';
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultContractorSearchFilter, ContractorSearchFilter } from '/@src/models/Contractor/contractor';
+import { defaultContractorSearchFilter, ContractorSearchFilter, Contractor } from '/@src/models/Contractor/contractor';
 import { CustomerConsts } from '/@src/models/CRM/Customer/customer';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
+import { useContractor } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 
@@ -16,16 +17,23 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultContractorSearchFilter)
-const contractorsList = ref()
+const contractorsList = ref<Array<Contractor>>([])
 const paginationVar = ref(defaultPagination)
-const { contractors, pagination } = await getContractorsList(searchFilter.value)
-contractorsList.value = contractors
-paginationVar.value = pagination
 const router = useRouter()
+const contractorStore = useContractor()
+const keyIncrement = ref(0)
+onMounted(async () => {
+    const { contractors, pagination } = await getContractorsList(searchFilter.value)
+    contractorsList.value = contractors
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+});
+
+
 
 
 const search = async (searchFilter2: ContractorSearchFilter) => {
-
+    paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
     const { contractors, pagination } = await getContractorsList(searchFilter2)
 
     contractorsList.value = contractors
@@ -35,12 +43,12 @@ const search = async (searchFilter2: ContractorSearchFilter) => {
 
 const resetFilter = async (searchFilter2: ContractorSearchFilter) => {
     searchFilter.value = searchFilter2
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 
 const getContractorsPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 const contractorSort = async (value: string) => {
     if (value != undefined) {
@@ -228,17 +236,36 @@ const columns = {
 </script>
 
 <template>
-    <ContractorTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-        :pagination="paginationVar" @resetFilter="resetFilter" />
+    <ContractorTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="contractorsList" :limit="searchFilter.per_page"
         @update:sort="contractorSort">
 
-        <VFlexTable v-if="contractorsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+        <VFlexTable separators clickable>
+            <template #body>
+                <div v-if="contractorStore?.loading" class="flex-list-inner">
+                    <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+                        <VFlexTableCell>
+                            <VPlaceload />
+                        </VFlexTableCell>
+
+                    </div>
+                </div>
+                <div v-else-if="contractorsList.length === 0" class="flex-list-inner">
+                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                        class="my-6">
+                    </VPlaceholderSection>
+                </div>
+
+            </template>
+        </VFlexTable>
         <VFlexPagination v-if="(contractorsList.length != 0 && paginationVar.max_page != 1)"
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getContractorsPerPage" />
-        <h6 v-if="contractorsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+        <h6 v-if="contractorsList.length != 0 && !contractorStore?.loading">Showing {{ paginationVar.page !=
+                paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
         }} to {{
@@ -247,8 +274,9 @@ const columns = {
             paginationVar.page *
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
+        <VPlaceloadText v-if="contractorStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
-        <h1 v-if="contractorsList.length == 0">No Data Returned...</h1>
+
     </VFlexTableWrapper>
 
 </template>

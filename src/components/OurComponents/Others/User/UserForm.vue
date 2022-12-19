@@ -57,7 +57,7 @@ export default defineComponent({
                 currentUser.value.status = defaultUserStatus
                 return
             }
-            const user = await getUser(userId.value)
+            const { user } = await getUser(userId.value)
             currentUser.value = user != undefined ? user : defaultUser
 
         }
@@ -118,15 +118,21 @@ export default defineComponent({
             userForm.room_id = userData.room?.id
             userForm.city_id = userData.city?.id
             userForm.user_status_id = userData.status?.id
-            userData = await addUser(userForm) as User
-            // @ts-ignore
-            notif.dismissAll()
-            // @ts-ignore
+            const { user, success, message } = await addUser(userForm)
+            if (success) {
 
-            notif.success(` ${viewWrapper.pageTitle} was added successfully`)
+                // @ts-ignore
+                notif.dismissAll()
+                // @ts-ignore
+
+                notif.success(` ${viewWrapper.pageTitle} was added successfully`)
 
 
-            router.push({ path: `/user/${userData.id}` })
+                router.push({ path: `/user/${user.id}` })
+            }
+            else {
+                notif.error(message)
+            }
 
         })
         const onSubmitEdit = async () => {
@@ -142,16 +148,20 @@ export default defineComponent({
             userForm.room_id = userData.room?.id
             userForm.city_id = userData.city?.id
             userForm.user_status_id = userData.status?.id
-            console.log(userForm)
-            await editUser(userForm)
-            // @ts-ignore
+            const { message, success } = await editUser(userForm)
+            if (success) {
 
-            notif.dismissAll()
-            // @ts-ignore
+                // @ts-ignore
 
-            notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
+                notif.dismissAll()
+                // @ts-ignore
 
-            router.push({ path: `/user/${userData.id}` })
+                notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
+
+                router.push({ path: `/user/${userData.id}` })
+            } else {
+                notif.error(message)
+            }
 
 
         }
@@ -342,5 +352,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

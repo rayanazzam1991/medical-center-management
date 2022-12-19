@@ -42,7 +42,7 @@ export default defineComponent({
                 currentDepartment.value.status = 1;
                 return;
             }
-            const department = await getDepartment(departmentId.value);
+            const { department } = await getDepartment(departmentId.value);
             currentDepartment.value = department != undefined ? department : defaultDepartment;
         };
         onMounted(() => {
@@ -68,21 +68,31 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var departmentData = currentDepartment.value;
-            departmentData = await addDepartment(departmentData) as Department;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(` ${viewWrapper.pageTitle} ${departmentData.name} was added successfully`);
-            router.push({ path: `/department/${departmentData.id}` });
+            const { department, success, message } = await addDepartment(departmentData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
+                router.push({ path: `/department/${department.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         const onSubmitEdit = async () => {
             const departmentData = currentDepartment.value;
-            await editDepartment(departmentData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/department/${departmentData.id}` });
+            const { message, success } = await editDepartment(departmentData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                router.push({ path: `/department/${departmentData.id}` });
+            } else {
+                notif.error(message)
+            }
         };
         return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts };
     },

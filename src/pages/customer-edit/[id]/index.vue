@@ -175,9 +175,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
     customerForm.userForm.room_id = userData.room_id
     customerForm.userForm.city_id = userData.city_id
     customerForm.userForm.user_status_id = userData.user_status_id
-    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-    if (customer.success) {
-        customerForm.dataUpdate.id = customer.customer.id
+    const { customer, success, message } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    if (success) {
+        customerForm.dataUpdate.id = customer.id
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
 
@@ -186,7 +186,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     else {
         // @ts-ignore
 
-        notif.error(customer.success)
+        notif.error(message)
         return false
 
 

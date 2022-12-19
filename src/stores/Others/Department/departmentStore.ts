@@ -10,6 +10,9 @@ export const useDepartment = defineStore('department', () => {
   const departments = ref<Department[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
 
   async function deleteDepartmentStore(departmentId: number) {
     if (loading.value) return
@@ -25,7 +28,16 @@ export const useDepartment = defineStore('department', () => {
         ),
         1
       )
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -38,8 +50,17 @@ export const useDepartment = defineStore('department', () => {
       const response = await getDepartmentApi(api, departmentId)
       var returnedDepartment: Department
       returnedDepartment = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedDepartment
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -53,8 +74,17 @@ export const useDepartment = defineStore('department', () => {
       var returnedDepartment: Department
       returnedDepartment = response.response.data
       departments.value.push(returnedDepartment)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedDepartment
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -73,8 +103,17 @@ export const useDepartment = defineStore('department', () => {
         ),
         1
       )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       departments.value.push(returnedDepartment)
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -87,14 +126,27 @@ export const useDepartment = defineStore('department', () => {
       const returnedResponse = await getDepartmentsApi(api, searchFilter)
       departments.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     departments,
     pagination,
+    loading,
     deleteDepartmentStore,
     addDepartmentStore,
     editDepartmentStore,

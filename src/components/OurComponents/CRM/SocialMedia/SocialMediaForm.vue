@@ -42,7 +42,7 @@ export default defineComponent({
                 return
             }
 
-            const socialMedia = await getSocialMedia(socialMediaId.value);
+            const {socialMedia} = await getSocialMedia(socialMediaId.value);
             currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
         };
         onMounted(() => {
@@ -69,21 +69,32 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var socialMediaData = currentSocialMedia.value;
-            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
+            const { socialMedia, success, message } = await addSocialMedia(socialMediaData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was added successfully`);
+                router.push({ path: `/social-media/${socialMedia.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         const onSubmitEdit = async () => {
             const socialMediaData = currentSocialMedia.value;
-            await editSocialMedia(socialMediaData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
+            const { success, message } = await editSocialMedia(socialMediaData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was edited successfully`);
+                router.push({ path: `/social-media/${socialMediaData.id}` });
+            }
+            else {
+                notif.error(message)
+            }
         };
         return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
     },

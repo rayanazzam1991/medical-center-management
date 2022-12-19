@@ -45,7 +45,7 @@ export default defineComponent({
                 return
             }
 
-            const service = await getService(serviceId.value);
+            const { service } = await getService(serviceId.value);
             currentService.value = service != undefined ? service : defaultService;
         };
         onMounted(() => {
@@ -74,21 +74,31 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var serviceData = currentService.value;
-            serviceData = await addService(serviceData) as Service;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
+            const { service, message, success } = await addService(serviceData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${service.name} ${viewWrapper.pageTitle} was added successfully`);
+                router.push({ path: `/service/${service.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         const onSubmitEdit = handleSubmit(async () => {
             const serviceData = currentService.value;
-            await editService(serviceData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/service/${serviceData.id}` });
+            const { success, message } = await editService(serviceData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                router.push({ path: `/service/${serviceData.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts };
     },
@@ -199,5 +209,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

@@ -68,16 +68,20 @@ const customerEditvalidationSchema = toFormValidator(zod
             ),
         emergency_contact_name:
             zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
+                .preprocess(
+                    val => val == undefined ? "" : val,
+                    zod
+                        .string({
+                            invalid_type_error: "Please enter a text"
+                        })
+                        .optional()),
+
         emergency_contact_phone:
             zod
                 .preprocess(
-                    val => val === "" ? undefined : val,
+                    val => val == undefined ? "" : val,
                     zod.string({})
-                        .regex(/\d+/, 'Please enter a valid number')
+                        .regex(/\d+|$^/, 'Please enter a valid number')
                         .optional()),
         customer_group_id: zod
             .preprocess(

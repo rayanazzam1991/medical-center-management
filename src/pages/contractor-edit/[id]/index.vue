@@ -149,9 +149,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
     contractorForm.userForm.room_id = userData.room_id
     contractorForm.userForm.city_id = userData.city_id
     contractorForm.userForm.user_status_id = userData.user_status_id
-    const contractor = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
-    if (contractor.success) {
-        contractorForm.dataUpdate.id = contractor.contractor.id
+    const { success, message, contractor } = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
+    if (success) {
+        contractorForm.dataUpdate.id = contractor.id
         // @ts-ignore
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was updated successfully`)
 
@@ -160,7 +160,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     else {
         // @ts-ignore
 
-        notif.error(contractor.success)
+        notif.error(message)
         return false
 
 

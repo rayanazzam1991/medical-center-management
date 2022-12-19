@@ -128,18 +128,23 @@ const onSubmitEdit = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
-    var customer
+    var _customer, _message, _success
     if (customerForm.dataUpdate.medical_info.id) {
 
-        customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+        const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+        _customer = customer
+        _message = message
+        _success = success
     }
     else {
-        console.log('true')
-        customer = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
+        const { customer, message, success } = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
+        _customer = customer
+        _message = message
+        _success = success
 
     }
 
-    if (customer.success) {
+    if (_success) {
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was updated successfully`)
 
@@ -148,7 +153,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     else {
         // @ts-ignore
 
-        notif.error(customer.success)
+        notif.error(_message)
 
     }
 

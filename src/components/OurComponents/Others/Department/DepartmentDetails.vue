@@ -21,7 +21,7 @@ const departmentId = ref(0)
 departmentId.value = route.params?.id as number ?? 0
 const currentDepartment = ref(defaultDepartment)
 const getCurrentDepartment = async () => {
-    const department = await getDepartment(departmentId.value)
+    const { department } = await getDepartment(departmentId.value)
     if (department != undefined)
         currentDepartment.value = department
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentDepartment.value.name

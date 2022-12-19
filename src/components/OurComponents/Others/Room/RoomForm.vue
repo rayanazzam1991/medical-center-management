@@ -48,7 +48,7 @@ export default defineComponent({
                 currentRoom.value.status = 0
                 return
             }
-            const room = await getRoom(roomId.value)
+            const { room } = await getRoom(roomId.value)
             currentRoom.value = room != undefined ? room : defaultRoom
 
         }
@@ -92,15 +92,20 @@ export default defineComponent({
             roomForm.number = roomData.number
             roomForm.department_id = roomData.department?.id
             roomForm.status = roomData.status
-            roomData = await addRoom(roomForm) as Room
-            // @ts-ignore
-            notif.dismissAll()
-            // @ts-ignore
+            const { room, success, message } = await addRoom(roomForm)
+            if (success) {
 
-            notif.success(` ${viewWrapper.pageTitle} ${roomData.number} was added successfully`)
+                // @ts-ignore
+                notif.dismissAll()
+                // @ts-ignore
+
+                notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
 
 
-            router.push({ path: `/room/${roomData.id}` })
+                router.push({ path: `/room/${room.id}` })
+            } else {
+                notif.error(message)
+            }
 
         })
         const onSubmitEdit = async () => {
@@ -111,15 +116,20 @@ export default defineComponent({
             roomForm.number = roomData.number
             roomForm.department_id = roomData.department?.id
             roomForm.status = roomData.status
-            await editRoom(roomForm)
-            // @ts-ignore
+            const { success, message } = await editRoom(roomForm)
+            if (success) {
 
-            notif.dismissAll()
-            // @ts-ignore
+                // @ts-ignore
 
-            notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
+                notif.dismissAll()
+                // @ts-ignore
 
-            router.push({ path: `/room/${roomData.id}` })
+                notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
+
+                router.push({ path: `/room/${roomData.id}` })
+            } else {
+                notif.error(message)
+            }
 
 
         }
@@ -223,5 +233,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

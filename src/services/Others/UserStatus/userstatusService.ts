@@ -1,28 +1,50 @@
 import { useUserStatus } from '/@src/stores/Others/UserStatus/userStatusStore'
-import { UserStatus, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { defaultUserStatus, UserStatus, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { Pagination } from '/@src/utils/response'
 
 export async function addUserStatus(userstatusData: UserStatus) {
-  const userstatus = useUserStatus()
-  return await userstatus.addUserStatusStore(userstatusData)
+  const userstatusResponse = useUserStatus()
+  var userStatus: UserStatus = await userstatusResponse.addUserStatusStore(userstatusData) ?? defaultUserStatus
+  var success: boolean = userstatusResponse.success ?? false
+  var error_code: string = userstatusResponse.error_code ?? ''
+  var message: string = userstatusResponse.message ?? ''
+  return { success, error_code, message, userStatus }
+
 }
 export async function deleteUserStatus(userstatusId: number) {
-  const userstatus = useUserStatus()
-  await userstatus.deleteUserStatusStore(userstatusId)
+  const userstatusResponse = useUserStatus()
+  await userstatusResponse.deleteUserStatusStore(userstatusId)
+  var success: boolean = userstatusResponse.success ?? false
+  var error_code: string = userstatusResponse.error_code ?? ''
+  var message: string = userstatusResponse.message ?? ''
+  return { success, error_code, message }
+
 }
 export async function editUserStatus(userstatusData: UserStatus) {
-  const userstatus = useUserStatus()
-  await userstatus.editUserStatusStore(userstatusData)
+  const userstatusResponse = useUserStatus()
+  await userstatusResponse.editUserStatusStore(userstatusData)
+  var success: boolean = userstatusResponse.success ?? false
+  var error_code: string = userstatusResponse.error_code ?? ''
+  var message: string = userstatusResponse.message ?? ''
+  return { success, error_code, message }
 }
+
 export async function getUserStatus(userstatusId: number) {
-  const userstatus = useUserStatus()
-  return await userstatus.getUserStatusStore(userstatusId)
+  const userstatusResponse = useUserStatus()
+  var userStatus: UserStatus = await userstatusResponse.getUserStatusStore(userstatusId) ?? defaultUserStatus
+  var success: boolean = userstatusResponse.success ?? false
+  var error_code: string = userstatusResponse.error_code ?? ''
+  var message: string = userstatusResponse.message ?? ''
+  return { success, error_code, message, userStatus }
+
 }
 export async function getUserStatusesList(searchFilter: UserStatusSearchFilter) {
-  const userstatus = useUserStatus()
-  await userstatus.getUserStatusesStore(searchFilter)
-
-  var userstatuses: UserStatus[] = userstatus.userstatuses
-  var pagination: Pagination = userstatus.pagination
-  return { userstatuses, pagination }
+  const userstatusResponse = useUserStatus()
+  await userstatusResponse.getUserStatusesStore(searchFilter)
+  var success: boolean = userstatusResponse.success ?? false
+  var error_code: string = userstatusResponse.error_code ?? ''
+  var message: string = userstatusResponse.message ?? ''
+  var userstatuses: UserStatus[] = userstatusResponse.userstatuses
+  var pagination: Pagination = userstatusResponse.pagination
+  return { success, error_code, message, userstatuses, pagination }
 }

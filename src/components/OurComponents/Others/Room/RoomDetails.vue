@@ -21,7 +21,7 @@ const roomId = ref(0)
 roomId.value = route.params?.id as number ?? 0
 const currentRoom = ref(defaultRoom)
 const getCurrentRoom = async () => {
-    const room = await getRoom(roomId.value)
+    const { room } = await getRoom(roomId.value)
     if (room != undefined)
         currentRoom.value = room
     pageTitle.value = viewWrapper.pageTitle + '# ' + currentRoom.value.number
@@ -76,5 +76,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>

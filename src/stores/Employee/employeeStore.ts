@@ -30,8 +30,16 @@ export const useEmployee = defineStore('employee', () => {
       error_code.value = response.response.error_code
       message.value = response.response.message
       employees.value.push(returnedEmployee)
+
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -48,7 +56,14 @@ export const useEmployee = defineStore('employee', () => {
       error_code.value = response.response.error_code
       message.value = response.response.message
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -67,7 +82,14 @@ export const useEmployee = defineStore('employee', () => {
       message.value = response.response.message
       employees.value.push(returnedEmployee)
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -80,7 +102,18 @@ export const useEmployee = defineStore('employee', () => {
       const returnedResponse = await getEmployeesApi(api, searchFilter)
       employees.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -99,7 +132,14 @@ export const useEmployee = defineStore('employee', () => {
       message.value = response.response.message
       return returnedMedia
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -119,7 +159,14 @@ export const useEmployee = defineStore('employee', () => {
       message.value = response.response.message
       return returnedMedia
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -135,7 +182,14 @@ export const useEmployee = defineStore('employee', () => {
       message.value = response.response.message
       return response
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -143,6 +197,7 @@ export const useEmployee = defineStore('employee', () => {
   return {
     employees,
     pagination,
+    loading,
     addEmployeeStore,
     getEmployeesStore,
     updateEmployeeStore,

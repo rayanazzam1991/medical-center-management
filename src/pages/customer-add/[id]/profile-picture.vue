@@ -60,9 +60,9 @@ const onSubmitAdd = async () => {
     if (profile_picture.value != undefined)
         formData.append('images[]', profile_picture.value);
 
-    const media = await addProfilePicture(customerId.value, formData)
+    const { message, success } = await addProfilePicture(customerId.value, formData)
 
-    if (media.success) {
+    if (success) {
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Profile Picture was added successfully`)
 
@@ -71,7 +71,7 @@ const onSubmitAdd = async () => {
     else {
         // @ts-ignore
 
-        notif.error(media.success)
+        notif.error(message)
 
     }
 
@@ -155,10 +155,10 @@ const onRemoveFile = (error: any, fileInfo: any) => {
     </div>
 </template>
 <style  scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/forms-outer';
+@import '/@src/scss/Styles/profilePictureWizard.scss';
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
 }
 </style>
+ 

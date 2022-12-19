@@ -20,7 +20,7 @@ const nationalityId = ref(0)
 nationalityId.value = route.params?.id as number ?? 0
 const currentNationality = ref(defaultNationality)
 const getCurrentNationality = async () => {
-    const nationality = await getNationality(nationalityId.value)
+    const { nationality } = await getNationality(nationalityId.value)
     if (nationality != undefined)
         currentNationality.value = nationality
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentNationality.value.name
@@ -68,5 +68,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>

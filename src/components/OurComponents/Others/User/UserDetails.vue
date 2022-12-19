@@ -43,7 +43,7 @@ const userId = ref(0)
 userId.value = route.params?.id as number ?? 0
 const currentUser = ref(defaultUser)
 const getCurrentUser = async () => {
-    const user = await getUser(userId.value)
+    const { user } = await getUser(userId.value)
     if (user != undefined)
         currentUser.value = user
     pageTitle.value = viewWrapper.pageTitle + ':' + currentUser.value.first_name + ' ' + currentUser.value.last_name
@@ -151,5 +151,4 @@ const toEdit = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/styles/detailsPage.scss';
-
 </style>

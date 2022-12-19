@@ -118,11 +118,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.user_status_id = userData.user_status_id
         console.log(employeeForm.userForm)
 
-        const employee = await addEmployee(employeeForm.data, employeeForm.userForm)
-        console.log(employee)
+        const { employee, success, message } = await addEmployee(employeeForm.data, employeeForm.userForm)
 
-        if (employee.success) {
-            employeeForm.data.id = employee.employee.id
+        if (success) {
+            employeeForm.data.id = employee.id
             // @ts-ignore
             notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
 
@@ -131,7 +130,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         else {
             // @ts-ignore
 
-            notif.error(employee.success)
+            notif.error(message)
             return false
 
 

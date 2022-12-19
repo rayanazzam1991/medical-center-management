@@ -38,7 +38,7 @@ export default defineComponent({
                 return
             }
 
-            const nationality = await getNationality(nationalityId.value);
+            const { nationality } = await getNationality(nationalityId.value);
             currentNationality.value = nationality != undefined ? nationality : defaultNationality;
         };
         onMounted(() => {
@@ -64,21 +64,32 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var nationalityData = currentNationality.value;
-            nationalityData = await addNationality(nationalityData) as Nationality;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/nationality/${nationalityData.id}` });
+            const { nationality, message, success } = await addNationality(nationalityData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${nationality.name} ${viewWrapper.pageTitle} was added successfully`);
+                router.push({ path: `/nationality/${nationality.id}` });
+            } else {
+                notif.error(message)
+            }
         });
         const onSubmitEdit = handleSubmit(async () => {
             const nationalityData = currentNationality.value;
-            await editNationality(nationalityData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/nationality/${nationalityData.id}` });
+            const { success, message } = await editNationality(nationalityData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                // @ts-ignore
+                notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                router.push({ path: `/nationality/${nationalityData.id}` });
+            } else {
+                notif.error(message)
+            }
+
         });
         return { pageTitle, onSubmit, currentNationality, viewWrapper, backRoute, NationalityConsts };
     },
@@ -148,5 +159,4 @@ export default defineComponent({
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
-
 </style>

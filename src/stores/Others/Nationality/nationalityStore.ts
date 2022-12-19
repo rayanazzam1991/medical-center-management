@@ -10,6 +10,9 @@ export const useNationality = defineStore('nationality', () => {
   const nationalities = ref<Nationality[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
 
   async function deleteNationalityStore(nationalityId: number) {
     if (loading.value) return
@@ -19,8 +22,17 @@ export const useNationality = defineStore('nationality', () => {
     try {
       const response = await deleteNationalityApi(api, nationalityId)
       nationalities.value.splice(nationalities.value.findIndex((nationality: Nationality) => nationality.id === nationalityId), 1)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
 
-    } finally {
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -33,9 +45,18 @@ export const useNationality = defineStore('nationality', () => {
       const response = await getNationalityApi(api, nationalityId)
       var returnedNationality: Nationality
       returnedNationality = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedNationality
 
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
 
     }
@@ -51,10 +72,19 @@ export const useNationality = defineStore('nationality', () => {
       var returnedNationality: Nationality
       returnedNationality = response.response.data
       nationalities.value.push(returnedNationality)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedNationality
 
 
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -70,9 +100,18 @@ export const useNationality = defineStore('nationality', () => {
       returnedNationality = response.response.data
       nationalities.value.splice(nationalities.value.findIndex((nationalityElement) => nationalityElement.id = nationality.id), 1)
       nationalities.value.push(returnedNationality)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
 
 
-    } finally {
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -86,15 +125,28 @@ export const useNationality = defineStore('nationality', () => {
       const returnedResponse = await getNationalitiesApi(api, searchFilter)
       nationalities.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
 
-    } finally {
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     nationalities,
     pagination,
+    loading,
     deleteNationalityStore,
     addNationalityStore,
     editNationalityStore,
