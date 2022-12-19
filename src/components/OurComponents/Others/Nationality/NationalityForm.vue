@@ -50,9 +50,12 @@ export default defineComponent({
         const validationSchema = nationalityvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentNationality.value.name ?? "",
                 status: currentNationality.value.status ?? 1,
+            } : {
+                name: "",
+                status: 1,
             },
         });
         const onSubmit = async (method: String) => {

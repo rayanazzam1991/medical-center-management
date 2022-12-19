@@ -52,9 +52,12 @@ export default defineComponent({
         const validationSchema = customergroupvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentCustomerGroup.value.name ?? "",
                 status: currentCustomerGroup.value.status ?? 1,
+            } : {
+                name: "",
+                status: 1,
             },
         });
         const onSubmit = async (method: String) => {

@@ -55,12 +55,19 @@ export default defineComponent({
         const validationSchema = servicevalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
-            initialValues: {
+            initialValues: formType.value == "Edit" ? {
                 name: currentService.value.name ?? "",
                 status: currentService.value.status ?? 1,
                 description: currentService.value.description ?? undefined,
                 duration_minutes: currentService.value.duration_minutes ?? undefined,
                 service_price: currentService.value.service_price ?? undefined,
+            } : {
+                name: '',
+                status: 1,
+                description: '',
+                duration_minutes: 0,
+                service_price: 0,
+
             },
         });
         const onSubmit = async (method: String) => {
