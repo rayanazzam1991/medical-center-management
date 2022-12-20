@@ -2,6 +2,7 @@
 const emits = defineEmits<{
     (e: 'view'): void
     (e: 'edit'): void
+    (e: 'changeStatus'): void
 }>()
 </script>
 
@@ -23,10 +24,10 @@ const emits = defineEmits<{
             </a>
 
             <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-    () => {
-        emits('edit')
-        close()
-    }
+                () => {
+                    emits('edit')
+                    close()
+                }
             ">
                 <div class="icon">
 
@@ -34,6 +35,19 @@ const emits = defineEmits<{
                 </div>
                 <div class="meta">
                     <span>Edit</span>
+                </div>
+            </a>
+            <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+    () => {
+        emits('changeStatus')
+        close()
+    }
+            ">
+                <div class="icon">
+                    <i class="fas fa-user-edit" aria-hidden="true"></i>
+                </div>
+                <div class="meta">
+                    <span>Change Status</span>
                 </div>
             </a>
 

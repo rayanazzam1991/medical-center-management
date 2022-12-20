@@ -22,12 +22,7 @@ const onSubmit = () => {
           </div>
           <div class="right">
             <div class="buttons">
-              <VButton
-                icon="lnir lnir-arrow-left rem-100"
-                to="/sidebar/layouts/profile-view"
-                light
-                dark-outlined
-              >
+              <VButton icon="lnir lnir-arrow-left rem-100" to="/sidebar/layouts/profile-view" light dark-outlined>
                 Cancel
               </VButton>
               <VButton type="submit" color="primary" raised> Request Payout </VButton>
@@ -87,40 +82,22 @@ const onSubmit = () => {
             <h3>Personal Info</h3>
             <VField>
               <VControl icon="feather:user">
-                <VInput
-                  type="text"
-                  placeholder="First Name *"
-                  autocomplete="given-name"
-                />
+                <VInput type="text" placeholder="First Name *" autocomplete="given-name" />
               </VControl>
             </VField>
             <VField>
               <VControl icon="feather:user">
-                <VInput
-                  type="text"
-                  placeholder="Last Name *"
-                  autocomplete="family-name"
-                />
+                <VInput type="text" placeholder="Last Name *" autocomplete="family-name" />
               </VControl>
             </VField>
             <VField>
               <VControl icon="feather:mail">
-                <VInput
-                  type="email"
-                  placeholder="Email Address *"
-                  autocomplete="email"
-                  inputmode="email"
-                />
+                <VInput type="email" placeholder="Email Address *" autocomplete="email" inputmode="email" />
               </VControl>
             </VField>
             <VField>
               <VControl icon="feather:phone">
-                <VInput
-                  type="tel"
-                  placeholder="Phone Number *"
-                  autocomplete="tel"
-                  inputmode="tel"
-                />
+                <VInput type="tel" placeholder="Phone Number *" autocomplete="tel" inputmode="tel" />
               </VControl>
             </VField>
           </div>
@@ -129,23 +106,15 @@ const onSubmit = () => {
 
             <VField v-slot="{ id }">
               <VControl>
-                <Multiselect
-                  v-model="bankAccount"
-                  :attrs="{ id }"
-                  placeholder="Bank Account"
-                  :options="['AMEX **** 42', 'HSBC **** 29']"
-                />
+                <Multiselect v-model="bankAccount" :attrs="{ id }" placeholder="Bank Account"
+                  :options="['AMEX **** 42', 'HSBC **** 29']" />
               </VControl>
             </VField>
 
             <VField v-slot="{ id }">
               <VControl>
-                <Multiselect
-                  v-model="transferFees"
-                  :attrs="{ id }"
-                  placeholder="Bank Account"
-                  :options="['Super Fast - $3.00', 'Regular - $0.50']"
-                />
+                <Multiselect v-model="transferFees" :attrs="{ id }" placeholder="Bank Account"
+                  :options="['Super Fast - $3.00', 'Regular - $0.50']" />
               </VControl>
             </VField>
 
@@ -240,7 +209,7 @@ const onSubmit = () => {
                 cursor: pointer;
 
                 &:checked {
-                  + .radio-pill-inner {
+                  +.radio-pill-inner {
                     background: var(--primary);
                     border-color: var(--primary);
                     box-shadow: var(--primary-box-shadow);
@@ -297,7 +266,7 @@ const onSubmit = () => {
               .radio-pills {
                 .radio-pill {
                   input {
-                    &:checked + .radio-pill-inner {
+                    &:checked+.radio-pill-inner {
                       border-color: var(--primary);
                       background: var(--primary);
                       box-shadow: var(--primary-box-shadow);

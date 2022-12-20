@@ -36,11 +36,10 @@ const contractorEditvalidationSchema = toFormValidator(zod
                 ),
         address:
             zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-
+                .preprocess(
+                    val => val == undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
         city_id: zod
             .preprocess(
                 (input) => {
@@ -88,7 +87,7 @@ const contractorEditvalidationSchema = toFormValidator(zod
                     },
                     zod
                         .number({ invalid_type_error: "Please enter a valid number" })
-                        .min(0, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
+                        .min(1, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
                 ),
 
     }));

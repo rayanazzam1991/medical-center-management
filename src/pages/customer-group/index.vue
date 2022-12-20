@@ -22,6 +22,7 @@ const deleteCustomerGroupId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 
+const default_per_page = ref(1)
 const customerGroupStore = useCustomerGroup()
 const keyIncrement = ref(0)
 onMounted(async () => {
@@ -29,6 +30,8 @@ onMounted(async () => {
   customerGroupsList.value = customerGroups
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 
@@ -141,7 +144,7 @@ const columns = {
 
 <template>
   <CustomerGroupTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
     @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="customerGroupsList" @update:sort="customerGroupSort">
 

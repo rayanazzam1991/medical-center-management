@@ -82,7 +82,7 @@ export default defineComponent({
                 // @ts-ignore
                 notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
                 await sleep(500)
-            router.push({ path: `/department/${department.id}` });
+                router.push({ path: `/department/${department.id}` });
             } else {
                 notif.error(message)
             }
@@ -96,7 +96,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)router.push({ path: `/department/${departmentData.id}` });
+                await sleep(500)
+                router.push({ path: `/department/${departmentData.id}` });
             } else {
                 notif.error(message)
             }
@@ -125,7 +126,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentDepartment.name" type="text"
                                             autocomplete="given-name" />
@@ -140,7 +141,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentDepartment.status" :value="DepartmentConsts.INACTIVE"

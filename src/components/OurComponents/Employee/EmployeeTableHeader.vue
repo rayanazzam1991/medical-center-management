@@ -20,35 +20,69 @@ export default defineComponent({
         },
         pagination: {
             default: defaultPagination,
+        },
+        default_per_page: {
+            type: Number,
+            default: 1,
         }
+
     },
 
 
     setup(props, context) {
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
+            quickSearchField.value = ''
             context.emit('onOpen', searchFilterPop.value)
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
         }
+        const default_per_page = props.default_per_page
         const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 30
-        })
         const searchFilterPop = ref(false)
         const searchFirstName = ref()
         const searchLastName = ref()
         const searchGender = ref()
         const searchPhoneNumber = ref()
         const searchRoom = ref()
-        const searchNationality = ref()
+        const quickSearchField = ref('')
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultEmployeeSearchFilter)
         const is_reseted = ref(false)
-        const keyTest = ref(0)
+        const keyIncrement = ref(0)
+        const quickSearch = () => {
+            if (quickSearchField.value != '') {
+
+                searchFilter.value.name = quickSearchField.value
+                if (isNumber(quickSearchField.value)) {
+                    searchFilter.value.phone_number = Number(quickSearchField.value)
+                }
+                else {
+                    searchFilter.value.phone_number = undefined
+                }
+                searchFilter.value.quick_search = true
+            } else {
+                searchFilter.value.phone_number = undefined
+                searchFilter.value.name = undefined
+                searchFilter.value.quick_search = undefined
+            }
+            searchFilter.value.per_page = perPage.value
+
+            search()
+        }
+        function isNumber(str: string): boolean {
+            if (typeof str !== 'string') {
+                return false;
+            }
+
+            if (str.trim() === '') {
+                return false;
+            }
+
+            return !Number.isNaN(Number(str));
+        }
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
@@ -69,8 +103,10 @@ export default defineComponent({
             searchFilter.value.to = undefined
             searchFilter.value.nationality_id = undefined
             searchFilter.value.user_status_id = undefined
+            searchFilter.value.quick_search = undefined
+            quickSearchField.value = ''
             is_reseted.value = true
-            keyTest.value++
+            keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -98,69 +134,62 @@ export default defineComponent({
             const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
             nationalities2.value = nationalities
         })
-        return { keyTest, is_reseted, isStuck, onOpen, resetFilter_popup, cities2, search_filter, popUpTrigger, nationalities2, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
+        return { keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, cities2, search_filter, popUpTrigger, nationalities2, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
     },
 })
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
+    <form class="form-layout" v-on:submit.prevent="quickSearch">
         <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+            <div class="form-header stuck-header">
                 <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content">
-                            <VButton @click.prevent="onOpen" raised> Search
-                            </VButton>
+                    <div class="left my-4 mx-2 ">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2" icon="feather:search">
+                                <VInput v-model="quickSearchField" type="text" placeholder="Name/Number..." />
+                            </VControl>
+                            <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+                            <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
+                                color="danger" />
                         </div>
-
                     </div>
-                    <div class="right">
-                        <div class="buttons  ">
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
-                            <VButton to="/employee-add" color="primary" raised> {{ button_name }}
-                            </VButton>
-                        </div>
-                        <div>
-                            <VField>
-                                <VControl>
-                                    <div class="select">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page
-                                                    *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-                        </div>
+                    <div class="left my-4 mx-2">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2 ">
+                                <div class="select">
 
-
+                                    <select v-model="perPage" @change="search">
+                                        <VOption :value="default_per_page * 0.1">{{ default_per_page *
+                                                0.1
+                                        }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page">{{ default_per_page }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 2">{{ default_per_page * 2 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 10">{{ default_per_page * 10 }}
+                                        </VOption>
+                                    </select>
+                                </div>
+                            </VControl>
+                            <VControl>
+                                <VButton class="" to="/employee-add" color="primary">{{ button_name }}
+                                </VButton>
+                            </VControl>
+                        </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <EmployeeSearchFilterModal :key="keyTest" :search_filter_popup="searchFilterPop"
+        <EmployeeSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
-<style   lang="scss">
+<style scoped  lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 </style>

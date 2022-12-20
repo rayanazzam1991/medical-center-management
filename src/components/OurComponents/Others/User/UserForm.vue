@@ -127,7 +127,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(` ${viewWrapper.pageTitle} was added successfully`)
-            await sleep(500)
+                await sleep(500)
                 router.push({ path: `/user/${user.id}` })
             }
             else {
@@ -157,7 +157,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
-await sleep(500)
+                await sleep(500)
                 router.push({ path: `/user/${userData.id}` })
             } else {
                 notif.error(message)

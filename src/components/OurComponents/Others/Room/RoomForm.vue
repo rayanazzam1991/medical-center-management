@@ -47,7 +47,7 @@ export default defineComponent({
                 currentRoom.value.number = 0
                 currentRoom.value.floor = 0
                 currentRoom.value.department = defaultDepartment
-                currentRoom.value.status = 0
+                currentRoom.value.status = 1
                 return
             }
             const { room } = await getRoom(roomId.value)
@@ -75,8 +75,8 @@ export default defineComponent({
                 status: currentRoom.value.status ?? 1,
                 department_id: currentRoom.value?.department?.id ?? 0,
             } : {
-                number: 0,
-                floor: 0,
+                number: '',
+                floor: '',
                 status: 1,
                 department_id: 0,
             },
@@ -107,7 +107,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
-            await sleep(500)
+                await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
                 notif.error(message)
@@ -131,7 +131,7 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
-await sleep(500)
+                await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {
                 notif.error(message)
@@ -165,7 +165,7 @@ await sleep(500)
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="number">
-                                    <VLabel>{{ viewWrapper.pageTitle }} number</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} number</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
@@ -181,7 +181,7 @@ await sleep(500)
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="floor">
-                                    <VLabel>{{ viewWrapper.pageTitle }} floor</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} floor</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.floor" type="number" autocomplete="given-floor" />
                                         <ErrorMessage class="help is-danger" name="floor" />
@@ -195,7 +195,7 @@ await sleep(500)
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="department_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} department</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} department</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
                                             <VOption value="">Department</VOption>
@@ -214,7 +214,7 @@ await sleep(500)
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"

@@ -83,23 +83,22 @@ export default defineComponent({
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                            placeholder="Duration..." />
+                        <input v-model="searchDuration" type="number" class="input " placeholder="Duration..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchPrice" type="number" class="input is-rounded" placeholder="Price..." />
+                        <input v-model="searchPrice" type="number" class="input " placeholder="Price..." />
                     </VControl>
                 </VField>
                 <VField class="column filter ">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
@@ -111,7 +110,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search" icon="feather:search">Search</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
     </VModal>
 </template>

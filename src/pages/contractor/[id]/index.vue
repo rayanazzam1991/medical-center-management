@@ -231,7 +231,7 @@ const getCurrentPersonalId = async () => {
                                                 <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
-                                                        {{ currentContractor.user.room.number }}
+                                                        {{ currentContractor?.user?.room?.number }}
                                                     </span>
                                                 </div>
 
@@ -242,7 +242,7 @@ const getCurrentPersonalId = async () => {
                                                 <div class="meta">
                                                     <span>Room Floor</span>
                                                     <span>
-                                                        {{ currentContractor.user.room.floor }}
+                                                        {{ currentContractor?.user?.room?.floor }}
                                                     </span>
                                                 </div>
 

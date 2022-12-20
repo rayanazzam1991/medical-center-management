@@ -370,20 +370,17 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-12">
-                                    <VField v-slot="{ id }" class="has-curved-tooltip" id="payment_percentage">
+                                    <VField id="payment_percentage">
                                         <VLabel>Payment Percentage</VLabel>
-
-                                        <VControl>
-                                            <Slider :id="id" v-model="currentContractor.payment_percentage" />
+                                        <VControl icon="feather:percent">
+                                            <VInput v-model="currentContractor.payment_percentage" type="number" />
                                             <ErrorMessage class="help is-danger" name="payment_percentage" />
-
                                         </VControl>
                                     </VField>
                                 </div>
                             </div>
                         </div>
                         <!--Fieldset-->
-
                     </div>
                 </div>
             </div>

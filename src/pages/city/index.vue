@@ -22,11 +22,14 @@ const deleteCityId = ref()
 const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
 const router = useRouter()
+const default_per_page = ref(1)
 onMounted(async () => {
   const { cities, pagination } = await getCitiesList(searchFilter.value)
   citiesList.value = cities
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 const removeCity = async (cityId: number) => {
@@ -136,7 +139,7 @@ const columns = {
 
 <template>
   <CityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
-    @search="search" :pagination="paginationVar" @resetFilter="resetFilter" />
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
   <VFlexTableWrapper :columns="columns" :data="citiesList" @update:sort="citySort">

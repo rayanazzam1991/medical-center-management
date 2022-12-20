@@ -31,7 +31,7 @@ useHead({
             <RouterView />
 
             <!--Wizard Navigation Buttons-->
-            <div class="wizard-buttons" :class="[employeeForm.canNavigate && 'is-active']">
+            <div class="wizard-buttons" :class="[(employeeForm.canNavigate && 'is-active') , (employeeForm.getStep() == 1 && 'is-scroll')]">
                 <div class="wizard-buttons-inner">
                     <VLoader size="small" :active="employeeStore.loading">
                         <VButton type="submit" class="wizard-button-previous"

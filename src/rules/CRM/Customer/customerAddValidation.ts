@@ -27,12 +27,12 @@ const customerAddvalidationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        const processed = zod.string({}).regex(/^\d{9}$/).transform(Number).safeParse(input);
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ required_error: 'This field is required', invalid_type_error: 'This field is required' })
-
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid phone number" })
+                    ,
                 ),
         address:
             zod
@@ -54,7 +54,7 @@ const customerAddvalidationSchema = toFormValidator(zod
         room_id:
             zod
                 .preprocess(
-                    val => val === "" ? undefined : val,
+                    val => val == "" ? undefined : val,
                     zod
                         .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                         .optional()),
