@@ -159,4 +159,3 @@ const onRemoveFile = (error: any, fileInfo: any) => {
     padding: 20px 40px 40px;
 }
 </style>
- </style>
