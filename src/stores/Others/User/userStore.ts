@@ -195,8 +195,7 @@ export const useUser = defineStore('user', () => {
     getUserStore,
     getUsersStore,
     phoneExistsCheckStore,
-    changeUserStatusStore,
-    loading
+    changeUserStatusStore
   } as const
 })
 
