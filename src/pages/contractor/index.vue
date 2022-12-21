@@ -100,12 +100,6 @@ const contractorSort = async (value: string) => {
 
 
 const columns = {
-    id: {
-        align: 'center',
-
-        searchable: true,
-        sortable: true,
-    },
     "users.name": {
         align: 'center',
 
@@ -113,33 +107,6 @@ const columns = {
         grow: 'lg',
         renderRow: (row: any) =>
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
-
-        sortable: true,
-        searchable: true,
-
-    },
-    "users.gender": {
-        align: 'center',
-
-        label: 'Gender',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.user?.gender === 'Male'
-                            ? 'primary'
-                            : row?.user?.gender === 'Female'
-                                ? 'orange'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row?.user?.gender
-                    },
-                }
-            ),
 
         sortable: true,
         searchable: true,
@@ -157,22 +124,10 @@ const columns = {
 
 
     },
-    "users.birth_date": {
-        align: 'center',
-
-        label: 'Birth date',
-        renderRow: (row: any) =>
-            h('span', row?.user?.birth_date),
-
-        searchable: true,
-        sortable: true
-
-
-    },
     room: {
         align: 'center',
 
-        label: 'Room',
+        label: 'Room #',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
 
@@ -209,33 +164,6 @@ const columns = {
                 }
             ),
         searchable: true,
-
-
-    },
-    is_completed: {
-        align: 'center',
-
-        label: 'completed',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.is_completed === CustomerConsts.TRUE
-                            ? 'primary'
-                            : row?.is_completed === CustomerConsts.FALSE
-                                ? 'warning'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return CustomerConsts.showBoolean(row?.is_completed)
-                    },
-                }
-            ),
-        searchable: true,
-
 
 
     },

@@ -95,12 +95,6 @@ const employeeSort = async (value: string) => {
 
 
 const columns = {
-    id: {
-        align: 'center',
-
-        searchable: true,
-        sortable: true,
-    },
     "users.name": {
         align: 'center',
 
@@ -113,34 +107,6 @@ const columns = {
         searchable: true,
 
     },
-    "users.gender": {
-        align: 'center',
-
-        label: 'Gender',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.user?.gender === 'Male'
-                            ? 'primary'
-                            : row?.user?.gender === 'Female'
-                                ? 'orange'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row?.user?.gender
-                    },
-                }
-            ),
-
-
-        searchable: true,
-        sortable: true
-
-    },
     "users.phone_number": {
         align: 'center',
         grow: true,
@@ -149,28 +115,6 @@ const columns = {
             h('span', row?.user?.phone_number),
 
         sortable: true,
-        searchable: true,
-
-
-    },
-    "users.starting_date": {
-        align: 'center',
-
-        label: 'Starting date',
-        renderRow: (row: any) =>
-            h('span', row?.starting_date),
-
-        searchable: true,
-
-
-    },
-    nationality: {
-        align: 'center',
-
-        label: 'Nationality',
-        renderRow: (row: any) =>
-            h('span', row?.nationality?.name),
-
         searchable: true,
 
 
@@ -188,7 +132,7 @@ const columns = {
     },
     room: {
         align: 'center',
-        label: 'Room',
+        label: 'Room #',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
 
@@ -236,6 +180,7 @@ const columns = {
             h('span', row?.created_at),
         searchable: true,
         sortable: true,
+        grow: true
 
     },
     actions: {
