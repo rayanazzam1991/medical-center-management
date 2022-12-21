@@ -24,6 +24,7 @@ declare module '@vue/runtime-core' {
     ContractorSubnav: typeof import('./src/layouts/navbar-items/ContractorSubnav.vue')['default']
     ContractorTableHeader: typeof import('./src/components/OurComponents/Contractor/ContractorTableHeader.vue')['default']
     CRMSubnav: typeof import('./src/layouts/navbar-items/CRMSubnav.vue')['default']
+    CustomerCreateFormNavigation: typeof import('./src/components/OurComponents/CRM/Customer/CustomerCreateFormNavigation.vue')['default']
     CustomerFormNavigation: typeof import('./src/components/OurComponents/CRM/Customer/CustomerFormNavigation.vue')['default']
     CustomerGroupDetails: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupDetails.vue')['default']
     CustomerGroupForm: typeof import('./src/components/OurComponents/Others/CustomerGroup/CustomerGroupForm.vue')['default']
