@@ -145,8 +145,7 @@ export const useRoom = defineStore('room', () => {
     addRoomStore,
     editRoomStore,
     getRoomStore,
-    getRoomsStore,
-    loading
+    getRoomsStore
   } as const
 })
 

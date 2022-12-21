@@ -161,8 +161,7 @@ export const useSocialMedia = defineStore('socialMedia', () => {
     addSocialMediaStore,
     editSocialMediaStore,
     getSocialMediaStore,
-    getSocialMediasStore,
-    loading
+    getSocialMediasStore
   } as const
 })
 

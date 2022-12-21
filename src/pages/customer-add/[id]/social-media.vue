@@ -75,9 +75,9 @@ const onSubmitAdd = async () => {
 
     }
     customerForm.data.is_completed = true
-    const { customer, message, success } = await addSocialMediasToCustomer(customerId.value, customerForm.customerSocialMediaForm)
+    const customer = await addSocialMediasToCustomer(customerId.value, customerForm.customerSocialMediaForm)
 
-    if (success) {
+    if (customer.success) {
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
@@ -86,7 +86,7 @@ const onSubmitAdd = async () => {
     else {
         // @ts-ignore
 
-        notif.error(message)
+        notif.error(customer.success)
 
     }
 
