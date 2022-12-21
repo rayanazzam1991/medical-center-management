@@ -185,9 +185,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <input class="input" type="text" placeholder="+964" readonly />
                                 </div>
                                 <VField class="column is-10 " id="phone_number">
-                                    <VControl class="Vi" icon="feather:chevrons-right">
+                                    <VControl class="Vi"
+                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
+                                        icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.phone_number" type="number" />
                                         <ErrorMessage class="help is-danger" name="phone_number" />
+                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+
                                     </VControl>
                                 </VField>
                             </div>
