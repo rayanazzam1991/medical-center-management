@@ -41,11 +41,9 @@ export interface CreateUpdateCustomerSocialMediaHelper {
 export interface CustomerSearchFilter {
     name?: string
     phone_number?: number
-    gender?: string
     date_between?: string
     from?: string
     to?: string
-    city_id?: number
     customer_group_id?: number
     is_completed?: boolean
     user_status_id?: number
@@ -100,11 +98,9 @@ export const defaultCustomerProfilePic: Media = {
 export const defaultCustomerSearchFilter: CustomerSearchFilter = {
     name: undefined,
     phone_number: undefined,
-    gender: undefined,
     date_between: undefined,
     from: undefined,
     to: undefined,
-    city_id: undefined,
     customer_group_id: undefined,
     is_completed: undefined,
     user_status_id: undefined,

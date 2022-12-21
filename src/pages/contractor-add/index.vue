@@ -90,6 +90,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
     const { result } = await phoneExistsCheck(userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
+
+        
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
         contractorForm.data.payment_percentage = customerData.payment_percentage
