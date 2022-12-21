@@ -278,7 +278,7 @@ export const useCustomer = defineStore('customer', () => {
     getCustomersStore,
     addCustomerProfilePictureStore,
     getCustomerProfilePicture,
-    deleteCustomerProfilePicture,
+    deleteCustomerProfilePicture
   } as const
 })
 

@@ -149,8 +149,7 @@ export const useNationality = defineStore('nationality', () => {
     addNationalityStore,
     editNationalityStore,
     getNationalityStore,
-    getNationalities,
-    loading
+    getNationalities
 
   } as const
 })
