@@ -34,12 +34,10 @@ export interface CreateUpdateServicesHelper {
 export interface ContractorSearchFilter {
     name?: string
     phone_number?: number
-    gender?: string
     date_between?: string
     from?: string
     to?: string
     room_id?: number
-    is_completed?: boolean
     user_status_id?: number
     page?: number
     per_page?: number
@@ -79,12 +77,10 @@ export const defaultContractor: Contractor = {
 export const defaultContractorSearchFilter: ContractorSearchFilter = {
     name: undefined,
     phone_number: undefined,
-    gender: undefined,
     date_between: undefined,
     from: undefined,
     to: undefined,
     room_id: undefined,
-    is_completed: undefined,
     user_status_id: undefined,
     page: undefined,
     per_page: 50,

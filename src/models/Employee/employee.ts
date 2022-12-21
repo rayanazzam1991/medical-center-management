@@ -29,12 +29,9 @@ export interface UpdateEmployee {
 export interface EmployeeSearchFilter {
     name?: string
     phone_number?: number
-    gender?: string
     date_between?: string
     from?: string
     to?: string
-    city_id?: number
-    nationality_id?: number
     user_status_id?: number
     page?: number
     per_page?: number
@@ -69,12 +66,9 @@ export const defaultEmployee: Employee = {
 export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
     name: undefined,
     phone_number: undefined,
-    gender: undefined,
     date_between: undefined,
     from: undefined,
     to: undefined,
-    city_id: undefined,
-    nationality_id: undefined,
     user_status_id: undefined,
     page: undefined,
     per_page: undefined,

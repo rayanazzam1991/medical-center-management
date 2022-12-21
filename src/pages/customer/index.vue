@@ -96,12 +96,6 @@ const customerSort = async (value: string) => {
 
 
 const columns = {
-    id: {
-        align: 'center',
-
-        searchable: true,
-        sortable: true,
-    },
     "users.name": {
         align: 'center',
 
@@ -111,33 +105,6 @@ const columns = {
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
 
         sortable: true,
-        searchable: true,
-
-    },
-    "users.gender": {
-        align: 'center',
-        sortable: true,
-        label: 'Gender',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.user?.gender === 'Male'
-                            ? 'primary'
-                            : row?.user?.gender === 'Female'
-                                ? 'orange'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row?.user?.gender
-                    },
-                }
-            ),
-
-
         searchable: true,
 
     },
@@ -153,32 +120,8 @@ const columns = {
 
 
     },
-    "users.birth_date": {
-        align: 'center',
-
-        label: 'Birth date',
-        renderRow: (row: any) =>
-            h('span', row?.user?.birth_date),
-
-        searchable: true,
-        sortable: true,
-
-
-    },
-    city: {
-        align: 'center',
-
-        label: 'City',
-        renderRow: (row: any) =>
-            h('span', row?.user?.city?.name),
-
-        searchable: true,
-
-
-    },
     status: {
         align: 'center',
-
         label: 'status',
         renderRow: (row: any) =>
             h(
@@ -258,7 +201,6 @@ const columns = {
                 }
             ),
         searchable: true,
-        sortable: true
 
 
     },
