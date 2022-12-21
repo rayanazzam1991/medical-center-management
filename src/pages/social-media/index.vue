@@ -24,11 +24,14 @@ const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const socialMediaStore = useSocialMedia()
 const keyIncrement = ref(0)
+const default_per_page = ref(1)
 onMounted(async () => {
   const { socialMedias, pagination } = await getSocialMediasList(searchFilter.value)
   socialMediasList.value = socialMedias
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 const removeSocialMedia = async (socialMediaId: number) => {
@@ -156,7 +159,7 @@ const columns = {
 
 <template>
   <SocialMediaTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
     @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="socialMediasList" @update:sort="socialMediaSort">
     <VFlexTable separators clickable>

@@ -116,23 +116,22 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Employee" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal title="Filter Employee" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input is-rounded"
-                            placeholder="phone_number..." />
+                        <input v-model="searchPhoneNumber" type="text" class="input " placeholder="Phone Number..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchGender" class="is-rounded">
+                        <VSelect v-model="searchGender" class="">
                             <VOption value="">Gender</VOption>
                             <VOption value="Male">Male</VOption>
                             <VOption value="Female">Female</VOption>
@@ -141,7 +140,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchNationality" class="is-rounded">
+                        <VSelect v-model="searchNationality" class="">
                             <VOption value="">Nationality</VOption>
                             <VOption v-for="nationality in nationalities2" :key="nationality.id"
                                 :value="nationality.id">{{ nationality.name }}
@@ -151,7 +150,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
                                     status.name
@@ -181,16 +180,8 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="feather:search" color="primary" raised @click="search">Search</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
-
-
-
-        <VField class="column filter">
-            <VControl icon="feather:search">
-                <input v-model="searchPhoneNumber" type="text" class="input is-rounded" placeholder="phone_number..." />
-            </VControl>
-        </VField>
     </VModal>
 </template>
 

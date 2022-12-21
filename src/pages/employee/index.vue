@@ -5,10 +5,15 @@ import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { getEmployeesList } from '/@src/services/Employee/employeeService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
+import { defaultEmployee, defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
+import { ErrorMessage } from 'vee-validate'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
+import { changeUserStatus } from '/@src/services/Others/User/userService'
+import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Employee')
 useHead({
@@ -17,18 +22,42 @@ useHead({
 const notif = useNotyf()
 const searchFilter = ref(defaultEmployeeSearchFilter)
 const employeesList = ref<Array<Employee>>([])
+const statusesList = ref<Array<UserStatus>>([])
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const employeeStore = useEmployee()
-
+const default_per_page = ref(1)
 const keyIncrement = ref(0)
+const changeStatusPopup = ref(false)
+const emplyeeChangeStatus = ref<Employee>(defaultEmployee)
+const currentChangeStatusUser = ref(defaultChangeStatusUser)
 
 onMounted(async () => {
     const { employees, pagination } = await getEmployeesList(searchFilter.value)
     employeesList.value = employees
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statusesList.value = userstatuses
+
 });
+const changestatusUser = async () => {
+    currentChangeStatusUser.value.id = emplyeeChangeStatus.value.user.id
+    currentChangeStatusUser.value.user_status_id = emplyeeChangeStatus.value.user.status.id
+    const { message, success } = await changeUserStatus(currentChangeStatusUser.value)
+    if (success) {
+
+        search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        // @ts-ignore
+        notif.success(`${emplyeeChangeStatus.value.user.first_name} ${emplyeeChangeStatus.value.user.last_name} status was edited successfully`)
+    } else {
+        notif.error(message)
+    }
+    changeStatusPopup.value = false
+}
 
 
 const search = async (searchFilter2: EmployeeSearchFilter) => {
@@ -219,7 +248,10 @@ const columns = {
                 onView: () => {
                     router.push({ path: `/employee/${row?.id}` })
                 },
-
+                onChangeStatus: () => {
+                    emplyeeChangeStatus.value = row
+                    changeStatusPopup.value = true
+                }
             }),
 
     },
@@ -229,7 +261,7 @@ const columns = {
 <template>
     <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
         :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
-        @resetFilter="resetFilter" />
+        :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
         @update:sort="employeeSort">
 
@@ -268,5 +300,33 @@ const columns = {
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
+    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="user_status_id">
+                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VSelect v-model="emplyeeChangeStatus.user.status.id">
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
+                                                status.name
+                                        }}
+                                        </VOption>
+                                    </VSelect>
+                                    <ErrorMessage name="user_status_id" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+        </template>
+    </VModal>
 
 </template>

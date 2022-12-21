@@ -76,17 +76,17 @@ export default defineComponent({
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchNumber" type="text" class="input is-rounded" placeholder="number..." />
+                        <input v-model="searchNumber" type="text" class="input " placeholder="Number..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchFloor" type="text" class="input is-rounded" placeholder="floor..." />
+                        <input v-model="searchFloor" type="text" class="input " placeholder="Floor..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchDepartment" class="is-rounded">
+                        <VSelect v-model="searchDepartment" class="">
                             <VOption value="">Department</VOption>
                             <VOption v-for="department in departments2" :key="department.id" :value="department.id">{{
                                     department.name
@@ -97,7 +97,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption value="0">{{ RoomConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ RoomConsts.showStatusName(1) }}</VOption>
@@ -109,7 +109,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Search</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
     </VModal>
 </template>

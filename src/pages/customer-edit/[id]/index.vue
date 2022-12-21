@@ -53,7 +53,6 @@ const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
 const pageTitle = 'Step 1: Customer Main Info'
-const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const customerId = ref(0)
@@ -68,10 +67,9 @@ const fetchCustomer = async () => {
     currentUser.value.phone_number = customer.user.phone_number
     currentUser.value.address = customer.user.address
     currentUser.value.city_id = customer.user.city.id
-    currentUser.value.room_id = customer.user.room.id
+    currentUser.value.room_id = customer?.user?.room?.id
     currentUser.value.user_status_id = customer.user.status.id
     currentUser.value.id = customer.user.id
-    console.log(currentUser.value.id)
     currentCustomer.value.customer_group_id = customer.customer_group.id
     currentCustomer.value.emergency_contact_name = customer.emergency_contact_name
     currentCustomer.value.emergency_contact_phone = customer.emergency_contact_phone
@@ -223,7 +221,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="first_name">
-                                        <VLabel>first name</VLabel>
+                                        <VLabel class="required">First name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -238,7 +236,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="last_name">
-                                        <VLabel>last name</VLabel>
+                                        <VLabel class="optional">Last name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -253,7 +251,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="birth_date">
-                                        <VLabel>birth date </VLabel>
+                                        <VLabel class="optional">Birth date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -268,14 +266,12 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="phone_number">
-                                        <VLabel>phone number </VLabel>
-                                        <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                            icon="feather:chevrons-right">
+                                        <VLabel class="required">Phone number </VLabel>
+                                        <VControl icon="feather:chevrons-right">
                                             <VInput disabled v-model="currentUser.phone_number" type="number"
                                                 placeholder="" autocomplete="given-phone_number" />
 
                                             <ErrorMessage class="help is-danger" name="phone_number" />
-                                            <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                         </VControl>
                                     </VField>
                                 </div>
@@ -286,7 +282,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel>address </VLabel>
+                                        <VLabel class="optional">Address </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -300,7 +296,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="gender">
-                                        <VLabel>gender</VLabel>
+                                        <VLabel class="required">Gender</VLabel>
 
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -319,10 +315,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="room_id">
-                                        <VLabel>room</VLabel>
+                                        <VLabel class="optional">Room</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                                <VOption>Room</VOption>
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                         room.number
                                                 }}
@@ -339,7 +334,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="city_id">
-                                        <VLabel>city</VLabel>
+                                        <VLabel class="required">City</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
@@ -359,7 +354,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="user_status_id">
-                                        <VLabel>status</VLabel>
+                                        <VLabel class="required">Status</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                                 <VOption value="">Status</VOption>
@@ -380,7 +375,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="emergency_contact_name">
-                                        <VLabel>Emergency Contact Name</VLabel>
+                                        <VLabel class="optional">Emergency Contact Name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_name" type="text"
                                                 placeholder="" autocomplete="given-emergency_contact_name" />
@@ -395,7 +390,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="emergency_contact_phone">
-                                        <VLabel>Emergency Contact Phone</VLabel>
+                                        <VLabel class="optional">Emergency Contact Phone</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_phone" type="number"
                                                 placeholder="" autocomplete="given-emergency_contact_phone" />
@@ -411,7 +406,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="customer_group_id">
-                                        <VLabel>Customer Group</VLabel>
+                                        <VLabel class="required">Customer Group</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
                                                 <VOption v-for="customerGroup in customerGroupsList"
@@ -439,6 +434,17 @@ const onSubmitEdit = handleSubmit(async (values) => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

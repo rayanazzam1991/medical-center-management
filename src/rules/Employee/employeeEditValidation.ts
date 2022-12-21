@@ -35,9 +35,10 @@ const employeeEditvalidationSchema = toFormValidator(zod
                 ),
         address:
             zod
-                .string({})
-                .optional(),
-
+                .preprocess(
+                    val => val == undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
         city_id: zod
             .preprocess(
                 (input) => {

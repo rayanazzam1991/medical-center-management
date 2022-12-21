@@ -22,11 +22,14 @@ const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const userStatusStore = useUserStatus()
 const keyIncrement = ref(0)
+const default_per_page = ref(1)
 onMounted(async () => {
     const { userstatuses, pagination } = await getUserStatusesList(searchFilter.value)
     userstatusesList.value = userstatuses
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+
 });
 
 
@@ -116,7 +119,7 @@ const columns = {
 
 <template>
     <UserStatusTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-        :pagination="paginationVar" @resetFilter="resetFilter" />
+        :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="userstatusesList" @update:sort="userstatusSort">
         <VFlexTable separators clickable>
             <template #body>

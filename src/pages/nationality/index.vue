@@ -21,12 +21,14 @@ const deleteNationalityId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const nationalityStore = useNationality()
+const default_per_page = ref(1)
 const keyIncrement = ref(0)
 onMounted(async () => {
   const { nationalities, pagination } = await getNationalitiesList(searchFilter.value)
   nationalitiesList.value = nationalities
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
 });
 
 
@@ -141,7 +143,7 @@ const columns = {
 <template>
   <NationalityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
     :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
-    @resetFilter="resetFilter" />
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="nationalitiesList" @update:sort="citySort">
     <VFlexTable separators clickable>
       <template #body>

@@ -22,6 +22,7 @@ const deleteDepartmentId = ref()
 const paginationVar = ref(defaultPagination)
 const departmentStore = useDepartment()
 
+const default_per_page = ref(1)
 const keyIncrement = ref(0)
 
 const router = useRouter()
@@ -30,6 +31,8 @@ onMounted(async () => {
   departmentsList.value = departments
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 const removeDepartment = async (departmentId: number) => {
@@ -137,7 +140,7 @@ const columns = {
 
 <template>
   <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
     @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="departmentsList" @update:sort="departmentSort">
 

@@ -40,6 +40,7 @@ export interface EmployeeSearchFilter {
     per_page?: number
     order_by?: string
     order?: string
+    quick_search?: boolean
 }
 export const defaultCreateEmployee: CreateEmployee = {
     id: 0,
@@ -79,6 +80,7 @@ export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
     per_page: undefined,
     order_by: undefined,
     order: undefined,
+    quick_search: undefined,
 }
 export const defaultEmployeePersonalId: Media = {
     id: undefined,

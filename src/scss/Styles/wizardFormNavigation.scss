@@ -1,3 +1,10 @@
+ .wizard-brand {
+  .title-wrap {
+    color: var(--dark-text) !important;
+
+  }
+}
+
 .wizard-navigation {
     position: fixed;
     width: 100%;
@@ -76,7 +83,7 @@
     .is-dark-mode {
       margin-left: auto;
       background: transparent !important;
-  
+      
       .navbar-icon {
         height: 38px;
         width: 38px;

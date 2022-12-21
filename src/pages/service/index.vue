@@ -22,11 +22,14 @@ const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const serviceStore = useService()
 const keyIncrement = ref(0)
+const default_per_page = ref(1)
 onMounted(async () => {
   const { services, pagination } = await getServicesList(searchFilter.value)
   servicesList.value = services
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 const removeService = async (serviceId: number) => {
@@ -150,7 +153,7 @@ const columns = {
 
 <template>
   <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
-    @search="search" :pagination="paginationVar" @resetFilter="resetFilter" />
+    @search="search" :pagination="paginationVar"  :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
     <VFlexTable separators clickable>
       <template #body>

@@ -86,12 +86,12 @@ const { handleSubmit } = useForm({
         birth_date: "",
         phone_number: "",
         address: "",
-        room_id: "",
+        room_id: undefined,
         city_id: "",
         user_status_id: "",
         emergency_contact_name: "",
         emergency_contact_phone: "",
-        customer_group_id: ""
+        customer_group_id: 1
     },
 })
 
@@ -154,7 +154,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="first_name">
-                                    <VLabel>first name</VLabel>
+                                    <VLabel class="required">First name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
@@ -169,7 +169,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel>last name</VLabel>
+                                    <VLabel class="optional">Last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -184,7 +184,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel>birth date </VLabel>
+                                    <VLabel class="optional">Birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -197,7 +197,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline ">
-                            <label class="lab">phone number </label>
+                            <label class="lab required">Phone number </label>
                             <div class="columns column is-12">
                                 <div class="column is-2 ">
                                     <input class="input" type="text" placeholder="+964" readonly />
@@ -207,10 +207,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                         icon="feather:chevrons-right">
                                         <VInput type="number" v-model="currentUser.phone_number" />
-                                        <!-- <VIMaskInput class="input" v-model="currentUser.phone_number" type="number"
-                                            placeholder="" autocomplete="given-phone_number" :options="{
-                                                mask: '000000000',
-                                            }" /> -->
                                         <ErrorMessage class="help is-danger" name="phone_number" />
                                         <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
                                     </VControl>
@@ -223,8 +219,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel>address </VLabel>
-                                    <VControl icon="feather:chevrons-right">
+                                    <VLabel class="optional">Address</VLabel>
+                                    <VControl>
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
                                     </VControl>
@@ -237,7 +233,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="gender">
-                                    <VLabel>gender</VLabel>
+                                    <VLabel class="required">Gender</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -256,7 +252,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="room_id">
-                                    <VLabel>room</VLabel>
+                                    <VLabel class="optional">Room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
@@ -276,7 +272,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="city_id">
-                                    <VLabel>city</VLabel>
+                                    <VLabel class="required">City</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
@@ -296,7 +292,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="user_status_id">
-                                    <VLabel>status</VLabel>
+                                    <VLabel class="required">Status</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
@@ -316,7 +312,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="emergency_contact_name">
-                                    <VLabel>Emergency Contact Name</VLabel>
+                                    <VLabel class="optional">Emergency Contact Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCustomer.emergency_contact_name" type="text"
                                             placeholder="" autocomplete="given-emergency_contact_name" />
@@ -331,7 +327,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="emergency_contact_phone">
-                                    <VLabel>Emergency Contact Phone</VLabel>
+                                    <VLabel class="optional">Emergency Contact Phone</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCustomer.emergency_contact_phone" type="number"
                                             placeholder="" autocomplete="given-emergency_contact_phone" />
@@ -347,7 +343,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="customer_group_id">
-                                    <VLabel>Customer Group</VLabel>
+                                    <VLabel class="required">Customer Group</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
                                             <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
@@ -372,6 +368,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .Vi {
     width: 28.5em;
