@@ -92,7 +92,7 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)
+                await sleep(500);
                 router.push({ path: `/nationality/${nationalityData.id}` });
             } else {
                 notif.error(message)
@@ -122,7 +122,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentNationality.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -137,7 +137,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
 

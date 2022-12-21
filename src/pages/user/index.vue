@@ -143,7 +143,7 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" 
         :pagination="paginationVar" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="usersList" @update:sort="userSort">
 

@@ -80,7 +80,7 @@ export default defineComponent({
                 // @ts-ignore
                 notif.success(`${customerGroup.name} ${viewWrapper.pageTitle} was added successfully`);
                 await sleep(500)
-            router.push({ path: `/customer-group/${customerGroup.id}` });
+                router.push({ path: `/customer-group/${customerGroup.id}` });
             } else {
                 notif.error(message)
             }
@@ -94,7 +94,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)router.push({ path: `/customer-group/${customerGroupData.id}` });
+                await sleep(500);
+                router.push({ path: `/customer-group/${customerGroupData.id}` });
             } else {
                 notif.error(message)
             }
@@ -123,7 +124,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCustomerGroup.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -139,7 +140,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentCustomerGroup.status"

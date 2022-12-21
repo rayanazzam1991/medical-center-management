@@ -65,8 +65,8 @@ export default defineComponent({
                 name: '',
                 status: 1,
                 description: '',
-                duration_minutes: 0,
-                service_price: 0,
+                duration_minutes: '',
+                service_price: '',
 
             },
         });
@@ -104,7 +104,7 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)
+                await sleep(500);
                 router.push({ path: `/service/${serviceData.id}` });
             } else {
                 notif.error(message)
@@ -134,7 +134,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentService.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -148,7 +148,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description" v-slot="{ field }">
-                                    <VLabel>Description</VLabel>
+                                    <VLabel class="optional">Description</VLabel>
                                     <VControl icon="feather:file-text">
                                         <VInput v-model="currentService.description" type="text" placeholder=""
                                             autocomplete="" />
@@ -165,7 +165,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="service_price" v-slot="{ field }">
-                                    <VLabel>Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
+                                    <VLabel class="required">Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentService.service_price" type="number" />
                                         <ErrorMessage name="service_price" class="help is-danger" />
@@ -178,7 +178,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="duration_minutes" v-slot="{ field }">
-                                    <VLabel>Duration</VLabel>
+                                    <VLabel class="required">Duration</VLabel>
                                     <VControl icon="feather:clock">
                                         <VInput v-model="currentService.duration_minutes" type="number" />
                                         <ErrorMessage name="duration_minutes" class="help is-danger" />
@@ -193,7 +193,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentService.status" :value="ServiceConsts.INACTIVE"

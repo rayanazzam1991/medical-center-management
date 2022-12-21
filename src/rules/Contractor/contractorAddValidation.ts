@@ -27,12 +27,12 @@ const contractorAddvalidationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        const processed = zod.string({}).regex(/^\d{9}$/).transform(Number).safeParse(input);
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
+                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid phone number" })
+                    ,
                 ),
         address:
             zod
@@ -88,7 +88,7 @@ const contractorAddvalidationSchema = toFormValidator(zod
                     },
                     zod
                         .number({ invalid_type_error: "Please enter a valid number" })
-                        .min(0, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
+                        .min(1, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
                 ),
 
     }));

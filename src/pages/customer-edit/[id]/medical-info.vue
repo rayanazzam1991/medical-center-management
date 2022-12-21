@@ -177,7 +177,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="blood_type">
-                                    <VLabel>Blood Type</VLabel>
+                                    <VLabel class="optional">Blood Type</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
                                             <VOption value="">Blood Type</VOption>
@@ -196,7 +196,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="allergic">
-                                    <VLabel>Allergic Reactions:</VLabel>
+                                    <VLabel class="optional">Allergic Reactions:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.allergic" type="text" placeholder=""
                                             autocomplete="" />
@@ -210,7 +210,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="chronic_diseases">
-                                    <VLabel>Chronic Diseases:</VLabel>
+                                    <VLabel class="optional">Chronic Diseases:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
                                             autocomplete="" />
@@ -224,7 +224,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="infectious_diseases">
-                                    <VLabel>Infectious Diseases:</VLabel>
+                                    <VLabel class="optional">Infectious Diseases:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
@@ -238,7 +238,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="smooking">
-                                    <VLabel>Smoke?</VLabel>
+                                    <VLabel class="optional">Smoke?</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
@@ -258,7 +258,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="any_other_info">
-                                    <VLabel>Other Info:</VLabel>
+                                    <VLabel class="optional">Other Info:</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentMedicalInfo.any_other_info" />
                                         <ErrorMessage class="help is-danger" name="any_other_info" />
@@ -278,6 +278,17 @@ const onSubmitEdit = handleSubmit(async (values) => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

@@ -26,17 +26,10 @@ export default defineComponent({
   emits: ['onSubmit'],
   setup(props, context) {
     var submited = false
-    const { y } = useWindowScroll()
-    const isStuck = computed(() => {
-      return y.value > 30
-    })
-
-
-
     const onSubmit = () => {
       context.emit('onSubmit', submited)
     }
-    return { isStuck, onSubmit }
+    return { onSubmit }
   },
 
 
@@ -50,7 +43,7 @@ export default defineComponent({
 <template>
   <div class="form-layout ">
     <div class="form-outer">
-      <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+      <div class="form-header">
         <div class="form-header-inner">
           <div class="left">
             <h3>{{ title }}</h3>

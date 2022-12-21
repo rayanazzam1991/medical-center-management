@@ -16,24 +16,26 @@ export default defineComponent({
         },
         pagination: {
             default: defaultPagination,
+        },
+        default_per_page: {
+            type: Number,
+            default: 1,
         }
+
     },
 
     setup(props, context) {
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
+            quickSearchField.value = ''
             context.emit('onOpen', searchFilterPop.value)
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
             console.log("DASdas", searchFilterPop.value)
         }
-
+        const default_per_page = props.default_per_page
         const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 150
-        })
         const searchFilterPop = ref(false)
         const searchName = ref('')
         const searchPrice = ref()
@@ -43,6 +45,29 @@ export default defineComponent({
         const searchFilter = ref(defaultServiceSearchFilter)
         const is_reseted = ref(false)
         const keyTest = ref(0)
+        const quickSearchField = ref('')
+        const quickSearch = () => {
+            if (quickSearchField.value != '') {
+
+                searchFilter.value.name = quickSearchField.value
+            } else {
+                searchFilter.value.name = undefined
+            }
+            searchFilter.value.per_page = perPage.value
+
+            search()
+        }
+        function isNumber(str: string): boolean {
+            if (typeof str !== 'string') {
+                return false;
+            }
+
+            if (str.trim() === '') {
+                return false;
+            }
+
+            return !Number.isNaN(Number(str));
+        }
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
@@ -58,6 +83,7 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.duration_minutes = undefined
             searchFilter.value.service_price = undefined
+            quickSearchField.value = ''
             is_reseted.value = true
             keyTest.value++
             context.emit('resetFilter', searchFilter.value)
@@ -74,7 +100,7 @@ export default defineComponent({
 
         }
 
-        return { searchFilterPop, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, isStuck, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts }
+        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts, quickSearch, quickSearchField }
     },
 
 
@@ -86,56 +112,45 @@ export default defineComponent({
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="search">
+    <form class="form-layout" v-on:submit.prevent="quickSearch">
         <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+            <div class="form-header stuck-header">
                 <div class="form-header-inner">
-                    <div class="left">
-                        <div>
-                            <VButton @click.prevent="onOpen" raised> Search
-                            </VButton>
+                    <div class="left my-4 mx-2 ">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2" icon="feather:search">
+                                <VInput v-model="quickSearchField" type="text" placeholder="Name..." />
+                            </VControl>
+                            <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+                            <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
+                                color="danger" />
                         </div>
-
                     </div>
-                    <div class="right  ">
-                        <div class="buttons  ">
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
+                    <div class="left my-4 mx-2">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2 ">
+                                <div class="select">
 
-                            <VButton to="/service/add" color="primary" raised> {{ button_name }}
-                            </VButton>
+                                    <select v-model="perPage" @change="search">
+                                        <VOption :value="default_per_page * 0.1">{{ default_per_page * 0.1 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page">{{ default_per_page }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 2">{{ default_per_page * 2 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 10">{{ default_per_page * 10 }}
+                                        </VOption>
+                                    </select>
+                                </div>
+                            </VControl>
+                            <VControl>
+                                <VButton class="" to="/service/add" color="primary">{{ button_name }}
+                                </VButton>
+                            </VControl>
                         </div>
-                        <div>
-
-                            <VField>
-                                <VControl>
-                                    <div class="select ">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-
-                        </div>
-
-
                     </div>
-
                 </div>
             </div>
         </div>

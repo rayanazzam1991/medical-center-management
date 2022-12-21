@@ -53,6 +53,7 @@ export interface CustomerSearchFilter {
     per_page?: number
     order_by?: string
     order?: string
+    quick_search?: boolean
 }
 export const defaultCreateCustomer: CreateCustomer = {
     id: 0,
@@ -111,7 +112,8 @@ export const defaultCustomerSearchFilter: CustomerSearchFilter = {
     per_page: 50,
     order_by: undefined,
     order: undefined,
+    quick_search: undefined
 
 }
 const CustomerConsts = BaseConsts
-export {CustomerConsts}
+export { CustomerConsts }

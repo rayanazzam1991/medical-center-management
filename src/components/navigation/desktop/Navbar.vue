@@ -18,14 +18,11 @@ const isScrolling = computed(() => {
 </script>
 
 <template>
-  <div
-    class="navbar-navbar"
-    :class="[
-      isScrolling && 'is-scrolled',
-      props.theme === 'fade' && 'is-transparent',
-      props.theme === 'colored' && 'is-colored',
-    ]"
-  >
+  <div class="navbar-navbar" :class="[
+    isScrolling && 'is-scrolled',
+    props.theme === 'fade' && 'is-transparent',
+    props.theme === 'colored' && 'is-colored',
+  ]">
     <div class="navbar-navbar-inner">
       <div class="left">
         <!-- Title slot -->
@@ -90,7 +87,6 @@ const isScrolling = computed(() => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
   background: var(--white);
   transition: all 0.3s; // transition-all test
   border-bottom: 1px solid var(--fade-grey);
@@ -234,7 +230,7 @@ const isScrolling = computed(() => {
                   color: var(--primary-light-2);
                 }
 
-                &:focus ~ .form-icon svg {
+                &:focus~.form-icon svg {
                   color: var(--smoke-white);
                 }
               }
@@ -255,7 +251,7 @@ const isScrolling = computed(() => {
               border-color: var(--landing-yyy-dark-12);
             }
 
-            > svg {
+            >svg {
               color: var(--smoke-white);
             }
           }
@@ -291,7 +287,7 @@ const isScrolling = computed(() => {
             background: var(--landing-yyy-dark-12);
           }
 
-          > svg {
+          >svg {
             color: var(--smoke-white);
           }
         }
@@ -344,7 +340,7 @@ const isScrolling = computed(() => {
         margin-right: 12px;
         cursor: pointer !important;
 
-        > img {
+        >img {
           height: 32px;
           width: 32px;
           border-radius: var(--radius-rounded);
@@ -479,7 +475,7 @@ const isScrolling = computed(() => {
           margin: 0 4px;
           transition: all 0.3s; // transition-all test
 
-          > .button {
+          >.button {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -551,7 +547,7 @@ const isScrolling = computed(() => {
 
                       a {
                         .meta {
-                          > span {
+                          >span {
                             display: inline-block;
                           }
 
@@ -746,6 +742,7 @@ const isScrolling = computed(() => {
                     font-size: 0.9rem;
 
                     &.is-media {
+
                       &:hover,
                       &.router-link-exact-active,
                       &.is-active {
@@ -868,7 +865,7 @@ const isScrolling = computed(() => {
       }
 
       .profile-dropdown {
-        > img {
+        >img {
           height: 32px;
           width: 32px;
           border-radius: var(--radius-rounded);
@@ -1005,7 +1002,7 @@ const isScrolling = computed(() => {
 
         .centered-drops {
           .centered-drop {
-            > .dropdown {
+            >.dropdown {
               &:hover {
                 .is-trigger {
                   background: transparent !important;
@@ -1043,6 +1040,7 @@ const isScrolling = computed(() => {
 
                           &:hover,
                           &:focus {
+
                             i,
                             span {
                               color: var(--primary);
@@ -1091,7 +1089,7 @@ const isScrolling = computed(() => {
         }
 
         .centered-button {
-          > .button {
+          >.button {
             background: transparent !important;
             border: none;
 
@@ -1215,6 +1213,7 @@ const isScrolling = computed(() => {
 
                             &:hover,
                             &:focus {
+
                               i,
                               span {
                                 color: var(--primary);
@@ -1269,7 +1268,7 @@ const isScrolling = computed(() => {
                 .input {
                   color: var(--smoke-white);
 
-                  &:focus ~ .form-icon svg {
+                  &:focus~.form-icon svg {
                     color: var(--smoke-white) !important;
                   }
                 }
@@ -1286,7 +1285,7 @@ const isScrolling = computed(() => {
                 border-color: var(--landing-yyy-dark-12) !important;
               }
 
-              > svg {
+              >svg {
                 color: var(--smoke-white);
               }
             }

@@ -42,7 +42,7 @@ export default defineComponent({
                 return
             }
 
-            const {socialMedia} = await getSocialMedia(socialMediaId.value);
+            const { socialMedia } = await getSocialMedia(socialMediaId.value);
             currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
         };
         onMounted(() => {
@@ -120,7 +120,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -136,7 +136,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="icon">
-                                    <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
+                                    <VLabel class="optional">{{ viewWrapper.pageTitle }} icon</VLabel>
                                     <VControl :icon="currentSocialMedia.icon">
                                         <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
                                             <VOption value="">Icon</VOption>
@@ -156,7 +156,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"

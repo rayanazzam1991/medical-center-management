@@ -7,6 +7,17 @@
     }
 }
 
+.required::after {
+    content:" *";
+    color: var(--danger);
+  }
+
+.optional::after {
+    content:" (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
+
 .filter {
     margin: 1rem;
 }

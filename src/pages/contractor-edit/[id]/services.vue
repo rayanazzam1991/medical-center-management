@@ -173,7 +173,8 @@ const onSubmitEdit = async () => {
                             <div class="column is-5">
                                 <VField v-for="service in servicesChecked" :id="service.service.name">
 
-                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                    <VLabel class="required" v-if="service.checked">Contractor's {{ service.service.name
+                                    }}
                                         Price:
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
@@ -217,6 +218,16 @@ const onSubmitEdit = async () => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

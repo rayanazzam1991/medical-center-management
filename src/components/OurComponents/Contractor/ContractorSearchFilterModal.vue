@@ -119,23 +119,22 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Contractor" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal title="Filter Contractor" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input is-rounded"
-                            placeholder="Phone Number..." />
+                        <input v-model="searchPhoneNumber" type="text" class="input " placeholder="Phone Number..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchGender" class="is-rounded">
+                        <VSelect v-model="searchGender" class="">
                             <VOption value="">Gender</VOption>
                             <VOption value="Male">Male</VOption>
                             <VOption value="Female">Female</VOption>
@@ -144,7 +143,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchRoom" class="is-rounded">
+                        <VSelect v-model="searchRoom" class="">
                             <VOption value="">Room Number</VOption>
                             <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{ room.number }}
                             </VOption>
@@ -153,7 +152,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
@@ -162,11 +161,19 @@ export default defineComponent({
                         </VSelect>
                     </VControl>
                 </VField>
+                <VField class="column filter">
+                    <VControl>
+                        <VSelect v-model="searchComplete" class="">
+                            <VOption value="">Completed</VOption>
+                            <VOption value="1">Yes</VOption>
+                            <VOption value="0">No</VOption>
+                        </VSelect>
+                    </VControl>
+                </VField>
                 <div class="column filter columns-is-multiliine">
                     <h1 class="column-is-12">Create Date:</h1>
                     <VField class="column-is-6 filter">
                         <VLabel>From : </VLabel>
-
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
@@ -178,22 +185,13 @@ export default defineComponent({
                             <VInput v-model="searchTo" type="date" />
                         </VControl>
                     </VField>
-
                 </div>
-                <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchComplete" class="is-rounded">
-                            <VOption value="">Completed</VOption>
-                            <VOption value="1">Yes</VOption>
-                            <VOption value="0">No</VOption>
-                        </VSelect>
-                    </VControl>
-                </VField>
+
                 <VButton type="submit" @click="search" class="is-hidden" />
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="feather:search" color="primary" raised @click="search">Search</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
 
 
