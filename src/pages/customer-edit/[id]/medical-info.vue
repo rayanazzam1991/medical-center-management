@@ -27,21 +27,21 @@ const head = useHead({
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-edit/${customerId.value}/social-media`,
+                path: `/customer-edit/${customerId.value}/profile-picture`,
             })
         }
 
     },
     skipStepFn: async () => {
         router.push({
-            path: `/customer-edit/${customerId.value}/social-media`,
+            path: `/customer-edit/${customerId.value}/profile-picture`,
         })
 
     }
@@ -68,7 +68,7 @@ const fetchCustomer = async () => {
     customerForm.userForm.birth_date = customer.user.birth_date
     customerForm.userForm.phone_number = customer.user.phone_number
     customerForm.userForm.address = customer.user.address
-    customerForm.userForm.room_id = customer.user.room.id
+    customerForm.userForm.room_id = undefined
     customerForm.userForm.city_id = customer.user.city.id
     customerForm.userForm.user_status_id = customer.user.status.id
     customerForm.dataUpdate.user.id = customer.user.id
@@ -96,7 +96,7 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 4: Customer Medical Info'
+const pageTitle = 'Step 2: Customer Medical Info'
 onMounted(async () => {
     if (customerForm.dataUpdate.id != customerId.value) {
 
@@ -175,7 +175,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="blood_type">
                                     <VLabel class="optional">Blood Type</VLabel>
                                     <VControl>
@@ -189,12 +189,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="allergic">
                                     <VLabel class="optional">Allergic Reactions:</VLabel>
                                     <VControl icon="feather:chevrons-right">
@@ -204,31 +199,30 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="chronic_diseases">
-                                    <VLabel class="optional">Chronic Diseases:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="infectious_diseases">
                                     <VLabel class="optional">Infectious Diseases:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
                                         <ErrorMessage class="help is-danger" name="infectious_diseases" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
+                                <VField id="chronic_diseases">
+                                    <VLabel class="optional">Chronic Diseases:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -287,5 +281,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

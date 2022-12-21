@@ -113,7 +113,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.birth_date = userData.birth_date
         employeeForm.userForm.phone_number = userData.phone_number
         employeeForm.userForm.address = userData.address
-        employeeForm.userForm.room_id = userData.room_id
+        console.log(userData.room_id)
+        if (currentUser.value.room_id != undefined)
+            employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
         console.log(employeeForm.userForm)
@@ -184,16 +186,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
                             </div>
                         </div>
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
-                                    <VField id="last_name">
-                                        <VLabel class="required">Last name</VLabel>
-                                        <VControl icon="feather:chevrons-right">
-                                            <VInput v-model="currentUser.last_name" type="text" placeholder=""
-                                                autocomplete="given-last_name" />
-                                            <ErrorMessage class="help is-danger" name="last_name" />
+                                    <VField id="phone_number">
+                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VControl icon="feather:chevrons-right"
+                                            :class="phoneCheck != 'false' ? 'has-validation has-error' : ''">
+                                            <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                                autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="phone_number" />
                                         </VControl>
                                     </VField>
                                 </div>
@@ -207,28 +209,43 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline ">
-                                <label class="lab required">Phone number </label>
-                                <div class="columns column is-12">
-                                    <div class="column is-1 ">
-                                        <input class="input" type="text" placeholder="+964" readonly />
-                                    </div>
-                                    <VField class="column is-10 " id="phone_number">
-                                        <VControl class="Vi"
-                                            :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                            icon="feather:chevrons-right">
-                                            <VInput v-model="currentUser.phone_number" type="number" />
+                                <div class="column is-half">
 
-                                            <ErrorMessage class="help is-danger" name="phone_number" />
-                                            <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+                                    <VField id="gender">
+                                        <VLabel class="required ml-3">Gender</VLabel>
+
+                                        <VControl>
+                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
+                                                color="success" />
+
+                                            <VRadio v-model="currentUser.gender" value="Female" label="Female"
+                                                name="gender" color="success" />
+                                            <ErrorMessage class="help is-danger" name="gender" />
+                                        </VControl>
+                                    </VField>
+
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="city_id">
+                                        <VLabel class="required">City</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                                <VOption value="">City</VOption>
+                                                <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
+                                                        city.name
+                                                }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="city_id" />
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -246,33 +263,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                         </div>
                         <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="gender">
-                                        <VLabel class="required">Gender</VLabel>
-
-                                        <VControl>
-                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                                color="success" />
-
-                                            <VRadio v-model="currentUser.gender" value="Female" label="Female"
-                                                name="gender" color="success" />
-                                            <ErrorMessage class="help is-danger" name="gender" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                            </div>
-                        </div>
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="room_id">
                                         <VLabel class="optional">Room</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                                <VOption>Room</VOption>
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                         room.number
                                                 }}
@@ -282,32 +280,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="city_id">
-                                        <VLabel class="required">City</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                                <VOption value="">City</VOption>
-                                                <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                        city.name
-                                                }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="city_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="user_status_id">
                                         <VLabel class="required">Status</VLabel>
                                         <VControl>
@@ -324,11 +297,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
+                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="starting_date">
                                         <VLabel class="required">Starting Date</VLabel>
                                         <VControl icon="feather:chevrons-right">
@@ -338,12 +313,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="end_date">
                                         <VLabel class="optional">End Date</VLabel>
                                         <VControl icon="feather:chevrons-right">
@@ -353,12 +323,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="basic_salary">
                                         <VLabel class="required">Basic Salary</VLabel>
                                         <VControl icon="feather:chevrons-right">
@@ -368,12 +339,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="nationality_id">
                                         <VLabel class="required">Nationality</VLabel>
                                         <VControl>
@@ -387,8 +353,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
+                        <!--Fieldset-->
                     </div>
 
                 </div>
@@ -417,11 +385,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
 }
 
 .layout {
-    min-width: 70%;
+    min-width: 50%;
 }
 
 .form-fieldset {
-    max-width: 60%;
+    max-width: 40%;
 }
 
 .form-layout .form-outer .form-body {

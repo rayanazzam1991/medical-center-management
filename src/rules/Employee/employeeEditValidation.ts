@@ -26,7 +26,6 @@ const employeeEditvalidationSchema = toFormValidator(zod
                         invalid_type_error: "That's not a date!",
                     }),
                 ),
-        gender: zod.string(),
         phone_number:
             zod
                 .preprocess(

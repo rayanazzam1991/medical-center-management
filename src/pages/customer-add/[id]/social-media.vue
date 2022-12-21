@@ -169,4 +169,12 @@ const onSubmitAdd = async () => {
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
 }
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
+}
 </style>

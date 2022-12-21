@@ -24,14 +24,14 @@ const head = useHead({
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/customer-add/${customerId.value}/social-media`,
+                path: `/customer/${customerId.value}`,
             })
         }
 
@@ -44,7 +44,7 @@ customerForm.setStep({
         customerForm.medicalInfoForm.smoking = 0
         customerForm.medicalInfoForm.any_other_info = ''
         router.push({
-            path: `/customer-add/${customerId.value}/social-media`,
+            path: `/customer/${customerId.value}`,
         })
 
     }
@@ -59,7 +59,7 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 4: Customer Medical Info'
+const pageTitle = 'Step 2: Customer Medical Info'
 onMounted(() => {
     getCurrentMedicalInfo()
 }
@@ -123,7 +123,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="blood_type">
                                     <VLabel class="optional">Blood Type</VLabel>
                                     <VControl>
@@ -137,12 +137,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="allergic">
                                     <VLabel class="optional">Allergic Reactions:</VLabel>
                                     <VControl icon="feather:chevrons-right">
@@ -152,31 +147,30 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="chronic_diseases">
-                                    <VLabel class="optional">Chronic Diseases:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="infectious_diseases">
                                     <VLabel class="optional">Infectious Diseases:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
                                         <ErrorMessage class="help is-danger" name="infectious_diseases" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
+                                <VField id="chronic_diseases">
+                                    <VLabel class="optional">Chronic Diseases:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -235,5 +229,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

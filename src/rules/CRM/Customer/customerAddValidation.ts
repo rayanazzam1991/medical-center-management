@@ -14,7 +14,7 @@ const customerAddvalidationSchema = toFormValidator(zod
                 .string({
                     required_error: "This field is required",
                 })
-                .optional(),
+                .min(1, "This field is required"),
         birth_date:
             zod
                 .preprocess(
@@ -22,7 +22,7 @@ const customerAddvalidationSchema = toFormValidator(zod
                     zod.string({})
                         .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
                         .optional()),
-        gender: zod.string(),
+        gender: zod.string().optional(),
         phone_number:
             zod
                 .preprocess(
@@ -44,29 +44,20 @@ const customerAddvalidationSchema = toFormValidator(zod
         city_id: zod
             .preprocess(
                 (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    const processed = zod.string({}).regex(/\d+|^$/).transform(Number).safeParse(input);
                     return processed.success ? processed.data : input;
                 },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
+                zod.number()
+                    .optional(),
             ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val == "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
         user_status_id: zod
             .preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
                     return processed.success ? processed.data : input;
                 },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
+                zod.number()
+                    .optional(),
             ),
         emergency_contact_name:
             zod

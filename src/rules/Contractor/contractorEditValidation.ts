@@ -22,7 +22,6 @@ const contractorEditvalidationSchema = toFormValidator(zod
                     zod.string({ required_error: 'This field is required' })
                         .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
                 ),
-        gender: zod.string(),
         phone_number:
             zod
                 .preprocess(

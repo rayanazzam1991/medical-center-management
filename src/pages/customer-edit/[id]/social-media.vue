@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {useHead} from "@vueuse/head"
-import {useNotyf} from "/@src/composable/useNotyf"
-import {SocialMedia, defaultSocialMediaSearchFilter} from "/@src/models/CRM/SocialMedia/socialMedia"
-import {getCustomer, updateCustomer} from "/@src/services/CRM/Customer/customerService"
-import {getSocialMediasList} from "/@src/services/CRM/SocialMedia/socialMediaService"
-import {useCustomerForm} from "/@src/stores/CRM/Customer/customerFormSteps"
-import {useViewWrapper} from "/@src/stores/viewWrapper"
-import {useForm} from "vee-validate";
+import { useHead } from "@vueuse/head"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { SocialMedia, defaultSocialMediaSearchFilter } from "/@src/models/CRM/SocialMedia/socialMedia"
+import { getCustomer, updateCustomer } from "/@src/services/CRM/Customer/customerService"
+import { getSocialMediasList } from "/@src/services/CRM/SocialMedia/socialMediaService"
+import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { useForm } from "vee-validate";
 import { toFormValidator } from '@vee-validate/zod';
 import { z as zod } from 'zod';
 
@@ -56,7 +56,7 @@ interface SocialMediaChecked {
 
 const fetchCustomer = async () => {
 
-  const {customer} = await getCustomer(customerId.value)
+  const { customer } = await getCustomer(customerId.value)
   for (let i = 0; i < customer.social_medias.length; i++) {
     // @ts-ignore
 
@@ -82,8 +82,9 @@ const fetchCustomer = async () => {
   customerForm.userForm.birth_date = customer.user.birth_date
   customerForm.userForm.phone_number = customer.user.phone_number
   customerForm.userForm.address = customer.user.address
-  customerForm.userForm.room_id = customer.user.room.id
+  customerForm.userForm.room_id = customer.user?.room?.id
   customerForm.userForm.city_id = customer.user.city.id
+  customerForm.userForm.room_id = undefined
   customerForm.userForm.user_status_id = customer.user.status.id
   customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
   customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
@@ -100,7 +101,7 @@ var validationObjectSchema = ref({})
 const initialValuesObject: Record<string, any> = {};
 
 onMounted(async () => {
-  const {socialMedias} = await getSocialMediasList(defaultSocialMediaSearchFilter)
+  const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
   socialMediasList.value = socialMedias
   if (customerForm.dataUpdate.id != customerId.value) {
 
@@ -112,36 +113,37 @@ onMounted(async () => {
     // @ts-ignore
     let socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
     if (socialMedia) {
-      socialMediaChecked.value.push({socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url})
+      socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url })
     } else {
-      socialMediaChecked.value.push({socialMedia: socialMediasList.value[index], checked: false, url: ''})
+      socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
     }
 
   }
-  if(socialMediaChecked.length>0){
-    for (let i = 0; i < socialMediaChecked.length; i++) {
-      console.log("i",i)
-      validationObject.socialMediaChecked.value[index] = zod
-        .string({
-          required_error: "This field is required",
-        })
-        .min(4, "This field is required");
-
-    }
-  }
-  validationObjectSchema = toFormValidator(zod
-    .object(validationObject));
-
-    console.log("initialValuesObject",initialValuesObject)
-
 })
+// if (socialMediaChecked.length > 0) {
+//   for (let i = 0; i < socialMediaChecked.length; i++) {
+//     console.log("i", i)
+//     validationObject.socialMediaChecked.value[index] = zod
+//       .string({
+//         required_error: "This field is required",
+//       })
+//       .min(4, "This field is required");
 
-const validationSchema = validationObjectSchema;
-const {handleSubmit} = useForm({
-  validationSchema,
-  initialValues:initialValuesObject
-});
+//   }
+// }
+//   validationObjectSchema = toFormValidator(zod
+//     .object(validationObject));
+
+//     console.log("initialValuesObject",initialValuesObject)
+
+// })
+
+// const validationSchema = validationObjectSchema;
+// const {handleSubmit} = useForm({
+//   validationSchema,
+//   initialValues:initialValuesObject
+// });
 
 const onSubmitEdit = async () => {
   customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
@@ -157,8 +159,8 @@ const onSubmitEdit = async () => {
   }
   customerForm.dataUpdate.is_completed = true
   console.log(customerForm.userForm)
-  const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-  if (customer.success) {
+  const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+  if (success) {
     // @ts-ignore
     notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
@@ -166,7 +168,7 @@ const onSubmitEdit = async () => {
   } else {
     // @ts-ignore
 
-    notif.error(customer.success)
+    notif.error(message)
 
   }
 
@@ -191,11 +193,9 @@ const onSubmitEdit = async () => {
                 <VField>
 
                   <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
-                    <VCheckbox :label="socialMedia.socialMedia.name"
-                               :name="socialMedia.socialMedia.id" color="primary"
-                               :key="socialMedia.socialMedia.id" v-model="socialMedia.checked"/>
-                    <VIcon :icon="socialMedia.socialMedia.icon"
-                           class="has-text-primary is-size-5"/>
+                    <VCheckbox :label="socialMedia.socialMedia.name" :name="socialMedia.socialMedia.id" color="primary"
+                      :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
+                    <VIcon :icon="socialMedia.socialMedia.icon" class="has-text-primary is-size-5" />
 
                   </VControl>
                 </VField>
@@ -209,13 +209,13 @@ const onSubmitEdit = async () => {
                 <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
                   <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-                                            socialMedia.socialMedia.name
-                                    }}
+                      socialMedia.socialMedia.name
+                  }}
                     URL:
                   </VLabel>
                   <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                     <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
-                            :key="socialMedia.socialMedia.id"/>
+                      :key="socialMedia.socialMedia.id" />
 
                   </VControl>
 
@@ -237,12 +237,20 @@ const onSubmitEdit = async () => {
 @import '/@src/scss/components/forms-outer';
 
 .required::after {
-    content: " *";
-    color: var(--danger);
+  content: " *";
+  color: var(--danger);
 }
 
 
 .form-layout .form-outer .form-body {
   padding: 20px 40px 40px;
+}
+
+.layout {
+  min-width: 50%;
+}
+
+.form-fieldset {
+  max-width: 40%;
 }
 </style>

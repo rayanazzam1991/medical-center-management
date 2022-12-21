@@ -10,6 +10,8 @@ import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatus
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { useContractor } from "/@src/stores/Contractor/contractorStore"
 import sleep from "/@src/utils/sleep"
+import { ErrorMessage } from "vee-validate"
+import { useContractorForm } from "/@src/stores/Contractor/contractorFormSteps"
 
 
 const route = useRoute()
@@ -21,6 +23,7 @@ const changeStatusPopup = ref(false)
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
 const contractorPersonalId = ref(defaultContractorPersonalId)
+const contractorForm = useContractorForm()
 
 const notif = useNotyf()
 
@@ -74,13 +77,42 @@ const changestatusUser = async () => {
     notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
     changeStatusPopup.value = false
 }
+const fetchContractor = async () => {
 
-const onClickEditServices = () => {
+    const { contractor } = await getContractor(contractorId.value)
+    for (let i = 0; i < contractor.services.length; i++) {
+        // @ts-ignore
+        contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
+
+
+    }
+
+
+    contractorForm.userForm.id = contractor.user.id
+    contractorForm.userForm.first_name = contractor.user.first_name
+    contractorForm.userForm.last_name = contractor.user.last_name
+    contractorForm.userForm.gender = contractor.user.gender
+    contractorForm.userForm.birth_date = contractor.user.birth_date
+    contractorForm.userForm.phone_number = contractor.user.phone_number
+    contractorForm.userForm.address = contractor.user.address
+    contractorForm.userForm.room_id = contractor.user.room.id
+    contractorForm.userForm.city_id = contractor.user.city.id
+    contractorForm.userForm.user_status_id = contractor.user.status.id
+    contractorForm.dataUpdate.starting_date = contractor.starting_date
+    contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
+    contractorForm.dataUpdate.id = contractorId.value
+
+
+}
+
+const onClickEditServices = async () => {
+    await fetchContractor()
     router.push({
         path: `/contractor-edit/${contractorId.value}/services`
     })
 }
-const onClickEditMainInfo = () => {
+const onClickEditMainInfo = async () => {
+    await fetchContractor()
     router.push({
         path: `/contractor-edit/${contractorId.value}/`
     })
@@ -122,7 +154,7 @@ const getCurrentPersonalId = async () => {
             <div class="tabs-wrapper is-slider">
 
                 <div class="tabs-inner">
-                    <div class="tabs ">
+                    <div class="tabs tabs-width ">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
@@ -332,5 +364,26 @@ const getCurrentPersonalId = async () => {
   
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
+
+.tabs-width {
+    min-width: 350px;
+    min-height: 40px;
+
+    .is-active {
+        min-height: 40px;
+
+    }
+}
+
+.tabs-wrapper .tabs li a,
+.tabs-wrapper-alt .tabs li a {
+    height: 40px;
+
+}
+
+.tabs li {
+    min-height: 40px !important;
+
+}
 </style>
   

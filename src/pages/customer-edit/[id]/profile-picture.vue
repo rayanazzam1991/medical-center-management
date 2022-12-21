@@ -8,7 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Profile Picture')
+viewWrapper.setPageTitle('Customer Medical File')
 const head = useHead({
     title: 'Customer',
 })
@@ -24,7 +24,7 @@ const profile_picture = ref()
 
 customerId.value = route.params?.id
 customerForm.setStep({
-    number: 2,
+    number: 3,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
@@ -36,7 +36,7 @@ customerForm.setStep({
             var isValid = await onSubmitEdit()
             if (isValid) {
                 router.push({
-                    path: `/customer-edit/${customerId.value}/medical-info`
+                    path: `/customer-edit/${customerId.value}/social-media`
                 })
             }
 
@@ -48,14 +48,14 @@ customerForm.setStep({
     skipStepFn: async () => {
 
         router.push({
-            path: `/customer-edit/${customerId.value}/medical-info`
+            path: `/customer-edit/${customerId.value}/social-media`
         })
     }
 
 })
 
 const fileError = ref('')
-const pageTitle = 'Step 2: Customer Profile Picture'
+const pageTitle = 'Step 3: Customer Medical File'
 const onAddFile = (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
@@ -79,11 +79,11 @@ const onSubmitEdit = async () => {
     if (profile_picture.value != undefined)
         formData.append('images[]', profile_picture.value);
 
-    const { message , success} = await addProfilePicture(customerId.value, formData)
+    const { message, success } = await addProfilePicture(customerId.value, formData)
 
     if (success) {
         // @ts-ignore
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Profile Picture was edited successfully`)
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Medical File was edited successfully`)
 
         return true
     }
@@ -163,7 +163,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
             <div id="wizard-step-1" class="inner-wrapper is-active">
                 <div class="step-content">
                     <div class="step-title">
-                        <h2 class="dark-inverted">Current Profile Picture :</h2>
+                        <h2 class="dark-inverted">Current Medical File :</h2>
                     </div>
 
                     <div class="project-info">
