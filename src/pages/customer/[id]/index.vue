@@ -102,43 +102,35 @@ const getCurrentProfilePic = async () => {
 </script>
 <template>
     <div class="profile-wrapper">
-        <div class="profile-header has-text-centered">
-            <VLoader size="large" class="v-avatar" :active="customerStore.loading">
+        <VLoader size="large" :active="customerStore.loading">
+            <div class="profile-header has-text-centered">
+                <!-- <VLoader size="large" class="v-avatar" :active="customerStore.loading">
                 <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
-            </VLoader>
-            <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
-                {{ currentCustomer.user.last_name }}
-            </h3>
-
-            <div class="profile-stats">
-                <div class="profile-stat">
-                    <i aria-hidden="true" class="lnil lnil-p"></i>
-                    <span>{{ currentCustomer.user.city.name }}</span>
-                </div>
-                <div class="separator"></div>
-                <div class="profile-stat">
-                    <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
-                    <span>Status: <span
-                            :class="currentCustomer.user.status.name == 'Pending' ? 'has-text-warning' : 'has-text-primary'">{{
-                                    currentCustomer.user.status.name
-                            }}</span></span>
-                </div>
-                <div class="separator"></div>
-                <div class="socials">
-                    <a v-for="socialMedia in currentCustomer.social_medias">
-                        <Tippy>
-                            <i aria-hidden="true" :class="socialMedia.icon"></i>
-                            <template #content>URL: {{ socialMedia?.url }} </template>
-                        </Tippy>
-
-                    </a>
+            </VLoader> -->
+                <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
+                    {{ currentCustomer.user.last_name }}
+                </h3>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <i aria-hidden="true" class="lnil lnil-p"></i>
+                        <span>{{ currentCustomer.user?.city?.name }}</span>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="profile-stat">
+                        <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
+                        <span>Status: <span
+                                :class="currentCustomer.user.status.name == 'Pending' ? 'has-text-warning' : 'has-text-primary'">{{
+                                        currentCustomer.user.status.name
+                                }}</span></span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </VLoader>
+
         <div class="project-details">
             <div class="tabs-wrapper is-triple-slider">
 
-                <div class="tabs-inner">
+                <div class="tabs-inner" :hidden="customerStore.loading">
                     <div class="tabs ">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
@@ -178,7 +170,8 @@ const getCurrentProfilePic = async () => {
                                         <i aria-hidden="true" class="lnil lnil-user"></i>
                                         <h4>Customer Name</h4>
                                         <p>
-                                            {{ currentCustomer.user.first_name }} {{ currentCustomer.user.last_name }}.
+                                            {{ currentCustomer.user.first_name }} {{ currentCustomer.user.last_name
+                                            }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -234,29 +227,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>City</span>
                                                     <span>
-                                                        {{ currentCustomer.user.city.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Number</span>
-                                                    <span>
-                                                        {{ currentCustomer?.user?.room?.number }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Floor</span>
-                                                    <span>
-                                                        {{ currentCustomer?.user?.room?.floor }}
+                                                        {{ currentCustomer.user?.city?.name }}
                                                     </span>
                                                 </div>
 
@@ -292,6 +263,7 @@ const getCurrentProfilePic = async () => {
 
                     </div>
                 </div>
+
                 <div v-if="tab === 'Medical Info'" class="tab-content is-active">
                     <div class="columns project-details-inner">
                         <div class="column is-12">
@@ -317,7 +289,8 @@ const getCurrentProfilePic = async () => {
                                         <i aria-hidden="true" class="lnir lnir-grow"></i>
                                         <h4>Smoke</h4>
                                         <p>
-                                            {{ MedicalInfoConsts.showBoolean(currentCustomer?.medical_info?.smoking) }}.
+                                            {{ MedicalInfoConsts.showBoolean(currentCustomer?.medical_info?.smoking)
+                                            }}.
                                         </p>
                                     </div>
                                 </div>
@@ -422,6 +395,7 @@ const getCurrentProfilePic = async () => {
             </div>
         </div>
     </div>
+
     <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">

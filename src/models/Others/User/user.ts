@@ -11,7 +11,6 @@ export interface User {
     birth_date?: string
     phone_number: string
     address: string
-    room: Room
     city: City
     status: UserStatus
     role?: string
@@ -22,11 +21,10 @@ export interface CreateUpdateUser {
     first_name: string
     last_name: string
     password: string
-    gender: string
+    gender?: string
     birth_date?: string
     phone_number: string
     address: string
-    room_id?: number
     city_id?: number
     user_status_id?: number
 }
@@ -38,7 +36,6 @@ export interface UserSearchFilter {
     name?: string
     gender?: string
     phone_number?: string
-    room_id?: number
     city_id?: number
     user_status_id?: number
     page?: number
@@ -50,13 +47,12 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
     id: undefined,
     first_name: '',
     last_name: '',
-    gender: '',
+    gender: undefined,
     birth_date: '',
     phone_number: '',
     address: '',
-    room_id: undefined,
-    city_id: 0,
-    user_status_id: 0,
+    city_id: undefined,
+    user_status_id: undefined,
     password: '0000000000',
 }
 export const defaultChangeStatusUser: ChangeUserStatus = {
@@ -71,7 +67,6 @@ export const defaultUser: User = {
     birth_date: '',
     phone_number: '',
     address: '',
-    room: defaultRoom,
     city: defaultCity,
     status: defaultUserStatus,
     password: '',
@@ -82,7 +77,6 @@ export const defaultUserSearchFilter: UserSearchFilter = {
     name: undefined,
     gender: undefined,
     phone_number: undefined,
-    room_id: undefined,
     city_id: undefined,
     user_status_id: undefined,
     page: undefined,

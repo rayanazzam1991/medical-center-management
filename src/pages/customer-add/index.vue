@@ -8,7 +8,6 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
 import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addCustomer } from '/@src/services/CRM/Customer/customerService';
@@ -54,19 +53,18 @@ const getCurrentCustomer = () => {
     currentCustomer.value = customerForm.data
 }
 const citiesList = ref<City[]>([])
-const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
 const customerGroupsList = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
     citiesList.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
     const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
     customerGroupsList.value = customerGroups
+    currentUser.value.user_status_id = getApprovedStatusId()
+
 
 })
 onMounted(() => {
@@ -74,6 +72,11 @@ onMounted(() => {
 }
 )
 
+const getApprovedStatusId = () => {
+    const ApprovedStatus = statusesList.value.find((status) => status.name === "Approved")
+    console.log(ApprovedStatus)
+    return ApprovedStatus?.id
+}
 
 const validationSchema = customerAddvalidationSchema
 
@@ -86,9 +89,8 @@ const { handleSubmit } = useForm({
         birth_date: "",
         phone_number: "",
         address: "",
-        room_id: "",
-        city_id: "",
-        user_status_id: "",
+        city_id: undefined,
+        user_status_id: currentUser.value.user_status_id,
         emergency_contact_name: "",
         emergency_contact_phone: "",
         customer_group_id: ""
@@ -112,7 +114,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.birth_date = userData.birth_date
         customerForm.userForm.phone_number = userData.phone_number
         customerForm.userForm.address = userData.address
-        customerForm.userForm.room_id = userData.room_id
         customerForm.userForm.city_id = userData.city_id
         customerForm.userForm.user_status_id = userData.user_status_id
         console.log(customerForm.userForm)
@@ -238,7 +239,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-12">
                                 <VField id="gender">
                                     <VLabel>gender</VLabel>
-
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                             color="success" />
@@ -246,26 +246,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
                                             color="success" />
                                         <ErrorMessage class="help is-danger" name="gender" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="room_id">
-                                    <VLabel>room</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption>Room</VOption>
-                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="room_id" />
                                     </VControl>
                                 </VField>
                             </div>
