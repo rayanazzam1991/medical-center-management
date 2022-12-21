@@ -47,6 +47,7 @@ const getCurrentContractor = () => {
 
     currentUser.value = contractorForm.userForm
     currentContractor.value = contractorForm.data
+    currentUser.value.gender = 'Male'
 
 
 }
@@ -91,7 +92,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
 
-        
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
         contractorForm.data.payment_percentage = customerData.payment_percentage
@@ -153,7 +153,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel class="optional">Last name</VLabel>
+                                    <VLabel class="required">Last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -168,7 +168,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel class="optional">Birth date </VLabel>
+                                    <VLabel class="required">Birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -204,7 +204,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel class="optional">Address </VLabel>
+                                    <VLabel class="required">Address </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
@@ -337,11 +337,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .Vi {
     width: 28.5em;

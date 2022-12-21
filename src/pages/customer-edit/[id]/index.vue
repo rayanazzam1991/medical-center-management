@@ -440,11 +440,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

@@ -374,11 +374,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .Vi {
     width: 28.5em;

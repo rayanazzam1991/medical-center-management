@@ -12,11 +12,8 @@
     color: var(--danger);
   }
 
-.optional::after {
-    content:" (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
+// .optional::after {
+// }
 
 .filter {
     margin: 1rem;

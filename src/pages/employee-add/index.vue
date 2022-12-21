@@ -149,10 +149,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
 </script>
 
 <template>
-    <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="onSubmitAdd()">
-            <div class="form-outer">
-                <div class="form-body">
+    <div class="">
+        <form class="" @submit.prevent="onSubmitAdd()">
+            <div class="">
+                <div class="">
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
@@ -176,7 +176,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel class="optional">Last name</VLabel>
+                                    <VLabel class="required">Last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -191,7 +191,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel class="optional">Birth date </VLabel>
+                                    <VLabel class="required">Birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -227,7 +227,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel class="optional">Address </VLabel>
+                                    <VLabel class="required">Address </VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
@@ -263,7 +263,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel class="optional">Room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption >Room</VOption>
+                                            <VOption>Room</VOption>
                                             <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
@@ -350,7 +350,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="basic_salary">
-                                    <VLabel class="optional">Basic Salary</VLabel>
+                                    <VLabel class="required">Basic Salary</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
                                             autocomplete="given-basic_salary" />
@@ -394,11 +394,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .Vi {
     width: 28.5em;

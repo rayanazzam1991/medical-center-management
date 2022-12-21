@@ -199,7 +199,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="first_name">
-                                        <VLabel>First name</VLabel>
+                                        <VLabel class="required">First name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -215,7 +215,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="last_name">
-                                        <VLabel>Last name</VLabel>
+                                        <VLabel class="required">Last name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -230,7 +230,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="birth_date">
-                                        <VLabel>Birth date </VLabel>
+                                        <VLabel class="required">Birth date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -245,7 +245,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="phone_number">
-                                        <VLabel>Phone number </VLabel>
+                                        <VLabel class="required">Phone number </VLabel>
                                         <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
                                             icon="feather:chevrons-right">
                                             <VInput disabled v-model="currentUser.phone_number" type="number"
@@ -263,7 +263,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel>Address </VLabel>
+                                        <VLabel class="required">Address </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -277,7 +277,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="gender">
-                                        <VLabel>Gender</VLabel>
+                                        <VLabel class="required">Gender</VLabel>
 
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -296,7 +296,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="room_id">
-                                        <VLabel>Room</VLabel>
+                                        <VLabel class="required">Room</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                                 <VOption>Room</VOption>
@@ -316,7 +316,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="city_id">
-                                        <VLabel>City</VLabel>
+                                        <VLabel class="required">City</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
@@ -336,7 +336,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="user_status_id">
-                                        <VLabel>Status</VLabel>
+                                        <VLabel class="required">Status</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                                 <VOption value="">Status</VOption>
@@ -357,7 +357,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="starting_date">
-                                        <VLabel>Starting date </VLabel>
+                                        <VLabel class="required">Starting date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentContractor.starting_date" type="date" />
                                             <ErrorMessage class="help is-danger" name="starting_date" />
@@ -371,7 +371,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="payment_percentage">
-                                        <VLabel>Payment Percentage</VLabel>
+                                        <VLabel class="required">Payment Percentage</VLabel>
                                         <VControl icon="feather:percent">
                                             <VInput v-model="currentContractor.payment_percentage" type="number" />
                                             <ErrorMessage class="help is-danger" name="payment_percentage" />
@@ -396,6 +396,11 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
 .Vi {
     width: 28.5em;
+}
+
+.required::after {
+    content: " *";
+    color: var(--danger);
 }
 
 .form-layout .form-outer .form-body {
