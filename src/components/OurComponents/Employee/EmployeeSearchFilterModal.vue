@@ -28,12 +28,10 @@ export default defineComponent({
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
         const searchName = ref()
-        const searchGender = ref()
         const searchPhoneNumber = ref()
         const searchDateBetween = ref()
         const searchFrom = ref()
         const searchTo = ref()
-        const searchNationality = ref()
         const searchStatus = ref()
 
         const searchFilter = ref(defaultEmployeeSearchFilter)
@@ -53,10 +51,8 @@ export default defineComponent({
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,
-                gender: searchGender.value,
                 phone_number: searchPhoneNumber.value,
                 user_status_id: searchStatus.value,
-                nationality_id: searchNationality.value,
                 date_between: 'created_at',
                 from: searchFrom.value,
                 to: searchTo.value,
@@ -69,19 +65,15 @@ export default defineComponent({
         }
         const resetFilter = () => {
             searchName.value = undefined
-            searchGender.value = undefined
             searchPhoneNumber.value = undefined
             searchPhoneNumber.value = undefined
             searchStatus.value = undefined
-            searchNationality.value = undefined
             searchDateBetween.value = undefined
             searchFrom.value = undefined
             searchTo.value = undefined
             searchFilter.value.name = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
             searchFilter.value.user_status_id = undefined
-            searchFilter.value.nationality_id = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
@@ -100,7 +92,7 @@ export default defineComponent({
         })
 
 
-        return { search, resetFilter, nationalities2, search_filter_popup, statuses2, searchName, searchGender, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo, searchNationality }
+        return { search, resetFilter, nationalities2, search_filter_popup, statuses2, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
 
 
 
@@ -127,25 +119,6 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl icon="feather:phone">
                         <input v-model="searchPhoneNumber" type="text" class="input " placeholder="Phone Number..." />
-                    </VControl>
-                </VField>
-                <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchGender" class="">
-                            <VOption value="">Gender</VOption>
-                            <VOption value="Male">Male</VOption>
-                            <VOption value="Female">Female</VOption>
-                        </VSelect>
-                    </VControl>
-                </VField>
-                <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchNationality" class="">
-                            <VOption value="">Nationality</VOption>
-                            <VOption v-for="nationality in nationalities2" :key="nationality.id"
-                                :value="nationality.id">{{ nationality.name }}
-                            </VOption>
-                        </VSelect>
                     </VControl>
                 </VField>
                 <VField class="column filter">

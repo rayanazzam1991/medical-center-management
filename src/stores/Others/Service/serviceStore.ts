@@ -145,8 +145,7 @@ export const useService = defineStore('service', () => {
     addServiceStore,
     editServiceStore,
     getServiceStore,
-    getServicesStore,
-    loading
+    getServicesStore
   } as const
 })
 
