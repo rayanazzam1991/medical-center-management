@@ -21,7 +21,6 @@ const customerEditvalidationSchema = toFormValidator(zod
                     zod.string({})
                         .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
                         .optional()),
-        gender: zod.string(),
         phone_number:
             zod
                 .preprocess(

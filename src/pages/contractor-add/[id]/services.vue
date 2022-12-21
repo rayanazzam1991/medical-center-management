@@ -124,7 +124,7 @@ const onSubmitAdd = async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-5">
+                            <div class="column is-6">
                                 <VField :key="service.service.id" v-for="service in servicesChecked"
                                     :id="service.service.name">
 
@@ -140,7 +140,7 @@ const onSubmitAdd = async () => {
 
                                 </VField>
                             </div>
-                            <div class="column is-7">
+                            <div class="column is-6">
                                 <VField :key="service.service.id" v-for="service in servicesChecked"
                                     :id="service.service.name">
 
@@ -175,13 +175,16 @@ const onSubmitAdd = async () => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

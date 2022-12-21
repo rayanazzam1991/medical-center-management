@@ -197,9 +197,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 <h4>{{ pageTitle }}</h4>
                             </div>
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="first_name">
-                                        <VLabel>First name</VLabel>
+                                        <VLabel class="required">First name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -207,15 +207,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="last_name">
-                                        <VLabel>Last name</VLabel>
+                                        <VLabel class="required">Last name</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -223,14 +217,27 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->
+                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
+                                    <VField id="phone_number">
+                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                                disabled autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="phone_number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                                <div class="column is-6">
                                     <VField id="birth_date">
-                                        <VLabel>Birth date </VLabel>
+                                        <VLabel class="required">Birth date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -241,43 +248,12 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             </div>
                         </div>
                         <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="phone_number">
-                                        <VLabel>Phone number </VLabel>
-                                        <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                            icon="feather:chevrons-right">
-                                            <VInput disabled v-model="currentUser.phone_number" type="number"
-                                                placeholder="" autocomplete="given-phone_number" />
-
-                                            <ErrorMessage class="help is-danger" name="phone_number" />
-                                            <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
-                                        </VControl>
-                                    </VField>
-                                </div>
-                            </div>
-                        </div>
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="address">
-                                        <VLabel>Address </VLabel>
-                                        <VControl icon="feather:chevrons-right">
-                                            <VTextarea v-model="currentUser.address" />
-                                            <ErrorMessage class="help is-danger" name="address" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="gender">
-                                        <VLabel>Gender</VLabel>
+                                        <VLabel class="required">Gender</VLabel>
 
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
@@ -289,34 +265,9 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="room_id">
-                                        <VLabel>Room</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                                <VOption>Room</VOption>
-                                                <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                        room.number
-                                                }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="room_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="city_id">
-                                        <VLabel>City</VLabel>
+                                        <VLabel class="required">City</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
@@ -329,14 +280,44 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-12">
+                                    <VField id="address">
+                                        <VLabel class="required">Address </VLabel>
+                                        <VControl>
+                                            <VTextarea v-model="currentUser.address" />
+                                            <ErrorMessage class="help is-danger" name="address" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="room_id">
+                                        <VLabel class="optional">Room</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.room_id">
+                                                <VOption>Room</VOption>
+                                                <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
+                                                        room.number
+                                                }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="room_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
                                     <VField id="user_status_id">
-                                        <VLabel>Status</VLabel>
+                                        <VLabel class="required">Status</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                                 <VOption value="">Status</VOption>
@@ -351,33 +332,31 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
+                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="starting_date">
-                                        <VLabel>Starting date </VLabel>
+                                        <VLabel class="required">Starting date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentContractor.starting_date" type="date" />
                                             <ErrorMessage class="help is-danger" name="starting_date" />
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="payment_percentage">
-                                        <VLabel>Payment Percentage</VLabel>
+                                        <VLabel class="required">Payment Percentage</VLabel>
                                         <VControl icon="feather:percent">
                                             <VInput v-model="currentContractor.payment_percentage" type="number" />
                                             <ErrorMessage class="help is-danger" name="payment_percentage" />
                                         </VControl>
                                     </VField>
                                 </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -398,6 +377,11 @@ const onSubmitEdit = handleSubmit(async (values) => {
     width: 28.5em;
 }
 
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
 }
@@ -412,5 +396,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
 .load {
     height: 400px;
     width: 500px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

@@ -14,15 +14,14 @@ const contractorEditvalidationSchema = toFormValidator(zod
                 .string({
                     required_error: "This field is required",
                 })
-                .optional(),
+                .min(1, "This field is required"),
         birth_date:
             zod
                 .preprocess(
                     val => val == undefined ? "" : val,
-                    zod.string({})
+                    zod.string({ required_error: 'This field is required' })
                         .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
+                ),
         phone_number:
             zod
                 .preprocess(
@@ -38,8 +37,9 @@ const contractorEditvalidationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     val => val == undefined ? "" : val,
-                    zod.string({})
-                        .optional()),
+                    zod.string({ required_error: 'This field is required' })
+                        .min(1, "This field is required"),
+                ),
         city_id: zod
             .preprocess(
                 (input) => {
@@ -76,7 +76,7 @@ const contractorEditvalidationSchema = toFormValidator(zod
                     },
                     zod.date({
                         invalid_type_error: "That's not a date!",
-                    }).optional(),
+                    })
                 ),
         payment_percentage:
             zod

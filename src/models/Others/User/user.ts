@@ -12,6 +12,7 @@ export interface User {
     phone_number: string
     address: string
     city: City
+    room: Room
     status: UserStatus
     role?: string
     token?: string
@@ -26,6 +27,7 @@ export interface CreateUpdateUser {
     phone_number: string
     address: string
     city_id?: number
+    room_id?: number
     user_status_id?: number
 }
 export interface ChangeUserStatus {
@@ -52,6 +54,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
     phone_number: '',
     address: '',
     city_id: undefined,
+    room_id: undefined,
     user_status_id: undefined,
     password: '0000000000',
 }
@@ -71,6 +74,7 @@ export const defaultUser: User = {
     status: defaultUserStatus,
     password: '',
     token: undefined,
+    room: defaultRoom
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {

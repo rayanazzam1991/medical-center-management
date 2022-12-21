@@ -32,23 +32,25 @@ useHead({
             <RouterView />
 
             <!--Wizard Navigation Buttons-->
-            <div class="wizard-buttons"
-                :class="[(contractorForm.canNavigate && 'is-active'), (contractorForm.getStep() == 1 && 'is-scroll')]">
-                <div class="wizard-buttons-inner">
-                    <VLoader size="small" :active="contractorStore.loading">
-                        <VButton type="submit" class="wizard-button-previous"
-                            :disabled="contractorForm.validateStepFn === null"
-                            :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                            {{ contractorForm.getStep() == 3 ? 'Submit & Finish' : 'Submit & Next'
+            <div class="wizard-buttons" :class="[(contractorForm.canNavigate && 'is-active')]">
+                <div class="columns">
+                    <div class="column is-one-quarter"></div>
+                    <div class="wizard-buttons-inner">
+                        <VLoader size="small" :active="contractorStore.loading">
+                            <VButton type="submit" class="wizard-button-previous"
+                                :disabled="contractorForm.validateStepFn === null"
+                                :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
+                                {{ contractorForm.getStep() == 3 ? 'Submit & Finish' : 'Submit & Next'
+                                }}
+                            </VButton>
+                        </VLoader>
+                        <VButton class="wizard-button-previous" :disabled="contractorForm.skipable === false"
+                            :color="contractorForm.skipable === true ? 'dark' : 'dark'"
+                            @click="() => contractorForm?.skipStepFn?.()">
+                            {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
                             }}
                         </VButton>
-                    </VLoader>
-                    <VButton class="wizard-button-previous" :disabled="contractorForm.skipable === false"
-                        :color="contractorForm.skipable === true ? 'dark' : 'dark'"
-                        @click="() => contractorForm?.skipStepFn?.()">
-                        {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
-                        }}
-                    </VButton>
+                    </div>
                 </div>
             </div>
         </form>

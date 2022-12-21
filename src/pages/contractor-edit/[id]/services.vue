@@ -27,7 +27,7 @@ contractorForm.setStep({
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
-        console.log(isValid)
+
         if (isValid) {
             contractorForm.reset()
             router.push({
@@ -56,7 +56,6 @@ interface ServicesChecked {
 const fetchContractor = async () => {
 
     const { contractor } = await getContractor(contractorId.value)
-    console.log(contractor.payment_percentage)
     for (let i = 0; i < contractor.services.length; i++) {
         // @ts-ignore
         contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
@@ -64,7 +63,6 @@ const fetchContractor = async () => {
 
     }
 
-    console.log(contractorForm.contractorServicesForm)
 
     contractorForm.userForm.id = contractor.user.id
     contractorForm.userForm.first_name = contractor.user.first_name
@@ -80,7 +78,6 @@ const fetchContractor = async () => {
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
     contractorForm.dataUpdate.id = contractorId.value
 
-    console.log(contractorForm.dataUpdate)
 
 }
 
@@ -115,10 +112,10 @@ onMounted(async () => {
 
 const onSubmitEdit = async () => {
     contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
+    console.log(contractorForm.contractorServicesForm)
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
             contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })
-            console.log(contractorForm.contractorServicesForm)
         }
 
     }
@@ -170,7 +167,7 @@ const onSubmitEdit = async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-5">
+                            <div class="column is-6">
                                 <VField v-for="service in servicesChecked" :id="service.service.name">
 
                                     <VLabel class="required" v-if="service.checked">Contractor's {{ service.service.name
@@ -185,7 +182,7 @@ const onSubmitEdit = async () => {
 
                                 </VField>
                             </div>
-                            <div class="column is-7">
+                            <div class="column is-6">
                                 <VField v-for="service in servicesChecked" :id="service.service.name">
 
                                     <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
@@ -223,13 +220,16 @@ const onSubmitEdit = async () => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

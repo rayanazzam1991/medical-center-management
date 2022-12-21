@@ -84,6 +84,7 @@ const fetchCustomer = async () => {
   customerForm.userForm.address = customer.user.address
   customerForm.userForm.room_id = customer.user?.room?.id
   customerForm.userForm.city_id = customer.user.city.id
+  customerForm.userForm.room_id = undefined
   customerForm.userForm.user_status_id = customer.user.status.id
   customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
   customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
@@ -158,8 +159,8 @@ const onSubmitEdit = async () => {
   }
   customerForm.dataUpdate.is_completed = true
   console.log(customerForm.userForm)
-  const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-  if (customer.success) {
+  const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+  if (success) {
     // @ts-ignore
     notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
@@ -167,7 +168,7 @@ const onSubmitEdit = async () => {
   } else {
     // @ts-ignore
 
-    notif.error(customer.success)
+    notif.error(message)
 
   }
 
@@ -240,13 +241,16 @@ const onSubmitEdit = async () => {
   color: var(--danger);
 }
 
-.optional::after {
-  content: " (optional)";
-  color: var(--placeholder);
-  font-style: italic;
-}
 
 .form-layout .form-outer .form-body {
   padding: 20px 40px 40px;
+}
+
+.layout {
+  min-width: 50%;
+}
+
+.form-fieldset {
+  max-width: 40%;
 }
 </style>
