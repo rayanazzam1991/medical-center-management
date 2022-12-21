@@ -82,7 +82,7 @@ export default defineComponent({
                 // @ts-ignore
                 notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
                 await sleep(500)
-            router.push({ path: `/department/${department.id}` });
+                router.push({ path: `/department/${department.id}` });
             } else {
                 notif.error(message)
             }
@@ -96,7 +96,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)router.push({ path: `/department/${departmentData.id}` });
+                await sleep(500)
+                router.push({ path: `/department/${departmentData.id}` });
             } else {
                 notif.error(message)
             }

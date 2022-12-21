@@ -78,7 +78,7 @@ export default defineComponent({
                 // @ts-ignore
                 notif.success(`${nationality.name} ${viewWrapper.pageTitle} was added successfully`);
                 await sleep(500)
-            router.push({ path: `/nationality/${nationality.id}` });
+                router.push({ path: `/nationality/${nationality.id}` });
             } else {
                 notif.error(message)
             }
@@ -92,7 +92,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)router.push({ path: `/nationality/${nationalityData.id}` });
+                await sleep(500)
+                router.push({ path: `/nationality/${nationalityData.id}` });
             } else {
                 notif.error(message)
             }

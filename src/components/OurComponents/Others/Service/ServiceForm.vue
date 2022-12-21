@@ -90,7 +90,7 @@ export default defineComponent({
                 // @ts-ignore
                 notif.success(`${service.name} ${viewWrapper.pageTitle} was added successfully`);
                 await sleep(500)
-            router.push({ path: `/service/${service.id}` });
+                router.push({ path: `/service/${service.id}` });
             } else {
                 notif.error(message)
             }
@@ -104,7 +104,8 @@ export default defineComponent({
                 notif.dismissAll();
                 // @ts-ignore
                 notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
-                await sleep(500)router.push({ path: `/service/${serviceData.id}` });
+                await sleep(500)
+                router.push({ path: `/service/${serviceData.id}` });
             } else {
                 notif.error(message)
             }
