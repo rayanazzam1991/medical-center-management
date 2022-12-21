@@ -168,3 +168,5 @@ public/robots.txt
 
 components.d.ts
 typed-router.d.ts
+
+/.idea

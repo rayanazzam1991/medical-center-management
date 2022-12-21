@@ -158,8 +158,7 @@ export const useCity = defineStore('city', () => {
     addCityStore,
     editCityStore,
     getCityStore,
-    getCitiesStore,
-    loading
+    getCitiesStore
   } as const
 })
 

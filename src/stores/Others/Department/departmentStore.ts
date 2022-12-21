@@ -149,8 +149,7 @@ export const useDepartment = defineStore('department', () => {
     addDepartmentStore,
     editDepartmentStore,
     getDepartmentStore,
-    getDepartmentsStore,
-    loading
+    getDepartmentsStore
   } as const
 })
 
