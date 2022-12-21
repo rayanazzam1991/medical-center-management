@@ -14,15 +14,16 @@ export default defineComponent({
         },
         pagination: {
             default: defaultPagination,
+        },
+        default_per_page: {
+            type: Number,
+            default: 1,
         }
+
     },
     setup(props, context) {
-
+        const default_per_page = props.default_per_page
         const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 30
-        })
         const searchName = ref('')
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
@@ -47,7 +48,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { isStuck, resetFilter, search, searchName, searchStatus, perPage, pagination, DepartmentConsts }
+        return { resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, DepartmentConsts }
     },
 
 
@@ -61,63 +62,49 @@ export default defineComponent({
 <template>
     <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+            <div class="form-header stuck-header">
                 <div class="form-header-inner">
-                    <div class="left">
-                        <div class="columns justify-content ">
-                            <VField class="column filter">
-                                <VControl icon="feather:search">
-                                    <input v-model="searchName" type="text" class="input is-rounded"
-                                        placeholder="Name..." />
-                                </VControl>
-                            </VField>
-                            <VField class="column ">
-                                <VControl>
-                                    <VSelect v-model="searchStatus" class="is-rounded">
-                                        <VOption value="">Status</VOption>
-                                        <VOption value="0">{{ DepartmentConsts.showStatusName(0) }}</VOption>
-                                        <VOption value="1">{{ DepartmentConsts.showStatusName(1) }}</VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
+                    <div class="left my-4 mx-2 ">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2" icon="feather:search">
+                                <VInput v-model="searchName" type="text" placeholder="Name..." />
+                            </VControl>
+                            <VControl class="mr-2 status-input">
+                                <VSelect v-model="searchStatus">
+                                    <VOption value="">Status</VOption>
+                                    <VOption value="0">{{ DepartmentConsts.showStatusName(0) }}</VOption>
+                                    <VOption value="1">{{ DepartmentConsts.showStatusName(1) }}</VOption>
+                                </VSelect>
+                            </VControl>
+                            <VIconButton class="mr-2" type="submit" v-on:click="search" icon="feather:search" />
+                            <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw"
+                                :raised="false" color="danger" />
                         </div>
-
                     </div>
-                    <div class="right  ">
-                        <div class="buttons ">
-                            <VIconButton v-on:click="search" icon="feather:search" color="" />
-                            <VButton @click="resetFilter" color="danger" raised> Reset Filters
-                            </VButton>
+                    <div class="left my-4 mx-2">
+                        <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2 ">
+                                <div class="select">
 
-                            <VButton to="/department/add" color="primary" raised> {{ button_name }}
-                            </VButton>
+                                    <select v-model="perPage" @change="search">
+                                        <VOption :value="default_per_page * 0.1">{{ default_per_page * 0.1 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page">{{ default_per_page }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 2">{{ default_per_page * 2 }}
+                                        </VOption>
+                                        <VOption :value="default_per_page * 10">{{ default_per_page * 10 }}
+                                        </VOption>
+                                    </select>
+                                </div>
+                            </VControl>
+                            <VControl>
+                                <VButton class="" to="/department/add" color="primary">{{ button_name }}
+                                </VButton>
+                            </VControl>
                         </div>
-                        <div>
-                            <VField>
-                                <VControl>
-                                    <div class="select is-rounded">
-                                        <select @change="search" v-model="perPage">
-                                            <option v-if="pagination.per_page * 0.1 == 1"
-                                                :value="pagination.per_page * 0.1">{{ pagination.per_page * 0.1 }}
-                                                result per page</option>
-                                            <option v-else :value="pagination.per_page * 0.1">{{ pagination.per_page *
-                                                    0.1
-                                            }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 0.5">{{ pagination.per_page * 0.5 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page">{{ pagination.per_page }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 2">{{ pagination.per_page * 2 }}
-                                                results per page</option>
-                                            <option :value="pagination.per_page * 10">{{ pagination.per_page * 10 }}
-                                                results per page</option>
-                                        </select>
-                                    </div>
-                                </VControl>
-                            </VField>
-                        </div>
-
                     </div>
                 </div>
             </div>

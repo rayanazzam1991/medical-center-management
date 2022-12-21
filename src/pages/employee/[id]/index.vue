@@ -72,12 +72,18 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
     userForm.user_status_id = userData.user.status?.id
-    await changeUserStatus(userForm)
-    getCurrentEmployee()
-    // @ts-ignore
-    notif.dismissAll()
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    const { message, success } = await changeUserStatus(userForm)
+    if (success) {
+
+        getCurrentEmployee()
+        // @ts-ignore
+        notif.dismissAll()
+        // @ts-ignore
+        notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    } else {
+        // @ts-ignore
+        notif.error(message)
+    }
     // router.push({ path: `/employee/${userData.id}` })
     changeStatusPopup.value = false
 }
@@ -218,7 +224,7 @@ const changestatusUser = async () => {
                                                 <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
-                                                        {{ currentEmployee.user.room.number }}
+                                                        {{ currentEmployee.user?.room?.number }}
                                                     </span>
                                                 </div>
 
@@ -229,7 +235,7 @@ const changestatusUser = async () => {
                                                 <div class="meta">
                                                     <span>Room Floor</span>
                                                     <span>
-                                                        {{ currentEmployee.user.room.floor }}
+                                                        {{ currentEmployee?.user?.room?.floor }}
                                                     </span>
                                                 </div>
 
@@ -240,7 +246,7 @@ const changestatusUser = async () => {
                                                 <div class="meta">
                                                     <span>Address</span>
                                                     <span>
-                                                        {{ currentEmployee.user.address }}
+                                                        {{ currentEmployee?.user?.address }}
                                                     </span>
                                                 </div>
 

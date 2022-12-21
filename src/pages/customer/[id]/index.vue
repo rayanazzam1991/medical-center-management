@@ -245,7 +245,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
-                                                        {{ currentCustomer.user.room.number }}
+                                                        {{ currentCustomer?.user?.room?.number }}
                                                     </span>
                                                 </div>
 
@@ -256,7 +256,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>Room Floor</span>
                                                     <span>
-                                                        {{ currentCustomer.user.room.floor }}
+                                                        {{ currentCustomer?.user?.room?.floor }}
                                                     </span>
                                                 </div>
 
@@ -310,14 +310,14 @@ const getCurrentProfilePic = async () => {
                                         <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
                                         <h4>Blood Type</h4>
                                         <p>
-                                            {{ currentCustomer.medical_info.blood_type }}
+                                            {{ currentCustomer?.medical_info?.blood_type }}
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnir lnir-grow"></i>
                                         <h4>Smoke</h4>
                                         <p>
-                                            {{ MedicalInfoConsts.showBoolean(currentCustomer.medical_info.smoking) }}.
+                                            {{ MedicalInfoConsts.showBoolean(currentCustomer?.medical_info?.smoking) }}.
                                         </p>
                                     </div>
                                 </div>
@@ -335,20 +335,9 @@ const getCurrentProfilePic = async () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Customer Group</span>
-                                                    <span>
-                                                        {{ currentCustomer.customer_group.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
                                                     <span>Allergic</span>
                                                     <span>
-                                                        {{ currentCustomer.medical_info.allergic }}
+                                                        {{ currentCustomer?.medical_info?.allergic }}
                                                     </span>
                                                 </div>
 
@@ -359,7 +348,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>Chronic Diseases</span>
                                                     <span>
-                                                        {{ currentCustomer.medical_info.chronic_diseases }}
+                                                        {{ currentCustomer?.medical_info?.chronic_diseases }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -369,7 +358,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>Infectious Diseases</span>
                                                     <span>
-                                                        {{ currentCustomer.medical_info.infectious_diseases }}
+                                                        {{ currentCustomer?.medical_info?.infectious_diseases }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -379,7 +368,7 @@ const getCurrentProfilePic = async () => {
                                                 <div class="meta">
                                                     <span>Other Medical Info</span>
                                                     <span>
-                                                        {{ currentCustomer.medical_info.any_other_info }}
+                                                        {{ currentCustomer?.medical_info?.any_other_info }}
                                                     </span>
                                                 </div>
 

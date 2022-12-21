@@ -1,10 +1,14 @@
 <script setup lang="ts">
 type TabId = 'Employee' | 'templates'
 const activeTab = ref<TabId>('Employee')
+  const emits = defineEmits<{
+    (e: 'close'): void
+}>()
+
 </script>
 
 <template>
-  <div class="navbar-subnavbar-inner tabs-wrapper">
+  <div class="navbar-subnavbar-inner tabs-wrapper"  @mouseleave="() => emits('close')" >
 
 
     <div class="container">
@@ -13,12 +17,12 @@ const activeTab = ref<TabId>('Employee')
           <div class="center has-slimscroll">
             <div class="columns">
               <div class="column is-3">
-                <h4 class="column-heading">Employee</h4>
+                <h4 class="column-heading">Employees</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee">
                       <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                      <span>All Employee</span>
+                      <span>Employees</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>

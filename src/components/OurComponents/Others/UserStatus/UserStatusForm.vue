@@ -1,6 +1,6 @@
 <script  lang="ts">
 import { useHead } from "@vueuse/head"
-import { useForm } from "vee-validate"
+import { ErrorMessage, useForm } from "vee-validate"
 import { addUserStatus, editUserStatus, getUserStatus } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultUserStatus, UserStatus } from "/@src/models/Others/UserStatus/userStatus"
@@ -13,100 +13,87 @@ export default defineComponent({
     props: {
         formType: {
             type: String,
-            default: '',
+            default: "",
         },
     },
-
-    emits: ['onSubmit'],
+    emits: ["onSubmit"],
     setup(props, context) {
-        const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('UserStatus')
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("User status");
         const head = useHead({
-            title: 'UserStatus',
-        })
-        const userStatusStore = useUserStatus()
-        const notif = useNotyf()
-        const formType = ref('')
-        formType.value = props.formType
-        const route = useRoute()
-        const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
-        const backRoute = '/userstatus'
-        const currentUserStatus = ref(defaultUserStatus)
-        const userstatusId = ref(0)
+            title: "User status",
+        });
+        const userStatusStore = useUserStatus();
+        const notif = useNotyf();
+        const formType = ref("");
+        formType.value = props.formType;
+        const route = useRoute();
+        const router = useRouter();
+        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const backRoute = "/userstatus";
+        const currentUserStatus = ref(defaultUserStatus);
+        const userstatusId = ref(0);
         // @ts-ignore
-        userstatusId.value = route.params?.id as number ?? 0
+        userstatusId.value = route.params?.id as number ?? 0;
         const getCurrentUserStatus = async () => {
             if (userstatusId.value === 0) {
-                currentUserStatus.value.name = ''
-                return
+                currentUserStatus.value.name = "";
+                return;
             }
-            const { userStatus } = await getUserStatus(userstatusId.value)
-            currentUserStatus.value = userStatus != undefined ? userStatus : defaultUserStatus
-
-        }
+            const { userStatus } = await getUserStatus(userstatusId.value);
+            currentUserStatus.value = userStatus != undefined ? userStatus : defaultUserStatus;
+        };
         onMounted(() => {
-            getCurrentUserStatus()
-        })
-
-        const validationSchema = userstatusvalidationSchema
-
+            getCurrentUserStatus();
+        });
+        const validationSchema = userstatusvalidationSchema;
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
-                name: currentUserStatus.value.name ?? '',
+                name: currentUserStatus.value.name ?? "",
             } : {
                 name: ""
             },
-        })
-
+        });
         const onSubmit = async (method: String) => {
-            if (method == 'Add') {
-                await onSubmitAdd()
+            if (method == "Add") {
+                await onSubmitAdd();
             }
-            else if (method == 'Edit') {
-                await onSubmitEdit()
+            else if (method == "Edit") {
+                await onSubmitEdit();
             }
-            else return
-        }
-
-        const onSubmitAdd = async () => {
-            var userstatusData = currentUserStatus.value
-            const { userStatus, message, success } = await addUserStatus(userstatusData)
+            else
+                return;
+        };
+        const onSubmitAdd = handleSubmit(async () => {
+            var userstatusData = currentUserStatus.value;
+            const { userStatus, message, success } = await addUserStatus(userstatusData);
             if (success) {
-
-                notif.dismissAll()
-                notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`)
-            await sleep(500)
-                router.push({ path: `/userstatus/${userStatus.id}` })
-
+                notif.dismissAll();
+                notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`);
+                await sleep(500);
+                router.push({ path: `/userstatus/${userStatus.id}` });
             }
             else {
-                notif.error(message)
+                notif.error(message);
             }
-        }
-        const onSubmitEdit = async () => {
-            const userstatusData = currentUserStatus.value
-            const { message, success } = await editUserStatus(userstatusData)
+        });
+        const onSubmitEdit = handleSubmit(async () => {
+            const userstatusData = currentUserStatus.value;
+            const { message, success } = await editUserStatus(userstatusData);
             if (success) {
-
-                notif.dismissAll()
-                notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`)
-            await sleep(500)
-                router.push({ path: `/userstatus/${userstatusData.id}` })
+                notif.dismissAll();
+                notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                await sleep(500);
+                router.push({ path: `/userstatus/${userstatusData.id}` });
             }
             else {
-                notif.error(message)
+                notif.error(message);
             }
-
-
-        }
-
-        return { pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute, userStatusStore }
+        });
+        return { pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute, userStatusStore };
     },
-
-
+    components: { ErrorMessage }
 })
 
 
@@ -128,13 +115,12 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUserStatus.name" type="text" placeholder=""
                                             autocomplete="given-name" />
-                                        <p v-if="field?.errorMessage" class="help is-danger">
-                                            {{ field.errorMessage }}
-                                        </p>
+                                        <ErrorMessage class="help is-danger" name="name" />
+
                                     </VControl>
                                 </VField>
                             </div>

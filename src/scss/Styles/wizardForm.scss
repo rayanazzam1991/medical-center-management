@@ -32,18 +32,23 @@
 }
 
 .wizard-buttons {
-    // position: fixed;
-    bottom: 20px;
+    position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
     margin: 0 auto;
-    max-width: 40rem;
+    // max-width: 40rem;
     background: var(--white);
-    border: 1px solid var(--fade-grey-dark-3);
-    border-radius: 14px;
+    // border: 1px solid var(--fade-grey-dark-3);
+    // border-radius: 14px;
     transform: translateY(120px);
     transition: all 0.3s; // transition-all test
     z-index: 5;
+
+    &.is-scroll {
+        position: relative;
+    }
+
 
     &.is-active {
         transform: translateY(0);
@@ -68,7 +73,7 @@
 ========================================================================== */
 .wizard-v1-wrapper {
     padding-top: 60px;
-    padding-bottom: 60px;
+    padding-bottom: 0;
 
     .inner-wrapper {
         display: none;

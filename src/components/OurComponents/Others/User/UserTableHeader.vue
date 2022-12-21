@@ -20,7 +20,12 @@ export default defineComponent({
         },
         pagination: {
             default: defaultPagination,
+        },
+        default_per_page: {
+            type: Number,
+            default: 1,
         }
+
     },
 
 
@@ -34,10 +39,8 @@ export default defineComponent({
             console.log("DASdas", searchFilterPop.value)
         }
         const pagination = props.pagination
-        const { y } = useWindowScroll()
-        const isStuck = computed(() => {
-            return y.value > 30
-        })
+        const default_per_page = props.default_per_page
+
         const searchFilterPop = ref(false)
         const searchFirstName = ref()
         const searchLastName = ref()
@@ -96,7 +99,7 @@ export default defineComponent({
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
             statuses2.value = userstatuses
         })
-        return { keyTest, is_reseted, isStuck, onOpen, resetFilter_popup, rooms2, cities2, search_filter, popUpTrigger, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
+        return { keyTest, default_per_page, is_reseted, onOpen, resetFilter_popup, rooms2, cities2, search_filter, popUpTrigger, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
     },
 
 
@@ -110,7 +113,7 @@ export default defineComponent({
 <template>
     <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
-            <div :class="[isStuck && 'is-stuck']" class="form-header stuck-header">
+            <div class="form-header stuck-header">
                 <div class="form-header-inner">
                     <div class="left">
                         <div>

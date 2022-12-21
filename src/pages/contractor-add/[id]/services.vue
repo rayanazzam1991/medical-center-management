@@ -128,7 +128,8 @@ const onSubmitAdd = async () => {
                                 <VField :key="service.service.id" v-for="service in servicesChecked"
                                     :id="service.service.name">
 
-                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                    <VLabel class="required" v-if="service.checked">Contractor's {{ service.service.name
+                                    }}
                                         Price:
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
@@ -143,9 +144,10 @@ const onSubmitAdd = async () => {
                                 <VField :key="service.service.id" v-for="service in servicesChecked"
                                     :id="service.service.name">
 
-                                    <VLabel class="is-flex-wrap-nowrap" v-if="service.checked">Contractor's {{
-                                            service.service.name
-                                    }}
+                                    <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
+                                        Contractor's {{
+                                                service.service.name
+                                        }}
                                         Service amount:
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
@@ -167,6 +169,17 @@ const onSubmitAdd = async () => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

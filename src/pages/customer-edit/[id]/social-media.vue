@@ -129,7 +129,7 @@ const onSubmitEdit = async () => {
     }
     customerForm.dataUpdate.is_completed = true
     console.log(customerForm.userForm)
-    const {customer , message , success} = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+    const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
     if (success) {
         // @ts-ignore
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
@@ -183,7 +183,9 @@ const onSubmitEdit = async () => {
                             <div class="column is-12">
                                 <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
-                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
+                                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
+                                            socialMedia.socialMedia.name
+                                    }}
                                         URL:
                                     </VLabel>
                                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
@@ -210,6 +212,17 @@ const onSubmitEdit = async () => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.optional::after {
+    content: " (optional)";
+    color: var(--placeholder);
+    font-style: italic;
+}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

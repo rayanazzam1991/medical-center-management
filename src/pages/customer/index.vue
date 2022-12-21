@@ -5,10 +5,15 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultCustomerSearchFilter, CustomerSearchFilter, CustomerConsts, Customer } from '/@src/models/CRM/Customer/customer'
+import { defaultCustomerSearchFilter, CustomerSearchFilter, CustomerConsts, Customer, defaultCustomer } from '/@src/models/CRM/Customer/customer'
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService'
 import { defaultPagination } from '/@src/utils/response'
 import { useCustomer } from '/@src/stores/CRM/Customer/customerStore'
+import { ErrorMessage } from 'vee-validate'
+import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { changeUserStatus } from '/@src/services/Others/User/userService'
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
@@ -17,9 +22,14 @@ useHead({
 const notif = useNotyf()
 const searchFilter = ref(defaultCustomerSearchFilter)
 const customersList = ref<Array<Customer>>([])
+const statusesList = ref<Array<UserStatus>>([])
 const paginationVar = ref(defaultPagination)
 const customerStore = useCustomer()
 const keyIncrement = ref(0)
+const default_per_page = ref(1)
+const changeStatusPopup = ref(false)
+const customerChangeStatus = ref<Customer>(defaultCustomer)
+const currentChangeStatusUser = ref(defaultChangeStatusUser)
 
 const router = useRouter()
 
@@ -28,7 +38,27 @@ onMounted(async () => {
     customersList.value = customers
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statusesList.value = userstatuses
+
 });
+const changestatusUser = async () => {
+    currentChangeStatusUser.value.id = customerChangeStatus.value.user.id
+    currentChangeStatusUser.value.user_status_id = customerChangeStatus.value.user.status.id
+    const { message, success } = await changeUserStatus(currentChangeStatusUser.value)
+    if (success) {
+
+        search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        // @ts-ignore
+        notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
+    } else {
+        notif.error(message)
+    }
+    changeStatusPopup.value = false
+}
 
 const search = async (searchFilter2: CustomerSearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -253,6 +283,11 @@ const columns = {
                 onView: () => {
                     router.push({ path: `/customer/${row?.id}` })
                 },
+                onChangeStatus: () => {
+                    customerChangeStatus.value = row
+                    changeStatusPopup.value = true
+                }
+
 
             }),
 
@@ -263,7 +298,7 @@ const columns = {
 <template>
     <CustomerTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
         :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
-        @resetFilter="resetFilter" />
+        :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="customersList" :limit="searchFilter.per_page"
         @update:sort="customerSort">
 
@@ -302,5 +337,33 @@ const columns = {
         <VPlaceloadText v-if="customerStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
     </VFlexTableWrapper>
+    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="user_status_id">
+                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VSelect v-model="customerChangeStatus.user.status.id">
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
+                                                status.name
+                                        }}
+                                        </VOption>
+                                    </VSelect>
+                                    <ErrorMessage name="user_status_id" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+        </template>
+    </VModal>
 
 </template>

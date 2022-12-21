@@ -22,11 +22,14 @@ const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const roomStore = useRoom()
 const keyIncrement = ref(0)
+const default_per_page = ref(1)
 onMounted(async () => {
   const { rooms, pagination } = await getRoomsList(searchFilter.value)
   roomsList.value = rooms
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
 });
 
 const removeRoom = async (roomId: number) => {
@@ -148,7 +151,7 @@ const columns = {
 
 <template>
   <RoomTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
-    @search="search" :pagination="paginationVar" @resetFilter="resetFilter" />
+    @search="search" :pagination="paginationVar"  :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="roomsList" @update:sort="roomSort">
     <VFlexTable separators clickable>
       <template #body>
