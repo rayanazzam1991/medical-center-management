@@ -24,14 +24,14 @@ const head = useHead({
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/customer-add/${customerId.value}/social-media`,
+                path: `/customer/${customerId.value}`,
             })
         }
 
@@ -44,7 +44,7 @@ customerForm.setStep({
         customerForm.medicalInfoForm.smoking = 0
         customerForm.medicalInfoForm.any_other_info = ''
         router.push({
-            path: `/customer-add/${customerId.value}/social-media`,
+            path: `/customer/${customerId.value}`,
         })
 
     }
@@ -59,7 +59,7 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 4: Customer Medical Info'
+const pageTitle = 'Step 2: Customer Medical Info'
 onMounted(() => {
     getCurrentMedicalInfo()
 }

@@ -33,9 +33,9 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
       case 1:
         return 'Main Info'
       case 2:
-        return 'Profile Picture'
-      case 3:
         return 'Medical Info'
+      case 3:
+        return 'Medical File'
       case 4:
         return 'Social Media'
       default:
@@ -60,9 +60,6 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
 
   async function save() {
     loading.value = true
-
-    console.log(data.value)
-
     loading.value = false
   }
 
@@ -121,7 +118,6 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     setLoading,
     setStep,
     getStep,
-
     save,
     reset,
   } as const

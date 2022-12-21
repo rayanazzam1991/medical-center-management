@@ -26,27 +26,28 @@ useHead({
 
         <!--Wizard Progress Bar-->
         <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(customerForm.step / 4) * 100" :max="100" />
+            :value="(customerForm.step / 2) * 100" :max="100" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => customerForm?.validateStepFn?.()">
             <RouterView />
 
             <!--Wizard Navigation Buttons-->
-            <div class="wizard-buttons" :class="[(customerForm.canNavigate && 'is-active'), (customerForm.getStep() == 1 && 'is-scroll')]">
+            <div class="wizard-buttons"
+                :class="[(customerForm.canNavigate && 'is-active'), (customerForm.getStep() == 1 && 'is-scroll')]">
                 <div class="wizard-buttons-inner">
                     <VLoader size="small" :active="customerStore.loading">
                         <VButton type="submit" class="wizard-button-previous"
                             :disabled="customerForm.validateStepFn === null"
                             :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                            {{ customerForm.getStep() == 4 ? 'Submit & Finish' : 'Submit & Next'
+                            {{ customerForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
                             }}
                         </VButton>
                     </VLoader>
                     <VButton class="wizard-button-previous" :disabled="customerForm.skipable === false"
                         :color="customerForm.skipable === true ? 'dark' : 'dark'"
                         @click="() => customerForm?.skipStepFn?.()">
-                        {{ customerForm.getStep() == 4 ? 'Skip & Finish' : 'Skip'
+                        {{ customerForm.getStep() == 2 ? 'Skip & Finish' : 'Skip'
                         }}
                     </VButton>
                 </div>
