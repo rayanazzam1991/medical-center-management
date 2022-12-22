@@ -9,6 +9,7 @@ import { getSocialMediasList, deleteSocialMedia } from '/@src/services/CRM/Socia
 import { useSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import sleep from '/@src/utils/sleep';
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Social Media')
@@ -35,17 +36,23 @@ onMounted(async () => {
 });
 
 const removeSocialMedia = async (socialMediaId: number) => {
-const { message, success } =  await deleteSocialMedia(socialMediaId)
+  const { message, success } = await deleteSocialMedia(socialMediaId)
   await search(searchFilter.value)
 
   deleteSocialMediaPopup.value = false
   if (success) {
 
-// @ts-ignore
-notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    await sleep(200);
 
-} else notif.error(message)
+    // @ts-ignore
+    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
+  } else {
+    await sleep(200);
+
+    notif.error(message)
+
+  }
 }
 
 const search = async (searchFilter2: SocialMediaSearchFilter) => {
@@ -159,8 +166,8 @@ const columns = {
 
 <template>
   <SocialMediaTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
-    @resetFilter="resetFilter" />
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="socialMediasList" @update:sort="socialMediaSort">
     <VFlexTable separators clickable>
       <template #body>

@@ -9,6 +9,7 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { useForm } from "vee-validate";
 import { toFormValidator } from '@vee-validate/zod';
 import { z as zod } from 'zod';
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -162,11 +163,14 @@ const onSubmitEdit = async () => {
   const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
   if (success) {
     // @ts-ignore
+    await sleep(200);
+
     notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
     return true
   } else {
     // @ts-ignore
+    await sleep(200);
 
     notif.error(message)
 

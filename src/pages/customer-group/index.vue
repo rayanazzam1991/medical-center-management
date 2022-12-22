@@ -7,6 +7,7 @@ import { getCustomerGroupsList, deleteCustomerGroup } from '/@src/services/Other
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import sleep from '/@src/utils/sleep';
 
 
 const viewWrapper = useViewWrapper()
@@ -44,9 +45,16 @@ const removeCustomerGroup = async (customerGroupId: number) => {
   if (success) {
 
     // @ts-ignore
+    await sleep(200);
+
     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-  } else notif.error(message)
+  } else {
+
+    await sleep(200);
+
+    notif.error(message)
+  }
 }
 
 const search = async (searchFilter2: CustomerGroupSearchFilter) => {
@@ -144,8 +152,8 @@ const columns = {
 
 <template>
   <CustomerGroupTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
-    @resetFilter="resetFilter" />
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="customerGroupsList" @update:sort="customerGroupSort">
 
     <VFlexTable separators clickable>

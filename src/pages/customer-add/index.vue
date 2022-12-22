@@ -17,6 +17,7 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerAddvalidationSchema } from '/@src/rules/CRM/Customer/customerAddValidation';
 import VRadio from '/@src/components/base/form/VRadio.vue';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -122,10 +123,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
         if (success) {
             customerForm.data.id = customer.id
             // @ts-ignore
+            await sleep(200);
+
             notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
             return true
         }
         else {
+            await sleep(200);
+
             // @ts-ignore
             notif.error(message)
             return false
@@ -341,6 +346,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+    padding-bottom: 72px;
 }
 
 .layout {

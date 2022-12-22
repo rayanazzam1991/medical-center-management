@@ -108,7 +108,6 @@ export default defineComponent({
         const onSubmitAdd = handleSubmit(async (values) => {
 
             var userData = currentUser.value
-            console.log(userData)
             var userForm = currentCreateUpdateUser.value
             userForm.first_name = userData.first_name
             userForm.last_name = userData.last_name
@@ -124,6 +123,8 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll()
+                await sleep(200);
+
                 // @ts-ignore
 
                 notif.success(` ${viewWrapper.pageTitle} was added successfully`)
@@ -131,6 +132,8 @@ export default defineComponent({
                 router.push({ path: `/user/${user.id}` })
             }
             else {
+                await sleep(200);
+
                 notif.error(message)
             }
 
@@ -154,12 +157,16 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.dismissAll()
+                await sleep(200);
+
                 // @ts-ignore
 
                 notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
                 await sleep(500)
                 router.push({ path: `/user/${userData.id}` })
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
 

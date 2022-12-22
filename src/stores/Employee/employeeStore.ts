@@ -204,7 +204,6 @@ export const useEmployee = defineStore('employee', () => {
     success,
     error_code,
     message,
-    loading
   } as const
 })
 

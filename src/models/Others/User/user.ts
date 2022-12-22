@@ -25,7 +25,7 @@ export interface CreateUpdateUser {
     gender?: string
     birth_date?: string
     phone_number: string
-    address: string
+    address?: string
     city_id?: number
     room_id?: number
     user_status_id?: number

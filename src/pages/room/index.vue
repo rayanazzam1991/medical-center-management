@@ -8,6 +8,7 @@ import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts, Room } from '/@s
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Room')
 useHead({
@@ -40,9 +41,15 @@ const removeRoom = async (roomId: number) => {
   if (success) {
 
     // @ts-ignore
+    await sleep(200);
+
     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
   }
-  else notif.error(message)
+  else {
+    await sleep(200);
+    notif.error(message)
+
+  }
 
 }
 const search = async (searchFilter2: RoomSearchFilter) => {
@@ -151,7 +158,7 @@ const columns = {
 
 <template>
   <RoomTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
-    @search="search" :pagination="paginationVar"  :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="roomsList" @update:sort="roomSort">
     <VFlexTable separators clickable>
       <template #body>

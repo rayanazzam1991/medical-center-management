@@ -44,12 +44,13 @@ useHead({
                                 }}
                             </VButton>
                         </VLoader>
-                        <VButton class="wizard-button-previous" :disabled="contractorForm.skipable === false"
+                        <VButton v-if="contractorForm.skipable === true" class="wizard-button-previous"
                             :color="contractorForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => contractorForm?.skipStepFn?.()">
                             {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
                             }}
                         </VButton>
+
                     </div>
                 </div>
             </div>

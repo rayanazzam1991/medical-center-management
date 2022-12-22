@@ -14,6 +14,7 @@ import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
@@ -52,9 +53,13 @@ const changestatusUser = async () => {
         search(searchFilter.value)
         // @ts-ignore
         notif.dismissAll()
+        await sleep(200);
+
         // @ts-ignore
         notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
     } else {
+        await sleep(200);
+
         notif.error(message)
     }
     changeStatusPopup.value = false

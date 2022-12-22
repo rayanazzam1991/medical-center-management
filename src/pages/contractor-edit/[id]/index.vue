@@ -158,6 +158,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
     const { success, message, contractor } = await updateContractor(contractorId.value, contractorForm.dataUpdate, contractorForm.userForm, contractorForm.contractorServicesForm)
     if (success) {
         contractorForm.dataUpdate.id = contractor.id
+        await sleep(200);
+
         // @ts-ignore
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was updated successfully`)
 
@@ -165,6 +167,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
         return false
@@ -302,7 +305,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="room_id">
-                                        <VLabel class="optional">Room</VLabel>
+                                        <VLabel class="required">Room</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                                 <VOption>Room</VOption>
@@ -384,6 +387,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+    padding-bottom: 72px;
+
 }
 
 

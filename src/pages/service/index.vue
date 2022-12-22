@@ -8,6 +8,7 @@ import { getServicesList, deleteService } from '/@src/services/Others/Service/se
 import { useService } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import sleep from '/@src/utils/sleep';
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Service')
 useHead({
@@ -41,9 +42,15 @@ const removeService = async (serviceId: number) => {
   if (success) {
 
     // @ts-ignore
+    await sleep(200);
+
     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-  } else notif.error(message)
+  } else {
+    await sleep(200);
+
+    notif.error(message)
+  }
 }
 
 const search = async (searchFilter2: ServiceSearchFilter) => {
@@ -153,7 +160,7 @@ const columns = {
 
 <template>
   <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
-    @search="search" :pagination="paginationVar"  :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
     <VFlexTable separators clickable>
       <template #body>

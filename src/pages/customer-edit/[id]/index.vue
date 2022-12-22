@@ -17,6 +17,7 @@ import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/custo
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerEditvalidationSchema } from '/@src/rules/CRM/Customer/customerEditValidation';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -66,10 +67,11 @@ const fetchCustomer = async () => {
     currentUser.value.birth_date = customer.user.birth_date
     currentUser.value.phone_number = customer.user.phone_number
     currentUser.value.address = customer.user.address
-    currentUser.value.city_id = customer.user.city.id
-    currentUser.value.user_status_id = customer.user.status.id
+    console.log(currentUser.value.city_id)
+    currentUser.value.city_id = customer.user?.city?.id
+    currentUser.value.user_status_id = customer.user?.status?.id
     currentUser.value.id = customer.user.id
-            customerForm.userForm.room_id = undefined
+    customerForm.userForm.room_id = undefined
 
     currentCustomer.value.customer_group_id = customer.customer_group.id
     currentCustomer.value.emergency_contact_name = customer.emergency_contact_name
@@ -181,12 +183,15 @@ const onSubmitEdit = handleSubmit(async (values) => {
     if (success) {
         customerForm.dataUpdate.id = customer.id
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
         return false
@@ -401,6 +406,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+    padding-bottom: 72px;
+
 }
 
 .load {

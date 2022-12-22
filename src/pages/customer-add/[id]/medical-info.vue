@@ -8,6 +8,7 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo'
 import { medicalinfoAddValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoAddValidation'
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -93,6 +94,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
     if (success) {
 
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was added successfully`)
 
         return true
@@ -100,6 +103,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     else {
 
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 
