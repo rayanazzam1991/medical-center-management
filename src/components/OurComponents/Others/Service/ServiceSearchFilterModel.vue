@@ -1,8 +1,6 @@
+
 <script lang="ts">
-import { ServiceSearchFilter } from '/@src/utils/api/Others/Service'
-import { defaultServiceSearchFilter } from '/@src/stores/Others/Service/serviceStore'
-import { ServiceConsts } from '/@src/utils/consts/service'
-import { boolean } from 'zod'
+import { defaultServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 
 export default defineComponent({
     props: {
@@ -82,36 +80,37 @@ export default defineComponent({
 <template>
     <VModal title="Search Service" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
-            <form class="form-layout" @submit.prevent="">
+            <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchDuration" type="number" class="input is-rounded"
-                            placeholder="Duration..." />
+                        <input v-model="searchDuration" type="number" class="input " placeholder="Duration..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchPrice" type="number" class="input is-rounded" placeholder="Price..." />
+                        <input v-model="searchPrice" type="number" class="input " placeholder="Price..." />
                     </VControl>
                 </VField>
                 <VField class="column filter ">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search" icon="feather:search">Ok..</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
     </VModal>
 </template>

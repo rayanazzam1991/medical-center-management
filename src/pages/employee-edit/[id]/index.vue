@@ -1,33 +1,22 @@
 <script setup  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateEmployee } from '/@src/stores/Employee/employeeStore';
-import { addEmployee } from '/@src/composable/Employee/addEmployee';
-import { getNationalitiesList } from '/@src/composable/Others/Nationality/getNationalitiesList';
-import { defaultNationalitySearchFilter } from '/@src/stores/Others/Nationality/nationalityStore';
-import { Nationality } from '/@src/utils/api/Others/Nationality';
+import { ErrorMessage, useForm } from 'vee-validate';
+import { getEmployee, updateEmployee } from '/@src/services/Employee/employeeService';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { getEmployee } from '/@src/composable/Employee/getEmployee';
-import { updateEmployee } from '/@src/composable/Employee/updateEmployee';
-import { UpdateEmployee } from '/@src/utils/api/Employee';
-
+import { defaultCreateEmployee } from '/@src/models/Employee/employee';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
+import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
+import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { employeeEditvalidationSchema } from '/@src/rules/Employee/employeeEditValidation';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -57,7 +46,7 @@ employeeForm.setStep({
 
     }
 })
-
+const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
@@ -75,6 +64,7 @@ const fetchEmployee = async () => {
     currentUser.value.gender = employee.user.gender
     currentUser.value.birth_date = employee.user.birth_date
     currentUser.value.phone_number = employee.user.phone_number
+    console.log(employee.user.phone_number)
     currentUser.value.address = employee.user.address
     currentUser.value.city_id = employee.user.city.id
     currentUser.value.room_id = employee.user.room.id
@@ -105,129 +95,32 @@ const fetchEmployee = async () => {
 
 }
 
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const nationalities2 = ref<Nationality[]>([])
+const citiesList = ref<City[]>([])
+const roomsList = ref<Room[]>([])
+const statusesList = ref<UserStatus[]>([])
+const nationalitiesList = ref<Nationality[]>([])
 
 onMounted(async () => {
-    const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
-    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
-    const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-    nationalities2.value = nationalities
-    await fetchEmployee()
+    if (!isLoading.value) {
+        isLoading.value = true
+        const { cities } = await getCitiesList(defaultCitySearchFilter)
+        citiesList.value = cities
+        const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+        roomsList.value = rooms
+        const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+        statusesList.value = userstatuses
+        const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
+        nationalitiesList.value = nationalities
+        await fetchEmployee()
+        isLoading.value = false
+
+    }
 
 })
 
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        birth_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        required_error: "Please select a date and time",
-                        invalid_type_error: "That's not a date!",
-                    }),
-                ),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        emergency_contact_name:
-            zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
-        emergency_contact_phone:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
-                ),
-        nationality_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number()
-                    .optional(),
-            ),
-
-    }));
+const validationSchema = employeeEditvalidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,
@@ -267,18 +160,21 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
-    const employee = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
-    if (employee.success) {
-        employeeForm.dataUpdate.id = employee.employee.id
+    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
+    if (success) {
+        employeeForm.dataUpdate.id = employee.id
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was updated successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
-        notif.error(employee.success)
+        notif.error(message)
         return false
 
 
@@ -298,458 +194,242 @@ const onSubmitEdit = handleSubmit(async (values) => {
         <form class="form-layout" @submit.prevent="">
             <div class="form-outer">
                 <div class="form-body">
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
+                    <VLoader :hidden="!isLoading" size="xl" :active="isLoading">
+                        <div class="load">
                         </div>
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="first_name">
-                                    <VLabel>first name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.first_name" type="text" placeholder=""
-                                            autocomplete="given-first_name" />
-                                        <ErrorMessage class="help is-danger" name="first_name" />
-                                    </VControl>
-                                </VField>
+                    </VLoader>
+                    <div :hidden="isLoading">
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="fieldset-heading">
+                                <h4>{{ pageTitle }}</h4>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="last_name">
-                                    <VLabel>last name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.last_name" type="text" placeholder=""
-                                            autocomplete="given-last_name" />
-                                        <ErrorMessage class="help is-danger" name="last_name" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="birth_date">
-                                    <VLabel>birth date </VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.birth_date" type="date" placeholder=""
-                                            autocomplete="given-birth_date" />
-                                        <ErrorMessage class="help is-danger" name="birth_date" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="phone_number">
-                                    <VLabel>phone number </VLabel>
-                                    <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                        icon="feather:chevrons-right">
-                                        <VInput disabled v-model="currentUser.phone_number" type="number" placeholder=""
-                                            autocomplete="given-phone_number" />
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="first_name">
+                                        <VLabel class="required">First name</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.first_name" type="text" placeholder=""
+                                                autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="first_name" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6 ">
+                                    <VField id="last_name">
+                                        <VLabel class="required">Last name</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.last_name" type="text" placeholder=""
+                                                autocomplete="given-last_name" />
+                                            <ErrorMessage class="help is-danger" name="last_name" />
+                                        </VControl>
+                                    </VField>
+                                </div>
 
-                                        <ErrorMessage class="help is-danger" name="phone_number" />
-                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
-                                    </VControl>
-                                </VField>
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="address">
-                                    <VLabel>address </VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VTextarea v-model="currentUser.address" />
-                                        <ErrorMessage class="help is-danger" name="address" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="gender">
-                                    <VLabel>gender</VLabel>
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="phone_number">
+                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VControl icon="feather:chevrons-right">
 
-                                    <VControl>
-                                        <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                            color="success" />
+                                            <VInput disabled v-model="currentUser.phone_number" type="number"
+                                                placeholder="" autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="phone_number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
 
-                                        <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
-                                            color="success" />
-                                        <ErrorMessage class="help is-danger" name="gender" />
-                                    </VControl>
-                                </VField>
+                                <div class="column is-6">
+                                    <VField id="birth_date">
+                                        <VLabel class="required">Birth date </VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.birth_date" type="date" placeholder=""
+                                                autocomplete="given-birth_date" />
+                                            <ErrorMessage class="help is-danger" name="birth_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="room_id">
-                                    <VLabel>room</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption value="">Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="room_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="city_id">
-                                    <VLabel>city</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                            <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
-                                                    city.name
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="city_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="user_status_id">
-                                    <VLabel>status</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                            <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="user_status_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="starting_date">
-                                    <VLabel>Starting Date</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
-                                            autocomplete="given-starting_date" />
-                                        <ErrorMessage class="help is-danger" name="starting_date" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="end_date">
-                                    <VLabel>end Date</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
-                                            autocomplete="given-end_date" />
-                                        <ErrorMessage class="help is-danger" name="end_date" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="basic_salary">
-                                    <VLabel>Basic Salary</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
-                                            autocomplete="given-basic_salary" />
-                                        <ErrorMessage class="help is-danger" name="basic_salary" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="nationality_id">
-                                    <VLabel>Nationality</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                            <VOption v-for="nationality in nationalities2" :key="nationality.id"
-                                                :value="nationality.id">{{ nationality.name }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="nationality_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline ">
+                                <div class="column is-half">
 
+                                    <VField id="gender">
+                                        <VLabel class="required ml-3">Gender</VLabel>
+
+                                        <VControl>
+                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
+                                                color="success" />
+
+                                            <VRadio v-model="currentUser.gender" value="Female" label="Female"
+                                                name="gender" color="success" />
+                                            <ErrorMessage class="help is-danger" name="gender" />
+                                        </VControl>
+                                    </VField>
+
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="city_id">
+                                        <VLabel class="required">City</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                                <VOption value="">City</VOption>
+                                                <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
+                                                        city.name
+                                                }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="city_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-12">
+                                    <VField id="address">
+                                        <VLabel class="required">Address </VLabel>
+                                        <VControl>
+                                            <VTextarea v-model="currentUser.address" />
+                                            <ErrorMessage class="help is-danger" name="address" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fieldset-->
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="room_id">
+                                        <VLabel class="required">Room</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.room_id">
+                                                <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
+                                                        room.number
+                                                }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="room_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="user_status_id">
+                                        <VLabel class="required">Status</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                                <VOption value="">Status</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id"
+                                                    :value="status.id">
+                                                    {{
+                                                            status.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="user_status_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="starting_date">
+                                        <VLabel class="required">Starting Date</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
+                                                autocomplete="given-starting_date" />
+                                            <ErrorMessage class="help is-danger" name="starting_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="end_date">
+                                        <VLabel class="optional">End Date</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
+                                                autocomplete="given-end_date" />
+                                            <ErrorMessage class="help is-danger" name="end_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="basic_salary">
+                                        <VLabel class="required">Basic Salary</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
+                                                autocomplete="given-basic_salary" />
+                                            <ErrorMessage class="help is-danger" name="basic_salary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="nationality_id">
+                                        <VLabel class="required">Nationality</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                                <VOption value="">Nationality</VOption>
+                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
+                                                    :value="nationality.id">{{ nationality.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
-
-
-
     </div>
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
+.required::after {
+    content: " *";
+    color: var(--danger);
 }
 
-.filter {
-    margin: 1rem;
+.layout {
+    min-width: 50%;
 }
 
-.justify-content {
-    display: flex;
-    align-items: baseline;
+.form-fieldset {
+    max-width: 40%;
 }
 
-.form-layout {
-    &.is-split {
-        max-width: 840px;
+.form-layout .form-outer .form-body {
+    padding: 20px 40px 40px;
+    padding-bottom: 72px;
 
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
+.load {
+    height: 400px;
+    width: 500px;
 }
 </style>

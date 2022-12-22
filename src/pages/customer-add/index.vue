@@ -1,31 +1,23 @@
 <script setup  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
-import { useForm, ErrorMessage } from 'vee-validate';
-import VRadio from '/@src/components/base/form/VRadio.vue';
-import { getCitiesList } from '/@src/composable/Others/City/getCitiesList';
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { phoneExistsCheck } from '/@src/composable/Others/User/phoneExistsCheck';
-import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
-import { defaultCitySearchFilter } from '/@src/stores/Others/City/cityStore';
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore';
-import { defaultCreateUpdateUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { City } from '/@src/utils/api/Others/City';
-import { Room } from '/@src/utils/api/Others/Room';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
-import { custom, z as zod } from 'zod';
-import { phoneExistsCheckApi } from '/@src/utils/api/Others/User';
-import { defaultCreateCustomer } from '/@src/stores/CRM/Customer/customerStore';
-import { addCustomer } from '/@src/composable/CRM/Customer/addCustomer';
-import { getCustomerGroupsList } from '/@src/composable/Others/CustomerGroup/getCustomerGroupsList';
-import { defaultCustomerGroupSearchFilter } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import { CustomerGroup } from '/@src/utils/api/Others/CustomerGroup';
+import { ErrorMessage, useForm } from 'vee-validate';
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
+import { phoneExistsCheck } from '/@src/services/Others/User/userService';
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
-
-
+import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
+import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { addCustomer } from '/@src/services/CRM/Customer/customerService';
+import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
+import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { customerAddvalidationSchema } from '/@src/rules/CRM/Customer/customerAddValidation';
+import VRadio from '/@src/components/base/form/VRadio.vue';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -43,7 +35,7 @@ customerForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/customer-add/${customerForm.data.id}/profile-picture`,
+                path: `/customer-add/${customerForm.data.id}/medical-info`,
             })
 
         }
@@ -58,26 +50,22 @@ const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const getCurrentCustomer = () => {
-
     currentUser.value = customerForm.userForm
     currentCustomer.value = customerForm.data
-
-
 }
-const cities2 = ref<City[]>([])
-const rooms2 = ref<Room[]>([])
-const statuses2 = ref<UserStatus[]>([])
-const customerGroups2 = ref<CustomerGroup[]>([])
+const citiesList = ref<City[]>([])
+const statusesList = ref<UserStatus[]>([])
+const customerGroupsList = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
-    cities2.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    rooms2.value = rooms
+    citiesList.value = cities
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
     const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
-    customerGroups2.value = customerGroups
+    customerGroupsList.value = customerGroups
+    currentUser.value.user_status_id = getApprovedStatusId()
+
 
 })
 onMounted(() => {
@@ -85,128 +73,30 @@ onMounted(() => {
 }
 )
 
+const getApprovedStatusId = () => {
+    const ApprovedStatus = statusesList.value.find((status) => status.name === "Approved")
+    return ApprovedStatus?.id
+}
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-        birth_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        invalid_type_error: "That's not a date!",
-                    }).optional(),
-                ),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        emergency_contact_name:
-            zod
-                .string({
-                    invalid_type_error: "Please enter a text"
-                })
-                .optional(),
-        emergency_contact_phone:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
-                ),
-        customer_group_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+|$^/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number()
-                    .optional(),
-            ),
-
-    }));
+const validationSchema = customerAddvalidationSchema
 
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        first_name: currentUser.value.first_name,
-        last_name: currentUser.value.last_name,
-        gender: currentUser.value.gender,
-        birth_date: currentUser.value.birth_date,
-        phone_number: currentUser.value.phone_number,
-        address: currentUser.value.address,
-        room_id: currentUser.value.room_id,
-        city_id: currentUser.value.city_id,
+        first_name: "",
+        last_name: "",
+        gender: "",
+        birth_date: "",
+        phone_number: "",
+        address: "",
+        city_id: undefined,
         user_status_id: currentUser.value.user_status_id,
-        emergency_contact_name: currentCustomer.value.emergency_contact_name,
-        emergency_contact_phone: currentCustomer.value.emergency_contact_phone,
-        customer_group_id: currentCustomer.value.customer_group_id
+        emergency_contact_name: "",
+        emergency_contact_phone: "",
+        customer_group_id: "",
+        room_id: undefined
     },
 })
-
 
 const onSubmitAdd = handleSubmit(async (values) => {
 
@@ -225,27 +115,25 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.birth_date = userData.birth_date
         customerForm.userForm.phone_number = userData.phone_number
         customerForm.userForm.address = userData.address
-        customerForm.userForm.room_id = userData.room_id
         customerForm.userForm.city_id = userData.city_id
+        customerForm.userForm.room_id = undefined
         customerForm.userForm.user_status_id = userData.user_status_id
         console.log(customerForm.userForm)
-
-        const customer = await addCustomer(customerForm.data, customerForm.userForm)
-        console.log(customer)
-        if (customer.success) {
-            customerForm.data.id = customer.customer.id
+        const { customer, message, success } = await addCustomer(customerForm.data, customerForm.userForm)
+        if (success) {
+            customerForm.data.id = customer.id
             // @ts-ignore
-            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+            await sleep(200);
 
+            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
             return true
         }
         else {
+            await sleep(200);
+
             // @ts-ignore
-
-            notif.error(customer.success)
+            notif.error(message)
             return false
-
-
         }
 
     }
@@ -271,9 +159,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="first_name">
-                                    <VLabel>first name</VLabel>
+                                    <VLabel class="required">First name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
@@ -281,14 +169,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="last_name">
-                                    <VLabel>last name</VLabel>
+                                    <VLabel class="required">Last name</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -298,12 +181,23 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                         </div>
                     </div>
-                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
+                                <VField id="phone_number">
+                                    <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                    <VControl icon="feather:chevrons-right"
+                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''">
+                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                            autocomplete="given-first_name" />
+                                        <ErrorMessage class="help is-danger" name="phone_number" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
                                 <VField id="birth_date">
-                                    <VLabel>birth date </VLabel>
+                                    <VLabel>Birth date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -314,44 +208,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                     </div>
                     <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="phone_number">
-                                    <VLabel>phone number </VLabel>
-                                    <VControl :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                        icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
-                                            autocomplete="given-phone_number" />
-
-                                        <ErrorMessage class="help is-danger" name="phone_number" />
-                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="address">
-                                    <VLabel>address </VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VTextarea v-model="currentUser.address" />
-                                        <ErrorMessage class="help is-danger" name="address" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="gender">
-                                    <VLabel>gender</VLabel>
-
+                                    <VLabel class="">Gender</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                             color="success" />
@@ -362,38 +224,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="room_id">
-                                    <VLabel>room</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption value="">Room</VOption>
-                                            <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="room_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="city_id">
-                                    <VLabel>city</VLabel>
+                                    <VLabel>City</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
-                                            <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
                                             </VOption>
@@ -402,31 +239,61 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
+                                <VField id="address">
+                                    <VLabel>Address </VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VTextarea v-model="currentUser.address" />
+                                        <ErrorMessage class="help is-danger" name="address" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
                                 <VField id="user_status_id">
-                                    <VLabel>status</VLabel>
+                                    <VLabel class="required">Status</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
                                             <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
-                                                    status.name
-                                            }}
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{
+                                                        status.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_status_id" />
                                     </VControl>
                                 </VField>
                             </div>
+                            <div class="column is-6">
+                                <VField id="customer_group_id">
+                                    <VLabel class="required">Customer Group</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
+                                            <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
+                                                :value="customerGroup.id">{{ customerGroup.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
                         </div>
                     </div>
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="emergency_contact_name">
                                     <VLabel>Emergency Contact Name</VLabel>
                                     <VControl icon="feather:chevrons-right">
@@ -436,12 +303,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="emergency_contact_phone">
                                     <VLabel>Emergency Contact Phone</VLabel>
                                     <VControl icon="feather:chevrons-right">
@@ -451,28 +313,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="customer_group_id">
-                                    <VLabel>Customer Group</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
-                                            <VOption v-for="customerGroup in customerGroups2" :key="customerGroup.id"
-                                                :value="customerGroup.id">{{ customerGroup.name }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="customer_group_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
 
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -485,224 +328,32 @@ const onSubmitAdd = handleSubmit(async (values) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
+.required::after {
+    content: " *";
+    color: var(--danger);
 }
 
-.filter {
-    margin: 1rem;
+
+.Vi {
+    width: 28.5em;
 }
 
-.justify-content {
-    display: flex;
-    align-items: baseline;
+.lab {
+    margin-left: .77em;
+    margin-bottom: .27em;
+    display: block;
 }
 
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+.form-layout .form-outer .form-body {
+    padding: 20px 40px 40px;
+    padding-bottom: 72px;
 }
 
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+.layout {
+    min-width: 50%;
 }
 
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

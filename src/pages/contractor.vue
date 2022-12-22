@@ -1,5 +1,9 @@
-<route lang="yaml">
-meta: requiresAuth: false
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true
+    }
+}
 </route>
     
 <script setup lang="ts">

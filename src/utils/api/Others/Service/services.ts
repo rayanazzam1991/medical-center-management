@@ -1,24 +1,6 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-
-export interface Service {
-  id?: number
-  name: string
-  status: number
-  description?: string
-  service_price?: number
-  duration_minutes?: number
-}
-export interface ServiceSearchFilter {
-  name?: string
-  status?: number
-  service_price?: number
-  duration_minutes?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+import { AxiosInstance } from "axios"
+import { Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteServiceApi(
   api: AxiosInstance,
@@ -32,7 +14,7 @@ export async function addServiceApi(
   api: AxiosInstance,
   service: Service
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`service/`, service)
+  const { data: response, headers } = await api.post(`service`, service)
 
   return { response }
 }

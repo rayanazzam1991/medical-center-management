@@ -1,13 +1,7 @@
 <script lang="ts">
-import { RoomSearchFilter } from '/@src/utils/api/Others/Room'
-import { defaultRoomSearchFilter } from '/@src/stores/Others/Room/roomStore'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { getRoomsList } from '/@src/composable/Others/Room/getRoomsList'
-import { Room } from '/@src/utils/api/Others/Room'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { boolean } from 'zod'
-import { Department } from '/@src/utils/api/Others/Department'
-import { RoomConsts } from '/@src/utils/consts/room'
+import { getDepartmentsList } from "/@src/services/Others/Department/departmentService"
+import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { defaultRoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
 
 
 export default defineComponent({
@@ -82,17 +76,17 @@ export default defineComponent({
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchNumber" type="text" class="input is-rounded" placeholder="number..." />
+                        <input v-model="searchNumber" type="text" class="input " placeholder="Number..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchFloor" type="text" class="input is-rounded" placeholder="floor..." />
+                        <input v-model="searchFloor" type="text" class="input " placeholder="Floor..." />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchDepartment" class="is-rounded">
+                        <VSelect v-model="searchDepartment" class="">
                             <VOption value="">Department</VOption>
                             <VOption v-for="department in departments2" :key="department.id" :value="department.id">{{
                                     department.name
@@ -103,17 +97,19 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
+                        <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
                             <VOption value="0">{{ RoomConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ RoomConsts.showStatusName(1) }}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
+                <VButton type="submit" @click="search" class="is-hidden" />
+
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Ok..</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
         </template>
     </VModal>
 </template>

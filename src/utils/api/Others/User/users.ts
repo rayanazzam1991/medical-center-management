@@ -1,54 +1,6 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
-import { City } from '../City'
-import { Department } from '../Department'
-import { Room } from '../Room'
-import { UserStatus } from '../UserStatus'
-
-export interface User {
-  id?: number
-  first_name: string
-  last_name: string
-  password: string
-  gender: string
-  birth_date: string
-  phone_number: string
-  address: string
-  room: Room
-  city: City
-  status: UserStatus
-  role: string
-  token?: string
-}
-export interface CreateUpdateUser {
-  id?: number
-  first_name: string
-  last_name: string
-  password: string
-  gender: string
-  birth_date: string
-  phone_number: string
-  address: string
-  room_id?: number
-  city_id?: number
-  user_status_id?: number
-}
-export interface ChangeUserStatus {
-  id?: number
-  user_status_id?: number
-}
-export interface UserSearchFilter {
-  name?: string
-  gender?: string
-  phone_number?: string
-  room_id?: number
-  city_id?: number
-  user_status_id?: number
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-}
+import { AxiosInstance } from "axios"
+import { CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteUserApi(
   api: AxiosInstance,
@@ -62,7 +14,7 @@ export async function addUserApi(
   api: AxiosInstance,
   user: CreateUpdateUser
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post(`user/`, user)
+  const { data: response, headers } = await api.post(`user`, user)
 
   return { response }
 }

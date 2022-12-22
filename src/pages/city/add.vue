@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-import VRadio from '/@src/components/base/form/VRadio.vue'
-import { addCity } from '/@src/composable/Others/City/addCity'
-import { City } from '/@src/utils/api/Others/City'
-
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { CityConsts } from '/@src/utils/consts/city';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
+const route = useRoute()
 
-const head =useHead({
+const head = useHead({
   title: 'Add City',
 })
 
@@ -18,5 +14,5 @@ const head =useHead({
 </script>
 
 <template>
-  <CityForm :formType="'Add'"/>
+  <CityForm :formType="'Add'" />
 </template>

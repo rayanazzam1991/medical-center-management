@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultUserSearchFilter } from '/@src/stores/Others/User/userStore'
-
-import { getUsersList } from '/@src/composable/Others/User/getUsersList'
-import { deleteUser } from '/@src/composable/Others/User/deleteUser'
-
-import { UserSearchFilter } from '/@src/utils/api/Others/User'
-import { defaultPagination } from '/@src/utils/response'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { Department } from '/@src/utils/api/Others/Department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-import { CustomerSearchFilter } from '/@src/utils/api/CRM/Customer'
-import { getCustomersList } from '/@src/composable/CRM/Customer/getCustomersList'
-import { defaultCustomerSearchFilter } from '/@src/stores/CRM/Customer/customerStore'
-import { CustomerConsts } from '/@src/utils/consts/customer'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultCustomerSearchFilter, CustomerSearchFilter, CustomerConsts, Customer, defaultCustomer } from '/@src/models/CRM/Customer/customer'
+import { getCustomersList } from '/@src/services/CRM/Customer/customerService'
+import { defaultPagination } from '/@src/utils/response'
+import { useCustomer } from '/@src/stores/CRM/Customer/customerStore'
+import { ErrorMessage } from 'vee-validate'
+import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
+import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { changeUserStatus } from '/@src/services/Others/User/userService'
+import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
@@ -26,17 +22,51 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultCustomerSearchFilter)
-const customersList = ref()
-const deleteUserPopup = ref(false)
-const deleteUserId = ref()
+const customersList = ref<Array<Customer>>([])
+const statusesList = ref<Array<UserStatus>>([])
 const paginationVar = ref(defaultPagination)
-const { customers, pagination } = await getCustomersList(searchFilter.value)
-customersList.value = customers
-paginationVar.value = pagination
+const customerStore = useCustomer()
+const keyIncrement = ref(0)
+const default_per_page = ref(1)
+const changeStatusPopup = ref(false)
+const customerChangeStatus = ref<Customer>(defaultCustomer)
+const currentChangeStatusUser = ref(defaultChangeStatusUser)
+
 const router = useRouter()
 
+onMounted(async () => {
+    const { customers, pagination } = await getCustomersList(searchFilter.value)
+    customersList.value = customers
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    statusesList.value = userstatuses
+
+});
+const changestatusUser = async () => {
+    currentChangeStatusUser.value.id = customerChangeStatus.value.user.id
+    currentChangeStatusUser.value.user_status_id = customerChangeStatus.value.user.status.id
+    const { message, success } = await changeUserStatus(currentChangeStatusUser.value)
+    if (success) {
+
+        search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        await sleep(200);
+
+        // @ts-ignore
+        notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
+    } else {
+        await sleep(200);
+
+        notif.error(message)
+    }
+    changeStatusPopup.value = false
+}
 
 const search = async (searchFilter2: CustomerSearchFilter) => {
+    paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
     const { customers, pagination } = await getCustomersList(searchFilter2)
 
@@ -47,12 +77,12 @@ const search = async (searchFilter2: CustomerSearchFilter) => {
 
 const resetFilter = async (searchFilter2: CustomerSearchFilter) => {
     searchFilter.value = searchFilter2
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 
 const getCustomersPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 const customerSort = async (value: string) => {
     if (value != undefined) {
@@ -71,12 +101,6 @@ const customerSort = async (value: string) => {
 
 
 const columns = {
-    id: {
-        align: 'center',
-
-        searchable: true,
-        sortable: true,
-    },
     "users.name": {
         align: 'center',
 
@@ -86,33 +110,6 @@ const columns = {
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
 
         sortable: true,
-        searchable: true,
-
-    },
-    "users.gender": {
-        align: 'center',
-        sortable: true,
-        label: 'Gender',
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.user.gender === 'Male'
-                            ? 'primary'
-                            : row?.user.gender === 'Female'
-                                ? 'orange'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row?.user.gender
-                    },
-                }
-            ),
-
-
         searchable: true,
 
     },
@@ -128,32 +125,8 @@ const columns = {
 
 
     },
-    "users.birth_date": {
-        align: 'center',
-
-        label: 'Birth date',
-        renderRow: (row: any) =>
-            h('span', row?.user?.birth_date),
-
-        searchable: true,
-        sortable: true,
-
-
-    },
-    city: {
-        align: 'center',
-
-        label: 'City',
-        renderRow: (row: any) =>
-            h('span', row?.user?.city.name),
-
-        searchable: true,
-
-
-    },
     status: {
         align: 'center',
-
         label: 'status',
         renderRow: (row: any) =>
             h(
@@ -161,21 +134,21 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.user.status.name === 'Pending'
+                        row?.user?.status?.name === 'Pending'
                             ? 'orange'
-                            : row?.user.status.name === 'Waiting'
+                            : row?.user?.status?.name === 'Waiting'
                                 ? 'blue'
-                                : row?.user.status.name === 'Approved'
+                                : row?.user?.status?.name === 'Approved'
                                     ? 'green'
-                                    : row?.user.status.name === 'Deleted'
+                                    : row?.user?.status?.name === 'Deleted'
                                         ? 'warning'
-                                        : row?.user.status.name === 'Busy'
+                                        : row?.user?.status?.name === 'Busy'
                                             ? 'danger'
                                             : undefined,
                 },
                 {
                     default() {
-                        return row?.user.status.name
+                        return row?.user?.status?.name
                     },
                 }
             ),
@@ -194,15 +167,15 @@ const columns = {
                 {
                     rounded: true,
                     color:
-                        row?.customer_group.name === 'normal'
+                        row?.customer_group?.name === 'normal'
                             ? 'primary'
-                            : row?.customer_group.name === 'vip'
+                            : row?.customer_group?.name === 'vip'
                                 ? 'blue'
                                 : undefined,
                 },
                 {
                     default() {
-                        return row?.customer_group.name
+                        return row?.customer_group?.name
                     },
                 }
             ),
@@ -233,7 +206,6 @@ const columns = {
                 }
             ),
         searchable: true,
-        sortable: true
 
 
     },
@@ -253,11 +225,16 @@ const columns = {
             h(NoDeleteDropDown, {
 
                 onEdit: () => {
-                    router.push({ path: `/customer-edit/${row.id}/` })
+                    router.push({ path: `/customer-edit/${row?.id}/` })
                 },
                 onView: () => {
-                    router.push({ path: `/customer/${row.id}` })
+                    router.push({ path: `/customer/${row?.id}` })
                 },
+                onChangeStatus: () => {
+                    customerChangeStatus.value = row
+                    changeStatusPopup.value = true
+                }
+
 
             }),
 
@@ -266,17 +243,36 @@ const columns = {
 </script>
 
 <template>
-    <CustomerTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-        :pagination="paginationVar" @resetFilter="resetFilter" />
+    <CustomerTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="customersList" :limit="searchFilter.per_page"
         @update:sort="customerSort">
 
-        <VFlexTable v-if="(customersList.length != 0)" :clickable="true" :separators="true"></VFlexTable>
+        <VFlexTable separators clickable>
+            <template #body>
+                <div v-if="customerStore?.loading" class="flex-list-inner">
+                    <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+                        <VFlexTableCell>
+                            <VPlaceload />
+                        </VFlexTableCell>
+
+                    </div>
+                </div>
+                <div v-else-if="customersList.length === 0" class="flex-list-inner">
+                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                        class="my-6">
+                    </VPlaceholderSection>
+                </div>
+
+            </template>
+        </VFlexTable>
         <VFlexPagination v-if="(customersList.length != 0 && paginationVar.max_page != 1)"
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCustomersPerPage" />
-        <h6 v-if="customersList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+        <h6 v-if="customersList.length != 0 && !customerStore?.loading">Showing {{ paginationVar.page !=
+                paginationVar.max_page
                 ?
                 (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
         }} to {{
@@ -285,8 +281,36 @@ const columns = {
             paginationVar.page *
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
+        <VPlaceloadText v-if="customerStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
-        <h1 v-if="customersList.length == 0">No Data Returned...</h1>
     </VFlexTableWrapper>
+    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="user_status_id">
+                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VSelect v-model="customerChangeStatus.user.status.id">
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
+                                                status.name
+                                        }}
+                                        </VOption>
+                                    </VSelect>
+                                    <ErrorMessage name="user_status_id" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+        </template>
+    </VModal>
 
 </template>

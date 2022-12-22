@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import { DepartmentConsts } from '/@src/utils/consts/department'
-import { defaultDepartmentSearchFilter } from '/@src/stores/Others/Department/departmentStore'
-
-import { getDepartmentsList } from '/@src/composable/Others/Department/getDepartmentsList'
-import { deleteDepartment } from '/@src/composable/Others/Department/deleteDepartment'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { DepartmentSearchFilter } from '/@src/utils/api/Others/Department'
-import { defaultPagination } from '/@src/utils/response'
+import VTag from '/@src/components/base/tags/VTag.vue'
+import { useHead } from '@vueuse/head'
+import { deleteDepartment, getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { useNotyf } from '/@src/composable/useNotyf'
+import { defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts, Department } from '/@src/models/Others/Department/department'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { defaultPagination } from '/@src/utils/response'
+import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
+import sleep from "/@src/utils/sleep"
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Department')
 useHead({
@@ -18,25 +17,39 @@ useHead({
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultDepartmentSearchFilter)
-const departmentsList = ref()
+const departmentsList = ref<Array<Department>>([])
 const deleteDepartmentPopup = ref(false)
 const deleteDepartmentId = ref()
 const paginationVar = ref(defaultPagination)
-const { departments, pagination } = await getDepartmentsList(searchFilter.value)
-departmentsList.value = departments
-paginationVar.value = pagination
+const departmentStore = useDepartment()
+
+const default_per_page = ref(1)
+const keyIncrement = ref(0)
+
 const router = useRouter()
+onMounted(async () => {
+  const { departments, pagination } = await getDepartmentsList(searchFilter.value)
+  departmentsList.value = departments
+  paginationVar.value = pagination
+  keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
+});
 
 const removeDepartment = async (departmentId: number) => {
 
   await deleteDepartment(departmentId)
+  await search(searchFilter.value)
   deleteDepartmentPopup.value = false
   // @ts-ignore
+  await sleep(200);
+
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
 }
 
 const search = async (searchFilter2: DepartmentSearchFilter) => {
+  paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
   const { departments, pagination } = await getDepartmentsList(searchFilter2)
 
@@ -48,12 +61,12 @@ const search = async (searchFilter2: DepartmentSearchFilter) => {
 
 const resetFilter = async (searchFilter2: DepartmentSearchFilter) => {
   searchFilter.value = searchFilter2
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 
 const getDepartmentsPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 const departmentSort = async (value: string) => {
   if (value != undefined) {
@@ -129,16 +142,34 @@ const columns = {
 </script>
 
 <template>
-  <DepartmentTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-    :pagination="paginationVar" @resetFilter="resetFilter" />
+  <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="departmentsList" @update:sort="departmentSort">
 
-    <VFlexTable v-if="departmentsList.length != 0" :clickable="true" :separators="true"></VFlexTable>
+    <VFlexTable separators clickable>
+      <template #body>
+        <div v-if="departmentStore?.loading" class="flex-list-inner">
+          <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+            <VFlexTableCell>
+              <VPlaceload />
+            </VFlexTableCell>
+
+          </div>
+        </div>
+        <div v-else-if="departmentsList.length === 0" class="flex-list-inner">
+          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          </VPlaceholderSection>
+        </div>
+
+      </template>
+    </VFlexTable>
     <VFlexPagination v-if="(departmentsList.length != 0 && paginationVar.max_page != 1)"
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getDepartmentsPerPage" />
-    <h6 v-if="departmentsList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
+    <h6 v-if="departmentsList.length != 0 && !departmentStore?.loading">Showing {{ paginationVar.page !=
+        paginationVar.max_page
         ?
         (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
     }} to {{
@@ -147,8 +178,8 @@ const columns = {
       paginationVar.page *
       paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
+    <VPlaceloadText v-if="departmentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
-    <h1 v-if="departmentsList.length == 0">No Data Returned...</h1>
   </VFlexTableWrapper>
   <VModal title="Remove Department" :open="deleteDepartmentPopup" actions="center"
     @close="deleteDepartmentPopup = false">

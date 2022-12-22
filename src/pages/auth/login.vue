@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {useHead} from '@vueuse/head'
+import { useHead } from '@vueuse/head'
 
-import {useDarkmode} from '/@src/stores/darkmode'
-import {useUserSession} from '/@src/stores/userSession'
-import {useNotyf} from '/@src/composable/useNotyf'
+import { useDarkmode } from '/@src/stores/darkmode'
+import { useUserSession } from '/@src/stores/userSession'
+import { useNotyf } from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
-import {signIn} from "/@src/composable/Others/User/Auth/signIn";
-import {SignInRequest} from "/@src/utils/api/Others/User/auth";
-import {defaultSignInRequest, useAuth} from "/@src/stores/Others/User/authStore";
+import { signIn } from "/@src/composable/Others/User/Auth/signIn";
+import { defaultSignInRequest } from '/@src/models/Others/User/auth'
+import { useAuth } from '/@src/stores/Others/User/authStore'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -18,10 +18,10 @@ const userSession = useUserSession()
 const redirect = route.query.redirect as string
 const signRequest = ref(defaultSignInRequest);
 const userAuth = useAuth();
-onBeforeMount(()=>{
-  if(userAuth.isLoggedIn){
+onBeforeMount(() => {
+  if (userAuth.isLoggedIn) {
     router.push({
-      name:"/dashboard/"
+      name: "/dashboard/"
     })
   }
 })
@@ -40,6 +40,8 @@ const handleLogin = async () => {
           name: '/dashboard/'
         })
       }
+      await sleep(200);
+
       notif.success('Welcome back')
     } catch (err: any) {
       if (err.response?.status !== undefined) {
@@ -71,16 +73,7 @@ useHead({
         <div class="hero-body">
           <div class="columns">
             <div class="column is-10 is-offset-1">
-              <img
-                class="light-image has-light-shadow has-light-border"
-                src="/@src/assets/illustrations/apps/vuero-banking-light.webp"
-                alt=""
-              />
-              <img
-                class="dark-image has-light-shadow"
-                src="/@src/assets/illustrations/apps/vuero-banking-dark.webp"
-                alt=""
-              />
+
             </div>
           </div>
         </div>
@@ -94,21 +87,14 @@ useHead({
     <div class="column is-4">
       <div class="hero is-fullheight is-white">
         <div class="hero-heading">
-          <label
-            class="dark-mode ml-auto"
-            tabindex="0"
-            @keydown.space.prevent="(e) => (e.target as HTMLLabelElement).click()"
-          >
-            <input
-              type="checkbox"
-              :checked="!darkmode.isDark"
-              @change="darkmode.onChange"
-            />
+          <label class="dark-mode ml-auto" tabindex="0"
+            @keydown.space.prevent="(e) => (e.target as HTMLLabelElement).click()">
+            <input type="checkbox" :checked="!darkmode.isDark" @change="darkmode.onChange" />
             <span></span>
           </label>
           <div class="auth-logo">
             <RouterLink to="/">
-              <AnimatedLogo width="36px" height="36px"/>
+              <AnimatedLogo width="36px" height="36px" />
             </RouterLink>
           </div>
         </div>
@@ -130,22 +116,16 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput v-model="signRequest.phone_number"
-                                  type="text"
-                                  placeholder="Username"
-                                  autocomplete="username"
-                          />
+                          <VInput v-model="signRequest.phone_number" type="text" placeholder="Username"
+                            autocomplete="username" />
                         </VControl>
                       </VField>
 
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput v-model="signRequest.password"
-                                  type="password"
-                                  placeholder="Password"
-                                  autocomplete="current-password"
-                          />
+                          <VInput v-model="signRequest.password" type="password" placeholder="Password"
+                            autocomplete="current-password" />
                         </VControl>
                       </VField>
 
@@ -158,13 +138,7 @@ useHead({
 
                       <!-- Submit -->
                       <div class="login">
-                        <VButton
-                          :loading="isLoading"
-                          color="primary"
-                          type="submit"
-                          bold
-                          fullwidth
-                          raised>
+                        <VButton :loading="isLoading" color="primary" type="submit" bold fullwidth raised>
                           Sign In
                         </VButton>
                       </div>

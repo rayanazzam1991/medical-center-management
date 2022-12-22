@@ -1,65 +1,12 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { defaultCustomerGroup } from "../../Others/CustomerGroup/customerGroupStore"
-import { defaultCreateUpdateUser, defaultUser } from "../../Others/User/userStore"
-import { defaultMedicalInfo } from "../MedicaInfo/medicalInfoStore"
 import { useApi } from "/@src/composable/useApi"
-import { CreateCustomer,UpdateCustomer, Customer, addCustomerApi, addMedicalInfoApi, CreateUpdateCustomerSocialMediaHelper, addSocialMediaApi, getCustomerApi, updateCustomerApi, CustomerSearchFilter, getCustomersApi } from "/@src/utils/api/CRM/Customer"
-import { MedicalInfo } from "/@src/utils/api/CRM/MedicalInfo"
+import { Customer, CreateCustomer, UpdateCustomer, CustomerSearchFilter, CreateUpdateCustomerSocialMediaHelper } from "/@src/models/CRM/Customer/customer"
+import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
+import { Media } from "/@src/models/Others/Media/media"
+import { addCustomerApi, updateCustomerApi, getCustomersApi, addMedicalInfoApi, addSocialMediaApi, getCustomerApi } from "/@src/utils/api/CRM/Customer"
+import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
-
-  
-export const defaultCreateCustomer: CreateCustomer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultCreateUpdateUser,
-  medical_info_id: undefined,
-  customer_group_id: 1,
-  social_medias: [],
-  is_completed : false,
-  
-}
-export const defaultUpdateCustomer: UpdateCustomer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultCreateUpdateUser,
-  medical_info: defaultMedicalInfo,
-  customer_group_id: 1,
-  social_medias: [],
-  is_completed : false,
-
-}
-export const defaultCustomer: Customer = {
-  id: 0,
-  emergency_contact_name: '',
-  emergency_contact_phone: '',
-  user: defaultUser,
-  medical_info: defaultMedicalInfo,
-  customer_group: defaultCustomerGroup,
-  social_medias: [],
-  is_completed : false,
-
-}
-
-export const defaultCustomerSearchFilter: CustomerSearchFilter = {
-  name : undefined,
-  phone_number : undefined,
-  gender : undefined,
-  date_between : undefined ,
-  from : undefined,
-  to : undefined ,
-  city_id : undefined,
-  customer_group_id : undefined,
-  is_completed : undefined,
-  user_status_id: undefined,
-  page : undefined,
-  per_page : 50,
-  order_by : undefined,
-  order : undefined,
-
-}
-
+import sleep from "/@src/utils/sleep"
 
 
 export const useCustomer = defineStore('customer', () => {
@@ -84,33 +31,42 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-      customers.value.push(returnedCustomer)
+
       return returnedCustomer
-    } 
-    
-    
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
     finally {
       loading.value = false
     }
   }
-  async function updateCustomerStore(customerId : number ,customer: UpdateCustomer) {
+  async function updateCustomerStore(customerId: number, customer: UpdateCustomer) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const response = await updateCustomerApi(api,customerId, customer)
+      const response = await updateCustomerApi(api, customerId, customer)
 
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
+      customers.value.push(returnedCustomer)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-      customers.value.push(returnedCustomer)
       return returnedCustomer
-    } 
-    
-    
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
     finally {
       loading.value = false
     }
@@ -120,85 +76,205 @@ export const useCustomer = defineStore('customer', () => {
 
     loading.value = true
 
+
     try {
       const returnedResponse = await getCustomersApi(api, searchFilter)
       customers.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
 
 
-  async function addMedicalInfoStore(customer_id: number , medical_info : MedicalInfo) {
+  async function addMedicalInfoStore(customer_id: number, medical_info: MedicalInfo) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await addMedicalInfoApi(api, customer_id , medical_info)
+      const response = await addMedicalInfoApi(api, customer_id, medical_info)
       console.log(response)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
-  async function addSocialMediaStore(customer_id: number , social_medias : Array<CreateUpdateCustomerSocialMediaHelper>) {
+  async function addCustomerProfilePictureStore(media: FormData) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await addSocialMediaApi(api, customer_id , social_medias)
+      const response = await uploadMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function getCustomerProfilePicture(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+  async function addSocialMediaStore(customer_id: number, social_medias: Array<CreateUpdateCustomerSocialMediaHelper>) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await addSocialMediaApi(api, customer_id, social_medias)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
-  
+
   async function getCustomerStore(customer_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
-      const response = await getCustomerApi(api, customer_id )
+      const response = await getCustomerApi(api, customer_id)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedCustomer
 
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
       loading.value = false
     }
   }
-  
+  async function deleteCustomerProfilePicture(picture_id: number) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await deleteMediaApi(api, picture_id)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return response
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
   return {
     success,
     error_code,
     message,
     customers,
     pagination,
+    loading,
     addCustomerStore,
     addSocialMediaStore,
     addMedicalInfoStore,
     getCustomerStore,
     updateCustomerStore,
-    getCustomersStore
+    getCustomersStore,
+    addCustomerProfilePictureStore,
+    getCustomerProfilePicture,
+    deleteCustomerProfilePicture
   } as const
 })
 

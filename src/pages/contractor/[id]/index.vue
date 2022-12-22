@@ -1,14 +1,17 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
-import { getContractor } from '/@src/composable/Contractor/getContractor';
-import { changeUserStatus } from '/@src/composable/Others/User/changeUserStatus';
-import { getUserStatusesList } from '/@src/composable/Others/UserStatus/getUserStatusesList';
-import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultContractor } from '/@src/stores/Contractor/contractorStore';
-import { defaultChangeStatusUser } from '/@src/stores/Others/User/userStore';
-import { defaultUserStatusSearchFilter } from '/@src/stores/Others/UserStatus/userStatusStore';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { Contractor } from '/@src/utils/api/Contractor';
-import { UserStatus } from '/@src/utils/api/Others/UserStatus';
+<script setup lang="ts">
+import { useHead } from "@vueuse/head"
+import { useNotyf } from "/@src/composable/useNotyf"
+import { Contractor, defaultContractor, defaultContractorPersonalId } from "/@src/models/Contractor/contractor"
+import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
+import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { getContractor, getPersonalId } from "/@src/services/Contractor/contractorService"
+import { changeUserStatus } from "/@src/services/Others/User/userService"
+import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
+import { useViewWrapper } from "/@src/stores/viewWrapper"
+import { useContractor } from "/@src/stores/Contractor/contractorStore"
+import sleep from "/@src/utils/sleep"
+import { ErrorMessage } from "vee-validate"
+import { useContractorForm } from "/@src/stores/Contractor/contractorFormSteps"
 
 
 const route = useRoute()
@@ -19,6 +22,9 @@ const currentChangeStatusUser = ref(defaultChangeStatusUser)
 const changeStatusPopup = ref(false)
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
+const contractorPersonalId = ref(defaultContractorPersonalId)
+const contractorForm = useContractorForm()
+
 const notif = useNotyf()
 
 // @ts-ignore
@@ -27,6 +33,7 @@ viewWrapper.setPageTitle(`Contractor`)
 useHead({
     title: 'Contractor',
 })
+const contractorStore = useContractor()
 const props = withDefaults(
     defineProps<{
         activeTab?: 'Details' | 'Services'
@@ -37,17 +44,20 @@ const props = withDefaults(
 )
 const tab = ref(props.activeTab)
 
-const statuses2 = ref<UserStatus[]>([])
+const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-    statuses2.value = userstatuses
+    statusesList.value = userstatuses
 })
 onMounted(async () => {
     await getCurrentContractor()
+    await getCurrentPersonalId()
+
 })
 const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
+    console.log(currentContractor.value)
 
 }
 const onOpen = () => {
@@ -63,29 +73,65 @@ const changestatusUser = async () => {
     getCurrentContractor()
     // @ts-ignore
     notif.dismissAll()
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
-    // router.push({ path: `/contractor/${userData.id}` })
+    await sleep(200);
+    console.log(currentContractor.value.user.first_name)
+    notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} was edited successfully`)
     changeStatusPopup.value = false
 }
+const fetchContractor = async () => {
 
-const onClickEditServices = () => {
+    const { contractor } = await getContractor(contractorId.value)
+    for (let i = 0; i < contractor.services.length; i++) {
+        // @ts-ignore
+        contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
+
+
+    }
+
+
+    contractorForm.userForm.id = contractor.user.id
+    contractorForm.userForm.first_name = contractor.user.first_name
+    contractorForm.userForm.last_name = contractor.user.last_name
+    contractorForm.userForm.gender = contractor.user.gender
+    contractorForm.userForm.birth_date = contractor.user.birth_date
+    contractorForm.userForm.phone_number = contractor.user.phone_number
+    contractorForm.userForm.address = contractor.user.address
+    contractorForm.userForm.room_id = contractor.user.room.id
+    contractorForm.userForm.city_id = contractor.user.city.id
+    contractorForm.userForm.user_status_id = contractor.user.status.id
+    contractorForm.dataUpdate.starting_date = contractor.starting_date
+    contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
+    contractorForm.dataUpdate.id = contractorId.value
+
+
+}
+
+const onClickEditServices = async () => {
+    await fetchContractor()
     router.push({
         path: `/contractor-edit/${contractorId.value}/services`
     })
 }
-const onClickEditMainInfo = () => {
+const onClickEditMainInfo = async () => {
+    await fetchContractor()
     router.push({
         path: `/contractor-edit/${contractorId.value}/`
     })
+}
+const getCurrentPersonalId = async () => {
+    var personal_id = await getPersonalId(contractorId.value)
+    await sleep(500)
+    if (personal_id.media.length != 0)
+        contractorPersonalId.value = personal_id.media[personal_id.media.length - 1]
 }
 
 </script>
 <template>
     <div class="profile-wrapper">
         <div class="profile-header has-text-centered">
-            <VAvatar size="xl" picture="/images/avatars/svg/vuero-1.svg"
-                badge="/images/icons/flags/united-states-of-america.svg" />
+            <VLoader size="large" class="v-avatar" :active="contractorStore.loading">
+                <VAvatar size="xl" :picture="contractorPersonalId?.relative_path" squared />
+            </VLoader>
 
             <h3 class="title is-4 is-narrow is-thin">{{ currentContractor.user.first_name }}
                 {{ currentContractor.user.last_name }}</h3>
@@ -109,7 +155,7 @@ const onClickEditMainInfo = () => {
             <div class="tabs-wrapper is-slider">
 
                 <div class="tabs-inner">
-                    <div class="tabs ">
+                    <div class="tabs tabs-width ">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
@@ -205,31 +251,9 @@ const onClickEditMainInfo = () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>City</span>
-                                                    <span>
-                                                        {{ currentContractor.user.city.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
-                                                        {{ currentContractor.user.room.number }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Floor</span>
-                                                    <span>
-                                                        {{ currentContractor.user.room.floor }}
+                                                        {{ currentContractor?.user?.room?.number }}
                                                     </span>
                                                 </div>
 
@@ -257,7 +281,8 @@ const onClickEditMainInfo = () => {
                                 </div>
 
                                 <div class="project-features">
-                                    <div v-for="service in currentContractor.services" class="project-feature">
+                                    <div :key="service.id" v-for="service in currentContractor.services"
+                                        class="project-feature">
                                         <h4>{{ service.name }}</h4>
                                         <p class="has-text-centered">Contractor Price:
                                             <span class="has-text-primary">{{ service.price }}</span>
@@ -297,7 +322,7 @@ const onClickEditMainInfo = () => {
                                     <VSelect v-if="currentContractor.user.status"
                                         v-model="currentContractor.user.status.id">
                                         <VOption value="">User Status</VOption>
-                                        <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                                        <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                                 status.name
                                         }}
                                         </VOption>
@@ -317,581 +342,27 @@ const onClickEditMainInfo = () => {
 </template>
   
 <style scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/profile-stats';
+@import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
-.is-navbar {
-    .profile-wrapper {
-        margin-top: 30px;
+.tabs-width {
+    min-width: 350px;
+    min-height: 40px;
+
+    .is-active {
+        min-height: 40px;
+
     }
 }
 
-.profile-wrapper {
-    max-width: 1040px;
-    margin: 0 auto;
-
-
-    .profile-header {
-        text-align: center;
-
-        >img {
-            display: block;
-            margin: 0 auto;
-            max-width: 300px;
-        }
-
-        .v-avatar {
-            margin: 0 auto 12px;
-        }
-
-        .anim-icon {
-            margin-bottom: 12px;
-        }
-
-        .title {
-            margin-bottom: 6px;
-        }
-
-        p {
-            font-size: 1rem;
-            max-width: 540px;
-            margin: 0 auto;
-            line-height: 1.3;
-        }
-    }
+.tabs-wrapper .tabs li a,
+.tabs-wrapper-alt .tabs li a {
+    height: 40px;
 
 }
 
-.project-details {
-    .tabs-wrapper {
-        .tabs-inner {
-            .tabs {
-                display: list-item;
-                margin: 0 auto;
-                background: var(--white);
-            }
-        }
-    }
+.tabs li {
+    min-height: 40px !important;
 
-    .project-details-inner {
-        padding: 20px 0;
-
-        .project-details-card {
-            @include vuero-s-card;
-
-            padding: 40px;
-
-            .card-head {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 20px;
-
-                .title-wrap {
-                    h3 {
-                        font-family: var(--font-alt);
-                        font-size: 1.5rem;
-                        font-weight: 700;
-                        color: var(--dark-text);
-                        line-height: 1.2;
-                        transition: all 0.3s; // transition-all test
-                    }
-                }
-            }
-
-            .project-overview {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 20px 0;
-
-                p {
-                    max-width: 420px;
-                }
-            }
-
-            .project-features {
-                display: flex;
-                justify-content: center;
-                padding: 25px 0;
-                border-top: 1px solid var(--fade-grey-dark-3);
-                border-bottom: 1px solid var(--fade-grey-dark-3);
-                display: flex;
-                justify-content: space-around;
-
-                .project-feature {
-                    margin-right: 20px;
-                    width: calc(25% - 20px);
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-
-                    i {
-                        font-size: 1.6rem;
-                        color: var(--primary);
-                        margin-bottom: 8px;
-                    }
-
-                    h4 {
-                        font-family: var(--font-alt);
-                        font-size: 0.85rem;
-                        font-weight: 600;
-                        color: var(--dark);
-                    }
-
-                    p {
-                        line-height: 1.2;
-                        font-size: 0.85rem;
-                        color: var(--light-text);
-                        margin-bottom: 0;
-                    }
-                }
-            }
-
-            .project-files {
-                padding: 20px 0;
-
-                h4 {
-                    font-family: var(--font-alt);
-                    font-weight: 600;
-                    font-size: 0.8rem;
-                    text-transform: uppercase;
-                    color: var(--primary);
-                    margin-bottom: 12px;
-                }
-
-                .file-box {
-                    display: flex;
-                    align-items: center;
-                    padding: 8px;
-                    background: var(--white);
-                    border: 1px solid transparent;
-                    border-radius: 12px;
-                    cursor: pointer;
-                    transition: all 0.3s; // transition-all test
-
-                    &:hover {
-                        border-color: var(--fade-grey-dark-3);
-                        box-shadow: var(--light-box-shadow);
-                    }
-
-                    img {
-                        display: block;
-                        width: 48px;
-                        min-width: 48px;
-                        height: 48px;
-                    }
-
-                    .meta {
-                        margin-left: 12px;
-                        line-height: 1.3;
-
-                        span {
-                            display: block;
-
-                            &:first-child {
-                                font-family: var(--font-alt);
-                                font-size: 0.9rem;
-                                font-weight: 600;
-                                color: var(--dark-text);
-                            }
-
-                            &:nth-child(2) {
-                                font-size: 0.9rem;
-                                color: var(--light-text);
-
-                                i {
-                                    position: relative;
-                                    top: -3px;
-                                    font-size: 0.3rem;
-                                    color: var(--light-text);
-                                    margin: 0 4px;
-                                }
-                            }
-                        }
-                    }
-
-                    .dropdown {
-                        margin-left: auto;
-                    }
-                }
-            }
-        }
-
-        .side-card {
-            @include vuero-s-card;
-
-            padding: 40px;
-            margin-bottom: 1.5rem;
-
-            h4 {
-                font-family: var(--font-alt);
-                font-weight: 600;
-                font-size: 0.8rem;
-                text-transform: uppercase;
-                color: var(--primary);
-                margin-bottom: 16px;
-            }
-        }
-
-        .project-team-card {
-            @include vuero-s-card;
-
-            padding: 40px;
-            max-width: 940px;
-            display: block;
-            margin: 0 auto;
-
-            .column {
-                padding: 1.5rem;
-
-                &:nth-child(odd) {
-                    border-right: 1px solid var(--fade-grey-dark-3);
-                }
-
-                &.has-border-bottom {
-                    border-bottom: 1px solid var(--fade-grey-dark-3);
-                }
-            }
-        }
-
-        .task-grid {
-            .grid-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 20px;
-
-                h3 {
-                    font-family: var(--font-alt);
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    color: var(--dark-text);
-                    line-height: 1.2;
-                }
-
-                .filter {
-                    display: flex;
-                    align-items: center;
-                    background: var(--white);
-                    padding: 8px 24px;
-                    border-radius: 100px;
-
-                    >span {
-                        font-family: var(--font-alt);
-                        font-size: 0.85rem;
-                        font-weight: 600;
-                        color: var(--dark-text);
-                        margin-right: 20px;
-                    }
-
-                    .multiselect {
-                        min-width: 140px;
-
-                        .multiselect-input {
-                            border: none;
-                        }
-                    }
-                }
-            }
-
-            .task-card {
-                @include vuero-s-card;
-
-                min-height: 200px;
-                display: flex !important;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 30px;
-                cursor: pointer;
-                transition: all 0.3s; // transition-all test
-
-                &:hover {
-                    transform: translateY(-5px);
-                    box-shadow: var(--light-box-shadow);
-                }
-
-                .title-wrap {
-                    h3 {
-                        font-size: 1.1rem;
-                        font-family: var(--font-alt);
-                        font-weight: 600;
-                        color: var(--dark-text);
-                        line-height: 1.2;
-                        margin-bottom: 4px;
-                    }
-
-                    span {
-                        font-family: var(--font);
-                        font-size: 0.9rem;
-                        color: var(--light-text);
-                    }
-                }
-
-                .content-wrap {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-
-                    .left {
-                        .avatar-stack {
-                            margin-bottom: 6px;
-                        }
-
-                        .attachments {
-                            display: flex;
-                            align-items: center;
-
-                            i {
-                                font-size: 15px;
-                                color: var(--light-text);
-                            }
-
-                            span {
-                                margin-left: 2px;
-                                font-size: 0.9rem;
-                                font-family: var(--font);
-                                color: var(--light-text);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .profile-wrapper {
-        .profile-header {
-            .v-avatar {
-                .badge {
-                    border-color: var(--dark-sidebar-light-6);
-                }
-            }
-        }
-
-    }
-
-    .icon-wrap,
-    .icon-wrap.is-placeholder {
-        background: var(--dark-sidebar-light-2) !important;
-        border-color: var(--dark-sidebar-light-12) !important;
-    }
-
-    .project-details {
-        .project-details-inner {
-            .project-details-card {
-                @include vuero-card--dark;
-
-                .card-head {
-                    .title-wrap {
-                        h3 {
-                            color: var(--dark-dark-text) !important;
-                        }
-                    }
-                }
-
-                .project-features {
-                    border-color: var(--dark-sidebar-light-12);
-
-                    .project-feature {
-                        i {
-                            color: var(--primary);
-                        }
-
-                        h4 {
-                            color: var(--dark-dark-text);
-                        }
-                    }
-                }
-
-                .project-files {
-                    h4 {
-                        color: var(--primary);
-                    }
-
-                    .file-box {
-                        background: var(--dark-sidebar-light-3);
-
-                        &:hover,
-                        &:focus {
-                            border-color: var(--dark-sidebar-light-10);
-                        }
-
-                        .meta {
-                            span {
-                                &:first-child {
-                                    color: var(--dark-dark-text);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .side-card {
-                @include vuero-card--dark;
-
-                h4 {
-                    color: var(--primary);
-                }
-            }
-
-            .project-team-card {
-                @include vuero-card--dark;
-
-                .column {
-                    border-color: var(--dark-sidebar-light-12);
-                }
-            }
-
-            .task-grid {
-                .grid-header {
-                    h3 {
-                        color: var(--dark-dark-text);
-                    }
-
-                    .filter {
-                        background: var(--dark-sidebar-light-1) !important;
-                        border-color: var(--dark-sidebar-light-4) !important;
-
-                        >span {
-                            color: var(--dark-dark-text);
-                        }
-                    }
-                }
-
-                .task-card {
-                    @include vuero-card--dark;
-
-                    .title-wrap {
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .profile-wrapper {
-        .profile-body {
-            .profile-card {
-                padding: 20px;
-
-                .profile-card-section {
-                    .section-content {
-
-                        .experience-wrapper,
-                        .languages-wrapper,
-                        .recommendations-wrapper {
-
-                            .experience-item,
-                            .languages-item,
-                            .recommendations-item {
-                                width: calc(100% - 16px);
-                            }
-                        }
-
-                        .skills-wrapper {
-                            .skills-item {
-                                .people {
-                                    .v-avatar {
-                                        &:not(:last-child) {
-                                            display: none !important;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .project-details {
-        .project-details-inner {
-            .project-details-card {
-                padding: 30px;
-
-                .project-overview {
-                    flex-direction: column;
-
-                    p {
-                        margin-bottom: 20px;
-                    }
-                }
-
-                .project-features {
-                    flex-wrap: wrap;
-                    display: flex;
-                    justify-content: space-around;
-
-                    .project-feature {
-                        width: calc(50% - 20px);
-                        text-align: center;
-                        margin: 0 10px;
-
-                        &:first-child,
-                        &:nth-child(2) {
-                            margin-bottom: 20px;
-                        }
-                    }
-                }
-            }
-
-            .project-team-card {
-                padding: 30px;
-
-                .column {
-                    border-right: none !important;
-                }
-            }
-        }
-    }
-
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .project-details {
-        .project-details-inner {
-            .project-details-card {
-                .project-files {
-                    .columns {
-                        display: flex;
-
-                        .column {
-                            min-width: 50%;
-                        }
-                    }
-                }
-            }
-
-            .project-team-card {
-                .columns {
-                    display: flex;
-
-                    .column {
-                        min-width: 50%;
-                    }
-                }
-            }
-
-            .task-grid {
-                .columns {
-                    display: flex;
-
-                    .column {
-                        min-width: 50%;
-                    }
-                }
-            }
-        }
-    }
 }
 </style>
   

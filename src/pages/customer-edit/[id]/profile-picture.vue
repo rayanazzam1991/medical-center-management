@@ -1,11 +1,15 @@
 <script setup  lang="ts">import { useHead } from '@vueuse/head';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCustomerProfilePic } from '/@src/models/CRM/Customer/customer';
+import { deleteProfilePicture, addProfilePicture, getProfilePicture } from '/@src/services/CRM/Customer/customerService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
+
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Profile Picture')
+viewWrapper.setPageTitle('Customer Medical File')
 const head = useHead({
     title: 'Customer',
 })
@@ -14,23 +18,32 @@ const customerForm = useCustomerForm()
 const route = useRoute()
 const router = useRouter()
 const customerId = ref()
+const currentProfilePicture = ref(defaultCustomerProfilePic)
+const profile_picture = ref()
+
 // @ts-ignore
 
 customerId.value = route.params?.id
 customerForm.setStep({
-    number: 2,
+    number: 3,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
         if (fileError.value != '') {
             // @ts-ignore
+            await sleep(200);
+
             notif.error(fileError.value)
         }
         else {
-            console.log('valid')
-            router.push({
-                path: `/customer-edit/${customerId.value}/medical-info`
-            })
+            var isValid = await onSubmitEdit()
+            if (isValid) {
+                router.push({
+                    path: `/customer-edit/${customerId.value}/social-media`
+                })
+            }
+
+
 
         }
 
@@ -38,17 +51,19 @@ customerForm.setStep({
     skipStepFn: async () => {
 
         router.push({
-            path: `/customer-edit/${customerId.value}/medical-info`
+            path: `/customer-edit/${customerId.value}/social-media`
         })
     }
 
 })
 
 const fileError = ref('')
-const pageTitle = 'Step 3: Customer Profile Picture'
-const onAddFile = (error: any, fileInfo: any) => {
+const pageTitle = 'Step 3: Customer Medical File'
+const onAddFile = async (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(`${error.main}: ${error.sub}`)
         console.error(error)
         fileError.value = error.main + ':' + error.sub
@@ -58,14 +73,50 @@ const onAddFile = (error: any, fileInfo: any) => {
 
     const _file = fileInfo.file as File
     if (_file) {
-        // wizard.data.logo = _file
+        profile_picture.value = _file
     }
 }
+const onSubmitEdit = async () => {
+    if (currentProfilePicture.value != undefined)
+        if (currentProfilePicture.value.id != undefined)
+            await deleteProfilePicture(currentProfilePicture.value.id)
+    let formData = new FormData();
+    if (profile_picture.value != undefined)
+        formData.append('images[]', profile_picture.value);
 
-const onRemoveFile = (error: any, fileInfo: any) => {
+    const { message, success } = await addProfilePicture(customerId.value, formData)
+
+    if (success) {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Medical File was edited successfully`)
+
+        return true
+    }
+    else {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.error(message)
+
+    }
+
+}
+
+onMounted(async () => {
+    await getCurrentProfilePic()
+})
+const getCurrentProfilePic = async () => {
+    var profile_pic = await getProfilePicture(customerId.value)
+    currentProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
+}
+const onRemoveFile = async (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(error)
         console.error(error)
         return
@@ -112,6 +163,23 @@ const onRemoveFile = (error: any, fileInfo: any) => {
 
                                     </VControl>
                                 </VField>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="wizard-step-1" class="inner-wrapper is-active">
+                <div class="step-content">
+                    <div class="step-title">
+                        <h2 class="dark-inverted">Current Medical File :</h2>
+                    </div>
+
+                    <div class="project-info">
+                        <div class="project-info-head">
+                            <div class="project-avatar-upload">
+                                <VAvatar :picture="currentProfilePicture?.relative_path" size="xl" />
                             </div>
                         </div>
                     </div>
@@ -124,227 +192,10 @@ const onRemoveFile = (error: any, fileInfo: any) => {
     </div>
 </template>
 <style  scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/forms-outer';
+@import '/@src/scss/Styles/profilePictureWizard.scss';
 
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
-}
-
-.filter {
-    margin: 1rem;
-}
-
-.justify-content {
-    display: flex;
-    align-items: baseline;
-}
-
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
+.form-layout .form-outer .form-body {
+    padding: 20px 40px 40px;
 }
 </style>
+ 

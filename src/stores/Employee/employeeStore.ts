@@ -1,58 +1,12 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { defaultCreateUpdateUser, defaultUser } from '../Others/User/userStore'
-import { defaultNationality } from '../Others/Nationality/nationalityStore'
-import { useApi } from '/@src/composable/useApi'
-import {
-  CreateEmployee,
-  UpdateEmployee,
-  Employee,
-  addEmployeeApi,
-  getEmployeesApi,
-  EmployeeSearchFilter,
-  getEmployeeApi,
-  updateEmployeeApi,
-} from '/@src/utils/api/Employee'
-import { Pagination, defaultPagination } from '/@src/utils/response'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useApi } from "/@src/composable/useApi"
+import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { Media } from "/@src/models/Others/Media/media"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi } from "/@src/utils/api/Employee"
+import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
+import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
-export const defaultCreateEmployee: CreateEmployee = {
-  id: 0,
-  starting_date: '',
-  end_date: '',
-  user: defaultCreateUpdateUser,
-  nationality_id: 0,
-  basic_salary: 0,
-}
-export const defaultUpdateEmployee: UpdateEmployee = {
-  id: 0,
-  starting_date: '',
-  end_date: '',
-  user: defaultCreateUpdateUser,
-  nationality_id: 0,
-  basic_salary: 0,
-}
-export const defaultEmployee: Employee = {
-  id: 0,
-  starting_date: '',
-  end_date: '',
-  nationality: defaultNationality,
-  basic_salary: 0,
-  user: defaultUser,
-}
-export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
-  name: undefined,
-  phone_number: undefined,
-  gender: undefined,
-  date_between: undefined,
-  from: undefined,
-  to: undefined,
-  city_id: undefined,
-  nationality_id: undefined,
-  user_status_id: undefined,
-  page: undefined,
-  per_page: undefined,
-  order_by: undefined,
-  order: undefined,
-}
 
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
@@ -65,9 +19,8 @@ export const useEmployee = defineStore('employee', () => {
 
   async function addEmployeeStore(employee: CreateEmployee) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await addEmployeeApi(api, employee)
       console.log(response.response)
@@ -77,16 +30,23 @@ export const useEmployee = defineStore('employee', () => {
       error_code.value = response.response.error_code
       message.value = response.response.message
       employees.value.push(returnedEmployee)
+
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
   async function getEmployeeStore(employee_id: number) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getEmployeeApi(api, employee_id)
       var returnedEmployee: Employee
@@ -95,15 +55,21 @@ export const useEmployee = defineStore('employee', () => {
       error_code.value = response.response.error_code
       message.value = response.response.message
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
   async function updateEmployeeStore(employeeId: number, employee: UpdateEmployee) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await updateEmployeeApi(api, employeeId, employee)
 
@@ -114,7 +80,14 @@ export const useEmployee = defineStore('employee', () => {
       message.value = response.response.message
       employees.value.push(returnedEmployee)
       return returnedEmployee
-    } finally {
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -127,7 +100,92 @@ export const useEmployee = defineStore('employee', () => {
       const returnedResponse = await getEmployeesApi(api, searchFilter)
       employees.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function addEmployeePersonalId(media: FormData) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await uploadMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function getEmployeePersonalId(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function deleteEmployeePersonalId(picture_id: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await deleteMediaApi(api, picture_id)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return response
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
       loading.value = false
     }
   }
@@ -135,10 +193,14 @@ export const useEmployee = defineStore('employee', () => {
   return {
     employees,
     pagination,
+    loading,
     addEmployeeStore,
     getEmployeesStore,
     updateEmployeeStore,
     getEmployeeStore,
+    addEmployeePersonalId,
+    getEmployeePersonalId,
+    deleteEmployeePersonalId,
     success,
     error_code,
     message,

@@ -1,18 +1,7 @@
-import type { AxiosInstance } from 'axios'
-import { CustomResponseCollection, CustomResponseSingle } from '../../../response'
+import { AxiosInstance } from "axios"
+import { UserStatus, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
-export interface UserStatus {
-  id?: number
-  name: string
-}
-export interface UserStatusSearchFilter {
-  name?: string
-  page?: number
-  per_page?: number
-  order_by?: string
-  order?: string
-  per_page?:undefined
-}
 
 export async function deleteUserStatusApi(
   api: AxiosInstance,
@@ -28,7 +17,7 @@ export async function addUserStatusApi(
 ): Promise<{ response: CustomResponseSingle }> {
   console.log('api', userstatus)
 
-  const { data: response, headers } = await api.post(`userstatus/`, userstatus)
+  const { data: response, headers } = await api.post(`userstatus`, userstatus)
 
   return { response }
 }

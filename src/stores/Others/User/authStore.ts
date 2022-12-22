@@ -1,26 +1,25 @@
-import {acceptHMRUpdate, defineStore} from "pinia";
-import {signIn, SignInRequest} from "/@src/utils/api/Others/User/auth";
-import {useApi} from "/@src/composable/useApi";
-import {User} from "/@src/utils/api/Others/User";
+import { defineStore, acceptHMRUpdate } from "pinia";
+import { useApi } from "/@src/composable/useApi";
+import { SignInRequest } from "/@src/models/Others/User/auth";
+import { User } from "/@src/models/Others/User/user";
+import { signIn } from "/@src/utils/api/Others/User/auth";
 
-export const defaultSignInRequest: SignInRequest = {
-  phone_number: undefined,
-  password: undefined
-}
 export const useAuth = defineStore('userAuth', () => {
 
   const api = useApi();
   const token = useStorage('token', '')
   const user = ref<Partial<User>>()
+  const userFullName = useStorage('userFullName', '')
   const loading = ref(true)
 
   const isLoggedIn = computed(() => token.value !== undefined && token.value !== '')
 
   function setUser(newUser: Partial<User>) {
     user.value = newUser
+    userFullName.value = newUser?.first_name + " " + newUser?.last_name
   }
 
-  function getUser () : Partial<User>{
+  function getUser(): Partial<User> {
     return user.value as User;
   }
   function setToken(newToken: string) {
@@ -34,6 +33,9 @@ export const useAuth = defineStore('userAuth', () => {
   async function logoutUser() {
     token.value = undefined
     user.value = undefined
+  }
+  function getUserFulLName(): string {
+    return userFullName.value;
   }
 
   async function signInAuthStore(credentials: SignInRequest) {
@@ -51,14 +53,14 @@ export const useAuth = defineStore('userAuth', () => {
       setUser(user.value)
 
       return response.response.data
-    } catch (e : any) {
+    } catch (e: any) {
       throw e
     } finally {
 
     }
   }
 
-  return {signInAuthStore,setUser, setToken, setLoading, logoutUser,getUser, user,token,isLoggedIn} as const
+  return { signInAuthStore, setUser, setToken, setLoading, logoutUser, getUser, getUserFulLName, user, token, isLoggedIn } as const
 });
 
 if (import.meta.hot) {

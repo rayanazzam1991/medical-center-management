@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import {useAuth} from "/@src/stores/Others/User/authStore";
-import {User} from "/@src/utils/api/Others/User";
+import { User } from "/@src/models/Others/User/user";
+import { useAuth } from "/@src/stores/Others/User/authStore";
 
 const userAuth = useAuth();
 const router = useRouter();
 const user = ref<Partial<User>>(userAuth.getUser());
+const userFullName = ref('')
+userFullName.value = userAuth.getUserFulLName()
 const logoutUser = async () => {
   try {
     await userAuth.logoutUser();
     await router.push({
       name: '/auth/login'
     })
-  }catch (err :any){
+  } catch (err: any) {
     throw err;
   }
 
@@ -20,28 +22,22 @@ const logoutUser = async () => {
 <template>
   <VDropdown right spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
-      <a
-        tabindex="0"
-        class="is-trigger dropdown-trigger"
-        aria-haspopup="true"
-        @keydown.space.prevent="toggle"
-        @click="toggle"
-      >
-        <VAvatar picture="/images/avatars/svg/vuero-1.svg"/>
+      <a tabindex="0" class="is-trigger dropdown-trigger" aria-haspopup="true" @keydown.space.prevent="toggle"
+        @click="toggle">
+        <VAvatar picture="/images/avatars/svg/vuero-1.svg" />
       </a>
     </template>
 
     <template #content>
       <div class="dropdown-head">
-        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg"/>
-
+        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
         <div class="meta">
-          <span>{{user?.first_name +' '+ user?.last_name}}</span>
+          <span>{{ userFullName }}</span>
           <span>Product Manager</span>
         </div>
       </div>
 
-      <a href="#" role="menuitem" class="dropdown-item is-media">
+      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-user-alt"></i>
         </div>
@@ -49,9 +45,9 @@ const logoutUser = async () => {
           <span>Profile</span>
           <span>View your profile</span>
         </div>
-      </a>
+      </a> -->
 
-      <hr class="dropdown-divider"/>
+      <!-- <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -61,9 +57,9 @@ const logoutUser = async () => {
           <span>Projects</span>
           <span>All my projects</span>
         </div>
-      </a>
+      </a> -->
 
-      <a href="#" role="menuitem" class="dropdown-item is-media">
+      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-users-alt"></i>
         </div>
@@ -71,9 +67,9 @@ const logoutUser = async () => {
           <span>Team</span>
           <span>Manage your team</span>
         </div>
-      </a>
+      </a> -->
 
-      <hr class="dropdown-divider"/>
+      <!-- <hr class="dropdown-divider" />
 
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
@@ -83,20 +79,13 @@ const logoutUser = async () => {
           <span>Settings</span>
           <span>Account settings</span>
         </div>
-      </a>
+      </a> -->
 
-      <hr class="dropdown-divider"/>
+      <hr class="dropdown-divider" />
 
       <div class="dropdown-item is-button">
-        <VButton
-          class="logout-button"
-          icon="feather:log-out"
-          color="primary"
-          role="menuitem"
-          @click="logoutUser"
-          raised
-          fullwidth
-        >
+        <VButton class="logout-button" icon="feather:log-out" color="primary" role="menuitem" @click="logoutUser" raised
+          fullwidth>
           Logout
         </VButton>
       </div>
