@@ -3,6 +3,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { addPersonalId } from '/@src/services/Contractor/contractorService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
@@ -60,12 +61,15 @@ const onSubmitAdd = async () => {
 
     if (success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} Personal ID was added successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 
@@ -73,11 +77,12 @@ const onSubmitAdd = async () => {
 
 }
 
-const onAddFile = (error: any, fileInfo: any) => {
+const onAddFile = async (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(`${error.main}: ${error.sub}`)
-        console.error(error)
         fileError.value = error.main + ':' + error.sub
         return
 
@@ -89,9 +94,11 @@ const onAddFile = (error: any, fileInfo: any) => {
     }
 }
 
-const onRemoveFile = (error: any, fileInfo: any) => {
+const onRemoveFile = async (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
+        await sleep(200);
+
         // @ts-ignore
         notif.error(error)
         return

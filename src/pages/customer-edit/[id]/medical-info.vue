@@ -9,6 +9,7 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo';
 import { medicalinfoEditValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoEditValidation';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -146,12 +147,15 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     if (_success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was updated successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(_message)
 

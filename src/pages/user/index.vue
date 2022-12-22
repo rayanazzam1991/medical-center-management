@@ -7,6 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultUserSearchFilter, UserSearchFilter } from '/@src/models/Others/User/user'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('User')
 useHead({
@@ -29,11 +30,16 @@ const removeUser = async (userId: number) => {
 
     deleteUserPopup.value = false
     if (success) {
+        await sleep(200);
 
         // @ts-ignore
         notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-    } else notif.error(message)
+    } else {
+        await sleep(200);
+
+        notif.error(message)
+    }
 
 
 }
@@ -143,7 +149,7 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" 
+    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="usersList" @update:sort="userSort">
 

@@ -4,6 +4,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorPersonalId } from '/@src/models/Contractor/contractor';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Profile Picture')
@@ -53,9 +54,11 @@ contractorForm.setStep({
 
 const fileError = ref('')
 const pageTitle = 'Step 2: Contractor Profile Picture'
-const onAddFile = (error: any, fileInfo: any) => {
+const onAddFile = async (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(`${error.main}: ${error.sub}`)
         console.error(error)
         fileError.value = error.main + ':' + error.sub
@@ -80,12 +83,15 @@ const onSubmitEdit = async () => {
 
     if (success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} Personal ID was edited successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 
@@ -101,10 +107,12 @@ const getCurrentPersonalId = async () => {
     if (personalId.media.length > 0)
         currentPersonalId.value = personalId.media[personalId.media.length - 1]
 }
-const onRemoveFile = (error: any, fileInfo: any) => {
+const onRemoveFile = async (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(error)
         return
     }
@@ -184,6 +192,7 @@ const onRemoveFile = (error: any, fileInfo: any) => {
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
 }
+
 .layout {
     min-width: 50%;
 }
@@ -191,6 +200,5 @@ const onRemoveFile = (error: any, fileInfo: any) => {
 .form-fieldset {
     max-width: 40%;
 }
-
 </style>
  

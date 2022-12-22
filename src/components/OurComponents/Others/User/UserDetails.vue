@@ -6,6 +6,7 @@ import { useNotyf } from "/@src/composable/useNotyf"
 import { defaultChangeStatusUser, defaultUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
+import sleep from "/@src/utils/sleep"
 
 const notif = useNotyf()
 const route = useRoute()
@@ -32,6 +33,8 @@ const changestatusUser = async () => {
     getCurrentUser()
     // @ts-ignore
     notif.dismissAll()
+    await sleep(200);
+
     // @ts-ignore
     notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
     router.push({ path: `/user/${userData.id}` })

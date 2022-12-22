@@ -8,6 +8,7 @@ import { defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Department')
@@ -41,6 +42,8 @@ const removeDepartment = async (departmentId: number) => {
   await search(searchFilter.value)
   deleteDepartmentPopup.value = false
   // @ts-ignore
+  await sleep(200);
+
   notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
 }
@@ -140,8 +143,8 @@ const columns = {
 
 <template>
   <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"  :default_per_page="default_per_page"
-    @resetFilter="resetFilter" />
+    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="departmentsList" @update:sort="departmentSort">
 
     <VFlexTable separators clickable>

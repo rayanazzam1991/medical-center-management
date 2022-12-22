@@ -59,7 +59,6 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-
       return returnedCustomer
     }
     catch (error: any) {
@@ -68,9 +67,6 @@ export const useCustomer = defineStore('customer', () => {
       message.value = error?.response.data.message
 
     }
-
-
-
     finally {
       loading.value = false
     }

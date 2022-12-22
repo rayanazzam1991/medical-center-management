@@ -15,6 +15,7 @@ import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { contractorAddvalidationSchema } from '/@src/rules/Contractor/contractorAddValidation';
+import sleep from '/@src/utils/sleep';
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
@@ -109,12 +110,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
         const { success, message, contractor } = await addContractor(contractorForm.data, contractorForm.userForm)
         if (success) {
             contractorForm.data.id = contractor.id
+            await sleep(200);
+
             // @ts-ignore
             notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was added successfully`)
             return true
         }
         else {
             // @ts-ignore
+            await sleep(200);
 
             notif.error(message)
             return false
@@ -243,7 +247,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="room_id">
-                                    <VLabel class="optional">Room</VLabel>
+                                    <VLabel class="required">Room</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                             <VOption>Room</VOption>
@@ -324,6 +328,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+    padding-bottom: 72px;
+
 }
 
 

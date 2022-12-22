@@ -13,6 +13,7 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { useContractor } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import sleep from '/@src/utils/sleep';
 
 
 const viewWrapper = useViewWrapper()
@@ -54,9 +55,13 @@ const changestatusUser = async () => {
         search(searchFilter.value)
         // @ts-ignore
         notif.dismissAll()
+        await sleep(200);
+
         // @ts-ignore
         notif.success(`${contractorChangeStatus.value.user.first_name} ${contractorChangeStatus.value.user.last_name} status was edited successfully`)
     } else {
+        await sleep(200);
+
         notif.error(message)
     }
     changeStatusPopup.value = false

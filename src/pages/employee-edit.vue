@@ -32,23 +32,25 @@ useHead({
             <RouterView />
 
             <!--Wizard Navigation Buttons-->
-            <div class="wizard-buttons"
-                :class="[(employeeForm.canNavigate && 'is-active'), (employeeForm.getStep() == 1 && 'is-scroll')]">
-                <div class="wizard-buttons-inner">
-                    <VLoader size="small" :active="employeeStore.loading">
-                        <VButton type="submit" class="wizard-button-previous"
-                            :disabled="employeeForm.validateStepFn === null"
-                            :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                            {{ employeeForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
+            <div class="wizard-buttons" :class="[(employeeForm.canNavigate && 'is-active')]">
+                <div class="columns">
+                    <div class="column is-one-quarter"></div>
+                    <div class="wizard-buttons-inner">
+                        <VLoader size="small" :active="employeeStore.loading">
+                            <VButton type="submit" class="wizard-button-previous"
+                                :disabled="employeeForm.validateStepFn === null"
+                                :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
+                                {{ employeeForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
+                                }}
+                            </VButton>
+                        </VLoader>
+                        <VButton class="wizard-button-previous" :disabled="employeeForm.skipable === false"
+                            :color="employeeForm.skipable === true ? 'dark' : 'dark'"
+                            @click="() => employeeForm?.skipStepFn?.()">
+                            {{ employeeForm.getStep() == 2 ? 'Skip & Finish' : 'Skip'
                             }}
                         </VButton>
-                    </VLoader>
-                    <VButton class="wizard-button-previous" :disabled="employeeForm.skipable === false"
-                        :color="employeeForm.skipable === true ? 'dark' : 'dark'"
-                        @click="() => employeeForm?.skipStepFn?.()">
-                        {{ employeeForm.getStep() == 2 ? 'Skip & Finish' : 'Skip'
-                        }}
-                    </VButton>
+                    </div>
                 </div>
             </div>
         </form>

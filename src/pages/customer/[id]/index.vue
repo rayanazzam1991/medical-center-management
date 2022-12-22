@@ -67,13 +67,15 @@ const changestatusUser = async () => {
     const userData = currentCustomer.value
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
-    userForm.user_status_id = userData.user.status?.id
+    userForm.user_status_id = userData.user?.status?.id
     await changeUserStatus(userForm)
     getCurrentCustomer()
     // @ts-ignore
     notif.dismissAll()
+    await sleep(200);
+
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} was edited successfully`)
     // router.push({ path: `/employee/${userData.id}` })
     changeStatusPopup.value = false
 }
@@ -103,13 +105,13 @@ const fetchCustomer = async () => {
     customerForm.userForm.id = customer.user.id
     customerForm.userForm.first_name = customer.user.first_name
     customerForm.userForm.last_name = customer.user.last_name
-    customerForm.userForm.gender = customer.user.gender
-    customerForm.userForm.birth_date = customer.user.birth_date
+    customerForm.userForm.gender = customer.user?.gender
+    customerForm.userForm.birth_date = customer.user?.birth_date
     customerForm.userForm.phone_number = customer.user.phone_number
-    customerForm.userForm.address = customer.user.address
-    customerForm.userForm.city_id = customer.user.city.id
+    customerForm.userForm.address = customer.user?.address
+    customerForm.userForm.city_id = customer.user?.city?.id
     customerForm.userForm.room_id = undefined
-    customerForm.userForm.user_status_id = customer.user.status.id
+    customerForm.userForm.user_status_id = customer.user?.status?.id
     customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
     customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
     customerForm.dataUpdate.customer_group_id = customer.customer_group.id
@@ -257,17 +259,6 @@ const getCurrentProfilePic = async () => {
                                                     <span>Address</span>
                                                     <span>
                                                         {{ currentCustomer.user.address }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>City</span>
-                                                    <span>
-                                                        {{ currentCustomer.user?.city?.name }}
                                                     </span>
                                                 </div>
 

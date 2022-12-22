@@ -7,6 +7,7 @@ import { defaultSocialMedia, SocialMedia, SocialMediaConsts } from '/@src/models
 import { socialmediavalidationSchema } from '../../../../rules/CRM/SocialMedia/socialmediaValidation';
 import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from '/@src/utils/sleep';
 
 
 export default defineComponent({
@@ -74,10 +75,13 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll();
+                await sleep(200);
                 // @ts-ignore
                 notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was added successfully`);
                 router.push({ path: `/social-media/${socialMedia.id}` });
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
         });
@@ -88,11 +92,15 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll();
+                await sleep(200);
+
                 // @ts-ignore
                 notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was edited successfully`);
                 router.push({ path: `/social-media/${socialMediaData.id}` });
             }
             else {
+                await sleep(200);
+
                 notif.error(message)
             }
         };

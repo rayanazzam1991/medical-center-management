@@ -70,11 +70,15 @@ export default defineComponent({
             const { userStatus, message, success } = await addUserStatus(userstatusData);
             if (success) {
                 notif.dismissAll();
+                await sleep(200);
+
                 notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`);
                 await sleep(500);
                 router.push({ path: `/userstatus/${userStatus.id}` });
             }
             else {
+                await sleep(200);
+
                 notif.error(message);
             }
         });
@@ -83,11 +87,15 @@ export default defineComponent({
             const { message, success } = await editUserStatus(userstatusData);
             if (success) {
                 notif.dismissAll();
+                await sleep(200);
+
                 notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`);
                 await sleep(500);
                 router.push({ path: `/userstatus/${userstatusData.id}` });
             }
             else {
+                await sleep(200);
+
                 notif.error(message);
             }
         });
