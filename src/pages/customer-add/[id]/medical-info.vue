@@ -123,7 +123,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="blood_type">
                                     <VLabel class="optional">Blood Type</VLabel>
                                     <VControl>
@@ -137,12 +137,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="allergic">
                                     <VLabel class="optional">Allergic Reactions:</VLabel>
                                     <VControl icon="feather:chevrons-right">
@@ -152,31 +147,30 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="chronic_diseases">
-                                    <VLabel class="optional">Chronic Diseases:</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
-                                            autocomplete="" />
-                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="infectious_diseases">
                                     <VLabel class="optional">Infectious Diseases:</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
                                         <ErrorMessage class="help is-danger" name="infectious_diseases" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
+                                <VField id="chronic_diseases">
+                                    <VLabel class="optional">Chronic Diseases:</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
+                                            autocomplete="" />
+                                        <ErrorMessage class="help is-danger" name="chronic_diseases" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -232,13 +226,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+}
+
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

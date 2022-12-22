@@ -12,14 +12,14 @@ const employeeAddvalidationSchema = toFormValidator(zod
         last_name:
             zod
                 .string({})
-                .optional(),
+                .min(1, "This field is required"),
         birth_date:
             zod
                 .preprocess(
                     val => val === "" ? undefined : val,
                     zod.string({})
                         .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
+                ),
         gender: zod.string(),
         phone_number:
             zod
@@ -34,9 +34,8 @@ const employeeAddvalidationSchema = toFormValidator(zod
                 ),
         address:
             zod
-                .string({})
-                .optional(),
-
+                .string({ required_error: 'This field is required' })
+                .min(1, "This field is required"),
         city_id: zod
             .preprocess(
                 (input) => {
@@ -91,8 +90,10 @@ const employeeAddvalidationSchema = toFormValidator(zod
                         return processed.success ? processed.data : input;
                     },
                     zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .optional(),
+                        .number({
+                            required_error: "This field is required"
+                            , invalid_type_error: "Please enter a valid number"
+                        })
                 ),
         nationality_id: zod
             .preprocess(

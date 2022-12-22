@@ -13,15 +13,19 @@ const employeeEditvalidationSchema = toFormValidator(zod
         last_name:
             zod
                 .string({})
-                .optional(),
+                .min(1, "This field is required"),
         birth_date:
             zod
                 .preprocess(
-                    val => val == undefined ? "" : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
+                    (input) => {
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
+                    },
+                    zod.date({
+                        required_error: "Please select a date and time",
+                        invalid_type_error: "That's not a date!",
+                    }),
+                ),
         phone_number:
             zod
                 .preprocess(
@@ -37,8 +41,7 @@ const employeeEditvalidationSchema = toFormValidator(zod
             zod
                 .preprocess(
                     val => val == undefined ? "" : val,
-                    zod.string({})
-                        .optional()),
+                    zod.string({ invalid_type_error: 'This field is required' })),
         city_id: zod
             .preprocess(
                 (input) => {
@@ -101,8 +104,7 @@ const employeeEditvalidationSchema = toFormValidator(zod
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
                     return processed.success ? processed.data : input;
                 },
-                zod.number()
-                    .optional(),
+                zod.number(),
             ),
 
     }));

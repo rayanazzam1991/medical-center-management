@@ -31,6 +31,14 @@
     }
 }
 
+.wizard-buttons .wizard-buttons-inner{
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 90px !important;
+    padding: 20px !important;
+    color: red;
+}
+
 .wizard-buttons {
     position: fixed;
     bottom: 0;

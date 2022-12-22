@@ -12,6 +12,8 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
 import sleep from "/@src/utils/sleep"
+import { ErrorMessage } from "vee-validate"
+import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -21,6 +23,7 @@ const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
 const notif = useNotyf()
+const customerForm = useCustomerForm()
 
 const customerProfilePicture = ref(defaultCustomerProfilePic)
 
@@ -75,21 +78,58 @@ const changestatusUser = async () => {
     changeStatusPopup.value = false
 }
 
-const onClickEditSocialMedia = () => {
+const onClickEditSocialMedia = async () => {
+    await fetchCustomer()
     router.push({
         path: `/customer-edit/${customerId.value}/social-media`
     })
 }
-const onClickEditMainInfo = () => {
+const onClickEditMainInfo = async () => {
+    await fetchCustomer()
+
     router.push({
         path: `/customer-edit/${customerId.value}/`
     })
 }
-const onClickEditMedicalInfo = () => {
+const onClickEditMedicalInfo = async () => {
+    await fetchCustomer()
+
     router.push({
         path: `/customer-edit/${customerId.value}/medical-info`
     })
 }
+const fetchCustomer = async () => {
+    const { customer } = await getCustomer(customerId.value)
+    customerForm.userForm.id = customer.user.id
+    customerForm.userForm.first_name = customer.user.first_name
+    customerForm.userForm.last_name = customer.user.last_name
+    customerForm.userForm.gender = customer.user.gender
+    customerForm.userForm.birth_date = customer.user.birth_date
+    customerForm.userForm.phone_number = customer.user.phone_number
+    customerForm.userForm.address = customer.user.address
+    customerForm.userForm.city_id = customer.user.city.id
+    customerForm.userForm.room_id = undefined
+    customerForm.userForm.user_status_id = customer.user.status.id
+    customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
+    customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
+    customerForm.dataUpdate.customer_group_id = customer.customer_group.id
+    customerForm.dataUpdate.id = customer.id
+    customerForm.dataUpdate.user.id = customer.user.id
+    if (customer.medical_info) {
+        customerForm.medicalInfoForm.allergic = customer.medical_info.allergic
+        customerForm.medicalInfoForm.any_other_info = customer.medical_info.any_other_info
+        customerForm.medicalInfoForm.blood_type = customer.medical_info.blood_type
+        customerForm.medicalInfoForm.chronic_diseases = customer.medical_info.chronic_diseases
+        customerForm.medicalInfoForm.infectious_diseases = customer.medical_info.infectious_diseases
+        customerForm.medicalInfoForm.smoking = customer.medical_info.smoking
+        customerForm.medicalInfoForm.id = customer.medical_info.id
+    }
+    for (let i = 0; i < customer.social_medias.length; i++) {
+        // @ts-ignore
+        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
+    }
+}
+
 const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
     await sleep(500)
@@ -131,7 +171,7 @@ const getCurrentProfilePic = async () => {
             <div class="tabs-wrapper is-triple-slider">
 
                 <div class="tabs-inner" :hidden="customerStore.loading">
-                    <div class="tabs ">
+                    <div class="tabs tabs-width ">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
@@ -430,4 +470,25 @@ const getCurrentProfilePic = async () => {
   
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
+
+.tabs-width {
+    min-width: 380px;
+    min-height: 40px;
+
+    .is-active {
+        min-height: 40px;
+
+    }
+}
+
+.tabs-wrapper.is-triple-slider .tabs li a,
+.tabs-wrapper-alt.is-triple-slider .tabs li a {
+    height: 40px;
+
+}
+
+.tabs li {
+    min-height: 40px !important;
+
+}
 </style>

@@ -24,6 +24,7 @@ export async function addEmployee(
     nationality_id: employeeData.nationality_id,
     user: userData,
   }
+  console.log(userData)
   const employeeResponse = useEmployee()
   var employee: Employee =
     (await employeeResponse.addEmployeeStore(newEmployeeData)) ?? defaultEmployee

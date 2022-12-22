@@ -113,7 +113,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.birth_date = userData.birth_date
         employeeForm.userForm.phone_number = userData.phone_number
         employeeForm.userForm.address = userData.address
-        employeeForm.userForm.room_id = userData.room_id
+        console.log(userData.room_id)
+        if (currentUser.value.room_id != undefined)
+            employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
         console.log(employeeForm.userForm)
@@ -153,231 +155,208 @@ const onSubmitAdd = handleSubmit(async (values) => {
         <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="first_name">
-                                    <VLabel class="required">First name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.first_name" type="text" placeholder=""
-                                            autocomplete="given-first_name" />
-                                        <ErrorMessage class="help is-danger" name="first_name" />
-                                    </VControl>
-                                </VField>
+                    <div class="layout">
+
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="fieldset-heading">
+                                <h4>{{ pageTitle }}</h4>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="last_name">
-                                    <VLabel class="optional">Last name</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.last_name" type="text" placeholder=""
-                                            autocomplete="given-last_name" />
-                                        <ErrorMessage class="help is-danger" name="last_name" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="birth_date">
-                                    <VLabel class="optional">Birth date </VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.birth_date" type="date" placeholder=""
-                                            autocomplete="given-birth_date" />
-                                        <ErrorMessage class="help is-danger" name="birth_date" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline ">
-                            <label class="lab required">Phone number </label>
-                            <div class="columns column is-12">
-                                <div class="column is-2 ">
-                                    <input class="input" type="text" placeholder="+964" readonly />
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="first_name">
+                                        <VLabel class="required">First name</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.first_name" type="text" placeholder=""
+                                                autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="first_name" />
+                                        </VControl>
+                                    </VField>
                                 </div>
-                                <VField class="column is-10 " id="phone_number">
-                                    <VControl class="Vi"
-                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                        icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" />
+                                <div class="column is-6 ">
+                                    <VField id="last_name">
+                                        <VLabel class="required">Last name</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.last_name" type="text" placeholder=""
+                                                autocomplete="given-last_name" />
+                                            <ErrorMessage class="help is-danger" name="last_name" />
+                                        </VControl>
+                                    </VField>
+                                </div>
 
-                                        <ErrorMessage class="help is-danger" name="phone_number" />
-                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
-                                    </VControl>
-                                </VField>
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="address">
-                                    <VLabel class="optional">Address </VLabel>
-                                    <VControl>
-                                        <VTextarea v-model="currentUser.address" />
-                                        <ErrorMessage class="help is-danger" name="address" />
-                                    </VControl>
-                                </VField>
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="phone_number">
+                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VControl icon="feather:chevrons-right"
+                                            :class="phoneCheck != 'false' ? 'has-validation has-error' : ''">
+                                            <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                                autocomplete="given-first_name" />
+                                            <ErrorMessage class="help is-danger" name="phone_number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="birth_date">
+                                        <VLabel class="required">Birth date </VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentUser.birth_date" type="date" placeholder=""
+                                                autocomplete="given-birth_date" />
+                                            <ErrorMessage class="help is-danger" name="birth_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="gender">
-                                    <VLabel class="required">Gender</VLabel>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline ">
+                                <div class="column is-half">
 
-                                    <VControl>
-                                        <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                            color="success" />
+                                    <VField id="gender">
+                                        <VLabel class="required ml-3">Gender</VLabel>
 
-                                        <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
-                                            color="success" />
-                                        <ErrorMessage class="help is-danger" name="gender" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="room_id">
-                                    <VLabel class="optional">Room</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption >Room</VOption>
-                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="room_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="city_id">
-                                    <VLabel class="required">City</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                            <VOption value="">City</VOption>
-                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                    city.name
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="city_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="user_status_id">
-                                    <VLabel class="required">Status</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                            <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
-                                                {{
-                                                        status.name
+                                        <VControl>
+                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
+                                                color="success" />
+
+                                            <VRadio v-model="currentUser.gender" value="Female" label="Female"
+                                                name="gender" color="success" />
+                                            <ErrorMessage class="help is-danger" name="gender" />
+                                        </VControl>
+                                    </VField>
+
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="city_id">
+                                        <VLabel class="required">City</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                                <VOption value="">City</VOption>
+                                                <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
+                                                        city.name
                                                 }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="user_status_id" />
-                                    </VControl>
-                                </VField>
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="city_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="starting_date">
-                                    <VLabel class="required">Starting Date</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
-                                            autocomplete="given-starting_date" />
-                                        <ErrorMessage class="help is-danger" name="starting_date" />
-                                    </VControl>
-                                </VField>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-12">
+                                    <VField id="address">
+                                        <VLabel class="required">Address </VLabel>
+                                        <VControl>
+                                            <VTextarea v-model="currentUser.address" />
+                                            <ErrorMessage class="help is-danger" name="address" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="end_date">
-                                    <VLabel class="optional">End Date</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
-                                            autocomplete="given-end_date" />
-                                        <ErrorMessage class="help is-danger" name="end_date" />
-                                    </VControl>
-                                </VField>
+                        <!--Fieldset-->
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="room_id">
+                                        <VLabel class="optional">Room</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.room_id">
+                                                <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
+                                                        room.number
+                                                }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="room_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="user_status_id">
+                                        <VLabel class="required">Status</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                                <VOption value="">Status</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id"
+                                                    :value="status.id">
+                                                    {{
+                                                            status.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="user_status_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="basic_salary">
-                                    <VLabel class="optional">Basic Salary</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
-                                            autocomplete="given-basic_salary" />
-                                        <ErrorMessage class="help is-danger" name="basic_salary" />
-                                    </VControl>
-                                </VField>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="starting_date">
+                                        <VLabel class="required">Starting Date</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
+                                                autocomplete="given-starting_date" />
+                                            <ErrorMessage class="help is-danger" name="starting_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="end_date">
+                                        <VLabel class="optional">End Date</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
+                                                autocomplete="given-end_date" />
+                                            <ErrorMessage class="help is-danger" name="end_date" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="nationality_id">
-                                    <VLabel class="required">Nationality</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                            <VOption value="">Nationality</VOption>
-                                            <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
-                                                :value="nationality.id">{{ nationality.name }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="nationality_id" />
-                                    </VControl>
-                                </VField>
+                        <!--Fieldset-->
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-6">
+                                    <VField id="basic_salary">
+                                        <VLabel class="required">Basic Salary</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
+                                                autocomplete="given-basic_salary" />
+                                            <ErrorMessage class="help is-danger" name="basic_salary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="nationality_id">
+                                        <VLabel class="required">Nationality</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                                <VOption value="">Nationality</VOption>
+                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
+                                                    :value="nationality.id">{{ nationality.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
+                        <!--Fieldset-->
                     </div>
 
                 </div>
@@ -394,11 +373,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
-.optional::after {
-    content: " (optional)";
-    color: var(--placeholder);
-    font-style: italic;
-}
 
 .Vi {
     width: 28.5em;
@@ -410,7 +384,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
     display: block;
 }
 
+.layout {
+    min-width: 50%;
+}
+
+.form-fieldset {
+    max-width: 40%;
+}
+
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+
+
 }
 </style>
