@@ -8,6 +8,7 @@ import { defaultNationalitySearchFilter, NationalitySearchFilter, NationalityCon
 import { getNationalitiesList, deleteNationality } from '/@src/services/Others/Nationality/nationalityService'
 import { defaultPagination } from '/@src/utils/response'
 import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Nationality')
 useHead({
@@ -41,10 +42,16 @@ const removeNationality = async (nationalityId: number) => {
   if (success) {
 
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
-  } else notif.error(message)
+    await sleep(200);
 
+    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  } else {
+    await sleep(200);
+    notif.error(message)
+
+  }
 }
+
 const search = async (searchFilter2: NationalitySearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 

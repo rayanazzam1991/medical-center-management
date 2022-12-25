@@ -104,12 +104,16 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll()
+                await sleep(200);
+
                 // @ts-ignore
 
                 notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
                 await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
 
@@ -128,12 +132,16 @@ export default defineComponent({
                 // @ts-ignore
 
                 notif.dismissAll()
+                await sleep(200);
+
                 // @ts-ignore
 
                 notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
                 await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
 

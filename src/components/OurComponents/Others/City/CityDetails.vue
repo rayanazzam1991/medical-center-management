@@ -24,7 +24,6 @@ cityId.value = route.params?.id as number ?? 0
 const currentCity = ref(defaultCity)
 const getCurrentCity = async () => {
     const { city } = await getCity(cityId.value)
-    sleep(500)
 
     if (city != undefined)
         currentCity.value = city

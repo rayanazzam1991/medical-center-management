@@ -6,6 +6,7 @@ import { addServicesToContractor } from '/@src/services/Contractor/contractorSer
 import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
@@ -80,12 +81,15 @@ const onSubmitAdd = async () => {
 
     if (success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 

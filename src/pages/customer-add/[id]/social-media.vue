@@ -6,6 +6,7 @@ import { addSocialMediasToCustomer } from '/@src/services/CRM/Customer/customerS
 import { getSocialMediasList } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -79,12 +80,15 @@ const onSubmitAdd = async () => {
 
     if (customer.success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(customer.success)
 

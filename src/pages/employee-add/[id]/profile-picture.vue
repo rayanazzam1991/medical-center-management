@@ -3,6 +3,7 @@ import { addPersonalId } from '/@src/services/Employee/employeeService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
@@ -27,6 +28,8 @@ employeeForm.setStep({
     validateStepFn: async () => {
         if (fileError.value != '') {
             // @ts-ignore
+            await sleep(200);
+
             notif.error(fileError.value)
         }
         else {
@@ -62,21 +65,26 @@ const onSubmitAdd = async () => {
 
     if (success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} Personal ID was added successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 
     }
 
 }
-const onAddFile = (error: any, fileInfo: any) => {
+const onAddFile = async (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(`${error.main}: ${error.sub}`)
         console.error(error)
         fileError.value = error.main + ':' + error.sub
@@ -90,10 +98,12 @@ const onAddFile = (error: any, fileInfo: any) => {
     }
 }
 
-const onRemoveFile = (error: any, fileInfo: any) => {
+const onRemoveFile = async (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(error)
         console.error(error)
         return

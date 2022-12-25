@@ -73,8 +73,9 @@ const changestatusUser = async () => {
     getCurrentContractor()
     // @ts-ignore
     notif.dismissAll()
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    await sleep(200);
+    console.log(currentContractor.value.user.first_name)
+    notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} was edited successfully`)
     changeStatusPopup.value = false
 }
 const fetchContractor = async () => {
@@ -250,31 +251,9 @@ const getCurrentPersonalId = async () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>City</span>
-                                                    <span>
-                                                        {{ currentContractor.user.city.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
                                                         {{ currentContractor?.user?.room?.number }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Floor</span>
-                                                    <span>
-                                                        {{ currentContractor?.user?.room?.floor }}
                                                     </span>
                                                 </div>
 

@@ -12,8 +12,9 @@ const customerEditvalidationSchema = toFormValidator(zod
         last_name:
             zod
                 .string({
+                    required_error: "This field is required",
                 })
-                .optional(),
+                .min(1, "This field is required"),
         birth_date:
             zod
                 .preprocess(
@@ -38,7 +39,7 @@ const customerEditvalidationSchema = toFormValidator(zod
                     val => val == undefined ? "" : val,
                     zod.string({})
                         .optional()),
-
+        gender: zod.string().optional(),
         city_id: zod
             .preprocess(
                 (input) => {
@@ -47,7 +48,7 @@ const customerEditvalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
+                    .optional(),
             ),
         room_id:
             zod
@@ -64,7 +65,7 @@ const customerEditvalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
+                    .optional(),
             ),
         emergency_contact_name:
             zod

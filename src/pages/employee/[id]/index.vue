@@ -78,10 +78,14 @@ const changestatusUser = async () => {
         getCurrentEmployee()
         // @ts-ignore
         notif.dismissAll()
+        await sleep(200);
+
         // @ts-ignore
-        notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+        notif.success(`${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} was edited successfully`)
     } else {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(message)
     }
     // router.push({ path: `/employee/${userData.id}` })
@@ -211,31 +215,9 @@ const changestatusUser = async () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>City</span>
-                                                    <span>
-                                                        {{ currentEmployee.user.city.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
                                                     <span>Room Number</span>
                                                     <span>
                                                         {{ currentEmployee.user?.room?.number }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Floor</span>
-                                                    <span>
-                                                        {{ currentEmployee?.user?.room?.floor }}
                                                     </span>
                                                 </div>
 

@@ -4,6 +4,7 @@ import { defaultCustomerProfilePic } from '/@src/models/CRM/Customer/customer';
 import { deleteProfilePicture, addProfilePicture, getProfilePicture } from '/@src/services/CRM/Customer/customerService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from "/@src/utils/sleep"
 
 
 
@@ -30,6 +31,8 @@ customerForm.setStep({
     validateStepFn: async () => {
         if (fileError.value != '') {
             // @ts-ignore
+            await sleep(200);
+
             notif.error(fileError.value)
         }
         else {
@@ -56,9 +59,11 @@ customerForm.setStep({
 
 const fileError = ref('')
 const pageTitle = 'Step 3: Customer Medical File'
-const onAddFile = (error: any, fileInfo: any) => {
+const onAddFile = async (error: any, fileInfo: any) => {
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(`${error.main}: ${error.sub}`)
         console.error(error)
         fileError.value = error.main + ':' + error.sub
@@ -83,12 +88,15 @@ const onSubmitEdit = async () => {
 
     if (success) {
         // @ts-ignore
+        await sleep(200);
+
         notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} Medical File was edited successfully`)
 
         return true
     }
     else {
         // @ts-ignore
+        await sleep(200);
 
         notif.error(message)
 
@@ -103,10 +111,12 @@ const getCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
     currentProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
 }
-const onRemoveFile = (error: any, fileInfo: any) => {
+const onRemoveFile = async (error: any, fileInfo: any) => {
     fileError.value = ''
     if (error) {
         // @ts-ignore
+        await sleep(200);
+
         notif.error(error)
         console.error(error)
         return

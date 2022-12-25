@@ -79,11 +79,15 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll();
+                await sleep(200);
+
                 // @ts-ignore
                 notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
                 await sleep(500)
                 router.push({ path: `/department/${department.id}` });
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
         });
@@ -94,11 +98,15 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.dismissAll();
+                await sleep(200);
+
                 // @ts-ignore
                 notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
                 await sleep(500)
                 router.push({ path: `/department/${departmentData.id}` });
             } else {
+                await sleep(200);
+
                 notif.error(message)
             }
         };

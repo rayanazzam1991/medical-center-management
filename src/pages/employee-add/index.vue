@@ -17,6 +17,7 @@ import { getNationalitiesList } from '/@src/services/Others/Nationality/national
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
+import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
@@ -125,12 +126,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
         if (success) {
             employeeForm.data.id = employee.id
             // @ts-ignore
+            await sleep(200);
+
             notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
 
             return true
         }
         else {
             // @ts-ignore
+            await sleep(200);
 
             notif.error(message)
             return false
@@ -268,7 +272,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="room_id">
-                                        <VLabel class="optional">Room</VLabel>
+                                        <VLabel class="required">Room</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
@@ -394,6 +398,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;
+    padding-bottom: 72px;
+
 
 
 }

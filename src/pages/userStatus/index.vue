@@ -7,6 +7,7 @@ import { defaultUserStatusSearchFilter, UserStatus, UserStatusSearchFilter } fro
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { defaultPagination } from "/@src/utils/response"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
+import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('UserStatus')
@@ -39,12 +40,16 @@ const removeUserStatus = async (userstatusId: number) => {
 
     deleteUserStatusPopup.value = false
     if (success) {
+        await sleep(200);
 
         // @ts-ignore
         notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
 
-    } else notif.error(message)
+    } else {
+        await sleep(200);
 
+        notif.error(message)
+    }
 }
 
 const search = async (searchFilter2: UserStatusSearchFilter) => {

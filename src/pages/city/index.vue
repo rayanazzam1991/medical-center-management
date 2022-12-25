@@ -8,6 +8,7 @@ import { getCitiesList, deleteCity } from '/@src/services/Others/City/cityServic
 import { useCity } from '/@src/stores/Others/City/cityStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
+import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
 useHead({
@@ -38,6 +39,8 @@ const removeCity = async (cityId: number) => {
   deleteCityPopup.value = false
   await search(searchFilter.value)
   if (success) {
+
+    await sleep(200);
 
     // @ts-ignore
     notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
