@@ -1,9 +1,9 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Customer, CreateCustomer, UpdateCustomer, CustomerSearchFilter, CreateUpdateCustomerSocialMediaHelper } from "/@src/models/CRM/Customer/customer"
+import { Customer, CreateCustomer, UpdateCustomer, CustomerSearchFilter, CreateUpdateCustomerSocialMediaHelper, UpdateNotes } from "/@src/models/CRM/Customer/customer"
 import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { Media } from "/@src/models/Others/Media/media"
-import { addCustomerApi, updateCustomerApi, getCustomersApi, addMedicalInfoApi, addSocialMediaApi, getCustomerApi } from "/@src/utils/api/CRM/Customer"
+import { addCustomerApi, updateCustomerApi, getCustomersApi, addMedicalInfoApi, addSocialMediaApi, getCustomerApi, UpdateNotesApi } from "/@src/utils/api/CRM/Customer"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -262,6 +262,30 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
+  async function updateCustomerNotesStore(customer_id: number, notes: UpdateNotes) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await UpdateNotesApi(api, customer_id, notes)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return response
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -278,7 +302,8 @@ export const useCustomer = defineStore('customer', () => {
     getCustomersStore,
     addCustomerProfilePictureStore,
     getCustomerProfilePicture,
-    deleteCustomerProfilePicture
+    deleteCustomerProfilePicture,
+    updateCustomerNotesStore
   } as const
 })
 

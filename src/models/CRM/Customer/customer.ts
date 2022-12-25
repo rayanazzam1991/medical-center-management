@@ -13,6 +13,9 @@ export interface Customer {
     customer_group: CustomerGroup
     social_medias: Array<CreateUpdateCustomerSocialMediaHelper>
     is_completed?: boolean
+    notes?: string
+    notes_timestamp?: string
+    notes_by?: User
 }
 export interface CreateCustomer {
     id?: number
@@ -53,6 +56,9 @@ export interface CustomerSearchFilter {
     order?: string
     quick_search?: boolean
 }
+export interface UpdateNotes {
+    notes: string
+}
 export const defaultCreateCustomer: CreateCustomer = {
     id: 0,
     emergency_contact_name: '',
@@ -84,6 +90,9 @@ export const defaultCustomer: Customer = {
     customer_group: defaultCustomerGroup,
     social_medias: [],
     is_completed: false,
+    notes: undefined,
+    notes_timestamp: undefined,
+    notes_by: undefined
 
 }
 export const defaultCustomerProfilePic: Media = {
@@ -110,6 +119,10 @@ export const defaultCustomerSearchFilter: CustomerSearchFilter = {
     order: undefined,
     quick_search: undefined
 
+}
+
+export const defaultUpdateNotes: UpdateNotes = {
+    notes: ''
 }
 const CustomerConsts = BaseConsts
 export { CustomerConsts }

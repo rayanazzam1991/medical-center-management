@@ -4,16 +4,20 @@ import { useHead } from "@vueuse/head"
 import { changeUserStatus } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
-import { Customer, defaultCustomer, defaultCustomerProfilePic } from "/@src/models/CRM/Customer/customer"
+import { Customer, defaultCustomer, defaultCustomerProfilePic, UpdateNotes } from "/@src/models/CRM/Customer/customer"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
-import { getCustomer, getProfilePicture } from "/@src/services/CRM/Customer/customerService"
+import { getCustomer, getProfilePicture, updateCustomerNotes } from "/@src/services/CRM/Customer/customerService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
+import CKE from '@ckeditor/ckeditor5-vue'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
@@ -24,9 +28,18 @@ const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
 const notif = useNotyf()
 const customerForm = useCustomerForm()
-
 const customerProfilePicture = ref(defaultCustomerProfilePic)
+const notesEditor = ref(false)
+const CKEditor = CKE.component
+const editorData = ref()
+const config = {
+    fontFamily: {
+        options: ['"Montserrat", sans-serif', '"Roboto", sans-serif'],
+    },
+    toolbar: ['heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList']
 
+
+}
 // @ts-ignore
 customerId.value = route.params.id
 viewWrapper.setPageTitle(`Customer`)
@@ -52,7 +65,7 @@ onMounted(async () => {
 onMounted(async () => {
     await getCurrentCustomer()
     await getCurrentProfilePic()
-    console.log(currentCustomer.value)
+    editorData.value = currentCustomer.value.notes
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
@@ -98,6 +111,26 @@ const onClickEditMedicalInfo = async () => {
         path: `/customer-edit/${customerId.value}/medical-info`
     })
 }
+const openNotesEditor = async () => {
+    notesEditor.value = true
+
+}
+const editNotes = async () => {
+    const newNote: UpdateNotes = editorData.value
+
+    const { success, message } = await updateCustomerNotes(customerId.value, newNote)
+    if (success) {
+        notif.dismissAll()
+        // @ts-ignore
+        notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
+    } else {
+        notif.error(message)
+    }
+}
+notesEditor.value = true
+
+}
+
 const fetchCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
     customerForm.userForm.id = customer.user.id
@@ -295,6 +328,47 @@ const getCurrentProfilePic = async () => {
 
                                             </div>
                                         </div>
+                                        <div v-if="!notesEditor" class="column is-12">
+                                            <div class="file-box">
+                                                <div class="meta full-width">
+                                                    <div
+                                                        class="is-justify-content-space-between is-align-items-center	 is-flex mt-2">
+
+                                                        <span class="mb-2">Notes
+                                                        </span>
+                                                        <VIconButton class="mb-3" size="small" icon="feather:edit-3"
+                                                            tabindex="0" @click="openNotesEditor" />
+
+                                                    </div>
+                                                    <VFlex class="mb-3">
+                                                        <!-- use any components inside --->
+                                                        <VCard>
+                                                            <div v-html="currentCustomer.notes"></div>
+                                                            <div class="has-text-primary">-Last update at: {{
+                                                                    currentCustomer.notes_timestamp
+                                                            }}
+                                                                |
+                                                                By: {{ currentCustomer.notes_by?.first_name }} {{
+                                                                        currentCustomer.notes_by?.last_name
+                                                                }}</div>
+
+                                                        </VCard>
+
+
+                                                    </VFlex>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="column is-12 editor-wrapper">
+                                            <CKEditor :config="config" class="editor" v-model="editorData"
+                                                :editor="ClassicEditor">
+                                            </CKEditor>
+                                            <VButton class="mt-4 editor-button" @click.prevent="editNotes" color="dark">
+                                                Save
+                                            </VButton>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -490,5 +564,23 @@ const getCurrentProfilePic = async () => {
 .tabs li {
     min-height: 40px !important;
 
+}
+
+.full-width {
+    width: 100%;
+    margin-right: 12px;
+}
+
+.editor-wrapper {
+    flex-direction: column;
+    display: flex;
+
+    .editor {
+        align-self: normal;
+    }
+
+    .editor-button {
+        align-self: flex-end;
+    }
 }
 </style>
