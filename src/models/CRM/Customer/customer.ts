@@ -100,7 +100,37 @@ export const defaultCustomerProfilePic: Media = {
     model_id: 0,
     model_type: MediaConsts.CUSTOMER_MODEL_ROUTE,
     relative_path: undefined,
+    is_featured: '1',
+    file_name: undefined,
+    mime_type: undefined,
+    size: undefined,
+    created_at: undefined,
+
+
+}
+
+export const defaultCustomerFiles: Media = {
+    id: undefined,
+    model_id: 0,
+    model_type: MediaConsts.CUSTOMER_MODEL_ROUTE,
+    relative_path: undefined,
     is_featured: '0',
+    file_name: undefined,
+    mime_type: undefined,
+    size: undefined,
+    created_at: undefined,
+
+}
+export const defaultMedicalInfoFiles: Media = {
+    id: undefined,
+    model_id: 0,
+    model_type: MediaConsts.MEDICAL_INFO_ROUTE,
+    relative_path: undefined,
+    is_featured: '0',
+    file_name: undefined,
+    mime_type: undefined,
+    size: undefined,
+    created_at: undefined,
 
 }
 

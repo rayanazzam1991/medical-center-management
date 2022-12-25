@@ -126,13 +126,12 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function addCustomerProfilePictureStore(media: FormData) {
+  async function addCustomerFileStore(media: FormData) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
@@ -181,6 +180,33 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
+  async function getCustomerFilesStore(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
   async function addSocialMediaStore(customer_id: number, social_medias: Array<CreateUpdateCustomerSocialMediaHelper>) {
     if (loading.value) return
     loading.value = true
@@ -211,7 +237,6 @@ export const useCustomer = defineStore('customer', () => {
   async function getCustomerStore(customer_id: number) {
     if (loading.value) return
     loading.value = true
-    sleep(2000)
     try {
       const response = await getCustomerApi(api, customer_id)
       var returnedCustomer: Customer
@@ -234,7 +259,7 @@ export const useCustomer = defineStore('customer', () => {
       loading.value = false
     }
   }
-  async function deleteCustomerProfilePicture(picture_id: number) {
+  async function deleteCustomerFile(picture_id: number) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
@@ -267,8 +292,8 @@ export const useCustomer = defineStore('customer', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-
-      return response
+      var returnedCustomer: Customer = response.response.data
+      return returnedCustomer
 
     }
     catch (error: any) {
@@ -296,10 +321,11 @@ export const useCustomer = defineStore('customer', () => {
     getCustomerStore,
     updateCustomerStore,
     getCustomersStore,
-    addCustomerProfilePictureStore,
     getCustomerProfilePicture,
-    deleteCustomerProfilePicture,
-    updateCustomerNotesStore
+    deleteCustomerFile,
+    updateCustomerNotesStore,
+    getCustomerFilesStore,
+    addCustomerFileStore
   } as const
 })
 

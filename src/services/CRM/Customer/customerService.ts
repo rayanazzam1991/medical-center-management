@@ -1,4 +1,4 @@
-import { Customer, defaultCustomer, CreateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter, defaultCustomerProfilePic, UpdateCustomer, UpdateNotes } from "/@src/models/CRM/Customer/customer"
+import { Customer, defaultCustomer, CreateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter, defaultCustomerProfilePic, UpdateCustomer, UpdateNotes, defaultCustomerFiles } from "/@src/models/CRM/Customer/customer"
 import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser } from "/@src/models/Others/User/user"
@@ -42,7 +42,19 @@ export async function addProfilePicture(customer_id: unknown, fd: FormData) {
     fd.append('model_id', customer_id as string)
     fd.append('model_type', MediaConsts.CUSTOMER_MODEL_ROUTE)
     fd.append('is_featured', String(is_featured))
-    var media: Media[] = await customerResponse.addCustomerProfilePictureStore(fd) ?? []
+    var media: Media[] = await customerResponse.addCustomerFileStore(fd) ?? []
+    var success: boolean = customerResponse.success ?? false
+    var error_code: string = customerResponse.error_code ?? ''
+    var message: string = customerResponse.message ?? ''
+    return { success, error_code, message, media }
+}
+export async function addCustomerFile(customer_id: unknown, fd: FormData) {
+    const customerResponse = useCustomer()
+    const is_featured: unknown = false
+    fd.append('model_id', customer_id as string)
+    fd.append('model_type', MediaConsts.CUSTOMER_MODEL_ROUTE)
+    fd.append('is_featured', String(is_featured))
+    var media: Media[] = await customerResponse.addCustomerFileStore(fd) ?? []
     var success: boolean = customerResponse.success ?? false
     var error_code: string = customerResponse.error_code ?? ''
     var message: string = customerResponse.message ?? ''
@@ -58,9 +70,9 @@ export async function addSocialMediasToCustomer(customer_id: number, social_medi
     return { success, error_code, message, customer }
 }
 
-export async function deleteProfilePicture(picture_id: number) {
+export async function deleteFile(picture_id: number) {
     const customerResponse = useCustomer()
-    await customerResponse.deleteCustomerProfilePicture(picture_id)
+    await customerResponse.deleteCustomerFile(picture_id)
     var success: boolean = customerResponse.success ?? false
     var error_code: string = customerResponse.error_code ?? ''
     var message: string = customerResponse.message ?? ''
@@ -91,6 +103,24 @@ export async function getProfilePicture(customer_id: number) {
     mediaParams.model_id = customer_id
     var media: Media[] = await customerResponse.getCustomerProfilePicture(mediaParams) ?? []
     media.forEach(element => {
+        element.file_name = element.relative_path
+        element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
+    });
+
+    var success: boolean = customerResponse.success ?? false
+    var error_code: string = customerResponse.error_code ?? ''
+    var message: string = customerResponse.message ?? ''
+    return { success, error_code, message, media }
+}
+
+export async function getCustomerFiles(customer_id: number) {
+    const customerResponse = useCustomer()
+    var mediaParams = defaultCustomerFiles
+    mediaParams.is_featured = '0'
+    mediaParams.model_id = customer_id
+    var media: Media[] = await customerResponse.getCustomerFilesStore(mediaParams) ?? []
+    media.forEach(element => {
+        element.file_name = element.relative_path
         element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
     });
     var success: boolean = customerResponse.success ?? false
@@ -127,9 +157,9 @@ export async function updateCustomerNotes(
     notes: UpdateNotes,
 ) {
     const customerResponse = useCustomer()
-    await customerResponse.updateCustomerNotesStore(customer_id, notes)
+    let customer: Customer = await customerResponse.updateCustomerNotesStore(customer_id, notes) ?? defaultCustomer
     var success: boolean = customerResponse.success ?? false
     var error_code: string = customerResponse.error_code ?? ''
     var message: string = customerResponse.message ?? ''
-    return { success, error_code, message }
+    return { success, error_code, message, customer }
 }

@@ -69,7 +69,7 @@ export async function UpdateNotesApi(
   api: AxiosInstance,
   customer_id: number,
   notes: UpdateNotes
-): Promise<{ response: CustomResponseCollection }> {
+): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`customer/${customer_id}/updateNotes`, notes)
   return { response }
 }
