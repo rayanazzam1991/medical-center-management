@@ -7,7 +7,7 @@ import { useNotyf } from "/@src/composable/useNotyf"
 import { Customer, defaultCustomer, defaultCustomerProfilePic, defaultUpdateNotes, UpdateNotes } from "/@src/models/CRM/Customer/customer"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
-import { getCustomer, getProfilePicture, updateCustomerNotes, getCustomerFiles, addCustomerFile, deleteFile } from "/@src/services/CRM/Customer/customerService"
+import { getCustomer, getProfilePicture, updateCustomerNotes, getCustomerFiles, addCustomerFile, deleteFile, addProfilePicture } from "/@src/services/CRM/Customer/customerService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
@@ -34,10 +34,13 @@ const customerForm = useCustomerForm()
 const customerProfilePicture = ref(defaultCustomerProfilePic)
 const customerFiles = ref<Array<Media>>([])
 const filesToUpload = ref<File>()
+const profilePictureToUpload = ref<File>()
+const updateProfilePicturePopup = ref(false)
 const notesEditor = ref(false)
 const loading = ref(false)
 const CKEditor = CKE.component
 const editorData = ref()
+const keyIncrement = ref(1)
 const config = {
     fontFamily: {
         options: ['"Montserrat", sans-serif', '"Roboto", sans-serif'],
@@ -185,7 +188,7 @@ const fetchCustomer = async () => {
 }
 
 const fetchCurrentProfilePic = async () => {
-    var profile_pic = await getProfilePicture(customerId.value)
+    let profile_pic = await getProfilePicture(customerId.value)
     await sleep(500)
     if (profile_pic.media.length != 0) {
 
@@ -203,11 +206,27 @@ const fetchCustomerFiles = async () => {
 }
 
 const onAddFile = async (event: any) => {
-
     const _file = event.target.files[0] as File
+    let _message = ''
     if (_file) {
-        filesToUpload.value = _file
+
+        if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
+            _message = 'Please choose an accepted file type'
+            await sleep(200);
+            notif.error(_message)
+
+
+        } else if (_file.size > (2 * 1024 * 1024)) {
+            _message = 'File size must be less than 2MB '
+            await sleep(200);
+            notif.error(_message)
+
+        } else {
+
+            filesToUpload.value = _file
+        }
     }
+
 }
 const UploadFile = async () => {
 
@@ -221,7 +240,7 @@ const UploadFile = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.first_name} file was added successfully`)
+        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was added successfully`)
         media[0].file_name = media[0].relative_path
         customerFiles.value.push(media[0])
         return true
@@ -249,7 +268,7 @@ const removefile = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.first_name} file was deleted successfully`)
+        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was deleted successfully`)
 
         customerFiles.value.splice(customerFiles.value.findIndex((element) => element.id == deleteFileId.value), 1)
         deleteFilePopup.value = false
@@ -265,15 +284,129 @@ const removefile = async () => {
 
 }
 
+const editProfilePicture = async () => {
+    updateProfilePicturePopup.value = true
+
+}
+const onEditProfilePicture = async (error: any, fileInfo: any) => {
+    if (error) {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.error(`${error.main}: ${error.sub}`)
+        console.error(error)
+        return
+
+    }
+
+    let _message = ''
+    const _file = fileInfo.file as File
+
+    if (_file) {
+
+        if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
+            _message = 'Please choose an accepted file type'
+            await sleep(200);
+            notif.error(_message)
+
+
+        } else if (_file.size > (2 * 1024 * 1024)) {
+            _message = 'File size must be less than 2MB '
+            await sleep(200);
+            notif.error(_message)
+
+        } else {
+
+            profilePictureToUpload.value = _file
+        }
+    }
+}
+const UploadProfilePicture = async () => {
+    let _success = true
+    let _message = ''
+    if (customerProfilePicture.value.id != undefined) {
+        const { message, success } = await deleteFile(customerProfilePicture.value.id)
+        _success = success
+        _message = message
+    } else if (customerProfilePicture.value.id != undefined || profilePictureToUpload.value == undefined) {
+        _success = false
+        _message = 'Please select a valid image to be uploaded'
+    }
+    if (_success) {
+
+        let formData = new FormData();
+        if (profilePictureToUpload.value != undefined)
+            formData.append('images[]', profilePictureToUpload.value);
+
+        const { success, message, media } = await addProfilePicture(customerId.value, formData)
+
+        if (success) {
+            // @ts-ignore
+            await sleep(200);
+
+            notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was edited successfully`)
+            customerProfilePicture.value = media[0]
+            keyIncrement.value++
+            updateProfilePicturePopup.value = false
+
+        }
+        else {
+            // @ts-ignore
+            await sleep(200);
+
+            notif.error(message)
+            keyIncrement.value++
+
+            updateProfilePicturePopup.value = false
+
+        }
+    } else {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.error(_message)
+        keyIncrement.value++
+
+        updateProfilePicturePopup.value = false
+
+    }
+
+
+}
+const RemoveProfilePicture = async () => {
+    if (customerProfilePicture.value.id != undefined) {
+        const { message, success } = await deleteFile(customerProfilePicture.value.id)
+        if (success) {
+            await sleep(200);
+
+            notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was deleted successfully`)
+            customerProfilePicture.value = defaultCustomerProfilePic
+
+        } else {
+            await sleep(200);
+
+            notif.error(message)
+
+        }
+        keyIncrement.value++
+
+        updateProfilePicturePopup.value = false
+
+    }
+
+
+}
+
 
 </script>
 <template>
     <div class="profile-wrapper">
         <VLoader size="large" :active="loading">
             <div class="profile-header has-text-centered">
-                <!-- <VLoader size="large" class="v-avatar" :active="customerStore.loading">
-                <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
-            </VLoader> -->
+                <VAvatar v-if="customerProfilePicture.id == undefined" size="xl"
+                    :picture="MediaConsts.getAvatarIcon(currentCustomer.user.gender)" edit @edit="editProfilePicture" />
+                <VAvatar v-else size="xl" :picture="customerProfilePicture.relative_path" edit
+                    @edit="editProfilePicture" />
                 <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
                     {{ currentCustomer.user.last_name }}
                 </h3>
@@ -350,7 +483,8 @@ const removefile = async () => {
                                             :class="currentCustomer.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
                                         <h4>Gender</h4>
                                         <p>
-                                            {{ currentCustomer.user.gender }}.
+                                            {{ currentCustomer.user.gender == 'Not_selected' currentCustomer.user.gender
+                                            }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -638,6 +772,11 @@ const removefile = async () => {
                                             Upload
                                         </VButton>
                                     </div>
+                                    <h6 class="ml-2 mt-2 help has-text-light">Max size: 2 MB | Accepted file types :
+                                        png,
+                                        jpg,
+                                        webp
+                                    </h6>
                                 </div>
                                 <div v-if="customerFiles.length != 0" class="project-files project-section">
                                     <div>
@@ -647,7 +786,7 @@ const removefile = async () => {
                                                 <div class="file-box">
                                                     <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
                                                     <div class="meta">
-                                                        <span class="file-link"> <a class="file-link"
+                                                        <span class="file-link"> <a target="_blank" class="file-link"
                                                                 :href="file.relative_path"> {{
                                                                         file.file_name
                                                                 }}</a>
@@ -719,7 +858,36 @@ const removefile = async () => {
             <VPlaceholderSection title="Are you sure?" :subtitle="`you are about to delete this file permenantly`" />
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="removefile(deleteFileId)">Confirm</VButton>
+            <VButton color="primary" raised @click="removefile()">Confirm</VButton>
+        </template>
+    </VModal>
+    <VModal :key="keyIncrement" title="Update Profile Picture" :open="updateProfilePicturePopup" actions="center"
+        @close="updateProfilePicturePopup = false">
+        <template #content>
+            <VField class="is-flex is-justify-content-center">
+                <VControl>
+                    <VFilePond size="large" class="profile-filepond" name="profile_filepond"
+                        :chunk-retry-delays="[500, 1000, 3000]" label-idle="<i class='lnil lnil-cloud-upload'></i>"
+                        :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']" :image-preview-height="140"
+                        :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
+                        style-panel-layout="compact circle" style-load-indicator-position="center bottom"
+                        style-progress-indicator-position="right bottom" style-button-remove-item-position="left bottom"
+                        style-button-process-item-position="right bottom" @addfile="onEditProfilePicture" />
+
+                </VControl>
+            </VField>
+            <h6 class="is-flex is-justify-content-center help has-text-light">Max size: 2 MB | Accepted file types :
+                png,
+                jpg,
+                webp
+            </h6>
+
+        </template>
+
+        <template #action="{ close }">
+            <VButton v-if="customerProfilePicture.id != undefined" color="warning" raised @click="RemoveProfilePicture">
+                Delete</VButton>
+            <VButton color="primary" raised @click="UploadProfilePicture">Update</VButton>
         </template>
     </VModal>
 </template>
@@ -789,6 +957,18 @@ const removefile = async () => {
         border-color: var(--dark-sidebar-light-12);
 
     }
+
+}
+
+.profile-picture-edit {
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 16px;
+    width: 16px;
+    border: 1px solid var(--white);
+
 
 }
 </style>
