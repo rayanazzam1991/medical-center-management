@@ -1,4 +1,4 @@
-import { Speciality, SpecialitySearchFilter, defaultSpeciality } from "/@src/models/Others/Speciality/speciality"
+import { Speciality, SpecialitySearchFilter, ChangeSpecialityStatus, defaultSpeciality } from "/@src/models/Others/Speciality/speciality"
 import { useSpeciality } from "/@src/stores/Others/Speciality/specialityStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -13,14 +13,13 @@ export async function addSpeciality(specialityData: Speciality) {
 
 }
 
-export async function deleteSpeciality(specialityId: number) {
+export async function changeSpecialityStatus(specialityData: ChangeSpecialityStatus) {
     const specialityResponse = useSpeciality()
-    await specialityResponse.deleteSpecialityStore(specialityId)
+    await specialityResponse.changeSpecialityStatusStore(specialityData)
     var success: boolean = specialityResponse.success ?? false
     var error_code: string = specialityResponse.error_code ?? ''
     var message: string = specialityResponse.message ?? ''
     return { success, error_code, message }
-
 }
 export async function editSpeciality(specialityData: Speciality) {
     const specialityResponse = useSpeciality()

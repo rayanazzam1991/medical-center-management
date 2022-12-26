@@ -16,6 +16,8 @@ import { getNationalitiesList } from '/@src/services/Others/Nationality/national
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeEditvalidationSchema } from '/@src/rules/Employee/employeeEditValidation';
+import { getPositionsList } from '/@src/services/Others/Position/positionService';
+import { Position, defaultPositionSearchFilter } from '/@src/models/Others/Position/position';
 import sleep from "/@src/utils/sleep"
 
 
@@ -34,14 +36,14 @@ employeeForm.setStep({
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
+                path: `/employee/${employeeForm.dataUpdate.id}`,
             })
 
         }
     },
     skipStepFn: async () => {
         router.push({
-            path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
+            path: `/employee/${employeeForm.dataUpdate.id}`,
         })
 
     }
@@ -70,6 +72,7 @@ const fetchEmployee = async () => {
     currentUser.value.room_id = employee.user.room.id
     currentUser.value.user_status_id = employee.user.status.id
     currentEmployee.value.nationality_id = employee.nationality.id
+    currentEmployee.value.position_id = employee.position.id
     currentEmployee.value.starting_date = employee.starting_date
     currentEmployee.value.end_date = employee.end_date
     currentEmployee.value.basic_salary = employee.basic_salary
@@ -90,6 +93,7 @@ const fetchEmployee = async () => {
     employeeForm.dataUpdate.end_date = currentEmployee.value.end_date
     employeeForm.dataUpdate.basic_salary = currentEmployee.value.basic_salary
     employeeForm.dataUpdate.nationality_id = currentEmployee.value.nationality_id
+    employeeForm.dataUpdate.position_id = currentEmployee.value.position_id
     employeeForm.dataUpdate.id = currentEmployee.value.id
 
 
@@ -99,6 +103,7 @@ const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
 const nationalitiesList = ref<Nationality[]>([])
+const positionsList = ref<Position[]>([])
 
 onMounted(async () => {
     if (!isLoading.value) {
@@ -111,6 +116,9 @@ onMounted(async () => {
         statusesList.value = userstatuses
         const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
         nationalitiesList.value = nationalities
+        await fetchEmployee()
+        const { positions } = await getPositionsList(defaultPositionSearchFilter)
+        positionsList.value = positions
         await fetchEmployee()
         isLoading.value = false
 
@@ -393,6 +401,20 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="nationality_id">
+                                        <VLabel class="required">Position</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.position_id">
+                                                <VOption value="">Position</VOption>
+                                                <VOption v-for="position in positionsList" :key="position.id"
+                                                    :value="position.id">{{ position.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="position_id" />
                                         </VControl>
                                     </VField>
                                 </div>
