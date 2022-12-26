@@ -90,13 +90,26 @@ export const defaultContractorSearchFilter: ContractorSearchFilter = {
 
 }
 
-export const defaultContractorPersonalId: Media = {
+export const defaultContractorProfilePic: Media = {
+    id: undefined,
+    model_id: 0,
+    model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
+    relative_path: undefined,
+    is_featured: '1',
+
+}
+export const defaultContractorFiles: Media = {
     id: undefined,
     model_id: 0,
     model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '0',
+    file_name: undefined,
+    mime_type: undefined,
+    size: undefined,
+    created_at: undefined,
 
 }
+
 const ContractorConsts = BaseConsts
 export { ContractorConsts }

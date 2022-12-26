@@ -27,6 +27,8 @@ export interface VAvatarProps {
   dotColor?: VAvatarDotColor
   squared?: boolean
   dot?: boolean
+  edit?: boolean
+  editAction?: Function
 }
 
 const props = withDefaults(defineProps<VAvatarProps>(), {
@@ -38,53 +40,41 @@ const props = withDefaults(defineProps<VAvatarProps>(), {
   size: undefined,
   color: undefined,
   dotColor: undefined,
+  edit: false,
+  editAction: undefined
+
 })
+const emits = defineEmits<{
+  (e: 'edit'): void
+}>()
+
 </script>
 
 <template>
-  <div
-    class="v-avatar"
-    :class="[
-      size && `is-${props.size}`,
-      dot && 'has-dot',
-      dotColor && `dot-${props.dotColor}`,
-      squared && dot && 'has-dot-squared',
-    ]"
-  >
+  <div class="v-avatar" :class="[
+    size && `is-${props.size}`,
+    dot && 'has-dot',
+    dotColor && `dot-${props.dotColor}`,
+    squared && dot && 'has-dot-squared',
+  ]">
     <slot name="avatar">
-      <img
-        v-if="props.picture"
-        class="avatar"
-        :class="[props.squared && 'is-squared', props.pictureDark && 'light-image']"
-        :src="props.picture"
-        alt=""
-        @error.once="onceImageErrored(150)"
-      />
-      <span
-        v-else
-        class="avatar is-fake"
-        :class="[props.squared && 'is-squared', props.color && `is-${props.color}`]"
-      >
+      <img v-if="props.picture" class="avatar"
+        :class="[props.squared && 'is-squared', props.pictureDark && 'light-image']" :src="props.picture" alt=""
+        @error.once="onceImageErrored(150)" />
+      <span v-else class="avatar is-fake" :class="[props.squared && 'is-squared', props.color && `is-${props.color}`]">
         <span>{{ props.initials }}</span>
       </span>
-      <img
-        v-if="props.picture && props.pictureDark"
-        class="avatar dark-image"
-        :class="[props.squared && 'is-squared']"
-        :src="props.pictureDark"
-        alt=""
-        @error.once="onceImageErrored(150)"
-      />
+      <img v-if="props.picture && props.pictureDark" class="avatar dark-image" :class="[props.squared && 'is-squared']"
+        :src="props.pictureDark" alt="" @error.once="onceImageErrored(150)" />
     </slot>
 
     <slot name="badge">
-      <img
-        v-if="props.badge"
-        class="badge"
-        :src="props.badge"
-        alt=""
-        @error.once="onceImageErrored(150)"
-      />
+      <img v-if="props.badge" class="badge" :src="props.badge" alt="" @error.once="onceImageErrored(150)" />
+    </slot>
+    <slot name="edit">
+      <VIconButton v-if="props.edit" class="badge" @click="props.editAction" icon="feather:edit" circle @click.prevent="() => {
+        emits('edit')
+      }" />
     </slot>
   </div>
 </template>
