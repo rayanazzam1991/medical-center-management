@@ -22,6 +22,7 @@ export async function addEmployee(
     end_date: employeeData.end_date,
     basic_salary: employeeData.basic_salary,
     nationality_id: employeeData.nationality_id,
+    position_id: employeeData.position_id,
     user: userData,
   }
   console.log(userData)
@@ -43,6 +44,7 @@ export async function updateEmployee(
     end_date: employeeData.end_date,
     basic_salary: employeeData.basic_salary,
     nationality_id: employeeData.nationality_id,
+    position_id: employeeData.position_id,
     user: userData,
   }
   const employeeResponse = useEmployee()

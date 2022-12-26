@@ -97,11 +97,9 @@ export default defineComponent({
         const resetFilter = () => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.nationality_id = undefined
             searchFilter.value.user_status_id = undefined
             searchFilter.value.quick_search = undefined
             quickSearchField.value = ''
@@ -113,11 +111,9 @@ export default defineComponent({
         const resetFilter_popup = (value: EmployeeSearchFilter) => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.nationality_id = undefined
             searchFilter.value.user_status_id = undefined
 
 

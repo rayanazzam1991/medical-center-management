@@ -52,13 +52,16 @@ const employeeEditvalidationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
+        room_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
         user_status_id: zod
             .preprocess(
                 (input) => {

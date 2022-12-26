@@ -49,6 +49,7 @@ onMounted(async () => {
 })
 const getCurrentEmployee = async () => {
     const { employee } = await getEmployee(employeeId.value)
+    console.log(employee)
     currentEmployee.value = employee
 
 }
@@ -74,18 +75,15 @@ const changestatusUser = async () => {
     userForm.user_status_id = userData.user.status?.id
     const { message, success } = await changeUserStatus(userForm)
     if (success) {
-
         getCurrentEmployee()
         // @ts-ignore
         notif.dismissAll()
         await sleep(200);
-
         // @ts-ignore
         notif.success(`${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} was edited successfully`)
     } else {
         // @ts-ignore
         await sleep(200);
-
         notif.error(message)
     }
     // router.push({ path: `/employee/${userData.id}` })
@@ -207,6 +205,17 @@ const changestatusUser = async () => {
                                                     <span>Ntionality</span>
                                                     <span>
                                                         {{ currentEmployee.nationality.name }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="column is-12">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>Position</span>
+                                                    <span>
+                                                        {{ currentEmployee.position.name }}
                                                     </span>
                                                 </div>
 

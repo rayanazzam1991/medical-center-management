@@ -42,29 +42,6 @@ onMounted(async () => {
 
 });
 
-const deactivateSpeciality = async (specialityId: number) => {
-
-    await deactivateSpeciality(specialityId)
-    await search(searchFilter.value)
-    deleteSpecialityPopup.value = false
-    // @ts-ignore
-    await sleep(200);
-
-    notif.success(`${viewWrapper.pageTitle} was deactivated successfully`)
-
-}
-const activateSpeciality = async (specialityId: number) => {
-
-    await activateSpeciality(specialityId)
-    await search(searchFilter.value)
-    deleteSpecialityPopup.value = false
-    // @ts-ignore
-    await sleep(200);
-
-    notif.success(`${viewWrapper.pageTitle} was activated successfully`)
-
-}
-
 const search = async (searchFilter2: SpecialitySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
