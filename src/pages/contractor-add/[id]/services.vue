@@ -95,36 +95,33 @@ const {handleSubmit} = useForm({
   validationSchema
 });
 const onSubmitAdd = handleSubmit(async () => {
+  for (let i = 0; i < servicesChecked.value.length; i++) {
+      if (servicesChecked.value[i].checked == true) {
+          contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) })
 
-  console.log('done')
+      }
+      else {
+      }
 
-  // for (let i = 0; i < servicesChecked.value.length; i++) {
-  //     if (servicesChecked.value[i].checked == true) {
-  //         contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) })
-  //
-  //     }
-  //     else {
-  //     }
-  //
-  // }
-  // contractorForm.data.is_completed = true
-  // const { success, message, contractor } = await addServicesToContractor(contractorId.value, contractorForm.contractorServicesForm)
-  //
-  // if (success) {
-  //     // @ts-ignore
-  //     await sleep(200);
-  //
-  //     notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
-  //
-  //     return true
-  // }
-  // else {
-  //     // @ts-ignore
-  //     await sleep(200);
-  //
-  //     notif.error(message)
-  //
-  // }
+  }
+  contractorForm.data.is_completed = true
+  const { success, message, contractor } = await addServicesToContractor(contractorId.value, contractorForm.contractorServicesForm)
+
+  if (success) {
+      // @ts-ignore
+      await sleep(200);
+
+      notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
+
+      return true
+  }
+  else {
+      // @ts-ignore
+      await sleep(200);
+
+      notif.error(message)
+
+  }
 
 
 })
