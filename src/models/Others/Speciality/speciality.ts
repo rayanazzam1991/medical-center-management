@@ -1,11 +1,11 @@
 import { BaseConsts } from "/@src/utils/consts/base"
 
-export interface City {
+export interface Speciality {
     id?: number
     name: string
     status: number
 }
-export interface CitySearchFilter {
+export interface SpecialitySearchFilter {
     name?: string
     status?: number
     page?: number
@@ -14,13 +14,13 @@ export interface CitySearchFilter {
     order?: string
 }
 
-export const defaultCity: City = {
+export const defaultSpeciality: Speciality = {
     id: 0,
     name: '',
     status: 1,
 }
 
-export const defaultCitySearchFilter: CitySearchFilter = {
+export const defaultSpecialitySearchFilter: SpecialitySearchFilter = {
     name: undefined,
     status: undefined,
     page: undefined,
@@ -29,5 +29,5 @@ export const defaultCitySearchFilter: CitySearchFilter = {
     per_page: undefined,
 }
 
-const CityConsts = BaseConsts
-export { CityConsts }
+const SpecialityConsts = BaseConsts
+export { SpecialityConsts }

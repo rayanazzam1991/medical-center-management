@@ -153,7 +153,6 @@ export const useUserStatus = defineStore('userstatus', () => {
     editUserStatusStore,
     getUserStatusStore,
     getUserStatusesStore,
-    loading
   } as const
 })
 
