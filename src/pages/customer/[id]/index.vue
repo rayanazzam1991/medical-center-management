@@ -4,29 +4,48 @@ import { useHead } from "@vueuse/head"
 import { changeUserStatus } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useNotyf } from "/@src/composable/useNotyf"
-import { Customer, defaultCustomer, defaultCustomerProfilePic } from "/@src/models/CRM/Customer/customer"
+import { Customer, defaultCustomer, defaultCustomerProfilePic, defaultUpdateNotes, UpdateNotes } from "/@src/models/CRM/Customer/customer"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
-import { getCustomer, getProfilePicture } from "/@src/services/CRM/Customer/customerService"
+import { getCustomer, getProfilePicture, updateCustomerNotes, getCustomerFiles, addCustomerFile, deleteFile } from "/@src/services/CRM/Customer/customerService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { MedicalInfoConsts } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
+import CKE from '@ckeditor/ckeditor5-vue'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { Media, MediaConsts } from "/@src/models/Others/Media/media"
+
+
 const route = useRoute()
 const router = useRouter()
 const changeStatus = ref()
 const currentChangeStatusUser = ref(defaultChangeStatusUser)
 const changeStatusPopup = ref(false)
+const deleteFilePopup = ref(false)
+const deleteFileId = ref()
 const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
 const notif = useNotyf()
 const customerForm = useCustomerForm()
-
 const customerProfilePicture = ref(defaultCustomerProfilePic)
+const customerFiles = ref<Array<Media>>([])
+const filesToUpload = ref<File>()
+const notesEditor = ref(false)
+const loading = ref(false)
+const CKEditor = CKE.component
+const editorData = ref()
+const config = {
+    fontFamily: {
+        options: ['"Montserrat", sans-serif', '"Roboto", sans-serif'],
+    },
+    toolbar: ['heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList']
 
+
+}
 // @ts-ignore
 customerId.value = route.params.id
 viewWrapper.setPageTitle(`Customer`)
@@ -36,7 +55,7 @@ useHead({
 const customerStore = useCustomer()
 const props = withDefaults(
     defineProps<{
-        activeTab?: 'Details' | 'Medical Info' | 'Social Media'
+        activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files'
     }>(),
     {
         activeTab: 'Details',
@@ -50,9 +69,15 @@ onMounted(async () => {
     statusesList.value = userstatuses
 })
 onMounted(async () => {
+    loading.value = true
     await getCurrentCustomer()
-    await getCurrentProfilePic()
-    console.log(currentCustomer.value)
+
+    await fetchCurrentProfilePic()
+
+    await fetchCustomerFiles()
+
+    loading.value = false
+    editorData.value = currentCustomer.value.notes
 })
 const getCurrentCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
@@ -75,7 +100,7 @@ const changestatusUser = async () => {
     await sleep(200);
 
     // @ts-ignore
-    notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} was edited successfully`)
+    notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} were edited successfully`)
     // router.push({ path: `/employee/${userData.id}` })
     changeStatusPopup.value = false
 }
@@ -100,6 +125,33 @@ const onClickEditMedicalInfo = async () => {
         path: `/customer-edit/${customerId.value}/medical-info`
     })
 }
+const openNotesEditor = async () => {
+    notesEditor.value = true
+
+}
+const editNotes = async () => {
+    const newNote: UpdateNotes = defaultUpdateNotes
+    newNote.notes = editorData.value
+    const { success, message, customer } = await updateCustomerNotes(customerId.value, newNote)
+    if (success) {
+        notif.dismissAll()
+        await sleep(200);
+        // @ts-ignore
+        notif.success(`Customer notes was edited successfully`)
+        currentCustomer.value.notes = customer.notes
+        currentCustomer.value.notes_by = customer.notes_by
+        currentCustomer.value.notes_timestamp = customer.notes_timestamp
+        notesEditor.value = false
+
+    } else {
+        await sleep(200);
+        notif.error(message)
+    }
+
+}
+
+
+
 const fetchCustomer = async () => {
     const { customer } = await getCustomer(customerId.value)
     customerForm.userForm.id = customer.user.id
@@ -132,7 +184,7 @@ const fetchCustomer = async () => {
     }
 }
 
-const getCurrentProfilePic = async () => {
+const fetchCurrentProfilePic = async () => {
     var profile_pic = await getProfilePicture(customerId.value)
     await sleep(500)
     if (profile_pic.media.length != 0) {
@@ -140,11 +192,84 @@ const getCurrentProfilePic = async () => {
         customerProfilePicture.value = profile_pic.media[profile_pic.media.length - 1]
     }
 }
+const fetchCustomerFiles = async () => {
+    const { media } = await getCustomerFiles(customerId.value)
+    await sleep(500)
+    if (media.length != 0) {
+        media.forEach(mediaElemnt => {
+            customerFiles.value.push(mediaElemnt)
+        });
+    }
+}
+
+const onAddFile = async (event: any) => {
+
+    const _file = event.target.files[0] as File
+    if (_file) {
+        filesToUpload.value = _file
+    }
+}
+const UploadFile = async () => {
+
+    let formData = new FormData();
+    if (filesToUpload.value != undefined)
+        formData.append('images[]', filesToUpload.value);
+
+    const { success, message, media } = await addCustomerFile(customerId.value, formData)
+
+    if (success) {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.first_name} file was added successfully`)
+        media[0].file_name = media[0].relative_path
+        customerFiles.value.push(media[0])
+        return true
+    }
+    else {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.error(message)
+
+    }
+
+}
+
+const onDeleteFile = (file_id: number) => {
+    deleteFilePopup.value = true
+    deleteFileId.value = file_id
+
+}
+const removefile = async () => {
+
+    const { message, success } = await deleteFile(deleteFileId.value)
+
+    if (success) {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.first_name} file was deleted successfully`)
+
+        customerFiles.value.splice(customerFiles.value.findIndex((element) => element.id == deleteFileId.value), 1)
+        deleteFilePopup.value = false
+        return true
+    }
+    else {
+        // @ts-ignore
+        await sleep(200);
+
+        notif.error(message)
+
+    }
+
+}
+
 
 </script>
 <template>
     <div class="profile-wrapper">
-        <VLoader size="large" :active="customerStore.loading">
+        <VLoader size="large" :active="loading">
             <div class="profile-header has-text-centered">
                 <!-- <VLoader size="large" class="v-avatar" :active="customerStore.loading">
                 <VAvatar size="xl" :picture="customerProfilePicture?.relative_path" />
@@ -170,9 +295,9 @@ const getCurrentProfilePic = async () => {
         </VLoader>
 
         <div class="project-details">
-            <div class="tabs-wrapper is-triple-slider">
+            <div class="tabs-wrapper is-quad-slider">
 
-                <div class="tabs-inner" :hidden="customerStore.loading">
+                <div class="tabs-inner" :hidden="loading">
                     <div class="tabs tabs-width ">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
@@ -186,6 +311,10 @@ const getCurrentProfilePic = async () => {
                             <li :class="[tab === 'Social Media' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Social Media'"
                                     @click="tab = 'Social Media'"><span>Social Media </span></a>
+                            </li>
+                            <li :class="[tab === 'Files' && 'is-active']">
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Files'"
+                                    @click="tab = 'Files'"><span>Files </span></a>
                             </li>
                             <li class="tab-naver"></li>
                         </ul>
@@ -286,6 +415,47 @@ const getCurrentProfilePic = async () => {
 
                                             </div>
                                         </div>
+                                        <div v-if="!notesEditor" class="column is-12">
+                                            <div class="file-box">
+                                                <div class="meta full-width">
+                                                    <div
+                                                        class="is-justify-content-space-between is-align-items-center	is-flex mt-2">
+
+                                                        <span class="mb-2">Notes
+                                                        </span>
+                                                        <VIconButton class="mb-3" size="small" icon="feather:edit-3"
+                                                            tabindex="0" @click="openNotesEditor" />
+
+                                                    </div>
+                                                    <VFlex class="mb-3">
+                                                        <!-- use any components inside --->
+                                                        <VCard>
+                                                            <div v-html="currentCustomer.notes" class="ml-3 mb-3"></div>
+                                                            <div class="has-text-primary">-Last update at: {{
+                                                                    currentCustomer.notes_timestamp
+                                                            }}
+                                                                |
+                                                                By: {{ currentCustomer.notes_by?.first_name }} {{
+                                                                        currentCustomer.notes_by?.last_name
+                                                                }}</div>
+
+                                                        </VCard>
+
+
+                                                    </VFlex>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="column is-12 editor-wrapper">
+                                            <CKEditor :config="config" class="editor" v-model="editorData"
+                                                :editor="ClassicEditor">
+                                            </CKEditor>
+                                            <VButton class="mt-4 editor-button" @click.prevent="editNotes" color="dark">
+                                                Save
+                                            </VButton>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -422,6 +592,93 @@ const getCurrentProfilePic = async () => {
 
                     </div>
                 </div>
+                <div v-if="tab === 'Files'" class="tab-content is-active">
+                    <div class="columns project-details-inner">
+                        <div class="column is-12">
+                            <div class="project-details-card">
+                                <div class="card-head">
+                                    <div class="title-wrap">
+                                        <h3>Customer Files</h3>
+                                    </div>
+
+                                </div>
+                                <div v-if="customerFiles.length == 0" class="project-features">
+                                    <div class="project-feature">
+                                        <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                                        <h4>Customer have no files...</h4>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="project-files project-section">
+                                    <h4>Upload File</h4>
+                                    <div class="is-flex is-justify-content-space-between ">
+                                        <VField class="mr-6" grouped>
+                                            <VControl>
+                                                <div class="file has-name">
+                                                    <label class="file-label">
+                                                        <input class="file-input" type="file" v-on:change="onAddFile" />
+                                                        <span class="file-cta">
+                                                            <span class="file-icon">
+                                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                            </span>
+                                                            <span class="file-label"> Choose a file… </span>
+                                                        </span>
+                                                        <span class="file-name light-text"> {{ filesToUpload?.name ??
+                                                                'Select File'
+                                                        }}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </VControl>
+                                        </VField>
+                                        <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                                            icon="lnir lnir-add-files rem-100" light dark-outlined>
+                                            Upload
+                                        </VButton>
+                                    </div>
+                                </div>
+                                <div v-if="customerFiles.length != 0" class="project-files project-section">
+                                    <div>
+                                        <h4>Files</h4>
+                                        <div class="columns is-multiline">
+                                            <div v-for="file in customerFiles" class="column is-6">
+                                                <div class="file-box">
+                                                    <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
+                                                    <div class="meta">
+                                                        <span class="file-link"> <a class="file-link"
+                                                                :href="file.relative_path"> {{
+                                                                        file.file_name
+                                                                }}</a>
+                                                        </span>
+                                                        <span>
+                                                            {{ file.size != undefined ? (file.size / (1024 *
+                                                                    1024)).toFixed(2) :
+                                                                    'Unknown'
+                                                            }} {{ file.size != undefined ? 'MB' : '' }} <i
+                                                                aria-hidden="true" class="fas fa-circle"></i> {{
+                                                                        file.created_at
+                                                                }}
+                                                        </span>
+                                                    </div>
+                                                    <VIconButton v-if="file.id"
+                                                        class="is-right is-dots is-spaced dropdown end-action mr-2"
+                                                        size="small" icon="feather:trash" tabindex="0" color="danger"
+                                                        @click="onDeleteFile(file.id ?? 0)" />
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -457,13 +714,21 @@ const getCurrentProfilePic = async () => {
             <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
         </template>
     </VModal>
+    <VModal title="Delete Customer File" :open="deleteFilePopup" actions="center" @close="deleteFilePopup = false">
+        <template #content>
+            <VPlaceholderSection title="Are you sure?" :subtitle="`you are about to delete this file permenantly`" />
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="removefile(deleteFileId)">Confirm</VButton>
+        </template>
+    </VModal>
 </template>
   
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-    min-width: 380px;
+    min-width: 500px;
     min-height: 40px;
 
     .is-active {
@@ -472,14 +737,58 @@ const getCurrentProfilePic = async () => {
     }
 }
 
-.tabs-wrapper.is-triple-slider .tabs li a,
-.tabs-wrapper-alt.is-triple-slider .tabs li a {
+.tabs-wrapper.is-quad-slider .tabs li a,
+.tabs-wrapper-alt.is-quad-slider .tabs li a {
     height: 40px;
 
 }
 
 .tabs li {
     min-height: 40px !important;
+
+}
+
+.full-width {
+    width: 100%;
+    margin-right: 12px;
+}
+
+.editor-wrapper {
+    flex-direction: column;
+    display: flex;
+
+    .editor {
+        align-self: normal;
+    }
+
+    .editor-button {
+        align-self: flex-end;
+    }
+
+}
+
+.project-section {
+    border-bottom: 1px solid var(--fade-grey-dark-3);
+    border-top: 1px solid var(--fade-grey-dark-3);
+}
+
+.file-link {
+
+    color: var(--primary-grey) !important;
+
+}
+
+.file-link:hover {
+    color: var(--primary) !important;
+
+}
+
+.is-dark {
+
+    .project-section {
+        border-color: var(--dark-sidebar-light-12);
+
+    }
 
 }
 </style>
