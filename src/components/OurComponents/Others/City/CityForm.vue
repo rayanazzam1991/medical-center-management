@@ -5,7 +5,7 @@ import { ErrorMessage, useForm } from 'vee-validate';
 import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
 import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
+import {cityvalidationSchema, schemaObj} from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
 import { useCity } from "/@src/stores/Others/City/cityStore";
 
@@ -52,6 +52,7 @@ export default defineComponent({
       getCurrentCity();
     });
 
+    const validationSchemaObj = schemaObj
     const validationSchema = cityvalidationSchema
     const { handleSubmit } = useForm({
       validationSchema,
@@ -109,7 +110,7 @@ export default defineComponent({
       }
     };
 
-    return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore };
+    return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore ,validationSchema,validationSchemaObj};
   },
   components: { ErrorMessage }
 })
@@ -131,7 +132,7 @@ export default defineComponent({
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
-                <VField id="name" v-slot="{ field }">
+                <VField id="name">
                   <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
                   <VControl icon="feather:chevrons-right">
                     <VInput v-model="currentCity.name" type="text" placeholder="" autocomplete="given-name" />
