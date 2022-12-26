@@ -35,7 +35,7 @@ export const useContractor = defineStore('contractor', () => {
       message.value = response.response.message
 
       return returnedContractor
-    }catch (error: any) {
+    } catch (error: any) {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
@@ -96,6 +96,7 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
+
 
   async function addServicesStore(contractor_id: number, services: Array<CreateUpdateServicesHelper>) {
     if (loading.value) return
@@ -223,6 +224,111 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
+  async function getContractorProfilePicture(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+  async function getContractorFilesStore(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function addContractorFileStore(media: FormData) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await uploadMediaApi(api, media)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function deleteContractorFile(picture_id: number) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await deleteMediaApi(api, picture_id)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return response
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
 
 
   return {
@@ -237,9 +343,13 @@ export const useContractor = defineStore('contractor', () => {
     getContractorStore,
     updateContractorStore,
     getContractorsStore,
+    getContractorProfilePicture,
     addContractorPersonalId,
     getContractorPersonalId,
-    deleteContractorPersonalId
+    deleteContractorPersonalId,
+    getContractorFilesStore,
+    addContractorFileStore,
+    deleteContractorFile
   } as const
 })
 
