@@ -94,3 +94,23 @@ export const defaultEmployeePersonalId: Media = {
     is_featured: '0',
 
 }
+export const defaultEmployeeProfilePic: Media = {
+    id: undefined,
+    model_id: 0,
+    model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
+    relative_path: undefined,
+    is_featured: '1',
+
+}
+export const defaultEmployeeFiles: Media = {
+    id: undefined,
+    model_id: 0,
+    model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
+    relative_path: undefined,
+    is_featured: '0',
+    file_name: undefined,
+    mime_type: undefined,
+    size: undefined,
+    created_at: undefined,
+
+}

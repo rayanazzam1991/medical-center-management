@@ -115,6 +115,7 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
+
   async function addEmployeePersonalId(media: FormData) {
     if (loading.value) return
     loading.value = true
@@ -127,6 +128,7 @@ export const useEmployee = defineStore('employee', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return returnedMedia
 
     }
@@ -135,8 +137,7 @@ export const useEmployee = defineStore('employee', () => {
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
 
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   }
@@ -153,6 +154,74 @@ export const useEmployee = defineStore('employee', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    } finally {
+      loading.value = false
+    }
+  }
+  async function deleteEmployeePersonalId(picture_id: number) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await deleteMediaApi(api, picture_id)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return response
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getEmployeeProfilePicture(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      console.log(response)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return returnedMedia
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+  async function getEmployeeFilesStore(media: Media) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await getMediaApi(api, media)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedMedia
 
     }
@@ -162,20 +231,49 @@ export const useEmployee = defineStore('employee', () => {
       message.value = error?.response.data.message
 
     }
+
     finally {
       loading.value = false
     }
   }
-  async function deleteEmployeePersonalId(picture_id: number) {
+
+  async function addEmployeeFileStore(media: FormData) {
     if (loading.value) return
-
     loading.value = true
+    sleep(2000)
+    try {
+      const response = await uploadMediaApi(api, media)
+      var returnedMedia: Media[]
+      returnedMedia = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
 
+      return returnedMedia
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function deleteEmployeeFile(picture_id: number) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
     try {
       const response = await deleteMediaApi(api, picture_id)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+
       return response
 
     }
@@ -185,11 +283,11 @@ export const useEmployee = defineStore('employee', () => {
       message.value = error?.response.data.message
 
     }
+
     finally {
       loading.value = false
     }
   }
-
   return {
     employees,
     pagination,
@@ -198,9 +296,12 @@ export const useEmployee = defineStore('employee', () => {
     getEmployeesStore,
     updateEmployeeStore,
     getEmployeeStore,
-    addEmployeePersonalId,
-    getEmployeePersonalId,
+    deleteEmployeeFile,
+    addEmployeeFileStore,
+    getEmployeeFilesStore,
+    getEmployeeProfilePicture,
     deleteEmployeePersonalId,
+    addEmployeePersonalId,
     success,
     error_code,
     message,

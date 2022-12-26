@@ -28,7 +28,7 @@ const servicevalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                    .min(0, "Please enter a valid number"),
+                    .min(1, "Please enter a valid number"),
             ),
         status: zod
             .number({ required_error: "Please choose one" }),

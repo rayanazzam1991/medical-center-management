@@ -25,7 +25,7 @@ useHead({
 
         <!--Wizard Progress Bar-->
         <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(employeeForm.step / 2) * 100" :max="100" />
+            :value="(employeeForm.step / 1) * 100" :max="100" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => employeeForm?.validateStepFn?.()">
@@ -40,16 +40,10 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous"
                                 :disabled="employeeForm.validateStepFn === null"
                                 :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ employeeForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
+                                {{ 'Submit'
                                 }}
                             </VButton>
                         </VLoader>
-                        <VButton class="wizard-button-previous" :disabled="employeeForm.skipable === false"
-                            :color="employeeForm.skipable === true ? 'dark' : 'dark'"
-                            @click="() => employeeForm?.skipStepFn?.()">
-                            {{ employeeForm.getStep() == 2 ? 'Skip & Finish' : 'Skip'
-                            }}
-                        </VButton>
                     </div>
                 </div>
             </div>

@@ -36,14 +36,14 @@ employeeForm.setStep({
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
+                path: `/employee/${employeeForm.dataUpdate.id}`,
             })
 
         }
     },
     skipStepFn: async () => {
         router.push({
-            path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
+            path: `/employee/${employeeForm.dataUpdate.id}`,
         })
 
     }

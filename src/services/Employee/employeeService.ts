@@ -2,7 +2,8 @@ import { addUser } from '../Others/User/userService'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
 import {
   CreateEmployee,
-  defaultEmployeePersonalId,
+  defaultEmployeeFiles,
+  defaultEmployeeProfilePic,
   EmployeeSearchFilter,
   Employee,
   UpdateEmployee,
@@ -68,7 +69,22 @@ export async function getEmployee(employee_id: number) {
   var message: string = employeeResponse.message ?? ''
   return { success, error_code, message, employee }
 }
+export async function getProfilePicture(employee_id: number) {
+  const employeeResponse = useEmployee()
+  var mediaParams = defaultEmployeeProfilePic
+  mediaParams.is_featured = '1'
+  mediaParams.model_id = employee_id
+  var media: Media[] = await employeeResponse.getEmployeeProfilePicture(mediaParams) ?? []
+  media.forEach(element => {
+    element.file_name = element.relative_path
+    element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
+  });
 
+  var success: boolean = employeeResponse.success ?? false
+  var error_code: string = employeeResponse.error_code ?? ''
+  var message: string = employeeResponse.message ?? ''
+  return { success, error_code, message, media }
+}
 export async function getEmployeesList(searchFilter: EmployeeSearchFilter) {
   const employee = useEmployee()
   await employee.getEmployeesStore(searchFilter)
@@ -77,37 +93,53 @@ export async function getEmployeesList(searchFilter: EmployeeSearchFilter) {
   return { employees, pagination }
 }
 
-export async function addPersonalId(employee_id: unknown, fd: FormData) {
-  const employeeResponse = useEmployee()
-  const is_featured: unknown = true
-  fd.append('model_id', employee_id as string)
-  fd.append('model_type', MediaConsts.EMPLOYEE_MODEL_ROUTE)
-  fd.append('is_featured', String(is_featured))
-  var media: Media[] = (await employeeResponse.addEmployeePersonalId(fd)) ?? []
-  var success: boolean = employeeResponse.success ?? false
-  var error_code: string = employeeResponse.error_code ?? ''
-  var message: string = employeeResponse.message ?? ''
+
+export async function getEmployeeFiles(employeee_id: number) {
+  const employeeeResponse = useEmployee()
+  var mediaParams = defaultEmployeeFiles
+  mediaParams.is_featured = '0'
+  mediaParams.model_id = employeee_id
+  var media: Media[] = await employeeeResponse.getEmployeeFilesStore(mediaParams) ?? []
+  media.forEach(element => {
+    element.file_name = element.relative_path
+    element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
+  });
+  var success: boolean = employeeeResponse.success ?? false
+  var error_code: string = employeeeResponse.error_code ?? ''
+  var message: string = employeeeResponse.message ?? ''
   return { success, error_code, message, media }
 }
-export async function deletePersonalId(picture_id: number) {
-  const employeeResponse = useEmployee()
-  await employeeResponse.deleteEmployeePersonalId(picture_id)
-  var success: boolean = employeeResponse.success ?? false
-  var error_code: string = employeeResponse.error_code ?? ''
-  var message: string = employeeResponse.message ?? ''
+
+export async function addEmployeeFile(employeee_id: unknown, fd: FormData) {
+  const employeeeResponse = useEmployee()
+  const is_featured: unknown = false
+  fd.append('model_id', employeee_id as string)
+  fd.append('model_type', MediaConsts.CONTRACTOR_MODEL_ROUTE)
+  fd.append('is_featured', String(is_featured))
+  var media: Media[] = await employeeeResponse.addEmployeeFileStore(fd) ?? []
+  var success: boolean = employeeeResponse.success ?? false
+  var error_code: string = employeeeResponse.error_code ?? ''
+  var message: string = employeeeResponse.message ?? ''
+  return { success, error_code, message, media }
+}
+
+export async function deleteFile(picture_id: number) {
+  const employeeeResponse = useEmployee()
+  await employeeeResponse.deleteEmployeeFile(picture_id)
+  var success: boolean = employeeeResponse.success ?? false
+  var error_code: string = employeeeResponse.error_code ?? ''
+  var message: string = employeeeResponse.message ?? ''
   return { success, error_code, message }
 }
-export async function getPersonalId(employee_id: number) {
-  const employeeResponse = useEmployee()
-  var mediaParams = defaultEmployeePersonalId
-  mediaParams.is_featured = '1'
-  mediaParams.model_id = employee_id
-  var media: Media[] = (await employeeResponse.getEmployeePersonalId(mediaParams)) ?? []
-  media.forEach((element) => {
-    element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
-  })
-  var success: boolean = employeeResponse.success ?? false
-  var error_code: string = employeeResponse.error_code ?? ''
-  var message: string = employeeResponse.message ?? ''
+export async function addProfilePicture(employeee_id: unknown, fd: FormData) {
+  const employeeeResponse = useEmployee()
+  const is_featured: unknown = true
+  fd.append('model_id', employeee_id as string)
+  fd.append('model_type', MediaConsts.CUSTOMER_MODEL_ROUTE)
+  fd.append('is_featured', String(is_featured))
+  var media: Media[] = await employeeeResponse.addEmployeeFileStore(fd) ?? []
+  var success: boolean = employeeeResponse.success ?? false
+  var error_code: string = employeeeResponse.error_code ?? ''
+  var message: string = employeeeResponse.message ?? ''
   return { success, error_code, message, media }
 }

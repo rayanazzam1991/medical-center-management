@@ -38,7 +38,7 @@ employeeForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/employee-add/${employeeForm.data.id}/profile-picture`,
+                path: `/employee/${employeeForm.data.id}`,
             })
 
         }

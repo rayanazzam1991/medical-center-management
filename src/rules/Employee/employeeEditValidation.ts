@@ -99,7 +99,7 @@ const employeeEditvalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid salary number" })
-                    .min(0, "Please enter a valid salary number"),
+                    .min(1, "Please enter a valid salary number"),
             ),
         nationality_id: zod
             .preprocess(
