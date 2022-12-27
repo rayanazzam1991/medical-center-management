@@ -41,6 +41,7 @@ const loading = ref(false)
 const CKEditor = CKE.component
 const editorData = ref()
 const keyIncrement = ref(1)
+const fullPath = ref()
 const config = {
     fontFamily: {
         options: ['"Montserrat", sans-serif', '"Roboto", sans-serif'],
@@ -241,7 +242,11 @@ const UploadFile = async () => {
 
         notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was added successfully`)
         media[0].file_name = media[0].relative_path
+        media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+
+
         customerFiles.value.push(media[0])
+
         return true
     }
     else {
@@ -320,6 +325,7 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
         }
     }
 }
+
 const UploadProfilePicture = async () => {
     let _success = true
     let _message = ''
@@ -345,6 +351,8 @@ const UploadProfilePicture = async () => {
 
             notif.success(`${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was edited successfully`)
             customerProfilePicture.value = media[0]
+            // customerProfilePicture.value.relative_path = import.meta.env.VITE_MEDIA_BASE_URL  + customerProfilePicture.value.relative_path
+            fullPath.value = import.meta.env.VITE_MEDIA_BASE_URL + customerProfilePicture.value.relative_path
             keyIncrement.value++
             updateProfilePicturePopup.value = false
 
@@ -404,8 +412,7 @@ const RemoveProfilePicture = async () => {
             <div class="profile-header has-text-centered">
                 <VAvatar v-if="customerProfilePicture.id == undefined" size="xl"
                     :picture="MediaConsts.getAvatarIcon(currentCustomer.user.gender)" edit @edit="editProfilePicture" />
-                <VAvatar v-else size="xl" :picture="customerProfilePicture.relative_path" edit
-                    @edit="editProfilePicture" />
+                <VAvatar v-else size="xl" :picture="fullPath" edit @edit="editProfilePicture" />
                 <h3 class="title is-4 is-narrow is-thin">{{ currentCustomer.user.first_name }}
                     {{ currentCustomer.user.last_name }}
                 </h3>
