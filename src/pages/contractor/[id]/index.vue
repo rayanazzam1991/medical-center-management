@@ -191,7 +191,10 @@ const UploadFile = async () => {
 
         notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} file was added successfully`)
         media[0].file_name = media[0].relative_path
+        media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+
         contractorFiles.value.push(media[0])
+
         return true
     }
     else {
@@ -295,6 +298,8 @@ const UploadProfilePicture = async () => {
 
             notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} profile picture was edited successfully`)
             contractorProfilePicture.value = media[0]
+            contractorProfilePicture.value.relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+
             keyIncrement.value++
             updateProfilePicturePopup.value = false
 
@@ -752,6 +757,17 @@ const RemoveProfilePicture = async () => {
 
 .tabs li {
     min-height: 40px !important;
+
+}
+
+.file-link {
+
+    color: var(--primary-grey) !important;
+
+}
+
+.file-link:hover {
+    color: var(--primary) !important;
 
 }
 </style>

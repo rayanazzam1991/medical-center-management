@@ -114,7 +114,7 @@ export async function addEmployeeFile(employeee_id: unknown, fd: FormData) {
   const employeeeResponse = useEmployee()
   const is_featured: unknown = false
   fd.append('model_id', employeee_id as string)
-  fd.append('model_type', MediaConsts.CONTRACTOR_MODEL_ROUTE)
+  fd.append('model_type', MediaConsts.EMPLOYEE_MODEL_ROUTE)
   fd.append('is_featured', String(is_featured))
   var media: Media[] = await employeeeResponse.addEmployeeFileStore(fd) ?? []
   var success: boolean = employeeeResponse.success ?? false
