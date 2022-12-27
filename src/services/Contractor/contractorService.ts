@@ -83,7 +83,7 @@ export async function updateContractor(
         speciality_id: contractorData.speciality_id,
         services: contractorServices
     }
-    
+
     const contractorResponse = useContractor()
     var contractor: Contractor = await contractorResponse.updateContractorStore(contractor_id, newContractorData) ?? defaultContractor
     var success: boolean = contractorResponse.success ?? false
@@ -133,7 +133,7 @@ export async function addProfilePicture(contractor_id: unknown, fd: FormData) {
     const contractorResponse = useContractor()
     const is_featured: unknown = true
     fd.append('model_id', contractor_id as string)
-    fd.append('model_type', MediaConsts.CUSTOMER_MODEL_ROUTE)
+    fd.append('model_type', MediaConsts.CONTRACTOR_MODEL_ROUTE)
     fd.append('is_featured', String(is_featured))
     var media: Media[] = await contractorResponse.addContractorFileStore(fd) ?? []
     var success: boolean = contractorResponse.success ?? false
