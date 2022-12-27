@@ -18,6 +18,10 @@ import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
 import sleep from "/@src/utils/sleep"
+import { Position, defaultPositionSearchFilter } from '/@src/models/Others/Position/position';
+import { getPositionsList } from '/@src/services/Others/Position/positionService';
+import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 
 
 const viewWrapper = useViewWrapper()
@@ -47,6 +51,7 @@ const router = useRouter()
 const notif = useNotyf()
 const pageTitle = 'Step 1: Employee Info'
 const phoneCheck = ref<string>('false')
+// const selectDepartment = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
 const getCurrentEmployee = () => {
@@ -57,6 +62,8 @@ const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
 const nationalitiesList = ref<Nationality[]>([])
+const positionsList = ref<Position[]>([])
+const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
@@ -67,6 +74,11 @@ onMounted(async () => {
     statusesList.value = userstatuses
     const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
     nationalitiesList.value = nationalities
+    const { positions } = await getPositionsList(defaultPositionSearchFilter)
+    positionsList.value = positions
+    const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+    departmentsList.value = departments
+
 
 })
 onMounted(() => {
@@ -75,6 +87,9 @@ onMounted(() => {
 )
 
 
+// const selectedDepartment = async () => {
+
+// }
 const validationSchema = employeeAddvalidationSchema
 
 const { handleSubmit } = useForm({
@@ -92,7 +107,8 @@ const { handleSubmit } = useForm({
         starting_date: "",
         end_date: "",
         basic_salary: undefined,
-        nationality_id: ""
+        nationality_id: "",
+        position_id: ""
     },
 })
 
@@ -108,6 +124,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.data.starting_date = employeeData.starting_date
         employeeForm.data.end_date = employeeData.end_date
         employeeForm.data.nationality_id = employeeData.nationality_id
+        employeeForm.data.position_id = employeeData.position_id
         employeeForm.userForm.first_name = userData.first_name
         employeeForm.userForm.last_name = userData.last_name
         employeeForm.userForm.password = userData.password
@@ -120,7 +137,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
-        console.log(employeeForm.userForm)
+        console.log(employeeForm.data.position_id)
 
         const { employee, success, message } = await addEmployee(employeeForm.data, employeeForm.userForm)
 
@@ -138,8 +155,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
             notif.error(message)
             return false
-
-
         }
 
     }
@@ -147,10 +162,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
         return false
     }
 })
-
-
-
-
 
 </script>
 
@@ -221,10 +232,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="form-fieldset">
                             <div class="columns is-multiline ">
                                 <div class="column is-half">
-
                                     <VField id="gender">
                                         <VLabel class="required ml-3">Gender</VLabel>
-
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                                 color="success" />
@@ -234,7 +243,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <ErrorMessage class="help is-danger" name="gender" />
                                         </VControl>
                                     </VField>
-
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
@@ -251,7 +259,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -269,9 +276,22 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                         </div>
                         <!--Fieldset-->
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
+                                <!-- <div class="column is-6">
+                                    <VField id="room_id">
+                                        <VLabel class="required">Department</VLabel>
+                                        <VControl>
+                                            <VSelect v-on:update:model-value="selectedDepartment()">
+                                                <VOption v-for="department in departmentsList" :key="department.id"
+                                                    :value="department.id">{{
+                                                            department.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                </div> -->
                                 <div class="column is-6">
                                     <VField id="room_id">
                                         <VLabel class="required">Room</VLabel>
@@ -283,23 +303,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="room_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                                <div class="column is-6">
-                                    <VField id="user_status_id">
-                                        <VLabel class="required">Status</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">Status</VOption>
-                                                <VOption v-for="status in statusesList" :key="status.id"
-                                                    :value="status.id">
-                                                    {{
-        status.name
-}}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="user_status_id" />
                                         </VControl>
                                     </VField>
                                 </div>
@@ -356,6 +359,38 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                                <div class="column is-6">
+                                    <VField id="position_id">
+                                        <VLabel class="required">Position</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.position_id">
+                                                <VOption value="">Position</VOption>
+                                                <VOption v-for="position in positionsList" :key="position.id"
+                                                    :value="position.id">{{ position.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="position_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="user_status_id">
+                                        <VLabel class="required">Status</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                                <VOption value="">Status</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id"
+                                                    :value="status.id">
+                                                    {{
+        status.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="user_status_id" />
                                         </VControl>
                                     </VField>
                                 </div>

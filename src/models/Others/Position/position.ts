@@ -1,40 +1,43 @@
 import { BaseConsts } from "/@src/utils/consts/base"
 
-export interface Speciality {
+export interface Position {
     id?: number
     name: string
+    description?: string
     status: number
 }
-export interface SpecialitySearchFilter {
+export interface PositionSearchFilter {
     name?: string
+    description?: string
     status?: number
     page?: number
     per_page?: number
     order_by?: string
     order?: string
 }
-export interface ChangeSpecialityStatus {
+export interface ChangePositionStatus {
     id?: number
     status?: number
 }
-
-export const defaultSpeciality: Speciality = {
+export const defaultPosition: Position = {
     id: 0,
     name: '',
+    description: undefined,
     status: 1,
 }
 
-export const defaultSpecialitySearchFilter: SpecialitySearchFilter = {
+export const defaultPositionSearchFilter: PositionSearchFilter = {
     name: undefined,
+    description: undefined,
     status: undefined,
     page: undefined,
     order: undefined,
     order_by: undefined,
     per_page: undefined,
 }
-export const defaultChangeSpecialityStatus: ChangeSpecialityStatus = {
+export const defaultChangePositionStatus: ChangePositionStatus = {
     id: undefined,
     status: undefined
 }
-const SpecialityConsts = BaseConsts
-export { SpecialityConsts }
+const PositionConsts = BaseConsts
+export { PositionConsts }

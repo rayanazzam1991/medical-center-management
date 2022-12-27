@@ -34,6 +34,23 @@ const emits = defineEmits<{
                     </RouterLink>
                   </li>
                 </ul>
+                <h4 class="column-heading">Specialities</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/speciality">
+                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <span>Specialities</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/speciality/add">
+                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <span>Create Speciality</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

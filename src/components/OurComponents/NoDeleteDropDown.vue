@@ -44,7 +44,7 @@ const emits = defineEmits<{
     }
             ">
                 <div class="icon">
-                    <i class="fas fa-user-edit" aria-hidden="true"></i>
+                    <i class="fas fa-edit" aria-hidden="true"></i>
                 </div>
                 <div class="meta">
                     <span>Change Status</span>

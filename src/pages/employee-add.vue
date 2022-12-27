@@ -39,16 +39,10 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous"
                                 :disabled="employeeForm.validateStepFn === null"
                                 :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ employeeForm.getStep() == 1 ? 'Submit & Finish' : 'Submit & Next'
-}}
+                                {{ 'Submit '
+                                }}
                             </VButton>
                         </VLoader>
-                        <VButton v-if="employeeForm.skipable === true" class="wizard-button-previous"
-                            :color="employeeForm.skipable === true ? 'dark' : 'dark'"
-                            @click="() => employeeForm?.skipStepFn?.()">
-                            {{ employeeForm.getStep() == 1 ? 'Skip & Finish' : 'Skip'
-                            }}
-                        </VButton>
                     </div>
                 </div>
 

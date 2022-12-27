@@ -176,6 +176,16 @@ const columns = {
 
 
     },
+    position: {
+        align: 'center',
+        label: 'Position #',
+        renderRow: (row: any) =>
+            h('span', row?.position.name),
+
+        searchable: true,
+
+
+    },
     created_at: {
         align: 'center',
 
