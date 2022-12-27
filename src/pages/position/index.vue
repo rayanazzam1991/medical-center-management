@@ -111,6 +111,7 @@ const columns = {
         sortable: true,
     },
     status: {
+        align: 'center',
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -133,7 +134,6 @@ const columns = {
     },
     actions: {
         align: 'center',
-
         renderRow: (row: any) =>
             h(NoDeleteDropDown, {
                 onEdit: () => {
@@ -181,10 +181,10 @@ const columns = {
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getPositionsPerPage" />
         <h6 v-if="positionsList.length != 0 && !positionStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
+        paginationVar.max_page
+        ?
+        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+}} to {{
         paginationVar.page !=
             paginationVar.max_page ?
             paginationVar.page *
