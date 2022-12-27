@@ -2,8 +2,6 @@
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultCustomerSearchFilter, CustomerSearchFilter, CustomerConsts, Customer, defaultCustomer } from '/@src/models/CRM/Customer/customer'
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService'
@@ -15,6 +13,7 @@ import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/U
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import sleep from '/@src/utils/sleep'
+import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
@@ -54,11 +53,12 @@ const changestatusUser = async () => {
         // @ts-ignore
         notif.dismissAll()
         await sleep(200);
-
         // @ts-ignore
+
         notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
     } else {
         await sleep(200);
+        // @ts-ignore
 
         notif.error(message)
     }
@@ -222,11 +222,7 @@ const columns = {
         align: 'center',
 
         renderRow: (row: any) =>
-            h(NoDeleteDropDown, {
-
-                onEdit: () => {
-                    router.push({ path: `/customer-edit/${row?.id}/` })
-                },
+            h(NoEditDropDown, {
                 onView: () => {
                     router.push({ path: `/customer/${row?.id}` })
                 },
@@ -272,10 +268,10 @@ const columns = {
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCustomersPerPage" />
         <h6 v-if="customersList.length != 0 && !customerStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
+        paginationVar.max_page
+        ?
+        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+}} to {{
         paginationVar.page !=
             paginationVar.max_page ?
             paginationVar.page *
@@ -296,8 +292,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="customerChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />

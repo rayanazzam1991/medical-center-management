@@ -33,8 +33,9 @@ employeeForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
+            employeeForm.reset()
             router.push({
-                path: `/employee-add/${employeeForm.data.id}/profile-picture`,
+                path: `/employee/${employeeForm.data.id}`,
             })
 
         }
@@ -100,7 +101,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     console.log(userData)
-    const { result } = await phoneExistsCheck(userData.phone_number)
+    const { result } = await phoneExistsCheck('964' + userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
         var employeeData = currentEmployee.value
@@ -125,16 +126,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
         if (success) {
             employeeForm.data.id = employee.id
-            // @ts-ignore
             await sleep(200);
-
+            // @ts-ignore
             notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
 
             return true
         }
         else {
-            // @ts-ignore
             await sleep(200);
+            // @ts-ignore
 
             notif.error(message)
             return false
@@ -200,6 +200,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                                 autocomplete="given-first_name" />
                                             <ErrorMessage class="help is-danger" name="phone_number" />
+                                            <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+
                                         </VControl>
                                     </VField>
                                 </div>
@@ -241,8 +243,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                        city.name
-                                                }}
+        city.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -276,8 +278,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.room_id">
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                        room.number
-                                                }}
+        room.number
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="room_id" />
@@ -293,8 +295,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                 <VOption v-for="status in statusesList" :key="status.id"
                                                     :value="status.id">
                                                     {{
-                                                            status.name
-                                                    }}
+        status.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="user_status_id" />

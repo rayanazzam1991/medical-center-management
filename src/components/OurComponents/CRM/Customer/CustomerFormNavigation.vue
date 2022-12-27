@@ -24,7 +24,7 @@ const customerForm = useCustomerForm()
     </div>
     <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
-        Step {{ customerForm.step }}: <span>{{ customerForm.stepTitle }}</span>
+        <span>{{ customerForm.stepTitle }}</span>
       </span>
     </div>
     <div class="navbar-item is-dark-mode">

@@ -21,7 +21,7 @@ import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Employee Main Info')
+viewWrapper.setPageTitle('Edit Employee Main Info')
 const head = useHead({
     title: 'Employee',
 })
@@ -29,29 +29,20 @@ const employeeForm = useEmployeeForm()
 employeeForm.setStep({
     number: 1,
     canNavigate: true,
-    skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
+                path: `/employee/${employeeForm.dataUpdate.id}`,
             })
 
         }
     },
-    skipStepFn: async () => {
-        router.push({
-            path: `/employee-edit/${employeeForm.dataUpdate.id}/profile-picture`,
-        })
-
-    }
 })
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
-const pageTitle = 'Step 1: Employee Main Info'
-const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
 const employeeId = ref(0)
@@ -201,9 +192,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
                     <div :hidden="isLoading">
                         <!--Fieldset-->
                         <div class="form-fieldset">
-                            <div class="fieldset-heading">
-                                <h4>{{ pageTitle }}</h4>
-                            </div>
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">

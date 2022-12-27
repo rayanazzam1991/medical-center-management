@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { contractorAddServicesValidationSchema } from '../../../rules/Contractor/contractorAddServicesValidationSchema';
 import { addServicesToContractor } from '/@src/services/Contractor/contractorService';
 import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep"
+import { z as zod } from 'zod';
 
 
 const viewWrapper = useViewWrapper()
@@ -23,7 +27,7 @@ const head = useHead({
 const notif = useNotyf()
 const contractorForm = useContractorForm()
 contractorForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
     skipable: true,
     validateStepFn: async () => {
@@ -45,7 +49,7 @@ contractorForm.setStep({
     }
 
 })
-const pageTitle = 'Step 3: Contractor Services'
+const pageTitle = 'Step 2: Contractor Services'
 const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
@@ -54,6 +58,7 @@ interface ServicesChecked {
     contractor_service_amount: number
 }
 const servicesChecked = ref<ServicesChecked[]>([])
+
 onMounted(async () => {
     const { services } = await getServicesList(defaultServiceSearchFilter)
     servicesList.value = services
@@ -63,9 +68,14 @@ onMounted(async () => {
     }
 })
 
+const validationSchema = contractorAddServicesValidationSchema
+
+const { handleSubmit } = useForm({
+    validationSchema
+});
 
 
-const onSubmitAdd = async () => {
+const onSubmitAdd = handleSubmit(async () => {
 
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
@@ -97,7 +107,7 @@ const onSubmitAdd = async () => {
 
 
 
-}
+})
 </script>
 
 <template>
@@ -129,29 +139,58 @@ const onSubmitAdd = async () => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField :key="service.service.id" v-for="service in servicesChecked"
-                                    :id="service.service.name">
+                                <div :class="service.checked ? 'mb-3' : ''" v-for="service in servicesChecked">
+                                    <VField v-if="service.checked" :key="service.service.id"
+                                        :id="`service_price_${service.service.id}`">
 
-                                    <VLabel class="required" v-if="service.checked">Contractor's {{ service.service.name
-                                    }}
-                                        Price:
-                                    </VLabel>
-                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                        <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
-                                            :key="service.service.id" />
+                                        <VLabel class="required" v-if="service.checked">Contractor's {{
+        service.service.name
+}}
+                                            Price:
+                                        </VLabel>
+                                        <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                            <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
+                                                :key="service.service.id" />
 
-                                    </VControl>
+                                        </VControl>
+                                        <ErrorMessage class="help is-danger"
+                                            :name="`service_price_${service.service.id}`" />
 
-                                </VField>
+
+                                    </VField>
+                                </div>
+
                             </div>
                             <div class="column is-6">
+
+                                <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
+                                    :id="service.service.name" :key="service.service.id">
+                                    <span class="label custom-label" v-if="service.checked"> Contractor's {{
+        service.service.name
+}}
+                                        Service
+                                        amount: </span>
+                                    <div v-if="service.checked" class="control">
+                                        <div class="input">
+                                            {{ (service.price *
+        (contractorForm.data.payment_percentage / 100 ?? 0))
+                                            }}
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- <div class="column is-6">
                                 <VField :key="service.service.id" v-for="service in servicesChecked"
-                                    :id="service.service.name">
+                                    :id="`service_amount_${service.service.id}`">
 
                                     <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
                                         Contractor's {{
-                                                service.service.name
-                                        }}
+        service.service.name
+}}
                                         Service amount:
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
@@ -161,8 +200,11 @@ const onSubmitAdd = async () => {
                                             :key="service.service.id" />
 
                                     </VControl>
+                                    <ErrorMessage class="help is-danger"
+                                        :name="`service_amount_${service.service.id}`" />
+
                                 </VField>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -191,4 +233,20 @@ const onSubmitAdd = async () => {
 .form-fieldset {
     max-width: 40%;
 }
+
+
+.field {
+
+    .custom-label {
+        font-family: var(--font);
+        font-size: 0.9rem;
+        color: var(--light-text) !important;
+        font-weight: 400;
+    }
+}
+
+.input {
+    height: 38px;
+}
+
 </style>

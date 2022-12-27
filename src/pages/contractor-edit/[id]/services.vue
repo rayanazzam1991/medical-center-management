@@ -1,6 +1,8 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { contractorEditServicesValidationSchema } from '/@src/rules/Contractor/contractorEditServicesValidationSchema';
 import { getContractor, updateContractor } from '/@src/services/Contractor/contractorService';
 import { getServicesList } from '/@src/services/Others/Service/serviceService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
@@ -16,16 +18,15 @@ const contractorId = ref<number>(0)
 // @ts-ignore
 contractorId.value = route.params?.id
 
-viewWrapper.setPageTitle('Contractor Services')
+viewWrapper.setPageTitle('Edit Contractor Services')
 const head = useHead({
     title: 'Contractor',
 })
 const notif = useNotyf()
 const contractorForm = useContractorForm()
 contractorForm.setStep({
-    number: 3,
+    number: 2,
     canNavigate: true,
-    skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
 
@@ -37,12 +38,6 @@ contractorForm.setStep({
         }
 
     },
-    skipStepFn: async () => {
-        contractorForm.reset()
-        router.push({
-            path: `/contractor/${contractorId.value}`,
-        })
-    }
 
 })
 const pageTitle = 'Step 3: Contractor Services'
@@ -76,6 +71,8 @@ const fetchContractor = async () => {
     contractorForm.userForm.city_id = contractor.user.city.id
     contractorForm.userForm.user_status_id = contractor.user.status.id
     contractorForm.dataUpdate.starting_date = contractor.starting_date
+    contractorForm.dataUpdate.end_date = contractor.end_date
+    contractorForm.dataUpdate.speciality_id = contractor.speciality.id ?? 0
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
     contractorForm.dataUpdate.id = contractorId.value
 
@@ -108,10 +105,15 @@ onMounted(async () => {
 
 
 })
+const validationSchema = contractorEditServicesValidationSchema
+
+const { handleSubmit } = useForm({
+    validationSchema,
+});
 
 
 
-const onSubmitEdit = async () => {
+const onSubmitEdit = handleSubmit(async () => {
     contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
     console.log(contractorForm.contractorServicesForm)
     for (let i = 0; i < servicesChecked.value.length; i++) {
@@ -138,7 +140,7 @@ const onSubmitEdit = async () => {
 
     }
 
-}
+})
 
 
 
@@ -153,7 +155,7 @@ const onSubmitEdit = async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
+                            <h4>Choose Services:</h4>
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
@@ -168,46 +170,84 @@ const onSubmitEdit = async () => {
                             </div>
                         </div>
                     </div>
-                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField v-for="service in servicesChecked" :id="service.service.name">
+                                <div :class="service.checked ? 'mb-3' : ''" v-for="service in servicesChecked">
+                                    <VField v-if="service.checked" :key="service.service.id"
+                                        :id="`service_price_${service.service.id}`">
 
-                                    <VLabel class="required" v-if="service.checked">Contractor's {{ service.service.name
-                                    }}
-                                        Price:
-                                    </VLabel>
-                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                        <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
-                                            :key="service.service.id" />
+                                        <VLabel class="required" v-if="service.checked">Contractor's {{
+        service.service.name
+}}
+                                            Price:
+                                        </VLabel>
+                                        <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                            <VInput :placeholder="service.price" class="input" type="number"
+                                                v-model="service.price" :key="service.service.id" />
 
-                                    </VControl>
+                                        </VControl>
+                                        <ErrorMessage class="help is-danger"
+                                            :name="`service_price_${service.service.id}`" />
 
-                                </VField>
+
+                                    </VField>
+                                </div>
+
                             </div>
                             <div class="column is-6">
-                                <VField v-for="service in servicesChecked" :id="service.service.name">
 
-                                    <VLabel v-if="service.checked">Contractor's {{ service.service.name }}
+                                <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
+                                    :id="service.service.name" :key="service.service.id">
+                                    <span class="label custom-label" v-if="service.checked"> Contractor's {{
+        service.service.name
+}}
+                                        Service
+                                        amount: </span>
+                                    <div v-if="service.checked" class="control">
+                                        <div class="input">
+                                            {{ (service.price *
+        (contractorForm.dataUpdate.payment_percentage / 100 ?? 0))
+                                            }}
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- <div class="column is-6">
+                                <VField :key="service.service.id" v-for="service in servicesChecked"
+                                    :id="`service_amount_${service.service.id}`">
+
+                                    <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
+                                        Contractor's {{
+        service.service.name
+}}
                                         Service amount:
                                     </VLabel>
                                     <VControl v-if="service.checked" icon="feather:chevrons-right">
                                         <VInput disabled type="number"
-                                            :value="(service.price * (contractorForm.dataUpdate.payment_percentage as number / 100 ?? 0))"
+                                            :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
                                             v-bind="service.price" v-model="service.contractor_service_amount"
                                             :key="service.service.id" />
 
                                     </VControl>
-                                </VField>
-                            </div>
+                                    <ErrorMessage class="help is-danger"
+                                        :name="`service_amount_${service.service.id}`" />
 
+                                </VField>
+                            </div> -->
                         </div>
                     </div>
 
-
-
                 </div>
+
+
+
+
             </div>
         </form>
 
@@ -235,5 +275,19 @@ const onSubmitEdit = async () => {
 
 .form-fieldset {
     max-width: 40%;
+}
+
+.field {
+
+    .custom-label {
+        font-family: var(--font);
+        font-size: 0.9rem;
+        color: var(--light-text) !important;
+        font-weight: 400;
+    }
+}
+
+.input {
+    height: 38px;
 }
 </style>

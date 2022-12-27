@@ -22,12 +22,7 @@ useHead({
 
 <template>
     <MinimalLayout>
-        <!--Wizard Navbar-->
-        <ContractorFormNavigation v-model:step="contractorForm.step" :title="contractorForm.stepTitle" />
-
-        <!--Wizard Progress Bar-->
-        <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(contractorForm.step / 3) * 100" :max="100" />
+        <ContractorFormNavigation :title="contractorForm.stepTitle" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => contractorForm?.validateStepFn?.()">
@@ -39,19 +34,10 @@ useHead({
                     <div class="column is-one-quarter"></div>
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="contractorStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
-                                :disabled="contractorForm.validateStepFn === null"
-                                :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ contractorForm.getStep() == 3 ? 'Submit & Finish' : 'Submit & Next'
-                                }}
+                            <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
+                                Submit
                             </VButton>
                         </VLoader>
-                        <VButton class="wizard-button-previous" :disabled="contractorForm.skipable === false"
-                            :color="contractorForm.skipable === true ? 'dark' : 'dark'"
-                            @click="() => contractorForm?.skipStepFn?.()">
-                            {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
-                            }}
-                        </VButton>
                     </div>
                 </div>
             </div>
@@ -59,6 +45,6 @@ useHead({
     </MinimalLayout>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
 </style>

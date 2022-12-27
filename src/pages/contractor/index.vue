@@ -1,7 +1,8 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { ErrorMessage } from 'vee-validate';
 import VTag from '/@src/components/base/tags/VTag.vue';
-import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue';
+import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue';
+
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorSearchFilter, ContractorSearchFilter, Contractor, defaultContractor } from '/@src/models/Contractor/contractor';
 import { CustomerConsts } from '/@src/models/CRM/Customer/customer';
@@ -186,11 +187,7 @@ const columns = {
         align: 'center',
 
         renderRow: (row: any) =>
-            h(NoDeleteDropDown, {
-
-                onEdit: () => {
-                    router.push({ path: `/contractor-edit/${row?.id}/` })
-                },
+            h(NoEditDropDown, {
                 onView: () => {
                     router.push({ path: `/contractor/${row?.id}` })
                 },
@@ -235,10 +232,10 @@ const columns = {
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getContractorsPerPage" />
         <h6 v-if="contractorsList.length != 0 && !contractorStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
+        paginationVar.max_page
+        ?
+        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+}} to {{
         paginationVar.page !=
             paginationVar.max_page ?
             paginationVar.page *
@@ -260,8 +257,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="contractorChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />

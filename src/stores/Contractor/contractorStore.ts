@@ -149,88 +149,13 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
-  async function addContractorPersonalId(media: FormData) {
-    if (loading.value) return
-    loading.value = true
-    sleep(2000)
-    try {
-      const response = await uploadMediaApi(api, media)
-      console.log(response)
-      var returnedMedia: Media[]
-      returnedMedia = response.response.data
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
 
-      return returnedMedia
-
-    }
-    catch (error: any) {
-      success.value = error?.response.data.success
-      error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.message
-
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function getContractorPersonalId(media: Media) {
-    if (loading.value) return
-    loading.value = true
-    sleep(2000)
-    try {
-      const response = await getMediaApi(api, media)
-      console.log(response)
-      var returnedMedia: Media[]
-      returnedMedia = response.response.data
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-
-      return returnedMedia
-
-    }
-    catch (error: any) {
-      success.value = error?.response.data.success
-      error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.message
-
-    } finally {
-      loading.value = false
-    }
-  }
-  async function deleteContractorPersonalId(picture_id: number) {
-    if (loading.value) return
-
-    loading.value = true
-
-    try {
-      const response = await deleteMediaApi(api, picture_id)
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-
-      return response
-
-    }
-    catch (error: any) {
-      success.value = error?.response.data.success
-      error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.message
-
-    }
-    finally {
-      loading.value = false
-    }
-  }
   async function getContractorProfilePicture(media: Media) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
@@ -344,9 +269,6 @@ export const useContractor = defineStore('contractor', () => {
     updateContractorStore,
     getContractorsStore,
     getContractorProfilePicture,
-    addContractorPersonalId,
-    getContractorPersonalId,
-    deleteContractorPersonalId,
     getContractorFilesStore,
     addContractorFileStore,
     deleteContractorFile

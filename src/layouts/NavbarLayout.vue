@@ -182,49 +182,49 @@ watch(
       <template #links>
         <div class="centered-links" :class="''">
           <a :class="[
-            (activeSubnav === 'others' ||
-              route.path.startsWith('/nationality') ||
-              route.path.startsWith('/department') ||
-              route.path.startsWith('/city') ||
-              route.path.startsWith('/userStatus') ||
-              route.path.startsWith('/service') ||
-              route.path.startsWith('/room')) &&
-            'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
+  (activeSubnav === 'others' ||
+    route.path.startsWith('/nationality') ||
+    route.path.startsWith('/department') ||
+    route.path.startsWith('/city') ||
+    route.path.startsWith('/userStatus') ||
+    route.path.startsWith('/service') ||
+    route.path.startsWith('/room')) &&
+  'is-active',
+]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
             <i class="iconify" data-icon="feather:layers" aria-hidden="true"></i>
             <span>Others</span>
           </a>
           <a :class="[
-            (activeSubnav === 'CRM' ||
-              route.path.startsWith('/customer') ||
-              route.path.startsWith('/customer-add') ||
-              route.path.startsWith('/customer-edit') ||
-              route.path.startsWith('/customer-group') ||
-              route.path.startsWith('/social-media')) &&
-            'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
+  (activeSubnav === 'CRM' ||
+    route.path.startsWith('/customer') ||
+    route.path.startsWith('/customer-add') ||
+    route.path.startsWith('/customer-edit') ||
+    route.path.startsWith('/customer-group') ||
+    route.path.startsWith('/social-media')) &&
+  'is-active',
+]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
             @click="toggleSubnav('CRM')">
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
             <span>CRM</span>
           </a>
           <a :class="[((activeSubnav === 'contractor') ||
-            route.path.startsWith('/contractor') ||
-            route.path.startsWith('/contractor-add') ||
-            route.path.startsWith('/contractor-edit')
-          
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+  route.path.startsWith('/contractor') ||
+  route.path.startsWith('/contractor-add') ||
+  route.path.startsWith('/contractor-edit')
+
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
             <span>Contractors</span>
           </a>
           <a :class="[(activeSubnav === 'employee' ||
-            route.path.startsWith('/employee') ||
-            route.path.startsWith('/employee-add') ||
-            route.path.startsWith('/employee-edit')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+  route.path.startsWith('/employee') ||
+  route.path.startsWith('/employee-add') ||
+  route.path.startsWith('/employee-edit')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
-            <i class="iconify" data-icon="feather:users" aria-hidden="true"></i>
+            <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
             <span>Employees</span>
           </a>
         </div>
@@ -258,8 +258,8 @@ watch(
       <!-- Custom navbar sub navigation -->
       <template #subnav>
         <div :class="[
-          !(activeSubnav === 'closed') && 'is-active',
-        ]" class="navbar-subnavbar">
+  !(activeSubnav === 'closed') && 'is-active',
+]" class="navbar-subnavbar">
 
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" @close="deactivateSubnav" />
 

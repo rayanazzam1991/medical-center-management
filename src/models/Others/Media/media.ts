@@ -42,8 +42,7 @@ class MediaConsts extends BaseConsts {
     if (gender === 'Female')
       return '/images/icons/avatar/woman.png'
     else
-      return '/images/icons/files/not_selected.png'
+      return '/images/icons/avatar/not_selected.png'
   }
-
 }
 export { MediaConsts }

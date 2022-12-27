@@ -29,7 +29,7 @@ const employeeForm = useEmployeeForm()
     </div>
     <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
-        Step {{ employeeForm.step }}: <span>{{ employeeForm.stepTitle }}</span>
+        <span>{{ employeeForm.stepTitle }}</span>
       </span>
     </div>
 

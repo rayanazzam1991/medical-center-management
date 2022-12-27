@@ -6,9 +6,8 @@ import { getCustomer, updateCustomer } from "/@src/services/CRM/Customer/custome
 import { getSocialMediasList } from "/@src/services/CRM/SocialMedia/socialMediaService"
 import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-import { useForm } from "vee-validate";
-import { toFormValidator } from '@vee-validate/zod';
-import { z as zod } from 'zod';
+import { ErrorMessage, useForm } from "vee-validate";
+import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
 import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
@@ -25,9 +24,8 @@ const head = useHead({
 const notif = useNotyf()
 const customerForm = useCustomerForm()
 customerForm.setStep({
-  number: 4,
+  number: 3,
   canNavigate: true,
-  skipable: true,
   validateStepFn: async () => {
     var isValid = await onSubmitEdit()
     if (isValid) {
@@ -38,15 +36,8 @@ customerForm.setStep({
     }
 
   },
-  skipStepFn: async () => {
-    customerForm.reset()
-    router.push({
-      path: `/customer/${customerId.value}`,
-    })
-  }
 
 })
-const pageTitle = 'Step 4: Customer Social Media'
 const socialMediasList = ref<SocialMedia[]>([])
 
 interface SocialMediaChecked {
@@ -146,7 +137,14 @@ onMounted(async () => {
 //   initialValues:initialValuesObject
 // });
 
-const onSubmitEdit = async () => {
+const validationSchema = customerEditSocialMediaValidationSchema
+
+const { handleSubmit } = useForm({
+  validationSchema
+});
+
+
+const onSubmitEdit = handleSubmit(async () => {
   customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
   for (let i = 0; i < socialMediaChecked.value.length; i++) {
     if (socialMediaChecked.value[i].checked == true) {
@@ -176,7 +174,7 @@ const onSubmitEdit = async () => {
 
   }
 
-}
+})
 
 
 </script>
@@ -189,7 +187,7 @@ const onSubmitEdit = async () => {
           <!--Fieldset-->
           <div class="form-fieldset">
             <div class="fieldset-heading">
-              <h4>{{ pageTitle }}</h4>
+              <h4>Choose Social Media:</h4>
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
@@ -209,22 +207,51 @@ const onSubmitEdit = async () => {
           <!--Fieldset-->
           <div class="form-fieldset">
             <div class="columns is-multiline">
+              <!-- <div class="column is-12">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+
+                  <VField :key="socialMedia.socialMedia.id" :id="`social_media_${socialMedia.socialMedia.id}`">
+
+                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
+    socialMedia.socialMedia.name
+}}
+                      URL:
+                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput v-if="socialMedia.checked" type="text" placeholder="" autocomplete=""
+                        v-model="socialMedia.url" :key="socialMedia.socialMedia.id" />
+
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_${socialMedia.socialMedia.id}`" />
+
+
+                  </VField>
+
+                </div>
+              </div> -->
               <div class="column is-12">
-                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+                  <VField v-if="socialMedia.checked" :key="socialMedia.socialMedia.id"
+                    :id="`social_media_url_${socialMedia.socialMedia.id}`">
 
-                  <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-                      socialMedia.socialMedia.name
-                  }}
-                    URL:
-                  </VLabel>
-                  <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
-                    <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
-                      :key="socialMedia.socialMedia.id" />
+                    <VLabel class="required" v-if="socialMedia.checked">customer's {{
+    socialMedia.socialMedia.name
+}}
+                      URL:
+                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput :placeholder="socialMedia.url" class="input" type="text" v-model="socialMedia.url"
+                        :key="socialMedia.socialMedia.id" />
 
-                  </VControl>
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_url_${socialMedia.socialMedia.id}`" />
 
-                </VField>
+
+                  </VField>
+                </div>
+
               </div>
+
             </div>
           </div>
 

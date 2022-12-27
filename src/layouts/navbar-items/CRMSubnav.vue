@@ -1,14 +1,14 @@
 <script setup lang="ts">
 type TabId = 'CRM' | 'templates'
 const activeTab = ref<TabId>('CRM')
-  const emits = defineEmits<{
-    (e: 'close'): void
+const emits = defineEmits<{
+  (e: 'close'): void
 }>()
 
 </script>
 
 <template>
-  <div class="navbar-subnavbar-inner tabs-wrapper"  @mouseleave="() => emits('close')">
+  <div class="navbar-subnavbar-inner tabs-wrapper" @mouseleave="() => emits('close')">
     <div class="container">
       <div class="tab-content" :class="[activeTab === 'CRM' && 'is-active']">
         <div class="tab-content-inner">
@@ -19,14 +19,14 @@ const activeTab = ref<TabId>('CRM')
                 <ul>
                   <li>
                     <RouterLink to="/customer">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i class="fas fa-user" aria-hidden="true"></i>
                       <span>Customers</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/customer-add">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>Create Customer</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
@@ -36,14 +36,14 @@ const activeTab = ref<TabId>('CRM')
                 <ul>
                   <li>
                     <RouterLink to="/customer-group">
-                      <i aria-hidden="true" class="lnil lnil-pizza"></i>
+                      <i class="lnir lnir-hierchy-alt" aria-hidden="true"></i>
                       <span>Customer Groups</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/customer-group/add">
-                      <i aria-hidden="true" class="lnil lnil-map"></i>
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>Create Customer Group</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
@@ -55,14 +55,14 @@ const activeTab = ref<TabId>('CRM')
                 <ul>
                   <li>
                     <RouterLink to="/social-media">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i class="fas fa-hashtag" aria-hidden="true"></i>
                       <span>Social Media</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/social-media/add">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>Create Social Media</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

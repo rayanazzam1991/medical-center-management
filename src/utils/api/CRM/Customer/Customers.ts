@@ -52,7 +52,7 @@ export async function getCustomerApi(
   customer_id: number
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`customer/${customer_id}`)
-
+  console.log(response)
   return { response }
 }
 

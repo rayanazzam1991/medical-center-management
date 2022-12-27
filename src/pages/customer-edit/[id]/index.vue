@@ -24,7 +24,7 @@ import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Main Info')
+viewWrapper.setPageTitle('Edit Customer Main Info')
 const head = useHead({
     title: 'Customer',
 })
@@ -32,28 +32,20 @@ const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 1,
     canNavigate: true,
-    skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-edit/${customerForm.dataUpdate.id}/medical-info`,
+                path: `/customer/${customerForm.dataUpdate.id}`,
             })
 
         }
     },
-    skipStepFn: async () => {
-        router.push({
-            path: `/customer-edit/${customerForm.dataUpdate.id}/medical-info`,
-        })
-
-    }
 })
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
-const pageTitle = 'Step 1: Customer Main Info'
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const customerId = ref(0)
@@ -67,7 +59,6 @@ const fetchCustomer = async () => {
     currentUser.value.birth_date = customer.user.birth_date
     currentUser.value.phone_number = customer.user.phone_number
     currentUser.value.address = customer.user.address
-    console.log(currentUser.value.city_id)
     currentUser.value.city_id = customer.user?.city?.id
     currentUser.value.user_status_id = customer.user?.status?.id
     currentUser.value.id = customer.user.id
@@ -220,9 +211,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
                     <div :hidden="isLoading">
                         <!--Fieldset-->
                         <div class="form-fieldset">
-                            <div class="fieldset-heading">
-                                <h4>{{ pageTitle }}</h4>
-                            </div>
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">
@@ -296,8 +284,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                        city.name
-                                                }}
+        city.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -333,8 +321,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                                 <VOption v-for="status in statusesList" :key="status.id"
                                                     :value="status.id">
                                                     {{
-                                                            status.name
-                                                    }}
+        status.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="user_status_id" />
@@ -348,8 +336,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                             <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
                                                 <VOption v-for="customerGroup in customerGroupsList"
                                                     :key="customerGroup.id" :value="customerGroup.id">{{
-                                                            customerGroup.name
-                                                    }}
+        customerGroup.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="customer_group_id" />

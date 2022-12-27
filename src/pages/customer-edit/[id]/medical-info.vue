@@ -22,7 +22,7 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Medical Info')
+viewWrapper.setPageTitle('Edit Customer Medical Info')
 const head = useHead({
     title: 'Customer',
 })
@@ -35,18 +35,11 @@ customerForm.setStep({
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-edit/${customerId.value}/profile-picture`,
+                path: `/customer/${customerId.value}`,
             })
         }
 
     },
-    skipStepFn: async () => {
-        router.push({
-            path: `/customer-edit/${customerId.value}/profile-picture`,
-        })
-
-    }
-
 })
 
 const fetchCustomer = async () => {
@@ -97,7 +90,6 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 2: Customer Medical Info'
 onMounted(async () => {
     if (customerForm.dataUpdate.id != customerId.value) {
 
@@ -129,6 +121,20 @@ const onSubmitEdit = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
+    if (medicalInfoData.allergic == undefined &&
+        medicalInfoData.blood_type == undefined &&
+        medicalInfoData.chronic_diseases == undefined &&
+        medicalInfoData.infectious_diseases == undefined &&
+        medicalInfoData.smoking == undefined &&
+        medicalInfoData.any_other_info == undefined) {
+        await sleep(200);
+
+        notif.error(`Please add some data before submitting`)
+
+        return false
+
+    }
+
     var _customer, _message, _success
     if (customerForm.dataUpdate.medical_info.id) {
 
@@ -175,9 +181,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
                 <div class="form-body">
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="blood_type">

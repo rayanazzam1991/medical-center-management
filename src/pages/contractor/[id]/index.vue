@@ -113,11 +113,15 @@ const fetchContractor = async () => {
     contractorForm.userForm.city_id = contractor.user.city.id
     contractorForm.userForm.user_status_id = contractor.user.status.id
     contractorForm.dataUpdate.starting_date = contractor.starting_date
+    contractorForm.dataUpdate.end_date = contractor.end_date
+    contractorForm.dataUpdate.speciality_id = contractor.speciality.id ?? 0
     contractorForm.dataUpdate.payment_percentage = contractor.payment_percentage
     contractorForm.dataUpdate.id = contractorId.value
 
 
 }
+
+
 
 const onClickEditServices = async () => {
     await fetchContractor()
@@ -366,8 +370,8 @@ const RemoveProfilePicture = async () => {
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
                         <span>Status: <span
                                 :class="currentContractor.user.status.name == 'Busy' ? 'has-text-danger' : 'has-text-primary'">{{
-                                        currentContractor.user.status.name
-                                }}</span></span>
+        currentContractor.user.status.name
+}}</span></span>
                     </div>
                     <div class="separator"></div>
                 </div>
@@ -418,8 +422,15 @@ const RemoveProfilePicture = async () => {
                                         <h4>Contractor Name</h4>
                                         <p>
                                             {{ currentContractor.user.first_name }} {{
-                                                    currentContractor.user.last_name
-                                            }}.
+        currentContractor.user.last_name
+}}.
+                                        </p>
+                                    </div>
+                                    <div class="project-feature">
+                                        <i class="fas fa-medal" aria-hidden="true"></i>
+                                        <h4>Speciality</h4>
+                                        <p>
+                                            {{ currentContractor.speciality.name }}
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -454,7 +465,7 @@ const RemoveProfilePicture = async () => {
                                 <div class="project-files">
                                     <h4>More Info</h4>
                                     <div class="columns is-multiline">
-                                        <div class="column is-12">
+                                        <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
                                                     <span>Starting Date</span>
@@ -465,6 +476,38 @@ const RemoveProfilePicture = async () => {
 
                                             </div>
                                         </div>
+                                        <div class="column is-6">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>End Date</span>
+                                                    <span>
+                                                        {{ currentContractor.end_date }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="column is-6">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>Department</span>
+                                                    <span>
+                                                        {{ currentContractor?.user?.room?.department?.name }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column is-6">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>Room Number</span>
+                                                    <span>
+                                                        {{ currentContractor?.user?.room?.number }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
@@ -476,23 +519,10 @@ const RemoveProfilePicture = async () => {
 
                                             </div>
                                         </div>
-                                        <div class="column is-12">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>Room Number</span>
-                                                    <span>
-                                                        {{ currentContractor?.user?.room?.number }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
                 <div v-if="tab === 'Services'" class="tab-content is-active">
@@ -517,7 +547,7 @@ const RemoveProfilePicture = async () => {
                                         </p>
                                         <p class="has-text-centered">Contractor service amount:
                                             <span class="has-text-primary">{{ service.contractor_service_amount
-                                            }}</span>
+}}</span>
                                         </p>
                                     </div>
                                     <div v-if="(currentContractor.services.length == 0)" class="project-feature">
@@ -567,8 +597,8 @@ const RemoveProfilePicture = async () => {
                                                             <span class="file-label"> Choose a file… </span>
                                                         </span>
                                                         <span class="file-name light-text"> {{ filesToUpload?.name ??
-                                                                'Select File'
-                                                        }}
+        'Select File'
+}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -595,17 +625,17 @@ const RemoveProfilePicture = async () => {
                                                     <div class="meta">
                                                         <span class="file-link"> <a target="_blank" class="file-link"
                                                                 :href="file.relative_path"> {{
-                                                                        file.file_name
-                                                                }}</a>
+        file.file_name
+}}</a>
                                                         </span>
                                                         <span>
                                                             {{ file.size != undefined ? (file.size / (1024 *
-                                                                    1024)).toFixed(2) :
-                                                                    'Unknown'
-                                                            }} {{ file.size != undefined ? 'MB' : '' }} <i
+        1024)).toFixed(2) :
+        'Unknown'
+}} {{ file.size != undefined ? 'MB' : '' }} <i
                                                                 aria-hidden="true" class="fas fa-circle"></i> {{
-                                                                        file.created_at
-                                                                }}
+        file.created_at
+}}
                                                         </span>
                                                     </div>
                                                     <VIconButton v-if="file.id"
@@ -643,8 +673,8 @@ const RemoveProfilePicture = async () => {
                                         v-model="currentContractor.user.status.id">
                                         <VOption value="">User Status</VOption>
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />
@@ -700,8 +730,9 @@ const RemoveProfilePicture = async () => {
 
 </template>
   
-<style scoped lang="scss">
+<style  lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
+
 
 .tabs-width {
     min-width: 350px;

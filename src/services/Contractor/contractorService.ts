@@ -13,6 +13,8 @@ export async function addContractor(
     const newContractorData: CreateContractor = {
         starting_date: contractorData.starting_date,
         payment_percentage: contractorData.payment_percentage,
+        end_date: contractorData.end_date,
+        speciality_id: contractorData.speciality_id,
         user: userData,
         services: []
     }
@@ -24,19 +26,6 @@ export async function addContractor(
     return { success, error_code, message, contractor }
 }
 
-export async function addPersonalId(contractor_id: unknown, fd: FormData) {
-    const contractorResponse = useContractor()
-    const is_featured: unknown = true
-    fd.append('model_id', contractor_id as string)
-    fd.append('model_type', MediaConsts.CONTRACTOR_MODEL_ROUTE)
-    fd.append('is_featured', String(is_featured))
-    var media: Media[] = await contractorResponse.addContractorPersonalId(fd) ?? []
-    var success: boolean = contractorResponse.success ?? false
-    var error_code: string = contractorResponse.error_code ?? ''
-    var message: string = contractorResponse.message ?? ''
-    return { success, error_code, message, media }
-}
-
 export async function addServicesToContractor(contractor_id: number, services: Array<CreateUpdateServicesHelper>) {
     const contractorResponse = useContractor()
     var contractor: Contractor = await contractorResponse.addServicesStore(contractor_id, services) ?? defaultContractor
@@ -44,16 +33,6 @@ export async function addServicesToContractor(contractor_id: number, services: A
     var error_code: string = contractorResponse.error_code ?? ''
     var message: string = contractorResponse.message ?? ''
     return { success, error_code, message, contractor }
-}
-
-export async function deletePersonalId(picture_id: number) {
-
-    const contractorResponse = useContractor()
-    await contractorResponse.deleteContractorPersonalId(picture_id)
-    var success: boolean = contractorResponse.success ?? false
-    var error_code: string = contractorResponse.error_code ?? ''
-    var message: string = contractorResponse.message ?? ''
-    return { success, error_code, message }
 }
 
 export async function getContractor(contractor_id: number) {
@@ -100,8 +79,11 @@ export async function updateContractor(
         starting_date: contractorData.starting_date,
         payment_percentage: contractorData.payment_percentage,
         user: userData,
+        end_date: contractorData.end_date,
+        speciality_id: contractorData.speciality_id,
         services: contractorServices
     }
+    
     const contractorResponse = useContractor()
     var contractor: Contractor = await contractorResponse.updateContractorStore(contractor_id, newContractorData) ?? defaultContractor
     var success: boolean = contractorResponse.success ?? false
