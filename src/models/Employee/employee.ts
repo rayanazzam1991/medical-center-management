@@ -86,18 +86,10 @@ export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
     order: undefined,
     quick_search: undefined,
 }
-export const defaultEmployeePersonalId: Media = {
-    id: undefined,
-    model_id: 0,
-    model_type: MediaConsts.EMPLOYEE_MODEL_ROUTE,
-    relative_path: undefined,
-    is_featured: '0',
-
-}
 export const defaultEmployeeProfilePic: Media = {
     id: undefined,
     model_id: 0,
-    model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
+    model_type: MediaConsts.EMPLOYEE_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '1',
 
@@ -105,7 +97,7 @@ export const defaultEmployeeProfilePic: Media = {
 export const defaultEmployeeFiles: Media = {
     id: undefined,
     model_id: 0,
-    model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
+    model_type: MediaConsts.EMPLOYEE_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '0',
     file_name: undefined,
