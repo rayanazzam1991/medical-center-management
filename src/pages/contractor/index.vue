@@ -110,7 +110,7 @@ const columns = {
         align: 'center',
 
         label: 'Name',
-        grow: 'lg',
+        grow: true,
         renderRow: (row: any) =>
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
 
@@ -120,7 +120,7 @@ const columns = {
     },
     "users.phone_number": {
         align: 'center',
-        grow: true,
+        grow: false,
         label: 'Phone',
         renderRow: (row: any) =>
             h('span', row?.user?.phone_number),
@@ -130,7 +130,27 @@ const columns = {
 
 
     },
-    room: {
+    speciality: {
+        align: 'center',
+        label: 'Speciality',
+        renderRow: (row: any) =>
+            h('span', row?.speciality?.name),
+
+
+
+    },
+    "users.rooms.department": {
+        align: 'center',
+
+        label: 'Department',
+        renderRow: (row: any) =>
+            h('span', row?.user?.room?.department?.name),
+
+        searchable: true,
+
+
+    },
+    "users.room": {
         align: 'center',
 
         label: 'Room #',
@@ -141,7 +161,7 @@ const columns = {
 
 
     },
-    status: {
+    "users.status": {
         align: 'center',
 
         label: 'status',
@@ -184,8 +204,8 @@ const columns = {
 
     },
     actions: {
-        align: 'center',
-
+        align: 'end',
+        grow: false,
         renderRow: (row: any) =>
             h(NoEditDropDown, {
                 onView: () => {

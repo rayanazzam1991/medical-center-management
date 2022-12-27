@@ -565,7 +565,8 @@ const RemoveProfilePicture = async () => {
                                                         <!-- use any components inside --->
                                                         <VCard>
                                                             <div v-html="currentCustomer.notes" class="ml-3 mb-3"></div>
-                                                            <div class="has-text-primary">-Last update at: {{
+                                                            <div v-if="currentCustomer.notes != undefined"
+                                                                class="has-text-primary">-Last update at: {{
         currentCustomer.notes_timestamp
 }}
                                                                 |
