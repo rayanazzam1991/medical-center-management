@@ -94,24 +94,26 @@ const columns = {
   },
   number: {
     sortable: true,
+    align: 'center',
     searchable: true,
 
   },
   floor: {
     sortable: true,
+    align: 'center',
     searchable: true,
 
   },
   department: {
     sortable: true,
     searchable: true,
+    align: 'center',
     label: 'Department',
     renderRow: (row: any) =>
       h('span', row?.department?.name)
   },
   status: {
     align: 'center',
-
     renderRow: (row: any) =>
       h(
         VTag,
@@ -179,10 +181,10 @@ const columns = {
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getRoomsPerPage" />
     <h6 v-if="roomsList.length != 0 && !roomStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-    }} to {{
+    paginationVar.max_page
+    ?
+    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+}} to {{
     paginationVar.page !=
       paginationVar.max_page ?
       paginationVar.page *

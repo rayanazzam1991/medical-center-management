@@ -146,6 +146,7 @@ const columns = {
     },
     status: {
         align: 'center',
+        grow: true,
 
         label: 'status',
         renderRow: (row: any) =>
@@ -178,6 +179,7 @@ const columns = {
     },
     position: {
         align: 'center',
+        grow: true,
         label: 'Position #',
         renderRow: (row: any) =>
             h('span', row?.position.name),
