@@ -93,13 +93,6 @@ const fetchContractor = async () => {
     contractorForm.dataUpdate.speciality_id = currentContractor.value.speciality_id
     contractorForm.dataUpdate.payment_percentage = currentContractor.value.payment_percentage
     contractorForm.dataUpdate.id = currentContractor.value.id
-    // for (let i = 0; i < contractor.services.length; i++) {
-    //     // @ts-ignore
-    //     contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
-
-
-    // }
-    console.log(contractor.user)
     selectedDepartmentId.value = contractor.user.room.department?.id ?? 0
 
 
@@ -123,17 +116,17 @@ onMounted(async () => {
         const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
         departmentsList.value = departments
         await fetchContractor()
-        let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
-        RoomsFilter.department_id = selectedDepartmentId.value
-        const { rooms } = await getRoomsList(RoomsFilter)
+        let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+        roomsFilter.department_id = selectedDepartmentId.value
+        const { rooms } = await getRoomsList(roomsFilter)
         roomsList.value = rooms
         isLoading.value = false
     }
 })
 const getRoomsByDepartment = async () => {
-    let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
-    RoomsFilter.department_id = selectedDepartmentId.value
-    const { rooms } = await getRoomsList(RoomsFilter)
+    let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+    roomsFilter.department_id = selectedDepartmentId.value
+    const { rooms } = await getRoomsList(roomsFilter)
     roomsList.value = rooms
     currentUser.value.room_id = undefined
 
