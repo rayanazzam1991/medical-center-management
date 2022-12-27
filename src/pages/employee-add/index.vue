@@ -9,7 +9,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
 import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
@@ -37,6 +37,7 @@ employeeForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
+            employeeForm.reset()
             router.push({
                 path: `/employee/${employeeForm.data.id}`,
             })
@@ -48,6 +49,8 @@ employeeForm.setStep({
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
+const selectedDepartmentId = ref(0)
+
 const pageTitle = 'Step 1: Employee Info'
 const phoneCheck = ref<string>('false')
 // const selectDepartment = ref<string>('false')
@@ -67,8 +70,8 @@ const departmentsList = ref<Department[]>([])
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
     citiesList.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    roomsList.value = rooms
+    // const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+    // roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
     const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
@@ -84,6 +87,13 @@ onMounted(() => {
     getCurrentEmployee()
 }
 )
+const getRoomsByDepartment = async () => {
+    let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+    RoomsFilter.department_id = selectedDepartmentId.value
+    const { rooms } = await getRoomsList(RoomsFilter)
+    roomsList.value = rooms
+
+}
 
 
 // const selectedDepartment = async () => {
@@ -116,7 +126,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     console.log(userData)
-    const { result } = await phoneExistsCheck(userData.phone_number)
+    const { result } = await phoneExistsCheck('964' + userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
         var employeeData = currentEmployee.value
@@ -142,16 +152,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
         if (success) {
             employeeForm.data.id = employee.id
-            // @ts-ignore
             await sleep(200);
-
+            // @ts-ignore
             notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
 
             return true
         }
         else {
-            // @ts-ignore
             await sleep(200);
+            // @ts-ignore
 
             notif.error(message)
             return false
@@ -211,6 +220,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                                 autocomplete="given-first_name" />
                                             <ErrorMessage class="help is-danger" name="phone_number" />
+                                            <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+
                                         </VControl>
                                     </VField>
                                 </div>
@@ -249,8 +260,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                                 <VOption value="">City</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                        city.name
-                                                }}
+        city.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -276,35 +287,39 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <!-- <div class="column is-6">
-                                    <VField id="room_id">
+                                <div class="column is-6">
+                                    <VField>
                                         <VLabel class="required">Department</VLabel>
                                         <VControl>
-                                            <VSelect v-on:update:model-value="selectedDepartment()">
-                                                <VOption v-for="department in departmentsList" :key="department.id"
-                                                    :value="department.id">{{
-                                                            department.name
-                                                    }}
-                                                </VOption>
-                                            </VSelect>
+                                            <div class="select">
+
+                                                <select @change="getRoomsByDepartment" v-if="currentUser"
+                                                    v-model="selectedDepartmentId">
+                                                    <VOption :value="0">Department</VOption>
+                                                    <VOption v-for="department in departmentsList" :key="department.id"
+                                                        :value="department.id">{{ department.name }}
+                                                    </VOption>
+                                                </select>
+                                            </div>
                                         </VControl>
                                     </VField>
-                                </div> -->
+                                </div>
                                 <div class="column is-6">
                                     <VField id="room_id">
                                         <VLabel class="required">Room</VLabel>
                                         <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.room_id">
+                                            <VSelect :disabled="roomsList.length <= 0" v-if="currentUser"
+                                                v-model="currentUser.room_id">
+                                                <VOption>Room</VOption>
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                        room.number
-                                                }}
+        room.number
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="room_id" />
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
                         <!--Fieldset-->

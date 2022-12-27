@@ -74,7 +74,6 @@ onMounted(async () => {
 onMounted(async () => {
     loading.value = true
     await getCurrentCustomer()
-
     await fetchCurrentProfilePic()
 
     await fetchCustomerFiles()
@@ -420,8 +419,8 @@ const RemoveProfilePicture = async () => {
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
                         <span>Status: <span
                                 :class="currentCustomer.user.status.name == 'Pending' ? 'has-text-warning' : 'has-text-primary'">{{
-                                        currentCustomer.user.status.name
-                                }}</span></span>
+        currentCustomer.user.status.name
+}}</span></span>
                     </div>
                 </div>
             </div>
@@ -475,7 +474,7 @@ const RemoveProfilePicture = async () => {
                                         <h4>Customer Name</h4>
                                         <p>
                                             {{ currentCustomer.user.first_name }} {{ currentCustomer.user.last_name
-                                            }}.
+}}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -483,8 +482,9 @@ const RemoveProfilePicture = async () => {
                                             :class="currentCustomer.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
                                         <h4>Gender</h4>
                                         <p>
-                                            {{ currentCustomer.user.gender == 'Not_selected' currentCustomer.user.gender
-                                            }}.
+                                            {{ currentCustomer.user.gender == 'Not_Selected' ? 'Unknown' :
+        currentCustomer.user.gender
+}}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -565,13 +565,14 @@ const RemoveProfilePicture = async () => {
                                                         <!-- use any components inside --->
                                                         <VCard>
                                                             <div v-html="currentCustomer.notes" class="ml-3 mb-3"></div>
-                                                            <div class="has-text-primary">-Last update at: {{
-                                                                    currentCustomer.notes_timestamp
-                                                            }}
+                                                            <div v-if="currentCustomer.notes != undefined"
+                                                                class="has-text-primary">-Last update at: {{
+        currentCustomer.notes_timestamp
+}}
                                                                 |
                                                                 By: {{ currentCustomer.notes_by?.first_name }} {{
-                                                                        currentCustomer.notes_by?.last_name
-                                                                }}</div>
+        currentCustomer.notes_by?.last_name
+}}</div>
 
                                                         </VCard>
 
@@ -625,7 +626,7 @@ const RemoveProfilePicture = async () => {
                                         <h4>Smoke</h4>
                                         <p>
                                             {{ MedicalInfoConsts.showBoolean(currentCustomer?.medical_info?.smoking)
-                                            }}.
+}}.
                                         </p>
                                     </div>
                                 </div>
@@ -710,7 +711,9 @@ const RemoveProfilePicture = async () => {
                                         <i aria-hidden="true" :class="socialMedia.icon"></i>
                                         <h4>{{ socialMedia.name }}</h4>
                                         <p class="has-text-centered">Customer URL:
-                                            <span class="has-text-primary">{{ socialMedia.url }}</span>
+                                            <a target="_blank" class=" has-text-primary" :href="socialMedia.url"> {{
+        socialMedia.url
+}}</a>
                                         </p>
                                     </div>
                                     <div v-if="(currentCustomer.social_medias.length == 0)" class="project-feature">
@@ -760,8 +763,8 @@ const RemoveProfilePicture = async () => {
                                                             <span class="file-label"> Choose a file… </span>
                                                         </span>
                                                         <span class="file-name light-text"> {{ filesToUpload?.name ??
-                                                                'Select File'
-                                                        }}
+        'Select File'
+}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -788,17 +791,17 @@ const RemoveProfilePicture = async () => {
                                                     <div class="meta">
                                                         <span class="file-link"> <a target="_blank" class="file-link"
                                                                 :href="file.relative_path"> {{
-                                                                        file.file_name
-                                                                }}</a>
+        file.file_name
+}}</a>
                                                         </span>
                                                         <span>
                                                             {{ file.size != undefined ? (file.size / (1024 *
-                                                                    1024)).toFixed(2) :
-                                                                    'Unknown'
-                                                            }} {{ file.size != undefined ? 'MB' : '' }} <i
+        1024)).toFixed(2) :
+        'Unknown'
+}} {{ file.size != undefined ? 'MB' : '' }} <i
                                                                 aria-hidden="true" class="fas fa-circle"></i> {{
-                                                                        file.created_at
-                                                                }}
+        file.created_at
+}}
                                                         </span>
                                                     </div>
                                                     <VIconButton v-if="file.id"
@@ -837,8 +840,8 @@ const RemoveProfilePicture = async () => {
                                         v-model="currentCustomer.user.status.id">
                                         <VOption value="">User Status</VOption>
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />

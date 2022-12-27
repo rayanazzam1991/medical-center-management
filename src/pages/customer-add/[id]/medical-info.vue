@@ -38,12 +38,12 @@ customerForm.setStep({
 
     },
     skipStepFn: async () => {
-        customerForm.medicalInfoForm.allergic = ''
-        customerForm.medicalInfoForm.blood_type = ''
-        customerForm.medicalInfoForm.chronic_diseases = ''
-        customerForm.medicalInfoForm.infectious_diseases = ''
-        customerForm.medicalInfoForm.smoking = 0
-        customerForm.medicalInfoForm.any_other_info = ''
+        customerForm.medicalInfoForm.allergic = undefined
+        customerForm.medicalInfoForm.blood_type = undefined
+        customerForm.medicalInfoForm.chronic_diseases = undefined
+        customerForm.medicalInfoForm.infectious_diseases = undefined
+        customerForm.medicalInfoForm.smoking = undefined
+        customerForm.medicalInfoForm.any_other_info = undefined
         router.push({
             path: `/customer/${customerId.value}`,
         })
@@ -89,6 +89,19 @@ const onSubmitAdd = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
+    if (medicalInfoData.allergic == undefined &&
+        medicalInfoData.blood_type == undefined &&
+        medicalInfoData.chronic_diseases == undefined &&
+        medicalInfoData.infectious_diseases == undefined &&
+        medicalInfoData.smoking == undefined &&
+        medicalInfoData.any_other_info == undefined) {
+        await sleep(200);
+
+        notif.error(`Please add some data or skip this step`)
+
+        return false
+
+    }
     const { customer, message, success } = await addMedicalInfo(customerId.value, customerForm.medicalInfoForm)
 
     if (success) {

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { getEmployeesList } from '/@src/services/Employee/employeeService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultEmployee, defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
@@ -15,6 +13,7 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import sleep from '/@src/utils/sleep'
+import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Employee')
 useHead({
@@ -201,10 +200,7 @@ const columns = {
     actions: {
         align: 'center',
         renderRow: (row: any) =>
-            h(NoDeleteDropDown, {
-                onEdit: () => {
-                    router.push({ path: `/employee-edit/${row?.id}/` })
-                },
+            h(NoEditDropDown, {
                 onView: () => {
                     router.push({ path: `/employee/${row?.id}` })
                 },
@@ -248,10 +244,10 @@ const columns = {
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getEmployeesPerPage" />
         <h6 v-if="employeesList.length != 0 && !employeeStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
+        paginationVar.max_page
+        ?
+        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+}} to {{
         paginationVar.page !=
             paginationVar.max_page ?
             paginationVar.page *
@@ -272,8 +268,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="emplyeeChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />

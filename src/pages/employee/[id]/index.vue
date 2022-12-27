@@ -349,8 +349,8 @@ const RemoveProfilePicture = async () => {
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
                         <span>Status: <span
                                 :class="currentEmployee.user.status.name == 'Busy' ? 'has-text-danger' : 'has-text-primary'">{{
-                                        currentEmployee.user.status.name
-                                }}</span></span>
+        currentEmployee.user.status.name
+}}</span></span>
                     </div>
                     <div class="separator"></div>
                 </div>
@@ -396,8 +396,8 @@ const RemoveProfilePicture = async () => {
                                         <h4>Employee Name</h4>
                                         <p>
                                             {{ currentEmployee.user.first_name }} {{
-                                                    currentEmployee.user.last_name
-                                            }}.
+        currentEmployee.user.last_name
+}}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -486,7 +486,7 @@ const RemoveProfilePicture = async () => {
                                                 <div class="meta">
                                                     <span>Nationality</span>
                                                     <span>
-                                                        {{ currentEmployee.nationality }}
+                                                        {{ currentEmployee.nationality?.name }}
                                                     </span>
                                                 </div>
 
@@ -497,7 +497,7 @@ const RemoveProfilePicture = async () => {
                                                 <div class="meta">
                                                     <span>Position</span>
                                                     <span>
-                                                        {{ currentEmployee.position }}
+                                                        {{ currentEmployee.position?.name }}
                                                     </span>
                                                 </div>
 
@@ -539,8 +539,8 @@ const RemoveProfilePicture = async () => {
                                                             <span class="file-label"> Choose a file… </span>
                                                         </span>
                                                         <span class="file-name light-text"> {{ filesToUpload?.name ??
-                                                                'Select File'
-                                                        }}
+        'Select File'
+}}
                                                         </span>
                                                     </label>
                                                 </div>
@@ -567,17 +567,17 @@ const RemoveProfilePicture = async () => {
                                                     <div class="meta">
                                                         <span class="file-link"> <a target="_blank" class="file-link"
                                                                 :href="file.relative_path"> {{
-                                                                        file.file_name
-                                                                }}</a>
+        file.file_name
+}}</a>
                                                         </span>
                                                         <span>
                                                             {{ file.size != undefined ? (file.size / (1024 *
-                                                                    1024)).toFixed(2) :
-                                                                    'Unknown'
-                                                            }} {{ file.size != undefined ? 'MB' : '' }} <i
+        1024)).toFixed(2) :
+        'Unknown'
+}} {{ file.size != undefined ? 'MB' : '' }} <i
                                                                 aria-hidden="true" class="fas fa-circle"></i> {{
-                                                                        file.created_at
-                                                                }}
+        file.created_at
+}}
                                                         </span>
                                                     </div>
                                                     <VIconButton v-if="file.id"
@@ -610,8 +610,8 @@ const RemoveProfilePicture = async () => {
                                         v-model="currentEmployee.user.status.id">
                                         <VOption value="">User Status</VOption>
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />

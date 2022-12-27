@@ -26,8 +26,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     switch (step.value) {
       case 1:
         return 'Main Info'
-      case 2:
-        return 'Personal ID'
       default:
         return 'Main Info'
     }

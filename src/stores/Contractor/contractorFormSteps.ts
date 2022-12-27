@@ -1,5 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { CreateContractor, defaultCreateContractor, UpdateContractor, defaultUpdateContractor, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { Service } from "/@src/models/Others/Service/service"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 
 
@@ -13,6 +14,12 @@ interface ContractorFormStepOptions {
   validateStepFn?: () => Promise<void>
   skipStepFn?: () => Promise<void>
 
+}
+interface ServicesChecked {
+  service: Service
+  checked: boolean
+  price: number
+  contractor_service_amount: number
 }
 
 export const useContractorForm = defineStore('ContractorForm', () => {
@@ -32,8 +39,6 @@ export const useContractorForm = defineStore('ContractorForm', () => {
       case 1:
         return 'Main Info'
       case 2:
-        return 'Personal ID'
-      case 3:
         return 'Services'
       default:
         return 'Main Info'
@@ -58,7 +63,8 @@ export const useContractorForm = defineStore('ContractorForm', () => {
     data.value.payment_percentage = 0
     data.value.starting_date = ''
     data.value.is_completed = false
-    data.value.starting_date = ''
+    data.value.speciality_id = 0
+    data.value.end_date = ''
     data.value.user.first_name = ''
     data.value.user.last_name = ''
     data.value.user.gender = ''
@@ -82,7 +88,7 @@ export const useContractorForm = defineStore('ContractorForm', () => {
     dataUpdate.value.user.city_id = 0
     dataUpdate.value.user.room_id = 0
     dataUpdate.value.user.user_status_id = 0
-    contractorServicesForm.value = []
+    contractorServicesForm.value.splice(0, contractorServicesForm.value.length)
 
   }
 

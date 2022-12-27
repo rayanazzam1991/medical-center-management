@@ -21,14 +21,14 @@ const emits = defineEmits<{
                 <ul>
                   <li>
                     <RouterLink to="/employee">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i class="lnir lnir-briefcase" aria-hidden="true"></i>
                       <span>Employees</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/employee-add">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>Create Employee</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

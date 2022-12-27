@@ -7,7 +7,7 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateContractor } from '/@src/models/Contractor/contractor';
 import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addContractor } from '/@src/services/Contractor/contractorService';
@@ -16,6 +16,10 @@ import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { contractorAddvalidationSchema } from '/@src/rules/Contractor/contractorAddValidation';
 import sleep from '/@src/utils/sleep';
+import { defaultSpecialitySearchFilter, Speciality } from '/@src/models/Others/Speciality/speciality';
+import { getSpecialitiesList } from '/@src/services/Others/Speciality/specialityService';
+import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
@@ -30,7 +34,7 @@ contractorForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/contractor-add/${contractorForm.data.id}/profile-picture`,
+                path: `/contractor-add/${contractorForm.data.id}/services`,
             })
 
         }
@@ -44,6 +48,7 @@ const pageTitle = 'Step 1: Contractor Main Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentContractor = ref(defaultCreateContractor)
+const selectedDepartmentId = ref(0)
 const getCurrentContractor = () => {
 
     currentUser.value = contractorForm.userForm
@@ -55,20 +60,32 @@ const getCurrentContractor = () => {
 const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
+const specialitiesList = ref<Speciality[]>([])
+const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
     citiesList.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
+    const { specialities } = await getSpecialitiesList(defaultSpecialitySearchFilter)
+    specialitiesList.value = specialities
+    const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+    departmentsList.value = departments
+
 
 })
 onMounted(() => {
     getCurrentContractor()
 })
 
+const getRoomsByDepartment = async () => {
+    let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+    RoomsFilter.department_id = selectedDepartmentId.value
+    const { rooms } = await getRoomsList(RoomsFilter)
+    roomsList.value = rooms
+
+}
 const validationSchema = contractorAddvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
@@ -84,17 +101,21 @@ const { handleSubmit } = useForm({
         user_status_id: "",
         starting_date: "",
         payment_percentage: "",
+        end_date: "",
+        speciality_id: ""
     },
 })
 
 const onSubmitAdd = handleSubmit(async (values) => {
     var userData = currentUser.value
-    const { result } = await phoneExistsCheck(userData.phone_number)
+    const { result } = await phoneExistsCheck('964' + userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
 
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
+        contractorForm.data.end_date = customerData.end_date
+        contractorForm.data.speciality_id = customerData.speciality_id
         contractorForm.data.payment_percentage = customerData.payment_percentage
         contractorForm.userForm.first_name = userData.first_name
         contractorForm.userForm.last_name = userData.last_name
@@ -106,7 +127,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         contractorForm.userForm.room_id = userData.room_id
         contractorForm.userForm.city_id = userData.city_id
         contractorForm.userForm.user_status_id = userData.user_status_id
-        console.log(contractorForm.userForm)
+        console.log(contractorForm.data)
         const { success, message, contractor } = await addContractor(contractorForm.data, contractorForm.userForm)
         if (success) {
             contractorForm.data.id = contractor.id
@@ -117,9 +138,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
             return true
         }
         else {
-            // @ts-ignore
             await sleep(200);
-
+            // @ts-ignore
             notif.error(message)
             return false
         }
@@ -176,6 +196,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
                                             autocomplete="given-first_name" />
                                         <ErrorMessage class="help is-danger" name="phone_number" />
+                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+
                                     </VControl>
                                 </VField>
                             </div>
@@ -217,8 +239,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">City</VOption>
                                             <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                    city.name
-                                            }}
+        city.name
+}}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="city_id" />
@@ -246,33 +268,35 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField id="room_id">
-                                    <VLabel class="required">Room</VLabel>
+                                <VField>
+                                    <VLabel class="required">Department</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption>Room</VOption>
-                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="room_id" />
+                                        <div class="select">
+
+                                            <select @change="getRoomsByDepartment" v-if="currentUser"
+                                                v-model="selectedDepartmentId">
+                                                <VOption :value="0">Department</VOption>
+                                                <VOption v-for="department in departmentsList" :key="department.id"
+                                                    :value="department.id">{{ department.name }}
+                                                </VOption>
+                                            </select>
+                                        </div>
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField id="user_status_id">
-                                    <VLabel class="required">Status</VLabel>
+                                <VField id="room_id">
+                                    <VLabel class="required">Room</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                            <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
-                                                {{
-                                                        status.name
-                                                }}
+                                        <VSelect :disabled="roomsList.length <= 0" v-if="currentUser"
+                                            v-model="currentUser.room_id">
+                                            <VOption>Room</VOption>
+                                            <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
+        room.number
+}}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage class="help is-danger" name="user_status_id" />
+                                        <ErrorMessage class="help is-danger" name="room_id" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -292,6 +316,20 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </VField>
                             </div>
                             <div class="column is-6">
+                                <VField id="end_date">
+                                    <VLabel class="required">End date </VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentContractor.end_date" type="date" />
+                                        <ErrorMessage class="help is-danger" name="end_date" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
                                 <VField id="payment_percentage">
                                     <VLabel class="required">Payment Percentage</VLabel>
                                     <VControl icon="feather:percent">
@@ -300,16 +338,42 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+                            <div class="column is-6">
+                                <VField id="speciality_id">
+                                    <VLabel class="required">Speciality</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentUser" v-model="currentContractor.speciality_id">
+                                            <VOption value="">Speciality</VOption>
+                                            <VOption v-for="speciality in specialitiesList" :key="speciality.id"
+                                                :value="speciality.id">
+                                                {{ speciality.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="speciality_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <VField id="user_status_id">
+                                    <VLabel class="required">Status</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                            <VOption value="">Status</VOption>
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{ status.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="user_status_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
 
                         </div>
                     </div>
-                    <!--Fieldset-->
+
                 </div>
             </div>
         </form>
-
-
-
     </div>
 </template>
 <style  scoped lang="scss">

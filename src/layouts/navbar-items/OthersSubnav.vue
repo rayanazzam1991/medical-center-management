@@ -21,14 +21,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/nationality">
-                                            <i aria-hidden="true" class="lnil lnil-pizza"></i>
+                                            <i class="lnir lnir-flag-alt" aria-hidden="true"></i>
                                             <span>Nationalities</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/nationality/add">
-                                            <i aria-hidden="true" class="lnil lnil-map"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create Nationality</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
@@ -38,14 +38,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/service">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
+                                            <i class="lnir lnir-briefcase-alt" aria-hidden="true"></i>
                                             <span>Services</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/service/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create Service</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
@@ -74,14 +74,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/department">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i class="lnir lnir-grid-alt" aria-hidden="true"></i>
                                             <span>Departments</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/department/add">
-                                            <i aria-hidden="true" class="lnil lnil-stats-up"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create Department</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
@@ -91,14 +91,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/room">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i class="lnir lnir-door-alt" aria-hidden="true"></i>
                                             <span>Rooms</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/room/add">
-                                            <i aria-hidden="true" class="lnil lnil-stats-up"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create Room</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
@@ -110,14 +110,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/city">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
+                                            <i class="lnir lnir-map" aria-hidden="true"></i>
                                             <span>Cities</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/city/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create City</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
@@ -129,14 +129,14 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/userStatus">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
+                                            <i class="fas fa-user-check" aria-hidden="true"></i>
                                             <span>User Statuses</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/userStatus/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create User Status</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>

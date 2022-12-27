@@ -14,10 +14,6 @@ const contractorForm = useContractorForm()
 
 <template>
   <nav class="wizard-navigation">
-    <!-- 
-    <RouterLink to="/" class="wizard-brand">
-      <AnimatedLogo width="38px" height="38px" />
-    </RouterLink> -->
 
     <div class="">
       <span class="title-wrap">
@@ -29,7 +25,7 @@ const contractorForm = useContractorForm()
     </div>
     <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
-        Step {{ contractorForm.step }}: <span>{{ contractorForm.stepTitle }}</span>
+        <span>{{ contractorForm.stepTitle }}</span>
       </span>
     </div>
 

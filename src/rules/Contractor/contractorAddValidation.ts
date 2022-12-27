@@ -49,17 +49,26 @@ const contractorAddvalidationSchema = toFormValidator(zod
                     .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
                     .min(1, "This field is required"),
             ),
-        room_id:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .min(1, "This field is required"),
-                ),
+        speciality_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
+        room_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
+                    .min(1, "This field is required"),
+            ),
         user_status_id: zod
             .preprocess(
                 (input) => {
@@ -71,6 +80,17 @@ const contractorAddvalidationSchema = toFormValidator(zod
                     .min(1, "This field is required"),
             ),
         starting_date:
+            zod
+                .preprocess(
+                    (input) => {
+                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+
+                    },
+                    zod.date({
+                        invalid_type_error: "That's not a date!",
+                    }),
+                ),
+        end_date:
             zod
                 .preprocess(
                     (input) => {

@@ -21,11 +21,8 @@ useHead({
 <template>
     <MinimalLayout>
         <!--Wizard Navbar-->
-        <EmployeeFormNavigation v-model:step="employeeForm.step" :title="employeeForm.stepTitle" />
+        <EmployeeFormNavigation :title="employeeForm.stepTitle" />
 
-        <!--Wizard Progress Bar-->
-        <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(employeeForm.step / 1) * 100" :max="100" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => employeeForm?.validateStepFn?.()">
@@ -37,11 +34,8 @@ useHead({
                     <div class="column is-one-quarter"></div>
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="employeeStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
-                                :disabled="employeeForm.validateStepFn === null"
-                                :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ 'Submit'
-                                }}
+                            <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
+                                Submit
                             </VButton>
                         </VLoader>
                     </div>
