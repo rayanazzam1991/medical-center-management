@@ -6,8 +6,8 @@ import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, CustomerGroupSearchFilter, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addCustomer } from '/@src/services/CRM/Customer/customerService';
@@ -18,6 +18,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerAddvalidationSchema } from '/@src/rules/CRM/Customer/customerAddValidation';
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import sleep from "/@src/utils/sleep"
+import { BaseConsts } from '/@src/utils/consts/base';
 
 
 
@@ -58,12 +59,19 @@ const statusesList = ref<UserStatus[]>([])
 const customerGroupsList = ref<CustomerGroup[]>([])
 
 onMounted(async () => {
-    const { cities } = await getCitiesList(defaultCitySearchFilter)
+    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    citySearchFilter.status = BaseConsts.ACTIVE
+    const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
+
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
-    const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+
+    let customerGroupSearchFilter: CustomerGroupSearchFilter = defaultCustomerGroupSearchFilter
+    customerGroupSearchFilter.status = BaseConsts.ACTIVE
+    const { customerGroups } = await getCustomerGroupsList(customerGroupSearchFilter)
     customerGroupsList.value = customerGroups
+    
     currentUser.value.user_status_id = getApprovedStatusId()
 
 

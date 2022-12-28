@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
-import { SocialMedia, defaultSocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { SocialMedia, defaultSocialMediaSearchFilter, SocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
 import { addSocialMediasToCustomer } from '/@src/services/CRM/Customer/customerService';
 import { getSocialMediasList } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { BaseConsts } from '/@src/utils/consts/base';
 import sleep from "/@src/utils/sleep"
 
 const viewWrapper = useViewWrapper()
@@ -54,8 +55,12 @@ interface SocialMediaChecked {
 }
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
-    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+
+    let socialMediaSearchFilter: SocialMediaSearchFilter = defaultSocialMediaSearchFilter
+    socialMediaSearchFilter.status = BaseConsts.ACTIVE
+    const { socialMedias } = await getSocialMediasList(socialMediaSearchFilter)
     socialMediasList.value = socialMedias
+    
     for (let index = 0; index < socialMediasList.value.length; index++) {
         socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 

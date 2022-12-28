@@ -3,7 +3,7 @@ import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
+import { Service, defaultServiceSearchFilter, ServiceSearchFilter } from '/@src/models/Others/Service/service';
 import { contractorAddServicesValidationSchema } from '../../../rules/Contractor/contractorAddServicesValidationSchema';
 import { addServicesToContractor } from '/@src/services/Contractor/contractorService';
 import { getServicesList } from '/@src/services/Others/Service/serviceService';
@@ -11,6 +11,7 @@ import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep"
 import { z as zod } from 'zod';
+import { BaseConsts } from '/@src/utils/consts/base';
 
 
 const viewWrapper = useViewWrapper()
@@ -60,8 +61,12 @@ interface ServicesChecked {
 const servicesChecked = ref<ServicesChecked[]>([])
 
 onMounted(async () => {
+
+    let serviceSearchFilter: ServiceSearchFilter = defaultServiceSearchFilter
+    serviceSearchFilter.status = BaseConsts.ACTIVE
     const { services } = await getServicesList(defaultServiceSearchFilter)
     servicesList.value = services
+
     for (let index = 0; index < servicesList.value.length; index++) {
         servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0, contractor_service_amount: 0 })
 

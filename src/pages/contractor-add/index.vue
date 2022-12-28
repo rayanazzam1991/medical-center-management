@@ -6,20 +6,21 @@ import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateContractor } from '/@src/models/Contractor/contractor';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addContractor } from '/@src/services/Contractor/contractorService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { contractorAddvalidationSchema } from '/@src/rules/Contractor/contractorAddValidation';
 import sleep from '/@src/utils/sleep';
-import { defaultSpecialitySearchFilter, Speciality } from '/@src/models/Others/Speciality/speciality';
+import { defaultSpecialitySearchFilter, Speciality, SpecialitySearchFilter } from '/@src/models/Others/Speciality/speciality';
 import { getSpecialitiesList } from '/@src/services/Others/Speciality/specialityService';
-import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
+import { BaseConsts } from '/@src/utils/consts/base';
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
@@ -64,13 +65,23 @@ const specialitiesList = ref<Speciality[]>([])
 const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
-    const { cities } = await getCitiesList(defaultCitySearchFilter)
+
+    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    citySearchFilter.status = BaseConsts.ACTIVE
+    const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
+
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
-    const { specialities } = await getSpecialitiesList(defaultSpecialitySearchFilter)
+
+    let specialitySearchFilter: SpecialitySearchFilter = defaultSpecialitySearchFilter
+    specialitySearchFilter.status = BaseConsts.ACTIVE
+    const { specialities } = await getSpecialitiesList(specialitySearchFilter)
     specialitiesList.value = specialities
-    const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+
+    let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+    departmentSearchFilter.status = BaseConsts.ACTIVE
+    const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments
 
 
@@ -82,6 +93,7 @@ onMounted(() => {
 const getRoomsByDepartment = async () => {
     let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
     RoomsFilter.department_id = selectedDepartmentId.value
+    RoomsFilter.status = BaseConsts.ACTIVE
     const { rooms } = await getRoomsList(RoomsFilter)
     roomsList.value = rooms
 
