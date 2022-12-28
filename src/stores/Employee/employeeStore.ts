@@ -167,25 +167,6 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
-  async function deleteEmployeePersonalId(picture_id: number) {
-    if (loading.value) return
-    loading.value = true
-    try {
-      const response = await deleteMediaApi(api, picture_id)
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-      return response
-    }
-    catch (error: any) {
-      success.value = error?.response.data.success
-      error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.message
-    }
-    finally {
-      loading.value = false
-    }
-  }
   async function getEmployeeProfilePicture(media: Media) {
     if (loading.value) return
     loading.value = true
@@ -300,7 +281,6 @@ export const useEmployee = defineStore('employee', () => {
     addEmployeeFileStore,
     getEmployeeFilesStore,
     getEmployeeProfilePicture,
-    deleteEmployeePersonalId,
     addEmployeePersonalId,
     success,
     error_code,

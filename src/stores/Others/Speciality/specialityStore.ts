@@ -121,15 +121,15 @@ export const useSpeciality = defineStore('speciality', () => {
         }
     }
 
-    async function changeSpecialityStatusStore(position: ChangeSpecialityStatus) {
+    async function changeSpecialityStatusStore(speciality: ChangeSpecialityStatus) {
         if (loading.value) return
         loading.value = true
         try {
-            const response = await changeSpecialityStatusApi(api, position)
+            const response = await changeSpecialityStatusApi(api, speciality)
             var returnedSpeciality: Speciality
             returnedSpeciality = response.response.data
             specialities.value.splice(
-                specialities.value.findIndex((positionElement) => (positionElement.id = position.id)),
+                specialities.value.findIndex((specialityElement) => (specialityElement.id = speciality.id)),
                 1
             )
             success.value = response.response.success

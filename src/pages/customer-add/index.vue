@@ -58,6 +58,10 @@ const citiesList = ref<City[]>([])
 const statusesList = ref<UserStatus[]>([])
 const customerGroupsList = ref<CustomerGroup[]>([])
 
+onMounted(() => {
+    getCurrentCustomer()
+}
+)
 onMounted(async () => {
     let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
     citySearchFilter.status = BaseConsts.ACTIVE
@@ -73,17 +77,19 @@ onMounted(async () => {
     customerGroupsList.value = customerGroups
     
     currentUser.value.user_status_id = getApprovedStatusId()
+    currentCustomer.value.customer_group_id = getNormalCustomerGroupId()
 
 
 })
-onMounted(() => {
-    getCurrentCustomer()
-}
-)
 
 const getApprovedStatusId = () => {
     const ApprovedStatus = statusesList.value.find((status) => status.name === "Approved")
     return ApprovedStatus?.id
+}
+
+const getNormalCustomerGroupId = () => {
+    const NormalGroup = customerGroupsList.value.find((group) => group.name === "Normal")
+    return NormalGroup?.id
 }
 
 const validationSchema = customerAddvalidationSchema
@@ -101,7 +107,7 @@ const { handleSubmit } = useForm({
         user_status_id: currentUser.value.user_status_id,
         emergency_contact_name: "",
         emergency_contact_phone: "",
-        customer_group_id: "",
+        customer_group_id: currentCustomer.value.customer_group_id,
         room_id: undefined
     },
 })
