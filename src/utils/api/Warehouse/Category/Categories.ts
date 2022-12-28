@@ -1,18 +1,20 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "/@src/utils/response"
-import { Category, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
+import { Category, CategorySearchFilter, ChangeCategoryStatus, CreateUpdateCategory } from "/@src/models/Warehouse/Category/category"
 
-export async function deleteCategoryApi(
+export async function changeCategoryStatusApi(
     api: AxiosInstance,
-    categoryId: number
-): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.delete(`category/${categoryId}`)
-
+    category: ChangeCategoryStatus
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.put(
+        `category/changeCategoryStatus/${category.id}`,
+        category
+    )
     return { response }
 }
 export async function addCategoryApi(
     api: AxiosInstance,
-    category: Category
+    category: CreateUpdateCategory
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.post(`category`, category)
 
@@ -20,7 +22,7 @@ export async function addCategoryApi(
 }
 export async function editCategoryApi(
     api: AxiosInstance,
-    category: Category
+    category: CreateUpdateCategory
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.put(
         `category/${category.id}`,
@@ -48,19 +50,9 @@ export async function getCategoriesApi(
     })
     return { response }
 }
-export async function deactivateCategoryApi(
+export async function getParentApi(
     api: AxiosInstance,
-    categoryId: number
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.delete(`category/${categoryId}/deactivate`)
-
-    return { response }
-}
-export async function activateCategoryApi(
-    api: AxiosInstance,
-    categoryId: number
-): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.delete(`category/${categoryId}/activate`)
-
+    const { data: response, headers } = await api.get('category/getParent')
     return { response }
 }
