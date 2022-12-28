@@ -151,9 +151,9 @@ export const defaultCustomerSearchFilter: CustomerSearchFilter = {
 
 }
 
-export const 
-defaultUpdateNotes: UpdateNotes = {
-    notes: ''
-}
+export const
+    defaultUpdateNotes: UpdateNotes = {
+        notes: ''
+    }
 const CustomerConsts = BaseConsts
 export { CustomerConsts }
