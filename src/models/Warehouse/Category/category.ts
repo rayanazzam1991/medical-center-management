@@ -4,7 +4,7 @@ import { BaseConsts } from "/@src/utils/consts/base"
 export interface Category {
     id?: number
     name: string
-    parent_id?: Category
+    parent?: Category
     created_by?: User
     status: number
 }
@@ -33,7 +33,7 @@ export interface ChangeCategoryStatus {
 export const defaultCategory: Category = {
     id: 0,
     name: '',
-    parent_id: undefined,
+    parent: undefined,
     created_by: undefined,
     status: 1,
 }
@@ -43,7 +43,7 @@ export const defaultCreateUpdateCategory: CreateUpdateCategory = {
     name: '',
     parent_id: undefined,
     created_by: undefined,
-    status: 0,
+    status: 1,
 }
 export const defaultCategorySearchFilter: CategorySearchFilter = {
     name: undefined,

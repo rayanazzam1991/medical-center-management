@@ -30,7 +30,6 @@ export default defineComponent({
         formType.value = props.formType
         const route = useRoute()
         const router = useRouter()
-
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/category'
         const currentCategory = ref(defaultCategory)
@@ -45,18 +44,20 @@ export default defineComponent({
         const getCurrentCategory = async () => {
             if (categoryId.value === 0) {
                 currentCategory.value.name = ''
-                currentCategory.value.parent_id = defaultCategory
+                currentCategory.value.parent = defaultCategory
                 currentCategory.value.status = 1
                 return
             }
             else {
                 const { category } = await getCategory(categoryId.value);
-                if (currentCategory.value.parent_id != undefined) {
+                currentCategory.value = category != undefined ? category : defaultCategory;
+                if (currentCategory.value.parent != undefined) {
                     isCategory.value = true
                     keyIncrement.value++
+                    const { categories } = await getParentsList()
+                    mainCategoriesList.value = categories
+
                 }
-                currentCategory.value = category != undefined ? category : defaultCategory;
-                console.log(currentCategory.value)
             }
 
 
@@ -68,7 +69,6 @@ export default defineComponent({
         onMounted(async () => {
             const { categories } = await getParentsList()
             mainCategoriesList.value = categories
-            console.log(mainCategoriesList.value)
         })
 
         const validationSchema = categoryvalidationSchema
@@ -76,7 +76,7 @@ export default defineComponent({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 name: currentCategory?.value?.name ?? "",
-                parent_id: currentCategory?.value?.parent_id?.id ?? 0,
+                parent_id: currentCategory?.value?.parent?.id ?? 0,
                 status: currentCategory?.value?.status ?? 1,
             } : {
                 name: "",
@@ -93,8 +93,14 @@ export default defineComponent({
                 return;
         };
         const onSubmitAdd = handleSubmit(async (values) => {
-            var categoryData = currentCreateUpdateCategory.value;
-            const { success, message, category } = await addCategory(categoryData);
+            var categoryData = currentCategory.value;
+            var categoryForm = currentCreateUpdateCategory.value
+            categoryForm.name = categoryData.name
+            categoryForm.parent_id = categoryData?.parent?.id
+            categoryForm.status = categoryData.status
+            const { success, message, category } = await addCategory(categoryForm);
+            console.log(categoryForm)
+
             if (success) {
                 // @ts-ignore
                 notif.dismissAll();
@@ -109,8 +115,14 @@ export default defineComponent({
             }
         });
         const onSubmitEdit = async () => {
-            const categoryData = currentCreateUpdateCategory.value;
-            const { message, success } = await editCategory(categoryData);
+            var categoryData = currentCategory.value;
+            var categoryForm = currentCreateUpdateCategory.value
+            categoryForm.id = categoryData.id
+            categoryForm.name = categoryData.name
+            categoryForm.parent_id = categoryData?.parent?.id
+            categoryForm.status = categoryData.status
+            console.log(categoryForm)
+            const { success, message } = await editCategory(categoryForm);
             if (success) {
                 // @ts-ignore
                 notif.dismissAll();
@@ -155,7 +167,6 @@ export default defineComponent({
                                         <VInput v-model="currentCategory.name" type="text" placeholder=""
                                             autocomplete="given-name" />
                                         <ErrorMessage class="help is-danger" name="name" />
-
                                     </VControl>
                                 </VField>
                             </div>
@@ -179,7 +190,7 @@ export default defineComponent({
                                 <VField id="parent_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} Parent</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentCategory.parent_id" v-model="currentCategory.parent_id.id"
+                                        <VSelect v-if="currentCategory.parent" v-model="currentCategory.parent.id"
                                             :disabled="!isCategory">
                                             <VOption value="">Parent</VOption>
                                             <VOption v-for="parent in mainCategoriesList" :key="parent.id"
