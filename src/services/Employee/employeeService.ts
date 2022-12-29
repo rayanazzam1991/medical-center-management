@@ -12,6 +12,7 @@ import {
 import { CreateUpdateUser } from '/@src/models/Others/User/user'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
+import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/employeeSchedule'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -131,6 +132,7 @@ export async function deleteFile(picture_id: number) {
   var message: string = employeeeResponse.message ?? ''
   return { success, error_code, message }
 }
+
 export async function addProfilePicture(employeee_id: unknown, fd: FormData) {
   const employeeeResponse = useEmployee()
   const is_featured: unknown = true
@@ -143,3 +145,27 @@ export async function addProfilePicture(employeee_id: unknown, fd: FormData) {
   var message: string = employeeeResponse.message ?? ''
   return { success, error_code, message, media }
 }
+
+export async function getEmployeesSchedule(searchFilter: EmployeeScheduleSearchFilter) {
+  const employee = useEmployee()
+  await employee.getEmployeesScheduleStore(searchFilter)
+  const employeesSchedule: EmployeeSchedule[] = employee.employeesSchedule
+  const pagination: Pagination = employee.pagination
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+
+  return { employeesSchedule, pagination, success, message }
+}
+
+export async function updateEmployeeSchedule(employee_id: number, date_id: number, data: UpdateSchedule) {
+  const employee = useEmployee()
+  await employee.updateEmployeeScheduleStore(employee_id, date_id, data)
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+
+  return { error_code, success, message }
+}
+
+

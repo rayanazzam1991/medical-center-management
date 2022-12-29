@@ -57,7 +57,7 @@ const changestatusUser = async () => {
         notif.success(`${emplyeeChangeStatus.value.user.first_name} ${emplyeeChangeStatus.value.user.last_name} status was edited successfully`)
     } else {
         await sleep(200);
-
+        // @ts-ignore
         notif.error(message)
     }
     changeStatusPopup.value = false

@@ -77,6 +77,7 @@
     "@vee-validate/zod": "4.7.3",
     "@vueform/multiselect": "2.5.2",
     "@vueform/slider": "2.1.2",
+    "@vuepic/vue-datepicker": "^3.6.3",
     "@vueuse/core": "9.1.1",
     "@vueuse/head": "0.7.9",
     "@vueuse/router": "9.1.1",

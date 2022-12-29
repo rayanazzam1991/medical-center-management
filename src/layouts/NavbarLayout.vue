@@ -10,7 +10,7 @@ export type SubnavId =
   | 'closed'
   | 'others'
   | 'CRM'
-  | 'employee'
+  | 'HR'
   | 'contractor'
 
 const props = withDefaults(
@@ -209,28 +209,28 @@ watch(
             <span>CRM</span>
           </a>
           <a :class="[((activeSubnav === 'contractor') ||
-            route.path.startsWith('/contractor') ||
-            route.path.startsWith('/contractor-add') ||
-            route.path.startsWith('/contractor-edit') ||
-            route.path.startsWith('/speciality') ||
-            route.path.startsWith('/speciality-add')
-          
-          
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+  route.path.startsWith('/contractor') ||
+  route.path.startsWith('/contractor-add') ||
+  route.path.startsWith('/contractor-edit') ||
+  route.path.startsWith('/speciality') ||
+  route.path.startsWith('/speciality-add')
+
+
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
             <span>Contractors</span>
           </a>
-          <a :class="[(activeSubnav === 'employee' ||
-            route.path.startsWith('/employee') ||
-            route.path.startsWith('/employee-add') ||
-            route.path.startsWith('/employee-edit') ||
-            route.path.startsWith('/position') ||
-            route.path.startsWith('/position-add')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
+          <a :class="[(activeSubnav === 'HR' ||
+  route.path.startsWith('/employee') ||
+  route.path.startsWith('/employee-add') ||
+  route.path.startsWith('/employee-edit') ||
+  route.path.startsWith('/position') ||
+  route.path.startsWith('/position-add')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
+            @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
-            <span>Employees</span>
+            <span>Human Resources</span>
           </a>
         </div>
         <!-- 
@@ -272,7 +272,7 @@ watch(
 
           <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" />
 
-          <EmployeeSubnav :class="[activeSubnav === 'employee' && 'is-active']" @close="deactivateSubnav" />
+          <EmployeeSubnav :class="[activeSubnav === 'HR' && 'is-active']" @close="deactivateSubnav" />
         </div>
       </template>
     </Navbar>
