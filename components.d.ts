@@ -44,7 +44,6 @@ declare module '@vue/runtime-core' {
     ElementsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ElementsMobileSubsidebar.vue')['default']
     ElementsSubnav: typeof import('./src/layouts/navbar-items/ElementsSubnav.vue')['default']
     EmployeeFormNavigation: typeof import('./src/components/OurComponents/Employee/EmployeeFormNavigation.vue')['default']
-    EmployeeNameCard: typeof import('./src/components/OurComponents/HR/Attendance/EmployeeNameCard.vue')['default']
     EmployeeScheduleSearchFilterModal: typeof import('./src/components/OurComponents/HR/Attendance/EmployeeScheduleSearchFilterModal.vue')['default']
     EmployeeScheduleTableHeader: typeof import('./src/components/OurComponents/HR/Attendance/EmployeeScheduleTableHeader.vue')['default']
     EmployeeSearchFilterModal: typeof import('./src/components/OurComponents/Employee/EmployeeSearchFilterModal.vue')['default']
