@@ -70,8 +70,6 @@ const departmentsList = ref<Department[]>([])
 onMounted(async () => {
     const { cities } = await getCitiesList(defaultCitySearchFilter)
     citiesList.value = cities
-    // const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    // roomsList.value = rooms
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
     const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
@@ -95,10 +93,6 @@ const getRoomsByDepartment = async () => {
 
 }
 
-
-// const selectedDepartment = async () => {
-
-// }
 const validationSchema = employeeAddvalidationSchema
 
 const { handleSubmit } = useForm({

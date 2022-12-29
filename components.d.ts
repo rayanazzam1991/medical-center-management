@@ -52,6 +52,8 @@ declare module '@vue/runtime-core' {
     FlightsDashboard: typeof import('./src/components/pages/dashboards/business/FlightsDashboard.vue')['default']
     FormHeader: typeof import('./src/components/OurComponents/FormHeader.vue')['default']
     FormLayoutSplit: typeof import('./src/components/pages/forms/form-layout/FormLayoutSplit.vue')['default']
+    ItemDetails: typeof import('./src/components/OurComponents/Warehouse/Item/ItemDetails.vue')['default']
+    ItemForm: typeof import('./src/components/OurComponents/Warehouse/Item/ItemForm.vue')['default']
     LandingEmptyNavigation: typeof import('./src/components/partials/landing/LandingEmptyNavigation.vue')['default']
     LandingFooter: typeof import('./src/components/partials/landing/LandingFooter.vue')['default']
     LandingLayout: typeof import('./src/layouts/LandingLayout.vue')['default']
@@ -205,5 +207,6 @@ declare module '@vue/runtime-core' {
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
+    WarehouseSubnav: typeof import('./src/layouts/navbar-items/WarehouseSubnav.vue')['default']
   }
 }

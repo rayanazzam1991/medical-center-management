@@ -33,6 +33,7 @@ export default defineComponent({
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/category'
         const currentCategory = ref(defaultCategory)
+        const currentParentCategory = ref(defaultCategory)
         const currentCreateUpdateCategory = ref(defaultCreateUpdateCategory)
         const categoryId = ref(0);
         const isCategory = ref(false)
@@ -51,6 +52,7 @@ export default defineComponent({
             else {
                 const { category } = await getCategory(categoryId.value);
                 currentCategory.value = category != undefined ? category : defaultCategory;
+                currentParentCategory.value = currentCategory.value.parent ?? defaultCategory;
                 if (currentCategory.value.parent != undefined) {
                     isCategory.value = true
                     keyIncrement.value++
@@ -70,7 +72,6 @@ export default defineComponent({
             const { categories } = await getParentsList()
             mainCategoriesList.value = categories
         })
-
         const validationSchema = categoryvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
@@ -133,15 +134,13 @@ export default defineComponent({
             } else {
                 await sleep(200);
                 notif.error(message)
-
             }
         };
 
-        return { keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
+        return { currentParentCategory, keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
     },
     components: { ErrorMessage }
 })
-
 
 </script>
 
@@ -156,7 +155,6 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="column is-6">
                             <h4>{{ pageTitle }}</h4>
-
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
@@ -172,7 +170,7 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
-                    <div class="form-fieldset">
+                    <div class="form-fieldset" v-if="currentCategory.parent">
                         <div class="columns is-multiline">
                             <div class="is-flex is-justify-content-center">
                                 <VControl class="ml-3">
@@ -186,10 +184,10 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="parent_id">
+                                <VField v-if="currentCategory.parent" id="parent_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} Parent</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentCategory.parent" v-model="currentCategory.parent.id"
+                                        <VSelect v-if="currentParentCategory" v-model="currentParentCategory.id"
                                             :disabled="!isCategory">
                                             <VOption value="">Parent</VOption>
                                             <VOption v-for="parent in mainCategoriesList" :key="parent.id"
@@ -209,10 +207,10 @@ export default defineComponent({
                                 <VField id="status" v-slot="{ field }">
                                     <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                     <VControl>
-                                        <VRadio v-model="currentCategory.status" :value="CategoryConsts.INACTIVE"
-                                            :label="CategoryConsts.showStatusName(0)" name="status" color="warning" />
                                         <VRadio v-model="currentCategory.status" :value="CategoryConsts.ACTIVE"
                                             :label="CategoryConsts.showStatusName(1)" name="status" color="success" />
+                                        <VRadio v-model="currentCategory.status" :value="CategoryConsts.INACTIVE"
+                                            :label="CategoryConsts.showStatusName(0)" name="status" color="warning" />
                                         <ErrorMessage class="help is-danger" name="status" />
                                     </VControl>
                                 </VField>
