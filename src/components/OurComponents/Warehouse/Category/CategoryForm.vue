@@ -2,13 +2,12 @@
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { defaultCategory, Category, CategoryConsts, defaultCreateUpdateCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { defaultCategory, Category, CategoryConsts, defaultCreateUpdateCategory, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getCategory, addCategory, editCategory, getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { categoryvalidationSchema } from '/@src/rules/Warehouse/Category/categoryAddValidation';
 import sleep from "/@src/utils/sleep";
 import { useCategory } from '/@src/stores/Warehouse/Category/CategoryStore';
-
 
 export default defineComponent({
     props: {
@@ -33,13 +32,10 @@ export default defineComponent({
         const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/category'
         const currentCategory = ref(defaultCategory)
-        const currentParentCategory = ref(defaultCategory)
         const currentCreateUpdateCategory = ref(defaultCreateUpdateCategory)
         const categoryId = ref(0);
         const isCategory = ref(false)
         const keyIncrement = ref(0)
-        console.log(isCategory.value)
-
         // @ts-ignore
         categoryId.value = route.params?.id as number ?? 0;
         const getCurrentCategory = async () => {
@@ -52,17 +48,13 @@ export default defineComponent({
             else {
                 const { category } = await getCategory(categoryId.value);
                 currentCategory.value = category != undefined ? category : defaultCategory;
-                currentParentCategory.value = currentCategory.value.parent ?? defaultCategory;
                 if (currentCategory.value.parent != undefined) {
                     isCategory.value = true
                     keyIncrement.value++
                     const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
                     mainCategoriesList.value = categories
-
                 }
             }
-
-
         };
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
@@ -98,8 +90,6 @@ export default defineComponent({
             categoryForm.parent_id = categoryData.parent?.id
             categoryForm.status = categoryData.status
             const { success, message, category } = await addCategory(categoryForm);
-            console.log(categoryForm)
-
             if (success) {
                 // @ts-ignore
                 notif.dismissAll();
@@ -119,13 +109,11 @@ export default defineComponent({
             categoryForm.name = categoryData.name
             categoryForm.parent_id = categoryData.parent?.id
             categoryForm.status = categoryData.status
-            console.log(categoryForm)
             const { success, message } = await editCategory(categoryForm);
             if (success) {
                 // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
-
                 // @ts-ignore
                 notif.success(`${categoryData.name} ${viewWrapper.pageTitle} was edited successfully`);
                 router.push({ path: `/category` });
@@ -134,8 +122,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-
-        return { currentParentCategory, keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
+        return { keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
     },
     components: { ErrorMessage }
 })
@@ -185,13 +172,15 @@ export default defineComponent({
                                 <VField v-if="currentCategory.parent" id="parent_id">
                                     <VLabel>{{ viewWrapper.pageTitle }} Parent</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentParentCategory" v-model="currentParentCategory.id"
-                                            :disabled="!isCategory">
-                                            <VOption value="">Parent</VOption>
-                                            <VOption v-for="parent in mainCategoriesList" :key="parent.id"
-                                                :value="parent.id">{{ parent.name }}
-                                            </VOption>
-                                        </VSelect>
+                                        <div class="select">
+                                            <select v-if="currentCategory" v-model="currentCategory.parent.id"
+                                                :disabled="!isCategory">
+                                                <VOption value="">Parent</VOption>
+                                                <VOption v-for="parent in mainCategoriesList" :key="parent.id"
+                                                    :value="parent.id">{{ parent.name }}
+                                                </VOption>
+                                            </select>
+                                        </div>
                                         <ErrorMessage class="help is-danger" name="parent_id" />
                                     </VControl>
                                 </VField>

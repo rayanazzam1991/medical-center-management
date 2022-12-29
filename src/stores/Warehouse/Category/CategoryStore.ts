@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Category, CategorySearchFilter, ChangeCategoryStatus, CreateUpdateCategory } from "/@src/models/Warehouse/Category/category"
-import { changeCategoryStatusApi, getParentApi, getCategoryApi, addCategoryApi, editCategoryApi, getCategoriesApi } from "/@src/utils/api/Warehouse/Category"
+import { changeCategoryStatusApi, getCategoryApi, addCategoryApi, editCategoryApi, getCategoriesApi } from "/@src/utils/api/Warehouse/Category"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -101,10 +101,7 @@ export const useCategory = defineStore('category', () => {
         loading.value = true
         try {
             const returnedResponse = await getCategoriesApi(api, searchFilter)
-            console.log(returnedResponse.response.data)
             categories.value = returnedResponse.response.data
-            console.log(returnedResponse)
-
             pagination.value = returnedResponse.response.pagination
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
@@ -120,33 +117,6 @@ export const useCategory = defineStore('category', () => {
             loading.value = false
         }
     }
-
-    async function getParentsStore() {
-        if (loading.value) return
-        loading.value = true
-        try {
-            const returnedResponse = await getParentApi(api)
-            console.log(returnedResponse.response.data)
-            // categories.value = returnedResponse.response.data
-            // console.log(categories.value)
-
-            pagination.value = returnedResponse.response.pagination
-            success.value = returnedResponse.response.success
-            error_code.value = returnedResponse.response.error_code
-            message.value = returnedResponse.response.message
-            return returnedResponse.response.data as Category[]
-        }
-        catch (error: any) {
-            success.value = error?.response.data.success
-            error_code.value = error?.response.data.error_code
-            message.value = error?.response.data.message
-
-        }
-        finally {
-            loading.value = false
-        }
-    }
-
 
     async function changeCategoryStatusStore(category: ChangeCategoryStatus) {
         if (loading.value) return
@@ -185,7 +155,6 @@ export const useCategory = defineStore('category', () => {
         editCategoryStore,
         getCategoryStore,
         getCategoriesStore,
-        getParentsStore,
         changeCategoryStatusStore
     } as const
 })
