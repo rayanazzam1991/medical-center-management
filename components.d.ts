@@ -12,8 +12,6 @@ declare module '@vue/runtime-core' {
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
-    CategoryDetails: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryDetails.vue')['default']
-    CategoryFile: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryFile.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
     CategorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Category/CategorySearchFilterModel.vue')['default']
     CategoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryTableHeader.vue')['default']
