@@ -35,3 +35,12 @@ export async function getEmployeesApi(
   })
   return { response }
 }
+export async function getEmployeesScheduleApi(
+  api: AxiosInstance,
+  searchFilter: EmployeeSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('employee/getEmployeesSchedule', {
+    params: searchFilter,
+  })
+  return { response }
+}

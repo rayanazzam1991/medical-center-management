@@ -7,8 +7,8 @@ import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
@@ -18,10 +18,11 @@ import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
 import sleep from "/@src/utils/sleep"
-import { Position, defaultPositionSearchFilter } from '/@src/models/Others/Position/position';
+import { Position, defaultPositionSearchFilter, PositionSearchFilter } from '/@src/models/Others/Position/position';
 import { getPositionsList } from '/@src/services/Others/Position/positionService';
-import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
+import { BaseConsts } from '/@src/utils/consts/base';
 
 
 const viewWrapper = useViewWrapper()
@@ -68,17 +69,28 @@ const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
-    const { cities } = await getCitiesList(defaultCitySearchFilter)
+
+    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    citySearchFilter.status = BaseConsts.ACTIVE
+    const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
-    // const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    // roomsList.value = rooms
+
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
-    const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
+
+    let nationalitySearchFilter: NationalitySearchFilter = defaultNationalitySearchFilter
+    nationalitySearchFilter.status = BaseConsts.ACTIVE
+    const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
     nationalitiesList.value = nationalities
-    const { positions } = await getPositionsList(defaultPositionSearchFilter)
+
+    let positionSearchFilter: PositionSearchFilter = defaultPositionSearchFilter
+    positionSearchFilter.status = BaseConsts.ACTIVE
+    const { positions } = await getPositionsList(positionSearchFilter)
     positionsList.value = positions
-    const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+
+    let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+    departmentSearchFilter.status = BaseConsts.ACTIVE
+    const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments
 
 
