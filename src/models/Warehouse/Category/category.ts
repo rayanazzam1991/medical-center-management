@@ -17,7 +17,7 @@ export interface CreateUpdateCategory {
 }
 export interface CategorySearchFilter {
     name?: string
-    parent_id?: 0
+    parent_id?: number
     status?: number
     created_by?: User
     is_main_category?: boolean
@@ -31,7 +31,7 @@ export interface ChangeCategoryStatus {
     status?: number
 }
 export const defaultCategory: Category = {
-    id: 0,
+    id: undefined,
     name: '',
     parent: undefined,
     created_by: undefined,

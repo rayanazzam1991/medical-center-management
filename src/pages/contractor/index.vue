@@ -120,7 +120,7 @@ const columns = {
     },
     "users.phone_number": {
         align: 'center',
-        grow: true,
+        grow: false,
         label: 'Phone',
         renderRow: (row: any) =>
             h('span', row?.user?.phone_number),
@@ -132,7 +132,6 @@ const columns = {
     },
     speciality: {
         align: 'center',
-        grow: true,
         label: 'Speciality',
         renderRow: (row: any) =>
             h('span', row?.speciality?.name),
@@ -142,7 +141,6 @@ const columns = {
     },
     "users.rooms.department": {
         align: 'center',
-        grow: true,
         label: 'Department',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.department?.name),
@@ -153,7 +151,6 @@ const columns = {
     },
     "users.room": {
         align: 'center',
-        grow: true,
         label: 'Room #',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
@@ -195,7 +192,6 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        grow: true,
         label: 'Create Date',
         renderRow: (row: any) =>
             h('span', row?.created_at),

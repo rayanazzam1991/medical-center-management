@@ -76,12 +76,12 @@ export default defineComponent({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 name: currentCategory?.value?.name ?? "",
-                parent_id: currentCategory?.value?.parent?.id ?? 0,
+                parent_id: currentCategory?.value?.parent?.id ?? undefined,
                 status: currentCategory?.value?.status ?? 1,
             } : {
                 name: "",
                 status: 1,
-                parent_id: 0
+                parent_id: undefined
             },
         });
         const onSubmit = async (method: String) => {
@@ -96,7 +96,7 @@ export default defineComponent({
             var categoryData = currentCategory.value;
             var categoryForm = currentCreateUpdateCategory.value
             categoryForm.name = categoryData.name
-            categoryForm.parent_id = categoryData?.parent?.id
+            categoryForm.parent_id = categoryData.parent?.id
             categoryForm.status = categoryData.status
             const { success, message, category } = await addCategory(categoryForm);
             console.log(categoryForm)
@@ -110,7 +110,6 @@ export default defineComponent({
                 router.push({ path: `/category` });
             } else {
                 await sleep(200);
-
                 notif.error(message)
             }
         });
@@ -119,7 +118,7 @@ export default defineComponent({
             var categoryForm = currentCreateUpdateCategory.value
             categoryForm.id = categoryData.id
             categoryForm.name = categoryData.name
-            categoryForm.parent_id = categoryData?.parent?.id
+            categoryForm.parent_id = categoryData.parent?.id
             categoryForm.status = categoryData.status
             console.log(categoryForm)
             const { success, message } = await editCategory(categoryForm);
