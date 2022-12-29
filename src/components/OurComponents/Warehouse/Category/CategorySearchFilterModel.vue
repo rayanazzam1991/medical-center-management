@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defaultCategorySearchFilter, CategoryConsts, Category, CategorySearchFilter, defaultMainCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
-import { getParentsList } from '/@src/services/Warehouse/Category/categoryService'
+import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
+import { getCategoriesList } from '/@src/services/Warehouse/Category/categoryService'
 
 
 export default defineComponent({
@@ -60,7 +60,7 @@ export default defineComponent({
         }
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const { categories } = await getParentsList()
+            const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
             console.log(categories)
             mainCategoriesList.value = categories
         })

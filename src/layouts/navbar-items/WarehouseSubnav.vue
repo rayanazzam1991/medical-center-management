@@ -27,7 +27,7 @@ const emits = defineEmits<{
                                         </RouterLink>
                                     </li>
                                     <li>
-                                        <RouterLink to="/category-add">
+                                        <RouterLink to="/category/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>Create Category</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>

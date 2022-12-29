@@ -3,7 +3,7 @@ import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { defaultCategory, Category, CategoryConsts, defaultCreateUpdateCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
-import { getCategory, addCategory, editCategory, getParentsList } from '/@src/services/Warehouse/Category/categoryService';
+import { getCategory, addCategory, editCategory, getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { categoryvalidationSchema } from '/@src/rules/Warehouse/Category/categoryAddValidation';
 import sleep from "/@src/utils/sleep";
@@ -56,7 +56,7 @@ export default defineComponent({
                 if (currentCategory.value.parent != undefined) {
                     isCategory.value = true
                     keyIncrement.value++
-                    const { categories } = await getParentsList()
+                    const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
                     mainCategoriesList.value = categories
 
                 }
@@ -64,14 +64,12 @@ export default defineComponent({
 
 
         };
-        onMounted(async () => {
-            await getCurrentCategory();
-        });
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const { categories } = await getParentsList()
+            await getCurrentCategory();
+            const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
             mainCategoriesList.value = categories
-        })
+        });
         const validationSchema = categoryvalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
