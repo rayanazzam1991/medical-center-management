@@ -141,7 +141,6 @@ const columns = {
     },
     "users.rooms.department": {
         align: 'center',
-
         label: 'Department',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.department?.name),
@@ -152,7 +151,6 @@ const columns = {
     },
     "users.room": {
         align: 'center',
-
         label: 'Room #',
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
@@ -163,7 +161,6 @@ const columns = {
     },
     "users.status": {
         align: 'center',
-
         label: 'status',
         renderRow: (row: any) =>
             h(
@@ -195,7 +192,6 @@ const columns = {
     },
     created_at: {
         align: 'center',
-
         label: 'Create Date',
         renderRow: (row: any) =>
             h('span', row?.created_at),

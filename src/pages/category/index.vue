@@ -153,6 +153,16 @@ const columns = {
             ),
 
     },
+    created_at: {
+        align: 'center',
+
+        label: 'Create Date',
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+
+    },
     actions: {
         align: 'center',
         renderRow: (row: any) =>
