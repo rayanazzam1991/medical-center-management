@@ -31,6 +31,7 @@ specifiers:
   '@vitejs/plugin-vue': 3.1.0
   '@vueform/multiselect': 2.5.2
   '@vueform/slider': 2.1.2
+  '@vuepic/vue-datepicker': ^3.6.3
   '@vueuse/core': 9.1.1
   '@vueuse/head': 0.7.9
   '@vueuse/router': 9.1.1
@@ -140,6 +141,7 @@ dependencies:
   '@vee-validate/zod': 4.7.3_ehbxrihgdpyakew3ygi2npdsma
   '@vueform/multiselect': 2.5.2
   '@vueform/slider': 2.1.2
+  '@vuepic/vue-datepicker': 3.6.3_vue@3.2.38
   '@vueuse/core': 9.1.1_vue@3.2.38
   '@vueuse/head': 0.7.9_vue@3.2.38
   '@vueuse/router': 9.1.1_4n526fuacxb7krhzh75jg7hrn4
@@ -2051,8 +2053,8 @@ packages:
       vue-i18n:
         optional: true
     dependencies:
-      '@intlify/message-compiler': 9.3.0-beta.10
-      '@intlify/shared': 9.3.0-beta.10
+      '@intlify/message-compiler': 9.3.0-beta.11
+      '@intlify/shared': 9.3.0-beta.11
       jsonc-eslint-parser: 1.4.1
       source-map: 0.6.1
       vue-i18n: 9.3.0-beta.3_vue@3.2.38
@@ -2074,11 +2076,11 @@ packages:
     dependencies:
       '@intlify/shared': 9.3.0-beta.3
 
-  /@intlify/message-compiler/9.3.0-beta.10:
-    resolution: {integrity: sha512-RoOC6yceOykLRhN0NlbkNOBUx1el6iphx3W8NfOx3jHVNtfT1FYokx14/5sU3F1F0uxeG4sp6q+ppKvaF8o+ww==}
+  /@intlify/message-compiler/9.3.0-beta.11:
+    resolution: {integrity: sha512-gGGfBGzM7JBXp1Q9gbDAy5jELz9ho3ILqnpxp2yp64+gkqohrqc2YXIvCdwZoc6AtKIh/Zmv4sWVqxkvMsBWtQ==}
     engines: {node: '>= 14'}
     dependencies:
-      '@intlify/shared': 9.3.0-beta.10
+      '@intlify/shared': 9.3.0-beta.11
       source-map: 0.6.1
     dev: true
 
@@ -2089,8 +2091,8 @@ packages:
       '@intlify/shared': 9.3.0-beta.3
       source-map: 0.6.1
 
-  /@intlify/shared/9.3.0-beta.10:
-    resolution: {integrity: sha512-h93uAanbAt/XgjDHclrVB7xix6r7Uz11wx0iGNOCdHP7aA2LCJjUT3uNbekJjjbo+Fl5jzTSJZdm2SexzoqhRA==}
+  /@intlify/shared/9.3.0-beta.11:
+    resolution: {integrity: sha512-CtbotesxTRiC3bRyXyv1NG39fkqJ790f8z8xFaeIXSZpOdiyxoh5BIyypCzSFQZDGLwz0Q9gyWbW1XpxQJm68Q==}
     engines: {node: '>= 14'}
     dev: true
 
@@ -2114,7 +2116,7 @@ packages:
         optional: true
     dependencies:
       '@intlify/bundle-utils': 3.4.0_vue-i18n@9.3.0-beta.3
-      '@intlify/shared': 9.3.0-beta.10
+      '@intlify/shared': 9.3.0-beta.11
       '@rollup/pluginutils': 4.2.1
       debug: 4.3.4
       fast-glob: 3.2.11
@@ -2930,6 +2932,17 @@ packages:
 
   /@vueform/slider/2.1.2:
     resolution: {integrity: sha512-cDXFaEeMjzF+TPHkIDBFKW0Hysj8R0E6kPTha8lRw9t1xy50rUvyBzvG+KWUauBkOJ9HA05+l5yHEqda8WkROQ==}
+    dev: false
+
+  /@vuepic/vue-datepicker/3.6.3_vue@3.2.38:
+    resolution: {integrity: sha512-ODNmHNFmoPIkoYWLxpS8ipYGBuStJk5ilVQkiszV3bEEnJgHi7jyIt1C7ovw1dn5tWEdUpGHKwVNQRGcKV7bMQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      vue: '>=3.2.0'
+    dependencies:
+      date-fns: 2.29.3
+      date-fns-tz: 1.3.7_date-fns@2.29.3
+      vue: 3.2.38
     dev: false
 
   /@vueuse/core/9.1.1_vue@3.2.38:
@@ -4371,8 +4384,21 @@ packages:
       date-fns: 2.29.2
     dev: false
 
+  /date-fns-tz/1.3.7_date-fns@2.29.3:
+    resolution: {integrity: sha512-1t1b8zyJo+UI8aR+g3iqr5fkUHWpd58VBx8J/ZSQ+w7YrGlw80Ag4sA86qkfCXRBLmMc4I2US+aPMd4uKvwj5g==}
+    peerDependencies:
+      date-fns: '>=2.0.0'
+    dependencies:
+      date-fns: 2.29.3
+    dev: false
+
   /date-fns/2.29.2:
     resolution: {integrity: sha512-0VNbwmWJDS/G3ySwFSJA3ayhbURMTJLtwM2DTxf9CWondCnh6DTNlO9JgRSq6ibf4eD0lfMJNBxUdEAHHix+bA==}
+    engines: {node: '>=0.11'}
+    dev: false
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
     engines: {node: '>=0.11'}
     dev: false
 

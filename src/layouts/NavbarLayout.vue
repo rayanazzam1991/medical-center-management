@@ -10,7 +10,7 @@ export type SubnavId =
   | 'closed'
   | 'others'
   | 'CRM'
-  | 'employee'
+  | 'HR'
   | 'contractor'
   | 'warehouse'
 
@@ -222,16 +222,16 @@ watch(
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
             <span>Contractors</span>
           </a>
-          <a :class="[(activeSubnav === 'employee' ||
+          <a :class="[(activeSubnav === 'HR' ||
   route.path.startsWith('/employee') ||
   route.path.startsWith('/employee-add') ||
   route.path.startsWith('/employee-edit') ||
   route.path.startsWith('/position') ||
   route.path.startsWith('/position-add')
-) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
+            @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
-            <span>Employees</span>
+            <span>Human Resources</span>
           </a>
           <a :class="[(activeSubnav === 'warehouse' ||
   route.path.startsWith('/category') ||
@@ -245,7 +245,7 @@ watch(
             <span>Warehouse</span>
           </a>
         </div>
-        <!-- 
+        <!--
         <div class="centered-search" :class="[activeSubnav !== 'search' && 'is-hidden']">
           <div class="field">
             <div class="control has-icon">
@@ -281,7 +281,7 @@ watch(
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" @close="deactivateSubnav" />
           <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" @close="deactivateSubnav" />
           <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" />
-          <EmployeeSubnav :class="[activeSubnav === 'employee' && 'is-active']" @close="deactivateSubnav" />
+          <EmployeeSubnav :class="[activeSubnav === 'HR' && 'is-active']" @close="deactivateSubnav" />
           <WarehouseSubnav :class="[activeSubnav === 'warehouse' && 'is-active']" @close="deactivateSubnav" />
         </div>
       </template>
