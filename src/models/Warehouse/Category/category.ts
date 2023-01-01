@@ -67,6 +67,17 @@ export const defaultMainCategorySearchFilter: CategorySearchFilter = {
     order_by: undefined,
     per_page: undefined,
 }
+export const defaultSubCategorySearchFilter: CategorySearchFilter = {
+    name: undefined,
+    parent_id: undefined,
+    status: undefined,
+    created_by: undefined,
+    is_main_category: false,
+    page: undefined,
+    order: undefined,
+    order_by: undefined,
+    per_page: undefined,
+}
 
 export const defaultChangeCategoryStatus: ChangeCategoryStatus = {
     id: undefined,

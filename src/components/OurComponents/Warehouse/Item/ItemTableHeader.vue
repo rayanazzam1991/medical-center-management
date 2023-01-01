@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts } from "/@src/models/Warehouse/Category/category"
+import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -40,7 +40,7 @@ export default defineComponent({
         const searchPrice = ref()
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
-        const searchFilter = ref(defaultCategorySearchFilter)
+        const searchFilter = ref(defaultItemSearchFilter)
         const is_reseted = ref(false)
         const keyTest = ref(0)
         const quickSearchField = ref('')
@@ -55,61 +55,40 @@ export default defineComponent({
 
             search()
         }
-        function isNumber(str: string): boolean {
-            if (typeof str !== 'string') {
-                return false;
-            }
-
-            if (str.trim() === '') {
-                return false;
-            }
-
-            return !Number.isNaN(Number(str));
-        }
-
         const search = () => {
             searchFilter.value.per_page = perPage.value
-            searchFilter.value.is_main_category = undefined
             context.emit('search', searchFilter.value)
         }
-        const search_filter = (value: CategorySearchFilter) => {
+        const search_filter = (value: ItemSearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
-            searchFilter.value.is_main_category = undefined
 
             context.emit('search', searchFilter.value)
         }
         const resetFilter = () => {
             searchFilter.value.name = undefined
             searchFilter.value.status = undefined
-            searchFilter.value.parent_id = undefined
-            searchFilter.value.is_main_category = undefined
-
+            searchFilter.value.category_id = undefined
+            searchFilter.value.sub_category_id = undefined
             quickSearchField.value = ''
             is_reseted.value = true
             keyTest.value++
             context.emit('resetFilter', searchFilter.value)
-
         }
-        const resetFilter_popup = (value: CategorySearchFilter) => {
+        const resetFilter_popup = (value: ItemSearchFilter) => {
             searchFilter.value.name = undefined
-            searchFilter.value.parent_id = undefined
             searchFilter.value.status = undefined
-            searchFilter.value.is_main_category = undefined
+            searchFilter.value.category_id = undefined
+            searchFilter.value.sub_category_id = undefined
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
+        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
     },
 
 
 })
-
-
-
-
 </script>
-
 <template>
     <form class="form-layout" v-on:submit.prevent="quickSearch">
         <div class="form-outer">
@@ -145,7 +124,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/category/add" color="primary">{{ button_name }}
+                                <VButton class="" to="/item/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -153,7 +132,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <CategorySearchFilterModel :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+        <ItemSearchFilterModel :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
             @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

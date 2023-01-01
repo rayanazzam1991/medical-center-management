@@ -36,13 +36,13 @@ const emits = defineEmits<{
                                 </ul>
                                 <h4 class="column-heading">Items</h4>
                                 <ul>
-                                    <!-- <li>
-                                        <RouterLink to="/position">
+                                    <li>
+                                        <RouterLink to="/item">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>Items</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
-                                    </li> -->
+                                    </li>
                                     <li>
                                         <RouterLink to="/item/add">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
