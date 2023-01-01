@@ -54,35 +54,35 @@ const toEdit = () => {
                         </div>
                         <div class="columns is-24 ml-1 mt-2">
                             <div class="column is-12">
-                                <h4 class="margin-bottom">Category:</h4>
+                                <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Category:</h4>
                                 <span>{{ currentItem.category.parent?.name }}</span>
 
                             </div>
                             <div class="column is-12">
-                                <h4 class="margin-bottom">Sub Category:</h4>
+                                <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Sub Category:</h4>
                                 <span>{{ currentItem.category.name }}</span>
                             </div>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Price :</h4>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Price :</h4>
                             <span>{{ currentItem.price }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Cost :</h4>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Cost :</h4>
                             <span>{{ currentItem.cost }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Description:</h4>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Description:</h4>
                             <span v-if="currentItem.description"> {{ currentItem.description }} </span>
                             <span v-else> Null </span>
                         </div>
                         <div class="columns is-24 ml-1 mt-2">
                             <div class="column is-12 ">
-                                <h4 class="margin-bottom">Quantity :</h4>
+                                <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Quantity :</h4>
                                 <span>{{ currentItem.quantity }}</span>
                             </div>
                             <div class="column is-12">
-                                <h4 class="margin-bottom">Min Quantity :</h4>
+                                <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Min Quantity :</h4>
                                 <span>{{ currentItem.min_quantity }}</span>
                             </div>
 

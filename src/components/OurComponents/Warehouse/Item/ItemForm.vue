@@ -8,8 +8,8 @@ import { getItem, addItem, editItem } from '/@src/services/Warehouse/Item/itemSe
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
-import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
-import { getCategoriesList, getParentsList } from '/@src/services/Warehouse/Category/categoryService';
+import { Category, defaultCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 
 
 export default defineComponent({
@@ -62,7 +62,7 @@ export default defineComponent({
         };
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const mainCategories = await getCategoriesList(defaultCategorySearchFilter)
+            const mainCategories = await getCategoriesList(defaultMainCategorySearchFilter)
             mainCategoriesList.value = mainCategories.categories
             await getCurrentItem();
             let categoriesFilter = defaultCategorySearchFilter
