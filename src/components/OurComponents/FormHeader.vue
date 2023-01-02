@@ -52,7 +52,8 @@ export default defineComponent({
           <div class="right">
             <div class="buttons">
               <div v-if="isLoading" class="loader is-loading m-r-15 m-b-05-rem w35-h35"></div>
-              <VButton icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light dark-outlined>
+              <VButton v-if="back_route != ''" icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light
+                dark-outlined>
                 Back
               </VButton>
               <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name }} </VButton>

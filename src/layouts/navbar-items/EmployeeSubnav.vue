@@ -57,7 +57,7 @@ const emits = defineEmits<{
                 <ul>
                   <li>
                     <RouterLink to="/employee-schedule">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i aria-hidden="true" class="lnir lnir-calender-alt-1"></i>
                       <span>Employees Schedule</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

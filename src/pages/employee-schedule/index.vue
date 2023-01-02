@@ -9,6 +9,7 @@ import { useEmployee } from '/@src/stores/Employee/employeeStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 
 
 const viewWrapper = useViewWrapper()
@@ -33,21 +34,16 @@ const selectedEndTime = ref({ hour: '00', minute: '00' })
 const updateScheduleVar = ref(defaultUpdateSchedule)
 const keyIncement = ref(0)
 const loading = ref({ update: false, delete: false })
-const { employeesSchedule, pagination } = await getEmployeesSchedule(searchFilter.value)
-employeesScheduleList.value = employeesSchedule
-if (employeesScheduleList.value.length != 0) {
-
-    for (let i = 0; i < employeesScheduleList.value[0].schedules.length; i++) {
-        daysName.value.push(employeesScheduleList.value[0].schedules[i].day_of_week);
-    }
-}
-
+daysName.value = await getWeekDays()
 
 onMounted(async () => {
 
+    const { employeesSchedule, pagination } = await getEmployeesSchedule(searchFilter.value)
+    employeesScheduleList.value = employeesSchedule
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
+
 
 });
 
@@ -448,7 +444,7 @@ const columns = {
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :key="keyIncement" title="Edit Employee Schedule" :open="tableCellPopup" actions="center"
+    <VModal :key="keyIncement" title="Edit Employee Schedule" :open="tableCellPopup" actions="right"
         @close="tableCellPopup = false">
         <template #content>
             <h2 class="is-size-5 has-text-primary mb-3">Day: {{ selectedCell.day_of_week }}</h2>
@@ -536,7 +532,7 @@ const columns = {
     </VModal>
 
 </template>
-<style lang="scss">
+<style scoped lang="scss">
 .is-clickable {
     cursor: default !important;
 }

@@ -66,6 +66,9 @@ const props = withDefaults(
     }
 )
 const tab = ref(props.activeTab)
+if (route.query.tab === 'Details' || route.query.tab === 'Medical Info' || route.query.tab === 'Social Media' || route.query.tab === 'Files') {
+    tab.value = route.query.tab
+}
 
 const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
