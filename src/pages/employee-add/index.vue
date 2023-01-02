@@ -74,7 +74,6 @@ onMounted(async () => {
     citySearchFilter.status = BaseConsts.ACTIVE
     const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
-
     const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
     statusesList.value = userstatuses
 
@@ -107,10 +106,6 @@ const getRoomsByDepartment = async () => {
 
 }
 
-
-// const selectedDepartment = async () => {
-
-// }
 const validationSchema = employeeAddvalidationSchema
 
 const { handleSubmit } = useForm({

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-type TabId = 'Employee' | 'templates'
-const activeTab = ref<TabId>('Employee')
+type TabId = 'HR' | 'templates'
+const activeTab = ref<TabId>('HR')
 const emits = defineEmits<{
   (e: 'close'): void
 }>()
@@ -12,7 +12,7 @@ const emits = defineEmits<{
 
 
     <div class="container">
-      <div class="tab-content" :class="[activeTab === 'Employee' && 'is-active']">
+      <div class="tab-content" :class="[activeTab === 'HR' && 'is-active']">
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
@@ -47,6 +47,18 @@ const emits = defineEmits<{
                     <RouterLink to="/position/add">
                       <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                       <span>Create Position</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-3">
+                <h4 class="column-heading">Employees Schedule</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/employee-schedule">
+                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <span>Employees Schedule</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>

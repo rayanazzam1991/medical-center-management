@@ -10,8 +10,9 @@ export type SubnavId =
   | 'closed'
   | 'others'
   | 'CRM'
-  | 'employee'
+  | 'HR'
   | 'contractor'
+  | 'warehouse'
 
 const props = withDefaults(
   defineProps<{
@@ -209,31 +210,42 @@ watch(
             <span>CRM</span>
           </a>
           <a :class="[((activeSubnav === 'contractor') ||
-            route.path.startsWith('/contractor') ||
-            route.path.startsWith('/contractor-add') ||
-            route.path.startsWith('/contractor-edit') ||
-            route.path.startsWith('/speciality') ||
-            route.path.startsWith('/speciality-add')
-          
-          
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+  route.path.startsWith('/contractor') ||
+  route.path.startsWith('/contractor-add') ||
+  route.path.startsWith('/contractor-edit') ||
+  route.path.startsWith('/speciality') ||
+  route.path.startsWith('/speciality-add')
+
+
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
             <span>Contractors</span>
           </a>
-          <a :class="[(activeSubnav === 'employee' ||
-            route.path.startsWith('/employee') ||
-            route.path.startsWith('/employee-add') ||
-            route.path.startsWith('/employee-edit') ||
-            route.path.startsWith('/position') ||
-            route.path.startsWith('/position-add')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
+          <a :class="[(activeSubnav === 'HR' ||
+  route.path.startsWith('/employee') ||
+  route.path.startsWith('/employee-add') ||
+  route.path.startsWith('/employee-edit') ||
+  route.path.startsWith('/position') ||
+  route.path.startsWith('/position-add')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
+            @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
-            <span>Employees</span>
+            <span>Human Resources</span>
+          </a>
+          <a :class="[(activeSubnav === 'warehouse' ||
+  route.path.startsWith('/category') ||
+  route.path.startsWith('/category-add') ||
+  route.path.startsWith('/category-edit') ||
+  route.path.startsWith('/item-edit') ||
+  route.path.startsWith('/item-add')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
+            <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
+            <span>Warehouse</span>
           </a>
         </div>
-        <!-- 
+        <!--
         <div class="centered-search" :class="[activeSubnav !== 'search' && 'is-hidden']">
           <div class="field">
             <div class="control has-icon">
@@ -267,12 +279,10 @@ watch(
 ]" class="navbar-subnavbar">
 
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" @close="deactivateSubnav" />
-
           <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" @close="deactivateSubnav" />
-
           <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" />
-
-          <EmployeeSubnav :class="[activeSubnav === 'employee' && 'is-active']" @close="deactivateSubnav" />
+          <EmployeeSubnav :class="[activeSubnav === 'HR' && 'is-active']" @close="deactivateSubnav" />
+          <WarehouseSubnav :class="[activeSubnav === 'warehouse' && 'is-active']" @close="deactivateSubnav" />
         </div>
       </template>
     </Navbar>

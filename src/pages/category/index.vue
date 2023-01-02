@@ -3,7 +3,7 @@ import NoViewDropDownVue from '/@src/components/OurComponents/NoViewDropDown.vue
 import VTag from '/@src/components/base/tags/VTag.vue'
 import VButton from '/@src/components/base/button/VButton.vue'
 import { useHead } from '@vueuse/head'
-import { getCategoriesList, changeCategoryStatus } from '/@src/services/Warehouse/Category/categoryService'
+import { getCategoriesList, changeCategoryStatus } from '/@src/services/Warehouse/Category/CategoryService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts, defaultCategory, Category, defaultChangeCategoryStatus } from '/@src/models/Warehouse/Category/category'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -30,20 +30,11 @@ const categoryStore = useCategory()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 
-// onMounted(async () => {
-//     const { categories, pagination } = await getCategoriesList(searchFilter.value)
-//     categoriesList.value = categories
-//     paginationVar.value = pagination
-//     keyIncrement.value = keyIncrement.value + 1
-//     default_per_page.value = pagination.per_page
-
-// });
-
 const { categories, pagination } = await getCategoriesList(searchFilter.value)
 categoriesList.value = categories
-
-
-
+paginationVar.value = pagination
+keyIncrement.value = keyIncrement.value + 1
+default_per_page.value = pagination.per_page
 
 const search = async (searchFilter2: CategorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -51,7 +42,6 @@ const search = async (searchFilter2: CategorySearchFilter) => {
     categoriesList.value = categories
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
-
 }
 
 const resetFilter = async (searchFilter2: CategorySearchFilter) => {
@@ -66,7 +56,6 @@ const getCategoriesPerPage = async (pageNum: number) => {
 const categorySort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
-
         searchFilter.value.order_by = sortField
         searchFilter.value.order = sortOrder
     }
@@ -75,7 +64,6 @@ const categorySort = async (value: string) => {
         searchFilter.value.order_by = undefined
     }
     await search(searchFilter.value)
-
 }
 const changestatusCategory = async () => {
     currentChangeStatusCategory.value.id = currentChangeStatusCategory.value.id
@@ -89,7 +77,6 @@ const changestatusCategory = async () => {
         notif.success(`${categoryChangeStatus.value.name} status was edited successfully`)
     } else {
         await sleep(200);
-
         notif.error(message)
     }
     changeStatusPopup.value = false
@@ -104,12 +91,13 @@ const columns = {
     name: {
         align: 'center',
         sortable: true,
-
+        grow: true,
 
     },
     parent_id: {
         sortable: true,
         searchable: true,
+        grow: true,
         align: 'center',
         label: 'Parent',
         renderRow: (row: any) =>
@@ -118,6 +106,7 @@ const columns = {
     created_by: {
         sortable: true,
         searchable: true,
+        grow: true,
         align: 'center',
         label: 'Created_by',
         renderRow: (row: any) =>
@@ -145,6 +134,15 @@ const columns = {
             ),
 
     },
+    created_at: {
+        align: 'center',
+        label: 'Create Date',
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+
+    },
     actions: {
         align: 'center',
         renderRow: (row: any) =>
@@ -157,7 +155,6 @@ const columns = {
                     changeStatusPopup.value = true
                 }
             }),
-
     },
 } as const
 </script>
@@ -173,7 +170,6 @@ const columns = {
                         <VFlexTableCell>
                             <VPlaceload />
                         </VFlexTableCell>
-
                     </div>
                 </div>
                 <div v-else-if="categoriesList.length === 0" class="flex-list-inner">
@@ -181,7 +177,6 @@ const columns = {
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
-
             </template>
         </VFlexTable>
         <VFlexPagination v-if="(categoriesList.length != 0 && paginationVar.max_page != 1)"
@@ -199,7 +194,6 @@ const columns = {
             paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
         <VPlaceloadText v-if="categoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
-
     </VFlexTableWrapper>
     <VModal title="Change Category Status" :open="changeStatusPopup" actions="center"
         @close="changeStatusPopup = false">
@@ -222,7 +216,6 @@ const columns = {
                             </VField>
                         </div>
                     </div>
-
                 </div>
             </form>
         </template>
@@ -230,7 +223,5 @@ const columns = {
             <VButton color="primary" raised @click="changestatusCategory()">Confirm</VButton>
         </template>
     </VModal>
-
-
 </template>
 

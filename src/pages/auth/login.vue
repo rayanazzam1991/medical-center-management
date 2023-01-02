@@ -8,6 +8,7 @@ import sleep from '/@src/utils/sleep'
 import { signIn } from "/@src/composable/Others/User/Auth/signIn";
 import { defaultSignInRequest } from '/@src/models/Others/User/auth'
 import { useAuth } from '/@src/stores/Others/User/authStore'
+import { getSettings } from '/@src/services/Others/Setting/settingService'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -33,7 +34,10 @@ const handleLogin = async () => {
     try {
 
       const loggedUser = await signIn(signRequest.value);
+      const { settings } = await getSettings();
       console.log("loggedUser", loggedUser)
+      console.log("settings", settings)
+
       if (userAuth.isLoggedIn) {
 
         router.push({

@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
 import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 
 
 export async function addEmployeeApi(
@@ -35,3 +36,22 @@ export async function getEmployeesApi(
   })
   return { response }
 }
+export async function getEmployeesScheduleApi(
+  api: AxiosInstance,
+  searchFilter: EmployeeScheduleSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('employee/getEmployeesSchedule', {
+    params: searchFilter,
+  })
+  return { response }
+}
+export async function updateEmployeeScheduleApi(
+  api: AxiosInstance,
+  employee_id:number,
+  date_id : number ,
+  data : UpdateSchedule
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(`employee/${employee_id}/updateEmployeeSchedule/${date_id}`, data )
+  return { response }
+}
+

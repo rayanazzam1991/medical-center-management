@@ -18,9 +18,8 @@ const route = useRoute()
     </NavbarLayout>
 </template>
 <style  lang="scss">
-
 .page-content-wrapper {
-    max-width: 1200px !important;
+    max-width: 1800px !important;
 }
 
 .page-content-wrapper .page-content {

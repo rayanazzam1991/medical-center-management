@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defaultCategorySearchFilter, CategoryConsts, Category, CategorySearchFilter, defaultMainCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
-import { getParentsList } from '/@src/services/Warehouse/Category/categoryService'
+import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
+import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
 
 
 export default defineComponent({
@@ -29,14 +29,11 @@ export default defineComponent({
         const searchStatus = ref()
         const searchFilter = ref(defaultCategorySearchFilter)
         const test = ref()
-
         let search_filter_popup = computed({
             get: () => props.search_filter_popup as boolean,
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
-
             },
         })
         const search = () => {
@@ -47,7 +44,6 @@ export default defineComponent({
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
         }
         const resetFilter = () => {
             searchName.value = ''
@@ -60,8 +56,7 @@ export default defineComponent({
         }
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const { categories } = await getParentsList()
-            console.log(categories)
+            const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
             mainCategoriesList.value = categories
         })
         return { mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }
