@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+
 type TabId = 'others' | 'templates'
 const activeTab = ref<TabId>('others')
+const { t } = useI18n()
 const emits = defineEmits<{
     (e: 'close'): void
 }>()
@@ -17,7 +20,7 @@ const emits = defineEmits<{
                     <div class="center has-slimscroll">
                         <div class="columns">
                             <div class="column is-3">
-                                <h4 class="column-heading">Nationalities</h4>
+                                <h4 class="column-heading">{{t('Nationalities')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/nationality">
