@@ -19,10 +19,8 @@ const notif = useNotyf()
 const searchFilter = ref(defaultItemSearchFilter)
 const itemsList = ref<Array<Item>>([])
 const changeStatusPopup = ref(false)
-const categoryChangeStatus = ref<Item>(defaultItem)
+const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
-const deleteItemPopup = ref(false)
-const deleteItemId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const itemStore = useItem()
@@ -34,7 +32,6 @@ onMounted(async () => {
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
-
 });
 const changestatusItem = async () => {
     currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
@@ -45,7 +42,7 @@ const changestatusItem = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${categoryChangeStatus.value.name} status was edited successfully`)
+        notif.success(`${itemChangeStatus.value.name} status was edited successfully`)
     } else {
         await sleep(200);
         notif.error(message)
@@ -54,9 +51,7 @@ const changestatusItem = async () => {
 }
 const search = async (searchFilter2: ItemSearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
-
     const { items, pagination } = await getItemsList(searchFilter2)
-
     itemsList.value = items
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
@@ -74,7 +69,6 @@ const getItemsPerPage = async (pageNum: number) => {
 const itemSort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
-
         searchFilter.value.order_by = sortField
         searchFilter.value.order = sortOrder
     }
@@ -83,10 +77,7 @@ const itemSort = async (value: string) => {
         searchFilter.value.order_by = undefined
     }
     await search(searchFilter.value)
-
 }
-
-
 const columns = {
     id: {
         searchable: true,
@@ -103,7 +94,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Category',
+        label: 'Level 1',
         renderRow: (row: any) =>
             h('span', row?.category?.parent?.name)
     },
@@ -112,7 +103,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Sub Category',
+        label: 'Level 2',
         renderRow: (row: any) =>
             h('span', row?.category?.name)
     },
@@ -175,7 +166,6 @@ const columns = {
 
     actions: {
         align: 'center',
-
         renderRow: (row: any) =>
             h(NoDeleteDropDownVue, {
 
@@ -189,9 +179,7 @@ const columns = {
                 onView: () => {
                     router.push({ path: `/item/${row.id}` })
                 },
-
             }),
-
     },
 } as const
 </script>

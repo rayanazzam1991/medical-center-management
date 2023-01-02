@@ -27,11 +27,13 @@ export default defineComponent({
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
         const searchName = ref('')
-        const searchParent = ref()
+        const searchParent = ref(0)
         const searchSubCategory = ref()
         const searchStatus = ref()
         const searchFilter = ref(defaultItemSearchFilter)
-        const test = ref()
+        const allCategoriesList = ref<Category[]>([])
+        const mainCategoriesList = ref<Category[]>([])
+        const subCategoriesList = ref<Category[]>([])
         let search_filter_popup = computed({
             get: () => props.search_filter_popup as boolean,
             set(value) {
@@ -45,42 +47,43 @@ export default defineComponent({
                 category_id: searchParent.value,
                 sub_category_id: searchSubCategory.value,
                 status: searchStatus.value,
+
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
+
         }
         const resetFilter = () => {
             searchName.value = ''
-            searchParent.value = undefined
+            searchParent.value = 0
+            searchSubCategory.value = undefined
             searchStatus.value = undefined
             searchFilter.value.name = undefined
-            searchFilter.value.category_id = undefined
             searchFilter.value.sub_category_id = undefined
+            searchFilter.value.category_id = undefined
             searchFilter.value.status = undefined
             context.emit('resetFilter', searchFilter.value)
         }
-        const getMainCategory = () => {
-            const MainCaegory = CategoriesList.value.filter((parent) => parent.parent === null)
-            return MainCaegory
-        }
-        const getSubCategory = () => {
-            const SubCaegory = CategoriesList.value.filter((parent) => parent.parent != null)
-            return SubCaegory
-        }
-        const CategoriesList = ref<Category[]>([])
-        const mainCategoriesList = ref<Category[]>([])
-        const subCategoriesList = ref<Category[]>([])
+
         onMounted(async () => {
             const allcategories = await getCategoriesList(defaultCategorySearchFilter)
-            CategoriesList.value = allcategories.categories
+            allCategoriesList.value = allcategories.categories
             mainCategoriesList.value = getMainCategory()
-            subCategoriesList.value = getSubCategory()
         })
-        return { subCategoriesList, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
+
+        const getMainCategory = () => {
+            const MainCategory = allCategoriesList.value.filter((category) => category.parent === null)
+            return MainCategory
+        }
+        const getSubCategory = () => {
+            let categoriesFilter = defaultCategorySearchFilter
+            categoriesFilter.parent_id = searchParent.value
+            const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
+            subCategoriesList.value = SubCategory
+        }
+        return { subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
     },
 })
-
-
 
 
 </script>
@@ -94,22 +97,25 @@ export default defineComponent({
                         <input v-model="searchName" type="text" class="input " placeholder="Name..." />
                     </VControl>
                 </VField>
-
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchParent" class="">
-                            <VOption value="">Category</VOption>
-                            <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">{{
+                        <div class="select">
+                            <select @change="getSubCategory" v-model="searchParent">
+                                <VOption value=0>Level 1</VOption>
+                                <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">{{
         parent.name
 }}
-                            </VOption>
-                        </VSelect>
+                                </VOption>
+                            </select>
+
+                        </div>
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchSubCategory" class="">
-                            <VOption value="">Sub_Category</VOption>
+                        <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == 0"
+                            v-model="searchSubCategory" class="">
+                            <VOption value="">Level 2</VOption>
                             <VOption v-for="sub_category in subCategoriesList" :key="sub_category.id"
                                 :value="sub_category.id">{{
         sub_category.name

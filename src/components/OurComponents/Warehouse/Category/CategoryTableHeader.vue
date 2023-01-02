@@ -42,7 +42,7 @@ export default defineComponent({
         const searchStatus = ref()
         const searchFilter = ref(defaultCategorySearchFilter)
         const is_reseted = ref(false)
-        const keyTest = ref(0)
+        const keyIncrement = ref(0)
         const quickSearchField = ref('')
         const quickSearch = () => {
             if (quickSearchField.value != '') {
@@ -87,7 +87,7 @@ export default defineComponent({
 
             quickSearchField.value = ''
             is_reseted.value = true
-            keyTest.value++
+            keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -99,7 +99,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
+        return { searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
     },
 
 
@@ -153,8 +153,8 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <CategorySearchFilterModel :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
-            @search="search_filter" @resetFilter="resetFilter_popup" />
+        <CategorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
