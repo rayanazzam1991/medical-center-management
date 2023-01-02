@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
 import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
-import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/employeeSchedule"
+import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 
 
 export async function addEmployeeApi(

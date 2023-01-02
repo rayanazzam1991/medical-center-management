@@ -20,6 +20,7 @@ export interface TableCellCardProps {
     elevated?: boolean
     title: string
     subtitle?: string
+    subtitle2?: string
     clickable?: boolean
     titleSize?: TableCellTitleSize
 
@@ -39,7 +40,7 @@ const props = withDefaults(defineProps<TableCellCardProps>(), {
     elevated: false,
     title: '',
     subtitle: '',
-    clickable: false,
+    clickable: true,
     titleSize: 'small'
 })
 
@@ -62,10 +63,37 @@ const titleSizeStyle = computed(() => {
 
     return 'is-size-6'
 })
-const TextColor = computed(() => {
+const subtitleColor = computed(() => {
     if (props.color === 'primary') {
         if (dark.isDark == false)
-            return 'has-text-light'
+            return 'has-text-grey-light	'
+        else
+            return 'has-text-grey-light		'
+    } else if (props.color === 'white') {
+        if (dark.isDark == false)
+
+            return 'has-text-primary'
+        else
+            return 'has-text-primary-light'
+
+    } else if (props.color === 'disabled') {
+        if (dark.isDark == false)
+
+            return 'has-text-grey'
+        else
+            return 'has-text-grey'
+
+    }
+    if (dark.isDark == false)
+        return 'has-text-primary'
+    else
+        return 'has-text-grey'
+
+})
+const textColor = computed(() => {
+    if (props.color === 'primary') {
+        if (dark.isDark == false)
+            return 'has-text-grey-dark'
         else
             return 'has-text-light	'
     } else if (props.color === 'white') {
@@ -92,20 +120,20 @@ const TextColor = computed(() => {
 const cardColor = computed(() => {
     if (props.color === 'primary') {
         if (dark.isDark == false)
-            return 'has-background-primary'
+            return ''
         else
-            return 'has-background-success-dark'
+            return ''
     } else if (props.color === 'white') {
         if (dark.isDark == false)
 
-            return 'has-background-light'
+            return 'has-background-grey-lighter'
         else
             return 'has-background-grey-dark'
 
     } else if (props.color === 'disabled') {
         if (dark.isDark == false)
 
-            return 'has-background-grey-lighter'
+            return 'has-background-grey-light'
         else
             return 'has-background-dark'
 
@@ -120,10 +148,20 @@ const cardColor = computed(() => {
 </script>
 
 <template>
-    <div @click="() => emits('click')" :class="[cardRadius, elevated && 'is-raised', cardColor]" class="card-size card">
+    <div v-if="clickable" @click="() => emits('click')" :class="[cardRadius, cardColor]" class="card-size cursor ">
         <div class="title-size center">
-            <h3 class=" mb-2 has-text-weight-normal" :class="[titleSizeStyle, TextColor]">{{ props.title }}</h3>
-            <p class="" v-if="props.subtitle != ''" :class="TextColor">{{ props.subtitle }} </p>
+            <h3 class=" mb-2 has-text-weight-normal" :class="[titleSizeStyle, textColor]">{{ props.title }}</h3>
+            <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
+            <p class="" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
+        </div>
+    </div>
+    <div v-else :class="[cardRadius, cardColor]" class="card-size">
+        <div class="title-size center">
+            <h3 @click="() => emits('click')" class=" mb-2 has-text-weight-normal cursor"
+                :class="[titleSizeStyle, textColor]">
+                {{ props.title }} </h3>
+            <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
+            <p class="" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
         </div>
     </div>
 
@@ -137,6 +175,7 @@ const cardColor = computed(() => {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    border: 0;
 }
 
 .center {
@@ -149,13 +188,16 @@ const cardColor = computed(() => {
     text-align-last: center
 }
 
-.card {
+.cursor {
     cursor: pointer;
 }
 
-.card:hover {
+
+
+.cursor {
     &:hover {
-        transform: scale(1.05);
+        color: var(--primary) !important;
+
     }
 
 }

@@ -12,7 +12,7 @@ import {
 import { CreateUpdateUser } from '/@src/models/Others/User/user'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
-import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/employeeSchedule'
+import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 
 export async function addEmployee(
   employeeData: CreateEmployee,

@@ -1,5 +1,5 @@
-import { defaultPosition, Position } from "../../Others/Position/position"
-import { defaultUser, User } from "../../Others/User/user"
+import { defaultPosition, Position } from "../../../Others/Position/position"
+import { defaultUser, User } from "../../../Others/User/user"
 
 export interface EmployeeSchedule {
     id?: number
