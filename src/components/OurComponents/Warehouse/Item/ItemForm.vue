@@ -40,6 +40,7 @@ export default defineComponent({
         const itemId = ref(0);
         const selectedCategoryId = ref(0)
         const subcategoeisList = ref<Category[]>([])
+        const allCategoriesList = ref<Category[]>([])
         // @ts-ignore
         itemId.value = route.params?.id as number ?? 0;
         const getCurrentItem = async () => {
@@ -56,28 +57,30 @@ export default defineComponent({
             }
             const { item } = await getItem(itemId.value);
             currentItem.value = item != undefined ? item : defaultItem;
-            console.log(currentItem.value)
             selectedCategoryId.value = currentItem.value.category.parent?.id ?? 0
 
         };
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const mainCategories = await getCategoriesList(defaultMainCategorySearchFilter)
-            mainCategoriesList.value = mainCategories.categories
+            const allCategories = await getCategoriesList(defaultCategorySearchFilter)
+            allCategoriesList.value = allCategories.categories
+            mainCategoriesList.value = getMainCategory()
             await getCurrentItem();
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
-            const subcategoeis = await getCategoriesList(categoriesFilter)
-            subcategoeisList.value = subcategoeis.categories
-
-
+            const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
+            subcategoeisList.value = SubCategory
         })
-
-        const getSubCategoryByCategroy = async () => {
+        const getMainCategory = () => {
+            const MainCategory = allCategoriesList.value.filter((category) => category.parent === null)
+            return MainCategory
+        }
+        const getSubCategoryByCategroy = () => {
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
-            const { categories } = await getCategoriesList(categoriesFilter)
-            subcategoeisList.value = categories
+            console.log(categoriesFilter.parent_id)
+            const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
+            subcategoeisList.value = SubCategory
 
         }
         const validationSchema = itemvalidationSchema
@@ -320,18 +323,15 @@ export default defineComponent({
                                 </VField>
                             </div>
                         </div>
+                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-12">
-                                    <VField id="description" v-slot="{ field }">
-                                        <VLabel class="optional">Description</VLabel>
-                                        <VControl icon="feather:file-text">
-                                            <VInput v-model="currentItem.description" type="text" placeholder=""
-                                                autocomplete="" />
-                                            <p v-if="field?.errorMessage" class="help is-danger">
-                                                {{ field.errorMessage }}
-                                            </p>
-
+                                    <VField id="description">
+                                        <VLabel class="optional">Description </VLabel>
+                                        <VControl>
+                                            <VTextarea v-model="currentItem.description" />
+                                            <ErrorMessage class="help is-danger" name="description" />
                                         </VControl>
                                     </VField>
                                 </div>

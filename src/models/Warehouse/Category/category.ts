@@ -5,6 +5,7 @@ export interface Category {
     id?: number
     name: string
     parent?: Category
+    sub_category?: Category
     created_by?: User
     status: number
 }
@@ -18,6 +19,7 @@ export interface CreateUpdateCategory {
 export interface CategorySearchFilter {
     name?: string
     parent_id?: number
+    sub_category_id?: number
     status?: number
     created_by?: User
     is_main_category?: boolean
@@ -34,6 +36,7 @@ export const defaultCategory: Category = {
     id: undefined,
     name: '',
     parent: undefined,
+    sub_category: undefined,
     created_by: undefined,
     status: 1,
 }
@@ -48,6 +51,7 @@ export const defaultCreateUpdateCategory: CreateUpdateCategory = {
 export const defaultCategorySearchFilter: CategorySearchFilter = {
     name: undefined,
     parent_id: undefined,
+    sub_category_id: undefined,
     status: undefined,
     created_by: undefined,
     is_main_category: undefined,
@@ -59,6 +63,7 @@ export const defaultCategorySearchFilter: CategorySearchFilter = {
 export const defaultMainCategorySearchFilter: CategorySearchFilter = {
     name: undefined,
     parent_id: undefined,
+    sub_category_id: undefined,
     status: undefined,
     created_by: undefined,
     is_main_category: true,

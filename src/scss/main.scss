@@ -5,6 +5,10 @@
 /* ==========================================================================
 SCSS Imports
 ========================================================================== */
+@font-face {
+  font-family: "Samara";
+  src: url("/fonts/custom/tajawal-regular.ttf");
+}
 
 @import './bulma-generated/generated-vars.sass';
 @import './css-variables/all';
