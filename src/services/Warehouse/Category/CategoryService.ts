@@ -35,23 +35,10 @@ export async function getCategoriesList(searchFilter: CategorySearchFilter) {
     const category = useCategory()
     await category.getCategoriesStore(searchFilter)
     var categories: Category[] = category.categories
-    console.log(categories)
     var pagination: Pagination = category.pagination
     var success: boolean = category.success ?? false
     var error_code: string = category.error_code ?? ''
     var message: string = category.message ?? ''
-
-    return { categories, pagination, success, error_code, message }
-
-}
-export async function getParentsList() {
-    const category = useCategory()
-    var categories: Category[] = await category.getParentsStore() ?? []
-    var pagination: Pagination = category.pagination
-    var success: boolean = category.success ?? false
-    var error_code: string = category.error_code ?? ''
-    var message: string = category.message ?? ''
-
     return { categories, pagination, success, error_code, message }
 
 }

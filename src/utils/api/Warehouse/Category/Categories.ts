@@ -50,9 +50,3 @@ export async function getCategoriesApi(
     })
     return { response }
 }
-export async function getParentApi(
-    api: AxiosInstance,
-): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('category/getParent')
-    return { response }
-}
