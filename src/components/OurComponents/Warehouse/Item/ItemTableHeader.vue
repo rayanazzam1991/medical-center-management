@@ -37,12 +37,10 @@ export default defineComponent({
         const pagination = props.pagination
         const searchFilterPop = ref(false)
         const searchName = ref('')
-        const searchPrice = ref()
         const perPage = ref(pagination.per_page)
-        const searchStatus = ref()
         const searchFilter = ref(defaultItemSearchFilter)
         const is_reseted = ref(false)
-        const keyTest = ref(0)
+        const keyIncrement = ref(0)
         const quickSearchField = ref('')
         const quickSearch = () => {
             if (quickSearchField.value != '') {
@@ -72,7 +70,7 @@ export default defineComponent({
             searchFilter.value.sub_category_id = undefined
             quickSearchField.value = ''
             is_reseted.value = true
-            keyTest.value++
+            keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
         }
         const resetFilter_popup = (value: ItemSearchFilter) => {
@@ -83,7 +81,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
+        return { searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
     },
 
 
@@ -132,8 +130,8 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ItemSearchFilterModel :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
-            @search="search_filter" @resetFilter="resetFilter_popup" />
+        <ItemSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
