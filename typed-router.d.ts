@@ -112,6 +112,8 @@ declare module 'vue-router/auto/routes' {
     '/service/[id]/': RouteRecordInfo<'/service/[id]/', '/service/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/service/[id]/edit': RouteRecordInfo<'/service/[id]/edit', '/service/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/service/add': RouteRecordInfo<'/service/add', '/service/add', Record<never, never>, Record<never, never>>,
+    '/settings': RouteRecordInfo<'/settings', '/settings', Record<never, never>, Record<never, never>>,
+    '/settings/': RouteRecordInfo<'/settings/', '/settings/', Record<never, never>, Record<never, never>>,
     '/social-media': RouteRecordInfo<'/social-media', '/social-media', Record<never, never>, Record<never, never>>,
     '/social-media/': RouteRecordInfo<'/social-media/', '/social-media/', Record<never, never>, Record<never, never>>,
     '/social-media/[id]/': RouteRecordInfo<'/social-media/[id]/', '/social-media/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

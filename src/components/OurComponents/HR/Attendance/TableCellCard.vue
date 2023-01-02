@@ -133,9 +133,9 @@ const cardColor = computed(() => {
     } else if (props.color === 'disabled') {
         if (dark.isDark == false)
 
-            return 'has-background-grey-light'
+            return ''
         else
-            return 'has-background-dark'
+            return ''
 
     }
     if (dark.isDark == false)

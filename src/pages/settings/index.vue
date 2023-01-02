@@ -1,0 +1,296 @@
+<script lang="ts">
+import { useHead } from '@vueuse/head'
+import { useNotyf } from '/@src/composable/useNotyf';
+import { ErrorMessage, useForm } from 'vee-validate';
+import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
+import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
+import sleep from "/@src/utils/sleep";
+import { useCity } from "/@src/stores/Others/City/cityStore";
+import { Setting } from '/@src/models/Others/Setting/setting';
+import { editSettings, getSettings } from '/@src/services/Others/Setting/settingService';
+import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
+import { useSetting } from '/@src/stores/Others/Setting/settingStore';
+
+
+export default defineComponent({
+    props: {},
+    emits: ["onSubmit"],
+    setup(props, context) {
+        const viewWrapper = useViewWrapper();
+        viewWrapper.setPageTitle("Edit Settings");
+        const head = useHead({
+            title: "Edit Settings",
+        });
+        const notif = useNotyf();
+        const formType = ref("Edit");
+        const route = useRoute();
+        const settingStore = useSetting();
+        const router = useRouter();
+        const settingsList = ref<Setting[]>([])
+        const pageTitle = viewWrapper.pageTitle;
+        const daysName = ref<string[]>([])
+        const start_day = ref('')
+        const end_day = ref('')
+        const start_of_week = ref('')
+        const start_time = ref({ hour: '00', minute: '00' })
+        const end_time = ref({ hour: '00', minute: '00' })
+        const late_tolerance = ref('')
+
+
+        onMounted(async () => {
+            const { settings } = await getSettings()
+            settingsList.value = settings
+            daysName.value = await getWeekDays()
+            start_day.value = settingsList.value.find((setting) => setting.key == 'start_day')?.value ?? ''
+            end_day.value = settingsList.value.find((setting) => setting.key == 'end_day')?.value ?? ''
+            start_of_week.value = settingsList.value.find((setting) => setting.key == 'start_of_week')?.value ?? ''
+            const settings_start_time = settingsList.value.find((setting) => setting.key == 'start_time')?.value ?? ''
+            const settings_end_time = settingsList.value.find((setting) => setting.key == 'end_time')?.value ?? ''
+            late_tolerance.value = settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value ?? ''
+            const [start_hour, start_minute, start_second] = settings_start_time.split(':')
+            start_time.value = { hour: start_hour, minute: start_minute }
+            const [end_hour, end_minute, end_second] = settings_end_time.split(':')
+            end_time.value = { hour: end_hour, minute: end_minute }
+
+        });
+
+        const onSubmit = async () => {
+
+            let formatedStartTimeMinute;
+            let formatedStartTimeHour;
+            let formatedEndTimeMinute;
+            let formatedEndTimeHour;
+            let updateSettings: Setting[] = []
+
+
+            if (Number(start_time.value.minute) < 10 && Number(start_time.value.minute) > 0)
+                formatedStartTimeMinute = '0' + start_time.value.minute
+            else
+                formatedStartTimeMinute = start_time.value.minute
+
+            if (Number(start_time.value.hour) < 10 && Number(start_time.value.hour) > 0)
+                formatedStartTimeHour = '0' + start_time.value.hour
+            else
+                formatedStartTimeHour = start_time.value.hour
+            if (Number(end_time.value.minute) < 10 && Number(end_time.value.minute) > 0)
+                formatedEndTimeMinute = '0' + end_time.value.minute
+            else
+                formatedEndTimeMinute = end_time.value.minute
+
+            if (Number(end_time.value.hour) < 10 && Number(end_time.value.hour) > 0)
+                formatedEndTimeHour = '0' + end_time.value.hour
+            else
+                formatedEndTimeHour = end_time.value.hour
+
+            if (Number(formatedStartTimeHour) > Number(formatedEndTimeHour)) {
+                await sleep(500);
+
+                // @ts-ignore
+                notif.error(`Start time cant be after end time`)
+
+                return
+            }
+
+            else if (Number(formatedStartTimeHour) == Number(formatedEndTimeHour)) {
+                if (Number(formatedStartTimeMinute) >= Number(formatedEndTimeMinute)) {
+                    await sleep(500);
+
+                    // @ts-ignore
+                    notif.error(`Start time cant be after end time`)
+
+                    return
+                }
+            }
+
+            const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
+            const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
+            if (updateStartTime != settingsList.value.find((setting) => setting.key == 'start_time')?.value || updateEndTime != settingsList.value.find((setting) => setting.key == 'end_time')?.value) {
+
+                updateSettings.push({ key: 'start_time', value: updateStartTime }, { key: 'end_time', value: updateEndTime })
+            }
+            if (start_day.value != settingsList.value.find((setting) => setting.key == 'start_day')?.value) {
+                updateSettings.push({ key: 'start_day', value: start_day.value })
+            }
+            if (end_day.value != settingsList.value.find((setting) => setting.key == 'end_day')?.value) {
+                updateSettings.push({ key: 'end_day', value: end_day.value })
+            }
+            if (start_of_week.value != settingsList.value.find((setting) => setting.key == 'start_of_week')?.value) {
+                const new_start_of_week_index = daysName.value.findIndex((day) => day == start_of_week.value)
+                const new_end_of_week = daysName.value.at(new_start_of_week_index - 1) ?? start_of_week.value
+
+                updateSettings.push({ key: 'start_of_week', value: start_of_week.value }, { key: 'end_of_week', value: new_end_of_week })
+            }
+            if (late_tolerance.value != settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value) {
+                updateSettings.push({ key: 'late_tolerance', value: late_tolerance.value })
+            }
+            console.log(updateSettings)
+
+            const { message, success } = await editSettings(updateSettings);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                await sleep(200);
+
+                // @ts-ignore
+                notif.success(`Settings were edited successfully`);
+                router.push({ path: `/` });
+            } else {
+                await sleep(200);
+
+                notif.error(message)
+
+            }
+        };
+        return { daysName, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+    },
+    components: { ErrorMessage }
+})
+
+
+</script>
+
+<template>
+    <div class="page-content-inner">
+        <FormHeader :title="pageTitle" :form_submit_name="formType" type="submit" @onSubmit="onSubmit()"
+            :isLoading="settingStore?.loading" />
+        <form class="form-layout" @submit.prevent="onSubmit()">
+            <div class="form-outer">
+                <div class="form-body">
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>Edit HR/Attendance Settings</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">Start Day</h2>
+
+                                <VField id="start_day">
+                                    <VControl>
+                                        <VSelect v-model="start_day">
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="start_day" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">End Day</h2>
+
+                                <VField id="end_day">
+                                    <VControl>
+                                        <VSelect v-model="end_day">
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="end_day" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-12">
+                                <h2 class="mb-3 required">Starting Time</h2>
+                                <div class="columns">
+
+                                    <VField class="column is-6 ">
+                                        <VControl>
+                                            <VSelect v-model="start_time.hour">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 23" :key="index" :value="index">{{ index < 10
+        ? '0' + index : index
+}} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                    <VField class="column is-6">
+                                        <VControl>
+                                            <VSelect v-model="start_time.minute">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
+        index
+            < 10 ? '0' + index : index
+}} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                            </div>
+                            <div class="column is-12">
+                                <h2 class="mb-3 required">End Time</h2>
+                                <div class="columns ">
+                                    <VField class="column is-6">
+                                        <VControl>
+                                            <VSelect v-model="end_time.hour">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 23" :key="index" :value="index">{{ index < 10
+        ? '0' + index : index
+}} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                    <VField class="column is-6 ">
+                                        <VControl>
+                                            <VSelect v-model="end_time.minute">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
+        index
+            < 10 ? '0' + index : index
+}} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                </div>
+
+                            </div>
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">Start of Week</h2>
+
+                                <VField id="start_of_week">
+                                    <VControl>
+                                        <VSelect v-model="start_of_week">
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="start_of_week" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">Late Tolerance</h2>
+
+                                <VField>
+                                    <VControl>
+                                        <VSelect v-model="late_tolerance">
+                                            <VOption :key="0" :value="0">00 </VOption>
+
+                                            <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
+        index
+            < 10 ? '0' + index : index
+}} </VOption>
+                                        </VSelect>
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--Fieldset-->
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</template>
+<style scoped lang="scss">
+@import '/@src/scss/styles/formPage.scss';
+</style>

@@ -25,7 +25,6 @@ export async function deleteCity(cityId: number) {
 export async function editCity(cityData: City) {
     const cityResponse = useCity()
     await cityResponse.editCityStore(cityData)
-    await cityResponse.editCityStore(cityData)
     var success: boolean = cityResponse.success ?? false
     var error_code: string = cityResponse.error_code ?? ''
     var message: string = cityResponse.message ?? ''

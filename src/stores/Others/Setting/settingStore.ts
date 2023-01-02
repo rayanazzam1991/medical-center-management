@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Setting } from "../../../models/Others/Setting/setting"
-import { getSettingsApi } from "/@src/utils/api/Others/Setting"
+import { editSettingsApi, getSettingsApi } from "/@src/utils/api/Others/Setting"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
@@ -45,6 +45,30 @@ export const useSetting = defineStore('setting', () => {
     function getSettings(): Setting[] {
         return settingsStorage.value;
     }
+    async function editSettingsStore(newSettings: Setting[]) {
+        if (loading.value) return
+        loading.value = true
+        try {
+            const response = await editSettingsApi(api, newSettings)
+            settings.value = response.response.data
+            setSettings(response.response.data)
+
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
 
 
     return {
@@ -56,7 +80,8 @@ export const useSetting = defineStore('setting', () => {
         loading,
         getSettingsStore,
         getSettings,
-        setSettings
+        setSettings,
+        editSettingsStore
     } as const
 })
 

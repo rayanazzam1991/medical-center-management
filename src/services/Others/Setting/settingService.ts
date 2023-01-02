@@ -21,3 +21,12 @@ export function getSettingsFromStorage() {
     return settings 
 
 }
+export async function editSettings(newSettings: Setting[]) {
+    const settingResponse = useSetting()
+    await settingResponse.editSettingsStore(newSettings)
+    var success: boolean = settingResponse.success ?? false
+    var error_code: string = settingResponse.error_code ?? ''
+    var message: string = settingResponse.message ?? ''
+    return { success, error_code, message }
+
+}

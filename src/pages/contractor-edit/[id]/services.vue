@@ -34,13 +34,13 @@ contractorForm.setStep({
             contractorForm.reset()
             router.push({
                 path: `/contractor/${contractorId.value}`,
+                query: { tab: 'Services' }
             })
         }
 
     },
 
 })
-const pageTitle = 'Step 3: Contractor Services'
 const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service

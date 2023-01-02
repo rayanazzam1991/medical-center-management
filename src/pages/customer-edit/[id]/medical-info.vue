@@ -36,6 +36,7 @@ customerForm.setStep({
         if (isValid) {
             router.push({
                 path: `/customer/${customerId.value}`,
+                query: { tab: 'Medical Info' }
             })
         }
 
