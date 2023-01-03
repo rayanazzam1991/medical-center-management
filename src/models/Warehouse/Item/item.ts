@@ -62,7 +62,7 @@ export const defaultCreateUpdateItem: CreateUpdateItem = {
     cost: 0,
     category_id: 0,
     description: '',
-    status: 0,
+    status: 1,
 }
 
 export const defaultItemSearchFilter: ItemSearchFilter = {
