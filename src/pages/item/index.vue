@@ -79,10 +79,6 @@ const itemSort = async (value: string) => {
     await search(searchFilter.value)
 }
 const columns = {
-    id: {
-        searchable: true,
-        sortable: true,
-    },
     name: {
         sortable: true,
         align: 'center',
@@ -133,6 +129,15 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
+    created_at: {
+        align: 'center',
+        label: 'Create Date',
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+    },
     status: {
         align: 'center',
         renderRow: (row: any) =>
@@ -153,15 +158,6 @@ const columns = {
                     },
                 }
             ),
-    },
-    created_at: {
-        align: 'center',
-        label: 'Create Date',
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.created_at),
-        searchable: true,
-        sortable: true,
     },
 
     actions: {

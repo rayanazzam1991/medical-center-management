@@ -83,11 +83,6 @@ const changestatusCategory = async () => {
 }
 
 const columns = {
-    id: {
-        align: 'center',
-        sortable: true,
-
-    },
     name: {
         align: 'center',
         sortable: true,
@@ -112,6 +107,16 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
+    created_at: {
+        align: 'center',
+        label: 'Create Date',
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+
+    },
     status: {
         align: 'center',
         renderRow: (row: any) =>
@@ -132,15 +137,6 @@ const columns = {
                     },
                 }
             ),
-
-    },
-    created_at: {
-        align: 'center',
-        label: 'Create Date',
-        renderRow: (row: any) =>
-            h('span', row?.created_at),
-        searchable: true,
-        sortable: true,
 
     },
     actions: {
