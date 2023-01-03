@@ -1,6 +1,6 @@
 <script lang="ts">
 import { EmployeeSearchFilter } from '/@src/models/Employee/employee'
-import { defaultEmployeeScheduleSearchFilter, EmployeeScheduleSearchFilter } from '/@src/models/HR/Attendance/employeeSchedule'
+import { defaultEmployeeScheduleSearchFilter, EmployeeScheduleSearchFilter } from '../../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { defaultPagination } from '/@src/utils/response'

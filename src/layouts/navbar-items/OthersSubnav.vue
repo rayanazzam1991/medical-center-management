@@ -54,23 +54,6 @@ const emits = defineEmits<{
                                         </RouterLink>
                                     </li>
                                 </ul>
-                                <!-- <h4 class="column-heading">User Status</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/userstatus">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>All UserStatus</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/userstatus/add">
-                                            <i aria-hidden="true" class="lnil lnil-pie-chart"></i>
-                                            <span>Create UserStatus</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul> -->
                             </div>
                             <div class="column is-3">
                                 <h4 class="column-heading">Departments</h4>
@@ -126,6 +109,17 @@ const emits = defineEmits<{
                                         </RouterLink>
                                     </li>
                                 </ul><br />
+                                <h4 class="column-heading">Settings</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/settings">
+                                            <i class="fas fa-wrench" aria-hidden="true"></i>
+                                            <span>Edit Settings</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+
                             </div>
                             <div class="column is-3">
                                 <h4 class="column-heading">User Statuses</h4>

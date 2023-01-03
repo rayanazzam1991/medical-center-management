@@ -32,6 +32,8 @@ customerForm.setStep({
       customerForm.reset()
       router.push({
         path: `/customer/${customerId.value}`,
+        query: { tab: 'Social Media' }
+
       })
     }
 

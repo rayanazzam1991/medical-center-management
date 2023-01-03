@@ -34,13 +34,13 @@ contractorForm.setStep({
             contractorForm.reset()
             router.push({
                 path: `/contractor/${contractorId.value}`,
+                query: { tab: 'Services' }
             })
         }
 
     },
 
 })
-const pageTitle = 'Step 3: Contractor Services'
 const servicesList = ref<Service[]>([])
 interface ServicesChecked {
     service: Service
@@ -157,7 +157,7 @@ const onSubmitEdit = handleSubmit(async () => {
                         <div class="fieldset-heading">
                             <h4>Choose Services:</h4>
                         </div>
-                        <div class="columns is-multiline">
+                        <div v-if="servicesList.length != 0" class="columns is-multiline">
                             <div class="column is-12">
 
                                 <VField>
@@ -169,8 +169,12 @@ const onSubmitEdit = handleSubmit(async () => {
                                 </VField>
                             </div>
                         </div>
+                        <div v-else class="fieldset-heading mt-6">
+                            <h4 class="has-text-centered ">There are no services...</h4>
+                        </div>
+
                     </div>
-                    <div class="form-fieldset">
+                    <div v-if="servicesList.length != 0" class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <div :class="service.checked ? 'mb-3' : ''" v-for="service in servicesChecked">

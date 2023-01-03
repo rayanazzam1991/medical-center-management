@@ -2,12 +2,14 @@
 import { useHead } from '@vueuse/head';
 import TableCellCard from '/@src/components/OurComponents/HR/Attendance/TableCellCard.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultEmployeeSchedule, defaultEmployeeScheduleSearchFilter, defaultSchedule, defaultUpdateSchedule, EmployeeSchedule, EmployeeScheduleSearchFilter, Schedule, UpdateSchedule } from '/@src/models/HR/Attendance/employeeSchedule';
+import { defaultEmployeeSchedule, defaultEmployeeScheduleSearchFilter, defaultSchedule, defaultUpdateSchedule, EmployeeSchedule, EmployeeScheduleSearchFilter, Schedule, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule';
 import { getEmployeesSchedule, updateEmployeeSchedule } from '/@src/services/Employee/employeeService';
+import { getSettingsFromStorage } from '/@src/services/Others/Setting/settingService';
 import { useEmployee } from '/@src/stores/Employee/employeeStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 
 
 const viewWrapper = useViewWrapper()
@@ -27,23 +29,21 @@ const tableCellPopup = ref(false)
 const selectedCell = ref<Schedule>(defaultSchedule)
 const selectedEmployee = ref<EmployeeSchedule>(defaultEmployeeSchedule)
 const daysName = ref<string[]>([])
-const selectedStartTime = ref({ hour: '00', minute: '00', second: '00' })
-const selectedEndTime = ref({ hour: '00', minute: '00', second: '00' })
+const selectedStartTime = ref({ hour: '00', minute: '00' })
+const selectedEndTime = ref({ hour: '00', minute: '00' })
 const updateScheduleVar = ref(defaultUpdateSchedule)
 const keyIncement = ref(0)
 const loading = ref({ update: false, delete: false })
-const { employeesSchedule, pagination } = await getEmployeesSchedule(searchFilter.value)
-employeesScheduleList.value = employeesSchedule
-
-for (let i = 0; i < employeesScheduleList.value[0].schedules.length; i++) {
-    daysName.value.push(employeesScheduleList.value[0].schedules[i].day_of_week);
-}
-
+daysName.value = await getWeekDays()
 
 onMounted(async () => {
+
+    const { employeesSchedule, pagination } = await getEmployeesSchedule(searchFilter.value)
+    employeesScheduleList.value = employeesSchedule
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
+
 
 });
 
@@ -82,13 +82,15 @@ const employeeSort = async (value: string) => {
 const formatTime = () => {
     if (selectedCell.value.start_time) {
         const [hour, minute, second] = selectedCell.value.start_time.split(':')
-        selectedStartTime.value = { hour: Number(hour) < 10 && Number(hour) > 0 ? '0' + hour : hour, minute: Number(minute) < 10 && Number(minute) > 0 ? '0' + minute : minute, second: second }
+        selectedStartTime.value = { hour: Number(hour) < 10 && Number(hour) > 0 ? hour.substring(1) : hour, minute: Number(minute) < 10 && Number(minute) > 0 ? minute.substring(1) : minute }
 
     }
     if (selectedCell.value.end_time) {
         const [hour, minute, second] = selectedCell.value.end_time.split(':')
-        selectedEndTime.value = { hour: Number(hour) < 10 && Number(hour) > 0 ? '0' + hour : hour, minute: Number(minute) < 10 && Number(minute) > 0 ? '0' + minute : minute, second: second }
+        selectedEndTime.value = { hour: Number(hour) < 10 && Number(hour) > 0 ? hour.substring(1) : hour, minute: Number(minute) < 10 && Number(minute) > 0 ? minute.substring(1) : minute }
     }
+    console.log(selectedStartTime.value)
+    console.log(selectedEndTime.value)
 }
 
 const updateSchedule = async () => {
@@ -136,9 +138,8 @@ const updateSchedule = async () => {
     }
 
 
-    const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute + ':' + selectedStartTime.value.second
-    const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute + ':' + selectedEndTime.value.second
-
+    const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
+    const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
     updateScheduleVar.value.end_time = updateEndTime
     updateScheduleVar.value.start_time = updateStartTime
     updateScheduleVar.value.is_vacation = false
@@ -210,9 +211,10 @@ const columns = {
             h(
                 TableCellCard, {
                 title: row?.user?.first_name + ' ' + row?.user?.last_name,
-                subtitle: `${row?.position?.name} | ${row?.user?.room?.department?.name} | ${row?.user?.phone_number}`,
+                subtitle2: `${row?.position?.name} | ${row?.user?.room?.department?.name}`,
+                subtitle: `${row?.user?.phone_number}`,
                 titleSize: 'medium',
-                clickable: true,
+                clickable: false,
                 color: 'primary',
                 onClick: () => {
                     router.push({ path: `/employee/${row?.id}` })
@@ -234,9 +236,12 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[0]?.is_vacation == 0 ? row?.schedules[0]?.start_time + ' To ' + row?.schedules[0]?.end_time : "Vacation",
+                title: row?.schedules[0]?.is_vacation == 0 ? row?.schedules[0]?.start_time + ' - ' + row?.schedules[0]?.end_time : "+",
+                titleSize: row?.schedules[0]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[0]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[0]
                     selectedEmployee.value = row
                     formatTime()
@@ -256,9 +261,11 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[1]?.is_vacation == 0 ? row?.schedules[1]?.start_time + ' To ' + row?.schedules[1]?.end_time : "Vacation",
+                title: row?.schedules[1]?.is_vacation == 0 ? row?.schedules[1]?.start_time + ' - ' + row?.schedules[1]?.end_time : "+",
+                titleSize: row?.schedules[1]?.is_vacation == 1 ? "large" : "small",
                 color: row?.schedules[1]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[1]
                     selectedEmployee.value = row
                     formatTime()
@@ -278,9 +285,13 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[2]?.is_vacation == 0 ? row?.schedules[2]?.start_time + ' To ' + row?.schedules[2]?.end_time : "Vacation",
+                title: row?.schedules[2]?.is_vacation == 0 ? row?.schedules[2]?.start_time + ' - ' + row?.schedules[2]?.end_time : "+",
+                titleSize: row?.schedules[2]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[2]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[2]
                     selectedEmployee.value = row
                     formatTime()
@@ -300,9 +311,12 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[3]?.is_vacation == 0 ? row?.schedules[3]?.start_time + ' To ' + row?.schedules[3]?.end_time : "Vacation",
+                title: row?.schedules[3]?.is_vacation == 0 ? row?.schedules[3]?.start_time + ' - ' + row?.schedules[3]?.end_time : "+",
+                titleSize: row?.schedules[3]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[3]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[3]
                     selectedEmployee.value = row
                     formatTime()
@@ -321,9 +335,12 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[4]?.is_vacation == 0 ? row?.schedules[4]?.start_time + ' To ' + row?.schedules[4]?.end_time : "Vacation",
+                title: row?.schedules[4]?.is_vacation == 0 ? row?.schedules[4]?.start_time + ' - ' + row?.schedules[4]?.end_time : "+",
+                titleSize: row?.schedules[4]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[4]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[4]
                     selectedEmployee.value = row
                     formatTime()
@@ -342,9 +359,12 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[5]?.is_vacation == 0 ? row?.schedules[5]?.start_time + ' To ' + row?.schedules[5]?.end_time : "Vacation",
+                title: row?.schedules[5]?.is_vacation == 0 ? row?.schedules[5]?.start_time + ' - ' + row?.schedules[5]?.end_time : "+",
+                titleSize: row?.schedules[5]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[5]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[5]
                     selectedEmployee.value = row
                     formatTime()
@@ -363,9 +383,12 @@ const columns = {
             h(
                 TableCellCard, {
                 clickable: true,
-                title: row?.schedules[6]?.is_vacation == 0 ? row?.schedules[6]?.start_time + ' To ' + row?.schedules[6]?.end_time : "Vacation",
+                title: row?.schedules[6]?.is_vacation == 0 ? row?.schedules[6]?.start_time + ' - ' + row?.schedules[6]?.end_time : "+",
+                titleSize: row?.schedules[6]?.is_vacation == 1 ? "large" : "small",
+
                 color: row?.schedules[6]?.is_vacation == 0 ? 'white' : 'disabled',
                 onClick: () => {
+                    keyIncement.value++
                     selectedCell.value = row?.schedules[6]
                     selectedEmployee.value = row
                     formatTime()
@@ -385,7 +408,7 @@ const columns = {
     <VFlexTableWrapper :columns="columns" :data="employeesScheduleList" :limit="searchFilter.per_page"
         @update:sort="employeeSort">
 
-        <VFlexTable separators>
+        <VFlexTable clickable>
             <template #body>
                 <div v-if="employeeStore?.loading" class="flex-list-inner">
                     <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
@@ -421,26 +444,26 @@ const columns = {
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :key="keyIncement" title="Edit Employee Schedule" :open="tableCellPopup" actions="center"
+    <VModal :key="keyIncement" title="Edit Employee Schedule" :open="tableCellPopup" actions="right"
         @close="tableCellPopup = false">
         <template #content>
-            <h2 class="is-size-5 has-text-primary mb-2">{{ selectedEmployee.user.first_name }} {{
-        selectedEmployee.user.last_name
-}}</h2>
-            <h4 class="ml-4"><span class="has-text-primary">Postion: </span>{{ selectedEmployee.position.name }} |
-                <span class="has-text-primary">Department: </span> {{ selectedEmployee.user.room.department?.name }} |
-                <span class="has-text-primary">Day: </span> {{ selectedCell.day_of_week }}
+            <h2 class="is-size-5 has-text-primary mb-3">Day: {{ selectedCell.day_of_week }}</h2>
+            <h2 class="is-size-5">{{ selectedEmployee.user.first_name }}
+                {{ selectedEmployee.user.last_name }}</h2>
+            <h4 class="mb-3"><span class=""> {{ selectedEmployee.position.name
+}}</span> |
+                <span class=""> {{ selectedEmployee.user.room.department?.name
+}}</span>
             </h4>
             <form class=" form-layout" @submit.prevent="">
                 <!--Fieldset-->
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
-                        <div class="column is-6">
+                        <div class="column is-12">
                             <h2 class="mb-3">Starting Time</h2>
-                            <div class="columns ml-2">
+                            <div class="columns">
 
                                 <VField class="column is-6 ">
-                                    <VLabel>Hour:</VLabel>
                                     <VControl>
                                         <VSelect v-model="selectedStartTime.hour">
                                             <VOption :key="'00'" :value="'00'">00 </VOption>
@@ -452,7 +475,6 @@ const columns = {
                                     </VControl>
                                 </VField>
                                 <VField class="column is-6">
-                                    <VLabel>Minute:</VLabel>
                                     <VControl>
                                         <VSelect v-model="selectedStartTime.minute">
                                             <VOption :key="'00'" :value="'00'">00 </VOption>
@@ -466,11 +488,10 @@ const columns = {
                             </div>
 
                         </div>
-                        <div class="column is-6">
+                        <div class="column is-12">
                             <h2 class="mb-3">End Time</h2>
-                            <div class="columns mr-2 ml-2 ">
+                            <div class="columns ">
                                 <VField class="column is-6">
-                                    <VLabel>Hour:</VLabel>
                                     <VControl>
                                         <VSelect v-model="selectedEndTime.hour">
                                             <VOption :key="'00'" :value="'00'">00 </VOption>
@@ -482,7 +503,6 @@ const columns = {
                                     </VControl>
                                 </VField>
                                 <VField class="column is-6 ">
-                                    <VLabel>Minute:</VLabel>
                                     <VControl>
                                         <VSelect v-model="selectedEndTime.minute">
                                             <VOption :key="'00'" :value="'00'">00 </VOption>
@@ -501,14 +521,19 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
+            <VLoader size="small" :active="loading.delete">
+                <VButton v-if="!selectedCell.is_vacation" class="mr-2" color="danger" outlined @click="deleteSchedule">
+                    Make Vacation</VButton>
+            </VLoader>
             <VLoader size="small" :active="loading.update">
                 <VButton color="primary" raised @click="updateSchedule">Update</VButton>
-            </VLoader>
-            <VLoader size="small" :active="loading.delete">
-                <VButton v-if="!selectedCell.is_vacation" class="ml-2" color="warning" raised @click="deleteSchedule">
-                    Make Vacation</VButton>
             </VLoader>
         </template>
     </VModal>
 
 </template>
+<style scoped lang="scss">
+.is-clickable {
+    cursor: default !important;
+}
+</style>
