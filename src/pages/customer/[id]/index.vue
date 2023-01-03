@@ -785,7 +785,7 @@ const RemoveProfilePicture = async () => {
                                             Upload
                                         </VButton>
                                     </div>
-                                    <h6 class="ml-2 mt-2 help has-text-light">Max size: 2 MB | Accepted file types :
+                                    <h6 class="ml-2 mt-2 help">Max size: 2 MB | Accepted file types :
                                         png,
                                         jpg,
                                         webp
@@ -889,7 +889,7 @@ const RemoveProfilePicture = async () => {
 
                 </VControl>
             </VField>
-            <h6 class="is-flex is-justify-content-center help has-text-light">Max size: 2 MB | Accepted file types :
+            <h6 class="is-flex is-justify-content-center help">Max size: 2 MB | Accepted file types :
                 png,
                 jpg,
                 webp

@@ -31,6 +31,7 @@ const filesToUpload = ref<File>()
 const profilePictureToUpload = ref<File>()
 const updateProfilePicturePopup = ref(false)
 const keyIncrement = ref(1)
+
 const loading = ref(false)
 const contractorForm = useContractorForm()
 
@@ -84,13 +85,11 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
     userForm.user_status_id = userData.user.status?.id
-    console.log(userForm)
     await changeUserStatus(userForm)
     getCurrentContractor()
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
-    console.log(currentContractor.value.user.first_name)
     notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} was edited successfully`)
     changeStatusPopup.value = false
 }
@@ -181,7 +180,6 @@ const onAddFile = async (event: any) => {
 
 }
 const UploadFile = async () => {
-
     let formData = new FormData();
     if (filesToUpload.value != undefined)
         formData.append('images[]', filesToUpload.value);
@@ -197,7 +195,6 @@ const UploadFile = async () => {
         media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
 
         contractorFiles.value.push(media[0])
-
         return true
     }
     else {
@@ -205,6 +202,7 @@ const UploadFile = async () => {
         await sleep(200);
 
         notif.error(message)
+
 
     }
 
@@ -249,7 +247,6 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
         await sleep(200);
 
         notif.error(`${error.main}: ${error.sub}`)
-        console.error(error)
         return
 
     }
@@ -597,7 +594,9 @@ const RemoveProfilePicture = async () => {
                                             <VControl>
                                                 <div class="file has-name">
                                                     <label class="file-label">
-                                                        <input class="file-input" type="file" v-on:change="onAddFile" />
+                                                        <input class="file-input" type="file" v-on:change="onAddFile"
+                                                            id="uploadFile" />
+
                                                         <span class="file-cta">
                                                             <span class="file-icon">
                                                                 <i class="fas fa-cloud-upload-alt"></i>
@@ -617,7 +616,7 @@ const RemoveProfilePicture = async () => {
                                             Upload
                                         </VButton>
                                     </div>
-                                    <h6 class="ml-2 mt-2 help has-text-light">Max size: 2 MB | Accepted file types :
+                                    <h6 class="ml-2 mt-2 help">Max size: 2 MB | Accepted file types :
                                         png,
                                         jpg,
                                         webp
@@ -720,7 +719,7 @@ const RemoveProfilePicture = async () => {
 
                 </VControl>
             </VField>
-            <h6 class="is-flex is-justify-content-center help has-text-light">Max size: 2 MB | Accepted file types :
+            <h6 class="is-flex is-justify-content-center help">Max size: 2 MB | Accepted file types :
                 png,
                 jpg,
                 webp
