@@ -31,8 +31,9 @@ const filesToUpload = ref<File>()
 const profilePictureToUpload = ref<File>()
 const updateProfilePicturePopup = ref(false)
 const keyIncrement = ref(1)
-
 const loading = ref(false)
+const uploadLoading = ref(false)
+const deleteLoading = ref(false)
 const contractorForm = useContractorForm()
 
 const notif = useNotyf()
@@ -85,11 +86,13 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
     userForm.user_status_id = userData.user.status?.id
+    console.log(userForm)
     await changeUserStatus(userForm)
     getCurrentContractor()
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
+    console.log(currentContractor.value.user.first_name)
     notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} was edited successfully`)
     changeStatusPopup.value = false
 }
@@ -175,11 +178,13 @@ const onAddFile = async (event: any) => {
         } else {
 
             filesToUpload.value = _file
+
         }
     }
 
 }
 const UploadFile = async () => {
+    uploadLoading.value = true
     let formData = new FormData();
     if (filesToUpload.value != undefined)
         formData.append('images[]', filesToUpload.value);
@@ -195,14 +200,19 @@ const UploadFile = async () => {
         media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
 
         contractorFiles.value.push(media[0])
+        filesToUpload.value = undefined
+        uploadLoading.value = false
+
         return true
     }
     else {
+
         // @ts-ignore
         await sleep(200);
 
         notif.error(message)
-
+        filesToUpload.value = undefined
+        uploadLoading.value = false
 
     }
 
@@ -214,7 +224,7 @@ const onDeleteFile = (file_id: number) => {
 
 }
 const removefile = async () => {
-
+    deleteLoading.value = true
     const { message, success } = await deleteFile(deleteFileId.value)
 
     if (success) {
@@ -225,9 +235,13 @@ const removefile = async () => {
 
         contractorFiles.value.splice(contractorFiles.value.findIndex((element) => element.id == deleteFileId.value), 1)
         deleteFilePopup.value = false
+        deleteLoading.value = false
+
         return true
     }
     else {
+        deleteLoading.value = false
+
         // @ts-ignore
         await sleep(200);
 
@@ -247,6 +261,7 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
         await sleep(200);
 
         notif.error(`${error.main}: ${error.sub}`)
+        console.error(error)
         return
 
     }
@@ -274,9 +289,11 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
     }
 }
 const UploadProfilePicture = async () => {
+    uploadLoading.value = true
+
     let _success = true
     let _message = ''
-    if (contractorProfilePicture.value.id != undefined) {
+    if (contractorProfilePicture.value.id != undefined && profilePictureToUpload.value == undefined) {
         const { message, success } = await deleteFile(contractorProfilePicture.value.id)
         _success = success
         _message = message
@@ -299,29 +316,34 @@ const UploadProfilePicture = async () => {
             notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} profile picture was edited successfully`)
             contractorProfilePicture.value = media[0]
             contractorProfilePicture.value.relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+            profilePictureToUpload.value = undefined
 
             keyIncrement.value++
             updateProfilePicturePopup.value = false
+            uploadLoading.value = false
+
 
         }
         else {
             // @ts-ignore
             await sleep(200);
+            profilePictureToUpload.value = undefined
 
             notif.error(message)
             keyIncrement.value++
-
+            uploadLoading.value = false
             updateProfilePicturePopup.value = false
 
         }
     } else {
         // @ts-ignore
         await sleep(200);
-
         notif.error(_message)
         keyIncrement.value++
-
+        uploadLoading.value = false
         updateProfilePicturePopup.value = false
+        profilePictureToUpload.value = undefined
+
 
     }
 
@@ -329,26 +351,26 @@ const UploadProfilePicture = async () => {
 }
 const RemoveProfilePicture = async () => {
     if (contractorProfilePicture.value.id != undefined) {
+        deleteLoading.value = true
+
         const { message, success } = await deleteFile(contractorProfilePicture.value.id)
         if (success) {
             await sleep(200);
-
             notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} profile picture was deleted successfully`)
             contractorProfilePicture.value = defaultContractorProfilePic
+            deleteLoading.value = false
+
 
         } else {
+            deleteLoading.value = false
             await sleep(200);
-
             notif.error(message)
 
         }
+        profilePictureToUpload.value = undefined
         keyIncrement.value++
-
         updateProfilePicturePopup.value = false
-
     }
-
-
 }
 
 </script>
@@ -594,9 +616,7 @@ const RemoveProfilePicture = async () => {
                                             <VControl>
                                                 <div class="file has-name">
                                                     <label class="file-label">
-                                                        <input class="file-input" type="file" v-on:change="onAddFile"
-                                                            id="uploadFile" />
-
+                                                        <input class="file-input" type="file" v-on:change="onAddFile" />
                                                         <span class="file-cta">
                                                             <span class="file-icon">
                                                                 <i class="fas fa-cloud-upload-alt"></i>
@@ -611,10 +631,12 @@ const RemoveProfilePicture = async () => {
                                                 </div>
                                             </VControl>
                                         </VField>
-                                        <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
-                                            icon="lnir lnir-add-files rem-100" light dark-outlined>
-                                            Upload
-                                        </VButton>
+                                        <VLoader size="small" :active="uploadLoading">
+                                            <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                                                icon="lnir lnir-add-files rem-100" light dark-outlined>
+                                                Upload
+                                            </VButton>
+                                        </VLoader>
                                     </div>
                                     <h6 class="ml-2 mt-2 help">Max size: 2 MB | Accepted file types :
                                         png,
@@ -701,7 +723,9 @@ const RemoveProfilePicture = async () => {
             <VPlaceholderSection title="Are you sure?" :subtitle="`you are about to delete this file permenantly`" />
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="removefile()">Confirm</VButton>
+            <VLoader size="small" :active="deleteLoading">
+                <VButton color="primary" raised @click="removefile()">Confirm</VButton>
+            </VLoader>
         </template>
     </VModal>
     <VModal :key="keyIncrement" title="Update Profile Picture" :open="updateProfilePicturePopup" actions="center"
@@ -728,10 +752,16 @@ const RemoveProfilePicture = async () => {
         </template>
 
         <template #action="{ close }">
-            <VButton v-if="contractorProfilePicture.id != undefined" color="warning" raised
-                @click="RemoveProfilePicture">
-                Delete</VButton>
-            <VButton color="primary" raised @click="UploadProfilePicture">Update</VButton>
+            <VLoader size="small" :active="deleteLoading">
+
+                <VButton v-if="contractorProfilePicture.id != undefined" color="danger" outlined class="mr-2"
+                    @click="RemoveProfilePicture">
+                    Delete</VButton>
+            </VLoader>
+            <VLoader size="small" :active="uploadLoading">
+
+                <VButton color="primary" raised @click="UploadProfilePicture">Update</VButton>
+            </VLoader>
         </template>
     </VModal>
 
