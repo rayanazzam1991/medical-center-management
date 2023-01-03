@@ -101,11 +101,35 @@ export const useCategory = defineStore('category', () => {
         loading.value = true
         try {
             const returnedResponse = await getCategoriesApi(api, searchFilter)
+
             categories.value = returnedResponse.response.data
             pagination.value = returnedResponse.response.pagination
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
             message.value = returnedResponse.response.message
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function getFilterCategoriesStore(searchFilter: CategorySearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        searchFilter.parent_id = undefined
+        try {
+            const returnedResponse = await getCategoriesApi(api, searchFilter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data
         }
         catch (error: any) {
             success.value = error?.response.data.success
@@ -155,7 +179,8 @@ export const useCategory = defineStore('category', () => {
         editCategoryStore,
         getCategoryStore,
         getCategoriesStore,
-        changeCategoryStatusStore
+        changeCategoryStatusStore,
+        getFilterCategoriesStore
     } as const
 })
 

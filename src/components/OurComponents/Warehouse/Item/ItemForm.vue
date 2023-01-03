@@ -8,8 +8,8 @@ import { getItem, addItem, editItem } from '/@src/services/Warehouse/Item/itemSe
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
-import { Category, defaultCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
-import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
+import { Category, defaultCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { getCategoriesList, getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 
 
 export default defineComponent({
@@ -38,7 +38,7 @@ export default defineComponent({
         const currentItem = ref(defaultItem);
         const currentCreateUpdateItem = ref(defaultCreateUpdateItem)
         const itemId = ref(0);
-        const selectedCategoryId = ref(0)
+        const selectedCategoryId = ref()
         const subcategoeisList = ref<Category[]>([])
         const allCategoriesList = ref<Category[]>([])
         // @ts-ignore
@@ -62,23 +62,20 @@ export default defineComponent({
         };
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const allCategories = await getCategoriesList(defaultCategorySearchFilter)
+            const allCategories = await getFilterCategoriesList(defaultCategorySearchFilter)
             allCategoriesList.value = allCategories.categories
-            mainCategoriesList.value = getMainCategory()
+            mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
             await getCurrentItem();
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
+
+
         })
-        const getMainCategory = () => {
-            const MainCategory = allCategoriesList.value.filter((category) => category.parent === null)
-            return MainCategory
-        }
         const getSubCategoryByCategroy = () => {
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
-            console.log(categoriesFilter.parent_id)
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
 
@@ -118,8 +115,8 @@ export default defineComponent({
                 return;
         };
         const onSubmitAdd = handleSubmit(async (values) => {
-            var itemData = currentItem.value
-            var itemForm = currentCreateUpdateItem.value
+            let itemData = currentItem.value
+            let itemForm = currentCreateUpdateItem.value
             itemForm.name = itemData.name
             itemForm.quantity = itemData.quantity
             itemForm.min_quantity = itemData.min_quantity
@@ -147,8 +144,8 @@ export default defineComponent({
             }
         });
         const onSubmitEdit = handleSubmit(async () => {
-            var itemData = currentItem.value
-            var itemForm = currentCreateUpdateItem.value
+            let itemData = currentItem.value
+            let itemForm = currentCreateUpdateItem.value
             itemForm.id = itemData.id
             itemForm.name = itemData.name
             itemForm.quantity = itemData.quantity
@@ -209,15 +206,14 @@ export default defineComponent({
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField>
-                                    <VLabel class="required">Category</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Level 1</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentItem"
                                                 v-model="selectedCategoryId">
-                                                <VOption :value="0">Category</VOption>
+                                                <VOption>Level 1</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -226,18 +222,13 @@ export default defineComponent({
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="category_id">
-                                    <VLabel class="required">Sub Category</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Level 2</VLabel>
                                     <VControl>
-                                        <VSelect :disabled="subcategoeisList.length <= 0 && selectedCategoryId == 0"
-                                            v-if="currentItem.category" v-model="currentItem.category.id">
-                                            <VOption>Category</VOption>
+                                        <VSelect :disabled="selectedCategoryId == undefined" v-if="currentItem.category"
+                                            v-model="currentItem.category.id">
+                                            <VOption>Level 2</VOption>
                                             <VOption v-for="category in subcategoeisList" :key="category.id"
                                                 :value="category.id">{{
         category.name
@@ -250,25 +241,21 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="price" v-slot="{ field }">
-                                    <VLabel class="required">Price </VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Price </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.price" type="number" />
                                         <ErrorMessage name="price" class="help is-danger" />
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="cost" v-slot="{ field }">
-                                    <VLabel class="required">Cost </VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Cost </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.cost" type="number" />
                                         <ErrorMessage name="cost" class="help is-danger" />
@@ -277,11 +264,12 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
+
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="quantity" v-slot="{ field }">
-                                    <VLabel class="required">Quantity</VLabel>
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Quantity</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentItem.quantity" type="number" />
                                         <ErrorMessage name="quantity" class="help is-danger" />
@@ -289,14 +277,9 @@ export default defineComponent({
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="min_quantity" v-slot="{ field }">
-                                    <VLabel class="optional">Min_Quantity</VLabel>
+                                    <VLabel class="optional">{{ viewWrapper.pageTitle }} Min_Quantity</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentItem.min_quantity" type="number" />
                                         <ErrorMessage name="min_quantity" class="help is-danger" />
@@ -307,6 +290,19 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="description">
+                                    <VLabel class="optional">Description </VLabel>
+                                    <VControl>
+                                        <VTextarea v-model="currentItem.description" />
+                                        <ErrorMessage class="help is-danger" name="description" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
@@ -321,20 +317,6 @@ export default defineComponent({
 
                                     </VControl>
                                 </VField>
-                            </div>
-                        </div>
-                        <!--Fieldset-->
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline">
-                                <div class="column is-12">
-                                    <VField id="description">
-                                        <VLabel class="optional">Description </VLabel>
-                                        <VControl>
-                                            <VTextarea v-model="currentItem.description" />
-                                            <ErrorMessage class="help is-danger" name="description" />
-                                        </VControl>
-                                    </VField>
-                                </div>
                             </div>
                         </div>
                     </div>
