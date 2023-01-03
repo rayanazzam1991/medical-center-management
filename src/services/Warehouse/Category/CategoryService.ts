@@ -33,10 +33,8 @@ export async function editCategory(categoryData: CreateUpdateCategory) {
 }
 export async function getCategoriesList(searchFilter: CategorySearchFilter) {
     const category = useCategory()
-    console.log("lalal")
     await category.getCategoriesStore(searchFilter)
     var categories: Category[] = category.categories
-    console.log("service", categories)
     var pagination: Pagination = category.pagination
     var success: boolean = category.success ?? false
     var error_code: string = category.error_code ?? ''
