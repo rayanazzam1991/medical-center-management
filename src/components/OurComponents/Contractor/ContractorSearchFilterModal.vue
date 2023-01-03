@@ -59,8 +59,6 @@ export default defineComponent({
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
-
 
         }
         const resetFilter = () => {

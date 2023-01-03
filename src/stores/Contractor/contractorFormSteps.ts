@@ -95,7 +95,6 @@ export const useContractorForm = defineStore('ContractorForm', () => {
   async function save() {
     loading.value = true
 
-    console.log(data.value)
 
     loading.value = false
   }

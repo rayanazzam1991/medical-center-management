@@ -25,7 +25,6 @@ export const useEmployee = defineStore('employee', () => {
     sleep(2000)
     try {
       const response = await addEmployeeApi(api, employee)
-      console.log(response.response)
       var returnedEmployee: Employee
       returnedEmployee = response.response.data
       success.value = response.response.success
@@ -124,7 +123,6 @@ export const useEmployee = defineStore('employee', () => {
     sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
@@ -150,7 +148,6 @@ export const useEmployee = defineStore('employee', () => {
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
@@ -175,7 +172,6 @@ export const useEmployee = defineStore('employee', () => {
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success

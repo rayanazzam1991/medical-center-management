@@ -109,6 +109,7 @@ export const defaultContractorProfilePic: Media = {
     model_type: MediaConsts.CONTRACTOR_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '1',
+    uploaded_by: undefined
 
 }
 export const defaultContractorFiles: Media = {
@@ -121,6 +122,7 @@ export const defaultContractorFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
+    uploaded_by:undefined
 
 }
 

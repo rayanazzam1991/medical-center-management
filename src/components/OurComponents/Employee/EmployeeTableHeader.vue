@@ -117,7 +117,6 @@ export default defineComponent({
             searchFilter.value.user_status_id = undefined
 
 
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }

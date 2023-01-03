@@ -35,8 +35,6 @@ const handleLogin = async () => {
 
       const loggedUser = await signIn(signRequest.value);
       const { settings } = await getSettings();
-      console.log("loggedUser", loggedUser)
-      console.log("settings", settings)
 
       if (userAuth.isLoggedIn) {
 

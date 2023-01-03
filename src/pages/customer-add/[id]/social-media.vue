@@ -38,7 +38,6 @@ customerForm.setStep({
     },
     skipStepFn: async () => {
         customerForm.reset()
-        console.log(customerForm.data)
 
         router.push({
             path: `/customer/${customerId.value}`,

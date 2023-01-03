@@ -86,13 +86,11 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.user.id
     userForm.user_status_id = userData.user.status?.id
-    console.log(userForm)
     await changeUserStatus(userForm)
     getCurrentContractor()
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
-    console.log(currentContractor.value.user.first_name)
     notif.success(`${currentContractor.value.user.first_name} ${currentContractor.value.user.last_name} was edited successfully`)
     changeStatusPopup.value = false
 }
@@ -665,6 +663,9 @@ const RemoveProfilePicture = async () => {
                                                                 aria-hidden="true" class="fas fa-circle"></i> {{
         file.created_at
 }}
+                              <i aria-hidden="true" class="fas fa-circle"></i>
+                              By: {{ file.uploaded_by.first_name }}{{ file.uploaded_by.last_name }}
+    
                                                         </span>
                                                     </div>
                                                     <VIconButton v-if="file.id"

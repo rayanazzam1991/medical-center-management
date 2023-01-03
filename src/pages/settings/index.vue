@@ -49,6 +49,7 @@ export default defineComponent({
             const settings_start_time = settingsList.value.find((setting) => setting.key == 'start_time')?.value ?? ''
             const settings_end_time = settingsList.value.find((setting) => setting.key == 'end_time')?.value ?? ''
             late_tolerance.value = settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value ?? ''
+
             const [start_hour, start_minute, start_second] = settings_start_time.split(':')
             start_time.value = { hour: start_hour, minute: start_minute }
             const [end_hour, end_minute, end_second] = settings_end_time.split(':')
@@ -125,7 +126,6 @@ export default defineComponent({
             if (late_tolerance.value != settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value) {
                 updateSettings.push({ key: 'late_tolerance', value: late_tolerance.value })
             }
-            console.log(updateSettings)
 
             const { message, success } = await editSettings(updateSettings);
             if (success) {
@@ -136,7 +136,7 @@ export default defineComponent({
 
                 // @ts-ignore
                 notif.success(`Settings were edited successfully`);
-                router.push({ path: `/` });
+                router.push({ path: `/dashboard` });
             } else {
                 await sleep(200);
 

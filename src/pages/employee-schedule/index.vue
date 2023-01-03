@@ -89,8 +89,6 @@ const formatTime = () => {
         const [hour, minute, second] = selectedCell.value.end_time.split(':')
         selectedEndTime.value = { hour: Number(hour) < 10 && Number(hour) > 0 ? hour.substring(1) : hour, minute: Number(minute) < 10 && Number(minute) > 0 ? minute.substring(1) : minute }
     }
-    console.log(selectedStartTime.value)
-    console.log(selectedEndTime.value)
 }
 
 const updateSchedule = async () => {

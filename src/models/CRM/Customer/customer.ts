@@ -105,6 +105,7 @@ export const defaultCustomerProfilePic: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
+    uploaded_by:undefined,
 
 
 }
@@ -119,6 +120,7 @@ export const defaultCustomerFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
+    uploaded_by:undefined
 
 }
 export const defaultMedicalInfoFiles: Media = {
@@ -131,6 +133,7 @@ export const defaultMedicalInfoFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
+    uploaded_by:undefined
 
 }
 

@@ -9,7 +9,6 @@ export async function addCustomerApi(
   customer: CreateCustomer
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`customer`, customer)
-  console.log(response)
   return { response }
 }
 export async function updateCustomerApi(
@@ -18,7 +17,6 @@ export async function updateCustomerApi(
   customer: UpdateCustomer
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`customer/${customerId}`, customer)
-  console.log(response)
 
   return { response }
 }
@@ -43,7 +41,6 @@ export async function addSocialMediaApi(
     `customer/${customer_id}/addSocialMedia`,
     { social_medias: social_medias }
   )
-  console.log(response)
   return { response }
 }
 
@@ -52,7 +49,6 @@ export async function getCustomerApi(
   customer_id: number
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`customer/${customer_id}`)
-  console.log(response)
   return { response }
 }
 

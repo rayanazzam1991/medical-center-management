@@ -132,7 +132,6 @@ const { handleSubmit } = useForm({
 const onSubmitAdd = handleSubmit(async (values) => {
 
     var userData = currentUser.value
-    console.log(userData)
     const { result } = await phoneExistsCheck('964' + userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
@@ -148,12 +147,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.userForm.birth_date = userData.birth_date
         employeeForm.userForm.phone_number = userData.phone_number
         employeeForm.userForm.address = userData.address
-        console.log(userData.room_id)
         if (currentUser.value.room_id != undefined)
             employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
-        console.log(employeeForm.data.position_id)
 
         const { employee, success, message } = await addEmployee(employeeForm.data, employeeForm.userForm)
 
