@@ -43,12 +43,10 @@ export default defineComponent({
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
 
             },
         })
 
-        console.log("fcsd", search_filter_popup.value)
 
 
         const search = () => {
@@ -56,13 +54,11 @@ export default defineComponent({
                 name: searchName.value,
                 gender: searchGender.value,
                 phone_number: searchPhoneNumber.value,
-                room_id: searchRoom.value,
                 city_id: searchCity.value,
                 user_status_id: searchStatus.value,
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
 
 
         }
@@ -76,7 +72,6 @@ export default defineComponent({
             searchFilter.value.name = undefined
             searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.room_id = undefined
             searchFilter.value.city_id = undefined
             searchFilter.value.user_status_id = undefined
 
@@ -86,7 +81,6 @@ export default defineComponent({
         const cities2 = ref<City[]>([])
         const statuses2 = ref<UserStatus[]>([])
         onMounted(async () => {
-            console.log('testt')
             const { rooms } = await getRoomsList(defaultRoomSearchFilter)
             rooms2.value = rooms
             const { cities } = await getCitiesList(defaultCitySearchFilter)

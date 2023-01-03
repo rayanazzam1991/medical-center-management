@@ -92,6 +92,7 @@ export const defaultEmployeeProfilePic: Media = {
     model_type: MediaConsts.EMPLOYEE_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '1',
+    uploaded_by:undefined
 
 }
 export const defaultEmployeeFiles: Media = {
@@ -104,5 +105,7 @@ export const defaultEmployeeFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
+    uploaded_by:undefined
+
 
 }

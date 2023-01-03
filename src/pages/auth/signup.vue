@@ -59,7 +59,6 @@ const { handleSubmit } = useForm({
 })
 
 const onSignup = handleSubmit(async (values) => {
-  console.log('handleSignup values')
   console.table(values)
 
   if (!isLoading.value) {

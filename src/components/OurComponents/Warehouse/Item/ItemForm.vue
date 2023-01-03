@@ -78,7 +78,6 @@ export default defineComponent({
         const getSubCategoryByCategroy = () => {
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
-            console.log(categoriesFilter.parent_id)
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
 

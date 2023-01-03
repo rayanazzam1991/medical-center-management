@@ -62,14 +62,11 @@ const changestatusItem = async () => {
     var itemForm = currentChangeStatusItem.value
     itemForm.id = itemData.id
     itemForm.status = itemData.status
-    console.log(itemForm)
     const { message, success } = await changeItemStatus(itemForm)
     getCurrentItem()
-    console.log("daf")
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
-    console.log(currentItem.value.id)
     changeStatusPopup.value = false
 }
 

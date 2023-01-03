@@ -36,7 +36,6 @@ export default defineComponent({
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
-            console.log("DASdas", searchFilterPop.value)
         }
         const pagination = props.pagination
         const default_per_page = props.default_per_page
@@ -84,7 +83,6 @@ export default defineComponent({
             searchFilter.value.city_id = undefined
             searchFilter.value.user_status_id = undefined
 
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }

@@ -70,7 +70,6 @@ export default defineComponent({
             searchFilter.value.floor = undefined
             searchFilter.value.department_id = undefined
             searchFilter.value.status = undefined
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -78,7 +77,6 @@ export default defineComponent({
         onMounted(async () => {
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
             departments2.value = departments
-            console.log(departments2.value)
         })
         return { keyTest, searchFilterPop, default_per_page, popUpTrigger, onOpen, resetFilter_popup, search_filter, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
     },

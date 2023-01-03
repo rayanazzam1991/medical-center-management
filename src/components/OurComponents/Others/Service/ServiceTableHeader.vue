@@ -32,7 +32,6 @@ export default defineComponent({
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
-            console.log("DASdas", searchFilterPop.value)
         }
         const default_per_page = props.default_per_page
         const pagination = props.pagination
@@ -95,7 +94,6 @@ export default defineComponent({
             searchFilter.value.duration_minutes = undefined
             searchFilter.value.service_price = undefined
 
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }

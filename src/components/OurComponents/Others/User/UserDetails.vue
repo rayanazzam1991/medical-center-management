@@ -28,7 +28,6 @@ const changestatusUser = async () => {
     var userForm = currentChangeStatusUser.value
     userForm.id = userData.id
     userForm.user_status_id = userData.status?.id
-    console.log(userForm)
     await changeUserStatus(userForm)
     getCurrentUser()
     // @ts-ignore

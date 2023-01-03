@@ -115,29 +115,6 @@ onMounted(async () => {
 
   }
 })
-// if (socialMediaChecked.length > 0) {
-//   for (let i = 0; i < socialMediaChecked.length; i++) {
-//     console.log("i", i)
-//     validationObject.socialMediaChecked.value[index] = zod
-//       .string({
-//         required_error: "This field is required",
-//       })
-//       .min(4, "This field is required");
-
-//   }
-// }
-//   validationObjectSchema = toFormValidator(zod
-//     .object(validationObject));
-
-//     console.log("initialValuesObject",initialValuesObject)
-
-// })
-
-// const validationSchema = validationObjectSchema;
-// const {handleSubmit} = useForm({
-//   validationSchema,
-//   initialValues:initialValuesObject
-// });
 
 const validationSchema = customerEditSocialMediaValidationSchema
 
@@ -159,7 +136,6 @@ const onSubmitEdit = handleSubmit(async () => {
 
   }
   customerForm.dataUpdate.is_completed = true
-  console.log(customerForm.userForm)
   const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
   if (success) {
     // @ts-ignore
