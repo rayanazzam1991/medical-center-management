@@ -4,7 +4,7 @@ import { ErrorMessage, useForm } from 'vee-validate'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { defaultDepartment, Department, defaultDepartmentSearchFilter, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
 import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts, RoomSearchFilter, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
@@ -57,9 +57,9 @@ export default defineComponent({
         }
         const departmentsList = ref<Department[]>([])
         onMounted(async () => {
-            let roomSearchFilter: RoomSearchFilter = defaultRoomSearchFilter
-            roomSearchFilter.status = BaseConsts.ACTIVE
-            const { departments } = await getDepartmentsList(roomSearchFilter)
+            let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+            departmentSearchFilter.status = BaseConsts.ACTIVE
+            const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
         })
         onMounted(() => {

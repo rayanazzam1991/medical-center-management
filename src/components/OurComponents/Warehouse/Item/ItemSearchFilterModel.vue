@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defaultMainCategorySearchFilter, Category, defaultCategorySearchFilter, defaultSubCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { defaultItemSearchFilter, ItemConsts, Item } from "/@src/models/Warehouse/Item/item"
-import { getCategoriesList } from "/@src/services/Warehouse/Category/CategoryService"
+import { getFilterCategoriesList } from "/@src/services/Warehouse/Category/CategoryService"
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService'
 
 
@@ -27,7 +27,7 @@ export default defineComponent({
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
         const searchName = ref('')
-        const searchParent = ref(0)
+        const searchParent = ref()
         const searchSubCategory = ref()
         const searchStatus = ref()
         const searchFilter = ref(defaultItemSearchFilter)
@@ -47,15 +47,13 @@ export default defineComponent({
                 category_id: searchParent.value,
                 sub_category_id: searchSubCategory.value,
                 status: searchStatus.value,
-
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-
         }
         const resetFilter = () => {
             searchName.value = ''
-            searchParent.value = 0
+            searchParent.value = undefined
             searchSubCategory.value = undefined
             searchStatus.value = undefined
             searchFilter.value.name = undefined
@@ -64,17 +62,11 @@ export default defineComponent({
             searchFilter.value.status = undefined
             context.emit('resetFilter', searchFilter.value)
         }
-
         onMounted(async () => {
-            const allcategories = await getCategoriesList(defaultCategorySearchFilter)
+            const allcategories = await getFilterCategoriesList(defaultCategorySearchFilter)
             allCategoriesList.value = allcategories.categories
-            mainCategoriesList.value = getMainCategory()
+            mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
         })
-
-        const getMainCategory = () => {
-            const MainCategory = allCategoriesList.value.filter((category) => category.parent === null)
-            return MainCategory
-        }
         const getSubCategory = () => {
             let categoriesFilter = defaultCategorySearchFilter
             categoriesFilter.parent_id = searchParent.value
@@ -101,7 +93,7 @@ export default defineComponent({
                     <VControl>
                         <div class="select">
                             <select @change="getSubCategory" v-model="searchParent">
-                                <VOption value=0>Level 1</VOption>
+                                <VOption>Level 1</VOption>
                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">{{
         parent.name
 }}
@@ -113,7 +105,7 @@ export default defineComponent({
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == 0"
+                        <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == undefined"
                             v-model="searchSubCategory" class="">
                             <VOption value="">Level 2</VOption>
                             <VOption v-for="sub_category in subCategoriesList" :key="sub_category.id"

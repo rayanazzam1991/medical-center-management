@@ -33,8 +33,20 @@ export async function editCategory(categoryData: CreateUpdateCategory) {
 }
 export async function getCategoriesList(searchFilter: CategorySearchFilter) {
     const category = useCategory()
+    console.log("lalal")
     await category.getCategoriesStore(searchFilter)
     var categories: Category[] = category.categories
+    console.log("service", categories)
+    var pagination: Pagination = category.pagination
+    var success: boolean = category.success ?? false
+    var error_code: string = category.error_code ?? ''
+    var message: string = category.message ?? ''
+    return { categories, pagination, success, error_code, message }
+
+}
+export async function getFilterCategoriesList(searchFilter: CategorySearchFilter) {
+    const category = useCategory()
+    const categories = await category.getFilterCategoriesStore(searchFilter) as Category[]
     var pagination: Pagination = category.pagination
     var success: boolean = category.success ?? false
     var error_code: string = category.error_code ?? ''

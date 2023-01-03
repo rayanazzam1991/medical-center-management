@@ -72,7 +72,6 @@ const fetchEmployee = async () => {
     currentEmployee.value.basic_salary = employee.basic_salary
     currentEmployee.value.id = employee.id
     currentEmployee.value.user = employee.user
-
     employeeForm.userForm.id = employee.user.id
     employeeForm.userForm.first_name = currentUser.value.first_name
     employeeForm.userForm.last_name = currentUser.value.last_name
@@ -108,8 +107,6 @@ onMounted(async () => {
         isLoading.value = true
         const { cities } = await getCitiesList(defaultCitySearchFilter)
         citiesList.value = cities
-        // const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-        // roomsList.value = rooms
         const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
         statusesList.value = userstatuses
         const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
@@ -119,7 +116,6 @@ onMounted(async () => {
         const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
         departmentsList.value = departments
         await fetchEmployee()
-
         let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
         roomsFilter.department_id = selectedDepartmentId.value
         const { rooms } = await getRoomsList(roomsFilter)

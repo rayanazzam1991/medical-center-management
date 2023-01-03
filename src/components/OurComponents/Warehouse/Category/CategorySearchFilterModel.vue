@@ -20,7 +20,6 @@ export default defineComponent({
             type: Boolean,
             default: false,
         }
-
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
@@ -62,8 +61,6 @@ export default defineComponent({
         return { mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }
     },
 })
-
-
 
 
 </script>
