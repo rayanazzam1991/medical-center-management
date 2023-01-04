@@ -34,5 +34,14 @@
         "match": "The password does not match"
       }
     }
+  },
+  "validation": {
+    "required": "This field is required",
+    "number": {
+      "invalid_type_error": "Please enter a valid number"
+    },
+    "redio": {
+      "required": "Please choose one"
+    }
   }
 }

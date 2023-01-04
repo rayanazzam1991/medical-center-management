@@ -1,6 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
+import { Media } from "/@src/models/Others/Media/media"
 import { itemHistory, addQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { uploadMediaApi } from "/@src/utils/api/Others/Media"
 import { addQuantityApi } from "/@src/utils/api/Warehouse/ItemHistory"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
@@ -40,6 +42,32 @@ export const useitemHistory = defineStore('itemHistory', () => {
             loading.value = false
         }
     }
+    async function addItemHistoryFileStore(media: FormData) {
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await uploadMediaApi(api, media)
+            var returnedMedia: Media[]
+            returnedMedia = response.response.data
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+
+            return returnedMedia
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+
+        finally {
+            loading.value = false
+        }
+    }
 
 
     return {
@@ -50,6 +78,7 @@ export const useitemHistory = defineStore('itemHistory', () => {
         pagination,
         loading,
         addQuantityStore,
+        addItemHistoryFileStore
     } as const
 })
 

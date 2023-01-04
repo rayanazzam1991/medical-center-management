@@ -3,7 +3,7 @@ import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { addQuantity, defaultAddQuantityItem, ItemHsitoryConsts } from '/@src/models/Warehouse/ItemHistory/itemHistory';
-import { addQuantityService } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
+import { addQuantityService, addItemHistoryFile } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
 import { useItemHistoryForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { addQuantityvalidationSchema } from '/@src/rules/Warehouse/ItemHistory/addQuantityValidation';
@@ -13,6 +13,7 @@ import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/mo
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { defaultItemSearchFilter, Item } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
+import { Media } from '/@src/models/Others/Media/media';
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Add Quantity')
 const head = useHead({
@@ -27,9 +28,8 @@ itemHistoryForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/item`,
+                path: `/item/${currentaddQuantity.value.item_id}`,
             })
-
         }
     },
 })
@@ -44,10 +44,12 @@ const selectedCategoryId = ref()
 const selectedSubCategoryId = ref()
 const subcategoeisList = ref<Category[]>([])
 const allCategoriesList = ref<Category[]>([])
+const itemHistoryFiles = ref<Array<Media>>([])
+const filesToUpload = ref<File>()
+const itemHistoryId = ref(0)
+
 const getCurrentAddQuantity = async () => {
     currentaddQuantity.value = itemHistoryForm.data
-
-
 }
 const mainCategoriesList = ref<Category[]>([])
 onMounted(async () => {
@@ -62,7 +64,6 @@ const getSubCategoryByCategroy = () => {
     categoriesFilter.parent_id = selectedCategoryId.value
     const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
     subcategoeisList.value = SubCategory
-
 }
 const allItemsList = ref<Item[]>([])
 const itemsList = ref<Item[]>([])
@@ -90,10 +91,71 @@ const { handleSubmit } = useForm({
         status: 1,
     },
 })
+const onAddFile = async (event: any) => {
+    const _file = event.target.files[0] as File
+    let _message = ''
+    if (_file) {
+
+        if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
+            _message = 'Please choose an accepted file type'
+            await sleep(200);
+            notif.error(_message)
+
+        } else if (_file.size > (2 * 1024 * 1024)) {
+            _message = 'File size must be less than 2MB '
+            await sleep(200);
+            notif.error(_message)
+
+        } else {
+
+            filesToUpload.value = _file
+            console.log("file", filesToUpload.value)
+        }
+    }
+}
 
 const onSubmitAdd = handleSubmit(async (values) => {
+    let addQuantityForm = currentaddQuantity.value
+    const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
+    if (success) {
+        let formData = new FormData();
+        if (filesToUpload.value != undefined)
+            formData.append('images[]', filesToUpload.value);
 
+        const { success, message, media } = await addItemHistoryFile(addQuantity.id, formData)
+
+        if (success) {
+            // @ts-ignore
+            await sleep(200);
+
+            notif.success(`${addQuantity.item.name}  file was added successfully`)
+            media[0].file_name = media[0].relative_path
+            media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+            itemHistoryFiles.value.push(media[0])
+            filesToUpload.value = undefined
+            return true
+        }
+        else {
+            // @ts-ignore
+            await sleep(200);
+            notif.error(`file has not been added to ${addQuantity.item.name}`)
+            filesToUpload.value = undefined
+        }
+        // @ts-ignore
+        notif.dismissAll();
+        // @ts-ignore
+        await sleep(500)
+        notif.success(`${addQuantity.item.name} ${viewWrapper.pageTitle} was added successfully`);
+
+        router.push({ path: `/item/${addQuantity.item.id}` });
+    }
+    else {
+        await sleep(200);
+        notif.error(message)
+    }
 })
+
+
 </script>
 
 <template>
@@ -108,7 +170,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField>
+                                <VField id="item_id">
                                     <VLabel class="required">Level 1</VLabel>
                                     <VControl>
                                         <div class="select">
@@ -124,7 +186,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField>
+                                <VField id="item_id">
                                     <VLabel class="required">Level 2</VLabel>
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
@@ -138,16 +200,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-
                         </div>
-                    </div>
-
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
+                        <!--Fieldset-->
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField>
-                                    <VLabel class="required">Item</VLabel>
+                            <div class="column is-6">
+                                <VField id="item_id">
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
@@ -157,19 +215,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                     {{ item.name }}
                                                 </VOption>
                                             </select>
+                                            <ErrorMessage class="help is-danger" name="item_id" />
+
                                         </div>
                                     </VControl>
                                 </VField>
                             </div>
-
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="item_quantity">
-                                    <VLabel class="required">Item Quantity</VLabel>
+                                    <VLabel class="required"> Item Quantity</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.item_quantity" type="text" placeholder=""
                                             autocomplete="given-item_quantity" />
@@ -177,49 +231,20 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+                        </div>
+                        <!--Fieldset-->
+                        <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField id="item_cost">
-                                    <VLabel class="required">Item Cost</VLabel>
+                                <VField id="add_item_cost">
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item Cost</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.add_item_cost" type="text" placeholder=""
-                                            autocomplete="given-item_cost" />
-                                        <ErrorMessage class="help is-danger" name="item_cost" />
-                                    </VControl>
-                                </VField>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <VField id="note">
-                                    <VLabel class="required">Item Note</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentaddQuantity.note" type="text" placeholder=""
-                                            autocomplete="given-note" />
-                                        <ErrorMessage class="help is-danger" name="note" />
+                                            autocomplete="given-add_item_cost" />
+                                        <ErrorMessage class="help is-danger" name="add_item_cost" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField id="invoice_number">
-                                    <VLabel class="required">Item Invoice Number</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentaddQuantity.invoice_number" type="text" placeholder=""
-                                            autocomplete="given-invoice_number" />
-                                        <ErrorMessage class="help is-danger" name="invoice_number" />
-                                    </VControl>
-                                </VField>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
                                     <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                     <VControl>
@@ -233,10 +258,61 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
+                        </div>
+                        <!--Fieldset-->
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField id="note">
+                                    <VLabel class="optinal">Item Note</VLabel>
+                                    <VControl>
+                                        <VTextarea v-model="currentaddQuantity.note" />
+                                        <ErrorMessage class="help is-danger" name="note" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <VField id="invoice_number">
+                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Number</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentaddQuantity.invoice_number" type="text" placeholder=""
+                                            autocomplete="given-invoice_number" />
+                                        <ErrorMessage class="help is-danger" name="invoice_number" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <VField>
+                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Image</VLabel>
+                                    <VControl>
+                                        <div class="file has-name">
+                                            <label class="file-label">
+                                                <input class="file-input" type="file" v-on:change="onAddFile" />
+                                                <span class="file-cta">
+                                                    <span class="file-icon">
+                                                        <i class="fas fa-cloud-upload-alt"></i>
+                                                    </span>
+                                                    <span class="file-label"> Choose a Image </span>
+                                                </span>
+                                                <span class="file-name light-text">
+                                                    {{ filesToUpload?.name ?? 'Select File' }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </VControl>
+                                </VField>
+                                <h6 class="font ml-2 mt-2 help">Max size: 2 MB | Accepted image… types :
+                                    png,
+                                    jpg,
+                                    webp
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </form>
     </div>
@@ -250,6 +326,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
     color: var(--danger);
 }
 
+.font {
+    font-size: xx-small;
+}
 
 .Vi {
     width: 28.5em;
@@ -273,6 +352,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 }
 
 .form-fieldset {
-    max-width: 40%;
+    max-width: 45%;
 }
 </style>
