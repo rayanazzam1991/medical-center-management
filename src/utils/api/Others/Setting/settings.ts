@@ -12,6 +12,6 @@ export async function editSettingsApi(
   api: AxiosInstance,
   newSettings: Setting[]
 ): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.put('setting/', { settings: newSettings })
+  const { data: response, headers } = await api.put('setting/updateSettings', { settings: newSettings })
   return { response }
 }
