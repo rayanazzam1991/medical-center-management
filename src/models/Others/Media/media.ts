@@ -17,6 +17,7 @@ export interface Media {
 class MediaConsts extends BaseConsts {
   static readonly EMPLOYEE_MODEL_ROUTE = "App\\Domain\\Employee\\Entity\\Employee";
   static readonly CONTRACTOR_MODEL_ROUTE = "App\\Domain\\Contractor\\Entity\\Contractor";
+  static readonly ItemHistory_MODEL_ROUTE = "App\\Domain\\Warehouse\\Entity\\ItemHistory";
   static readonly CUSTOMER_MODEL_ROUTE = "App\\Domain\\CRM\\Entity\\Customer";
   static readonly MEDICAL_INFO_ROUTE = "App\\Domain\\CRM\\Entity\\Medical_info";
   static readonly MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL;

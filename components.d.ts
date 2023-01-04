@@ -57,6 +57,7 @@ declare module '@vue/runtime-core' {
     FormLayoutSplit: typeof import('./src/components/pages/forms/form-layout/FormLayoutSplit.vue')['default']
     ItemDetails: typeof import('./src/components/OurComponents/Warehouse/Item/ItemDetails.vue')['default']
     ItemForm: typeof import('./src/components/OurComponents/Warehouse/Item/ItemForm.vue')['default']
+    ItemHistoryFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/ItemHistoryFormNavigation.vue')['default']
     ItemSearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Item/ItemSearchFilterModel.vue')['default']
     ItemTableHeader: typeof import('./src/components/OurComponents/Warehouse/Item/ItemTableHeader.vue')['default']
     LandingEmptyNavigation: typeof import('./src/components/partials/landing/LandingEmptyNavigation.vue')['default']

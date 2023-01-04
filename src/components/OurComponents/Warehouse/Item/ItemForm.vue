@@ -8,8 +8,8 @@ import { getItem, addItem, editItem } from '/@src/services/Warehouse/Item/itemSe
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
-import { Category, defaultCategory, defaultCategorySearchFilter, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
-import { getCategoriesList, getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
+import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 
 
 export default defineComponent({
@@ -128,11 +128,9 @@ export default defineComponent({
             const { item, success, message } = await addItem(itemForm)
 
             if (success) {
-
                 // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
-
                 // @ts-ignore
                 notif.success(`${item.name} ${viewWrapper.pageTitle} was added successfully`);
                 await sleep(500)
@@ -160,7 +158,6 @@ export default defineComponent({
                 // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
-
                 // @ts-ignore
                 notif.success(`${itemData.name} ${viewWrapper.pageTitle} was edited successfully`);
                 await sleep(500);
@@ -264,7 +261,6 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
-
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
@@ -314,7 +310,6 @@ export default defineComponent({
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
                                             :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
                                         <ErrorMessage name="status" class="help is-danger" />
-
                                     </VControl>
                                 </VField>
                             </div>
