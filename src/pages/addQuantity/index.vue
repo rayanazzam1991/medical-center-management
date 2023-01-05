@@ -123,18 +123,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
         let formData = new FormData();
         if (filesToUpload.value != undefined)
             formData.append('images[]', filesToUpload.value);
-
         const { success, message, media } = await addItemHistoryFile(addQuantity.id, formData)
-
         if (success) {
             // @ts-ignore
             await sleep(500);
-            notif.success(`${addQuantity.item.name}  file was added successfully`)
             media[0].file_name = media[0].relative_path
             media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
             itemHistoryFiles.value.push(media[0])
             filesToUpload.value = undefined
-            return true
         }
         // @ts-ignore
         notif.dismissAll();
