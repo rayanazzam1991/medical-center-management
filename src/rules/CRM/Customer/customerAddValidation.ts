@@ -1,14 +1,26 @@
 import { toFormValidator } from '@vee-validate/zod';
 import { z as zod } from 'zod';
 
+import { createI18n } from 'vue-i18n'
+import ar from '../../../locales/ar.json'
+
+// Type-define 'en-US' as the master schema for the resource
+type MessageSchema = typeof ar
+
+const i18n = createI18n<[MessageSchema], 'ar'>({
+    locale: 'ar',
+    messages: {
+        'ar': ar,
+    }
+})
 const customerAddvalidationSchema = toFormValidator(zod
     .object({
         first_name:
             zod
                 .string({
-                    required_error: "This field is required",
+                    required_error: i18n.global.t("required"),
                 })
-                .min(1, "This field is required"),
+                .min(1, i18n.global.t("required")),
         last_name:
             zod
                 .string({
