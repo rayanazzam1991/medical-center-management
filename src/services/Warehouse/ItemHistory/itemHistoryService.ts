@@ -1,4 +1,4 @@
-import { addQuantity, defaultItemHistory, itemHistory } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, defaultItemHistory, itemHistory, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 import { Pagination } from "/@src/utils/response"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
@@ -25,5 +25,14 @@ export async function addItemHistoryFile(itemHistory_id: unknown, fd: FormData) 
     var error_code: string = contractorResponse.error_code ?? ''
     var message: string = contractorResponse.message ?? ''
     return { success, error_code, message, media }
+}
+export async function withdrawQuantityService(withdrawQuantityData: withdrawQuantity) {
+    const withdrawQuantityResponse = useitemHistory()
+    let withdrawQuantity: itemHistory = await withdrawQuantityResponse.withdrawQuantityStore(withdrawQuantityData) ?? defaultItemHistory
+    let success: boolean = withdrawQuantityResponse.success ?? false
+    let error_code: string = withdrawQuantityResponse.error_code ?? ''
+    let message: string = withdrawQuantityResponse.message ?? ''
+    return { success, error_code, message, withdrawQuantity }
+
 }
 

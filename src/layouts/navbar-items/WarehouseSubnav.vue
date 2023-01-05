@@ -63,6 +63,15 @@ const emits = defineEmits<{
                                         </RouterLink>
                                     </li>
                                 </ul>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/withdrawQuantity">
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>Withdraw Quantity</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>

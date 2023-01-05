@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { addQuantity, defaultAddQuantityItem, itemHistory } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, defaultAddQuantityItem, defaultWithdrawQuantityItem, itemHistory, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 
 
 
@@ -26,8 +26,6 @@ export const useItemHistoryForm = defineStore('ItemHistoryForm', () => {
         switch (step.value) {
             case 1:
                 return 'Add Quantity'
-            case 2:
-                return 'Invoice Image'
             default:
                 return 'Add Quantity'
         }
@@ -54,14 +52,10 @@ export const useItemHistoryForm = defineStore('ItemHistoryForm', () => {
         data.value.item_quantity = 0
         data.value.status = 0
         data.value.invoice_number = ''
-        // contractorServicesForm.value.splice(0, contractorServicesForm.value.length)
     }
 
     async function save() {
         loading.value = true
-
-        console.log(data.value)
-
         loading.value = false
     }
 
@@ -76,6 +70,72 @@ export const useItemHistoryForm = defineStore('ItemHistoryForm', () => {
         loading,
         stepTitle,
         data,
+        setLoading,
+        setStep,
+        getStep,
+        save,
+        reset,
+    } as const
+})
+
+export const useWithdrawItemForm = defineStore('useWithdrawItemForm', () => {
+    const step = ref(1)
+    const loading = ref(false)
+    const canNavigate = ref(false)
+    const skipable = ref(false)
+    const previousStepFn = shallowRef<ItemHistoryFormStepOptions['previousStepFn'] | null>()
+    const validateStepFn = shallowRef<ItemHistoryFormStepOptions['validateStepFn'] | null>()
+    const skipStepFn = shallowRef<ItemHistoryFormStepOptions['skipStepFn'] | null>()
+    const dataWithdraw = ref<withdrawQuantity>(defaultWithdrawQuantityItem)
+    const stepTitle = computed(() => {
+        switch (step.value) {
+            case 1:
+                return 'Withdraw Quantity'
+            default:
+                return 'Withdraw Quantity'
+        }
+    })
+
+    function setLoading(value: boolean) {
+        loading.value = value
+    }
+    function setStep(options?: ItemHistoryFormStepOptions) {
+        step.value = options?.number || 1
+        canNavigate.value = options?.canNavigate ?? false
+        skipable.value = options?.skipable ?? false
+        previousStepFn.value = options?.previousStepFn ?? null
+        validateStepFn.value = options?.validateStepFn ?? null
+        skipStepFn.value = options?.skipStepFn ?? null
+    }
+    function getStep() {
+        return step.value
+    }
+    function reset() {
+        dataWithdraw.value.requester_name = ''
+        dataWithdraw.value.note = ''
+        dataWithdraw.value.item_id = 0
+        dataWithdraw.value.user_id = 0
+        dataWithdraw.value.item_quantity = 0
+        dataWithdraw.value.status = 0
+        dataWithdraw.value.requester_type = ''
+    }
+
+    async function save() {
+        loading.value = true
+        loading.value = false
+    }
+
+
+    return {
+        canNavigate,
+        skipable,
+        previousStepFn,
+        validateStepFn,
+        skipStepFn,
+        step,
+        loading,
+        stepTitle,
+        dataWithdraw,
         setLoading,
         setStep,
         getStep,
