@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
+    AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/AddQuantityFormNavigation.vue')['default']
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
@@ -214,5 +215,6 @@ declare module '@vue/runtime-core' {
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
     WarehouseSubnav: typeof import('./src/layouts/navbar-items/WarehouseSubnav.vue')['default']
+    WithdrawQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/WithdrawQuantityFormNavigation.vue')['default']
   }
 }
