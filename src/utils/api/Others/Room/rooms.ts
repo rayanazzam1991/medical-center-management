@@ -24,7 +24,6 @@ export async function editRoomApi(
   room: CreateUpdateRoom
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`room/${room.id}`, room)
-  console.log(response)
   return { response }
 }
 export async function getRoomApi(

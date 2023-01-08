@@ -42,7 +42,6 @@ export default defineComponent({
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
 
             },
         })
@@ -59,7 +58,6 @@ export default defineComponent({
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
 
 
         }

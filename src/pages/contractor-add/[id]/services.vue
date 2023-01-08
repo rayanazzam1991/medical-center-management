@@ -33,7 +33,6 @@ contractorForm.setStep({
     skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
-        console.log(isValid)
         if (isValid) {
             contractorForm.reset()
             router.push({

@@ -115,7 +115,6 @@ const { handleSubmit } = useForm({
 
 const onSubmitEdit = handleSubmit(async () => {
     contractorForm.contractorServicesForm.splice(0, contractorForm.contractorServicesForm.length)
-    console.log(contractorForm.contractorServicesForm)
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
             contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: (servicesChecked.value[i].price * (contractorForm.dataUpdate.payment_percentage as number / 100)) })

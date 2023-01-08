@@ -61,7 +61,6 @@ export default defineComponent({
         }
         const departments2 = ref<Department[]>([])
         onMounted(async () => {
-            console.log('testt')
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
             departments2.value = departments
         })

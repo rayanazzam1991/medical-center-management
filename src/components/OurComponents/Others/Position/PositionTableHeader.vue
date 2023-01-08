@@ -30,7 +30,6 @@ export default defineComponent({
         const perPage = ref(pagination.per_page)
         const searchStatus = ref()
         const searchFilter = ref(defaultPositionSearchFilter)
-        console.log(pagination.per_page)
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,

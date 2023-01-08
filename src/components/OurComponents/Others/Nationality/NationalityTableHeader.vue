@@ -37,7 +37,6 @@ export default defineComponent({
                 status: searchStatus.value,
                 per_page: perPage.value
             }
-            console.log(searchFilter.value)
             context.emit('search', searchFilter.value)
 
         }

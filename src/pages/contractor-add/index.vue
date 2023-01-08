@@ -138,7 +138,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
         contractorForm.userForm.room_id = userData.room_id
         contractorForm.userForm.city_id = userData.city_id
         contractorForm.userForm.user_status_id = userData.user_status_id
-        console.log(contractorForm.data)
         const { success, message, contractor } = await addContractor(contractorForm.data, contractorForm.userForm)
         if (success) {
             contractorForm.data.id = contractor.id

@@ -105,7 +105,6 @@ export const useCustomer = defineStore('customer', () => {
     sleep(2000)
     try {
       const response = await addMedicalInfoApi(api, customer_id, medical_info)
-      console.log(response)
       var returnedCustomer: Customer
       returnedCustomer = response.response.data
       success.value = response.response.success
@@ -159,7 +158,6 @@ export const useCustomer = defineStore('customer', () => {
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      console.log(response)
       var returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success

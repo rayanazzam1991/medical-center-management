@@ -116,7 +116,6 @@ export default defineComponent({
             searchFilter.value.room_id = undefined
 
 
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }

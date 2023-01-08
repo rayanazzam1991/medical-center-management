@@ -1,4 +1,5 @@
 import { string } from "zod"
+import { User } from "../User/user"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Media {
@@ -11,6 +12,7 @@ export interface Media {
   mime_type?: string
   size?: number
   created_at?: string
+  uploaded_by? : User
 }
 class MediaConsts extends BaseConsts {
   static readonly EMPLOYEE_MODEL_ROUTE = "App\\Domain\\Employee\\Entity\\Employee";
