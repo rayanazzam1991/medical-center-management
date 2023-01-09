@@ -73,6 +73,18 @@ const emits = defineEmits<{
                                     </li>
                                 </ul>
                             </div>
+                            <div class="column is-3">
+                                <h4 class="column-heading">History</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/list-stock-movement">
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>List Stock Movement</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

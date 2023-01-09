@@ -19,7 +19,6 @@ export async function withdrawQuantityApi(
 
     return { response }
 }
-
 export async function getItemHistoriesApi(
     api: AxiosInstance,
     searchFilter: ItemHistorySearchFilter
@@ -37,5 +36,15 @@ export async function changeItemHistoryStatusApi(
         `itemHistory/changeItemHistoryStatus/${itemHistory.id}`,
         itemHistory
     )
+    return { response }
+}
+export async function getItemHistoryApi(
+    api: AxiosInstance,
+    itemId: number,
+    searchFilter: ItemHistorySearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+    const { data: response, headers } = await api.get(`itemHistory/getItemHistory/${itemId}`, {
+        params: searchFilter,
+    })
     return { response }
 }

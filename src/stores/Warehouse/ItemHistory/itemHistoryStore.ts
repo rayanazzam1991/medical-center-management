@@ -3,7 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Media } from "/@src/models/Others/Media/media"
 import { itemHistory, addQuantity, withdrawQuantity, ItemHistorySearchFilter, ChangeItemHistoryStatus } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { uploadMediaApi } from "/@src/utils/api/Others/Media"
-import { addQuantityApi, getItemHistoriesApi, withdrawQuantityApi, changeItemHistoryStatusApi } from "/@src/utils/api/Warehouse/ItemHistory"
+import { addQuantityApi, getItemHistoriesApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi } from "/@src/utils/api/Warehouse/ItemHistory"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -143,6 +143,31 @@ export const useitemHistory = defineStore('itemHistory', () => {
             loading.value = false
         }
     }
+    async function getItemHistoryStore(itemId: number,
+        searchFilter: ItemHistorySearchFilter) {
+        if (loading.value) return
+        loading.value = true
+
+        try {
+            const returnedResponse = await getItemHistoryApi(api, itemId, searchFilter)
+            itemHistories.value = returnedResponse.response.data
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
 
 
     return {
@@ -156,7 +181,8 @@ export const useitemHistory = defineStore('itemHistory', () => {
         withdrawQuantityStore,
         addItemHistoryFileStore,
         getItemHistoriesStore,
-        changeItemHistoryStatusStore
+        changeItemHistoryStatusStore,
+        getItemHistoryStore
     } as const
 })
 

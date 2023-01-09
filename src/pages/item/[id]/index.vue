@@ -8,6 +8,9 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
+import { defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
+import { defaultPagination } from "/@src/utils/response"
 
 
 
@@ -21,6 +24,14 @@ const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
 const keyIncrement = ref(1)
 const loading = ref(false)
+const allItemHistoriesList = ref<itemHistory[]>([])
+const ItemHistoriesList = ref<itemHistory[]>([])
+const searchFilter = ref(defaultItemHistorySearchFilter)
+const itemHistoryList = ref<Array<itemHistory>>([])
+const paginationVar = ref(defaultPagination)
+const default_per_page = ref(1)
+
+
 const notif = useNotyf()
 
 // @ts-ignore
@@ -51,7 +62,43 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
+    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
+    searchFilter.value = {} as ItemHistorySearchFilter
+    itemHistoryList.value = itemHistories
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
 })
+
+const search = async (searchFilter2: ItemHistorySearchFilter) => {
+    paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
+    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter2)
+    itemHistoryList.value = itemHistories
+    paginationVar.value = pagination
+    searchFilter.value = searchFilter2
+}
+
+const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
+    searchFilter.value = searchFilter2
+    await search(searchFilter.value)
+}
+
+const getItemsPerPage = async (pageNum: number) => {
+    searchFilter.value.page = pageNum
+    await search(searchFilter.value)
+}
+const itemSort = async (value: string) => {
+    if (value != undefined) {
+        const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
+        searchFilter.value.order_by = sortField
+        searchFilter.value.order = sortOrder
+    }
+    else {
+        searchFilter.value.order = undefined
+        searchFilter.value.order_by = undefined
+    }
+    await search(searchFilter.value)
+}
 const getCurrentItem = async () => {
     const { item } = await getItem(itemId.value)
     currentItem.value = item
@@ -69,7 +116,6 @@ const changestatusItem = async () => {
     await sleep(200);
     changeStatusPopup.value = false
 }
-
 const onClickEditMainInfo = () => {
     router.push({
         path: `/item/${itemId.value}/edit`
@@ -83,7 +129,6 @@ const onClickEditMainInfo = () => {
             <div class="profile-header has-text-centered">
                 <h3 class="title is-4 is-narrow is-thin">{{ currentItem.name }}</h3>
                 <div class="profile-stats">
-
                     <div class="profile-stat">
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
                         <span>Status: <span>
@@ -104,8 +149,8 @@ const onClickEditMainInfo = () => {
                                     @click="tab = 'Details'"><span>Details</span></a>
                             </li>
                             <li :class="[tab === 'History' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'History'"
-                                    @click="tab = 'History'"><span>Item History </span></a>
+                                <a tabindex="0" @keydown.space.prevent="tab = 'History'" @click="tab = 'History'">
+                                    <span>Item History </span></a>
                             </li>
                             <li class="tab-naver"></li>
                         </ul>
@@ -214,6 +259,20 @@ const onClickEditMainInfo = () => {
                         </div>
                     </div>
                 </div>
+
+
+                <div v-if="tab === 'History'" class="tab-content is-active mb-8">
+                    <div class="columns project-details-inner">
+                        <div class="column is-12">
+                            <div class="project-details-card">
+                                <ItemHistoryTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+                                    :button_name="`Add ${viewWrapper.pageTitle}`" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -244,28 +303,30 @@ const onClickEditMainInfo = () => {
         </template>
     </VModal>
 </template>
-  
+
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-    min-width: 50px;
+    min-width: 250px;
     min-height: 40px;
 
     .is-active {
         min-height: 40px;
-
     }
 }
 
-.tabs-wrapper .tabs li a,
-.tabs-wrapper-alt .tabs li a {
+.tabs-wrapper.is-slider .tabs li a,
+.tabs-wrapper-alt.is-slider .tabs li a {
     height: 40px;
 }
 
 .tabs li {
     min-height: 40px !important;
+}
 
+.full-width {
+    width: 100%;
+    margin-right: 12px;
 }
 </style>
-  
