@@ -9,7 +9,7 @@ const servicevalidationSchema = toFormValidator(zod
             })
             .min(1, "This field is required"),
         description: zod.string().optional(),
-        duration_minutes:
+        duration_minutes:   
             zod.preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
