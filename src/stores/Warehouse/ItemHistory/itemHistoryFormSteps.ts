@@ -53,12 +53,10 @@ export const useItemHistoryForm = defineStore('ItemHistoryForm', () => {
         data.value.status = 0
         data.value.invoice_number = ''
     }
-
     async function save() {
         loading.value = true
         loading.value = false
     }
-
 
     return {
         canNavigate,

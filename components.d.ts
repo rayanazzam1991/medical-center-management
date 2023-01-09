@@ -66,6 +66,8 @@ declare module '@vue/runtime-core' {
     LandingLayout: typeof import('./src/layouts/LandingLayout.vue')['default']
     LanguagesPanel: typeof import('./src/components/partials/panels/LanguagesPanel.vue')['default']
     LayoutsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/LayoutsMobileSubsidebar.vue')['default']
+    ListStockeMovementSearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/ListStockeMovementSearchFilterModel.vue')['default']
+    ListStockMovementTableHeader: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/ListStockMovementTableHeader.vue')['default']
     MarketingAbout: typeof import('./src/components/partials/marketing/MarketingAbout.vue')['default']
     MarketingFeaturesIcons: typeof import('./src/components/partials/marketing/MarketingFeaturesIcons.vue')['default']
     MarketingMockup: typeof import('./src/components/partials/marketing/MarketingMockup.vue')['default']

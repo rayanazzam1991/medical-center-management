@@ -16,6 +16,20 @@ export interface itemHistory {
     withdraw_item_price: number
 }
 
+export interface ItemHistorySearchFilter {
+    item_id?: number
+    category_id?: number
+    sub_category_id?: number
+    date_between?: string
+    from?: string
+    to?: string
+    status?: number
+    type?: string
+    page?: number
+    per_page?: number
+    order_by?: string
+    order?: string
+}
 export interface addQuantity {
     id?: number
     item_id: number
@@ -53,6 +67,20 @@ export const defaultItemHistory: itemHistory = {
     created_by: defaultUser,
     withdraw_item_price: 0,
     status: 1
+}
+export const defaultItemHistorySearchFilter: ItemHistorySearchFilter = {
+    item_id: undefined,
+    category_id: undefined,
+    sub_category_id: undefined,
+    date_between: undefined,
+    from: undefined,
+    to: undefined,
+    status: undefined,
+    type: undefined,
+    page: undefined,
+    per_page: undefined,
+    order_by: undefined,
+    order: undefined,
 }
 export const defaultAddQuantityItem: addQuantity = {
     id: 0,

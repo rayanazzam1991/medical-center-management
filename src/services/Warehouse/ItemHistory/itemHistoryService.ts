@@ -1,4 +1,4 @@
-import { addQuantity, defaultItemHistory, itemHistory, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, ChangeItemHistoryStatus, defaultItemHistory, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 import { Pagination } from "/@src/utils/response"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
@@ -35,4 +35,19 @@ export async function withdrawQuantityService(withdrawQuantityData: withdrawQuan
     return { success, error_code, message, withdrawQuantity }
 
 }
+export async function getItemHistoriesList(searchFilter: ItemHistorySearchFilter) {
+    const itemHistory = useitemHistory()
+    await itemHistory.getItemHistoriesStore(searchFilter)
+    var itemHistories: itemHistory[] = itemHistory.itemHistories
+    var pagination: Pagination = itemHistory.pagination
+    return { itemHistories, pagination }
+}
 
+export async function changeItemHistoryStatus(itemHistoryData: ChangeItemHistoryStatus) {
+    const itemResponse = useitemHistory()
+    await itemResponse.changeItemHistoryStatusStore(itemHistoryData)
+    var success: boolean = itemResponse.success ?? false
+    var error_code: string = itemResponse.error_code ?? ''
+    var message: string = itemResponse.message ?? ''
+    return { success, error_code, message }
+}

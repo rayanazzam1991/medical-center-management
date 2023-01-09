@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { addQuantity, itemHistory, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, ChangeItemHistoryStatus, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function addQuantityApi(
@@ -17,5 +17,25 @@ export async function withdrawQuantityApi(
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.post(`itemHistory/withdrawQuantity`, withdrawquantity)
 
+    return { response }
+}
+
+export async function getItemHistoriesApi(
+    api: AxiosInstance,
+    searchFilter: ItemHistorySearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+    const { data: response, headers } = await api.get('itemHistory/getItemHistoriesList', {
+        params: searchFilter,
+    })
+    return { response }
+}
+export async function changeItemHistoryStatusApi(
+    api: AxiosInstance,
+    itemHistory: ChangeItemHistoryStatus
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.put(
+        `itemHistory/changeItemHistoryStatus/${itemHistory.id}`,
+        itemHistory
+    )
     return { response }
 }

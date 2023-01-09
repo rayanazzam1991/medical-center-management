@@ -184,9 +184,6 @@ export default defineComponent({
                 <div class="form-body">
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
@@ -228,8 +225,8 @@ export default defineComponent({
                                             <VOption>Level 2</VOption>
                                             <VOption v-for="category in subcategoeisList" :key="category.id"
                                                 :value="category.id">{{
-        category.name
-}}
+                                                    category.name
+                                                }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="category_id" />
