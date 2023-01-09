@@ -4141,16 +4141,13 @@ const columns31Sub = {
 
     },
 } 
-// const columns31 = Object.assign(columns28,...columns31Sub)  
+
 let columns31 = {} ;
  Object.assign(columns31, columns28, columns31Sub) 
  let columns30 = {} ;
  Object.assign(columns30, columns28, columns30Sub) 
  let columns29 = {} ;
  Object.assign(columns29, columns28, columns29Sub) 
-
-// const columns30 = {...columns28 , ...columns30Sub} as const
-// const columns29 = {...columns28 , ...columns29Sub} as const
 </script>
 
 <template>
