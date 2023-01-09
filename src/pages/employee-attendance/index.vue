@@ -3961,7 +3961,7 @@ const columns29Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[29 - 1].day} ${deysNamePerMonth.value[29 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[29 - 1] ?  `${deysNamePerMonth.value[29 - 1]?.day} ${deysNamePerMonth.value[29 - 1]?.day_name} ` :  '',
             }
 
             ),
@@ -3994,7 +3994,7 @@ const columns30Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[29 - 1].day} ${deysNamePerMonth.value[29 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[29 - 1] ? `${deysNamePerMonth.value[29 - 1]?.day} ${deysNamePerMonth.value[29 - 1]?.day_name} ` : '',
             }
 
             ),
@@ -4024,7 +4024,7 @@ const columns30Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[30 - 1].day} ${deysNamePerMonth.value[30 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[30 - 1] ?  `${deysNamePerMonth.value[30 - 1]?.day} ${deysNamePerMonth.value[30 - 1]?.day_name} ` : '',
             }
 
             ),
@@ -4058,7 +4058,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[29 - 1].day} ${deysNamePerMonth.value[29 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[29 - 1] ? `${deysNamePerMonth.value[29 - 1]?.day} ${deysNamePerMonth.value[29 - 1]?.day_name} ` : '',
             }
 
             ),
@@ -4088,7 +4088,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[30 - 1].day} ${deysNamePerMonth.value[30 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[30 - 1] ? `${deysNamePerMonth.value[30 - 1]?.day} ${deysNamePerMonth.value[30 - 1]?.day_name} ` : '',
             }
 
             ),
@@ -4118,7 +4118,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${deysNamePerMonth.value[31 - 1].day} ${deysNamePerMonth.value[31 - 1].day_name} `,
+                headerTitle: deysNamePerMonth.value[31 - 1] ?  `${deysNamePerMonth.value[31 - 1]?.day} ${deysNamePerMonth.value[31 - 1]?.day_name} ` : '',
             }
 
             ),
