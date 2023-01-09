@@ -10,12 +10,13 @@ import { defaultPagination } from '/@src/utils/response'
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore'
 import sleep from '/@src/utils/sleep'
 import { defaultChangeItemStatus, defaultItem } from '/@src/models/Warehouse/Item/item'
+import { Notyf } from 'notyf'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Item')
 useHead({
     title: 'Item',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemSearchFilter)
 const itemsList = ref<Array<Item>>([])
 const changeStatusPopup = ref(false)
@@ -27,11 +28,14 @@ const itemStore = useItem()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 
-const { items, pagination } = await getItemsList(searchFilter.value)
-itemsList.value = items
-paginationVar.value = pagination
-keyIncrement.value = keyIncrement.value + 1
-default_per_page.value = pagination.per_page
+onMounted(async () => {
+    const { items, pagination } = await getItemsList(searchFilter.value)
+    searchFilter.value = defaultItemSearchFilter
+    itemsList.value = items
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+});
 
 const changestatusItem = async () => {
     currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
@@ -164,7 +168,6 @@ const columns = {
         align: 'center',
         renderRow: (row: any) =>
             h(NoDeleteDropDownVue, {
-
                 onChangeStatus: () => {
                     currentChangeStatusItem.value = row
                     changeStatusPopup.value = true
