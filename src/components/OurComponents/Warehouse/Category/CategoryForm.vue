@@ -42,6 +42,7 @@ export default defineComponent({
             if (categoryId.value === 0) {
                 currentCategory.value.name = ''
                 currentCategory.value.parent = defaultCategory
+                currentCategory.value.parent.id = undefined
                 currentCategory.value.status = 1
                 return
             }
@@ -75,6 +76,12 @@ export default defineComponent({
                 parent_id: undefined
             },
         });
+        const resetPerant = () => {
+            if (isCategory.value == false && currentCategory.value.parent?.id != undefined) {
+                currentCategory.value.parent.id = undefined
+                console.log(currentCategory.value.parent.id)
+            }
+        }
         const onSubmit = async (method: String) => {
             if (method == "Add") {
                 await onSubmitAdd();
@@ -86,9 +93,17 @@ export default defineComponent({
         const onSubmitAdd = handleSubmit(async (values) => {
             var categoryData = currentCategory.value;
             var categoryForm = currentCreateUpdateCategory.value
-            categoryForm.name = categoryData.name
-            categoryForm.parent_id = categoryData.parent?.id
-            categoryForm.status = categoryData.status
+            if (isCategory.value == true) {
+                categoryForm.name = categoryData.name
+                categoryForm.parent_id = categoryData.parent?.id
+                categoryForm.status = categoryData.status
+            }
+            else {
+                categoryForm.name = categoryData.name
+                categoryForm.status = categoryData.status
+                categoryForm.parent_id = undefined
+
+            }
             const { success, message, category } = await addCategory(categoryForm);
             if (success) {
                 // @ts-ignore
@@ -122,7 +137,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-        return { keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
+        return { resetPerant, keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
     },
     components: { ErrorMessage }
 })
@@ -138,9 +153,6 @@ export default defineComponent({
                 <div class="form-body">
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="column is-6">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
@@ -159,8 +171,8 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="is-flex is-justify-content-center">
                                 <VControl class="ml-3">
-                                    <VSwitchSegment :key="keyIncrement" v-model="isCategory" label-true="Level 2"
-                                        label-false="Level 1" color="success" />
+                                    <VSwitchSegment @change="resetPerant" :key="keyIncrement" v-model="isCategory"
+                                        label-true="Level 2" label-false="Level 1" color="success" />
                                 </VControl>
                             </div>
                         </div>

@@ -96,6 +96,8 @@ declare module 'vue-router/auto/routes' {
     '/item/[id]/': RouteRecordInfo<'/item/[id]/', '/item/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/item/[id]/edit': RouteRecordInfo<'/item/[id]/edit', '/item/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/item/add': RouteRecordInfo<'/item/add', '/item/add', Record<never, never>, Record<never, never>>,
+    '/list_stock_movement': RouteRecordInfo<'/list_stock_movement', '/list_stock_movement', Record<never, never>, Record<never, never>>,
+    '/list_stock_movement/': RouteRecordInfo<'/list_stock_movement/', '/list_stock_movement/', Record<never, never>, Record<never, never>>,
     '/nationality': RouteRecordInfo<'/nationality', '/nationality', Record<never, never>, Record<never, never>>,
     '/nationality/': RouteRecordInfo<'/nationality/', '/nationality/', Record<never, never>, Record<never, never>>,
     '/nationality/[id]/': RouteRecordInfo<'/nationality/[id]/', '/nationality/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

@@ -12,13 +12,14 @@ import { useCategory } from '/@src/stores/Warehouse/Category/CategoryStore'
 import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
+import { Notyf } from 'notyf';
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Category')
 useHead({
     title: 'Category',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
 const changeStatusPopup = ref(false)
@@ -179,15 +180,16 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCategoriesPerPage" />
-        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
+        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">Showing {{
+            paginationVar.page !=
+                paginationVar.max_page
+                ?
+                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        }} to {{
+    paginationVar.page !=
+        paginationVar.max_page ?
+        paginationVar.page *
+        paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
         <VPlaceloadText v-if="categoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>

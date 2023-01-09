@@ -9,13 +9,14 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { addQuantityvalidationSchema } from '/@src/rules/Warehouse/ItemHistory/addQuantityValidation';
 import sleep from '/@src/utils/sleep';
 import { BaseConsts } from '/@src/utils/consts/base';
-import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
-import { defaultItemSearchFilter, Item } from '/@src/models/Warehouse/Item/item';
+import { defaultItemSearchFilter, Item, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
 import { Media } from '/@src/models/Others/Media/media';
 import { error } from 'node:console';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
+import { Notyf } from 'notyf';
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Add Quantity')
@@ -39,7 +40,7 @@ itemHistoryForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const pageTitle = ' Add Quantity'
 const phoneCheck = ref<string>('false')
 const currentaddQuantity = ref(defaultAddQuantityItem)
@@ -50,6 +51,8 @@ const allCategoriesList = ref<Category[]>([])
 const itemHistoryFiles = ref<Array<Media>>([])
 const filesToUpload = ref<File>()
 const itemHistoryId = ref(0)
+const allItemsList = ref<Item[]>([])
+const itemsList = ref<Item[]>([])
 
 const getCurrentAddQuantity = async () => {
     currentaddQuantity.value = itemHistoryForm.data
@@ -63,17 +66,15 @@ onMounted(async () => {
 })
 
 const getSubCategoryByCategroy = () => {
-    let categoriesFilter = defaultCategorySearchFilter
+    let categoriesFilter = {} as CategorySearchFilter
     categoriesFilter.parent_id = selectedCategoryId.value
     const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
     subcategoeisList.value = SubCategory
 }
-const allItemsList = ref<Item[]>([])
-const itemsList = ref<Item[]>([])
 const getItemBySubCategroy = async () => {
     const { items } = await getItemsList(defaultItemSearchFilter)
     allItemsList.value = items
-    let ItemFilter = defaultItemSearchFilter
+    let ItemFilter = {} as ItemSearchFilter
     ItemFilter.category_id = selectedSubCategoryId.value
     const Item = allItemsList.value.filter((item) => item.category.id == ItemFilter.category_id)
     itemsList.value = Item
@@ -167,7 +168,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentaddQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption :value="0">Level 1</VOption>
+                                                <VOption value="">Select Level 1</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -184,7 +185,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
                                             v-if="currentaddQuantity" v-model="selectedSubCategoryId">
-                                            <VOption>Level 2</VOption>
+                                            <VOption>Select Level 2</VOption>
                                             <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
                                                 :value="subCategory.id">
                                                 {{ subCategory.name }}
@@ -208,7 +209,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <div class="select">
                                             <select :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
                                                 v-model="currentaddQuantity.item_id">
-                                                <VOption :value="0">Item</VOption>
+                                                <VOption value="">Select Item</VOption>
                                                 <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                                     {{ item.name }}
                                                 </VOption>

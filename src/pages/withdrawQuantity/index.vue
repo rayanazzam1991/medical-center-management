@@ -9,15 +9,16 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { withdrawQuantityvalidationSchema } from '/@src/rules/Warehouse/ItemHistory/withdrawQuantityValidation';
 import sleep from '/@src/utils/sleep';
 import { BaseConsts } from '/@src/utils/consts/base';
-import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
-import { defaultItemSearchFilter, Item } from '/@src/models/Warehouse/Item/item';
+import { defaultItem, defaultItemSearchFilter, Item, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
 import { Contractor, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
 import { defaultEmployeeSearchFilter, Employee } from '/@src/models/Employee/employee';
 import { getEmployeesList } from '/@src/services/Employee/employeeService';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
+import { Notyf } from 'notyf';
 const itemStore = useItem()
 
 const viewWrapper = useViewWrapper()
@@ -37,7 +38,7 @@ withdarwQuantityForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const pageTitle = 'Withdraw Quantity'
 const phoneCheck = ref<string>('false')
 const currentwithdrawQuantity = ref(defaultWithdrawQuantityItem)
@@ -50,6 +51,9 @@ const isType = ref(false)
 const employeesList = ref<Employee[]>([])
 const contractorsList = ref<Contractor[]>([])
 const requesterId = ref()
+const selectedItem = ref(defaultItem)
+const allItemsList = ref<Item[]>([])
+const itemsList = ref<Item[]>([])
 
 const getCurrentWithdrawQuantity = async () => {
     currentwithdrawQuantity.value = withdarwQuantityForm.dataWithdraw
@@ -65,22 +69,20 @@ onMounted(async () => {
     const { contractors } = await getContractorsList(defaultContractorSearchFilter)
     contractorsList.value = contractors
 })
-
 const getSubCategoryByCategroy = () => {
-    let categoriesFilter = defaultCategorySearchFilter
+    let categoriesFilter = {} as CategorySearchFilter
     categoriesFilter.parent_id = selectedCategoryId.value
     const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
     subcategoeisList.value = SubCategory
 }
-const allItemsList = ref<Item[]>([])
-const itemsList = ref<Item[]>([])
 const getItemBySubCategroy = async () => {
     const { items } = await getItemsList(defaultItemSearchFilter)
     allItemsList.value = items
-    let ItemFilter = defaultItemSearchFilter
+    let ItemFilter = {} as ItemSearchFilter
     ItemFilter.category_id = selectedSubCategoryId.value
     const Item = allItemsList.value.filter((item) => item.category.id == ItemFilter.category_id)
     itemsList.value = Item
+
 }
 onMounted(() => {
     getCurrentWithdrawQuantity()
@@ -93,7 +95,7 @@ const { handleSubmit } = useForm({
         item_id: undefined,
         user_id: undefined,
         item_quantity: "",
-        withdraw_item_price: "",
+        withdraw_item_price: selectedItem.value.price ?? 0,
         note: "",
         status: 1,
     },
@@ -101,9 +103,9 @@ const { handleSubmit } = useForm({
 
 const onSubmitAdd = handleSubmit(async (values) => {
     let withdrawQuantityForm = currentwithdrawQuantity.value
-    withdrawQuantityForm.item_id = withdrawQuantityForm.item_id
+    withdrawQuantityForm.item_id = selectedItem.value.id ?? 0
     withdrawQuantityForm.item_quantity = withdrawQuantityForm.item_quantity
-    withdrawQuantityForm.withdraw_item_price = withdrawQuantityForm.withdraw_item_price
+    withdrawQuantityForm.withdraw_item_price = selectedItem.value.price
     withdrawQuantityForm.status = withdrawQuantityForm.status
     withdrawQuantityForm.note = withdrawQuantityForm.note
     if (isType.value == true && requesterId != undefined) {
@@ -196,11 +198,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <div class="select">
                                             <select :disabled="itemsList.length <= 0" v-if="currentwithdrawQuantity"
-                                                v-model="currentwithdrawQuantity.item_id">
+                                                v-model="selectedItem">
                                                 <VOption :value="0">
                                                     Select Item
                                                 </VOption>
-                                                <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
+                                                <VOption v-for="item in itemsList" :key="item.id" :value="item">
                                                     {{ item.name }}
                                                 </VOption>
                                             </select>
@@ -227,8 +229,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="withdraw_item_price">
                                     <VLabel class="required">{{ viewWrapper.pageTitle }} Item Price</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentwithdrawQuantity.withdraw_item_price" type="number"
-                                            placeholder="" autocomplete="given-withdraw_item_price" />
+                                        <VInput v-model="selectedItem.price" type="number" placeholder=""
+                                            autocomplete="given-withdraw_item_price" />
                                         <ErrorMessage class="help is-danger" name="withdraw_item_price" />
                                     </VControl>
                                 </VField>
@@ -262,26 +264,24 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </VField>
                             </div>
                             <div class="column is-6" v-if="employeesList">
-                                <VField>
+                                <VField id="user_id">
                                     <VLabel class="required">Requester Name</VLabel>
                                     <VControl>
-                                        <div class="select">
-                                            <select v-if="isType" v-model="requesterId">
-                                                <VOption value="0">Employee</VOption>
-                                                <VOption v-for="employee in employeesList" :key="employee.id"
-                                                    :value="employee.id">
-                                                    {{ employee.user.first_name }}
-                                                </VOption>
-                                            </select>
-                                            <select v-else v-model="requesterId">
-                                                <VOption :value="0">Contractor</VOption>
-                                                <VOption v-for="contractor in contractorsList" :key="contractor.user.id"
-                                                    :value="contractor.id">
-                                                    {{ contractor.user.first_name }}
-                                                </VOption>
-                                            </select>
-                                            <!-- <ErrorMessage class="help is-danger" name="user_id" /> -->
-                                        </div>
+                                        <VSelect v-if="isType" v-model="requesterId">
+                                            <VOption value="0">Employee</VOption>
+                                            <VOption v-for="employee in employeesList" :key="employee.id"
+                                                :value="employee.id">
+                                                {{ employee.user.first_name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <VSelect v-else v-model="requesterId">
+                                            <VOption :value="0">Contractor</VOption>
+                                            <VOption v-for="contractor in contractorsList" :key="contractor.user.id"
+                                                :value="contractor.id">
+                                                {{ contractor.user.first_name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="user_id" />
                                     </VControl>
                                 </VField>
                             </div>
