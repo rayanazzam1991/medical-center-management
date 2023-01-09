@@ -84,14 +84,11 @@ export default defineComponent({
                 searchFilter.value.quick_search = undefined
             }
             searchFilter.value.per_page = perPage.value
-            console.log(props.days_per_month)
                 const {daysPerMonth} = await getDaysPerMonth(selectedYear.value)
             selectedMonthDays.value = daysPerMonth.find((month) => month.month == selectedMonth.value)?.number_of_days ?? 28
             searchFilter.value.per_page = perPage.value
             searchFilter.value.attendance_from = `${selectedYear.value}-${selectedMonth.value}-01`
             searchFilter.value.attendance_to = `${selectedYear.value}-${selectedMonth.value}-${selectedMonthDays.value}`
-            console.log('123213')
-
             await search()
         }
         function isNumber(str: string): boolean {
@@ -109,7 +106,6 @@ export default defineComponent({
         const search = async () => {
             searchFilter.value.per_page = perPage.value
             searchFilter.value.page = 1
-            console.log(searchFilter.value , 'asds')
             const daysPerMonth = selectedMonthDays.value
             context.emit('search', searchFilter.value , daysPerMonth)
         }

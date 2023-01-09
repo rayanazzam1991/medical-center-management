@@ -15,7 +15,6 @@ export async function getDaysNamePerMonthApi(
   month: number
 
 ): Promise<{ response: CustomResponseCollection }> {
-  console.log(year, month  )
   const { data: response, headers } = await api.post(`date/getDaysNamePerMonth`, { "year": year, "month": month })
 
   return { response }
