@@ -11,7 +11,7 @@
 
 .page-content-wrapper {
   width: 100%;
-  max-width: 1800px;
+  max-width: 1500px;
   margin: 0 auto;
 
   .page-content {

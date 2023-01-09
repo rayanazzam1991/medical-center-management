@@ -3,16 +3,18 @@ import { useApi } from "/@src/composable/useApi"
 import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
+import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
 
 
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
+  const employeesAttendance = ref<EmployeeAttendance[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const success = ref<boolean>()
   const error_code = ref<string>()
@@ -314,11 +316,82 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
+  async function getMaxEmployeeNumberStore() {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await maxEmployeeNumberApi(api)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function updateEmployeeNumberStore(employee_id: number, employee_number: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await updateEmployeeNumberApi(api, employee_id, employee_number)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getEmployeesAttendanceStore(searchFilter: EmployeeAttendanceSearchFilter) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getEmployeesAttendanceApi(api, searchFilter)
+      employeesAttendance.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
 
   return {
     employees,
     employeesSchedule,
+    employeesAttendance,
     pagination,
     loading,
     addEmployeeStore,
@@ -332,6 +405,9 @@ export const useEmployee = defineStore('employee', () => {
     addEmployeePersonalId,
     getEmployeesScheduleStore,
     updateEmployeeScheduleStore,
+    getMaxEmployeeNumberStore,
+    updateEmployeeNumberStore,
+    getEmployeesAttendanceStore,
     success,
     error_code,
     message,

@@ -13,6 +13,7 @@ import { CreateUpdateUser } from '/@src/models/Others/User/user'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
+import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -165,6 +166,35 @@ export async function updateEmployeeSchedule(employee_id: number, date_id: numbe
   const message: string = employee.message ?? ''
 
   return { error_code, success, message }
+}
+export async function getMaxEmployeeNumber() {
+  const employee = useEmployee()
+  const result = await employee.getMaxEmployeeNumberStore()
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+
+  return { error_code, success, message, result }
+}
+export async function updateEmployeeNumber(employee_id: number, employee_number: number) {
+  const employee = useEmployee()
+  await employee.updateEmployeeNumberStore(employee_id, employee_number)
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+
+  return { error_code, success, message }
+}
+export async function getEmployeesAttendance(searchFilter: EmployeeAttendanceSearchFilter) {
+  const employee = useEmployee()
+  await employee.getEmployeesAttendanceStore(searchFilter)
+  const employeesAttendance: EmployeeAttendance[] = employee.employeesAttendance
+  const pagination: Pagination = employee.pagination
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+
+  return { employeesAttendance, pagination, success, message, error_code }
 }
 
 

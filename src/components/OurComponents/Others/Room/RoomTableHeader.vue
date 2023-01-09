@@ -52,6 +52,8 @@ export default defineComponent({
         const search_filter = (value: RoomSearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
+
             context.emit('search', searchFilter.value)
         }
 

@@ -6,6 +6,7 @@ import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "..
 export interface Employee {
     id?: number
     starting_date: string
+    employee_number?: number
     end_date: string
     basic_salary: number
     user: User
@@ -71,6 +72,7 @@ export const defaultEmployee: Employee = {
     position: defaultPosition,
     basic_salary: 0,
     user: defaultUser,
+    employee_number: undefined,
 }
 export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
     name: undefined,
