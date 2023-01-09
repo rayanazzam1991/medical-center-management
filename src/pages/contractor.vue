@@ -19,7 +19,7 @@ const route = useRoute()
 </template>
 <style  lang="scss">
 .page-content-wrapper {
-    max-width: 1800px !important;
+    max-width: 1500px !important;
 }
 
 .page-content-wrapper .page-content {

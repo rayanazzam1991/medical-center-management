@@ -64,6 +64,18 @@ const emits = defineEmits<{
                   </li>
                 </ul>
               </div>
+              <div class="column is-3">
+                <h4 class="column-heading">Employees Attendance</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/employee-attendance">
+                      <i class="lnir lnir-calender-alt" aria-hidden="true"></i>
+                      <span>Employees Attendance</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

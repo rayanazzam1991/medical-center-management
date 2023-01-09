@@ -85,6 +85,8 @@ declare module 'vue-router/auto/routes' {
     '/employee/[id]/': RouteRecordInfo<'/employee/[id]/', '/employee/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/employee-add': RouteRecordInfo<'/employee-add', '/employee-add', Record<never, never>, Record<never, never>>,
     '/employee-add/': RouteRecordInfo<'/employee-add/', '/employee-add/', Record<never, never>, Record<never, never>>,
+    '/employee-attendance': RouteRecordInfo<'/employee-attendance', '/employee-attendance', Record<never, never>, Record<never, never>>,
+    '/employee-attendance/': RouteRecordInfo<'/employee-attendance/', '/employee-attendance/', Record<never, never>, Record<never, never>>,
     '/employee-edit': RouteRecordInfo<'/employee-edit', '/employee-edit', Record<never, never>, Record<never, never>>,
     '/employee-edit/[id]/': RouteRecordInfo<'/employee-edit/[id]/', '/employee-edit/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/employee-schedule': RouteRecordInfo<'/employee-schedule', '/employee-schedule', Record<never, never>, Record<never, never>>,

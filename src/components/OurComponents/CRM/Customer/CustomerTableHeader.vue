@@ -78,6 +78,8 @@ export default defineComponent({
 
         const search = async () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
+
             context.emit('search', searchFilter.value)
         }
         const search_filter = (value: CustomerSearchFilter) => {

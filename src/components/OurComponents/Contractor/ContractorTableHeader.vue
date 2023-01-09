@@ -79,6 +79,8 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
+
             context.emit('search', searchFilter.value)
         }
         const search_filter = (value: ContractorSearchFilter) => {
@@ -90,11 +92,9 @@ export default defineComponent({
         const resetFilter = () => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
             searchFilter.value.room_id = undefined
             searchFilter.value.quick_search = undefined
@@ -107,11 +107,9 @@ export default defineComponent({
         const resetFilter_popup = (value: CustomerSearchFilter) => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
             searchFilter.value.room_id = undefined
 

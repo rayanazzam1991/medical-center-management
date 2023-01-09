@@ -1,9 +1,7 @@
-import { DateConsts } from "/@src/models/HR/Attendance/Date/date";
-import { City, CitySearchFilter, defaultCity } from "/@src/models/Others/City/city"
+import { DateConsts, DaysNamePerMonth, DaysPerMonth, defaultDaysPerMonth } from "/@src/models/HR/Attendance/Date/date";
 import { Setting } from "/@src/models/Others/Setting/setting";
-import { getSettings, getSettingsFromStorage } from "/@src/services/Others/Setting/settingService"
-import { useCity } from "/@src/stores/Others/City/cityStore"
-import { Pagination } from "/@src/utils/response"
+import { getSettingsFromStorage, getSettings } from "/@src/services/Others/Setting/settingService";
+import { useDate } from "/@src/stores/HR/Attendance/Date/dateStore";
 
 
 
@@ -34,6 +32,27 @@ export async function getWeekDays() {
     return newWeek
 
 }
+
+
+export async function getDaysPerMonth(year: number) {
+    const dateResponse = useDate()
+    let daysPerMonth: DaysPerMonth[] = await dateResponse.getDaysPerMonthStore(year) ?? []
+    let success: boolean = dateResponse.success ?? false
+    let error_code: string = dateResponse.error_code ?? ''
+    let message: string = dateResponse.message ?? ''
+    return { success, error_code, message, daysPerMonth }
+
+}
+export async function getDaysNamePerMonth(year: number, month: number) {
+    const dateResponse = useDate()
+    let daysName: DaysNamePerMonth[] = await dateResponse.getDaysNamePerMonthStore(year, month) ?? []
+    let success: boolean = dateResponse.success ?? false
+    let error_code: string = dateResponse.error_code ?? ''
+    let message: string = dateResponse.message ?? ''
+    return { success, error_code, message, daysName }
+
+}
+
 
 
 
