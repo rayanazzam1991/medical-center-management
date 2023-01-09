@@ -26,13 +26,13 @@ const router = useRouter()
 const itemStore = useItem()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
-onMounted(async () => {
-    const { items, pagination } = await getItemsList(searchFilter.value)
-    itemsList.value = items
-    paginationVar.value = pagination
-    keyIncrement.value = keyIncrement.value + 1
-    default_per_page.value = pagination.per_page
-});
+
+const { items, pagination } = await getItemsList(searchFilter.value)
+itemsList.value = items
+paginationVar.value = pagination
+keyIncrement.value = keyIncrement.value + 1
+default_per_page.value = pagination.per_page
+
 const changestatusItem = async () => {
     currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
     const { message, success } = await changeItemStatus(currentChangeStatusItem.value)
@@ -204,15 +204,16 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getItemsPerPage" />
-        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
+        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">Showing {{
+            paginationVar.page !=
+                paginationVar.max_page
+                ?
+                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        }} to {{
+    paginationVar.page !=
+        paginationVar.max_page ?
+        paginationVar.page *
+        paginationVar.per_page : paginationVar.total
 }} of {{ paginationVar.total }} entries</h6>
 
         <VPlaceloadText v-if="itemStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />

@@ -138,6 +138,8 @@ declare module 'vue-router/auto/routes' {
     '/userStatus/[id]/': RouteRecordInfo<'/userStatus/[id]/', '/userStatus/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/[id]/edit': RouteRecordInfo<'/userStatus/[id]/edit', '/userStatus/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/add': RouteRecordInfo<'/userStatus/add', '/userStatus/add', Record<never, never>, Record<never, never>>,
+    '/withdrawQuantity': RouteRecordInfo<'/withdrawQuantity', '/withdrawQuantity', Record<never, never>, Record<never, never>>,
+    '/withdrawQuantity/': RouteRecordInfo<'/withdrawQuantity/', '/withdrawQuantity/', Record<never, never>, Record<never, never>>,
   }
 }
 

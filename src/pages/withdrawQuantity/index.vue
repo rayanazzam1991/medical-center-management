@@ -2,64 +2,68 @@
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { addQuantity, defaultAddQuantityItem, ItemHsitoryConsts } from '/@src/models/Warehouse/ItemHistory/itemHistory';
-import { addQuantityService, addItemHistoryFile } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
-import { useItemHistoryForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
+import { withdrawQuantity, defaultWithdrawQuantityItem, ItemHsitoryConsts } from '/@src/models/Warehouse/ItemHistory/itemHistory';
+import { withdrawQuantityService } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
+import { useWithdrawItemForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { addQuantityvalidationSchema } from '/@src/rules/Warehouse/ItemHistory/addQuantityValidation';
+import { withdrawQuantityvalidationSchema } from '/@src/rules/Warehouse/ItemHistory/withdrawQuantityValidation';
 import sleep from '/@src/utils/sleep';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { defaultItemSearchFilter, Item } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
-import { Media } from '/@src/models/Others/Media/media';
-import { error } from 'node:console';
+import { Contractor, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
+import { defaultEmployeeSearchFilter, Employee } from '/@src/models/Employee/employee';
+import { getEmployeesList } from '/@src/services/Employee/employeeService';
+import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 const itemStore = useItem()
+
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Add Quantity')
+viewWrapper.setPageTitle('Withdraw Quantity')
 const head = useHead({
-    title: 'Add Quantity',
+    title: 'Withdraw Quantity',
 })
-const itemHistoryForm = useItemHistoryForm()
-itemHistoryForm.setStep({
+const withdarwQuantityForm = useWithdrawItemForm()
+withdarwQuantityForm.setStep({
     number: 1,
     canNavigate: true,
     skipable: false,
     validateStepFn: async () => {
-        var isValid = await onSubmitAdd()
-        if (isValid) {
-            router.push({
-                path: `/item/${currentaddQuantity.value.item_id}`,
-            })
-        }
+        await onSubmitAdd()
     },
 })
 
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf()
-const pageTitle = ' Add Quantity'
+const pageTitle = 'Withdraw Quantity'
 const phoneCheck = ref<string>('false')
-const currentaddQuantity = ref(defaultAddQuantityItem)
+const currentwithdrawQuantity = ref(defaultWithdrawQuantityItem)
 const selectedCategoryId = ref()
 const selectedSubCategoryId = ref()
 const subcategoeisList = ref<Category[]>([])
 const allCategoriesList = ref<Category[]>([])
-const itemHistoryFiles = ref<Array<Media>>([])
-const filesToUpload = ref<File>()
 const itemHistoryId = ref(0)
+const isType = ref(false)
+const employeesList = ref<Employee[]>([])
+const contractorsList = ref<Contractor[]>([])
+const requesterId = ref()
 
-const getCurrentAddQuantity = async () => {
-    currentaddQuantity.value = itemHistoryForm.data
+const getCurrentWithdrawQuantity = async () => {
+    currentwithdrawQuantity.value = withdarwQuantityForm.dataWithdraw
 }
 const mainCategoriesList = ref<Category[]>([])
 onMounted(async () => {
     const allCategories = await getFilterCategoriesList(defaultCategorySearchFilter)
     allCategoriesList.value = allCategories.categories
     mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
-    await getCurrentAddQuantity();
+    await getCurrentWithdrawQuantity();
+    const { employees } = await getEmployeesList(defaultEmployeeSearchFilter)
+    employeesList.value = employees
+    const { contractors } = await getContractorsList(defaultContractorSearchFilter)
+    contractorsList.value = contractors
 })
 
 const getSubCategoryByCategroy = () => {
@@ -79,66 +83,53 @@ const getItemBySubCategroy = async () => {
     itemsList.value = Item
 }
 onMounted(() => {
-    getCurrentAddQuantity()
+    getCurrentWithdrawQuantity()
 })
 
-const validationSchema = addQuantityvalidationSchema
+const validationSchema = withdrawQuantityvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
         item_id: undefined,
+        user_id: undefined,
         item_quantity: "",
-        add_item_cost: "",
+        withdraw_item_price: "",
         note: "",
-        invoice_number: "",
         status: 1,
     },
 })
-const onAddFile = async (event: any) => {
-    const _file = event.target.files[0] as File
-    let _message = ''
-    if (_file) {
-
-        if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
-            _message = 'Please choose an accepted file type'
-            await sleep(500);
-            notif.error(_message)
-
-        } else if (_file.size > (2 * 1024 * 1024)) {
-            _message = 'File size must be less than 2MB '
-            await sleep(500);
-            notif.error(_message)
-
-        } else {
-
-            filesToUpload.value = _file
-        }
-    }
-}
 
 const onSubmitAdd = handleSubmit(async (values) => {
-    let addQuantityForm = currentaddQuantity.value
-    const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
+    let withdrawQuantityForm = currentwithdrawQuantity.value
+    withdrawQuantityForm.item_id = withdrawQuantityForm.item_id
+    withdrawQuantityForm.item_quantity = withdrawQuantityForm.item_quantity
+    withdrawQuantityForm.withdraw_item_price = withdrawQuantityForm.withdraw_item_price
+    withdrawQuantityForm.status = withdrawQuantityForm.status
+    withdrawQuantityForm.note = withdrawQuantityForm.note
+    if (isType.value == true && requesterId != undefined) {
+        const employee = employeesList.value.find((employee) => employee.id == requesterId.value)
+        withdrawQuantityForm.user_id = employee?.user.id ?? 0
+        withdrawQuantityForm.requester_name = employee?.user.first_name + ' ' + employee?.user.last_name ?? ''
+        withdrawQuantityForm.requester_type = 'Employee'
+    } else if (isType.value == false && requesterId != undefined) {
+        const contractor = contractorsList.value.find((contractor) => contractor.id == requesterId.value)
+        withdrawQuantityForm.user_id = contractor?.user.id ?? 0
+        withdrawQuantityForm.requester_name = contractor?.user.first_name + ' ' + contractor?.user.last_name ?? ''
+        withdrawQuantityForm.requester_type = 'Contractor'
+    }
+    else {
+        return false
+    }
+    const { withdrawQuantity, success, message } = await withdrawQuantityService(withdrawQuantityForm)
     if (success) {
         let formData = new FormData();
-        if (filesToUpload.value != undefined)
-            formData.append('images[]', filesToUpload.value);
-        const { success, message, media } = await addItemHistoryFile(addQuantity.id, formData)
-        if (success) {
-            // @ts-ignore
-            await sleep(500);
-            media[0].file_name = media[0].relative_path
-            media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
-            itemHistoryFiles.value.push(media[0])
-            filesToUpload.value = undefined
-        }
         // @ts-ignore
         notif.dismissAll();
         // @ts-ignore
         await sleep(500)
-        notif.success(`${addQuantity.item.name} ${viewWrapper.pageTitle} was added successfully`);
+        notif.success(`${withdrawQuantity.item.name} ${viewWrapper.pageTitle} was withdrawed successfully`);
 
-        router.push({ path: `/item/${addQuantity.item.id}` });
+        router.push({ path: `/item/${withdrawQuantity.item.id}` });
     }
     else {
         await sleep(500);
@@ -165,9 +156,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel class="required">Level 1</VLabel>
                                     <VControl>
                                         <div class="select">
-                                            <select @change="getSubCategoryByCategroy" v-if="currentaddQuantity"
+                                            <select @change="getSubCategoryByCategroy" v-if="currentwithdrawQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption :value="0">Level 1</VOption>
+                                                <VOption :value="0">Select Level 1</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -178,13 +169,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="item_id">
-                                    <VLabel class="required">
-                                        Level 2
-                                    </VLabel>
+                                    <VLabel class="required">Level 2</VLabel>
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
-                                            v-if="currentaddQuantity" v-model="selectedSubCategoryId">
-                                            <VOption>Level 2</VOption>
+                                            v-if="currentwithdrawQuantity" v-model="selectedSubCategoryId">
+                                            <VOption>Select Level 2</VOption>
                                             <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
                                                 :value="subCategory.id">
                                                 {{ subCategory.name }}
@@ -206,9 +195,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VLabel>
                                     <VControl>
                                         <div class="select">
-                                            <select :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
-                                                v-model="currentaddQuantity.item_id">
-                                                <VOption :value="0">Item</VOption>
+                                            <select :disabled="itemsList.length <= 0" v-if="currentwithdrawQuantity"
+                                                v-model="currentwithdrawQuantity.item_id">
+                                                <VOption :value="0">
+                                                    Select Item
+                                                </VOption>
                                                 <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                                     {{ item.name }}
                                                 </VOption>
@@ -223,8 +214,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="item_quantity">
                                     <VLabel class="required"> Item Quantity</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentaddQuantity.item_quantity" type="number" placeholder=""
-                                            autocomplete="given-item_quantity" />
+                                        <VInput v-model="currentwithdrawQuantity.item_quantity" type="number"
+                                            placeholder="" autocomplete="given-item_quantity" />
                                         <ErrorMessage class="help is-danger" name="item_quantity" />
                                     </VControl>
                                 </VField>
@@ -233,23 +224,25 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <!--Fieldset-->
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField id="add_item_cost">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item Cost</VLabel>
+                                <VField id="withdraw_item_price">
+                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item Price</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentaddQuantity.add_item_cost" type="number" placeholder=""
-                                            autocomplete="given-add_item_cost" />
-                                        <ErrorMessage class="help is-danger" name="add_item_cost" />
+                                        <VInput v-model="currentwithdrawQuantity.withdraw_item_price" type="number"
+                                            placeholder="" autocomplete="given-withdraw_item_price" />
+                                        <ErrorMessage class="help is-danger" name="withdraw_item_price" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField id="status" v-slot="{ field }">
+                                <VField id="status">
                                     <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                     <VControl>
-                                        <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
+                                        <VRadio v-model="currentwithdrawQuantity.status"
+                                            :value="ItemHsitoryConsts.ACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(1)" name="status"
                                             color="success" />
-                                        <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
+                                        <VRadio v-model="currentwithdrawQuantity.status"
+                                            :value="ItemHsitoryConsts.INACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(0)" name="status"
                                             color="warning" />
                                         <ErrorMessage name="status" class="help is-danger" />
@@ -258,55 +251,51 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
 
                         </div>
-                        <!--Fieldset-->
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="note">
-                                    <VLabel class="optinal">Item Note</VLabel>
+                            <div class="column is-6 is-flex is-justify-content">
+                                <VField>
+                                    <VLabel class="required">Requester Type</VLabel>
                                     <VControl>
-                                        <VTextarea v-model="currentaddQuantity.note" />
-                                        <ErrorMessage class="help is-danger" name="note" />
+                                        <VSwitchSegment v-model="isType" label-true="Employee" label-false="Contractor"
+                                            color="success" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6" v-if="employeesList">
+                                <VField>
+                                    <VLabel class="required">Requester Name</VLabel>
+                                    <VControl>
+                                        <div class="select">
+                                            <select v-if="isType" v-model="requesterId">
+                                                <VOption value="0">Employee</VOption>
+                                                <VOption v-for="employee in employeesList" :key="employee.id"
+                                                    :value="employee.id">
+                                                    {{ employee.user.first_name }}
+                                                </VOption>
+                                            </select>
+                                            <select v-else v-model="requesterId">
+                                                <VOption :value="0">Contractor</VOption>
+                                                <VOption v-for="contractor in contractorsList" :key="contractor.user.id"
+                                                    :value="contractor.id">
+                                                    {{ contractor.user.first_name }}
+                                                </VOption>
+                                            </select>
+                                            <!-- <ErrorMessage class="help is-danger" name="user_id" /> -->
+                                        </div>
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
-
+                        <!--Fieldset-->
                         <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <VField id="invoice_number">
-                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Number</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentaddQuantity.invoice_number" type="text" placeholder=""
-                                            autocomplete="given-invoice_number" />
-                                        <ErrorMessage class="help is-danger" name="invoice_number" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                            <div class="column is-6">
-                                <VField>
-                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Image</VLabel>
+                            <div class="column is-12">
+                                <VField id="note">
+                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Note</VLabel>
                                     <VControl>
-                                        <div class="file has-name">
-                                            <label class="file-label">
-                                                <input class="file-input" type="file" v-on:change="onAddFile" />
-                                                <span class="file-cta">
-                                                    <span class="file-icon">
-                                                        <i class="fas fa-cloud-upload-alt"></i>
-                                                    </span>
-                                                    <span class="file-label"> Choose a Image </span>
-                                                </span>
-                                                <span class="file-name light-text">
-                                                    {{ filesToUpload?.name ?? 'Select File' }}
-                                                </span>
-                                            </label>
-                                        </div>
+                                        <VTextarea v-model="currentwithdrawQuantity.note" />
+                                        <ErrorMessage class="help is-danger" name="note" />
                                     </VControl>
                                 </VField>
-                                <h6 class="font ml-2 mt-2 help">Max size: 2 MB | Accepted image… types :
-                                    png,
-                                    jpg,
-                                    webp
-                                </h6>
                             </div>
                         </div>
                     </div>
