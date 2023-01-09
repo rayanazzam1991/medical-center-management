@@ -170,7 +170,8 @@ const cardColor = computed(() => {
 <style scoped lang="scss">
 .card-size {
     min-height: 100%;
-    width: 124px;
+    max-height: 120px ;
+    width: 100px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

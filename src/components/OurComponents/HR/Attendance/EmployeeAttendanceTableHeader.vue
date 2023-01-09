@@ -25,7 +25,7 @@ export default defineComponent({
             default: 1,
         },
         selected_month: {
-            type:String,
+            type: String,
             default: '1',
 
         },
@@ -35,13 +35,13 @@ export default defineComponent({
         },
         days_per_month: {
             type: Number,
-            default:28
+            default: 28
         }
 
     },
 
 
-    setup(props, context)  {
+    setup(props, context) {
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -65,9 +65,9 @@ export default defineComponent({
         const perPage = ref(pagination.per_page)
         const searchFilter = ref(defaultEmployeeAttendanceSearchFilter)
         const is_reseted = ref(false)
-        const months= DateConsts.MONTHS
+        const months = DateConsts.MONTHS
         const keyIncrement = ref(0)
-        const quickSearch = async  () => {
+        const quickSearch = async () => {
             if (quickSearchField.value != '') {
 
                 searchFilter.value.name = quickSearchField.value
@@ -84,7 +84,7 @@ export default defineComponent({
                 searchFilter.value.quick_search = undefined
             }
             searchFilter.value.per_page = perPage.value
-                const {daysPerMonth} = await getDaysPerMonth(selectedYear.value)
+            const { daysPerMonth } = await getDaysPerMonth(selectedYear.value)
             selectedMonthDays.value = daysPerMonth.find((month) => month.month == selectedMonth.value)?.number_of_days ?? 28
             searchFilter.value.per_page = perPage.value
             searchFilter.value.attendance_from = `${selectedYear.value}-${selectedMonth.value}-01`
@@ -107,7 +107,7 @@ export default defineComponent({
             searchFilter.value.per_page = perPage.value
             searchFilter.value.page = 1
             const daysPerMonth = selectedMonthDays.value
-            context.emit('search', searchFilter.value , daysPerMonth)
+            context.emit('search', searchFilter.value, daysPerMonth)
         }
         const search_filter = (value: EmployeeAttendanceSearchFilter) => {
             searchFilter.value = value
@@ -148,13 +148,13 @@ export default defineComponent({
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
             statusesList.value = userstatuses
         })
-        return { AttendanceConsts ,months,selectedMonth,selectedYear, keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
+        return { AttendanceConsts, months, selectedMonth, selectedYear, keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
 
 <template>
-    <form class="form-layout" v-on:submit.prevent="quickSearch" >
+    <form class="form-layout" v-on:submit.prevent="quickSearch">
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="form-header-inner">
@@ -165,15 +165,20 @@ export default defineComponent({
                             </VControl>
                             <VControl class="mr-2">
                                 <VSelect v-model="selectedMonth">
-                                    <VOption :key="index" v-for="(month , index) in months" :value="index+1 < 10 ? '0' + (index+1).toString() : (index+1).toString()"> {{ month }}</VOption>
+                                    <VOption :key="index" v-for="(month, index) in months"
+                                        :value="index + 1 < 10 ? '0' + (index + 1).toString() : (index + 1).toString()">
+                                        {{
+                                            month
+                                        }}</VOption>
                                 </VSelect>
                             </VControl>
                             <VControl class="mr-2">
                                 <VSelect v-model="selectedYear">
-                                    <VOption :key="year" v-for="year in (100)" :value="year + 2000">{{ year + 2000 }}</VOption>
+                                    <VOption :key="year" v-for="year in (100)" :value="year + 2000">{{ year + 2000 }}
+                                    </VOption>
                                 </VSelect>
                             </VControl>
-                                                        <VIconButton class="mr-2"  v-on:click="quickSearch" icon="feather:search" />
+                            <VIconButton class="mr-2" v-on:click="quickSearch" icon="feather:search" />
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                                 color="danger" />
@@ -201,31 +206,71 @@ export default defineComponent({
                             </VControl>
                         </div>
                     </div>
-
                 </div>
                 <h6 class="is-size-7 mt-2"><span class="has-text-info">Note: </span>
-           <span class="blue">  {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.ATTEND) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND) }} |
-            {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_ABSENCE) }} |
-            <span class="green">{{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_ABSENCE) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_ABSENCE) }} |
-            <span class="red">{{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.UNJUTIFIED_ABSENCE) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUTIFIED_ABSENCE) }} |
-            {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }} =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }} |
-            <span class="green">{{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE) }} |
-            <span class="red">{{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE) }} |
-            <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.VACATION) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.VACATION) }} |
-            <span class="yellow">{{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.MISSING_CHECK) }}</span> =
-            {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.MISSING_CHECK) }} |
-            - = No Data
+                    <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.ATTEND) }}</span> ➡
+                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND) }}  | 
+                    <Tippy placement="bottom">
+                        {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
+                        Absence  | 
+                        <template #content>
+                            <p>
+                                {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
+                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_ABSENCE) }}
+                            </p>
+                            <p>
+                                <span class="green">{{
+                                    AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_ABSENCE)
+                                }}</span> ➡
+                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_ABSENCE) }}
+                            </p>
+                            <p>
+                                <span class="red">{{
+                                    AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.UNJUTIFIED_ABSENCE)
+                                }}</span>
+                                ➡
+                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUTIFIED_ABSENCE) }}
+                            </p>
+                        </template>
+                    </Tippy>
+                    <Tippy placement="bottom">
+                        {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }} ➡
+                        Partial Absence  | 
+                        <template #content>
+                            <p>
+                                {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
+                                ➡
+                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
+                            </p>
+                            <p>
+                                <span class="green">{{
+                                    AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE)
+                                }}</span> ➡
+                                {{
+                                    AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE)
+                                }}
+                            </p>
+                            <p>
+                                <span class="red">{{
+                                    AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE)
+                                }}</span>
+                                ➡
+                                {{
+                                    AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE)
+                                }}
+                            </p>
+                        </template>
+                    </Tippy>
+                    <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.VACATION) }}</span>
+                    ➡
+                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.VACATION) }}  | 
+                    <span class="yellow">{{
+                        AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.MISSING_CHECK)
+                    }}</span> ➡
+                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.MISSING_CHECK) }}
 
 
-        </h6>
+                </h6>
 
             </div>
         </div>
@@ -236,20 +281,24 @@ export default defineComponent({
 
 <style scoped  lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
-.blue{
+
+.blue {
     color: rgb(0, 0, 255) !important;
 }
-.red{
+
+.red {
     color: rgb(255, 0, 0) !important;
 }
-.grey{
+
+.grey {
     color: grey !important;
 }
-.yellow{
-    color: rgb(255, 208, 0) !important; 
-}
-.green{
-    color: rgb(0, 255, 0) !important;
+
+.yellow {
+    color: rgb(255, 208, 0) !important;
 }
 
+.green {
+    color: rgb(0, 255, 0) !important;
+}
 </style>

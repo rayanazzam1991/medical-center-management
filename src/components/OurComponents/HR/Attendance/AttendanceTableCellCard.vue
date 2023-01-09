@@ -169,7 +169,7 @@ const cardColor = computed(() => {
 <template>
     <div v-if="clickable && !isHeader" @click="() => emits('click')" :class="[cardRadius, cardColor]" class="card-size cursor ">
         <div class="title-size center">
-            <h3 class=" mb-2 has-text-weight-normal" :class="[titleSizeStyle, textColor , props.statusColor]" >{{ props.title }}</h3>
+            <h3 class=" mb-2 has-text-weight-semibold" :class="[titleSizeStyle, textColor , props.statusColor]" >{{ props.title }}</h3>
             <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
             <p class="" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
         </div>
@@ -196,7 +196,7 @@ const cardColor = computed(() => {
 <style scoped lang="scss">
 .header{
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 5px;
 
     width: 160px !important;
 
@@ -216,8 +216,8 @@ const cardColor = computed(() => {
 
 }
 .main-size {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: px;
+    padding-right: 5px;
 
     width: 120px !important;
 }
@@ -233,8 +233,8 @@ const cardColor = computed(() => {
     padding: 0;
 }
 .main-card {
-    padding-right: 10px ;
-    padding-left: 10px ;
+    padding-right: 5px ;
+    padding-left: 5px ;
     padding-top: 0;
     padding-bottom: 0;
     width: 120px !important;
