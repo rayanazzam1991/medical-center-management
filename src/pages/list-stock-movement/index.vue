@@ -88,10 +88,10 @@ const itemSort = async (value: string) => {
     await search(searchFilter.value)
 }
 const noteTrim = (value: string) => {
-    if(value == undefined){
+    if (value == undefined) {
         return ''
     }
-    else{
+    else {
         let trimmedString = value?.substring(0, 10);
         return trimmedString + '...'
     }
@@ -158,8 +158,6 @@ const columns = {
         searchable: true,
         label: 'cost',
         grow: true,
-
-
     },
     withdraw_item_price: {
         sortable: true,
@@ -203,27 +201,6 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
-    // status: {
-    //     align: 'center',
-    //     renderRow: (row: any) =>
-    //         h(
-    //             VTag,
-    //             {
-    //                 rounded: true,
-    //                 color:
-    //                     row.status === ItemHsitoryConsts.INACTIVE
-    //                         ? 'orange'
-    //                         : row.status === ItemHsitoryConsts.ACTIVE
-    //                             ? 'success'
-    //                             : undefined,
-    //             },
-    //             {
-    //                 default() {
-    //                     return ItemHsitoryConsts.showStatusName(row.status)
-    //                 },
-    //             }
-    //         ),
-    // },
 } as const
 </script>
 
@@ -297,7 +274,6 @@ const columns = {
     </VModal>
 </template>
 <style  lang="scss">
-
 .tooltip {
     position: relative;
     display: inline-block;
