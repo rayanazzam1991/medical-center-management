@@ -93,7 +93,7 @@ export default defineComponent({
                     <VControl>
                         <div class="select">
                             <select @change="getSubCategory" v-model="searchParent">
-                                <VOption>Level 1</VOption>
+                                <VOption >Level 1</VOption>
                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">
                                     {{ parent.name }}
                                 </VOption>

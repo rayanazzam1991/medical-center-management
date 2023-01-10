@@ -113,7 +113,7 @@ const { handleSubmit } = useForm({
         user_status_id: "",
         starting_date: "",
         payment_percentage: "",
-        end_date: "",
+        end_date: undefined,
         speciality_id: ""
     },
 })
@@ -125,7 +125,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
     if (phoneCheck.value === 'false') {
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
-        contractorForm.data.end_date = customerData.end_date
+        if(customerData.end_date != ''){
+            contractorForm.data.end_date = customerData.end_date 
+
+        }else {
+            contractorForm.data.end_date = undefined 
+
+        }
         contractorForm.data.speciality_id = customerData.speciality_id
         contractorForm.data.payment_percentage = customerData.payment_percentage
         contractorForm.userForm.first_name = userData.first_name
@@ -327,7 +333,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="end_date">
-                                    <VLabel class="required">End date </VLabel>
+                                    <VLabel >End date </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentContractor.end_date" type="date" />
                                         <ErrorMessage class="help is-danger" name="end_date" />

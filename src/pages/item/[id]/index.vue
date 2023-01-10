@@ -8,11 +8,12 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
-import { getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
+import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
+import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
 
 
 
@@ -23,8 +24,11 @@ const itemHistoryStore = useitemHistory()
 const currentItem = ref<Item>(defaultItem)
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
+const changeHistoryStatusPopup = ref(false)
 const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
+const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
+const itemHistoryChangeStatus = ref<itemHistory>(defaultItemHistory)
 const keyIncrement = ref(1)
 const loading = ref(false)
 const allItemHistoriesList = ref<itemHistory[]>([])
@@ -86,7 +90,6 @@ const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
     await search(searchFilter.value)
 }
 
-
 const getItemHistoriesPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     await search(searchFilter.value)
@@ -126,6 +129,27 @@ const onClickEditMainInfo = () => {
     })
 }
 
+const onOpenHistory = () => {
+    changeHistoryStatusPopup.value = !changeHistoryStatusPopup.value
+}
+
+const changestatusItemHistory = async () => {
+    currentChangeStatusItemHistory.value.id = currentChangeStatusItemHistory.value.id
+    changeHistoryStatusPopup.value = false
+    const { message, success } = await changeItemHistoryStatus(currentChangeStatusItemHistory.value)
+    if (success) {
+        await search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        await sleep(200);
+        // @ts-ignore
+        notif.success(`status was edited successfully`)
+    } else {
+        await sleep(200);
+        notif.error(message)
+    }
+}
+
 const columns = {
     type: {
         sortable: true,
@@ -159,14 +183,12 @@ const columns = {
 
     },
     add_item_cost: {
-        sortable: true,
         align: 'center',
         searchable: true,
         label: 'cost',
         grow: true,
     },
     withdraw_item_price: {
-        sortable: true,
         align: 'center',
         searchable: true,
         label: 'Price',
@@ -180,23 +202,39 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        label: 'Create_at',
+        label: 'Create at',
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
         sortable: true,
     },
-    created_by: {
-        searchable: true,
-        grow: true,
+    invoice_number: {
         align: 'center',
-        label: 'Created_by',
-        renderRow: (row: any) =>
-            h('span', row?.created_by?.first_name)
+        searchable: true,
+        label: 'invoice number',
+        grow: true,
     },
+  Image: {
+    align: 'center',
+    grow: true,
+    label: 'Invoice',
+    renderRow: (row: any) => {
+        if(row?.file?.length > 0) {
+           return h( IconButton , { 
+                icon : 'fas fa-eye',
+                image_path: import.meta.env.VITE_MEDIA_BASE_URL + row?.file[0]?.relative_path,
+            });
+        } else {
+          return  h( 'span' , '');
+
+        }
+    },
+  },
   status: {
     align: 'center',
+    grow: true,
+
     renderRow: (row: any) =>
       h(
         VTag,
@@ -215,6 +253,22 @@ const columns = {
           },
         }
       ),
+
+  },
+  action: {
+    align: 'center',
+    grow: true,
+    label: 'edit status',
+    renderRow: (row: any) =>
+      h( IconButton , { 
+        icon : 'fas fa-edit',
+        onClick: () => {
+                    keyIncrement.value++
+                    currentChangeStatusItemHistory.value = row
+                    changeHistoryStatusPopup.value = true
+                    
+                },
+      }),
 
   },
 } as const
@@ -421,7 +475,7 @@ const columns = {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <VField class="column " id="user_status_id">
+                            <VField class="column " id="status">
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
@@ -438,6 +492,34 @@ const columns = {
         </template>
         <template #action="{ close }">
             <VButton color="primary" raised @click="changestatusItem()">Confirm</VButton>
+        </template>
+    </VModal>
+    <VModal :key="keyIncrement" title="Change User Status" :open="changeHistoryStatusPopup" actions="center" 
+    @close="changeHistoryStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="status">
+                            
+                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.INACTIVE"
+                                        :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
+                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.ACTIVE"
+                                        :label="ItemConsts.showStatusName(1)" name="status" color="success" />
+                                    <ErrorMessage class="help is-danger" name="status" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusItemHistory()">Confirm</VButton>
         </template>
     </VModal>
 </template>

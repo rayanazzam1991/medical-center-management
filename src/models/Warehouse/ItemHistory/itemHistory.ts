@@ -79,8 +79,8 @@ export const defaultItemHistorySearchFilter: ItemHistorySearchFilter = {
     type: undefined,
     page: undefined,
     per_page: undefined,
-    order_by: undefined,
-    order: undefined,
+    order_by: 'created_at',
+    order: 'desc',
 }
 export const defaultAddQuantityItem: addQuantity = {
     id: 0,

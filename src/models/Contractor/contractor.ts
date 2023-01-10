@@ -15,8 +15,8 @@ export interface Contractor {
 }
 export interface CreateContractor {
     id?: number
-    starting_date?: string
-    end_date: string
+    starting_date: string
+    end_date?: string
     speciality_id: number
     payment_percentage?: number
     user: CreateUpdateUser
@@ -25,8 +25,8 @@ export interface CreateContractor {
 }
 export interface UpdateContractor {
     id?: number
-    starting_date?: string
-    end_date: string
+    starting_date: string
+    end_date?: string
     speciality_id: number
     payment_percentage?: number
     user: CreateUpdateUser
@@ -59,7 +59,7 @@ export const defaultCreateContractor: CreateContractor = {
     user: defaultCreateUpdateUser,
     services: [],
     is_completed: false,
-    end_date: '',
+    end_date: undefined,
     speciality_id: 0,
 
 
@@ -122,7 +122,7 @@ export const defaultContractorFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
-    uploaded_by:undefined
+    uploaded_by: undefined
 
 }
 
