@@ -8,15 +8,18 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
+import VTag from '/@src/components/base/tags/VTag.vue'
+import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 
 
 
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
+const itemHistoryStore = useitemHistory()
 const currentItem = ref<Item>(defaultItem)
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
@@ -83,7 +86,8 @@ const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
     await search(searchFilter.value)
 }
 
-const getItemsPerPage = async (pageNum: number) => {
+
+const getItemHistoriesPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     await search(searchFilter.value)
 }
@@ -121,6 +125,99 @@ const onClickEditMainInfo = () => {
         path: `/item/${itemId.value}/edit`
     })
 }
+
+const columns = {
+    type: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        grow: true,
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row.type === 'in'
+                            ? 'success'
+                            : row.type === 'out'
+                                ? 'danger'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return row.type
+                    },
+                }
+            ),
+    },
+    item_quantity: {
+        align: 'center',
+        searchable: true,
+        grow: true,
+        label: 'quantity',
+
+    },
+    add_item_cost: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        label: 'cost',
+        grow: true,
+    },
+    withdraw_item_price: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        label: 'Price',
+        grow: true,
+    },
+    requester_name: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: 'requester',
+    },
+    created_at: {
+        align: 'center',
+        label: 'Create_at',
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+    },
+    created_by: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: 'Created_by',
+        renderRow: (row: any) =>
+            h('span', row?.created_by?.first_name)
+    },
+  status: {
+    align: 'center',
+    renderRow: (row: any) =>
+      h(
+        VTag,
+        {
+          rounded: true,
+          color:
+            row?.status === ItemHsitoryConsts.INACTIVE
+              ? 'orange'
+              : row?.status === ItemHsitoryConsts.ACTIVE
+                ? 'success'
+                : undefined,
+        },
+        {
+          default() {
+            return ItemHsitoryConsts.showStatusName(row?.status)
+          },
+        }
+      ),
+
+  },
+} as const
 
 </script>
 <template>
@@ -266,7 +363,48 @@ const onClickEditMainInfo = () => {
                         <div class="column is-12">
                             <div class="project-details-card">
                                 <ItemHistoryTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-                                    :button_name="`Add ${viewWrapper.pageTitle}`" />
+                                    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+                                    :pagination="paginationVar" :default_per_page="default_per_page"
+                                    @resetFilter="resetFilter" />
+                                <VFlexTableWrapper :columns="columns" :data="itemHistoryList" @update:sort="itemSort">
+                                    <VFlexTable separators clickable>
+                                        <template #body>
+                                            <div v-if="itemHistoryStore?.loading" class="flex-list-inner">
+                                                <div v-for="key in paginationVar.per_page" :key="key"
+                                                    class="flex-table-item">
+                                                    <VFlexTableCell>
+                                                        <VPlaceload />
+                                                    </VFlexTableCell>
+                                                </div>
+                                            </div>
+                                            <div v-else-if="itemHistoryList.length === 0" class="flex-list-inner">
+                                                <VPlaceholderSection title="No matches"
+                                                    subtitle="There is no data that match your search." class="my-6">
+                                                </VPlaceholderSection>
+                                            </div>
+                                        </template>
+                                    </VFlexTable>
+                                    <VFlexPagination v-if="(itemHistoryList.length != 0 && paginationVar.max_page != 1)"
+                                        :current-page="paginationVar.page" class="mt-6"
+                                        :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
+                                        :max-links-displayed="3" no-router
+                                        @update:current-page="getItemHistoriesPerPage" />
+                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">Showing {{
+                                        paginationVar.page !=
+                                            paginationVar.max_page
+                                            ?
+                                            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1
+                                                ? 1 : paginationVar.total
+                                    }} to {{
+    paginationVar.page !=
+        paginationVar.max_page ?
+        paginationVar.page *
+        paginationVar.per_page : paginationVar.total
+}} of {{ paginationVar.total }} entries</h6>
+
+                                    <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
+                                        class="mx-2" />
+                                </VFlexTableWrapper>
                             </div>
                         </div>
 
