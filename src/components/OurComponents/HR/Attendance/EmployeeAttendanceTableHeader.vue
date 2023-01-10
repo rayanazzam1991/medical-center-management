@@ -36,7 +36,17 @@ export default defineComponent({
         days_per_month: {
             type: Number,
             default: 28
-        }
+        },
+        current_year: {
+            type: String,
+            default: '1',
+
+        },
+        current_month: {
+            type: String,
+            default: '2023',
+        },
+
 
     },
 
@@ -57,7 +67,10 @@ export default defineComponent({
         const daysPerMonth = ref()
         selectedMonth.value = props.selected_month
         selectedYear.value = props.selected_year
+        const currentYear = props.current_year
+        const currentMonth = props.current_month
         daysPerMonth.value = props.days_per_month
+
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchFilterPop = ref(false)
@@ -125,8 +138,8 @@ export default defineComponent({
             searchFilter.value.department_id = undefined
             searchFilter.value.quick_search = undefined
             quickSearchField.value = ''
-            selectedYear.value = props.selected_year
-            selectedMonth.value = props.selected_month
+            selectedYear.value = currentYear
+            selectedMonth.value = currentMonth
             is_reseted.value = true
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)

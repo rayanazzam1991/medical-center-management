@@ -209,7 +209,6 @@ const columns = {
             h(
                 TableCellCard, {
                 title: row?.user?.first_name + ' ' + row?.user?.last_name,
-                subtitle2: `${row?.position?.name} | ${row?.user?.room?.department?.name}`,
                 subtitle: `${row?.user?.phone_number}`,
                 titleSize: 'medium',
                 clickable: false,
