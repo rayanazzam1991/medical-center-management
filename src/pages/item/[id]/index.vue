@@ -8,20 +8,27 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
-import { getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
+import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
+import VTag from '/@src/components/base/tags/VTag.vue'
+import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
+import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
 
 
 
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
+const itemHistoryStore = useitemHistory()
 const currentItem = ref<Item>(defaultItem)
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
+const changeHistoryStatusPopup = ref(false)
 const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
+const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
+const itemHistoryChangeStatus = ref<itemHistory>(defaultItemHistory)
 const keyIncrement = ref(1)
 const loading = ref(false)
 const allItemHistoriesList = ref<itemHistory[]>([])
@@ -83,7 +90,7 @@ const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
     await search(searchFilter.value)
 }
 
-const getItemsPerPage = async (pageNum: number) => {
+const getItemHistoriesPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     await search(searchFilter.value)
 }
@@ -121,6 +128,150 @@ const onClickEditMainInfo = () => {
         path: `/item/${itemId.value}/edit`
     })
 }
+
+const onOpenHistory = () => {
+    changeHistoryStatusPopup.value = !changeHistoryStatusPopup.value
+}
+
+const changestatusItemHistory = async () => {
+    currentChangeStatusItemHistory.value.id = currentChangeStatusItemHistory.value.id
+    changeHistoryStatusPopup.value = false
+    const { message, success } = await changeItemHistoryStatus(currentChangeStatusItemHistory.value)
+    if (success) {
+        await search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        await sleep(200);
+        // @ts-ignore
+        notif.success(`status was edited successfully`)
+    } else {
+        await sleep(200);
+        notif.error(message)
+    }
+}
+
+const columns = {
+    type: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        grow: true,
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row.type === 'in'
+                            ? 'success'
+                            : row.type === 'out'
+                                ? 'danger'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return row.type
+                    },
+                }
+            ),
+    },
+    item_quantity: {
+        align: 'center',
+        searchable: true,
+        grow: true,
+        label: 'quantity',
+
+    },
+    add_item_cost: {
+        align: 'center',
+        searchable: true,
+        label: 'cost',
+        grow: true,
+    },
+    withdraw_item_price: {
+        align: 'center',
+        searchable: true,
+        label: 'Price',
+        grow: true,
+    },
+    requester_name: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: 'requester',
+    },
+    created_at: {
+        align: 'center',
+        label: 'Create at',
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+    },
+    invoice_number: {
+        align: 'center',
+        searchable: true,
+        label: 'invoice number',
+        grow: true,
+    },
+  Image: {
+    align: 'center',
+    grow: true,
+    label: 'Invoice',
+    renderRow: (row: any) => {
+        if(row?.file?.length > 0) {
+           return h( IconButton , { 
+                icon : 'fas fa-eye',
+                image_path: import.meta.env.VITE_MEDIA_BASE_URL + row?.file[0]?.relative_path,
+            });
+        } else {
+          return  h( 'span' , '');
+
+        }
+    },
+  },
+  status: {
+    align: 'center',
+    grow: true,
+
+    renderRow: (row: any) =>
+      h(
+        VTag,
+        {
+          rounded: true,
+          color:
+            row?.status === ItemHsitoryConsts.INACTIVE
+              ? 'orange'
+              : row?.status === ItemHsitoryConsts.ACTIVE
+                ? 'success'
+                : undefined,
+        },
+        {
+          default() {
+            return ItemHsitoryConsts.showStatusName(row?.status)
+          },
+        }
+      ),
+
+  },
+  action: {
+    align: 'center',
+    grow: true,
+    label: 'edit status',
+    renderRow: (row: any) =>
+      h( IconButton , { 
+        icon : 'fas fa-edit',
+        onClick: () => {
+                    keyIncrement.value++
+                    currentChangeStatusItemHistory.value = row
+                    changeHistoryStatusPopup.value = true
+                    
+                },
+      }),
+
+  },
+} as const
 
 </script>
 <template>
@@ -266,7 +417,48 @@ const onClickEditMainInfo = () => {
                         <div class="column is-12">
                             <div class="project-details-card">
                                 <ItemHistoryTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-                                    :button_name="`Add ${viewWrapper.pageTitle}`" />
+                                    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+                                    :pagination="paginationVar" :default_per_page="default_per_page"
+                                    @resetFilter="resetFilter" />
+                                <VFlexTableWrapper :columns="columns" :data="itemHistoryList" @update:sort="itemSort">
+                                    <VFlexTable separators clickable>
+                                        <template #body>
+                                            <div v-if="itemHistoryStore?.loading" class="flex-list-inner">
+                                                <div v-for="key in paginationVar.per_page" :key="key"
+                                                    class="flex-table-item">
+                                                    <VFlexTableCell>
+                                                        <VPlaceload />
+                                                    </VFlexTableCell>
+                                                </div>
+                                            </div>
+                                            <div v-else-if="itemHistoryList.length === 0" class="flex-list-inner">
+                                                <VPlaceholderSection title="No matches"
+                                                    subtitle="There is no data that match your search." class="my-6">
+                                                </VPlaceholderSection>
+                                            </div>
+                                        </template>
+                                    </VFlexTable>
+                                    <VFlexPagination v-if="(itemHistoryList.length != 0 && paginationVar.max_page != 1)"
+                                        :current-page="paginationVar.page" class="mt-6"
+                                        :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
+                                        :max-links-displayed="3" no-router
+                                        @update:current-page="getItemHistoriesPerPage" />
+                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">Showing {{
+                                        paginationVar.page !=
+                                            paginationVar.max_page
+                                            ?
+                                            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1
+                                                ? 1 : paginationVar.total
+                                    }} to {{
+    paginationVar.page !=
+        paginationVar.max_page ?
+        paginationVar.page *
+        paginationVar.per_page : paginationVar.total
+}} of {{ paginationVar.total }} entries</h6>
+
+                                    <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
+                                        class="mx-2" />
+                                </VFlexTableWrapper>
                             </div>
                         </div>
 
@@ -283,7 +475,7 @@ const onClickEditMainInfo = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <VField class="column " id="user_status_id">
+                            <VField class="column " id="status">
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
@@ -300,6 +492,34 @@ const onClickEditMainInfo = () => {
         </template>
         <template #action="{ close }">
             <VButton color="primary" raised @click="changestatusItem()">Confirm</VButton>
+        </template>
+    </VModal>
+    <VModal :key="keyIncrement" title="Change User Status" :open="changeHistoryStatusPopup" actions="center" 
+    @close="changeHistoryStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column " id="status">
+                            
+                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VControl>
+                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.INACTIVE"
+                                        :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
+                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.ACTIVE"
+                                        :label="ItemConsts.showStatusName(1)" name="status" color="success" />
+                                    <ErrorMessage class="help is-danger" name="status" />
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusItemHistory()">Confirm</VButton>
         </template>
     </VModal>
 </template>

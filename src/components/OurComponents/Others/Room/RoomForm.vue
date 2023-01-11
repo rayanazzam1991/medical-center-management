@@ -11,6 +11,7 @@ import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
 import sleep from "/@src/utils/sleep"
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import { BaseConsts } from '/@src/utils/consts/base'
+import { Notyf } from 'notyf'
 
 
 export default defineComponent({
@@ -30,7 +31,7 @@ export default defineComponent({
             title: 'Room',
         })
         const roomStore = useRoom()
-        const notif = useNotyf()
+        const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
@@ -53,21 +54,17 @@ export default defineComponent({
             }
             const { room } = await getRoom(roomId.value)
             currentRoom.value = room != undefined ? room : defaultRoom
-
         }
         const departmentsList = ref<Department[]>([])
         onMounted(async () => {
-            let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+            let departmentSearchFilter  = {} as DepartmentSearchFilter
             departmentSearchFilter.status = BaseConsts.ACTIVE
             const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
         })
         onMounted(() => {
             getCurrentRoom()
-        }
-        )
-
-
+        })
         const validationSchema = roomvalidationSchema
 
         const { handleSubmit } = useForm({
@@ -84,6 +81,7 @@ export default defineComponent({
                 department_id: 0,
             },
         })
+
 
         const onSubmit = async (method: String) => {
             if (method == 'Add') {

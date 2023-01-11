@@ -29,20 +29,20 @@ class DateConsts extends BaseConsts {
     static readonly SATURDAY = 6;
     static readonly WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wedensday', 'Thursday', 'Friday', 'Saturday'];
     public static getDayOfWeekNumber(day_name: string) {
-        const _day_name = day_name.toUpperCase()
-        if (_day_name == 'SUNDAY')
+        const dayName = day_name.toUpperCase()
+        if (dayName == 'SUNDAY')
             return 0;
-        if (_day_name == 'MONDAY')
+        if (dayName == 'MONDAY')
             return 1;
-        if (_day_name == 'TUESDAY')
+        if (dayName == 'TUESDAY')
             return 2;
-        if (_day_name == 'WEDNESDAY')
+        if (dayName == 'WEDNESDAY')
             return 3;
-        if (_day_name == 'THURSDAY')
+        if (dayName == 'THURSDAY')
             return 4;
-        if (_day_name == 'FRIDAY')
+        if (dayName == 'FRIDAY')
             return 5;
-        if (_day_name == 'SATURDAY')
+        if (dayName == 'SATURDAY')
             return 6;
         else return -1;
     }
@@ -60,6 +60,34 @@ class DateConsts extends BaseConsts {
     static readonly NOVEMBER = 11
     static readonly DECEMBER = 12
     static readonly MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    public static getMonthNumber(month_name: string) {
+        const MonthName = month_name.toUpperCase()
+        if (MonthName == 'JANUARY')
+            return 1;
+        if (MonthName == 'FEBRUARY')
+            return 2;
+        if (MonthName == 'MARCH')
+            return 3;
+        if (MonthName == 'APRIL')
+            return 4;
+        if (MonthName == 'MAY')
+            return 5;
+        if (MonthName == 'JUNE')
+            return 6;
+        if (MonthName == 'JULY')
+            return 7;
+        if (MonthName == 'AUGUST')
+            return 8;
+        if (MonthName == 'SPETEMBER')
+            return 9;
+        if (MonthName == 'OCTOBER')
+            return 10;
+        if (MonthName == 'NOVEMBER')
+            return 11;
+        if (MonthName == 'DECEMBER')
+            return 12;
+        else return -1;
+    }
 
 
 }
