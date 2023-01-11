@@ -61,7 +61,7 @@ const titleSizeStyle = computed(() => {
         return 'is-size-5'
     }
 
-    return 'is-size-6'
+    return 'is-size-7'
 })
 const subtitleColor = computed(() => {
     if (props.color === 'primary') {
@@ -170,7 +170,6 @@ const cardColor = computed(() => {
 <style scoped lang="scss">
 .card-size {
     min-height: 100%;
-    max-height: 90px ;
     width: 100px;
     display: flex;
     flex-wrap: wrap;

@@ -2,8 +2,8 @@
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { defaultContractorSearchFilter } from '/@src/models/Contractor/contractor'
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room'
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 
 
 export default defineComponent({
@@ -85,9 +85,13 @@ export default defineComponent({
         const roomsList = ref<Room[]>([])
 
         onMounted(async () => {
-            const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+            let roomSearchFilter = {} as RoomSearchFilter
+            roomSearchFilter.per_page = 500
+            const { rooms } = await getRoomsList(roomSearchFilter)
             roomsList.value = rooms
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+            let userStatusSearchFilter = {} as UserStatusSearchFilter
+            userStatusSearchFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
             statusesList.value = userstatuses
 
         })

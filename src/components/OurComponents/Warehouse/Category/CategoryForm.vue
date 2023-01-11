@@ -2,12 +2,14 @@
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { defaultCategory, Category, CategoryConsts, defaultCreateUpdateCategory, defaultMainCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { defaultCategory, Category, CategoryConsts, defaultCreateUpdateCategory, defaultMainCategorySearchFilter, CategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getCategory, addCategory, editCategory, getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { categoryvalidationSchema } from '/@src/rules/Warehouse/Category/categoryAddValidation';
 import sleep from "/@src/utils/sleep";
 import { useCategory } from '/@src/stores/Warehouse/Category/CategoryStore';
+import { BaseConsts } from '/@src/utils/consts/base';
+import { Notyf } from 'notyf';
 
 export default defineComponent({
     props: {
@@ -24,7 +26,7 @@ export default defineComponent({
             title: "Category",
         });
         const categoryStore = useCategory()
-        const notif = useNotyf()
+        const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
@@ -36,7 +38,6 @@ export default defineComponent({
         const categoryId = ref(0);
         const isCategory = ref(false)
         const keyIncrement = ref(0)
-        // @ts-ignore
         categoryId.value = route.params?.id as number ?? 0;
         const getCurrentCategory = async () => {
             if (categoryId.value === 0) {
@@ -52,7 +53,11 @@ export default defineComponent({
                 if (currentCategory.value.parent != undefined) {
                     isCategory.value = true
                     keyIncrement.value++
-                    const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
+                    let mainCategorySearchFilter = {} as CategorySearchFilter
+                    mainCategorySearchFilter.per_page = 500
+                    mainCategorySearchFilter.status = BaseConsts.ACTIVE
+                    mainCategorySearchFilter.is_main_category = true
+                    const { categories } = await getCategoriesList(mainCategorySearchFilter)
                     mainCategoriesList.value = categories
                 }
             }
@@ -60,7 +65,11 @@ export default defineComponent({
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
             await getCurrentCategory();
-            const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
+            let mainCategorySearchFilter = {} as CategorySearchFilter
+            mainCategorySearchFilter.status = BaseConsts.ACTIVE
+            mainCategorySearchFilter.per_page = 500
+            mainCategorySearchFilter.is_main_category = true
+            const { categories } = await getCategoriesList(mainCategorySearchFilter)
             mainCategoriesList.value = categories
         });
         const validationSchema = categoryvalidationSchema
@@ -106,10 +115,8 @@ export default defineComponent({
             }
             const { success, message, category } = await addCategory(categoryForm);
             if (success) {
-                // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
-                // @ts-ignore
                 notif.success(`${category.name} ${viewWrapper.pageTitle} was added successfully`);
                 router.push({ path: `/category` });
             } else {
@@ -126,10 +133,8 @@ export default defineComponent({
             categoryForm.status = categoryData.status
             const { success, message } = await editCategory(categoryForm);
             if (success) {
-                // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
-                // @ts-ignore
                 notif.success(`${categoryData.name} ${viewWrapper.pageTitle} was edited successfully`);
                 router.push({ path: `/category` });
             } else {
@@ -209,7 +214,7 @@ export default defineComponent({
                                         <VRadio v-model="currentCategory.status" :value="CategoryConsts.ACTIVE"
                                             :label="CategoryConsts.showStatusName(1)" name="status" color="success" />
                                         <VRadio v-model="currentCategory.status" :value="CategoryConsts.INACTIVE"
-                                            :label="CategoryConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="CategoryConsts.showStatusName(0)" name="status" color="danger" />
                                         <ErrorMessage class="help is-danger" name="status" />
                                     </VControl>
                                 </VField>

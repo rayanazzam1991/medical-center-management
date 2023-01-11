@@ -111,7 +111,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === NationalityConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === NationalityConsts.ACTIVE
                 ? 'success'
                 : undefined,

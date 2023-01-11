@@ -91,6 +91,8 @@ const columns = {
   id: {
     searchable: true,
     sortable: true,
+    align: 'center',
+    
   },
   number: {
     sortable: true,
@@ -121,7 +123,7 @@ const columns = {
           rounded: true,
           color:
             row.status === RoomConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row.status === RoomConsts.ACTIVE
                 ? 'success'
                 : undefined,

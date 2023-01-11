@@ -227,7 +227,7 @@ export default defineComponent({
 
                                     <VControl>
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"
-                                            :label="RoomConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="RoomConsts.showStatusName(0)" name="status" color="danger" />
 
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.ACTIVE"
                                             :label="RoomConsts.showStatusName(1)" name="status" color="success" />

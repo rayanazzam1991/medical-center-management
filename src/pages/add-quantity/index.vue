@@ -59,7 +59,10 @@ const getCurrentAddQuantity = async () => {
 }
 const mainCategoriesList = ref<Category[]>([])
 onMounted(async () => {
-    const allCategories = await getFilterCategoriesList(defaultCategorySearchFilter)
+    let categorySearchFilter = {} as CategorySearchFilter
+    categorySearchFilter.status = BaseConsts.ACTIVE
+    categorySearchFilter.per_page = 500
+    const allCategories = await getFilterCategoriesList(categorySearchFilter)
     allCategoriesList.value = allCategories.categories
     mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
     await getCurrentAddQuantity();
@@ -72,7 +75,11 @@ const getSubCategoryByCategroy = () => {
     subcategoeisList.value = SubCategory
 }
 const getItemBySubCategroy = async () => {
-    const { items } = await getItemsList(defaultItemSearchFilter)
+    let itemSearchFilter = {} as ItemSearchFilter
+    itemSearchFilter.status = BaseConsts.ACTIVE
+    itemSearchFilter.per_page = 500
+
+    const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items
     let ItemFilter = {} as ItemSearchFilter
     ItemFilter.category_id = selectedSubCategoryId.value
@@ -252,7 +259,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             color="success" />
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />
                                     </VControl>
                                 </VField>

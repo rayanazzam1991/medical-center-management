@@ -63,6 +63,7 @@ onMounted(async () => {
 
     let serviceSearchFilter: ServiceSearchFilter = defaultServiceSearchFilter
     serviceSearchFilter.status = BaseConsts.ACTIVE
+    serviceSearchFilter.per_page = 500
     const { services } = await getServicesList(defaultServiceSearchFilter)
     servicesList.value = services
 

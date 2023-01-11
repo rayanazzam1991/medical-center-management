@@ -39,8 +39,9 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
   align-items: center;
   padding: 0 10px;
   font-family: var(--font);
-  word-break: break-word;
-  white-space: normal;
+  word-break: keep-all;
+    white-space: normal;
+    text-align: center;
 
   &.is-scrollable-x {
     overflow-x: auto;

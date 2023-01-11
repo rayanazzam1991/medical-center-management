@@ -11,7 +11,7 @@ import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Ot
 import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
@@ -23,6 +23,7 @@ import { getPositionsList } from '/@src/services/Others/Position/positionService
 import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { BaseConsts } from '/@src/utils/consts/base';
+import { Notyf } from 'notyf';
 
 
 const viewWrapper = useViewWrapper()
@@ -49,7 +50,7 @@ employeeForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const selectedDepartmentId = ref(0)
 
 const pageTitle = 'Step 1: Employee Info'
@@ -70,25 +71,31 @@ const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
 
-    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    let citySearchFilter = {} as CitySearchFilter
     citySearchFilter.status = BaseConsts.ACTIVE
+    citySearchFilter.per_page = 500
     const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
-    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    let userStatusSearchFilter = {} as UserStatusSearchFilter
+    userStatusSearchFilter.per_page = 500
+    const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
     statusesList.value = userstatuses
 
-    let nationalitySearchFilter: NationalitySearchFilter = defaultNationalitySearchFilter
+    let nationalitySearchFilter = {} as NationalitySearchFilter
     nationalitySearchFilter.status = BaseConsts.ACTIVE
+    nationalitySearchFilter.per_page = 500
     const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
     nationalitiesList.value = nationalities
 
-    let positionSearchFilter: PositionSearchFilter = defaultPositionSearchFilter
+    let positionSearchFilter = {} as PositionSearchFilter 
+    positionSearchFilter.per_page = 500
     positionSearchFilter.status = BaseConsts.ACTIVE
     const { positions } = await getPositionsList(positionSearchFilter)
     positionsList.value = positions
 
-    let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+    let departmentSearchFilter = {} as DepartmentSearchFilter 
     departmentSearchFilter.status = BaseConsts.ACTIVE
+    departmentSearchFilter.per_page = 500
     const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments
 
@@ -101,6 +108,7 @@ onMounted(() => {
 const getRoomsByDepartment = async () => {
     let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
     RoomsFilter.department_id = selectedDepartmentId.value
+    RoomsFilter.per_page = 500
     const { rooms } = await getRoomsList(RoomsFilter)
     roomsList.value = rooms
 

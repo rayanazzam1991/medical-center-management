@@ -81,7 +81,9 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
         onMounted(async () => {
-            const allcategories = await getFilterCategoriesList(defaultCategorySearchFilter)
+            let categorySearchFilter = {} as CategorySearchFilter
+            categorySearchFilter.per_page = 500
+            const allcategories = await getFilterCategoriesList(categorySearchFilter)
             allCategoriesList.value = allcategories.categories
             mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
         })
@@ -92,7 +94,10 @@ export default defineComponent({
             subCategoriesList.value = SubCategory
         }
         const getItemBySubCategroy = async () => {
-            const { items } = await getItemsList(defaultItemSearchFilter)
+            let itemSearchFilter = {} as ItemSearchFilter
+            itemSearchFilter.per_page = 500
+
+            const { items } = await getItemsList(itemSearchFilter)
             allItemsList.value = items
             let ItemFilter = {} as ItemSearchFilter
             ItemFilter.category_id = selectedSubCategoryId.value

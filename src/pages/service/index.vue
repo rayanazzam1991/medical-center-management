@@ -122,7 +122,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === ServiceConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === ServiceConsts.ACTIVE
                 ? 'success'
                 : undefined,
