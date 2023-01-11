@@ -58,7 +58,7 @@ const titleSizeStyle = computed(() => {
     if (props.titleSize === 'large') {
         return 'is-size-3'
     } else if (props.titleSize === 'medium') {
-        return 'is-size-4'
+        return 'is-size-5'
     }
 
     return 'is-size-6'
@@ -148,16 +148,16 @@ const cardColor = computed(() => {
 </script>
 
 <template>
-    <div v-if="clickable" @click="() => emits('click')" :class="[cardRadius, cardColor]" class="card-size cursor ">
+    <div v-if="clickable" @click="() => emits('click')" :class="[cardRadius, cardColor]" class="card-size cursor sub-card-size ">
         <div class="title-size center">
-            <h3 class=" mb-2 has-text-weight-normal" :class="[titleSizeStyle, textColor]">{{ props.title }}</h3>
+            <h3 class=" mb-1 has-text-weight-normal" :class="[titleSizeStyle, textColor]">{{ props.title }}</h3>
             <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
             <p class="" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
         </div>
     </div>
     <div v-else :class="[cardRadius, cardColor]" class="card-size">
         <div class="title-size center">
-            <h3 @click="() => emits('click')" class=" mb-2 has-text-weight-normal cursor"
+            <h3 @click="() => emits('click')" class=" mb-1 has-text-weight-normal cursor"
                 :class="[titleSizeStyle, textColor]">
                 {{ props.title }} </h3>
             <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
@@ -170,12 +170,15 @@ const cardColor = computed(() => {
 <style scoped lang="scss">
 .card-size {
     min-height: 100%;
-    width: 124px;
+    max-height: 90px ;
+    width: 100px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     border: 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .center {
@@ -201,4 +204,5 @@ const cardColor = computed(() => {
     }
 
 }
+
 </style>

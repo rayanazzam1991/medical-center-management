@@ -15,6 +15,10 @@ export interface Attendance {
     check_out?: string
     status: number
 }
+export interface UpdateAttendance {
+    check_in: string
+    check_out: string
+}
 export const defaultEmployeeAttendance: EmployeeAttendance = {
     id: undefined,
     user: defaultUser,
@@ -27,6 +31,10 @@ export const defaultAttendance: Attendance = {
     check_in: undefined,
     check_out: undefined,
     status: 0,
+}
+export const defaultUpdateAttendance: UpdateAttendance = {
+    check_in: "00:00:00",
+    check_out: "00:00:00"
 }
 export interface EmployeeAttendanceSearchFilter {
     phone_number?: number
