@@ -1,7 +1,6 @@
 <script lang="ts">
 
 
-import { boolean } from "zod";
 
 export default defineComponent({
   props: {
@@ -18,7 +17,7 @@ export default defineComponent({
       default: '',
     },
     isLoading: {
-      type: boolean,
+      type: Boolean,
       default: false
     }
   },

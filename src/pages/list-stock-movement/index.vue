@@ -16,8 +16,6 @@ import {
     itemHistory
 } from '/@src/models/Warehouse/ItemHistory/itemHistory'
 import { Notyf } from 'notyf'
-import { tippy } from 'vue-tippy'
-import { Tippy } from 'vue-tippy'
 import { BaseConsts } from '/@src/utils/consts/base'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('List Stock Movement')
@@ -39,8 +37,6 @@ const default_per_page = ref(1)
 onMounted(async () => {
     searchFilter.value = {} as ItemHistorySearchFilter
     searchFilter.value.status = BaseConsts.ACTIVE
-    searchFilter.value.order = 'desc'
-    searchFilter.value.order_by = 'created_at'
     const { itemHistories, pagination } = await getItemHistoriesList(searchFilter.value)
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
@@ -65,6 +61,8 @@ const changestatusItemHistory = async () => {
     changeStatusPopup.value = false
 }
 const search = async (searchFilter2: ItemHistorySearchFilter) => {
+    searchFilter2.status = BaseConsts.ACTIVE
+
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
     const { itemHistories, pagination } = await getItemHistoriesList(searchFilter2)
     itemHistoriesList.value = itemHistories
@@ -74,6 +72,8 @@ const search = async (searchFilter2: ItemHistorySearchFilter) => {
 
 const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
     searchFilter.value = searchFilter2
+    searchFilter.value.status = BaseConsts.ACTIVE
+
     await search(searchFilter.value)
 }
 
@@ -103,25 +103,25 @@ const noteTrim = (value: string) => {
     }
 }
 const columns = {
-    Level1: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: 'Level 1',
-        renderRow: (row: any) =>
-            h('span', row?.item.category?.parent?.name)
-    },
-    Level2: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: 'Level 2',
-        renderRow: (row: any) =>
-            h('span', row?.item.category?.name)
-    },
+    // Level1: {
+    //     searchable: true,
+    //     grow: true,
+    //     align: 'center',
+    //     label: 'Level 1',
+    //     renderRow: (row: any) =>
+    //         h('span', row?.item.category?.parent?.name)
+    // },
+    // Level2: {
+    //     searchable: true,
+    //     grow: true,
+    //     align: 'center',
+    //     label: 'Level 2',
+    //     renderRow: (row: any) =>
+    //         h('span', row?.item.category?.name)
+    // },
     Item: {
         searchable: true,
-        grow: true,
+        grow: "xl",
         align: 'center',
         label: 'Item',
         renderRow: (row: any) =>
@@ -163,6 +163,10 @@ const columns = {
         align: 'center',
         searchable: true,
         label: 'cost',
+        renderRow: (row: any) =>
+            h('span', row?.add_item_cost ? row?.add_item_cost : '-'),
+
+
         grow: true,
     },
     withdraw_item_price: {
@@ -171,12 +175,23 @@ const columns = {
         searchable: true,
         label: 'Price',
         grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-'),
+
+
     },
     requester_name: {
         searchable: true,
-        grow: true,
+        grow: 'lg',
         align: 'center',
         label: 'requester',
+        renderRow: (row: any) =>
+            h('span', {
+                innerHTML: row?.requester_name ?
+                    `<div class="tooltip">${noteTrim(row?.requester_name)}<div class="tooltiptext"><p class="text-white">${row?.requester_name}</p></div></div>` : '-',
+
+            }),
+
     },
     note: {
         align: 'center',
@@ -262,7 +277,7 @@ const columns = {
                                 <VControl>
                                     <VRadio v-model="currentChangeStatusItemHistory.status"
                                         :value="ItemHsitoryConsts.INACTIVE" :label="ItemHsitoryConsts.showStatusName(0)"
-                                        name="status" color="warning" />
+                                        name="status" color="danger" />
                                     <VRadio v-model="currentChangeStatusItemHistory.status"
                                         :value="ItemHsitoryConsts.ACTIVE" :label="ItemHsitoryConsts.showStatusName(1)"
                                         name="status" color="success" />
@@ -292,8 +307,10 @@ const columns = {
     text-align: center;
     border-radius: 6px;
     padding: 5px;
-    word-wrap: break-word;
-    
+    word-break: keep-all;
+    white-space: normal;
+
+
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
@@ -304,9 +321,10 @@ const columns = {
 
 
 }
-.is-dark{
+
+.is-dark {
     .tooltip .tooltiptext {
-    background-color: rgb(43, 41, 41);
-}
+        background-color: rgb(43, 41, 41);
+    }
 }
 </style>

@@ -114,7 +114,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === CustomerGroupConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === CustomerGroupConsts.ACTIVE
                 ? 'success'
                 : undefined,

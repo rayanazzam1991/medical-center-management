@@ -66,20 +66,25 @@ const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
 
-    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    let citySearchFilter = {} as CitySearchFilter
     citySearchFilter.status = BaseConsts.ACTIVE
+    citySearchFilter.per_page = 500
     const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
 
-    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    let userStatusSearchFilter = {} as UserStatusSearchFilter
+    userStatusSearchFilter.per_page = 500
+    const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
     statusesList.value = userstatuses
 
-    let specialitySearchFilter: SpecialitySearchFilter = defaultSpecialitySearchFilter
+    let specialitySearchFilter = {} as SpecialitySearchFilter 
     specialitySearchFilter.status = BaseConsts.ACTIVE
+    specialitySearchFilter.per_page = 500 
     const { specialities } = await getSpecialitiesList(specialitySearchFilter)
     specialitiesList.value = specialities
 
-    let departmentSearchFilter: DepartmentSearchFilter = defaultDepartmentSearchFilter
+    let departmentSearchFilter = {} as DepartmentSearchFilter 
+    departmentSearchFilter.per_page = 500
     departmentSearchFilter.status = BaseConsts.ACTIVE
     const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments

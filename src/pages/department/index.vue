@@ -105,7 +105,7 @@ const columns = {
           rounded: true,
           color:
             row.status === DepartmentConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row.status === DepartmentConsts.ACTIVE
                 ? 'success'
                 : undefined,

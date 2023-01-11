@@ -173,7 +173,7 @@ export default defineComponent({
 
                                     <VControl>
                                         <VRadio v-model="currentPosition.status" :value="PositionConsts.INACTIVE"
-                                            :label="PositionConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="PositionConsts.showStatusName(0)" name="status" color="danger" />
 
                                         <VRadio v-model="currentPosition.status" :value="PositionConsts.ACTIVE"
                                             :label="PositionConsts.showStatusName(1)" name="status" color="success" />

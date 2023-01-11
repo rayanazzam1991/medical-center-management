@@ -6,10 +6,10 @@ import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateContractor } from '/@src/models/Contractor/contractor';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getContractor, updateContractor } from '/@src/services/Contractor/contractorService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
@@ -18,9 +18,9 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { contractorEditvalidationSchema } from '/@src/rules/Contractor/contractorEditValidation';
 import { useContractor } from '/@src/stores/Contractor/contractorStore';
 import sleep from '/@src/utils/sleep';
-import { defaultSpecialitySearchFilter, Speciality } from '/@src/models/Others/Speciality/speciality';
+import { defaultSpecialitySearchFilter, Speciality, SpecialitySearchFilter } from '/@src/models/Others/Speciality/speciality';
 import { getSpecialitiesList } from '/@src/services/Others/Speciality/specialityService';
-import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 
 
@@ -107,25 +107,35 @@ const departmentsList = ref<Department[]>([])
 onMounted(async () => {
     if (!isLoading.value) {
         isLoading.value = true
-        const { cities } = await getCitiesList(defaultCitySearchFilter)
+        let citySearchFilter = {} as CitySearchFilter 
+        citySearchFilter.per_page = 500
+        const { cities } = await getCitiesList(citySearchFilter)
         citiesList.value = cities
-        const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+        let userStatusSearchFilter = {} as UserStatusSearchFilter
+        userStatusSearchFilter.per_page = 500
+        const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
         statusesList.value = userstatuses
-        const { specialities } = await getSpecialitiesList(defaultSpecialitySearchFilter)
+        let specialitySearchFilter = {} as SpecialitySearchFilter
+        specialitySearchFilter.per_page  = 500
+        const { specialities } = await getSpecialitiesList(specialitySearchFilter)
         specialitiesList.value = specialities
-        const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+        let departmentSearchFilter = {} as DepartmentSearchFilter
+        departmentSearchFilter.per_page = 500
+        const { departments } = await getDepartmentsList(departmentSearchFilter)
         departmentsList.value = departments
         await fetchContractor()
-        let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+        let roomsFilter = {} as RoomSearchFilter 
         roomsFilter.department_id = selectedDepartmentId.value
+        roomsFilter.per_page = 500
         const { rooms } = await getRoomsList(roomsFilter)
         roomsList.value = rooms
         isLoading.value = false
     }
 })
 const getRoomsByDepartment = async () => {
-    let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+    let roomsFilter = {} as RoomSearchFilter 
     roomsFilter.department_id = selectedDepartmentId.value
+    roomsFilter.per_page = 500
     const { rooms } = await getRoomsList(roomsFilter)
     roomsList.value = rooms
     currentUser.value.room_id = undefined

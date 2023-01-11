@@ -154,7 +154,7 @@ export default defineComponent({
                                         <VRadio v-model="currentCustomerGroup.status"
                                             :value="CustomerGroupConsts.INACTIVE"
                                             :label="CustomerGroupConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
 
                                         <VRadio v-model="currentCustomerGroup.status"
                                             :value="CustomerGroupConsts.ACTIVE"

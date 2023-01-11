@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Position } from '/@src/models/Others/Position/position'
-import { Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { Position, PositionSearchFilter } from '/@src/models/Others/Position/position'
+import { Department, defaultDepartmentSearchFilter, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { getPositionsList } from '/@src/services/Others/Position/positionService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
@@ -65,12 +65,19 @@ export default defineComponent({
         const departmentsList = ref<Department[]>([])
         const positionsList = ref<Position[]>([])
         onMounted(async () => {
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+            let userStatusSearchFilter = {} as UserStatusSearchFilter
+            userStatusSearchFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
             statusesList.value = userstatuses
-            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+            let departmentSearchFilter = {} as DepartmentSearchFilter
+            departmentSearchFilter.per_page = 500
+            const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
-            const { positions } = await getPositionsList(defaultUserStatusSearchFilter)
+            let positionSearchFilter = {} as PositionSearchFilter
+            positionSearchFilter.per_page = 500
+            const { positions } = await getPositionsList(positionSearchFilter)
             positionsList.value = positions
+
         })
 
 

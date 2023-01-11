@@ -30,6 +30,7 @@ const router = useRouter()
 const categoryStore = useCategory()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const selectedStatus = ref(0)
 
 const { categories, pagination } = await getCategoriesList(searchFilter.value)
 categoriesList.value = categories
@@ -68,6 +69,7 @@ const categorySort = async (value: string) => {
 }
 const changestatusCategory = async () => {
     currentChangeStatusCategory.value.id = currentChangeStatusCategory.value.id
+    currentChangeStatusCategory.value.status = selectedStatus.value
     const { message, success } = await changeCategoryStatus(currentChangeStatusCategory.value)
     if (success) {
         await search(searchFilter.value)
@@ -97,7 +99,7 @@ const columns = {
         align: 'center',
         label: 'Parent',
         renderRow: (row: any) =>
-            h('span', row?.parent?.name)
+            h('span', row?.parent?.name ? row?.parent?.name : '-')
     },
     created_by: {
         sortable: true,
@@ -127,7 +129,7 @@ const columns = {
                     rounded: true,
                     color:
                         row.status === CategoryConsts.INACTIVE
-                            ? 'orange'
+                            ? 'danger'
                             : row.status === CategoryConsts.ACTIVE
                                 ? 'success'
                                 : undefined,
@@ -149,6 +151,7 @@ const columns = {
                 },
                 onChangeStatus: () => {
                     currentChangeStatusCategory.value = row
+                    selectedStatus.value = row?.status
                     changeStatusPopup.value = true
                 }
             }),
@@ -204,10 +207,10 @@ const columns = {
                             <VField id="status" v-slot="{ field }">
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentChangeStatusCategory.status"
+                                    <VRadio v-model="selectedStatus"
                                         :value="CategoryConsts.INACTIVE" :label="CategoryConsts.showStatusName(0)"
-                                        name="status" color="warning" />
-                                    <VRadio v-model="currentChangeStatusCategory.status" :value="CategoryConsts.ACTIVE"
+                                        name="status" color="danger" />
+                                    <VRadio v-model="selectedStatus" :value="CategoryConsts.ACTIVE"
                                         :label="CategoryConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>

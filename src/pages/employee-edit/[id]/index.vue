@@ -6,21 +6,22 @@ import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Nationality, defaultNationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeEditvalidationSchema } from '/@src/rules/Employee/employeeEditValidation';
 import { getPositionsList } from '/@src/services/Others/Position/positionService';
-import { Position, defaultPositionSearchFilter } from '/@src/models/Others/Position/position';
+import { Position, defaultPositionSearchFilter, PositionSearchFilter } from '/@src/models/Others/Position/position';
 import sleep from "/@src/utils/sleep"
-import { defaultDepartmentSearchFilter, Department } from '/@src/models/Others/Department/department';
+import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
+import { Notyf } from 'notyf';
 
 
 
@@ -46,7 +47,7 @@ employeeForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
 const employeeId = ref(0)
@@ -105,19 +106,30 @@ const departmentsList = ref<Department[]>([])
 onMounted(async () => {
     if (!isLoading.value) {
         isLoading.value = true
-        const { cities } = await getCitiesList(defaultCitySearchFilter)
+        let citySearchFilter = {} as CitySearchFilter 
+        citySearchFilter.per_page = 500
+        const { cities } = await getCitiesList(citySearchFilter)
         citiesList.value = cities
-        const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+        let userStatusSearchFilter = {} as UserStatusSearchFilter
+        userStatusSearchFilter.per_page = 500
+        const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
         statusesList.value = userstatuses
-        const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
+        let nationalitySearchFilter = {} as NationalitySearchFilter
+        nationalitySearchFilter.per_page = 500
+        const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
         nationalitiesList.value = nationalities
-        const { positions } = await getPositionsList(defaultPositionSearchFilter)
+        let positionSearchFilter = {} as PositionSearchFilter
+        positionSearchFilter.per_page = 500
+        const { positions } = await getPositionsList(positionSearchFilter)
         positionsList.value = positions
-        const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+        let departmentSearchFilter = {} as DepartmentSearchFilter
+        departmentSearchFilter.per_page = 500
+        const { departments } = await getDepartmentsList(departmentSearchFilter)
         departmentsList.value = departments
         await fetchEmployee()
         let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
         roomsFilter.department_id = selectedDepartmentId.value
+        roomsFilter.per_page = 500
         const { rooms } = await getRoomsList(roomsFilter)
         roomsList.value = rooms
 
@@ -129,6 +141,7 @@ onMounted(async () => {
 const getRoomsByDepartment = async () => {
     let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
     roomsFilter.department_id = selectedDepartmentId.value
+    roomsFilter.per_page = 500
     const { rooms } = await getRoomsList(roomsFilter)
     roomsList.value = rooms
     currentUser.value.room_id = undefined

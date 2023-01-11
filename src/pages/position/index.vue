@@ -117,7 +117,7 @@ const columns = {
                     rounded: true,
                     color:
                         row.status === PositionConsts.INACTIVE
-                            ? 'orange'
+                            ? 'danger'
                             : row.status === PositionConsts.ACTIVE
                                 ? 'success'
                                 : undefined,
@@ -204,7 +204,7 @@ const columns = {
                                 <VControl>
                                     <VRadio v-model="currentChangeStatusPosition.status"
                                         :value="PositionConsts.INACTIVE" :label="PositionConsts.showStatusName(0)"
-                                        name="status" color="warning" />
+                                        name="status" color="danger" />
                                     <VRadio v-model="currentChangeStatusPosition.status" :value="PositionConsts.ACTIVE"
                                         :label="PositionConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />

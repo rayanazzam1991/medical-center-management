@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter } from "/@src/models/Warehouse/Category/category"
+import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
 
 
@@ -55,7 +55,10 @@ export default defineComponent({
         }
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const { categories } = await getCategoriesList(defaultMainCategorySearchFilter)
+            let mainCategorySearchFilter = {} as CategorySearchFilter
+            mainCategorySearchFilter.is_main_category = true
+            mainCategorySearchFilter.per_page = 500
+            const { categories } = await getCategoriesList(mainCategorySearchFilter)
             mainCategoriesList.value = categories
         })
         return { mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }

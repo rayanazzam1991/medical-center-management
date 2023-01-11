@@ -13,8 +13,8 @@ import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchF
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { defaultItem, defaultItemSearchFilter, Item, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
-import { Contractor, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
-import { defaultEmployeeSearchFilter, Employee } from '/@src/models/Employee/employee';
+import { Contractor, ContractorSearchFilter, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
+import { defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee';
 import { getEmployeesList } from '/@src/services/Employee/employeeService';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
@@ -60,13 +60,22 @@ const getCurrentWithdrawQuantity = async () => {
 }
 const mainCategoriesList = ref<Category[]>([])
 onMounted(async () => {
-    const allCategories = await getFilterCategoriesList(defaultCategorySearchFilter)
+    let categorySearchFilter = {} as CategorySearchFilter
+    categorySearchFilter.status = BaseConsts.ACTIVE
+    categorySearchFilter.per_page = 500
+    const allCategories = await getFilterCategoriesList(categorySearchFilter)
     allCategoriesList.value = allCategories.categories
     mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
     await getCurrentWithdrawQuantity();
-    const { employees } = await getEmployeesList(defaultEmployeeSearchFilter)
+    let employeeSearchFilter = {} as EmployeeSearchFilter
+    employeeSearchFilter.per_page = 500
+
+    const { employees } = await getEmployeesList(employeeSearchFilter)
     employeesList.value = employees
-    const { contractors } = await getContractorsList(defaultContractorSearchFilter)
+    let contractorSearchFilter = {} as ContractorSearchFilter
+    contractorSearchFilter.per_page = 500
+
+    const { contractors } = await getContractorsList(contractorSearchFilter)
     contractorsList.value = contractors
 })
 const getSubCategoryByCategroy = () => {
@@ -76,7 +85,10 @@ const getSubCategoryByCategroy = () => {
     subcategoeisList.value = SubCategory
 }
 const getItemBySubCategroy = async () => {
-    const { items } = await getItemsList(defaultItemSearchFilter)
+    let itemSearchFilter = {} as ItemSearchFilter
+    itemSearchFilter.status = BaseConsts.ACTIVE
+    itemSearchFilter.per_page = 500
+    const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items
     let ItemFilter = {} as ItemSearchFilter
     ItemFilter.category_id = selectedSubCategoryId.value
@@ -246,7 +258,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <VRadio v-model="currentwithdrawQuantity.status"
                                             :value="ItemHsitoryConsts.INACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />
                                     </VControl>
                                 </VField>
@@ -271,14 +283,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VOption value="0">Employee</VOption>
                                             <VOption v-for="employee in employeesList" :key="employee.id"
                                                 :value="employee.id">
-                                                {{ employee.user.first_name }}
+                                                {{ employee.user.first_name }} {{ employee.user.last_name }}
                                             </VOption>
                                         </VSelect>
                                         <VSelect v-else v-model="requesterId">
                                             <VOption :value="0">Contractor</VOption>
                                             <VOption v-for="contractor in contractorsList" :key="contractor.user.id"
                                                 :value="contractor.id">
-                                                {{ contractor.user.first_name }}
+                                                {{ contractor.user.first_name }} {{ contractor.user.last_name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="user_id" />
