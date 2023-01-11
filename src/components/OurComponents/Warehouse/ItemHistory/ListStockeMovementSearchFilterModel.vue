@@ -30,7 +30,6 @@ export default defineComponent({
         const searchItem = ref()
         const searchParent = ref()
         const searchSubCategory = ref()
-        const searchStatus = ref()
         const searchType = ref()
         const searchDateBetween = ref()
         const searchFrom = ref()
@@ -56,7 +55,6 @@ export default defineComponent({
                 item_id: searchItem.value,
                 category_id: searchParent.value,
                 sub_category_id: searchSubCategory.value,
-                status: searchStatus.value,
                 type: searchType.value,
                 date_between: 'created_at',
                 from: searchFrom.value,
@@ -69,7 +67,6 @@ export default defineComponent({
             searchItem.value = ''
             searchParent.value = undefined
             searchSubCategory.value = undefined
-            searchStatus.value = undefined
             searchType.value = undefined
             searchDateBetween.value = undefined
             searchFrom.value = undefined
@@ -102,7 +99,7 @@ export default defineComponent({
             const Item = allItemsList.value.filter((item) => item.category.id == ItemFilter.category_id)
             itemsList.value = Item
         }
-        return { selectedSubCategoryId, getItemBySubCategroy, itemsList, subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchItem, searchParent, searchStatus, searchFrom, searchTo, searchSubCategory, searchType }
+        return { selectedSubCategoryId, getItemBySubCategroy, itemsList, subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchItem, searchParent,  searchFrom, searchTo, searchSubCategory, searchType }
     },
 })
 
@@ -117,7 +114,7 @@ export default defineComponent({
                     <VControl>
                         <div class="select">
                             <select @change="getSubCategory" v-model="searchParent">
-                                <VOption>Level 1</VOption>
+                                <VOption>Select Level 1</VOption>
                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">
                                     {{ parent.name }}
                                 </VOption>
@@ -130,7 +127,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == undefined"
                             @change="getItemBySubCategroy" v-model="selectedSubCategoryId">
-                            <VOption>Select Level 2</VOption>
+                            <VOption value="">Select Level 2</VOption>
                             <VOption v-for="subCategory in subCategoriesList" :key="subCategory.id"
                                 :value="subCategory.id">
                                 {{ subCategory.name }}
@@ -141,7 +138,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect :disabled="itemsList.length <= 0" @change="getItemBySubCategroy" v-model="searchItem">
-                            <VOption>Select Item</VOption>
+                            <VOption value="">Select Item</VOption>
                             <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </VOption>
@@ -154,15 +151,6 @@ export default defineComponent({
                             <VOption value="">Select Type</VOption>
                             <VOption value="in">In</VOption>
                             <VOption value="out">Out</VOption>
-                        </VSelect>
-                    </VControl>
-                </VField>
-                <VField class="column filter ">
-                    <VControl>
-                        <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Select Status</VOption>
-                            <VOption value="0">{{ ItemConsts.showStatusName(0) }}</VOption>
-                            <VOption value="1">{{ ItemConsts.showStatusName(1) }}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>

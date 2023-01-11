@@ -160,12 +160,16 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     var contractorData = currentContractor.value
+    console.log(contractorData)
     contractorForm.dataUpdate.starting_date = contractorData.starting_date
-    contractorForm.dataUpdate.end_date = contractorData.end_date
     contractorForm.dataUpdate.payment_percentage = contractorData.payment_percentage
     contractorForm.dataUpdate.speciality_id = contractorData.speciality_id
+    if(contractorData.end_date != ''){
+            contractorForm.data.end_date = contractorData.end_date 
 
-
+        }else {
+            contractorForm.data.end_date = undefined 
+        }
     contractorForm.userForm.first_name = userData.first_name
     contractorForm.userForm.last_name = userData.last_name
     contractorForm.userForm.password = userData.password
@@ -371,7 +375,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="end_date">
-                                        <VLabel class="required">End date </VLabel>
+                                        <VLabel >End date </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentContractor.end_date" type="date" />
                                             <ErrorMessage class="help is-danger" name="end_date" />

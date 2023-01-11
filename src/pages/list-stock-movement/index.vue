@@ -16,10 +16,13 @@ import {
     itemHistory
 } from '/@src/models/Warehouse/ItemHistory/itemHistory'
 import { Notyf } from 'notyf'
+import { tippy } from 'vue-tippy'
+import { Tippy } from 'vue-tippy'
+import { BaseConsts } from '/@src/utils/consts/base'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('ItemHistory')
+viewWrapper.setPageTitle('List Stock Movement')
 useHead({
-    title: 'ItemHistory',
+    title: 'List Stock Movement',
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemHistorySearchFilter)
@@ -34,8 +37,11 @@ const keyIncrement = ref(0)
 const default_per_page = ref(1)
 
 onMounted(async () => {
+    searchFilter.value = {} as ItemHistorySearchFilter
+    searchFilter.value.status = BaseConsts.ACTIVE
+    searchFilter.value.order = 'desc'
+    searchFilter.value.order_by = 'created_at'
     const { itemHistories, pagination } = await getItemHistoriesList(searchFilter.value)
-    searchFilter.value = defaultItemHistorySearchFilter
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
@@ -179,7 +185,7 @@ const columns = {
         renderRow: (row: any) =>
             h('span', {
                 innerHTML:
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p>${row?.note}</p></div></div>`,
+                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`,
 
             }),
 
@@ -281,14 +287,13 @@ const columns = {
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: auto;
-    height: 120px;
+    width: 150px;
     background-color: white;
-    color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px;
     word-wrap: break-word;
+    
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
@@ -296,5 +301,12 @@ const columns = {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+
+
+}
+.is-dark{
+    .tooltip .tooltiptext {
+    background-color: rgb(43, 41, 41);
+}
 }
 </style>

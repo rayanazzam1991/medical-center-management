@@ -8,7 +8,7 @@ import { getItem, addItem, editItem } from '/@src/services/Warehouse/Item/itemSe
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
-import { Category, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
+import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 
 
@@ -74,7 +74,7 @@ export default defineComponent({
 
         })
         const getSubCategoryByCategroy = () => {
-            let categoriesFilter = defaultCategorySearchFilter
+            let categoriesFilter = {} as CategorySearchFilter
             categoriesFilter.parent_id = selectedCategoryId.value
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
