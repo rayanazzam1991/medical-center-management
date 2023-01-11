@@ -8,8 +8,8 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
 import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { CustomerGroup, CustomerGroupSearchFilter, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
-import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { defaultCreateUpdateUser, UserSearchFilter } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addCustomer } from '/@src/services/CRM/Customer/customerService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
@@ -19,6 +19,7 @@ import { customerAddvalidationSchema } from '/@src/rules/CRM/Customer/customerAd
 import VRadio from '/@src/components/base/form/VRadio.vue';
 import sleep from "/@src/utils/sleep"
 import { BaseConsts } from '/@src/utils/consts/base';
+import { Notyf } from 'notyf';
 
 
 
@@ -45,7 +46,7 @@ customerForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const pageTitle = 'Step 1: Customer Main Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
@@ -63,16 +64,21 @@ onMounted(() => {
 }
 )
 onMounted(async () => {
-    let citySearchFilter: CitySearchFilter = defaultCitySearchFilter
+    let citySearchFilter = {} as CitySearchFilter 
     citySearchFilter.status = BaseConsts.ACTIVE
+    citySearchFilter.per_page = 500
     const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
+    let userStatusSearchFilter = {} as UserStatusSearchFilter 
+    userStatusSearchFilter.per_page = 500
 
-    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+    const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
     statusesList.value = userstatuses
 
-    let customerGroupSearchFilter: CustomerGroupSearchFilter = defaultCustomerGroupSearchFilter
+
+    let customerGroupSearchFilter = {} as CustomerGroupSearchFilter
     customerGroupSearchFilter.status = BaseConsts.ACTIVE
+    customerGroupSearchFilter.per_page = 500
     const { customerGroups } = await getCustomerGroupsList(customerGroupSearchFilter)
     customerGroupsList.value = customerGroups
     
@@ -135,7 +141,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         const { customer, message, success } = await addCustomer(customerForm.data, customerForm.userForm)
         if (success) {
             customerForm.data.id = customer.id
-            // @ts-ignore
+            
             await sleep(200);
 
             notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
@@ -144,7 +150,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         else {
             await sleep(200);
 
-            // @ts-ignore
+            
             notif.error(message)
             return false
         }

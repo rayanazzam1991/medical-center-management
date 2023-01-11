@@ -34,8 +34,8 @@ declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
-    '/addQuantity': RouteRecordInfo<'/addQuantity', '/addQuantity', Record<never, never>, Record<never, never>>,
-    '/addQuantity/': RouteRecordInfo<'/addQuantity/', '/addQuantity/', Record<never, never>, Record<never, never>>,
+    '/add-quantity': RouteRecordInfo<'/add-quantity', '/add-quantity', Record<never, never>, Record<never, never>>,
+    '/add-quantity/': RouteRecordInfo<'/add-quantity/', '/add-quantity/', Record<never, never>, Record<never, never>>,
     '/auth': RouteRecordInfo<'/auth', '/auth', Record<never, never>, Record<never, never>>,
     '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
@@ -140,8 +140,8 @@ declare module 'vue-router/auto/routes' {
     '/userStatus/[id]/': RouteRecordInfo<'/userStatus/[id]/', '/userStatus/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/[id]/edit': RouteRecordInfo<'/userStatus/[id]/edit', '/userStatus/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/add': RouteRecordInfo<'/userStatus/add', '/userStatus/add', Record<never, never>, Record<never, never>>,
-    '/withdrawQuantity': RouteRecordInfo<'/withdrawQuantity', '/withdrawQuantity', Record<never, never>, Record<never, never>>,
-    '/withdrawQuantity/': RouteRecordInfo<'/withdrawQuantity/', '/withdrawQuantity/', Record<never, never>, Record<never, never>>,
+    '/withdraw-quantity': RouteRecordInfo<'/withdraw-quantity', '/withdraw-quantity', Record<never, never>, Record<never, never>>,
+    '/withdraw-quantity/': RouteRecordInfo<'/withdraw-quantity/', '/withdraw-quantity/', Record<never, never>, Record<never, never>>,
   }
 }
 

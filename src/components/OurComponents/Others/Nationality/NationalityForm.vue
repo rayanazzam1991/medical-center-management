@@ -151,7 +151,7 @@ export default defineComponent({
 
                                         <VRadio v-model="currentNationality.status" :value="NationalityConsts.INACTIVE"
                                             :label="NationalityConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
 
                                         <VRadio v-model="currentNationality.status" :value="NationalityConsts.ACTIVE"
                                             :label="NationalityConsts.showStatusName(1)" name="status"

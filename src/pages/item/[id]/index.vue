@@ -14,6 +14,7 @@ import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
+import { Notyf } from "notyf"
 
 
 
@@ -37,11 +38,10 @@ const searchFilter = ref(defaultItemHistorySearchFilter)
 const itemHistoryList = ref<Array<itemHistory>>([])
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
+const selectedStatus = ref(0)
 
+const notif = useNotyf() as Notyf
 
-const notif = useNotyf()
-
-// @ts-ignore
 itemId.value = route.params.id
 viewWrapper.setPageTitle(`Item`)
 useHead({
@@ -57,7 +57,6 @@ const props = withDefaults(
     }
 )
 const tab = ref(props.activeTab)
-// @ts-ignore
 itemId.value = route.params?.id as number ?? 0
 
 const onOpen = () => {
@@ -118,7 +117,6 @@ const changestatusItem = async () => {
     itemForm.status = itemData.status
     const { message, success } = await changeItemStatus(itemForm)
     getCurrentItem()
-    // @ts-ignore
     notif.dismissAll()
     await sleep(200);
     changeStatusPopup.value = false
@@ -135,14 +133,13 @@ const onOpenHistory = () => {
 
 const changestatusItemHistory = async () => {
     currentChangeStatusItemHistory.value.id = currentChangeStatusItemHistory.value.id
+    currentChangeStatusItemHistory.value.status = selectedStatus.value
     changeHistoryStatusPopup.value = false
     const { message, success } = await changeItemHistoryStatus(currentChangeStatusItemHistory.value)
     if (success) {
         await search(searchFilter.value)
-        // @ts-ignore
         notif.dismissAll()
         await sleep(200);
-        // @ts-ignore
         notif.success(`status was edited successfully`)
     } else {
         await sleep(200);
@@ -187,22 +184,31 @@ const columns = {
         searchable: true,
         label: 'cost',
         grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.add_item_cost ? row?.add_item_cost : '-')
+
     },
     withdraw_item_price: {
         align: 'center',
         searchable: true,
         label: 'Price',
         grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-')
+
     },
     requester_name: {
         searchable: true,
         grow: true,
         align: 'center',
         label: 'requester',
+        renderRow: (row: any) =>
+            h('span', row?.requester_name ? row?.requester_name : '-'),
+
     },
     created_at: {
         align: 'center',
-        label: 'Create at',
+        label: 'Created at',
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -214,63 +220,67 @@ const columns = {
         searchable: true,
         label: 'invoice number',
         grow: true,
-    },
-  Image: {
-    align: 'center',
-    grow: true,
-    label: 'Invoice',
-    renderRow: (row: any) => {
-        if(row?.file?.length > 0) {
-           return h( IconButton , { 
-                icon : 'fas fa-eye',
-                image_path: import.meta.env.VITE_MEDIA_BASE_URL + row?.file[0]?.relative_path,
-            });
-        } else {
-          return  h( 'span' , '');
+        renderRow: (row: any) =>
+            h('span', row?.invoice_number ? row?.invoice_number : '-')
 
-        }
     },
-  },
-  status: {
-    align: 'center',
-    grow: true,
+    Image: {
+        align: 'center',
+        grow: true,
+        label: 'Invoice',
+        renderRow: (row: any) => {
+            if (row?.file?.length > 0) {
+                return h(IconButton, {
+                    icon: 'fas fa-eye',
+                    image_path: import.meta.env.VITE_MEDIA_BASE_URL + row?.file[0]?.relative_path,
+                });
+            } else {
+                return h('span', '-');
 
-    renderRow: (row: any) =>
-      h(
-        VTag,
-        {
-          rounded: true,
-          color:
-            row?.status === ItemHsitoryConsts.INACTIVE
-              ? 'orange'
-              : row?.status === ItemHsitoryConsts.ACTIVE
-                ? 'success'
-                : undefined,
+            }
         },
-        {
-          default() {
-            return ItemHsitoryConsts.showStatusName(row?.status)
-          },
-        }
-      ),
+    },
+    status: {
+        align: 'center',
+        grow: true,
 
-  },
-  action: {
-    align: 'center',
-    grow: true,
-    label: 'edit status',
-    renderRow: (row: any) =>
-      h( IconButton , { 
-        icon : 'fas fa-edit',
-        onClick: () => {
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.status === ItemHsitoryConsts.INACTIVE
+                            ? 'danger'
+                            : row?.status === ItemHsitoryConsts.ACTIVE
+                                ? 'success'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return ItemHsitoryConsts.showStatusName(row?.status)
+                    },
+                }
+            ),
+
+    },
+    action: {
+        align: 'center',
+        grow: true,
+        label: 'edit status',
+        renderRow: (row: any) =>
+            h(IconButton, {
+                icon: 'fas fa-edit',
+                onClick: () => {
                     keyIncrement.value++
                     currentChangeStatusItemHistory.value = row
                     changeHistoryStatusPopup.value = true
-                    
-                },
-      }),
+                    selectedStatus.value = row?.status
 
-  },
+                },
+            }),
+
+    },
 } as const
 
 </script>
@@ -479,7 +489,7 @@ const columns = {
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
-                                        :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
+                                        :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
                                     <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
                                         :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
@@ -494,8 +504,8 @@ const columns = {
             <VButton color="primary" raised @click="changestatusItem()">Confirm</VButton>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" title="Change User Status" :open="changeHistoryStatusPopup" actions="center" 
-    @close="changeHistoryStatusPopup = false">
+    <VModal :key="keyIncrement" title="Change User Status" :open="changeHistoryStatusPopup" actions="center"
+        @close="changeHistoryStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -503,13 +513,15 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="status">
-                            
+
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.INACTIVE"
-                                        :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
-                                    <VRadio v-model="currentChangeStatusItemHistory.status" :value="ItemHsitoryConsts.ACTIVE"
-                                        :label="ItemConsts.showStatusName(1)" name="status" color="success" />
+                                    <VRadio v-model="selectedStatus"
+                                        :value="ItemHsitoryConsts.INACTIVE" :label="ItemConsts.showStatusName(0)"
+                                        name="status" color="danger" />
+                                    <VRadio v-model="selectedStatus"
+                                        :value="ItemHsitoryConsts.ACTIVE" :label="ItemConsts.showStatusName(1)"
+                                        name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>
                             </VField>
@@ -549,4 +561,6 @@ const columns = {
     width: 100%;
     margin-right: 12px;
 }
+
+
 </style>

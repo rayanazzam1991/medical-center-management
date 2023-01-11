@@ -207,6 +207,7 @@ const columns = computed(() => {
     display: flex;
     align-items: center;
     padding: 0 5px;
+    text-align: center;
 
     > span,
     .text {

@@ -10,6 +10,7 @@ import sleep from '/@src/utils/sleep';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
+import { BaseConsts } from '/@src/utils/consts/base';
 
 
 export default defineComponent({
@@ -62,7 +63,10 @@ export default defineComponent({
         };
         const mainCategoriesList = ref<Category[]>([])
         onMounted(async () => {
-            const allCategories = await getFilterCategoriesList(defaultCategorySearchFilter)
+            let categorySearchFilter = {} as CategorySearchFilter
+            categorySearchFilter.status = BaseConsts.ACTIVE
+            categorySearchFilter.per_page = 500
+            const allCategories = await getFilterCategoriesList(categorySearchFilter)
             allCategoriesList.value = allCategories.categories
             mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
             await getCurrentItem();
@@ -305,7 +309,7 @@ export default defineComponent({
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
                                             :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
-                                            :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />
                                     </VControl>
                                 </VField>

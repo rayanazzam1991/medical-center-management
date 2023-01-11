@@ -122,11 +122,11 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl class="mr-4">
-                                <VButton class="" to="/addQuantity" color="primary">Add Quantity
+                                <VButton class="" to="/add-quantity" color="primary">Add Quantity
                                 </VButton>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/withdrawQuantity" color="primary">Withdraw Quantity
+                                <VButton class="" to="/withdraw-quantity" color="primary">Withdraw Quantity
                                 </VButton>
                             </VControl>
                         </div>

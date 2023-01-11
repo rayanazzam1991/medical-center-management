@@ -104,7 +104,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === CityConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === CityConsts.ACTIVE
                 ? 'success'
                 : undefined,

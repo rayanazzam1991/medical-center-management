@@ -169,7 +169,7 @@ export default defineComponent({
                                     <VControl>
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
                                             :label="SocialMediaConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
 
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
                                             :label="SocialMediaConsts.showStatusName(1)" name="status"

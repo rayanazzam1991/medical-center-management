@@ -2,11 +2,12 @@
 <script lang="ts">
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultCustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
-import { City, defaultCitySearchFilter } from "/@src/models/Others/City/city"
-import { CustomerGroup, defaultCustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
-import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { City, CitySearchFilter, defaultCitySearchFilter } from "/@src/models/Others/City/city"
+import { CustomerGroup, CustomerGroupSearchFilter, defaultCustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getCitiesList } from "/@src/services/Others/City/cityService"
 import { getCustomerGroupsList } from "/@src/services/Others/CustomerGroup/customerGroupService"
+import { UserSearchFilter } from "/@src/models/Others/User/user"
 
 export default defineComponent({
     props: {
@@ -92,11 +93,18 @@ export default defineComponent({
         const statusesList = ref<UserStatus[]>([])
         const customerGroupsList = ref<CustomerGroup[]>([])
         onMounted(async () => {
-            const { cities } = await getCitiesList(defaultCitySearchFilter)
+            let citySearchFilter = {} as CitySearchFilter
+            citySearchFilter.per_page = 500
+            const { cities } = await getCitiesList(citySearchFilter)
             citiesList.value = cities
-            const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+            let customerGroupFilter = {} as CustomerGroupSearchFilter
+            customerGroupFilter.per_page = 500
+
+            const { customerGroups } = await getCustomerGroupsList(customerGroupFilter)
             customerGroupsList.value = customerGroups
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+            let userStatusFilter = {} as UserStatusSearchFilter
+            userStatusFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusFilter)
             statusesList.value = userstatuses
 
         })

@@ -3,7 +3,7 @@ import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatus
 import { defaultEmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
 import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
-import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
 
 export default defineComponent({
@@ -79,18 +79,16 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        const cities2 = ref<City[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        const nationalities2 = ref<Nationality[]>([])
+        const statusesList = ref<UserStatus[]>([])
         onMounted(async () => {
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
-            const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-            nationalities2.value = nationalities
+            let userStatusSearchFilter = {} as UserStatusSearchFilter
+            userStatusSearchFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
+            statusesList.value = userstatuses
         })
 
 
-        return { search, resetFilter, nationalities2, search_filter_popup, statuses2, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
+        return { search, resetFilter, search_filter_popup, statusesList, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
 
 
 
@@ -123,7 +121,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
                             <VOption value="">Status</VOption>
-                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
                             </VOption>

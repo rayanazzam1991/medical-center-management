@@ -56,7 +56,7 @@ const emits = defineEmits<{
                                 <h4 class="column-heading">Quantity</h4>
                                 <ul>
                                     <li>
-                                        <RouterLink to="/addQuantity">
+                                        <RouterLink to="/add-quantity">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>Add Quantity</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
@@ -65,7 +65,7 @@ const emits = defineEmits<{
                                 </ul>
                                 <ul>
                                     <li>
-                                        <RouterLink to="/withdrawQuantity">
+                                        <RouterLink to="/withdraw-quantity">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>Withdraw Quantity</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>

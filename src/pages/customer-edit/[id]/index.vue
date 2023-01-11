@@ -6,11 +6,11 @@ import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
-import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, CustomerGroupSearchFilter, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser, UserSearchFilter } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCustomer, updateCustomer } from '/@src/services/CRM/Customer/customerService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
@@ -18,6 +18,7 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerEditvalidationSchema } from '/@src/rules/CRM/Customer/customerEditValidation';
 import sleep from "/@src/utils/sleep"
+import { Notyf } from 'notyf';
 
 
 
@@ -45,7 +46,7 @@ customerForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const customerId = ref(0)
@@ -117,13 +118,27 @@ const customerGroupsList = ref<CustomerGroup[]>([])
 onMounted(async () => {
     if (!isLoading.value) {
         isLoading.value = true
-        const { cities } = await getCitiesList(defaultCitySearchFilter)
+        let citySearchFilter = {} as CitySearchFilter
+        citySearchFilter.per_page = 500
+        const { cities } = await getCitiesList(citySearchFilter)
         citiesList.value = cities
-        const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+        
+        let roomSearchFilter = {} as RoomSearchFilter
+        roomSearchFilter.per_page = 500
+
+        const { rooms } = await getRoomsList(roomSearchFilter)
         roomsList.value = rooms
-        const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+
+        let userStatusSearchFilter = {} as UserStatusSearchFilter
+        userStatusSearchFilter.per_page = 500
+
+        const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
         statusesList.value = userstatuses
-        const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+
+        let customerGroupSearchFilter = {} as CustomerGroupSearchFilter
+        customerGroupSearchFilter.per_page = 500
+
+        const { customerGroups } = await getCustomerGroupsList(customerGroupSearchFilter)
         customerGroupsList.value = customerGroups
         await fetchCustomer()
         isLoading.value = false

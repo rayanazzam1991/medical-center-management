@@ -9,6 +9,7 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { ErrorMessage, useForm } from "vee-validate";
 import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
 import sleep from "/@src/utils/sleep"
+import { Notyf } from "notyf"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -21,7 +22,7 @@ viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
   title: 'Customer',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
   number: 3,

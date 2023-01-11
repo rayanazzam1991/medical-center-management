@@ -1,7 +1,8 @@
 <script lang="ts">
 import { getDepartmentsList } from "/@src/services/Others/Department/departmentService"
-import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
+import { Department, defaultDepartmentSearchFilter, DepartmentSearchFilter } from "/@src/models/Others/Department/department"
 import { defaultRoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
+import { BaseConsts } from "/@src/utils/consts/base"
 
 
 export default defineComponent({
@@ -61,7 +62,9 @@ export default defineComponent({
         }
         const departments2 = ref<Department[]>([])
         onMounted(async () => {
-            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+            let departmentSearchFilter = {} as DepartmentSearchFilter
+            departmentSearchFilter.per_page = 500
+            const { departments } = await getDepartmentsList(departmentSearchFilter)
             departments2.value = departments
         })
         return { RoomConsts, search, resetFilter, departments2, search_filter_popup, searchNumber, searchFloor, searchDepartment, searchStatus }

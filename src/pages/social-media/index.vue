@@ -128,7 +128,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === SocialMediaConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === SocialMediaConsts.ACTIVE
                 ? 'success'
                 : undefined,

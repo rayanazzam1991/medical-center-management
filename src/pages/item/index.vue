@@ -27,6 +27,7 @@ const router = useRouter()
 const itemStore = useItem()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const selectedStatus = ref(0)
 
 onMounted(async () => {
     const { items, pagination } = await getItemsList(searchFilter.value)
@@ -39,6 +40,7 @@ onMounted(async () => {
 
 const changestatusItem = async () => {
     currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
+    currentChangeStatusItem.value.status = selectedStatus.value
     const { message, success } = await changeItemStatus(currentChangeStatusItem.value)
     if (success) {
         await search(searchFilter.value)
@@ -151,7 +153,7 @@ const columns = {
                     rounded: true,
                     color:
                         row.status === ItemConsts.INACTIVE
-                            ? 'orange'
+                            ? 'danger'
                             : row.status === ItemConsts.ACTIVE
                                 ? 'success'
                                 : undefined,
@@ -170,6 +172,7 @@ const columns = {
             h(NoDeleteDropDownVue, {
                 onChangeStatus: () => {
                     currentChangeStatusItem.value = row
+                    selectedStatus.value = row?.status
                     changeStatusPopup.value = true
                 },
                 onEdit: () => {
@@ -231,9 +234,9 @@ const columns = {
                             <VField id="status" v-slot="{ field }">
                                 <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentChangeStatusItem.status" :value="ItemConsts.INACTIVE"
-                                        :label="ItemConsts.showStatusName(0)" name="status" color="warning" />
-                                    <VRadio v-model="currentChangeStatusItem.status" :value="ItemConsts.ACTIVE"
+                                    <VRadio v-model="selectedStatus" :value="ItemConsts.INACTIVE"
+                                        :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
+                                    <VRadio v-model="selectedStatus" :value="ItemConsts.ACTIVE"
                                         :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>

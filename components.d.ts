@@ -17,7 +17,6 @@ declare module '@vue/runtime-core' {
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
     CategorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Category/CategorySearchFilterModel.vue')['default']
     CategoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryTableHeader.vue')['default']
-    ChangeStatusButton: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/ChangeStatusButton.vue')['default']
     CityDetails: typeof import('./src/components/OurComponents/Others/City/CityDetails.vue')['default']
     CityForm: typeof import('./src/components/OurComponents/Others/City/CityForm.vue')['default']
     CityTableHeader: typeof import('./src/components/OurComponents/Others/City/CityTableHeader.vue')['default']
