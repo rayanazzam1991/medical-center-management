@@ -8,11 +8,12 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { defaultPagination } from "/@src/utils/response"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 import sleep from "/@src/utils/sleep"
-
+import { useI18n } from "vue-i18n"
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('UserStatus')
+viewWrapper.setPageTitle(t('user_status.table.title'))
 useHead({
-    title: 'UserStatus',
+    title: t('user_status.table.title'),
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultUserStatusSearchFilter)
@@ -91,16 +92,19 @@ const columns = {
     id: {
         align: 'center',
         sortable: true,
+        label: t('user_status.table.columns.id')
 
     },
     name: {
         align: 'center',
         sortable: true,
+        label: t('user_status.table.columns.name')
 
 
     },
     actions: {
         align: 'center',
+        label: t('user_status.table.columns.actions'),
 
         renderRow: (row: any) =>
             h(MyDropDown, {
@@ -136,7 +140,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="userstatusesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -147,27 +152,29 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getUserStatusPerPage" />
-        <h6 v-if="userstatusesList.length != 0 && !userStatusStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="userstatusesList.length != 0 && !userStatusStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
         <VPlaceloadText v-if="userStatusStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal title="Remove UserStatus" :open="deleteUserStatusPopup" actions="center"
+    <VModal :title="t('user_status.table.modal_title')" :open="deleteUserStatusPopup" actions="center"
         @close="deleteUserStatusPopup = false">
         <template #content>
-            <VPlaceholderSection title="Are you sure?"
-                :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+            <VPlaceholderSection :title="t('modal.delete_modal.title')"
+                :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="removeUserStatus(deleteUserStatusId)">Confirm</VButton>
+            <VButton color="primary" raised @click="removeUserStatus(deleteUserStatusId)">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 </template>

@@ -15,10 +15,12 @@ import { Attendance, defaultAttendance, defaultEmployeeAttendance, defaultEmploy
 import { DateConsts, DaysNamePerMonth, DaysPerMonth } from '/@src/models/HR/Attendance/Date/date';
 import { AttendanceConsts, UpdateAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
 import { updateAttendance , justifyAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
+import { useI18n } from 'vue-i18n';
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Employees Attendance')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('employee_attendance.table.title'))
 useHead({
-    title: 'Employees Attendance',
+    title: t('employee_attendance.table.title'),
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultEmployeeAttendanceSearchFilter)
@@ -92,8 +94,6 @@ const resetFilter = async (newSearchFilter: EmployeeAttendanceSearchFilter) => {
     daysNamePerMonth.value = originalDaysName
     selectedYear.value = currentYear
     selectedMonth.value = currentMonth
-    console.log(selectedYear.value)
-    console.log(selectedMonth.value)
     await search(searchFilter.value, selectedMonthDays.value)
     loading.value.fetch = false
 
@@ -188,7 +188,6 @@ const updateEmployeeAttendance = async () => {
     }
     if (selectedCell.value.check_in != undefined) {
         const checkInSpliter = selectedCell.value.check_in?.split(':')
-        console.log(formatedCheckInHour, checkInSpliter[0])
         if (Number(formatedCheckInHour) > Number(checkInSpliter[0])) {
             await sleep(200);
             notif.error(`New check in can't be after original check in`)
@@ -332,18 +331,17 @@ const columns28 = {
     "users.name": {
         align: 'center',
 
-        label: 'Employee Name',
+        label: t('employee_attendance.table.columns.employee_name'),
         renderHeader: () =>
             h(
                 AttendanceTableCellCard, {
                 isHeader: true,
                 isMainHeader: true,
                 radius: 'none',
-                headerTitle: 'Employee Name',
+                headerTitle: t('employee_attendance.table.columns.employee_name'),
             }
 
             ),
-        // grow: true,
         renderRow: (row: any) =>
             h(
                 AttendanceTableCellCard, {
@@ -1773,7 +1771,8 @@ Object.assign(columns29, columns28, columns29Sub)
                     </div>
                 </div>
                 <div v-else-if="employeesAttendanceList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -1784,22 +1783,22 @@ Object.assign(columns29, columns28, columns29Sub)
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getEmployeesAttendancePerPage" />
-        <h6 v-if="employeesAttendanceList.length != 0 && !employeeStore?.loading && !loading.fetch">Showing {{
-            paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }}
-            to {{
-                paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total
-            }} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="employeesAttendanceList.length != 0 && !employeeStore?.loading && !loading.fetch">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
         <VPlaceloadText v-if="employeeStore?.loading || loading.fetch" :lines="1" last-line-width="20%" class="mx-2"  />
     </VFlexTableWrapper>
-    <VModal :key="keyIncement" title="Attendance Details" :open="tableCellPopup" actions="right"
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.attendance_details_modal.title')" :open="tableCellPopup" actions="right"
         @close="tableCellPopup = false">
         <template #content>
             <div class="is-flex is-justify-content-space-between">
@@ -1808,19 +1807,19 @@ Object.assign(columns29, columns28, columns29Sub)
                         selectedEmployee.user.last_name
                     }}</h2>
                     <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-5 mb-3">Date: <span class="has-text-primary"> {{
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.date')}} <span class="has-text-primary"> {{
                         daysNamePerMonth.find((day) =>
                             day.day == Number(selectedCell.date.split('-')[2]))?.day_name
                     }} {{
     selectedCell.date
 }}</span></h2>
-                    <h2 class="is-size-5 mb-3">Status: <span class="has-text-primary">{{
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}}<span class="has-text-primary">{{
                         AttendanceConsts.getAttendanceStatusName(selectedCell.status)
                     }}</span></h2>
                 </div>
                 <div>
                     <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised
-                        @click="markAttendancePopup = true">Mark Attendance</VButton>
+                        @click="markAttendancePopup = true">{{ t('employee_attendance.table.attendance_details_modal.mark_attendance') }}</VButton>
                 </div>
             </div>
 
@@ -1828,12 +1827,12 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-6 mb-2">Check In</h3>
-                            <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : 'No Data' }} </p>
+                            <h3 class="title is-6 mb-2">{{ t('employee_attendance.table.attendance_details_modal.check_in') }}</h3>
+                            <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-6 mb-2">Check Out</h3>
-                            <p> {{ selectedCell.check_out != undefined ? selectedCell.check_out : 'No Data' }} </p>
+                            <h3 class="title is-6 mb-2"> {{ t('employee_attendance.table.attendance_details_modal.check_out') }} </h3>
+                            <p> {{ selectedCell.check_out != undefined ? selectedCell.check_out : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
                         </VCard>
                     </div>
                 </div>
@@ -1845,17 +1844,17 @@ Object.assign(columns29, columns28, columns29Sub)
                 <VButton :disabled="loading.update" v-if="(selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
                 selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE) && canMarkAttendanceSelectedCell"
                     class="mr-2" color="danger" outlined @click="justifyEmployeeAttendance(false)">
-                    Unjustify Attendance</VButton>
+                    {{ t('employee_attendance.table.attendance_details_modal.unjustify_attendance') }}</VButton>
             </VLoader>
             <VLoader size="small" :active="loading.update">
                 <VButton :disabled="loading.delete" v-if="(selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
                 selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE) && canMarkAttendanceSelectedCell"
                     class="mr-2" color="primary" outlined @click="justifyEmployeeAttendance(true)">
-                    Justify Attendance</VButton>
+                    {{ t('employee_attendance.table.attendance_details_modal.justify_attendance') }}</VButton>
             </VLoader>
         </template>
     </VModal>
-    <VModal :key="keyIncement" title="Mark Attendance" :open="markAttendancePopup" actions="right"
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.mark_attendance_modal.title')" :open="markAttendancePopup" actions="right"
         @close="markAttendancePopup = false">
         <template #content>
             <div class="is-flex is-justify-content-space-between">
@@ -1864,13 +1863,13 @@ Object.assign(columns29, columns28, columns29Sub)
                         selectedEmployee.user.last_name
                     }}</h2>
                     <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-5 mb-3">Date: <span class="has-text-primary"> {{
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.date') }}<span class="has-text-primary"> {{
                         daysNamePerMonth.find((day) =>
                             day.day == Number(selectedCell.date.split('-')[2]))?.day_name
                     }} {{
     selectedCell.date
 }}</span></h2>
-                    <h2 class="is-size-5 mb-3">Status: <span class="has-text-primary">{{
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span class="has-text-primary">{{
                         AttendanceConsts.getAttendanceStatusName(selectedCell.status)
                     }}</span></h2>
                 </div>
@@ -1880,7 +1879,7 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-6 mb-2">Check In</h3>
+                            <h3 class="title is-6 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_in')}}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
@@ -1914,7 +1913,7 @@ Object.assign(columns29, columns28, columns29Sub)
                             <!-- <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : 'No Data' }} </p> -->
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-6 mb-2">Check Out</h3>
+                            <h3 class="title is-6 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_out')}}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
@@ -1953,7 +1952,7 @@ Object.assign(columns29, columns28, columns29Sub)
         <template #action="{ close }">
             <VLoader size="small" :active="loading.update">
                 <VButton class="mr-2" color="primary" @click="updateEmployeeAttendance">
-                    Update</VButton>
+                    {{t('modal.buttons.update')}}</VButton>
             </VLoader>
         </template>
     </VModal>

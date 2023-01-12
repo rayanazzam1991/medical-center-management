@@ -1,5 +1,7 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
+import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue';
 
@@ -16,13 +18,13 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
-
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Contractor')
+viewWrapper.setPageTitle(t('contractor.table.title'))
 useHead({
-    title: 'Contractor',
+    title: t('contractor.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultContractorSearchFilter)
 const contractorsList = ref<Array<Contractor>>([])
 const statusesList = ref<Array<UserStatus>>([])
@@ -109,7 +111,7 @@ const columns = {
     "users.name": {
         align: 'center',
 
-        label: 'Name',
+        label: t('contractor.table.columns.name'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
@@ -121,7 +123,7 @@ const columns = {
     "users.phone_number": {
         align: 'center',
         grow: false,
-        label: 'Phone',
+        label:  t('contractor.table.columns.phone'),
         renderRow: (row: any) =>
             h('span', row?.user?.phone_number),
 
@@ -132,7 +134,7 @@ const columns = {
     },
     speciality: {
         align: 'center',
-        label: 'Speciality',
+        label:  t('contractor.table.columns.speciality'),
         renderRow: (row: any) =>
             h('span', row?.speciality?.name),
 
@@ -141,7 +143,7 @@ const columns = {
     },
     "users.rooms.department": {
         align: 'center',
-        label: 'Department',
+        label: t('contractor.table.columns.department'),
         renderRow: (row: any) =>
             h('span', row?.user?.room?.department?.name),
 
@@ -151,7 +153,7 @@ const columns = {
     },
     "users.room": {
         align: 'center',
-        label: 'Room #',
+        label: t('contractor.table.columns.room'),
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
 
@@ -161,7 +163,7 @@ const columns = {
     },
     "users.status": {
         align: 'center',
-        label: 'status',
+        label: t('contractor.table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -192,7 +194,7 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        label: 'Create Date',
+        label: t('contractor.table.columns.created_at'),
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
@@ -202,6 +204,7 @@ const columns = {
     actions: {
         align: 'end',
         grow: false,
+        label: t('contractor.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoEditDropDown, {
                 onView: () => {
@@ -236,7 +239,7 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="contractorsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -247,21 +250,24 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getContractorsPerPage" />
-        <h6 v-if="contractorsList.length != 0 && !contractorStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="contractorsList.length != 0 && !contractorStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
+
         <VPlaceloadText v-if="contractorStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
 
     </VFlexTableWrapper>
-    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('contractor.table.modal_title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -269,7 +275,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="user_status_id">
-                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel>{{ t('contractor.table.columns.ststus') }}</VLabel>
                                 <VControl>
                                     <VSelect v-model="contractorChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
@@ -286,7 +292,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 

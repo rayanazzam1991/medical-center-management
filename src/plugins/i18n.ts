@@ -13,6 +13,7 @@ export default definePlugin(({ app }) => {
 	const defaultLocale = useStorage('locale', 'ar')
 	const i18n = createI18n({
 		locale: defaultLocale.value,
+		fallbackLocale: 'en',
 		legacy: false,
 		globalInjection: true,
 

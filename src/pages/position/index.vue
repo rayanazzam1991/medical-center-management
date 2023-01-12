@@ -12,11 +12,12 @@ import { usePosition } from '/@src/stores/Others/Position/positionStore'
 import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
-
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Position')
+viewWrapper.setPageTitle(t('position.table.title'))
 useHead({
-    title: 'Position',
+    title: t('position.table.title'),
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultPositionSearchFilter)
@@ -96,20 +97,26 @@ const columns = {
     id: {
         align: 'center',
         sortable: true,
+        label : t('position.table.columns.id')
 
     },
     name: {
         align: 'center',
         sortable: true,
+        label : t('position.table.columns.name')
 
 
     },
     description: {
         align: 'center',
         sortable: true,
+        label : t('position.table.columns.description')
+
     },
     status: {
         align: 'center',
+        label : t('position.table.columns.status'),
+
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -132,6 +139,8 @@ const columns = {
     },
     actions: {
         align: 'center',
+        label : t('position.table.columns.actions'),
+
         renderRow: (row: any) =>
             h(NoDeleteDropDown, {
                 onEdit: () => {
@@ -167,7 +176,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="positionsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -178,20 +188,22 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getPositionsPerPage" />
-        <h6 v-if="positionsList.length != 0 && !positionStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="positionsList.length != 0 && !positionStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
         <VPlaceloadText v-if="positionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
     </VFlexTableWrapper>
-    <VModal title="Change Position Status" :open="changeStatusPopup" actions="center"
+    <VModal :title="t('position.table.modal_title')" :open="changeStatusPopup" actions="center"
         @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
@@ -200,7 +212,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField id="status" v-slot="{ field }">
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel class="required">{{ t('position.table.columns.status') }}</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentChangeStatusPosition.status"
                                         :value="PositionConsts.INACTIVE" :label="PositionConsts.showStatusName(0)"
@@ -217,7 +229,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusPosition()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusPosition()">{{ t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 

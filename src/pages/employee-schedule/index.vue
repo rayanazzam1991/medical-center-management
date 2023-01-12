@@ -10,12 +10,14 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
+import { useI18n } from 'vue-i18n';
 
+const {t} = useI18n()
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Employees Schedule')
+viewWrapper.setPageTitle(t('employee_schedule.table.title'))
 useHead({
-    title: 'Employees Schedule',
+    title: t('employee_schedule.table.title'),
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultEmployeeScheduleSearchFilter)
@@ -203,7 +205,7 @@ const columns = {
     "users.name": {
         align: 'center',
 
-        label: 'Employee Name',
+        label : t('employee_schedule.table.columns.employee_name'),
         grow: true,
         renderRow: (row: any) =>
             h(
@@ -416,7 +418,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="employeesScheduleList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -427,24 +430,24 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getEmployeesSchedulePerPage" />
-        <h6 v-if="employeesScheduleList.length != 0 && !employeeStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}}
-            to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
-
+        <h6 v-if="employeesScheduleList.length != 0 && !employeeStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :key="keyIncement" title="Edit Employee Schedule" :open="tableCellPopup" actions="right"
+    <VModal :key="keyIncement" :title="t('employee_schedule.table.modal.title')" :open="tableCellPopup" actions="right"
         @close="tableCellPopup = false">
         <template #content>
-            <h2 class="is-size-5 has-text-primary mb-3">Day: {{ selectedCell.day_of_week }}</h2>
+            <h2 class="is-size-5 has-text-primary mb-3">{{t('employee_schedule.table.modal.day')}} {{ selectedCell.day_of_week }}</h2>
             <h2 class="is-size-5">{{ selectedEmployee.user.first_name }}
                 {{ selectedEmployee.user.last_name }}</h2>
             <h4 class="mb-3"><span class=""> {{ selectedEmployee.position.name
@@ -457,7 +460,7 @@ const columns = {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h2 class="mb-3">Starting Time</h2>
+                            <h2 class="mb-3">{{t('employee_schedule.table.modal.start_time')}}</h2>
                             <div class="columns">
 
                                 <VField class="column is-6 ">
@@ -486,7 +489,7 @@ const columns = {
 
                         </div>
                         <div class="column is-12">
-                            <h2 class="mb-3">End Time</h2>
+                            <h2 class="mb-3">{{t('employee_schedule.table.modal.end_time')}}</h2>
                             <div class="columns ">
                                 <VField class="column is-6">
                                     <VControl>
@@ -520,10 +523,10 @@ const columns = {
         <template #action="{ close }">
             <VLoader size="small" :active="loading.delete">
                 <VButton v-if="!selectedCell.is_vacation" class="mr-2" color="danger" outlined @click="deleteSchedule">
-                    Make Vacation</VButton>
+                    {{ t('employee_schedule.table.modal.make_vacation')}}</VButton>
             </VLoader>
             <VLoader size="small" :active="loading.update">
-                <VButton color="primary" raised @click="updateSchedule">Update</VButton>
+                <VButton color="primary" raised @click="updateSchedule">  {{ t('modal.buttons.update')}}</VButton>
             </VLoader>
         </template>
     </VModal>

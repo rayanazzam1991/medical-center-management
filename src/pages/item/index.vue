@@ -11,10 +11,12 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore'
 import sleep from '/@src/utils/sleep'
 import { defaultChangeItemStatus, defaultItem } from '/@src/models/Warehouse/Item/item'
 import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Item')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('item.table.title'))
 useHead({
-    title: 'Item',
+    title: t('item.table.title'),
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemSearchFilter)
@@ -90,13 +92,14 @@ const columns = {
         align: 'center',
         grow: true,
         searchable: true,
+        label : t('item.table.columns.name')
     },
     Level1: {
         sortable: true,
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Level 1',
+        label : t('item.table.columns.level_1'),
         renderRow: (row: any) =>
             h('span', row?.category?.parent?.name)
     },
@@ -105,7 +108,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Level 2',
+        label : t('item.table.columns.level_2'),
         renderRow: (row: any) =>
             h('span', row?.category?.name)
     },
@@ -114,30 +117,35 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
+        label : t('item.table.columns.quantity')
 
     },
     price: {
         sortable: true,
         align: 'center',
         searchable: true,
+        label : t('item.table.columns.price')
+
     },
     cost: {
         sortable: true,
         align: 'center',
         searchable: true,
+        label : t('item.table.columns.cost')
+
     },
     created_by: {
         sortable: true,
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Created_by',
+        label : t('item.table.columns.created_by'),
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
     created_at: {
         align: 'center',
-        label: 'Create Date',
+        label : t('item.table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -146,6 +154,7 @@ const columns = {
     },
     status: {
         align: 'center',
+        label : t('item.table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -168,6 +177,7 @@ const columns = {
 
     actions: {
         align: 'center',
+        label : t('item.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoDeleteDropDownVue, {
                 onChangeStatus: () => {
@@ -200,7 +210,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="itemsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitles')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -210,21 +221,22 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getItemsPerPage" />
-        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">Showing {{
-            paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-    paginationVar.page !=
-        paginationVar.max_page ?
-        paginationVar.page *
-        paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
         <VPlaceloadText v-if="itemStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal title="Change Item Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('item.table.modal_title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -232,7 +244,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField id="status" v-slot="{ field }">
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel class="required">{{ t('item.table.columns.status') }}</VLabel>
                                 <VControl>
                                     <VRadio v-model="selectedStatus" :value="ItemConsts.INACTIVE"
                                         :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
@@ -247,7 +259,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItem()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusItem()">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 </template>

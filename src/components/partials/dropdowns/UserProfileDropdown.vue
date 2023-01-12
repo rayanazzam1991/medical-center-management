@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { User } from "/@src/models/Others/User/user";
 import { useAuth } from "/@src/stores/Others/User/authStore";
 
 const userAuth = useAuth();
 const router = useRouter();
+const {t} = useI18n();
 const user = ref<Partial<User>>(userAuth.getUser());
 const userFullName = ref('')
 userFullName.value = userAuth.getUserFulLName()
@@ -33,7 +35,7 @@ const logoutUser = async () => {
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
         <div class="meta">
           <span>{{ userFullName }}</span>
-          <span>Product Manager</span>
+          <!-- <span>Product Manager</span> -->
         </div>
       </div>
 
@@ -86,7 +88,7 @@ const logoutUser = async () => {
       <div class="dropdown-item is-button">
         <VButton class="logout-button" icon="feather:log-out" color="primary" role="menuitem" @click="logoutUser" raised
           fullwidth>
-          Logout
+          {{t('user_profile_dropdown.logout')}}
         </VButton>
       </div>
     </template>

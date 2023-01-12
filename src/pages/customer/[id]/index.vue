@@ -34,6 +34,8 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import CKE from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
@@ -45,7 +47,8 @@ const deleteFileId = ref()
 const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const {t} = useI18n()
 const customerForm = useCustomerForm()
 const customerProfilePicture = ref(defaultCustomerProfilePic)
 const customerFiles = ref<Array<Media>>([])

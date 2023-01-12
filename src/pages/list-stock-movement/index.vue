@@ -17,10 +17,12 @@ import {
 } from '/@src/models/Warehouse/ItemHistory/itemHistory'
 import { Notyf } from 'notyf'
 import { BaseConsts } from '/@src/utils/consts/base'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('List Stock Movement')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('list_stock_movement.table.title'))
 useHead({
-    title: 'List Stock Movement',
+    title: t('list_stock_movement.table.title'),
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemHistorySearchFilter)
@@ -103,27 +105,11 @@ const noteTrim = (value: string) => {
     }
 }
 const columns = {
-    // Level1: {
-    //     searchable: true,
-    //     grow: true,
-    //     align: 'center',
-    //     label: 'Level 1',
-    //     renderRow: (row: any) =>
-    //         h('span', row?.item.category?.parent?.name)
-    // },
-    // Level2: {
-    //     searchable: true,
-    //     grow: true,
-    //     align: 'center',
-    //     label: 'Level 2',
-    //     renderRow: (row: any) =>
-    //         h('span', row?.item.category?.name)
-    // },
-    Item: {
+    item: {
         searchable: true,
         grow: "xl",
         align: 'center',
-        label: 'Item',
+        label: t('list_stock_movement.table.columns.item'),
         renderRow: (row: any) =>
             h('span', row?.item.name)
     },
@@ -132,6 +118,8 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
+        label: t('list_stock_movement.table.columns.type'),
+
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -155,14 +143,14 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
-        label: 'quantity',
+        label: t('list_stock_movement.table.columns.quantity'),
 
     },
     add_item_cost: {
         sortable: true,
         align: 'center',
         searchable: true,
-        label: 'cost',
+        label: t('list_stock_movement.table.columns.cost'),
         renderRow: (row: any) =>
             h('span', row?.add_item_cost ? row?.add_item_cost : '-'),
 
@@ -173,7 +161,7 @@ const columns = {
         sortable: true,
         align: 'center',
         searchable: true,
-        label: 'Price',
+        label: t('list_stock_movement.table.columns.price'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-'),
@@ -184,7 +172,7 @@ const columns = {
         searchable: true,
         grow: 'lg',
         align: 'center',
-        label: 'requester',
+        label: t('list_stock_movement.table.columns.requester'),
         renderRow: (row: any) =>
             h('span', {
                 innerHTML: row?.requester_name ?
@@ -197,6 +185,8 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
+        label: t('list_stock_movement.table.columns.note'),
+
         renderRow: (row: any) =>
             h('span', {
                 innerHTML:
@@ -207,7 +197,7 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        label: 'Create_at',
+        label: t('list_stock_movement.table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -218,7 +208,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Created_by',
+        label: t('list_stock_movement.table.columns.created_by'),
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
@@ -240,7 +230,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="itemHistoriesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')"
+                     :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -250,25 +241,24 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getItemHistoriesPerPage" />
-        <h6 v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading">Showing {{
-            paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-    paginationVar.page !=
-        paginationVar.max_page ?
-        paginationVar.page *
-        paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
-
+        <h6 v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
         <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal title="Change ItemHistory Status" :open="changeStatusPopup" actions="center"
+    <!-- <VModal title="Change Item History Status" :open="changeStatusPopup" actions="center"
         @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
-                <!--Fieldset-->
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
@@ -292,7 +282,7 @@ const columns = {
         <template #action="{ close }">
             <VButton color="primary" raised @click="changestatusItemHistory()">Confirm</VButton>
         </template>
-    </VModal>
+    </VModal> -->
 </template>
 <style  lang="scss">
 .tooltip {

@@ -9,10 +9,12 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Room')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('room.table.title'))
 useHead({
-  title: 'Room',
+  title: t('room.table.title'),
 })
 const notif = useNotyf()
 const searchFilter = ref(defaultRoomSearchFilter)
@@ -92,30 +94,36 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
+    label : t('room.table.columns.id')
     
   },
   number: {
     sortable: true,
     align: 'center',
     searchable: true,
+    label : t('room.table.columns.number')
+
 
   },
   floor: {
     sortable: true,
     align: 'center',
     searchable: true,
+    label : t('room.table.columns.floor')
 
   },
   department: {
     sortable: true,
     searchable: true,
     align: 'center',
-    label: 'Department',
+    label : t('room.table.columns.department'),
     renderRow: (row: any) =>
       h('span', row?.department?.name)
   },
   status: {
     align: 'center',
+    label : t('room.table.columns.status'),
+
     renderRow: (row: any) =>
       h(
         VTag,
@@ -139,6 +147,7 @@ const columns = {
 
   actions: {
     align: 'center',
+    label : t('room.table.columns.actions'),
 
     renderRow: (row: any) =>
       h(MyDropDown, {
@@ -174,7 +183,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="roomsList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" 
+          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
@@ -182,26 +192,28 @@ const columns = {
     <VFlexPagination v-if="(roomsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getRoomsPerPage" />
-    <h6 v-if="roomsList.length != 0 && !roomStore?.loading">Showing {{ paginationVar.page !=
-    paginationVar.max_page
-    ?
-    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-}} to {{
-    paginationVar.page !=
-      paginationVar.max_page ?
-      paginationVar.page *
-      paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+    <h6 v-if="roomsList.length != 0 && !roomStore?.loading">
+      {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
     <VPlaceloadText v-if="roomStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal title="Remove Room" :open="deleteRoomPopup" actions="center" @close="deleteRoomPopup = false">
+  <VModal :title="t('room.table.modal_title')" :open="deleteRoomPopup" actions="center" @close="deleteRoomPopup = false">
     <template #content>
-      <VPlaceholderSection title="Are you sure?"
-        :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+      <VPlaceholderSection :title="t('modal.delete_modal.title')"
+        :subtitle="t('modal.delete_modal.subtitle',{title : viewWrapper.pageTitle})" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeRoom(deleteRoomId)">Confirm</VButton>
+      <VButton color="primary" raised @click="removeRoom(deleteRoomId)">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
 

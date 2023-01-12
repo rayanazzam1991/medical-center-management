@@ -69,6 +69,7 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
             searchFilter.value.is_main_category = undefined
             context.emit('search', searchFilter.value)
         }

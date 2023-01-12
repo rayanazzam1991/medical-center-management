@@ -20,101 +20,101 @@ const emits = defineEmits<{
                     <div class="center has-slimscroll">
                         <div class="columns">
                             <div class="column is-3">
-                                <h4 class="column-heading">{{t('Nationalities')}}</h4>
+                                <h4 class="column-heading">{{t('others_subnav.nationality.nationalities')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/nationality">
                                             <i class="lnir lnir-flag-alt" aria-hidden="true"></i>
-                                            <span>Nationalities</span>
+                                            <span>{{t('others_subnav.nationality.nationalities')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/nationality/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create Nationality</span>
+                                            <span>{{t('others_subnav.nationality.create_nationality')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">Services</h4>
+                                <h4 class="column-heading">{{t('others_subnav.service.services')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/service">
                                             <i class="lnir lnir-briefcase-alt" aria-hidden="true"></i>
-                                            <span>Services</span>
+                                            <span>{{t('others_subnav.service.services')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/service/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create Service</span>
+                                            <span>{{t('others_subnav.service.create_service')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">Departments</h4>
+                                <h4 class="column-heading">{{t('others_subnav.department.departments')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/department">
                                             <i class="lnir lnir-grid-alt" aria-hidden="true"></i>
-                                            <span>Departments</span>
+                                            <span>{{t('others_subnav.department.departments')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/department/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create Department</span>
+                                            <span>{{t('others_subnav.department.create_department')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">Rooms</h4>
+                                <h4 class="column-heading">{{ t('others_subnav.room.rooms') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/room">
                                             <i class="lnir lnir-door-alt" aria-hidden="true"></i>
-                                            <span>Rooms</span>
+                                            <span>{{  t('others_subnav.room.rooms') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/room/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create Room</span>
+                                            <span>{{t('others_subnav.room.create_room')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">Cities</h4>
+                                <h4 class="column-heading">{{t('others_subnav.city.cities')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/city">
                                             <i class="lnir lnir-map" aria-hidden="true"></i>
-                                            <span>Cities</span>
+                                            <span>{{t('others_subnav.city.cities')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/city/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create City</span>
+                                            <span>{{t('others_subnav.city.create_city')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">Settings</h4>
+                                <h4 class="column-heading">{{t('others_subnav.setting.settings')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/settings">
                                             <i class="fas fa-wrench" aria-hidden="true"></i>
-                                            <span>Edit Settings</span>
+                                            <span>{{ t('others_subnav.setting.edit_settings')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
@@ -122,19 +122,19 @@ const emits = defineEmits<{
 
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">User Statuses</h4>
+                                <h4 class="column-heading">{{t('others_subnav.user_status.user_statuses')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/userStatus">
                                             <i class="fas fa-user-check" aria-hidden="true"></i>
-                                            <span>User Statuses</span>
+                                            <span>{{t('others_subnav.user_status.user_statuses')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/userStatus/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create User Status</span>
+                                            <span>{{t('others_subnav.user_status.create_user_status')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>

@@ -38,10 +38,142 @@
   "validation": {
     "required": "This field is required",
     "number": {
-      "invalid_type_error": "Please enter a valid number"
+      "price": "Please enter a valid price",
+      "invalid_type_error": "Please enter a valid number",
+      "payment_percentage": "Please enter a number from 0-100",
+      "phone_number": "Please enter a valid phone number"
     },
     "redio": {
       "required": "Please choose one"
+    },
+    "date": {
+      "required_error": "Please select a date and time",
+      "invalid_type_error": "That's not a date!",
+      "format": "Date must be a vaild date format YYYY-MM-DD"
+    },
+    "text": {
+      "invalid_type_error": "Please enter a text"
+    },
+    "URL": {
+      "invalid_type_error": "Please enter a valid URL"
     }
-  }
+  },
+  "navbar": {
+    "others": "Others",
+    "crm": "CRM",
+    "contractor": "Contractor",
+    "human_resources": "Human Resources",
+    "warehouse": "Warehouse"
+  },
+  "others_subnav": {
+    "nationality": {
+      "nationalities": "Nationalities",
+      "create_nationality": "Create Nationality"
+    },
+    "service": {
+      "services": "Services",
+      "create_service": "Create Service"
+    },
+    "department": {
+      "departments": "Departments",
+      "create_department": "Create Department"
+    },
+    "room": {
+      "rooms": "Rooms",
+      "create_room": "Create Room"
+    },
+    "city": {
+      "cities": "Cities",
+      "create_city": "Create City"
+    },
+    "setting": {
+      "settings": "Settings",
+      "edit_settings": "Edit Settings"
+    },
+    "user_status": {
+      "user_statuses": "User Statuses",
+      "create_user_status": "Create User Status"
+    }
+  },
+  "crm_subnav": {
+    "customer": {
+      "customers": "Customers",
+      "create_customer": "Create Customer"
+    },
+    "customer_group": {
+      "customer_groups": "Customer Groups",
+      "create_customer_group": "Create Customer Group"
+    },
+    "social_media": {
+      "social_medias": "Social Media",
+      "create_social_media": "Create Social Media"
+    }
+  },
+  "contractor_subnav": {
+    "contractor": {
+      "contractors": "Contractors",
+      "create_contractor": "Create Contractor"
+    },
+    "speciality": {
+      "specialities": "Specialities",
+      "create_speciality": "Create Speciality"
+    }
+  },
+  "human_resources_subnav": {
+    "employee": {
+      "employees": "Employees",
+      "create_employee": "Create Employee"
+    },
+    "position": {
+      "positions": "Positions",
+      "create_position": "Create Position"
+    },
+    "employees_schedule": "Employees Schedule",
+    "employees_attendance": "Employees Attendance"
+  },
+  "warehouse_subnav": {
+    "category": {
+      "categories": "Categories",
+      "create_category": "Create Category"
+    },
+    "item": {
+      "items": "Items",
+      "create_item": "Create Item"
+    },
+    "quantity": {
+      "quantity": "Quantity",
+      "add_quantity": "Add Quantity",
+      "withdraw_quantity": "Withdray Quantity"
+    },
+    "item_history": {
+      "item_history": "Item History",
+      "list_stock_movement": "List Stock Movement"
+    }
+  },
+  "user_profile_dropdown": {
+    "logout": "Logout"
+  },
+  "tables" : {
+    "placeholder" : {
+        "title" : "No matches",
+        "subtitle" : "There is no data that match your search."
+    },
+    "pagination_footer" : "Showing {from_number} to {to_number} of {all_number} entries"
+},
+
+
+"category" : {
+    "table" : {
+        "title" : "Category",
+        "columns" : {
+            "name" : "Name",
+            "parent" : "Parent" ,
+            "created_by" : "Created By",
+            "created_at" : "Created At",
+            "status" : "Status",
+            "actions" : "Actions"
+        }
+    }
+}
+
 }

@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 type TabId = 'warehouse' | 'templates'
 const activeTab = ref<TabId>('warehouse')
 const emits = defineEmits<{
     (e: 'close'): void
 }>()
+const {t} = useI18n()
 
 </script>
 
@@ -17,48 +20,48 @@ const emits = defineEmits<{
                     <div class="center has-slimscroll">
                         <div class="columns">
                             <div class="column is-3">
-                                <h4 class="column-heading">Categories</h4>
+                                <h4 class="column-heading">{{ t('warehouse_subnav.category.categories') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/category">
                                             <i class="lnir lnir-briefcase" aria-hidden="true"></i>
-                                            <span>Categories</span>
+                                            <span>{{  t('warehouse_subnav.category.categories') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/category/add">
                                             <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>Create Category</span>
+                                            <span>{{t('warehouse_subnav.category.create_category')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
-                                <h4 class="column-heading">Items</h4>
+                                <h4 class="column-heading">{{t('warehouse_subnav.item.items')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/item">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>Items</span>
+                                            <span>{{t('warehouse_subnav.item.items')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/item/add">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>Create item</span>
+                                            <span>{{t('warehouse_subnav.item.create_item')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">Quantity</h4>
+                                <h4 class="column-heading">{{ t('warehouse_subnav.quantity.quantity') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/add-quantity">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>Add Quantity</span>
+                                            <span>{{ t('warehouse_subnav.quantity.add_quantity') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
@@ -67,19 +70,19 @@ const emits = defineEmits<{
                                     <li>
                                         <RouterLink to="/withdraw-quantity">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>Withdraw Quantity</span>
+                                            <span>{{ t('warehouse_subnav.quantity.withdraw_quantity') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">History</h4>
+                                <h4 class="column-heading">{{t('warehouse_subnav.item_history.item_history')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/list-stock-movement">
                                             <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>List Stock Movement</span>
+                                            <span>{{t('warehouse_subnav.item_history.list_stock_movement')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>

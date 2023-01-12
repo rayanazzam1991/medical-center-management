@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 type TabId = 'HR' | 'templates'
 const activeTab = ref<TabId>('HR')
 const emits = defineEmits<{
   (e: 'close'): void
 }>()
+const {t} = useI18n()
 
 </script>
 
@@ -17,60 +20,60 @@ const emits = defineEmits<{
           <div class="center has-slimscroll">
             <div class="columns">
               <div class="column is-3">
-                <h4 class="column-heading">Employees</h4>
+                <h4 class="column-heading">{{t('human_resources_subnav.employee.employees')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee">
                       <i class="lnir lnir-briefcase" aria-hidden="true"></i>
-                      <span>Employees</span>
+                      <span>{{t('human_resources_subnav.employee.employees')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/employee-add">
                       <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                      <span>Create Employee</span>
+                      <span>{{t('human_resources_subnav.employee.create_employee')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                 </ul>
-                <h4 class="column-heading">Positions</h4>
+                <h4 class="column-heading">{{t('human_resources_subnav.position.positions')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/position">
                       <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                      <span>Positions</span>
+                      <span>{{t('human_resources_subnav.position.positions')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/position/add">
                       <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                      <span>Create Position</span>
+                      <span>{{t('human_resources_subnav.position.create_position')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                 </ul>
               </div>
               <div class="column is-3">
-                <h4 class="column-heading">Employees Schedule</h4>
+                <h4 class="column-heading">{{t('human_resources_subnav.employees_schedule')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee-schedule">
                       <i aria-hidden="true" class="lnir lnir-calender-alt-1"></i>
-                      <span>Employees Schedule</span>
+                      <span>{{t('human_resources_subnav.employees_schedule')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                 </ul>
               </div>
               <div class="column is-3">
-                <h4 class="column-heading">Employees Attendance</h4>
+                <h4 class="column-heading">{{t('human_resources_subnav.employees_attendance')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee-attendance">
                       <i class="lnir lnir-calender-alt" aria-hidden="true"></i>
-                      <span>Employees Attendance</span>
+                      <span>{{t('human_resources_subnav.employees_attendance')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>

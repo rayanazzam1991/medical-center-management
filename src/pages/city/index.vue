@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -10,11 +12,12 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('City')
+const { t } = useI18n()
+viewWrapper.setPageTitle(t('city.table.title'))
 useHead({
-  title: 'City',
+  title: t('city.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const cityStore = useCity()
 const searchFilter = ref(defaultCitySearchFilter)
 const citiesList = ref<Array<City>>([])
@@ -86,16 +89,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
+    label: t("city.columns.id")
 
   },
   name: {
     align: 'center',
     sortable: true,
+    label: t("city.columns.name")
 
 
   },
   status: {
     align: 'center',
+    label: t("city.columns.status"),
 
     renderRow: (row: any) =>
       h(
@@ -119,7 +125,7 @@ const columns = {
   },
   actions: {
     align: 'center',
-
+    label: t("city.columns.actions"),
     renderRow: (row: any) =>
       h(MyDropDown, {
 
@@ -166,7 +172,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="citiesList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
 
@@ -176,15 +183,18 @@ const columns = {
     <VFlexPagination v-if="(citiesList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getCitiesPerPage" />
-    <h6 v-if="citiesList.length != 0 && !cityStore?.loading">Showing {{ paginationVar.page != paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-    }} to {{
-    paginationVar.page !=
-      paginationVar.max_page ?
-      paginationVar.page *
-      paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+    <h6 v-if="citiesList.length != 0 && !cityStore?.loading">
+      {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
     <VPlaceloadText v-if="cityStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
@@ -192,13 +202,13 @@ const columns = {
 
 
 
-  <VModal title="Remove City" :open="deleteCityPopup" actions="center" @close="deleteCityPopup = false">
+  <VModal :title="t('city.table.modal_title')" :open="deleteCityPopup" actions="center" @close="deleteCityPopup = false">
     <template #content>
-      <VPlaceholderSection title="Are you sure?"
-        :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+      <VPlaceholderSection :title="t('modal.delete_modal.title')"
+        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeCity(deleteCityId)">Confirm</VButton>
+      <VButton color="primary" raised @click="removeCity(deleteCityId)">{{ t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
 
