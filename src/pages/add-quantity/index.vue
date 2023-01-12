@@ -17,6 +17,8 @@ import { Media } from '/@src/models/Others/Media/media';
 import { error } from 'node:console';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
+import {useI18n} from "vue-i18n";
+
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Add Quantity')
@@ -36,8 +38,9 @@ itemHistoryForm.setStep({
             })
         }
     },
-})
 
+})
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf() as Notyf
@@ -108,12 +111,12 @@ const onAddFile = async (event: any) => {
     if (_file) {
 
         if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
-            _message = 'Please choose an accepted file type'
+            _message = t('toast.file.type')
             await sleep(500);
             notif.error(_message)
 
         } else if (_file.size > (2 * 1024 * 1024)) {
-            _message = 'File size must be less than 2MB '
+            _message = t('toast.file.size')
             await sleep(500);
             notif.error(_message)
 
@@ -144,7 +147,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         notif.dismissAll();
         // @ts-ignore
         await sleep(500)
-        notif.success(`${addQuantity.item.name} ${viewWrapper.pageTitle} was added successfully`);
+        notif.success(t('toast.success.add'));
 
         router.push({ path: `/item/${addQuantity.item.id}` });
     }

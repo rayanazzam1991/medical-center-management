@@ -34,6 +34,8 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import CKE from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
@@ -45,7 +47,8 @@ const deleteFileId = ref()
 const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const customerForm = useCustomerForm()
 const customerProfilePicture = ref(defaultCustomerProfilePic)
 const customerFiles = ref<Array<Media>>([])
@@ -67,9 +70,9 @@ const config = {
 }
 // @ts-ignore
 customerId.value = route.params.id
-viewWrapper.setPageTitle(`Customer`)
+viewWrapper.setPageTitle(t('customer.details.title'))
 useHead({
-  title: 'Customer',
+  title: t('customer.details.title'),
 })
 const customerStore = useCustomer()
 const props = withDefaults(
@@ -125,10 +128,7 @@ const changestatusUser = async () => {
   await sleep(200)
 
   // @ts-ignore
-  notif.success(
-    `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} were edited successfully`
-  )
-  // router.push({ path: `/employee/${userData.id}` })
+  notif.success( t('toast.success.edit') )
   changeStatusPopup.value = false
 }
 
@@ -166,7 +166,7 @@ const editNotes = async () => {
     notif.dismissAll()
     await sleep(200)
     // @ts-ignore
-    notif.success(`Customer notes was edited successfully`)
+    notif.success(t('toast.success.customer_note'))
     currentCustomer.value.notes = customer.notes
     currentCustomer.value.notes_by = customer.notes_by
     currentCustomer.value.notes_timestamp = customer.notes_timestamp
@@ -239,11 +239,11 @@ const onAddFile = async (event: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -263,9 +263,7 @@ const UploadFile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was added successfully`
-    )
+    notif.success(t('toast.success.add'))
     media[0].file_name = media[0].relative_path
     media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
 
@@ -295,9 +293,7 @@ const removefile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was deleted successfully`
-    )
+    notif.success(t('toast.success.remove'))
 
     customerFiles.value.splice(
       customerFiles.value.findIndex((element) => element.id == deleteFileId.value),
@@ -338,11 +334,11 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -383,9 +379,7 @@ const UploadProfilePicture = async () => {
       // @ts-ignore
       await sleep(200)
 
-      notif.success(
-        `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was edited successfully`
-      )
+      notif.success(t('toast.success.edit'))
       customerProfilePicture.value = media[0]
       customerProfilePicture.value.relative_path =
         import.meta.env.VITE_MEDIA_BASE_URL + customerProfilePicture.value.relative_path
@@ -425,9 +419,7 @@ const RemoveProfilePicture = async () => {
     if (success) {
       await sleep(200)
 
-      notif.success(
-        `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was deleted successfully`
-      )
+      notif.success(t('toast.success.remove'))
       customerProfilePicture.value = defaultCustomerProfilePic
     } else {
       await sleep(200)

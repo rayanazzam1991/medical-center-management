@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
@@ -14,7 +16,8 @@ viewWrapper.setPageTitle('Service')
 useHead({
   title: 'Service',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultServiceSearchFilter)
 const servicesList = ref<Array<Service>>([])
 const deleteServicePopup = ref(false)
@@ -44,7 +47,7 @@ const removeService = async (serviceId: number) => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
 
   } else {
     await sleep(200);

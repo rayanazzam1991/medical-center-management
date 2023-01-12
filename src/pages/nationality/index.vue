@@ -9,12 +9,15 @@ import { getNationalitiesList, deleteNationality } from '/@src/services/Others/N
 import { defaultPagination } from '/@src/utils/response'
 import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore'
 import sleep from '/@src/utils/sleep'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Nationality')
 useHead({
   title: 'Nationality',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultNationalitySearchFilter)
 const nationalitiesList = ref<Array<Nationality>>([])
 const deleteNationalityPopup = ref(false)
@@ -44,7 +47,7 @@ const removeNationality = async (nationalityId: number) => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
   } else {
     await sleep(200);
     notif.error(message)

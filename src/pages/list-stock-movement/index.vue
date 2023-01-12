@@ -17,11 +17,13 @@ import {
 } from '/@src/models/Warehouse/ItemHistory/itemHistory'
 import { Notyf } from 'notyf'
 import { BaseConsts } from '/@src/utils/consts/base'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('List Stock Movement')
 useHead({
     title: 'List Stock Movement',
 })
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemHistorySearchFilter)
 const itemHistoriesList = ref<Array<itemHistory>>([])
@@ -53,7 +55,7 @@ const changestatusItemHistory = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${itemChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
         notif.error(message)

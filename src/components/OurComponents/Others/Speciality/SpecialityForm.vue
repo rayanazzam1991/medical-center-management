@@ -8,6 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { specialityvalidationSchema } from '/@src/rules/Others/Speciality/specialityValidation';
 import sleep from "/@src/utils/sleep";
 import { useSpeciality } from "/@src/stores/Others/Speciality/specialityStore";
+import {useI18n} from "vue-i18n";
 
 
 export default defineComponent({
@@ -25,6 +26,7 @@ export default defineComponent({
             title: "Speciality",
         });
         const specialityStore = useSpeciality()
+        const { t } = useI18n();
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -81,7 +83,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${speciality.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/speciality/${speciality.id}` });
             } else {
                 await sleep(200);
@@ -99,7 +101,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${specialityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/speciality/${specialityData.id}` });
             } else {
                 await sleep(200);

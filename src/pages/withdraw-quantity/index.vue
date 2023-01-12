@@ -19,6 +19,7 @@ import { getEmployeesList } from '/@src/services/Employee/employeeService';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 const itemStore = useItem()
 
 const viewWrapper = useViewWrapper()
@@ -38,6 +39,7 @@ withdarwQuantityForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const pageTitle = 'Withdraw Quantity'
 const phoneCheck = ref<string>('false')
@@ -141,7 +143,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         notif.dismissAll();
         // @ts-ignore
         await sleep(500)
-        notif.success(`${withdrawQuantity.item.name} ${viewWrapper.pageTitle} was withdrawed successfully`);
+        notif.success(t('toast.success.withdraw'));
 
         router.push({ path: `/item/${withdrawQuantity.item.id}` });
     }

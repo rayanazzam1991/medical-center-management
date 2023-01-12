@@ -20,6 +20,7 @@ import VRadio from '/@src/components/base/form/VRadio.vue';
 import sleep from "/@src/utils/sleep"
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 
@@ -46,6 +47,7 @@ customerForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const pageTitle = 'Step 1: Customer Main Info'
 const phoneCheck = ref<string>('false')
@@ -144,7 +146,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             
             await sleep(200);
 
-            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+            notif.success(t('toast.success.add'))
             return true
         }
         else {

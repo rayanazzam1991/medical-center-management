@@ -13,12 +13,14 @@ import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { Notyf } from 'notyf';
+import {useI18n} from "vue-i18n";
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Category')
 useHead({
     title: 'Category',
 })
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
@@ -77,7 +79,7 @@ const changestatusCategory = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${categoryChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.add'))
     } else {
         await sleep(200);
         notif.error(message)

@@ -8,7 +8,7 @@ import { getCustomerGroup, addCustomerGroup, editCustomerGroup } from '/@src/ser
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep";
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
     props: {
@@ -25,6 +25,7 @@ export default defineComponent({
             title: "Customer Group",
         });
         const customerGroupStore = useCustomerGroup()
+        const { t } = useI18n();
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -80,7 +81,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${customerGroup.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500);
                 router.push({ path: `/customer-group/${customerGroup.id}` });
             } else {
@@ -99,7 +100,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/customer-group/${customerGroupData.id}` });
             } else {

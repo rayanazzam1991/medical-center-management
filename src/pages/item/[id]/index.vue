@@ -15,6 +15,7 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
 import { Notyf } from "notyf"
+import { useI18n } from "vue-i18n"
 
 
 
@@ -39,10 +40,8 @@ const itemHistoryList = ref<Array<itemHistory>>([])
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
-
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
-
-itemId.value = route.params.id
 viewWrapper.setPageTitle(`Item`)
 useHead({
     title: 'Item',
@@ -140,7 +139,7 @@ const changestatusItemHistory = async () => {
         await search(searchFilter.value)
         notif.dismissAll()
         await sleep(200);
-        notif.success(`status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
         notif.error(message)

@@ -21,6 +21,9 @@ import { getSpecialitiesList } from '/@src/services/Others/Speciality/speciality
 import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { BaseConsts } from '/@src/utils/consts/base';
+import {useI18n} from "vue-i18n";
+import Notyf from 'notyf/notyf';
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Contractor Main Info')
 const head = useHead({
@@ -41,10 +44,10 @@ contractorForm.setStep({
         }
     },
 })
-
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const pageTitle = 'Step 1: Contractor Main Info'
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
@@ -155,7 +158,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             await sleep(200);
 
             // @ts-ignore
-            notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was added successfully`)
+            notif.success(t('toast.success.add'))
             return true
         }
         else {

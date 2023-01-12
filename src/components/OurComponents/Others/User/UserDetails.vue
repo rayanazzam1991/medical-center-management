@@ -7,7 +7,9 @@ import { defaultChangeStatusUser, defaultUser } from "/@src/models/Others/User/u
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import sleep from "/@src/utils/sleep"
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const notif = useNotyf()
 const route = useRoute()
 const router = useRouter()
@@ -35,7 +37,7 @@ const changestatusUser = async () => {
     await sleep(200);
 
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} ${userData.first_name} was edited successfully`)
+    notif.success(t('toast.success.edit'))
     router.push({ path: `/user/${userData.id}` })
     changeStatusPopup.value = false
 }

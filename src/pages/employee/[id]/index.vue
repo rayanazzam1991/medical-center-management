@@ -31,6 +31,7 @@ import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { employeeNumberEditValidationSchema } from '/@src/rules/Employee/employeeNumberEditValidation'
 import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
@@ -56,7 +57,7 @@ const editEmployeeNumberTrigger = ref(false)
 const newEmployeeNumber = ref<number>()
 const maxEmployeeNumber = ref(0)
 const employeeForm = useEmployeeForm()
-
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 
 // @ts-ignore
@@ -112,9 +113,7 @@ const changestatusUser = async () => {
   // @ts-ignore
   notif.dismissAll()
   await sleep(200)
-  notif.success(
-    `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} was edited successfully`
-  )
+  notif.success(t('toast.success.edit'))
   changeStatusPopup.value = false
 }
 const fetchEmployee = async () => {
@@ -169,11 +168,11 @@ const onAddFile = async (event: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message = t("toast.file.size")
       await sleep(200)
       notif.error(_message)
     } else {
@@ -192,9 +191,7 @@ const UploadFile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} file was added successfully`
-    )
+    notif.success(t('toast.success.add'))
     media[0].file_name = media[0].relative_path
     media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
 
@@ -223,9 +220,7 @@ const removefile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} file was deleted successfully`
-    )
+    notif.success(t('toast.success.remove'))
 
     employeeFiles.value.splice(
       employeeFiles.value.findIndex((element) => element.id == deleteFileId.value),
@@ -267,11 +262,11 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message =t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -296,7 +291,7 @@ const UploadProfilePicture = async () => {
     profilePictureToUpload.value == undefined
   ) {
     _success = false
-    _message = 'Please select a valid image to be uploaded'
+    _message = t('toast.file.image')
   }
   if (_success) {
     let formData = new FormData()
@@ -312,9 +307,7 @@ const UploadProfilePicture = async () => {
       // @ts-ignore
       await sleep(200)
 
-      notif.success(
-        `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} profile picture was edited successfully`
-      )
+      notif.success(t('toast.success.edit'))
       employeeProfilePicture.value = media[0]
       employeeProfilePicture.value.relative_path =
         import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
@@ -353,9 +346,7 @@ const RemoveProfilePicture = async () => {
     if (success) {
       await sleep(200)
 
-      notif.success(
-        `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} profile picture was deleted successfully`
-      )
+      notif.success(t('toast.success.remove'))
       employeeProfilePicture.value = defaultEmployeeProfilePic
     } else {
       await sleep(200)
@@ -395,9 +386,7 @@ updateLoading.value= true
     await sleep(200)
 
     // @ts-ignore
-    notif.success(
-      `${currentEmployee.value.user.first_name} ${currentEmployee.value.user.last_name} Employee Number was edited successfully`
-    )
+    notif.success(t('toast.success.edit'))
     await sleep(500)
   } else {
     await sleep(200)

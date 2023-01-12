@@ -8,6 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
 import { useCity } from "/@src/stores/Others/City/cityStore";
+import {useI18n} from "vue-i18n";
 
 
 export default defineComponent({
@@ -25,6 +26,7 @@ export default defineComponent({
       title: "City",
     });
     const cityStore = useCity()
+    const { t } = useI18n();
     const notif = useNotyf();
     const formType = ref("");
     formType.value = props.formType;
@@ -81,7 +83,7 @@ export default defineComponent({
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${city.name} ${viewWrapper.pageTitle} was added successfully`);
+        notif.success(t('toast.success.add'));
         router.push({ path: `/city/${city.id}` });
       } else {
         await sleep(200);
@@ -99,7 +101,7 @@ export default defineComponent({
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+        notif.success(t('toast.success.edit'));
         router.push({ path: `/city/${cityData.id}` });
       } else {
         await sleep(200);

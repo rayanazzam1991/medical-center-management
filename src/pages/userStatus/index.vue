@@ -8,13 +8,16 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { defaultPagination } from "/@src/utils/response"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 import sleep from "/@src/utils/sleep"
+import { Notyf } from "notyf"
+import { useI18n } from "vue-i18n"
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('UserStatus')
 useHead({
     title: 'UserStatus',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const searchFilter = ref(defaultUserStatusSearchFilter)
 const userstatusesList = ref<Array<UserStatus>>([])
 const deleteUserStatusPopup = ref(false)
@@ -43,7 +46,7 @@ const removeUserStatus = async (userstatusId: number) => {
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+        notif.success(t('toast.success.remove'))
 
     } else {
         await sleep(200);

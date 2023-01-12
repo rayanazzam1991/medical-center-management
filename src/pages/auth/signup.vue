@@ -67,7 +67,7 @@ const onSignup = handleSubmit(async (values) => {
     await sleep(800)
 
     notif.dismissAll()
-    notif.success('Welcome, Erik Kovalsky')
+    notif.success(t('auth.success_signUp'))
 
     router.push({ name: '/app' })
     isLoading.value = false

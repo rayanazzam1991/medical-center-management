@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { SocialMedia, defaultSocialMediaSearchFilter, SocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
 import { addSocialMediasToCustomer } from '/@src/services/CRM/Customer/customerService';
@@ -20,7 +22,8 @@ viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
     title: 'Customer',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 4,
@@ -86,7 +89,7 @@ const onSubmitAdd = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }
@@ -94,7 +97,7 @@ const onSubmitAdd = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.error(customer.success)
+        notif.error(customer.message)
 
     }
 

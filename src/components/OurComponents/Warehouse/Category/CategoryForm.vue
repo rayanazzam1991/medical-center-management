@@ -10,6 +10,7 @@ import sleep from "/@src/utils/sleep";
 import { useCategory } from '/@src/stores/Warehouse/Category/CategoryStore';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
     props: {
@@ -26,6 +27,7 @@ export default defineComponent({
             title: "Category",
         });
         const categoryStore = useCategory()
+        const { t } = useI18n();
         const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
@@ -117,7 +119,7 @@ export default defineComponent({
             if (success) {
                 notif.dismissAll();
                 await sleep(200);
-                notif.success(`${category.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/category` });
             } else {
                 await sleep(200);
@@ -135,7 +137,7 @@ export default defineComponent({
             if (success) {
                 notif.dismissAll();
                 await sleep(200);
-                notif.success(`${categoryData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/category` });
             } else {
                 await sleep(200);

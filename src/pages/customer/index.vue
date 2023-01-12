@@ -14,12 +14,15 @@ import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import sleep from '/@src/utils/sleep'
 import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Customer')
 useHead({
     title: 'Customer',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const searchFilter = ref(defaultCustomerSearchFilter)
 const customersList = ref<Array<Customer>>([])
 const statusesList = ref<Array<UserStatus>>([])
@@ -55,7 +58,7 @@ const changestatusUser = async () => {
         await sleep(200);
         // @ts-ignore
 
-        notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
         // @ts-ignore

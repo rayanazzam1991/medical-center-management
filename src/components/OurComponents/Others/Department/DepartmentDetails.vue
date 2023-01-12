@@ -7,14 +7,17 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { DepartmentConsts } from '/@src/models/Others/Department/department'
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
+
 const panels = usePanels()
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Department')
+viewWrapper.setPageTitle(t('department.details.title'))
 const head = useHead({
-    title: 'Department',
+    title: t('department.details.title'),
 })
 
 const departmentStore = useDepartment()
@@ -50,11 +53,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Department Name:</h4>
+                            <h4 class="margin-bottom">{{t('department.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>{{ currentDepartment.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Department Status:</h4>
+                            <h4 class="margin-bottom">{{t('department.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentDepartment.status === DepartmentConsts.INACTIVE ? 'danger' : 'success'">

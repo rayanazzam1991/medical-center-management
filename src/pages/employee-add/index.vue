@@ -24,6 +24,7 @@ import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } fro
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 const viewWrapper = useViewWrapper()
@@ -50,6 +51,7 @@ employeeForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const selectedDepartmentId = ref(0)
 
@@ -166,7 +168,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             employeeForm.data.id = employee.id
             await sleep(200);
             // @ts-ignore
-            notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
+            notif.success(t('toast.success.add'))
 
             return true
         }
