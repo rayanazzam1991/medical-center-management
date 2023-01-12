@@ -360,8 +360,179 @@
         "employee_name": "Employee Name"
       },
       "attendance_details_modal": {
-        "title": "Attendance Details"
+        "title": "Attendance Details",
+        "date": "Date:",
+        "status": "Status:",
+        "mark_attendance": "Mark Attendance",
+        "check_in": "Check In",
+        "check_out": "Check Out",
+        "no_data": "No Data",
+        "justify_attendance": "Justify Attendance",
+        "unjustify_attendance": "Unjustify Attendance"
+      },
+      "mark_attendance_modal": {
+        "title": "Mark Attendance",
+        "date": "Date:",
+        "status": "Status:",
+        "check_in": "Check In",
+        "check_out": "Check Out"
       }
+    }
+  },
+  "employee_schedule": {
+    "table": {
+      "title": "Employees Schedule",
+      "columns": {
+        "employee_name": "Employee Name"
+      },
+      "modal": {
+        "title": "Edit Employee Schedule",
+        "day": "Day:",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "make_vacation": "Make Vacation"
+      }
+    }
+  },
+  "item": {
+    "table": {
+      "title": "Item",
+      "columns": {
+        "name": "Name",
+        "level_1": "Level 1",
+        "level_2": "Level 2",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "created_by": "Created By",
+        "created_at": "Created At",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Item Status"
+    }
+  },
+  "list_stock_movement": {
+    "table": {
+      "title": "List Stock Movement",
+      "columns": {
+        "item": "Item",
+        "type": "Type",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "requester": "Requester",
+        "note": "Note",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      }
+    }
+  },
+  "nationality": {
+    "table": {
+      "title": "Nationality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Nationality"
+    }
+  },
+  "position": {
+    "table": {
+      "title": "Position",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Position Status"
+    }
+  },
+  "room": {
+    "table": {
+      "title": "Room",
+      "columns": {
+        "id": "ID",
+        "number": "Number",
+        "floor": "Floor",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Room"
+    }
+  },
+  "service": {
+    "table": {
+      "title": "Service",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "duration": "Duration",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Service"
+    }
+  },
+  "social_media": {
+    "table": {
+      "title": "Social Media",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "icon": "Icon",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Social Media"
+    }
+  },
+  "speciality": {
+    "table": {
+      "title": "Speciality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Speciality Status"
+    }
+  },
+  "user": {
+    "table": {
+      "title": "User",
+      "columns": {
+        "id": "ID",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "gender": "Gender",
+        "phone": "Phone",
+        "room": "Room #",
+        "city": "City",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove User"
+    }
+  },
+  "user_status": {
+    "table": {
+      "title": "User Status",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove User Status"
     }
   }
 }
