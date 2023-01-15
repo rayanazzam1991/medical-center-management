@@ -73,15 +73,18 @@ onMounted(async () => {
 
 const getSubCategoryByCategroy = () => {
     let categoriesFilter = {} as CategorySearchFilter
+    categoriesFilter.status = BaseConsts.ACTIVE
     categoriesFilter.parent_id = selectedCategoryId.value
     const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
     subcategoeisList.value = SubCategory
+    itemsList.value = []
+     selectedSubCategoryId.value= undefined
+    currentaddQuantity.value.item_id=0
 }
 const getItemBySubCategroy = async () => {
     let itemSearchFilter = {} as ItemSearchFilter
     itemSearchFilter.status = BaseConsts.ACTIVE
     itemSearchFilter.per_page = 500
-
     const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items
     let ItemFilter = {} as ItemSearchFilter
@@ -97,6 +100,7 @@ const validationSchema = addQuantityvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
+        sub_category_id:undefined,
         item_id: undefined,
         item_quantity: "",
         add_item_cost: "",
@@ -128,6 +132,7 @@ const onAddFile = async (event: any) => {
 }
 
 const onSubmitAdd = handleSubmit(async (values) => {
+    console.log("fasf")
     let addQuantityForm = currentaddQuantity.value
     const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
     if (success) {
@@ -172,7 +177,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField id="item_id">
+                                <VField >
                                     <VLabel class="required">Level 1</VLabel>
                                     <VControl>
                                         <div class="select">
@@ -188,7 +193,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField id="item_id">
+                                <VField id="sub_category_id">
                                     <VLabel class="required">
                                         Level 2
                                     </VLabel>
@@ -201,6 +206,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                 {{ subCategory.name }}
                                             </VOption>
                                         </VSelect>
+                                        <ErrorMessage class="help is-danger" name="sub_category_id" />
+
                                     </VControl>
                                 </VField>
                             </div>
@@ -216,17 +223,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </div>
                                     </VLabel>
                                     <VControl>
-                                        <div class="select">
-                                            <select :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
+                                        <!-- <div class="select"> -->
+                                            <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
                                                 v-model="currentaddQuantity.item_id">
                                                 <VOption value="">Select Item</VOption>
                                                 <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                                     {{ item.name }}
                                                 </VOption>
-                                            </select>
+                                            </VSelect>
                                             <ErrorMessage class="help is-danger" name="item_id" />
 
-                                        </div>
+                                        <!-- </div> -->
                                     </VControl>
                                 </VField>
                             </div>

@@ -7,13 +7,16 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { PositionConsts } from '/@src/models/Others/Position/position'
 import { usePosition } from '/@src/stores/Others/Position/positionStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Position')
+viewWrapper.setPageTitle(t('position.details.title'))
 const head = useHead({
-    title: 'Position',
+    title: t('position.details.title'),
 })
 
 
@@ -50,15 +53,15 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{t('position.details.name')}}:</h4>
                             <span>{{ currentPosition.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Description:</h4>
+                            <h4 class="margin-bottom"> {{t('position.details.description')}}:</h4>
                             <span>{{ currentPosition?.description }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom"> {{t('position.details.status')}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentPosition.status === PositionConsts.INACTIVE ? 'danger' : 'success'">

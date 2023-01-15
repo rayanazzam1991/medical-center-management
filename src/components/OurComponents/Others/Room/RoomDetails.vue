@@ -6,14 +6,16 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { RoomConsts } from "/@src/models/Others/Room/room"
 import { useRoom } from "/@src/stores/Others/Room/roomStore"
 import sleep from "/@src/utils/sleep"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('room')
+viewWrapper.setPageTitle(t('room.details.title'))
 const head = useHead({
-    title: 'Room',
+    title: t('room.details.title'),
 })
 
 
@@ -50,19 +52,19 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} number:</h4>
+                            <h4 class="margin-bottom"> {{t('room.details.number')}}:</h4>
                             <span>{{ currentRoom.number }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} floor:</h4>
+                            <h4 class="margin-bottom"> {{t('room.details.floor')}}:</h4>
                             <span>{{ currentRoom.floor }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} departemnt:</h4>
+                            <h4 class="margin-bottom"> {{t('room.details.department?')}}:</h4>
                             <span>{{ currentRoom.department?.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom"> {{t('room.details.status')}}:</h4>
                             <span>
                                 <VTag :color="currentRoom.status === RoomConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ RoomConsts.showStatusName(currentRoom.status) }}</VTag>

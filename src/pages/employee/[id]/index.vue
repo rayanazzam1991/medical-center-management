@@ -62,9 +62,9 @@ const notif = useNotyf() as Notyf
 
 // @ts-ignore
 employeeId.value = route.params.id
-viewWrapper.setPageTitle(`Employee`)
+viewWrapper.setPageTitle(t('employee.details.title'))
 useHead({
-  title: 'Employee',
+  title: t('employee.details.title'),
 })
 const employeeStore = useEmployee()
 const props = withDefaults(
@@ -429,7 +429,7 @@ updateLoading.value= true
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span
-              >Status:
+              >{{t('employee.details.status')}}:
               <span
                 :class="
                   currentEmployee.user.status.name == 'Busy'
@@ -455,7 +455,7 @@ updateLoading.value= true
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Details'"
                   @click="tab = 'Details'"
-                  ><span>Details</span></a
+                  ><span>{{ t('employee.details.tabs.details') }}</span></a
                 >
               </li>
               <li :class="[tab === 'Files' && 'is-active']">
@@ -463,7 +463,7 @@ updateLoading.value= true
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Files'"
                   @click="tab = 'Files'"
-                  ><span>Files </span></a
+                  ><span>{{ t('employee.details.tabs.files') }} </span></a
                 >
               </li>
               <li class="tab-naver"></li>
@@ -476,11 +476,11 @@ updateLoading.value= true
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Main Details</h3>
+                    <h3>{{t('employee.details.main_details')}}</h3>
                   </div>
                   <div class="buttons">
                     <VButton @click.prevent="onOpen" color="dark">
-                      Change User Status
+                      {{t('employee.table.modal_title')}}
                     </VButton>
                     <VIconButton
                       size="small"
@@ -494,7 +494,7 @@ updateLoading.value= true
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>Employee Name</h4>
+                    <h4>{{t('employee.details.name',{title :viewWrapper.pageTitle  })}}</h4>
                     <p>
                       {{ currentEmployee.user.first_name }}
                       {{ currentEmployee.user.last_name }}.
@@ -509,17 +509,17 @@ updateLoading.value= true
                           : 'lnir lnir-female'
                       "
                     ></i>
-                    <h4>Gender</h4>
+                    <h4>{{t('employee.details.gender')}}</h4>
                     <p>{{ currentEmployee.user.gender }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
-                    <h4>Birth Date</h4>
+                    <h4>{{t('employee.details.birth_date')}}</h4>
                     <p>{{ currentEmployee.user.birth_date }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
-                    <h4>Phone Number</h4>
+                    <h4>{{t('employee.details.phone_number')}}</h4>
                     <p>{{ currentEmployee.user.phone_number }}.</p>
                   </div>
                 </div>
@@ -530,7 +530,7 @@ updateLoading.value= true
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Starting Date</span>
+                          <span>{{t('employee.details.starting_date')}}</span>
                           <span>
                             {{ currentEmployee.starting_date }}
                           </span>
@@ -540,7 +540,7 @@ updateLoading.value= true
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>End Date</span>
+                          <span>{{t('employee.details.end_date')}}</span>
                           <span>
                             {{ currentEmployee.end_date }}
                           </span>
@@ -550,7 +550,7 @@ updateLoading.value= true
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Department</span>
+                          <span>{{t('employee.details.department')}}</span>
                           <span>
                             {{ currentEmployee?.user?.room?.department?.name }}
                           </span>
@@ -560,7 +560,7 @@ updateLoading.value= true
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Room Number</span>
+                          <span>{{t('employee.details.room_number')}}</span>
                           <span>
                             {{ currentEmployee?.user?.room?.number }}
                           </span>
@@ -570,7 +570,7 @@ updateLoading.value= true
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Nationality</span>
+                          <span>{{t('employee.details.nationality')}}</span>
                           <span>
                             {{ currentEmployee.nationality?.name }}
                           </span>
@@ -580,7 +580,7 @@ updateLoading.value= true
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Position</span>
+                          <span>{{t('employee.details.position')}}</span>
                           <span>
                             {{ currentEmployee.position?.name }}
                           </span>
@@ -590,7 +590,7 @@ updateLoading.value= true
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Address</span>
+                          <span>{{t('employee.details.address')}}</span>
                           <span>
                             {{ currentEmployee.user.address }}
                           </span>
@@ -612,7 +612,7 @@ updateLoading.value= true
                               <span
                                 class="column is-12 pb-0"
                                 :class="editEmployeeNumberTrigger ? 'required' : ''"
-                                >Employee Number</span
+                                >{{t('employee.details.employee_number')}}</span
                               >
                               <span v-if="!editEmployeeNumberTrigger" class="column py-0">
                                 {{ currentEmployee.employee_number ?? 'None' }}
@@ -637,7 +637,7 @@ updateLoading.value= true
                                 v-if="editEmployeeNumberTrigger"
                                 class="column is-12 has-text-info is-size-7 mt-0 pt-2"
                               >
-                                last employee number: {{ maxEmployeeNumber ?? 0 }}
+                                {{t('employee.details.last_employee_number')}}: {{ maxEmployeeNumber ?? 0 }}
                               </div>
                             </div>
                             <div>
@@ -685,17 +685,17 @@ updateLoading.value= true
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Employee Files</h3>
+                    <h3>{{t('employee.details.employee_files')}}</h3>
                   </div>
                 </div>
                 <div v-if="employeeFiles.length == 0" class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>Employee have no files...</h4>
+                    <h4>{{t('employee.details.tabs_content_placeholder.files')}}</h4>
                   </div>
                 </div>
                 <div class="project-files project-section">
-                  <h4>Upload File</h4>
+                  <h4>{{t('employee.details.upload_file')}}</h4>
                   <div class="is-flex is-justify-content-space-between">
                     <VField class="mr-6" grouped>
                       <VControl>
@@ -710,7 +710,7 @@ updateLoading.value= true
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
                               </span>
-                              <span class="file-label"> Choose a file… </span>
+                              <span class="file-label"> {{t('images.image_select_file')}} </span>
                             </span>
                             <span class="file-name light-text">
                               {{ filesToUpload?.name ?? 'Select File' }}
@@ -728,12 +728,12 @@ updateLoading.value= true
                         light
                         dark-outlined
                       >
-                        Upload
+                        {{t('employee.details.upload')}}
                       </VButton>
                     </VLoader>
                   </div>
                   <h6 class="ml-2 mt-2 help">
-                    Max size: 2 MB | Accepted file types : png, jpg, webp
+                    {{t('images.accepted_file')}}
                   </h6>
                 </div>
                 <div
@@ -795,7 +795,7 @@ updateLoading.value= true
     </div>
   </div>
   <VModal
-    title="Change User Status"
+    :title="t('employee.table.modal_title.status')"
     :open="changeStatusPopup"
     actions="center"
     @close="changeStatusPopup = false"
@@ -807,13 +807,13 @@ updateLoading.value= true
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column" id="user_status_id">
-                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                <VLabel>{{t('employee.details.employee_status')}}</VLabel>
                 <VControl>
                   <VSelect
                     v-if="currentEmployee.user.status"
                     v-model="currentEmployee.user.status.id"
                   >
-                    <VOption value="">User Status</VOption>
+                    <VOption value="">{{t('employee.details.select_employee_status')}}</VOption>
                     <VOption
                       v-for="status in statusesList"
                       :key="status.id"
@@ -830,30 +830,30 @@ updateLoading.value= true
       </form>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+      <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
   <VModal
-    title="Delete Employee File"
+    :title="t('employee.table.modal_title.delete_file')"
     :open="deleteFilePopup"
     actions="center"
     @close="deleteFilePopup = false"
   >
     <template #content>
       <VPlaceholderSection
-        title="Are you sure?"
-        :subtitle="`you are about to delete this file permenantly`"
+        :title="t('employee.table.modal_title.placeholderSection.title')"
+        :subtitle="t('employee.table.modal_title.placeholderSection.subtitle')"
       />
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton color="primary" raised @click="removefile()">Confirm</VButton>
+        <VButton color="primary" raised @click="removefile()">{{t('modal.buttons.confirm')}}</VButton>
       </VLoader>
     </template>
   </VModal>
   <VModal
     :key="keyIncrement"
-    title="Update Profile Picture"
+    :title="t('employee.table.modal_title.profile_picture')"
     :open="updateProfilePicturePopup"
     actions="center"
     @close="updateProfilePicturePopup = false"
@@ -882,7 +882,7 @@ updateLoading.value= true
         </VControl>
       </VField>
       <h6 class="is-flex is-justify-content-center help">
-        Max size: 2 MB | Accepted file types : png, jpg, webp
+        {{ t('images.accepted_file') }}
       </h6>
     </template>
 

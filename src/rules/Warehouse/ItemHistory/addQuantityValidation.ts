@@ -43,6 +43,16 @@ const addQuantityvalidationSchema = toFormValidator(zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
                     .min(1, i18n.global.t('validation.number.invalid_type_error')),
             ),
+        sub_category_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+                    .min(1, i18n.global.t('validation.required')),
+            ),
         item_id: zod
             .preprocess(
                 (input) => {

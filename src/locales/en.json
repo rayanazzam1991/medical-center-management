@@ -184,7 +184,8 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "update": "Update",
-      "delete": "Delete"
+      "delete": "Delete",
+      "save": "Save"
     },
     "delete_modal": {
       "title": "Are you sure?",
@@ -198,7 +199,11 @@
     },
     "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
   },
-
+  "images": {
+    "image_name_placeholder": "Choose an image",
+    "image_select_file": "Select File",
+    "accepted_file": "Max size: 2 MB | Accepted image… types :png, jpg, webp"
+  },
   "category": {
     "table": {
       "title": "Category",
@@ -243,7 +248,15 @@
         "actions": "Actions",
         "created_at": "Created At"
       },
-      "modal_title": "Change User Status"
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
     },
     "details": {
       "title": "Contractor",
@@ -291,16 +304,58 @@
         "actions": "Actions",
         "created_at": "Created At"
       },
-      "modal_title": "Change User Status"
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
     },
     "details": {
       "title": "Customer",
-      "phone": "Phone",
+      "tabs": {
+        "details": "Details",
+        "medical_info": "Medical Info",
+        "social_media": "Social Media",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
       "name": "{title} Name",
       "group": "Group",
+      "gender": "Gender",
+      "note": "Note",
+      "last_update": "Last Update at",
+      "by": "By",
+      "phone_number": "Phone Number",
+      "emergency_contact_name": "Emergency Contact Name",
+      "emergency_contact_phone": "Emergency Contact Phone",
+      "address": "Address",
       "is_completed": "Completed",
       "status": "Status",
-      "birth_date": "Birth Date"
+      "birth_date": "Birth Date",
+      "medical_info": "Customer Medical Info",
+      "blood_type": "Blood Type",
+      "smooke": "Smoke",
+      "more_info": "More Info",
+      "allergic": "Allergic",
+      "infectious_diseases": "Infectious Diseases",
+      "chronic_diseases": "Chronic Diseases",
+      "other_medical_info": "Other Medical Info",
+      "customer_social_media": "Customer Social Media",
+      "customer_URL": "Customer URL",
+      "customer_files": "Customer Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "customer_status": "Customer Status",
+      "select_customer_status": "Select Customer Status",
+      "tabs_content_placeholder": {
+        "medical_info": "Customer have no medical info...",
+        "social_modia": "Customer have no social media...",
+        "files": "Customer have no files..."
+      }
     }
   },
   "customer_group": {
@@ -350,7 +405,45 @@
         "actions": "Actions",
         "created_at": "Created At"
       },
-      "modal_title": "Change User Status"
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Employee File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Employee",
+      "tabs": {
+        "details": "Details",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "starting_date": "Starting Date",
+      "end_date": "End Date",
+      "gender": "Gender",
+      "department": "Department",
+      "room_number": "Room Number",
+      "nationality": "Nationality",
+      "position": "Position",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "employee_number": "Employee Number",
+      "last_employee_number": "Last Employee Number",
+      "status": "Status",
+      "birth_date": "Birth Date",
+      "employee_files": "Employee Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "employee_status": "Employee Status",
+      "select_employee_status": "Select Employee Status",
+      "tabs_content_placeholder": {
+        "files": "Employee have no files..."
+      }
     }
   },
   "employee_attendance": {
@@ -409,7 +502,47 @@
         "status": "Status",
         "actions": "Actions"
       },
-      "modal_title": "Change Item Status"
+      "modal_title": {
+        "item": "Change Item Status",
+        "item_history": "Change Item History Status"
+      }
+    },
+    "details": {
+      "title": "Item",
+      "tabs": {
+        "details": "Details",
+        "item_history": "Item History"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "leve_1": "Item Level 1",
+      "leve_2": "Item Level 2",
+      "quantity": "Item Quantity",
+      "min_quantity": "Item Min Quantity",
+      "price": "Price",
+      "cost": "Cost",
+      "description": "Description",
+      "status": "Item Status",
+      "history_status": "Item History Status",
+      "employee_status": "Item Status",
+      "select_employee_status": "Select Item Status",
+      "item_history_table": {
+        "columns": {
+          "requester_name": "Requester",
+          "item_quantity": "Item Quantity",
+          "withdraw_item_price": "Price",
+          "add_item_cost": "Cost",
+          "invoice_number": "Invoice number",
+          "created_at": "Created At",
+          "Image": "Invoice",
+          "status": "Status",
+          "type": "Type",
+          "action": "Edit Status"
+        }
+      },
+      "tabs_content_placeholder": {
+        "item_history": "Item have no history..."
+      }
     }
   },
   "list_stock_movement": {
@@ -438,6 +571,11 @@
         "actions": "Actions"
       },
       "modal_title": "Remove Nationality"
+    },
+    "details": {
+      "title": "Nationality",
+      "name": "Nationality Name",
+      "status": "Nationality Status"
     }
   },
   "position": {
@@ -451,6 +589,12 @@
         "actions": "Actions"
       },
       "modal_title": "Change Position Status"
+    },
+    "details": {
+      "title": "Position",
+      "name": "Position Name",
+      "description": "Position Description",
+      "status": "Position Status"
     }
   },
   "room": {
@@ -465,6 +609,13 @@
         "actions": "Actions"
       },
       "modal_title": "Remove Room"
+    },
+    "details": {
+      "title": "Room",
+      "number": "Room Number",
+      "floor": "Room Floor",
+      "department": "Room Department",
+      "status": "Room Status"
     }
   },
   "service": {
@@ -479,6 +630,14 @@
         "actions": "Actions"
       },
       "modal_title": "Remove Service"
+    },
+    "details": {
+      "title": "Service",
+      "name": "Service Name",
+      "price": "Service Price",
+      "description": "Service Description",
+      "estimated": "Estimated Duration",
+      "status": "Service Status"
     }
   },
   "social_media": {
@@ -505,6 +664,11 @@
         "actions": "Actions"
       },
       "modal_title": "Change Speciality Status"
+    },
+    "details": {
+      "title": "Speciality",
+      "name": "Speciality Name",
+      "status": "Speciality Status"
     }
   },
   "user": {
@@ -521,7 +685,22 @@
         "status": "Status",
         "actions": "Actions"
       },
-      "modal_title": "Remove User"
+      "modal_title": {
+        "remove": "Remove User",
+        "status": "Change User Status"
+      }
+    },
+    "details": {
+      "title": "User Status",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "gender": "Gender",
+      "phone": "Phone",
+      "city": "City",
+      "room": "Room ",
+      "status": "Status",
+      "address": "Address",
+      "birth_date": "Birth Date"
     }
   },
   "user_status": {
@@ -533,6 +712,10 @@
         "actions": "Actions"
       },
       "modal_title": "Remove User Status"
+    },
+    "details": {
+      "title": "User Status",
+      "name": "User Status Name"
     }
   }
 }

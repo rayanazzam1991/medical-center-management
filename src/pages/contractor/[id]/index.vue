@@ -687,7 +687,7 @@ const RemoveProfilePicture = async () => {
             </div>
         </div>
     </div>
-    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -717,9 +717,9 @@ const RemoveProfilePicture = async () => {
             <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-    <VModal title="Delete Contractor File" :open="deleteFilePopup" actions="center" @close="deleteFilePopup = false">
+    <VModal :title="t('contractor.table.modal_title.delete_file')" :open="deleteFilePopup" actions="center" @close="deleteFilePopup = false">
         <template #content>
-            <VPlaceholderSection title="Are you sure?" :subtitle="`you are about to delete this file permenantly`" />
+            <VPlaceholderSection :title="t('contractor.table.modal_title.placeholderSection.title')" :subtitle="t('contractor.table.modal_title.placeholderSection.subtitle')" />
         </template>
         <template #action="{ close }">
             <VLoader size="small" :active="deleteLoading">
@@ -727,7 +727,7 @@ const RemoveProfilePicture = async () => {
             </VLoader>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" title="Update Profile Picture" :open="updateProfilePicturePopup" actions="center"
+    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.profile_picture')" :open="updateProfilePicturePopup" actions="center"
         @close="updateProfilePicturePopup = false">
         <template #content>
             <VField class="is-flex is-justify-content-center">

@@ -44,7 +44,7 @@ const { t } = useI18n()
 const notif = useNotyf() as Notyf
 viewWrapper.setPageTitle(`Item`)
 useHead({
-    title: 'Item',
+    title: t('item.details.title'),
 })
 const itemStore = useItem()
 const props = withDefaults(
@@ -152,6 +152,7 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
+        label: t('item.details.item_history_table.columns.type'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -175,13 +176,13 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
-        label: 'quantity',
+        label: t('item.details.item_history_table.columns.item_quantity'),
 
     },
     add_item_cost: {
         align: 'center',
         searchable: true,
-        label: 'cost',
+        label: t('item.details.item_history_table.columns.add_item_cost'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.add_item_cost ? row?.add_item_cost : '-')
@@ -190,7 +191,7 @@ const columns = {
     withdraw_item_price: {
         align: 'center',
         searchable: true,
-        label: 'Price',
+        label: t('item.details.item_history_table.columns.withdraw_item_price'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-')
@@ -200,14 +201,14 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'requester',
+        label: t('item.details.item_history_table.columns.requester_name'),
         renderRow: (row: any) =>
             h('span', row?.requester_name ? row?.requester_name : '-'),
 
     },
     created_at: {
         align: 'center',
-        label: 'Created at',
+        label: t('item.details.item_history_table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -217,7 +218,7 @@ const columns = {
     invoice_number: {
         align: 'center',
         searchable: true,
-        label: 'invoice number',
+        label: t('item.details.item_history_table.columns.invoice_number'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.invoice_number ? row?.invoice_number : '-')
@@ -226,7 +227,7 @@ const columns = {
     Image: {
         align: 'center',
         grow: true,
-        label: 'Invoice',
+        label: t('item.details.item_history_table.columns.Image'),
         renderRow: (row: any) => {
             if (row?.file?.length > 0) {
                 return h(IconButton, {
@@ -242,7 +243,7 @@ const columns = {
     status: {
         align: 'center',
         grow: true,
-
+        lable:t('item.details.item_history_table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -266,7 +267,7 @@ const columns = {
     action: {
         align: 'center',
         grow: true,
-        label: 'edit status',
+        label: t('item.details.item_history_table.columns.action'),
         renderRow: (row: any) =>
             h(IconButton, {
                 icon: 'fas fa-edit',
@@ -291,7 +292,7 @@ const columns = {
                 <div class="profile-stats">
                     <div class="profile-stat">
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
-                        <span>Status: <span>
+                        <span>{{t('item.details.status')}}: <span>
                                 <VTag :color="currentItem.status === ItemConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ ItemConsts.showStatusName(currentItem.status) }}</VTag>
                             </span></span>
@@ -306,11 +307,11 @@ const columns = {
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
-                                    @click="tab = 'Details'"><span>Details</span></a>
+                                    @click="tab = 'Details'"><span>{{ t('item.details.tabs.details') }}</span></a>
                             </li>
                             <li :class="[tab === 'History' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'History'" @click="tab = 'History'">
-                                    <span>Item History </span></a>
+                                    <span>{{ t('item.details.tabs.item_history') }}</span></a>
                             </li>
                             <li class="tab-naver"></li>
                         </ul>
@@ -322,10 +323,10 @@ const columns = {
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>Main Details</h3>
+                                        <h3>{{t('item.details.main_details')}}</h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton @click.prevent="onOpen" color="dark"> Change Item Status
+                                        <VButton @click.prevent="onOpen" color="dark">{{t('item.table.modal_title.item')}}
                                         </VButton>
                                         <VIconButton size="small" icon="feather:edit-3" tabindex="0"
                                             @click="onClickEditMainInfo" />
@@ -337,7 +338,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Item Level 1</span>
+                                                    <span>{{t('item.details.leve_1')}}</span>
                                                     <span>
                                                         {{ currentItem.category.parent?.name }}
                                                     </span>
@@ -348,7 +349,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Item Level 2</span>
+                                                    <span>{{t('item.details.leve_2')}}</span>
                                                     <span>
                                                         {{ currentItem.category.name }}
                                                     </span>
@@ -359,8 +360,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Item
-                                                        Quantity</span>
+                                                    <span>{{t('item.details.quantity')}}</span>
                                                     <span
                                                         :class="currentItem.min_quantity >= currentItem.quantity ? 'has-text-danger' : ''">
                                                         {{ currentItem.quantity }} Items left
@@ -372,7 +372,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Item Min Quantity</span>
+                                                    <span>{{t('item.details.min_quantity')}}</span>
                                                     <span>
                                                         {{ currentItem.min_quantity }}
                                                     </span>
@@ -383,7 +383,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Price</span>
+                                                    <span>{{t('item.details.price')}}</span>
                                                     <span>
                                                         {{ currentItem.price }}
                                                     </span>
@@ -394,7 +394,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Cost</span>
+                                                    <span>{{t('item.details.cost')}}</span>
                                                     <span>
                                                         {{ currentItem.cost }}
                                                     </span>
@@ -405,7 +405,7 @@ const columns = {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>Description</span>
+                                                    <span>{{t('item.details.description')}}</span>
                                                     <span>
                                                         {{ currentItem.description }}
                                                     </span>
@@ -452,18 +452,17 @@ const columns = {
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
                                         :max-links-displayed="3" no-router
                                         @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">Showing {{
-                                        paginationVar.page !=
-                                            paginationVar.max_page
-                                            ?
-                                            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1
-                                                ? 1 : paginationVar.total
-                                    }} to {{
-    paginationVar.page !=
-        paginationVar.max_page ?
-        paginationVar.page *
-        paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
                                     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
                                         class="mx-2" />
@@ -477,7 +476,7 @@ const columns = {
             </div>
         </div>
     </div>
-    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -485,7 +484,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="status">
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel class="required">{{t('item.details.status')}}</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
                                         :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
@@ -500,10 +499,10 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItem()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusItem()">{{t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" title="Change User Status" :open="changeHistoryStatusPopup" actions="center"
+    <VModal :key="keyIncrement" :title="t('item.table.modal_title.item_history')" :open="changeHistoryStatusPopup" actions="center"
         @close="changeHistoryStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
@@ -513,7 +512,7 @@ const columns = {
                         <div class="column is-12">
                             <VField class="column " id="status">
 
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel class="required">{{ t('item.details.history_status') }}</VLabel>
                                 <VControl>
                                     <VRadio v-model="selectedStatus"
                                         :value="ItemHsitoryConsts.INACTIVE" :label="ItemConsts.showStatusName(0)"
@@ -530,7 +529,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItemHistory()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusItemHistory()">{{t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
 </template>
