@@ -170,7 +170,7 @@ const columns = {
 </script>
 
 <template>
-  <RoomTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
+  <RoomTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('room.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="roomsList" @update:sort="roomSort">
     <VFlexTable separators clickable>

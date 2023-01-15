@@ -11,6 +11,7 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { BaseConsts } from '/@src/utils/consts/base';
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
@@ -23,10 +24,11 @@ export default defineComponent({
     components: { ErrorMessage },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Item");
+        viewWrapper.setPageTitle(t('item.form.page_title'));
         const head = useHead({
-            title: "Item",
+            title: t('item.form.page_title'),
         });
         const itemStore = useItem()
         const notif = useNotyf();
@@ -34,7 +36,8 @@ export default defineComponent({
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+        const pageTitle = t('item.form.form_header' , {type : formTypeName});
         const backRoute = "/item";
         const currentItem = ref(defaultItem);
         const currentCreateUpdateItem = ref(defaultCreateUpdateItem)
@@ -171,7 +174,7 @@ export default defineComponent({
                 notif.error(message)
             }
         });
-        return { selectedCategoryId, getSubCategoryByCategroy, subcategoeisList, mainCategoriesList, pageTitle, onSubmit, currentItem, viewWrapper, backRoute, ItemConsts, itemStore };
+        return { t, selectedCategoryId, getSubCategoryByCategroy, subcategoeisList, mainCategoriesList, pageTitle, onSubmit, currentItem, viewWrapper, backRoute, ItemConsts, itemStore };
     },
 })
 
@@ -191,7 +194,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('item.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentItem.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -206,7 +209,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField>
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Level 1</VLabel>
+                                    <VLabel class="required">{{ t('item.form.level_1') }}</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentItem"
@@ -222,7 +225,7 @@ export default defineComponent({
                             </div>
                             <div class="column is-6">
                                 <VField id="category_id">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Level 2</VLabel>
+                                    <VLabel class="required">{{t('item.form.level_2')}}</VLabel>
                                     <VControl>
                                         <VSelect :disabled="selectedCategoryId == undefined" v-if="currentItem.category"
                                             v-model="currentItem.category.id">
@@ -244,7 +247,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="price" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Price </VLabel>
+                                    <VLabel class="required">{{ t('item.form.price') }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.price" type="number" />
                                         <ErrorMessage name="price" class="help is-danger" />
@@ -253,7 +256,7 @@ export default defineComponent({
                             </div>
                             <div class="column is-6">
                                 <VField id="cost" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Cost </VLabel>
+                                    <VLabel class="required">{{ t('item.form.cost')  }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.cost" type="number" />
                                         <ErrorMessage name="cost" class="help is-danger" />
@@ -266,7 +269,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="quantity" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Quantity</VLabel>
+                                    <VLabel class="required">{{ t('item.form.quantity') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentItem.quantity" type="number" />
                                         <ErrorMessage name="quantity" class="help is-danger" />
@@ -276,7 +279,7 @@ export default defineComponent({
                             </div>
                             <div class="column is-6">
                                 <VField id="min_quantity" v-slot="{ field }">
-                                    <VLabel class="optional">{{ viewWrapper.pageTitle }} Min_Quantity</VLabel>
+                                    <VLabel class="optional">{{ t('item.form.min_quantity') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentItem.min_quantity" type="number" />
                                         <ErrorMessage name="min_quantity" class="help is-danger" />
@@ -291,7 +294,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description">
-                                    <VLabel class="optional">Description </VLabel>
+                                    <VLabel class="optional">{{t('item.form.description') }} </VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentItem.description" />
                                         <ErrorMessage class="help is-danger" name="description" />
@@ -304,7 +307,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('item.form.status') }} </VLabel>
                                     <VControl>
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
                                             :label="ItemConsts.showStatusName(1)" name="status" color="success" />

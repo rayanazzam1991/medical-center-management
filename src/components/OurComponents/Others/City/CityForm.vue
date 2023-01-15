@@ -8,6 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
 import { useCity } from "/@src/stores/Others/City/cityStore";
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
@@ -19,10 +20,11 @@ export default defineComponent({
   },
   emits: ["onSubmit"],
   setup(props, context) {
+    const {t} = useI18n()
     const viewWrapper = useViewWrapper();
-    viewWrapper.setPageTitle("City");
+    viewWrapper.setPageTitle(t('city.form.page_title'));
     const head = useHead({
-      title: "City",
+      title: t('city.form.page_title'),
     });
     const cityStore = useCity()
     const notif = useNotyf();
@@ -30,7 +32,8 @@ export default defineComponent({
     formType.value = props.formType;
     const route = useRoute();
     const router = useRouter();
-    const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+    const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('city.form.form_header' , {type : formTypeName});
     const backRoute = "/city";
     const currentCity = ref(defaultCity);
     const cityId = ref(0);
@@ -109,7 +112,7 @@ export default defineComponent({
       }
     };
 
-    return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore };
+    return { t, pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore };
   },
   components: { ErrorMessage }
 })
@@ -132,7 +135,7 @@ export default defineComponent({
             <div class="columns is-multiline">
               <div class="column is-12">
                 <VField id="name" v-slot="{ field }">
-                  <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                  <VLabel class="required">{{ t('city.form.name') }}</VLabel>
                   <VControl icon="feather:chevrons-right">
                     <VInput v-model="currentCity.name" type="text" placeholder="" autocomplete="given-name" />
                     <ErrorMessage class="help is-danger" name="name" />
@@ -147,7 +150,7 @@ export default defineComponent({
             <div class="columns is-multiline">
               <div class="column is-12">
                 <VField id="status" v-slot="{ field }">
-                  <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                  <VLabel class="required">{{ t('city.form.status') }}</VLabel>
 
                   <VControl>
                     <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"

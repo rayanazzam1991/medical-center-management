@@ -10,7 +10,8 @@ import { ErrorMessage, useForm } from "vee-validate";
 import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
 import sleep from "/@src/utils/sleep"
 import { Notyf } from "notyf"
-
+import { useI18n } from "vue-i18n"
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -18,9 +19,9 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle(t('customer.form.step_3_title'))
 const head = useHead({
-  title: 'Customer',
+  title: t('customer.form.page_title'),
 })
 const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
@@ -166,7 +167,7 @@ const onSubmitEdit = handleSubmit(async () => {
           <!--Fieldset-->
           <div class="form-fieldset">
             <div class="fieldset-heading">
-              <h4>Choose Social Media:</h4>
+              <h4>{{ t('customer.form.choose_social_media') }}</h4>
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
@@ -213,11 +214,9 @@ const onSubmitEdit = handleSubmit(async () => {
                   <VField v-if="socialMedia.checked" :key="socialMedia.socialMedia.id"
                     :id="`social_media_url_${socialMedia.socialMedia.id}`">
 
-                    <VLabel class="required" v-if="socialMedia.checked">customer's {{
-    socialMedia.socialMedia.name
-}}
-                      URL:
-                    </VLabel>
+                    <VLabel class="required" v-if="socialMedia.checked">
+                    {{ t('customer.form.social_media_url', {social_media:socialMedia.socialMedia.name }) }}
+                                    </VLabel>
                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                       <VInput :placeholder="socialMedia.url" class="input" type="text" v-model="socialMedia.url"
                         :key="socialMedia.socialMedia.id" />

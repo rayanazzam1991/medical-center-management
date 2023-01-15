@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultSocialMediaSearchFilter, SocialMediaConsts } from "/@src/models/CRM/SocialMedia/socialMedia"
 import { defaultPagination } from "/@src/utils/response"
 
@@ -24,6 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -50,7 +52,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SocialMediaConsts }
+        return {t, resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SocialMediaConsts }
     },
 
 
@@ -69,11 +71,11 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" placeholder="Name..." />
+                                <VInput v-model="searchName" type="text" :placeholder="t('social_media.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">Status</VOption>
+                                    <VOption value="">{{t('social_media.search_filter.status')}}</VOption>
                                     <VOption value="0">{{ SocialMediaConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ SocialMediaConsts.showStatusName(1) }}</VOption>
                                 </VSelect>

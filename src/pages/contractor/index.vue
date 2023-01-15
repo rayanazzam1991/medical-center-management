@@ -223,7 +223,7 @@ const columns = {
 
 <template>
     <ContractorTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :button_name="t('contractor.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="contractorsList" :limit="searchFilter.per_page"
         @update:sort="contractorSort">
@@ -267,7 +267,7 @@ const columns = {
 
 
     </VFlexTableWrapper>
-    <VModal :title="t('contractor.table.modal_title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -275,7 +275,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="user_status_id">
-                                <VLabel>{{ t('contractor.table.columns.ststus') }}</VLabel>
+                                <VLabel>{{ t('contractor.table.columns.status') }}</VLabel>
                                 <VControl>
                                     <VSelect v-model="contractorChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{

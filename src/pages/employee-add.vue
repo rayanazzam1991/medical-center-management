@@ -9,9 +9,10 @@
 import { useHead } from '@vueuse/head'
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps'
 import { useEmployee } from '../stores/Employee/employeeStore';
+import { useI18n } from 'vue-i18n';
 const employeeStore = useEmployee()
 const employeeForm = useEmployeeForm()
-
+const {t} = useI18n()
 useHead({
     title: computed(() => `${employeeForm.stepTitle} - Employee`),
 })
@@ -39,7 +40,7 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous"
                                 :disabled="employeeForm.validateStepFn === null"
                                 :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ 'Submit '
+                                {{ t('employee.form.edit_submit')
                                 }}
                             </VButton>
                         </VLoader>

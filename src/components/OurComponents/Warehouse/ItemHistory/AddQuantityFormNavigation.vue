@@ -3,6 +3,7 @@ import { useDropdown } from '/@src/composable/useDropdown'
 import { useItemHistoryForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useDarkmode } from '/@src/stores/darkmode'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
+import { useI18n } from 'vue-i18n';
 
 const darkmode = useDarkmode()
 
@@ -10,6 +11,7 @@ const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
 
 const itemHistoryForm = useItemHistoryForm()
+const {t} = useI18n()
 </script>
 
 <template>
@@ -19,7 +21,7 @@ const itemHistoryForm = useItemHistoryForm()
             <span class="title-wrap">
                 <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/item" darkOutlined
                     color="white">
-                    Back to items page
+                    {{t('add_quantity.form.back_button')}}
                 </VButton>
             </span>
         </div>

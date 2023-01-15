@@ -9,10 +9,11 @@
 import { useHead } from '@vueuse/head'
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useCustomer } from '../stores/CRM/Customer/customerStore';
+import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-
+const {t} = useI18n()
 
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
@@ -41,14 +42,14 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous"
                                 :disabled="customerForm.validateStepFn === null"
                                 :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ customerForm.getStep() == 2 ? 'Submit & Finish' : 'Submit & Next'
+                                {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') : t('customer.form.submit_and_next_button')
                                 }}
                             </VButton>
                         </VLoader>
                         <VButton v-if="customerForm.skipable === true" class="wizard-button-previous"
                             :color="customerForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => customerForm?.skipStepFn?.()">
-                            {{ customerForm.getStep() == 2 ? 'Skip & Finish' : 'Skip'
+                            {{ customerForm.getStep() == 2 ? t('customer.form.skip_and_finish_button') : t('customer.form.skip_button')
                             }}
                         </VButton>
                     </div>

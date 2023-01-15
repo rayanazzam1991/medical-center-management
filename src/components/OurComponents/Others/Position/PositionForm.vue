@@ -8,6 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { positionvalidationSchema } from '/@src/rules/Others/Position/positionValidation';
 import sleep from "/@src/utils/sleep";
 import { usePosition } from "/@src/stores/Others/Position/positionStore";
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
@@ -19,10 +20,11 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Position");
+        viewWrapper.setPageTitle(t('posisiton.form.page_title'));
         const head = useHead({
-            title: "Position",
+            title: t('posisiton.form.page_title'),
         });
         const positionStore = usePosition()
         const notif = useNotyf();
@@ -30,7 +32,8 @@ export default defineComponent({
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('position.form.form_header' , {type : formTypeName});
         const backRoute = "/position";
         const currentPosition = ref(defaultPosition);
         const positionId = ref(0);
@@ -111,7 +114,7 @@ export default defineComponent({
             }
         };
 
-        return { pageTitle, onSubmit, currentPosition, viewWrapper, backRoute, PositionConsts, positionStore };
+        return { t, pageTitle, onSubmit, currentPosition, viewWrapper, backRoute, PositionConsts, positionStore };
     },
     components: { ErrorMessage }
 })
@@ -134,7 +137,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('position.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentPosition.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -153,7 +156,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description" v-slot="{ field }">
-                                    <VLabel>{{ viewWrapper.pageTitle }} description</VLabel>
+                                    <VLabel>{{ t('position.form.description') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentPosition.description" type="text" placeholder=""
                                             autocomplete="given-description" />
@@ -169,7 +172,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ t('position.form.status') }}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentPosition.status" :value="PositionConsts.INACTIVE"

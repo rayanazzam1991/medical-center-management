@@ -149,7 +149,7 @@ const columns = {
 
 <template>
   <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :button_name="t('department.header_button')" @search="search" :pagination="paginationVar"
     :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="departmentsList" @update:sort="departmentSort">
 

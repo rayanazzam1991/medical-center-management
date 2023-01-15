@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { useI18n } from 'vue-i18n';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { keyIncrement } from '/@src/utils/force-rerender';
+
 const route = useRoute()
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Category')
+viewWrapper.setPageTitle(t('category.form.page_title'))
 useHead({
-    title: 'Edit Category',
+    title: t('category.form.edit_category_title'),
 })
 
 </script>

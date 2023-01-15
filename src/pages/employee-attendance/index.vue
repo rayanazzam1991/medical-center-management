@@ -369,7 +369,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[0].day} ${daysNamePerMonth.value[0].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[0].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[0].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -409,7 +409,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[1].day} ${daysNamePerMonth.value[1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -448,7 +448,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[2].day} ${daysNamePerMonth.value[2].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[2].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[2].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -489,7 +489,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[3].day} ${daysNamePerMonth.value[3].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[3].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[3].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -532,7 +532,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[4].day} ${daysNamePerMonth.value[4].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[4].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[4].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -574,7 +574,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[5].day} ${daysNamePerMonth.value[5].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[5].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[5].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -615,7 +615,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[6].day} ${daysNamePerMonth.value[6].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[6].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[6].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -656,7 +656,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[7].day} ${daysNamePerMonth.value[7].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[7].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[7].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -697,7 +697,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[8].day} ${daysNamePerMonth.value[8].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[8].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[8].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -738,7 +738,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[9].day} ${daysNamePerMonth.value[9].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[9].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[9].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -779,7 +779,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[10].day} ${daysNamePerMonth.value[10].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[10].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[10].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -820,7 +820,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[11].day} ${daysNamePerMonth.value[11].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[11].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[11].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -860,7 +860,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[12].day} ${daysNamePerMonth.value[12].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[12].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[12].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -901,7 +901,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[13].day} ${daysNamePerMonth.value[13].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[13].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[13].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -942,7 +942,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${daysNamePerMonth.value[15 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[15 - 1 ].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -982,7 +982,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[16 - 1].day} ${daysNamePerMonth.value[16 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[16 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[16 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1022,7 +1022,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[17 - 1].day} ${daysNamePerMonth.value[17 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[17 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[17 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1062,7 +1062,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[18 - 1].day} ${daysNamePerMonth.value[18 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[18 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[18 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1102,7 +1102,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[19 - 1].day} ${daysNamePerMonth.value[19 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[19 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[19 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1142,7 +1142,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[20 - 1].day} ${daysNamePerMonth.value[20 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[20 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[20 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1182,7 +1182,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${daysNamePerMonth.value[21 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[21 -1 ].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1222,7 +1222,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${daysNamePerMonth.value[22 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[22-1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1262,7 +1262,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[23 - 1].day} ${daysNamePerMonth.value[23 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[23 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[23 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1302,7 +1302,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${daysNamePerMonth.value[24 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[24 -1 ].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1342,7 +1342,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${daysNamePerMonth.value[25 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[25 - 1 ].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1382,7 +1382,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[26 - 1].day} ${daysNamePerMonth.value[26 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[26 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[26 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1421,7 +1421,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[27 - 1].day} ${daysNamePerMonth.value[27 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[27 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[27 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1460,7 +1460,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[28 - 1].day} ${daysNamePerMonth.value[28 - 1].day_name} `,
+                headerTitle: `${daysNamePerMonth.value[28 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[28 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1503,7 +1503,7 @@ const columns29Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${daysNamePerMonth.value[29 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1546,7 +1546,7 @@ const columns30Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${daysNamePerMonth.value[29 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1586,7 +1586,7 @@ const columns30Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${daysNamePerMonth.value[30 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1 ].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1630,7 +1630,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${daysNamePerMonth.value[29 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1670,7 +1670,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${daysNamePerMonth.value[30 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1709,7 +1709,7 @@ const columns31Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[31 - 1] ? `${daysNamePerMonth.value[31 - 1]?.day} ${daysNamePerMonth.value[31 - 1]?.day_name} ` : '',
+                headerTitle: daysNamePerMonth.value[31 - 1] ? `${daysNamePerMonth.value[31 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[31 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1808,13 +1808,13 @@ Object.assign(columns29, columns28, columns29Sub)
                     }}</h2>
                     <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
                     <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.date')}} <span class="has-text-primary"> {{
-                        daysNamePerMonth.find((day) =>
-                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name
+                        t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
                     }} {{
     selectedCell.date
 }}</span></h2>
-                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}}<span class="has-text-primary">{{
-                        AttendanceConsts.getAttendanceStatusName(selectedCell.status)
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span class="has-text-primary">{{
+                        t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(' ','_').toLowerCase()}`)
                     }}</span></h2>
                 </div>
                 <div>
@@ -1870,7 +1870,7 @@ Object.assign(columns29, columns28, columns29Sub)
     selectedCell.date
 }}</span></h2>
                     <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span class="has-text-primary">{{
-                        AttendanceConsts.getAttendanceStatusName(selectedCell.status)
+                       t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(" ", "_").toLowerCase()}`) 
                     }}</span></h2>
                 </div>
             </div>
@@ -1909,8 +1909,6 @@ Object.assign(columns29, columns28, columns29Sub)
                                 </div>
 
                             </div>
-
-                            <!-- <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : 'No Data' }} </p> -->
                         </VCard>
                         <VCard elevated class="mt-2">
                             <h3 class="title is-6 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_out')}}</h3>

@@ -8,6 +8,7 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { userstatusvalidationSchema } from "/@src/rules/Others/UserStatus/userstatusValidation"
 import sleep from "/@src/utils/sleep"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
+import { useI18n } from "vue-i18n"
 
 export default defineComponent({
     props: {
@@ -18,10 +19,11 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("User status");
+        viewWrapper.setPageTitle(t('user_status.form.page_title'));
         const head = useHead({
-            title: "User status",
+            title: t('user_status.form.page_title'),
         });
         const userStatusStore = useUserStatus();
         const notif = useNotyf();
@@ -29,7 +31,8 @@ export default defineComponent({
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('user_status.form.form_header' , {type : formTypeName});
         const backRoute = "/userstatus";
         const currentUserStatus = ref(defaultUserStatus);
         const userstatusId = ref(0);
@@ -99,7 +102,7 @@ export default defineComponent({
                 notif.error(message);
             }
         });
-        return { pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute, userStatusStore };
+        return { t, pageTitle, onSubmit, currentUserStatus, viewWrapper, backRoute, userStatusStore };
     },
     components: { ErrorMessage }
 })
@@ -123,7 +126,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{t('user_status.form.name')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUserStatus.name" type="text" placeholder=""
                                             autocomplete="given-name" />

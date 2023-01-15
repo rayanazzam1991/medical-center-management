@@ -160,7 +160,7 @@ const columns = {
 
 <template>
     <SpecialityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :button_name="t('speciality.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="specialitiesList" @update:sort="specialitySort">
 

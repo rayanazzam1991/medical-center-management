@@ -6,10 +6,12 @@
 }
 </route>
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useWithdrawItemForm } from '../stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useitemHistory } from '../stores/Warehouse/ItemHistory/itemHistoryStore';
 
+const {t} = useI18n()
 const itemHistoryStore = useitemHistory()
 const withdarwQuantityForm = useWithdrawItemForm()
 
@@ -35,7 +37,7 @@ useHead({
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="itemHistoryStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                Submit
+                                {{ t('withdraw_quantity.form.submit')}}
                             </VButton>
                         </VLoader>
                     </div>

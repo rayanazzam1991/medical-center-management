@@ -13,13 +13,14 @@ import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { useI18n } from 'vue-i18n'
+import { Notyf } from 'notyf'
 const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('position.table.title'))
 useHead({
     title: t('position.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultPositionSearchFilter)
 const positionsList = ref<Array<Position>>([])
 const paginationVar = ref(defaultPagination)
@@ -161,7 +162,7 @@ const columns = {
 
 <template>
     <PositionTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :button_name="t('position.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="positionsList" @update:sort="positionSort">
 

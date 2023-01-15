@@ -6,6 +6,7 @@ import { getDepartmentsList } from '/@src/services/Others/Department/departmentS
 import { getPositionsList } from '/@src/services/Others/Position/positionService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { defaultEmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
+import { useI18n } from 'vue-i18n'
 
 
 export default defineComponent({
@@ -18,6 +19,7 @@ export default defineComponent({
 
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref()
         const searchPhoneNumber = ref()
         const searchPosition = ref()
@@ -81,7 +83,7 @@ export default defineComponent({
         })
 
 
-        return { search, resetFilter, search_filter_popup, statusesList, departmentsList, positionsList, searchName, searchPhoneNumber, searchStatus, searchDepartment, searchPosition }
+        return {t , search, resetFilter, search_filter_popup, statusesList, departmentsList, positionsList, searchName, searchPhoneNumber, searchStatus, searchDepartment, searchPosition }
 
 
 
@@ -97,23 +99,23 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Filter Employee" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('employee_attendance.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('employee_attendance.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input " placeholder="Phone Number..." />
+                        <input v-model="searchPhoneNumber" type="text" class="input " :placeholder="t('employee_attendance.search_filter.phone_number')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Status</VOption>
+                            <VOption value="">{{t('employee_attendance.search_filter.status')}}</VOption>
                             <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{ status.name
 }}
                             </VOption>
@@ -123,7 +125,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchDepartment" class="">
-                            <VOption value="">Department</VOption>
+                            <VOption value="">{{t('employee_attendance.search_filter.department')}}</VOption>
                             <VOption v-for="department in departmentsList" :key="department.id" :value="department.id">
                                 {{ department.name }}
                             </VOption>
@@ -133,7 +135,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchPosition" class="">
-                            <VOption value="">Position</VOption>
+                            <VOption value="">{{t('employee_attendance.search_filter.position')}}</VOption>
                             <VOption v-for="position in positionsList" :key="position.id" :value="position.id">{{
         position.name
 }}
@@ -146,7 +148,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

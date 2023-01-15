@@ -8,6 +8,7 @@ import { getService, addService, editService } from '/@src/services/Others/Servi
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useService } from '/@src/stores/Others/Service/serviceStore';
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
@@ -19,10 +20,11 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Service");
+        viewWrapper.setPageTitle(t('service.form.page_title'));
         const head = useHead({
-            title: "Service",
+            title: t('service.form.page_title'),
         });
         const serviceStore = useService()
         const notif = useNotyf();
@@ -30,7 +32,8 @@ export default defineComponent({
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('service.form.form_header' , {type : formTypeName});
         const backRoute = "/service";
         const currentService = ref(defaultService);
         const serviceId = ref(0);
@@ -118,7 +121,7 @@ export default defineComponent({
                 notif.error(message)
             }
         });
-        return { pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts, serviceStore };
+        return {t, pageTitle, onSubmit, currentService, viewWrapper, backRoute, ServiceConsts, serviceStore };
     },
     components: { ErrorMessage }
 })
@@ -142,7 +145,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('service.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentService.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -156,7 +159,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description" v-slot="{ field }">
-                                    <VLabel class="optional">Description</VLabel>
+                                    <VLabel class="optional">{{t('service.form.desciption')}}</VLabel>
                                     <VControl icon="feather:file-text">
                                         <VInput v-model="currentService.description" type="text" placeholder=""
                                             autocomplete="" />
@@ -173,7 +176,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="service_price" v-slot="{ field }">
-                                    <VLabel class="required">Price ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
+                                    <VLabel class="required">{{t('service.form.price')}} ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentService.service_price" type="number" />
                                         <ErrorMessage name="service_price" class="help is-danger" />
@@ -186,7 +189,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="duration_minutes" v-slot="{ field }">
-                                    <VLabel class="required">Duration</VLabel>
+                                    <VLabel class="required">{{t('service.form.duration')}}</VLabel>
                                     <VControl icon="feather:clock">
                                         <VInput v-model="currentService.duration_minutes" type="number" />
                                         <ErrorMessage name="duration_minutes" class="help is-danger" />
@@ -201,7 +204,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ t('service.form.status') }}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentService.status" :value="ServiceConsts.INACTIVE"

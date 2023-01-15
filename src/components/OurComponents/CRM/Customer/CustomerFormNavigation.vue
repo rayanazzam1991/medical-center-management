@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { useDropdown } from '/@src/composable/useDropdown'
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useDarkmode } from '/@src/stores/darkmode'
@@ -8,7 +9,7 @@ const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-
+const {t} = useI18n()
 const customerForm = useCustomerForm()
 </script>
 
@@ -18,7 +19,7 @@ const customerForm = useCustomerForm()
       <span class="title-wrap">
         <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/customer" darkOutlined
           color="white">
-          Back to customers page
+          {{t('customer.form.back_button')}}
         </VButton>
       </span>
     </div>

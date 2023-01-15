@@ -229,7 +229,7 @@ const columns = {
     first_day: {
         align: 'center',
 
-        label: `${daysName.value[0]}`,
+        label: t(`dates.days.${daysName.value[0].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -254,7 +254,7 @@ const columns = {
     second_day: {
         align: 'center',
 
-        label: `${daysName.value[1]}`,
+        label: t(`dates.days.${daysName.value[1].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -278,7 +278,7 @@ const columns = {
     third_day: {
         align: 'center',
 
-        label: `${daysName.value[2]}`,
+        label: t(`dates.days.${daysName.value[2].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -304,7 +304,7 @@ const columns = {
     fourth_day: {
         align: 'center',
 
-        label: `${daysName.value[3]}`,
+        label: t(`dates.days.${daysName.value[3].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -328,7 +328,7 @@ const columns = {
     fifth_day: {
         align: 'center',
 
-        label: `${daysName.value[4]}`,
+        label: t(`dates.days.${daysName.value[4].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -352,7 +352,7 @@ const columns = {
     sixth_day: {
         align: 'center',
 
-        label: `${daysName.value[5]}`,
+        label: t(`dates.days.${daysName.value[5].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -376,7 +376,7 @@ const columns = {
     seventh_day: {
         align: 'center',
 
-        label: `${daysName.value[6]}`,
+        label: t(`dates.days.${daysName.value[6].toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(
@@ -447,7 +447,7 @@ const columns = {
     <VModal :key="keyIncement" :title="t('employee_schedule.table.modal.title')" :open="tableCellPopup" actions="right"
         @close="tableCellPopup = false">
         <template #content>
-            <h2 class="is-size-5 has-text-primary mb-3">{{t('employee_schedule.table.modal.day')}} {{ selectedCell.day_of_week }}</h2>
+            <h2 class="is-size-5 has-text-primary mb-3">{{t('employee_schedule.table.modal.day')}} {{ t(`dates.days.${selectedCell.day_of_week.toLowerCase()}`) }}</h2>
             <h2 class="is-size-5">{{ selectedEmployee.user.first_name }}
                 {{ selectedEmployee.user.last_name }}</h2>
             <h4 class="mb-3"><span class=""> {{ selectedEmployee.position.name

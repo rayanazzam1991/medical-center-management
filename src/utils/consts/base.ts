@@ -1,3 +1,13 @@
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 export class BaseConsts {
     static readonly ACTIVE = 1
     static readonly INACTIVE = 0
@@ -6,18 +16,18 @@ export class BaseConsts {
 
     public static showStatusName(status: number): string {
         if (status === BaseConsts.ACTIVE)
-            return 'Active'
+            return i18n.global.t('status.active')
 
         if (status === BaseConsts.INACTIVE)
-            return 'Inactive'
+            return i18n.global.t('status.inactive')
         return ''
     }
     public static showBoolean(boolean: number): string {
         if (boolean === BaseConsts.TRUE)
-            return 'Yes'
+            return i18n.global.t('boolean.true')
 
         if (boolean === BaseConsts.FALSE)
-            return 'No'
+            return i18n.global.t('boolean.false')
         return ''
     }
 }

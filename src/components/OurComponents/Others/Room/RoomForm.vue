@@ -12,6 +12,7 @@ import sleep from "/@src/utils/sleep"
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import { BaseConsts } from '/@src/utils/consts/base'
 import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 
 export default defineComponent({
@@ -25,10 +26,11 @@ export default defineComponent({
 
     emits: ['onSubmit'],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Room')
+        viewWrapper.setPageTitle(t('room.form.page_title'))
         const head = useHead({
-            title: 'Room',
+            title: t('room.form.page_title'),
         })
         const roomStore = useRoom()
         const notif = useNotyf() as Notyf
@@ -36,8 +38,8 @@ export default defineComponent({
         formType.value = props.formType
         const route = useRoute()
         const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('room.form.form_header' , {type : formTypeName});
         const backRoute = '/room'
         const currentRoom = ref(defaultRoom)
         const currentCreateUpdateRoom = ref(defaultCreateUpdateRoom)
@@ -149,7 +151,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
+        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
     },
 
 
@@ -174,7 +176,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="number">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} number</VLabel>
+                                    <VLabel class="required">{{t('room.form.number')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
@@ -190,7 +192,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="floor">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} floor</VLabel>
+                                    <VLabel class="required">{{ t('room.form.floor') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.floor" type="number" autocomplete="given-floor" />
                                         <ErrorMessage class="help is-danger" name="floor" />
@@ -204,10 +206,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="department_id">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} department</VLabel>
+                                    <VLabel class="required">{{t('room.form.department')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
-                                            <VOption value="">Department</VOption>
+                                            <VOption value="">{{t('room.form.department')}}</VOption>
                                             <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
@@ -223,7 +225,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('room.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"

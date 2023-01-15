@@ -89,19 +89,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
-    label: t("city.columns.id")
+    label: t("city.table.columns.id")
 
   },
   name: {
     align: 'center',
     sortable: true,
-    label: t("city.columns.name")
+    label: t("city.table.columns.name")
 
 
   },
   status: {
     align: 'center',
-    label: t("city.columns.status"),
+    label: t("city.table.columns.status"),
 
     renderRow: (row: any) =>
       h(
@@ -125,7 +125,7 @@ const columns = {
   },
   actions: {
     align: 'center',
-    label: t("city.columns.actions"),
+    label: t("city.table.columns.actions"),
     renderRow: (row: any) =>
       h(MyDropDown, {
 
@@ -147,7 +147,7 @@ const columns = {
 </script>
 
 <template>
-  <CityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
+  <CityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('city.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 

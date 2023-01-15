@@ -17,11 +17,13 @@ import { Media } from '/@src/models/Others/Media/media';
 import { error } from 'node:console';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Add Quantity')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('add_quantity.form.title'))
 const head = useHead({
-    title: 'Add Quantity',
+    title: t('add_quantity.form.title'),
 })
 const itemHistoryForm = useItemHistoryForm()
 itemHistoryForm.setStep({
@@ -41,7 +43,7 @@ itemHistoryForm.setStep({
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf() as Notyf
-const pageTitle = ' Add Quantity'
+const pageTitle = t('add_quantity.form.title')
 const phoneCheck = ref<string>('false')
 const currentaddQuantity = ref(defaultAddQuantityItem)
 const selectedCategoryId = ref()
@@ -170,12 +172,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="item_id">
-                                    <VLabel class="required">Level 1</VLabel>
+                                    <VLabel class="required">{{ t('add_quantity.form.level_1')}}</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentaddQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption value="">Select Level 1</VOption>
+                                                <VOption value="">{{ t('add_quantity.form.select_level_1')}}</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -187,12 +189,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="item_id">
                                     <VLabel class="required">
-                                        Level 2
+                                        {{ t('add_quantity.form.level_2')}}
                                     </VLabel>
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
                                             v-if="currentaddQuantity" v-model="selectedSubCategoryId">
-                                            <VOption>Select Level 2</VOption>
+                                            <VOption>{{ t('add_quantity.form.select_level_2')}}</VOption>
                                             <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
                                                 :value="subCategory.id">
                                                 {{ subCategory.name }}
@@ -207,7 +209,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="item_id">
                                     <VLabel class="required" style="position:relative">
-                                        {{ viewWrapper.pageTitle }} Item
+                                       {{t('add_quantity.form.item')}}
                                         <div v-if="itemStore.loading"
                                             class="loader is-loading m-r-15 m-b-05-rem w35-h35 custom-loader">
                                         </div>
@@ -216,7 +218,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <div class="select">
                                             <select :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
                                                 v-model="currentaddQuantity.item_id">
-                                                <VOption value="">Select Item</VOption>
+                                                <VOption value="">  {{t('add_quantity.form.select_item')}}</VOption>
                                                 <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                                     {{ item.name }}
                                                 </VOption>
@@ -229,7 +231,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="item_quantity">
-                                    <VLabel class="required"> Item Quantity</VLabel>
+                                    <VLabel class="required"> {{t('add_quantity.form.item_quantity')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.item_quantity" type="number" placeholder=""
                                             autocomplete="given-item_quantity" />
@@ -242,7 +244,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="add_item_cost">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item Cost</VLabel>
+                                    <VLabel class="required">{{t('add_quantity.form.item_cost')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.add_item_cost" type="number" placeholder=""
                                             autocomplete="given-add_item_cost" />
@@ -252,7 +254,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('add_quantity.form.status')}}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(1)" name="status"
@@ -270,7 +272,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="note">
-                                    <VLabel class="optinal">Item Note</VLabel>
+                                    <VLabel class="optinal">{{t('add_quantity.form.item_note')}}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentaddQuantity.note" />
                                         <ErrorMessage class="help is-danger" name="note" />
@@ -282,7 +284,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="invoice_number">
-                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Number</VLabel>
+                                    <VLabel class="optinal">{{t('add_quantity.form.invoice_number')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.invoice_number" type="text" placeholder=""
                                             autocomplete="given-invoice_number" />
@@ -292,7 +294,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField>
-                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Invoice Image</VLabel>
+                                    <VLabel class="optinal">{{t('add_quantity.form.invoice_image')}}</VLabel>
                                     <VControl>
                                         <div class="file has-name">
                                             <label class="file-label">
@@ -301,19 +303,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                     <span class="file-icon">
                                                         <i class="fas fa-cloud-upload-alt"></i>
                                                     </span>
-                                                    <span class="file-label"> Choose a Image </span>
+                                                    <span class="file-label"> {{ t('images.image_name_placeholder')}} </span>
                                                 </span>
                                                 <span class="file-name light-text">
-                                                    {{ filesToUpload?.name ?? 'Select File' }}
+                                                    {{ filesToUpload?.name ?? t('images.image_select_file') }}
                                                 </span>
                                             </label>
                                         </div>
                                     </VControl>
                                 </VField>
-                                <h6 class="font ml-2 mt-2 help">Max size: 2 MB | Accepted image… types :
-                                    png,
-                                    jpg,
-                                    webp
+                                <h6 class="font ml-2 mt-2 help">{{t('images.accepted_file')}}
                                 </h6>
                             </div>
                         </div>

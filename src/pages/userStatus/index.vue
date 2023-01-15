@@ -127,7 +127,7 @@ const columns = {
 </script>
 
 <template>
-    <UserStatusTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <UserStatusTableHeader :title="viewWrapper.pageTitle" :button_name="t('user_status.header_button')" @search="search"
         :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="userstatusesList" @update:sort="userstatusSort">
         <VFlexTable separators clickable>

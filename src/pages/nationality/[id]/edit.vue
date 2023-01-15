@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { useI18n } from 'vue-i18n';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Nationality')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('nationality.form.page_title'))
 useHead({
-  title: 'Edit Nationality',
+  title: t('nationality.form.edit_nationality_title'),
 })
 </script>
 

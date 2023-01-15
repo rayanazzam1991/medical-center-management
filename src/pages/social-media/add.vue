@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { useI18n } from 'vue-i18n';
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Social Media')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('social_media.form.page_title'))
 
 const head =useHead({
-  title: 'Add Social Media',
+  title: t('social_media.form.add_social_media_title'),
 })
 
 

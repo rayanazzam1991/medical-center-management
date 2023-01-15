@@ -222,7 +222,7 @@ const columns = {
 
 <template>
     <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :button_name="t('employee.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
         @update:sort="employeeSort">
@@ -265,7 +265,7 @@ const columns = {
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :title="t('employee.table.modal_title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('employee.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->

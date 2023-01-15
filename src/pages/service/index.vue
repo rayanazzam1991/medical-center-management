@@ -165,7 +165,7 @@ const columns = {
 </script>
 
 <template>
-  <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
+  <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('serivce.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
     <VFlexTable separators clickable>

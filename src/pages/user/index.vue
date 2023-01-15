@@ -158,7 +158,7 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="t('user.header_button')" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="usersList" @update:sort="userSort">
 
@@ -180,9 +180,9 @@ const columns = {
           paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
       })}}</h6>
 
-        <h1 v-if="usersList.length == 0">No Data Returned...</h1>
+        <h1 v-if="usersList.length == 0">{{ t('user.table.placeholder') }}</h1>
     </VFlexTableWrapper>
-    <VModal :title="t('user.table.modal_title')" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
+    <VModal :title="t('user.table.modal_title.remove')" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
         <template #content>
             <VPlaceholderSection :title="t('modal.delete_modal.title')"
                 :subtitle="t('modal.delete_modal.subtitle', {title: viewWrapper.pageTitle})" />

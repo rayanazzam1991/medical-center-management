@@ -27,7 +27,7 @@ class DateConsts extends BaseConsts {
     static readonly THURSDAY = 4;
     static readonly FRIDAY = 5;
     static readonly SATURDAY = 6;
-    static readonly WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wedensday', 'Thursday', 'Friday', 'Saturday'];
+    static readonly WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     public static getDayOfWeekNumber(day_name: string) {
         const dayName = day_name.toUpperCase()
         if (dayName == 'SUNDAY')

@@ -9,7 +9,8 @@ import { signIn } from "/@src/composable/Others/User/Auth/signIn";
 import { defaultSignInRequest } from '/@src/models/Others/User/auth'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { getSettings } from '/@src/services/Others/Setting/settingService'
-
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n()
 const isLoading = ref(false)
 const darkmode = useDarkmode()
 const router = useRouter()
@@ -105,8 +106,8 @@ useHead({
             <div class="columns">
               <div class="column is-12">
                 <div class="auth-content">
-                  <h2>Welcome Back.</h2>
-                  <p>Please sign in to your account</p>
+                  <h2>{{ t('auth.form.welcome_back') }}</h2>
+                  <p>{{ t('auth.form.sign_in')}}</p>
                   <!--                  <RouterLink to="/auth/signup-2">-->
                   <!--                    I do not have an account yet-->
                   <!--                  </RouterLink>-->
@@ -118,7 +119,7 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput v-model="signRequest.phone_number" type="text" placeholder="Username"
+                          <VInput v-model="signRequest.phone_number" type="text" :placeholder="t('auth.form.placeholders.phone')"
                             autocomplete="username" />
                         </VControl>
                       </VField>
@@ -126,7 +127,7 @@ useHead({
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput v-model="signRequest.password" type="password" placeholder="Password"
+                          <VInput v-model="signRequest.password" type="password" :placeholder="t('auth.form.placeholders.password')"
                             autocomplete="current-password" />
                         </VControl>
                       </VField>
@@ -141,7 +142,7 @@ useHead({
                       <!-- Submit -->
                       <div class="login">
                         <VButton :loading="isLoading" color="primary" type="submit" bold fullwidth raised>
-                          Sign In
+                          {{t('auth.form.sign_in_button')}}
                         </VButton>
                       </div>
 

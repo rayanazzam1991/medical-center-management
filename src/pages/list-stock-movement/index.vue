@@ -217,7 +217,7 @@ const columns = {
 
 <template>
     <ListStockMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="itemHistoriesList" @update:sort="itemSort">
         <VFlexTable separators clickable>

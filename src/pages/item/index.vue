@@ -197,7 +197,7 @@ const columns = {
 </script>
 
 <template>
-    <ItemTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`"
+    <ItemTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('item.header_button')"
         @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="itemsList" @update:sort="itemSort">
         <VFlexTable separators clickable>
@@ -236,7 +236,7 @@ const columns = {
 
         <VPlaceloadText v-if="itemStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :title="t('item.table.modal_title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
