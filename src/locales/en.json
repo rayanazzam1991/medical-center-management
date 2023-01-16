@@ -2,6 +2,8 @@
   "select-language": "Select Language",
   "cancel-label": "Cancel",
   "auth": {
+    "success_login": "Welcome back",
+    "success_signUp": "Welcome",
     "title": "Join Us Now.",
     "subtitle": "Start by creating your account",
     "label": {
@@ -38,10 +40,682 @@
   "validation": {
     "required": "This field is required",
     "number": {
-      "invalid_type_error": "Please enter a valid number"
+      "price": "Please enter a valid price",
+      "invalid_type_error": "Please enter a valid number",
+      "payment_percentage": "Please enter a number from 0-100",
+      "phone_number": "Please enter a valid phone number"
     },
     "redio": {
       "required": "Please choose one"
+    },
+    "date": {
+      "required_error": "Please select a date and time",
+      "invalid_type_error": "That's not a date!",
+      "format": "Date must be a vaild date format YYYY-MM-DD"
+    },
+    "text": {
+      "invalid_type_error": "Please enter a text"
+    },
+    "URL": {
+      "invalid_type_error": "Please enter a valid URL"
+    }
+  },
+  "navbar": {
+    "others": "Others",
+    "crm": "CRM",
+    "contractor": "Contractor",
+    "human_resources": "Human Resources",
+    "warehouse": "Warehouse"
+  },
+  "others_subnav": {
+    "nationality": {
+      "nationalities": "Nationalities",
+      "create_nationality": "Create Nationality"
+    },
+    "service": {
+      "services": "Services",
+      "create_service": "Create Service"
+    },
+    "department": {
+      "departments": "Departments",
+      "create_department": "Create Department"
+    },
+    "room": {
+      "rooms": "Rooms",
+      "create_room": "Create Room"
+    },
+    "city": {
+      "cities": "Cities",
+      "create_city": "Create City"
+    },
+    "setting": {
+      "settings": "Settings",
+      "edit_settings": "Edit Settings"
+    },
+    "user_status": {
+      "user_statuses": "User Statuses",
+      "create_user_status": "Create User Status"
+    }
+  },
+  "crm_subnav": {
+    "customer": {
+      "customers": "Customers",
+      "create_customer": "Create Customer"
+    },
+    "customer_group": {
+      "customer_groups": "Customer Groups",
+      "create_customer_group": "Create Customer Group"
+    },
+    "social_media": {
+      "social_medias": "Social Media",
+      "create_social_media": "Create Social Media"
+    }
+  },
+  "contractor_subnav": {
+    "contractor": {
+      "contractors": "Contractors",
+      "create_contractor": "Create Contractor"
+    },
+    "speciality": {
+      "specialities": "Specialities",
+      "create_speciality": "Create Speciality"
+    }
+  },
+  "human_resources_subnav": {
+    "employee": {
+      "employees": "Employees",
+      "create_employee": "Create Employee"
+    },
+    "position": {
+      "positions": "Positions",
+      "create_position": "Create Position"
+    },
+    "employees_schedule": "Employees Schedule",
+    "employees_attendance": "Employees Attendance"
+  },
+  "warehouse_subnav": {
+    "category": {
+      "categories": "Categories",
+      "create_category": "Create Category"
+    },
+    "item": {
+      "items": "Items",
+      "create_item": "Create Item"
+    },
+    "quantity": {
+      "quantity": "Quantity",
+      "add_quantity": "Add Quantity",
+      "withdraw_quantity": "Withdray Quantity"
+    },
+    "item_history": {
+      "item_history": "Item History",
+      "list_stock_movement": "List Stock Movement"
+    }
+  },
+  "user_profile_dropdown": {
+    "logout": "Logout"
+  },
+  "toast": {
+    "success": {
+      "add": "Added successfully",
+      "edit": "Edited successfully",
+      "remove": "Removed successfully",
+      "customer_note": "Customer notes was edited successfully",
+      "justified": "justified successfully",
+      "unjustified": "Unjustified successfully",
+      "withdraw": "Withdrawed successfully"
+    },
+    "error": {
+      "steps_error": "Please add some data or skip this step",
+      "Attendance": {
+        "time": "Start time cant be after end time",
+        "check_in": "New check in can't be after original check in",
+        "check_out": "New check out can't be before original check out"
+      }
+    },
+    "file": {
+      "type": "Please choose an accepted file type",
+      "size": "File size must be less than 2MB",
+      "image": "Please select a valid image to be uploaded"
+    }
+  },
+  "modal": {
+    "buttons": {
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "update": "Update",
+      "delete": "Delete",
+      "save": "Save"
+    },
+    "delete_modal": {
+      "title": "Are you sure?",
+      "subtitle": "you are about to delete this {title} permenantly"
+    }
+  },
+  "tables": {
+    "placeholder": {
+      "title": "No matches",
+      "subtitle": "There is no data that match your search."
+    },
+    "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
+  },
+  "images": {
+    "image_name_placeholder": "Choose an image",
+    "image_select_file": "Select File",
+    "accepted_file": "Max size: 2 MB | Accepted image… types :png, jpg, webp"
+  },
+  "category": {
+    "table": {
+      "title": "Category",
+      "columns": {
+        "name": "Name",
+        "parent": "Parent",
+        "created_by": "Created By",
+        "created_at": "Created At",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Category Status"
+    }
+  },
+  "city": {
+    "table": {
+      "title": "City",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove City"
+    },
+    "details": {
+      "title": "City",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    }
+  },
+  "contractor": {
+    "table": {
+      "title": "Contractor",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "speciality": "Speciality",
+        "department": "Department",
+        "room": "Room #",
+        "status": "Status",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Contractor",
+      "tabs": {
+        "details": "Details",
+        "services": "Sevices",
+        "files": "Files"
+      },
+      "service": "Contractor Service",
+      "file": "Contractor Files",
+      "name": "{title} Name",
+      "speciality": "{title} Speciality",
+      "status": "{title} Status",
+      "user_status": "User Status",
+      "birth_date": "Birth Date",
+      "phone_number": "Phone Number",
+      "payment_percentage": "Payment Percentage",
+      "starting_date": "Starting Date",
+      "end_date": "End Date",
+      "department": "Department",
+      "room_number": "Room Number",
+      "address": "Address",
+      "price": "{title} Service Price",
+      "service_ammount": "{title} Service Ammount",
+      "gender": "gender",
+      "upload_file": "Upload File",
+      "choose_file": "Choose a file…",
+      "upload": "Upload",
+      "accepted_file": "Max size: 2 MB | Accepted file types :png, jpg, webp",
+      "tabs_content_placeholder": {
+        "service": "Contractor have no services for now...",
+        "files": "Contractor have no files..."
+      }
+    }
+  },
+  "customer": {
+    "table": {
+      "title": "Customer",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "group": "Group",
+        "is_completed": "Completed",
+        "status": "Status",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Customer",
+      "tabs": {
+        "details": "Details",
+        "medical_info": "Medical Info",
+        "social_media": "Social Media",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "group": "Group",
+      "gender": "Gender",
+      "note": "Note",
+      "last_update": "Last Update at",
+      "by": "By",
+      "phone_number": "Phone Number",
+      "emergency_contact_name": "Emergency Contact Name",
+      "emergency_contact_phone": "Emergency Contact Phone",
+      "address": "Address",
+      "is_completed": "Completed",
+      "status": "Status",
+      "birth_date": "Birth Date",
+      "medical_info": "Customer Medical Info",
+      "blood_type": "Blood Type",
+      "smooke": "Smoke",
+      "more_info": "More Info",
+      "allergic": "Allergic",
+      "infectious_diseases": "Infectious Diseases",
+      "chronic_diseases": "Chronic Diseases",
+      "other_medical_info": "Other Medical Info",
+      "customer_social_media": "Customer Social Media",
+      "customer_URL": "Customer URL",
+      "customer_files": "Customer Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "customer_status": "Customer Status",
+      "select_customer_status": "Select Customer Status",
+      "tabs_content_placeholder": {
+        "medical_info": "Customer have no medical info...",
+        "social_modia": "Customer have no social media...",
+        "files": "Customer have no files..."
+      }
+    }
+  },
+  "customer_group": {
+    "table": {
+      "title": "Customer Group",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Customer Group"
+    },
+    "details": {
+      "title": "Customer Group",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    }
+  },
+  "department": {
+    "table": {
+      "title": "Department",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Department"
+    },
+    "details": {
+      "title": "Department",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    }
+  },
+  "employee": {
+    "table": {
+      "title": "Employee",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "department": "Department",
+        "room": "Room #",
+        "status": "Status",
+        "position": "Position",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Employee File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Employee",
+      "tabs": {
+        "details": "Details",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "starting_date": "Starting Date",
+      "end_date": "End Date",
+      "gender": "Gender",
+      "department": "Department",
+      "room_number": "Room Number",
+      "nationality": "Nationality",
+      "position": "Position",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "employee_number": "Employee Number",
+      "last_employee_number": "Last Employee Number",
+      "status": "Status",
+      "birth_date": "Birth Date",
+      "employee_files": "Employee Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "employee_status": "Employee Status",
+      "select_employee_status": "Select Employee Status",
+      "tabs_content_placeholder": {
+        "files": "Employee have no files..."
+      }
+    }
+  },
+  "employee_attendance": {
+    "table": {
+      "title": "Employees Attendance",
+      "columns": {
+        "employee_name": "Employee Name"
+      },
+      "attendance_details_modal": {
+        "title": "Attendance Details",
+        "date": "Date:",
+        "status": "Status:",
+        "mark_attendance": "Mark Attendance",
+        "check_in": "Check In",
+        "check_out": "Check Out",
+        "no_data": "No Data",
+        "justify_attendance": "Justify Attendance",
+        "unjustify_attendance": "Unjustify Attendance"
+      },
+      "mark_attendance_modal": {
+        "title": "Mark Attendance",
+        "date": "Date:",
+        "status": "Status:",
+        "check_in": "Check In",
+        "check_out": "Check Out"
+      }
+    }
+  },
+  "employee_schedule": {
+    "table": {
+      "title": "Employees Schedule",
+      "columns": {
+        "employee_name": "Employee Name"
+      },
+      "modal": {
+        "title": "Edit Employee Schedule",
+        "day": "Day:",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "make_vacation": "Make Vacation"
+      }
+    }
+  },
+  "item": {
+    "table": {
+      "title": "Item",
+      "columns": {
+        "name": "Name",
+        "level_1": "Level 1",
+        "level_2": "Level 2",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "created_by": "Created By",
+        "created_at": "Created At",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": {
+        "item": "Change Item Status",
+        "item_history": "Change Item History Status"
+      }
+    },
+    "details": {
+      "title": "Item",
+      "tabs": {
+        "details": "Details",
+        "item_history": "Item History"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "leve_1": "Item Level 1",
+      "leve_2": "Item Level 2",
+      "quantity": "Item Quantity",
+      "min_quantity": "Item Min Quantity",
+      "price": "Price",
+      "cost": "Cost",
+      "description": "Description",
+      "status": "Item Status",
+      "history_status": "Item History Status",
+      "employee_status": "Item Status",
+      "select_employee_status": "Select Item Status",
+      "item_history_table": {
+        "columns": {
+          "requester_name": "Requester",
+          "item_quantity": "Item Quantity",
+          "withdraw_item_price": "Price",
+          "add_item_cost": "Cost",
+          "invoice_number": "Invoice number",
+          "created_at": "Created At",
+          "Image": "Invoice",
+          "status": "Status",
+          "type": "Type",
+          "action": "Edit Status"
+        }
+      },
+      "tabs_content_placeholder": {
+        "item_history": "Item have no history..."
+      }
+    }
+  },
+  "list_stock_movement": {
+    "table": {
+      "title": "List Stock Movement",
+      "columns": {
+        "item": "Item",
+        "type": "Type",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "requester": "Requester",
+        "note": "Note",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      }
+    }
+  },
+  "nationality": {
+    "table": {
+      "title": "Nationality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Nationality"
+    },
+    "details": {
+      "title": "Nationality",
+      "name": "Nationality Name",
+      "status": "Nationality Status"
+    }
+  },
+  "position": {
+    "table": {
+      "title": "Position",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Position Status"
+    },
+    "details": {
+      "title": "Position",
+      "name": "Position Name",
+      "description": "Position Description",
+      "status": "Position Status"
+    }
+  },
+  "room": {
+    "table": {
+      "title": "Room",
+      "columns": {
+        "id": "ID",
+        "number": "Number",
+        "floor": "Floor",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Room"
+    },
+    "details": {
+      "title": "Room",
+      "number": "Room Number",
+      "floor": "Room Floor",
+      "department": "Room Department",
+      "status": "Room Status"
+    }
+  },
+  "service": {
+    "table": {
+      "title": "Service",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "duration": "Duration",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Service"
+    },
+    "details": {
+      "title": "Service",
+      "name": "Service Name",
+      "price": "Service Price",
+      "description": "Service Description",
+      "estimated": "Estimated Duration",
+      "status": "Service Status"
+    }
+  },
+  "social_media": {
+    "table": {
+      "title": "Social Media",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "icon": "Icon",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Social Media"
+    }
+  },
+  "speciality": {
+    "table": {
+      "title": "Speciality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Speciality Status"
+    },
+    "details": {
+      "title": "Speciality",
+      "name": "Speciality Name",
+      "status": "Speciality Status"
+    }
+  },
+  "user": {
+    "table": {
+      "title": "User",
+      "columns": {
+        "id": "ID",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "gender": "Gender",
+        "phone": "Phone",
+        "room": "Room #",
+        "city": "City",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": {
+        "remove": "Remove User",
+        "status": "Change User Status"
+      }
+    },
+    "details": {
+      "title": "User Status",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "gender": "Gender",
+      "phone": "Phone",
+      "city": "City",
+      "room": "Room ",
+      "status": "Status",
+      "address": "Address",
+      "birth_date": "Birth Date"
+    }
+  },
+  "user_status": {
+    "table": {
+      "title": "User Status",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove User Status"
+    },
+    "details": {
+      "title": "User Status",
+      "name": "User Status Name"
     }
   }
 }

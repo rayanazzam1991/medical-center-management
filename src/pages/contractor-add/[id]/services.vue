@@ -12,6 +12,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep"
 import { z as zod } from 'zod';
 import { BaseConsts } from '/@src/utils/consts/base';
+import {useI18n} from "vue-i18n";
 
 
 const viewWrapper = useViewWrapper()
@@ -25,7 +26,8 @@ viewWrapper.setPageTitle('Contractor Services')
 const head = useHead({
     title: 'Contractor',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const contractorForm = useContractorForm()
 contractorForm.setStep({
     number: 2,
@@ -98,7 +100,7 @@ const onSubmitAdd = handleSubmit(async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }

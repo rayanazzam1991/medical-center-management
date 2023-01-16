@@ -11,11 +11,13 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore'
 import sleep from '/@src/utils/sleep'
 import { defaultChangeItemStatus, defaultItem } from '/@src/models/Warehouse/Item/item'
 import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Item')
 useHead({
     title: 'Item',
 })
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultItemSearchFilter)
 const itemsList = ref<Array<Item>>([])
@@ -48,7 +50,7 @@ const changestatusItem = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${itemChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
         notif.error(message)

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-
 import { useDarkmode } from '/@src/stores/darkmode'
 import { useUserSession } from '/@src/stores/userSession'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -9,12 +8,15 @@ import { signIn } from "/@src/composable/Others/User/Auth/signIn";
 import { defaultSignInRequest } from '/@src/models/Others/User/auth'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { getSettings } from '/@src/services/Others/Setting/settingService'
+import {useI18n} from "vue-i18n";
+import { Notyf } from 'notyf'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
 const router = useRouter()
 const route = useRoute()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const userSession = useUserSession()
 const redirect = route.query.redirect as string
 const signRequest = ref(defaultSignInRequest);
@@ -44,7 +46,7 @@ const handleLogin = async () => {
       }
       await sleep(200);
 
-      notif.success('Welcome back')
+      notif.success(t('auth.success_login'))
     } catch (err: any) {
       if (err.response?.status !== undefined) {
         if (err.response.status !== 401) throw err

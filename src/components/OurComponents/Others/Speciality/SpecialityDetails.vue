@@ -7,13 +7,16 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { SpecialityConsts } from '/@src/models/Others/Speciality/speciality'
 import { useSpeciality } from '/@src/stores/Others/Speciality/specialityStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Speciality')
+viewWrapper.setPageTitle(t('speciality.details.title'))
 const head = useHead({
-    title: 'Speciality',
+    title: t('speciality.details.title'),
 })
 
 
@@ -50,11 +53,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{t('speciality.details.name')}}:</h4>
                             <span>{{ currentSpeciality.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom">{{t('speciality.details.status')}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentSpeciality.status === SpecialityConsts.INACTIVE ? 'danger' : 'success'">

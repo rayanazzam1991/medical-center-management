@@ -12,6 +12,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { departmentvalidationSchema } from '/@src/rules/Others/Department/departmentValidation';
 import sleep from '/@src/utils/sleep';
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore';
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
     props: {
@@ -28,6 +29,7 @@ export default defineComponent({
             title: "Department",
         });
         const departmentStore = useDepartment()
+        const { t } = useI18n();
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -82,7 +84,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/department/${department.id}` });
             } else {
@@ -101,7 +103,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500)
                 router.push({ path: `/department/${departmentData.id}` });
             } else {

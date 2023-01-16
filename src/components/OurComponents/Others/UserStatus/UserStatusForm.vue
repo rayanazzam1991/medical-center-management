@@ -8,6 +8,8 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { userstatusvalidationSchema } from "/@src/rules/Others/UserStatus/userstatusValidation"
 import sleep from "/@src/utils/sleep"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
+import {useI18n} from "vue-i18n";
+
 
 export default defineComponent({
     props: {
@@ -24,6 +26,7 @@ export default defineComponent({
             title: "User status",
         });
         const userStatusStore = useUserStatus();
+        const { t } = useI18n();
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -72,7 +75,7 @@ export default defineComponent({
                 notif.dismissAll();
                 await sleep(200);
 
-                notif.success(`${userStatus.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500);
                 router.push({ path: `/userstatus/${userStatus.id}` });
             }
@@ -89,7 +92,7 @@ export default defineComponent({
                 notif.dismissAll();
                 await sleep(200);
 
-                notif.success(`${userstatusData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/userstatus/${userstatusData.id}` });
             }

@@ -9,12 +9,16 @@ import { useCity } from '/@src/stores/Others/City/cityStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
+import {useI18n} from "vue-i18n"
+import { Notyf } from 'notyf'
+
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('City')
 useHead({
   title: 'City',
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const cityStore = useCity()
 const searchFilter = ref(defaultCitySearchFilter)
 const citiesList = ref<Array<City>>([])
@@ -43,7 +47,7 @@ const removeCity = async (cityId: number) => {
     await sleep(200);
 
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
 
   } else notif.error(message)
 }

@@ -22,6 +22,8 @@ import { defaultSpecialitySearchFilter, Speciality, SpecialitySearchFilter } fro
 import { getSpecialitiesList } from '/@src/services/Others/Speciality/specialityService';
 import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
+import {useI18n} from "vue-i18n";
+import Notyf from 'notyf/notyf';
 
 
 
@@ -51,7 +53,8 @@ contractorForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentContractor = ref(defaultCreateContractor)
 const contractorId = ref(0)
@@ -196,7 +199,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }

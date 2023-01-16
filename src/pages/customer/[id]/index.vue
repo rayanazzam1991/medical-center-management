@@ -34,6 +34,8 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import CKE from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
@@ -45,7 +47,8 @@ const deleteFileId = ref()
 const viewWrapper = useViewWrapper()
 const currentCustomer = ref<Customer>(defaultCustomer)
 const customerId = ref(0)
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const customerForm = useCustomerForm()
 const customerProfilePicture = ref(defaultCustomerProfilePic)
 const customerFiles = ref<Array<Media>>([])
@@ -67,9 +70,9 @@ const config = {
 }
 // @ts-ignore
 customerId.value = route.params.id
-viewWrapper.setPageTitle(`Customer`)
+viewWrapper.setPageTitle(t('customer.details.title'))
 useHead({
-  title: 'Customer',
+  title: t('customer.details.title'),
 })
 const customerStore = useCustomer()
 const props = withDefaults(
@@ -125,10 +128,7 @@ const changestatusUser = async () => {
   await sleep(200)
 
   // @ts-ignore
-  notif.success(
-    `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} were edited successfully`
-  )
-  // router.push({ path: `/employee/${userData.id}` })
+  notif.success( t('toast.success.edit') )
   changeStatusPopup.value = false
 }
 
@@ -166,7 +166,7 @@ const editNotes = async () => {
     notif.dismissAll()
     await sleep(200)
     // @ts-ignore
-    notif.success(`Customer notes was edited successfully`)
+    notif.success(t('toast.success.customer_note'))
     currentCustomer.value.notes = customer.notes
     currentCustomer.value.notes_by = customer.notes_by
     currentCustomer.value.notes_timestamp = customer.notes_timestamp
@@ -239,11 +239,11 @@ const onAddFile = async (event: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -263,9 +263,7 @@ const UploadFile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was added successfully`
-    )
+    notif.success(t('toast.success.add'))
     media[0].file_name = media[0].relative_path
     media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
 
@@ -295,9 +293,7 @@ const removefile = async () => {
     // @ts-ignore
     await sleep(200)
 
-    notif.success(
-      `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} file was deleted successfully`
-    )
+    notif.success(t('toast.success.remove'))
 
     customerFiles.value.splice(
       customerFiles.value.findIndex((element) => element.id == deleteFileId.value),
@@ -338,11 +334,11 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
       _file.type != 'image/png' &&
       _file.type != 'image/webp'
     ) {
-      _message = 'Please choose an accepted file type'
+      _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message = 'File size must be less than 2MB '
+      _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -367,7 +363,7 @@ const UploadProfilePicture = async () => {
     profilePictureToUpload.value == undefined
   ) {
     _success = false
-    _message = 'Please select a valid image to be uploaded'
+    _message = t('toast.file.image')
   }
   if (_success) {
     let formData = new FormData()
@@ -383,9 +379,7 @@ const UploadProfilePicture = async () => {
       // @ts-ignore
       await sleep(200)
 
-      notif.success(
-        `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was edited successfully`
-      )
+      notif.success(t('toast.success.edit'))
       customerProfilePicture.value = media[0]
       customerProfilePicture.value.relative_path =
         import.meta.env.VITE_MEDIA_BASE_URL + customerProfilePicture.value.relative_path
@@ -425,9 +419,7 @@ const RemoveProfilePicture = async () => {
     if (success) {
       await sleep(200)
 
-      notif.success(
-        `${currentCustomer.value.user.first_name} ${currentCustomer.value.user.last_name} profile picture was deleted successfully`
-      )
+      notif.success(t('toast.success.remove'))
       customerProfilePicture.value = defaultCustomerProfilePic
     } else {
       await sleep(200)
@@ -473,7 +465,7 @@ const RemoveProfilePicture = async () => {
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span
-              >Status:
+              >{{t('customer.details.status')}}:
               <span
                 :class="
                   currentCustomer.user.status.name == 'Pending'
@@ -498,7 +490,7 @@ const RemoveProfilePicture = async () => {
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Details'"
                   @click="tab = 'Details'"
-                  ><span>Details</span></a
+                  ><span>{{t('customer.details.tabs.details')}}</span></a
                 >
               </li>
               <li :class="[tab === 'Medical Info' && 'is-active']">
@@ -506,7 +498,7 @@ const RemoveProfilePicture = async () => {
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Medical Info'"
                   @click="tab = 'Medical Info'"
-                  ><span>Medical Info </span></a
+                  ><span>{{t('customer.details.tabs.medical_info')}}</span></a
                 >
               </li>
               <li :class="[tab === 'Social Media' && 'is-active']">
@@ -514,7 +506,7 @@ const RemoveProfilePicture = async () => {
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Social Media'"
                   @click="tab = 'Social Media'"
-                  ><span>Social Media </span></a
+                  ><span>{{t('customer.details.tabs.social_media')}}</span></a
                 >
               </li>
               <li :class="[tab === 'Files' && 'is-active']">
@@ -522,7 +514,7 @@ const RemoveProfilePicture = async () => {
                   tabindex="0"
                   @keydown.space.prevent="tab = 'Files'"
                   @click="tab = 'Files'"
-                  ><span>Files </span></a
+                  ><span>{{t('customer.details.tabs.files')}}</span></a
                 >
               </li>
               <li class="tab-naver"></li>
@@ -535,11 +527,11 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Main Details</h3>
+                    <h3>{{t('customer.details.main_details')}}</h3>
                   </div>
                   <div class="buttons">
                     <VButton @click.prevent="onOpen" color="dark">
-                      Change User Status
+                      {{t('customer.table.modal_title')}}
                     </VButton>
                     <VIconButton
                       size="small"
@@ -553,7 +545,7 @@ const RemoveProfilePicture = async () => {
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>Customer Name</h4>
+                    <h4>{{t('customer.details.name',{title :viewWrapper.pageTitle  })}}</h4>
                     <p>
                       {{ currentCustomer.user.first_name }}
                       {{ currentCustomer.user.last_name }}.
@@ -568,7 +560,7 @@ const RemoveProfilePicture = async () => {
                           : 'lnir lnir-female'
                       "
                     ></i>
-                    <h4>Gender</h4>
+                    <h4>{{ t('customer.details.gender') }}</h4>
                     <p>
                       {{
                         currentCustomer.user.gender == 'Not_Selected'
@@ -579,12 +571,12 @@ const RemoveProfilePicture = async () => {
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
-                    <h4>Birth Date</h4>
+                    <h4>{{ t('customer.details.birth_date') }}</h4>
                     <p>{{ currentCustomer.user.birth_date }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
-                    <h4>Phone Number</h4>
+                    <h4>{{ t('customer.details.phone_number') }}</h4>
                     <p>{{ currentCustomer.user.phone_number }}.</p>
                   </div>
                 </div>
@@ -595,7 +587,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Customer Group</span>
+                          <span>{{ t('customer.details.group') }}</span>
                           <span>
                             {{ currentCustomer.customer_group.name }}
                           </span>
@@ -605,7 +597,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Address</span>
+                          <span>{{ t('customer.details.address') }}</span>
                           <span>
                             {{ currentCustomer.user.address }}
                           </span>
@@ -615,7 +607,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Emergency Contact Name</span>
+                          <span>{{ t('customer.details.emergency_contact_name') }}</span>
                           <span>
                             {{ currentCustomer.emergency_contact_name }}
                           </span>
@@ -625,7 +617,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Emergency Contact Phone</span>
+                          <span>{{ t('customer.details.emergency_contact_phone') }}</span>
                           <span>
                             {{ currentCustomer.emergency_contact_phone }}
                           </span>
@@ -643,7 +635,7 @@ const RemoveProfilePicture = async () => {
                               mt-2
                             "
                           >
-                            <span class="mb-2">Notes </span>
+                            <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton
                               class="mb-3"
                               size="small"
@@ -660,8 +652,8 @@ const RemoveProfilePicture = async () => {
                                 v-if="currentCustomer.notes != undefined"
                                 class="has-text-primary"
                               >
-                                -Last update at: {{ currentCustomer.notes_timestamp }} |
-                                By: {{ currentCustomer.notes_by?.first_name }}
+                                -{{ t('customer.details.last_update') }}: {{ currentCustomer.notes_timestamp }} |
+                                {{ t('customer.details.by') }}: {{ currentCustomer.notes_by?.first_name }}
                                 {{ currentCustomer.notes_by?.last_name }}
                               </div>
                             </VCard>
@@ -682,7 +674,7 @@ const RemoveProfilePicture = async () => {
                         @click.prevent="editNotes"
                         color="dark"
                       >
-                        Save
+                        {{t('modal.buttons.save')}}
                       </VButton>
                     </div>
                   </div>
@@ -698,9 +690,8 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Customer Medical Info</h3>
+                    <h3>{{ t('customer.details.medical_info') }}</h3>
                   </div>
-
                   <VIconButton
                     size="small"
                     icon="feather:edit-3"
@@ -712,14 +703,14 @@ const RemoveProfilePicture = async () => {
                 <div v-if="currentCustomer.medical_info" class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
-                    <h4>Blood Type</h4>
+                    <h4>{{t('customer.details.blood_type')}}</h4>
                     <p>
                       {{ currentCustomer?.medical_info?.blood_type }}
                     </p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnir lnir-grow"></i>
-                    <h4>Smoke</h4>
+                    <h4>{{t('customer.details.smooke')}}</h4>
                     <p>
                       {{
                         MedicalInfoConsts.showBoolean(
@@ -732,17 +723,17 @@ const RemoveProfilePicture = async () => {
                 <div v-else class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>Customer have no medical info...</h4>
+                    <h4>{{ t('customer.details.tabs_content_placeholder.medical_info') }}</h4>
                   </div>
                 </div>
 
                 <div v-if="currentCustomer.medical_info" class="project-files">
-                  <h4>More Info</h4>
+                  <h4>{{t('customer.details.more_info')}}</h4>
                   <div class="columns is-multiline">
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Allergic</span>
+                          <span>{{t('customer.details.allergic')}}</span>
                           <span>
                             {{ currentCustomer?.medical_info?.allergic }}
                           </span>
@@ -752,7 +743,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Chronic Diseases</span>
+                          <span>{{t('customer.details.chronic_diseases')}}</span>
                           <span>
                             {{ currentCustomer?.medical_info?.chronic_diseases }}
                           </span>
@@ -762,7 +753,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Infectious Diseases</span>
+                          <span>{{t('customer.details.infectious_diseases')}}</span>
                           <span>
                             {{ currentCustomer?.medical_info?.infectious_diseases }}
                           </span>
@@ -772,7 +763,7 @@ const RemoveProfilePicture = async () => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta">
-                          <span>Other Medical Info</span>
+                          <span>{{t('customer.details.other_medical_info')}}</span>
                           <span>
                             {{ currentCustomer?.medical_info?.any_other_info }}
                           </span>
@@ -791,7 +782,7 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Customer Social Media</h3>
+                    <h3>{{t('customer.details.customer_social_media')}}</h3>
                   </div>
 
                   <VIconButton
@@ -810,7 +801,7 @@ const RemoveProfilePicture = async () => {
                     <i aria-hidden="true" :class="socialMedia.icon"></i>
                     <h4>{{ socialMedia.name }}</h4>
                     <p class="has-text-centered">
-                      Customer URL:
+                      {{t('customer.details.customer_URL')}}:
                       <a target="_blank" class="has-text-primary" :href="socialMedia.url">
                         {{ socialMedia.url }}</a
                       >
@@ -821,7 +812,7 @@ const RemoveProfilePicture = async () => {
                     class="project-feature"
                   >
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>Customer have no social media...</h4>
+                    <h4>{{ t('customer.details.tabs_content_placeholder.social_modia') }}</h4>
                   </div>
                 </div>
               </div>
@@ -834,18 +825,18 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>Customer Files</h3>
+                    <h3>{{ t('customer.details.customer_files') }}</h3>
                   </div>
                 </div>
                 <div v-if="customerFiles.length == 0" class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>Customer have no files...</h4>
+                    <h4>{{t('customer.details.tabs_content_placeholder.files')}}</h4>
                   </div>
                 </div>
 
                 <div class="project-files project-section">
-                  <h4>Upload File</h4>
+                  <h4>{{t('customer.details.upload_file')}}</h4>
                   <div class="is-flex is-justify-content-space-between">
                     <VField class="mr-6" grouped>
                       <VControl>
@@ -860,7 +851,7 @@ const RemoveProfilePicture = async () => {
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
                               </span>
-                              <span class="file-label"> Choose a file… </span>
+                              <span class="file-label">{{t('images.image_select_file')}}</span>
                             </span>
                             <span class="file-name light-text">
                               {{ filesToUpload?.name ?? 'Select File' }}
@@ -878,12 +869,12 @@ const RemoveProfilePicture = async () => {
                         light
                         dark-outlined
                       >
-                        Upload
+                        {{t('customer.details.upload')}}
                       </VButton>
                     </VLoader>
                   </div>
                   <h6 class="ml-2 mt-2 help">
-                    Max size: 2 MB | Accepted file types : png, jpg, webp
+                    {{t('images.accepted_file')}}
                   </h6>
                 </div>
                 <div
@@ -891,7 +882,7 @@ const RemoveProfilePicture = async () => {
                   class="project-files project-section"
                 >
                   <div>
-                    <h4>Files</h4>
+                    <h4>{{t('customer.details.tabs.files')}}</h4>
                     <div class="columns is-multiline">
                       <div v-for="file in customerFiles" class="column is-6">
                         <div class="file-box">
@@ -944,9 +935,8 @@ const RemoveProfilePicture = async () => {
       </div>
     </div>
   </div>
-
   <VModal
-    title="Change User Status"
+    :title="t('customer.table.modal_title.status')"
     :open="changeStatusPopup"
     actions="center"
     @close="changeStatusPopup = false"
@@ -958,13 +948,13 @@ const RemoveProfilePicture = async () => {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column" id="user_status_id">
-                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                <VLabel>{{t('customer.details.customer_status')}}</VLabel>
                 <VControl>
                   <VSelect
                     v-if="currentCustomer.user.status"
                     v-model="currentCustomer.user.status.id"
                   >
-                    <VOption value="">User Status</VOption>
+                    <VOption value="">{{t('customer.details.select_customer_status')}}</VOption>
                     <VOption
                       v-for="status in statusesList"
                       :key="status.id"
@@ -981,30 +971,30 @@ const RemoveProfilePicture = async () => {
       </form>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+      <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
   <VModal
-    title="Delete Customer File"
+    :title="t('customer.table.modal_title.delete_file')"
     :open="deleteFilePopup"
     actions="center"
     @close="deleteFilePopup = false"
   >
     <template #content>
       <VPlaceholderSection
-        title="Are you sure?"
-        :subtitle="`you are about to delete this file permenantly`"
+        :title="t('customer.table.modal_title.placeholderSection.title')"
+        :subtitle="t('customer.table.modal_title.placeholderSection.subtitle')"
       />
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton color="primary" raised @click="removefile()"> Confirm </VButton>
+        <VButton color="primary" raised @click="removefile()">{{t('modal.buttons.confirm')}}</VButton>
       </VLoader>
     </template>
   </VModal>
   <VModal
     :key="keyIncrement"
-    title="Update Profile Picture"
+    :title="t('customer.table.modal_title.profile_picture')"
     :open="updateProfilePicturePopup"
     actions="center"
     @close="updateProfilePicturePopup = false"
@@ -1033,7 +1023,7 @@ const RemoveProfilePicture = async () => {
         </VControl>
       </VField>
       <h6 class="is-flex is-justify-content-center help">
-        Max size: 2 MB | Accepted file types : png, jpg, webp
+        {{t('images.accepted_file')}}
       </h6>
     </template>
 
@@ -1046,12 +1036,12 @@ const RemoveProfilePicture = async () => {
           class="mr-2"
           @click="RemoveProfilePicture"
         >
-          Delete</VButton
+          {{t('modal.buttons.delete')}}</VButton
         >
       </VLoader>
 
       <VLoader size="small" :active="uploadLoading">
-        <VButton color="primary" raised @click="UploadProfilePicture">Update</VButton>
+        <VButton color="primary" raised @click="UploadProfilePicture">{{ t('customer.details.upload') }}</VButton>
       </VLoader>
     </template>
   </VModal>

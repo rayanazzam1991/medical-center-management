@@ -12,6 +12,8 @@ import { Setting } from '/@src/models/Others/Setting/setting';
 import { editSettings, getSettings } from '/@src/services/Others/Setting/settingService';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 import { useSetting } from '/@src/stores/Others/Setting/settingStore';
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
@@ -23,7 +25,8 @@ export default defineComponent({
         const head = useHead({
             title: "Edit Settings",
         });
-        const notif = useNotyf();
+        const { t } = useI18n();
+        const notif = useNotyf() as Notyf;
         const formType = ref("Edit");
         const route = useRoute();
         const settingStore = useSetting();
@@ -89,7 +92,7 @@ export default defineComponent({
                 await sleep(500);
 
                 // @ts-ignore
-                notif.error(`Start time cant be after end time`)
+                notif.error(t('toast.error.Attendance.time'))
 
                 return
             }
@@ -99,7 +102,7 @@ export default defineComponent({
                     await sleep(500);
 
                     // @ts-ignore
-                    notif.error(`Start time cant be after end time`)
+                    notif.error(t('toast.error.Attendance.time'))
 
                     return
                 }
@@ -135,7 +138,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`Settings were edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/dashboard` });
             } else {
                 await sleep(200);

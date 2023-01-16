@@ -11,6 +11,8 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { BaseConsts } from '/@src/utils/consts/base';
+import {useI18n} from "vue-i18n";
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -29,7 +31,8 @@ export default defineComponent({
             title: "Item",
         });
         const itemStore = useItem()
-        const notif = useNotyf();
+        const { t } = useI18n();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -136,7 +139,7 @@ export default defineComponent({
                 notif.dismissAll();
                 await sleep(200);
                 // @ts-ignore
-                notif.success(`${item.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/item/${item.id}` });
             } else {
@@ -163,7 +166,7 @@ export default defineComponent({
                 notif.dismissAll();
                 await sleep(200);
                 // @ts-ignore
-                notif.success(`${itemData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/item/${itemData.id}` });
             } else {

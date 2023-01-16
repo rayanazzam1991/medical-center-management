@@ -10,6 +10,7 @@ import { ErrorMessage, useForm } from "vee-validate";
 import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
 import sleep from "/@src/utils/sleep"
 import { Notyf } from "notyf"
+import { useI18n } from "vue-i18n"
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
@@ -22,6 +23,7 @@ viewWrapper.setPageTitle('Customer Social Media')
 const head = useHead({
   title: 'Customer',
 })
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
@@ -34,10 +36,8 @@ customerForm.setStep({
       router.push({
         path: `/customer/${customerId.value}`,
         query: { tab: 'Social Media' }
-
       })
     }
-
   },
 
 })
@@ -142,7 +142,7 @@ const onSubmitEdit = handleSubmit(async () => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+    notif.success(t('toast.success.add'))
 
     return true
   } else {

@@ -1,8 +1,9 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue';
-
+import {useI18n} from "vue-i18n";
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorSearchFilter, ContractorSearchFilter, Contractor, defaultContractor } from '/@src/models/Contractor/contractor';
 import { CustomerConsts } from '/@src/models/CRM/Customer/customer';
@@ -22,7 +23,8 @@ viewWrapper.setPageTitle('Contractor')
 useHead({
     title: 'Contractor',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultContractorSearchFilter)
 const contractorsList = ref<Array<Contractor>>([])
 const statusesList = ref<Array<UserStatus>>([])
@@ -59,7 +61,7 @@ const changestatusUser = async () => {
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${contractorChangeStatus.value.user.first_name} ${contractorChangeStatus.value.user.last_name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
 

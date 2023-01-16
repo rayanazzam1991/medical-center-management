@@ -8,6 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { positionvalidationSchema } from '/@src/rules/Others/Position/positionValidation';
 import sleep from "/@src/utils/sleep";
 import { usePosition } from "/@src/stores/Others/Position/positionStore";
+import {useI18n} from "vue-i18n";
 
 
 export default defineComponent({
@@ -25,6 +26,7 @@ export default defineComponent({
             title: "Position",
         });
         const positionStore = usePosition()
+        const { t } = useI18n();
         const notif = useNotyf();
         const formType = ref("");
         formType.value = props.formType;
@@ -83,7 +85,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${position.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/position/${position.id}` });
             } else {
                 await sleep(200);
@@ -101,7 +103,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${positionData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/position/${positionData.id}` });
             } else {
                 await sleep(200);

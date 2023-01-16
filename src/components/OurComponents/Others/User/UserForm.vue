@@ -14,6 +14,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { uservalidationSchema } from '/@src/rules/Others/User/userValidation';
 import { useUser } from '/@src/stores/Others/User/userStore';
 import sleep from '/@src/utils/sleep';
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
     props: {
@@ -32,6 +33,7 @@ export default defineComponent({
             title: 'User',
         })
         const userStore = useUser()
+        const { t } = useI18n();
         const notif = useNotyf()
         const formType = ref('')
         formType.value = props.formType
@@ -127,7 +129,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(` ${viewWrapper.pageTitle} was added successfully`)
+                notif.success(t('toast.success.add'))
                 await sleep(500)
                 router.push({ path: `/user/${user.id}` })
             }
@@ -161,7 +163,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
+                notif.success(t('toast.success.edit'))
                 await sleep(500)
                 router.push({ path: `/user/${userData.id}` })
             } else {

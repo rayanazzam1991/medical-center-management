@@ -1,5 +1,7 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
 import { ErrorMessage, useForm } from 'vee-validate';
+import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Service, defaultServiceSearchFilter } from '/@src/models/Others/Service/service';
 import { contractorEditServicesValidationSchema } from '/@src/rules/Contractor/contractorEditServicesValidationSchema';
@@ -22,7 +24,8 @@ viewWrapper.setPageTitle('Edit Contractor Services')
 const head = useHead({
     title: 'Contractor',
 })
-const notif = useNotyf()
+const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const contractorForm = useContractorForm()
 contractorForm.setStep({
     number: 2,
@@ -127,7 +130,7 @@ const onSubmitEdit = handleSubmit(async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }

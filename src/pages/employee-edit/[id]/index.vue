@@ -22,6 +22,7 @@ import sleep from "/@src/utils/sleep"
 import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 
@@ -47,6 +48,7 @@ employeeForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
@@ -196,7 +198,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }

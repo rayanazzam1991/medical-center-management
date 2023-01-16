@@ -12,6 +12,7 @@ import sleep from "/@src/utils/sleep"
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import { BaseConsts } from '/@src/utils/consts/base'
 import { Notyf } from 'notyf'
+import {useI18n} from "vue-i18n";
 
 
 export default defineComponent({
@@ -31,6 +32,7 @@ export default defineComponent({
             title: 'Room',
         })
         const roomStore = useRoom()
+        const { t } = useI18n();
         const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
@@ -109,7 +111,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
+                notif.success(t('toast.success.add'))
                 await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
@@ -137,7 +139,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
+                notif.success(t('toast.success.edit'))
                 await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {

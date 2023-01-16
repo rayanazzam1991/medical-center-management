@@ -19,6 +19,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerEditvalidationSchema } from '/@src/rules/CRM/Customer/customerEditValidation';
 import sleep from "/@src/utils/sleep"
 import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 
@@ -46,6 +47,7 @@ customerForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
@@ -191,7 +193,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }
