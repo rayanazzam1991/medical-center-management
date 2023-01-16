@@ -6,16 +6,17 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { useNationality } from "/@src/stores/Others/Nationality/nationalityStore"
 import sleep from "/@src/utils/sleep"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Nationality')
+viewWrapper.setPageTitle(t('nationality.details.title'))
 const head = useHead({
-    title: 'Nationality',
+    title: t('nationality.details.title'),
 })
-
-
 const nationalityStore = useNationality()
 const nationalityId = ref(0)
 // @ts-ignore
@@ -49,11 +50,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} {{t('nationality.details.name')}}:</h4>
                             <span>{{ currentNationality.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} {{t('nationality.details.status')}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentNationality.status === NationalityConsts.INACTIVE ? 'danger' : 'success'">

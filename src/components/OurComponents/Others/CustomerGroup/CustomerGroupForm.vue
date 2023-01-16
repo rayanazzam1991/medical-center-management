@@ -9,6 +9,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep";
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -27,7 +28,7 @@ export default defineComponent({
             title: t('customer_group.form.page_title'),
         });
         const customerGroupStore = useCustomerGroup()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -83,7 +84,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${customerGroup.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500);
                 router.push({ path: `/customer-group/${customerGroup.id}` });
             } else {
@@ -102,7 +103,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${customerGroupData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/customer-group/${customerGroupData.id}` });
             } else {

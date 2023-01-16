@@ -1,13 +1,23 @@
 import { toFormValidator } from '@vee-validate/zod';
 import { z as zod } from 'zod';
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 
 const itemvalidationSchema = toFormValidator(zod
     .object({
         name: zod
             .string({
-                required_error: "This field is required",
+                required_error: i18n.global.t('validation.required'),
             })
-            .min(1, "This field is required"),
+            .min(1, i18n.global.t('validation.required')),
         description: zod
             .preprocess(
                 val => val == undefined ? "" : val,
@@ -20,8 +30,8 @@ const itemvalidationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                    .min(0, "Please enter a valid number"),
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
         cost:
             zod.preprocess(
@@ -30,8 +40,8 @@ const itemvalidationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                    .min(0, "Please enter a valid number"),
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
         quantity:
             zod.preprocess(
@@ -40,8 +50,8 @@ const itemvalidationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                    .min(0, "Please enter a valid number"),
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
         min_quantity:
             zod
@@ -60,11 +70,11 @@ const itemvalidationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+                    .min(1, i18n.global.t('validation.required')),
             ),
         status: zod
-            .number({ required_error: "Please choose one" }),
+            .number({ required_error: i18n.global.t('validation.redio.required') }),
     }));
 export {
     itemvalidationSchema

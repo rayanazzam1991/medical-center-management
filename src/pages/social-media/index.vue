@@ -1,4 +1,5 @@
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VAvatar from '/@src/components/base/avatar/VAvatar.vue';
 import VIcon from '/@src/components/base/icon/VIcon.vue';
@@ -17,7 +18,7 @@ viewWrapper.setPageTitle(t('social_media.table.title'))
 useHead({
   title: t('social_media.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultSocialMediaSearchFilter)
 const socialMediasList = ref<Array<SocialMedia>>([])
 const deleteSocialMediaPopup = ref(false)
@@ -46,7 +47,7 @@ const removeSocialMedia = async (socialMediaId: number) => {
     await sleep(200);
 
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
 
   } else {
     await sleep(200);

@@ -9,6 +9,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import sleep from '/@src/utils/sleep'
+import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
@@ -16,7 +17,7 @@ viewWrapper.setPageTitle(t('room.table.title'))
 useHead({
   title: t('room.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultRoomSearchFilter)
 const roomsList = ref<Array<Room>>([])
 const deleteRoomPopup = ref(false)
@@ -45,7 +46,7 @@ const removeRoom = async (roomId: number) => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
   }
   else {
     await sleep(200);

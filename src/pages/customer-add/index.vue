@@ -145,7 +145,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             
             await sleep(200);
 
-            notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was added successfully`)
+            notif.success(t('toast.success.add'))
             return true
         }
         else {

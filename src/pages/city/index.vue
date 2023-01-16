@@ -11,6 +11,7 @@ import { useCity } from '/@src/stores/Others/City/cityStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
+
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('city.table.title'))
@@ -46,7 +47,7 @@ const removeCity = async (cityId: number) => {
     await sleep(200);
 
     // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
 
   } else notif.error(message)
 }

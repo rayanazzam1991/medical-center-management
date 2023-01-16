@@ -10,6 +10,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
+import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 
 const {t} = useI18n()
@@ -19,7 +20,7 @@ viewWrapper.setPageTitle(t('employee_schedule.table.title'))
 useHead({
     title: t('employee_schedule.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultEmployeeScheduleSearchFilter)
 const employeesScheduleList = ref<Array<EmployeeSchedule>>([])
 const paginationVar = ref(defaultPagination)
@@ -121,7 +122,7 @@ const updateSchedule = async () => {
         await sleep(200);
 
         // @ts-ignore
-        notif.error(`Start time cant be after end time`)
+        notif.error(t('toast.error.Attendance.time'))
 
         return
     }
@@ -131,7 +132,7 @@ const updateSchedule = async () => {
             await sleep(200);
 
             // @ts-ignore
-            notif.error(`Start time cant be after end time`)
+            notif.error(t('toast.error.Attendance.time'))
 
             return
         }
@@ -154,7 +155,7 @@ const updateSchedule = async () => {
             await sleep(200);
 
             // @ts-ignore
-            notif.success(`${selectedEmployee.value.user.first_name} ${selectedEmployee.value.user.last_name} schedule was edited successfully`)
+            notif.success(t('toast.success.edit'))
         } else {
             await sleep(200);
             // @ts-ignore
@@ -186,7 +187,7 @@ const deleteSchedule = async () => {
             await sleep(200);
 
             // @ts-ignore
-            notif.success(`${selectedEmployee.value.user.first_name} ${selectedEmployee.value.user.last_name} schedule was edited successfully`)
+            notif.success(t('toast.success.edit'))
         } else {
             await sleep(200);
             // @ts-ignore

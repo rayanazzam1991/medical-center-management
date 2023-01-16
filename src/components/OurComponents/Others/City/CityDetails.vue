@@ -7,13 +7,15 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { CityConsts } from '/@src/models/Others/City/city'
 import { useCity } from '/@src/stores/Others/City/cityStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('City')
+viewWrapper.setPageTitle(t('city.details.title'))
 const head = useHead({
-    title: 'City',
+    title: t('city.details.title'),
 })
 
 
@@ -50,11 +52,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{t('city.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>{{ currentCity.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom">{{t('city.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>
                                 <VTag :color="currentCity.status === CityConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ CityConsts.showStatusName(currentCity.status) }}</VTag>

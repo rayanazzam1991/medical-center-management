@@ -12,14 +12,15 @@ import { useSpeciality } from '/@src/stores/Others/Speciality/specialityStore'
 import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
+import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('speciality.table.title'))
 useHead({
     title: t('speciality.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultSpecialitySearchFilter)
 const specialitiesList = ref<Array<Speciality>>([])
 const deleteSpecialityPopup = ref(false)
@@ -86,7 +87,7 @@ const changestatusSpeciality = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${specialityChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
 

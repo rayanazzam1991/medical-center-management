@@ -167,7 +167,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
             employeeForm.data.id = employee.id
             await sleep(200);
             // @ts-ignore
-            notif.success(`${employeeForm.userForm.first_name} ${employeeForm.userForm.last_name} was added successfully`)
+            notif.success(t('toast.success.add'))
 
             return true
         }

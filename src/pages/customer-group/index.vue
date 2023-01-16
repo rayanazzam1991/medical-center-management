@@ -49,7 +49,7 @@ const removeCustomerGroup = async (customerGroupId: number) => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    notif.success(t('toast.success.remove'))
 
   } else {
 

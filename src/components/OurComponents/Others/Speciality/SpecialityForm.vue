@@ -9,6 +9,7 @@ import { specialityvalidationSchema } from '/@src/rules/Others/Speciality/specia
 import sleep from "/@src/utils/sleep";
 import { useSpeciality } from "/@src/stores/Others/Speciality/specialityStore";
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -27,7 +28,7 @@ export default defineComponent({
             title: t('speciality.form.page_title'),
         });
         const specialityStore = useSpeciality()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -85,7 +86,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${speciality.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/speciality/${speciality.id}` });
             } else {
                 await sleep(200);
@@ -103,7 +104,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${specialityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/speciality/${specialityData.id}` });
             } else {
                 await sleep(200);

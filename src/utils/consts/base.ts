@@ -22,12 +22,15 @@ export class BaseConsts {
             return i18n.global.t('status.inactive')
         return ''
     }
-    public static showBoolean(boolean: number): string {
+    public static showBoolean(boolean: number | undefined): string {
         if (boolean === BaseConsts.TRUE)
             return i18n.global.t('boolean.true')
 
-        if (boolean === BaseConsts.FALSE)
+            if (boolean === BaseConsts.FALSE)
             return i18n.global.t('boolean.false')
+            if (boolean === undefined)
+            return ''
+            
         return ''
     }
 }

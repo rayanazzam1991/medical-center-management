@@ -13,6 +13,7 @@ import sleep from "/@src/utils/sleep"
 import { z as zod } from 'zod';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 const {t} = useI18n()
 const viewWrapper = useViewWrapper()
@@ -26,7 +27,7 @@ viewWrapper.setPageTitle(t('contractor.form.step_2_title'))
 const head = useHead({
     title: t('contractor.form.page_title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const contractorForm = useContractorForm()
 contractorForm.setStep({
     number: 2,
@@ -85,7 +86,7 @@ const onSubmitAdd = handleSubmit(async () => {
 
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
-            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) })
+            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: contractorForm.data.payment_percentage!= undefined ? servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) :  0 })
 
         }
         else {
@@ -99,7 +100,7 @@ const onSubmitAdd = handleSubmit(async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} services was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }
@@ -177,8 +178,8 @@ const onSubmitAdd = handleSubmit(async () => {
                              </span>
                                     <div v-if="service.checked" class="control">
                                         <div class="input">
-                                            {{ (service.price *
-        (contractorForm.data.payment_percentage / 100 ?? 0))
+                                            {{ contractorForm.data.payment_percentage != undefined ? (service.price *
+        (contractorForm.data.payment_percentage / 100 )) : 0
                                             }}
 
                                         </div>

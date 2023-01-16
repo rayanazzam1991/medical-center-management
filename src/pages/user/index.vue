@@ -8,6 +8,7 @@ import { defaultUserSearchFilter, UserSearchFilter } from '/@src/models/Others/U
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
+import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
@@ -15,7 +16,7 @@ viewWrapper.setPageTitle(t('user.table.title'))
 useHead({
     title: t('user.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultUserSearchFilter)
 const usersList = ref()
 const deleteUserPopup = ref(false)
@@ -35,7 +36,7 @@ const removeUser = async (userId: number) => {
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+        notif.success(t('toast.success.remove'))
 
     } else {
         await sleep(200);

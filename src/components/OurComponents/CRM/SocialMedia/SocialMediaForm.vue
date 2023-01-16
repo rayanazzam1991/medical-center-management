@@ -9,6 +9,7 @@ import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -26,7 +27,7 @@ export default defineComponent({
         const head = useHead({
             title: t('social_media.form.page_title'),
         });
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -80,7 +81,7 @@ export default defineComponent({
                 notif.dismissAll();
                 await sleep(200);
                 // @ts-ignore
-                notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/social-media/${socialMedia.id}` });
             } else {
                 await sleep(200);
@@ -98,7 +99,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${socialMedia.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/social-media/${socialMediaData.id}` });
             }
             else {

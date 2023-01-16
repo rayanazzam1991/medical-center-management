@@ -43,7 +43,6 @@ const keyIncement = ref(0)
 const loading = ref({ update: false, delete: false, fetch: false })
 const currentYear = new Date().getFullYear()
 const currentMonth = new Date().getMonth() + 1 < 10 ? "0" + (new Date().getMonth() + 1).toString() : (new Date().getMonth() + 1).toString()
-
 const selectedYear = ref(currentYear)
 const selectedMonth = ref(currentMonth)
 const selectedMonthDays = ref(28)
@@ -171,7 +170,7 @@ const updateEmployeeAttendance = async () => {
         await sleep(200);
 
 
-        notif.error(`Start time cant be after end time`)
+        notif.error(t('toast.error.Attendance.time'))
 
         return
     }
@@ -180,7 +179,7 @@ const updateEmployeeAttendance = async () => {
         if (Number(formatedCheckInMinute) >= Number(formatedCheckOutMinute)) {
             await sleep(200);
 
-            notif.error(`Start time cant be after end time`)
+            notif.error(t('toast.error.Attendance.time'))
 
             return
         }
@@ -190,13 +189,13 @@ const updateEmployeeAttendance = async () => {
         const checkInSpliter = selectedCell.value.check_in?.split(':')
         if (Number(formatedCheckInHour) > Number(checkInSpliter[0])) {
             await sleep(200);
-            notif.error(`New check in can't be after original check in`)
+            notif.error(t('toast.error.Attendance.check_in'))
             return
 
         } else if (Number(formatedCheckInHour) == Number(checkInSpliter[0])) {
             if (Number(formatedCheckInMinute) > Number(checkInSpliter[1])) {
                 await sleep(200);
-                notif.error(`New check in can't be after original check in`)
+                notif.error(t('toast.error.Attendance.check_in'))
                 return
 
             }
@@ -206,13 +205,13 @@ const updateEmployeeAttendance = async () => {
         const checkOutSpliter = selectedCell.value.check_out?.split(':')
         if (Number(formatedCheckOutHour) < Number(checkOutSpliter[0])) {
             await sleep(200);
-            notif.error(`New check out can't be before original check out`)
+            notif.error(t('toast.error.Attendance.check_out'))
             return
 
         } else if (Number(formatedCheckOutHour) == Number(checkOutSpliter[0])) {
             if (Number(formatedCheckOutMinute) < Number(checkOutSpliter[1])) {
                 await sleep(200);
-                notif.error(`New check out can't be before original check out`)
+                notif.error(t('toast.error.Attendance.check_out'))
                 return
 
             }
@@ -229,7 +228,7 @@ const updateEmployeeAttendance = async () => {
         await search(searchFilter.value, selectedMonthDays.value)
         notif.dismissAll()
         await sleep(200);
-        notif.success(`${selectedEmployee.value.user.first_name} ${selectedEmployee.value.user.last_name} attendance was edited successfully`)
+        notif.success(t('toast.success.edit'))
         selectedCell.value.check_in = attendance.check_in
         selectedCell.value.check_out = attendance.check_out
         selectedCell.value.status = attendance.status
@@ -263,11 +262,11 @@ const justifyEmployeeAttendance = async (isJustify : boolean) => {
         if(isJustify) {
             notif.dismissAll()
             await sleep(200);
-            notif.success(`${selectedEmployee.value.user.first_name} ${selectedEmployee.value.user.last_name} attendance was justified successfully`)
+            notif.success(t('toast.success.justified'))
         } else {
             notif.dismissAll()
             await sleep(200);
-            notif.success(`${selectedEmployee.value.user.first_name} ${selectedEmployee.value.user.last_name} attendance was unjustified successfully`)
+            notif.success(t('toast.success.unjustified'))
         }
         selectedCell.value.status = attendance.status
     } else {

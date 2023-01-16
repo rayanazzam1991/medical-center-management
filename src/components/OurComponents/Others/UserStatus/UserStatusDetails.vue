@@ -6,16 +6,17 @@ import { usePanels } from "/@src/stores/panels"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 import sleep from "/@src/utils/sleep"
+import { useI18n } from "vue-i18n"
 
-
+const { t } = useI18n()
 const panels = usePanels()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('UserStatus')
+viewWrapper.setPageTitle(t('user_status.details.title'))
 const head = useHead({
-    title: 'UserStatus',
+    title: t('user_status.details.title'),
 })
 
 const userStatusStore = useUserStatus()
@@ -51,7 +52,7 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">UserStatus Name:</h4>
+                            <h4 class="margin-bottom">{{t('user_status.details.name')}}:</h4>
                             <span>{{ currentUserStatus.name }}</span>
                         </div>
                     </div>

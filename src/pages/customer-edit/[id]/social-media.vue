@@ -35,10 +35,8 @@ customerForm.setStep({
       router.push({
         path: `/customer/${customerId.value}`,
         query: { tab: 'Social Media' }
-
       })
     }
-
   },
 
 })
@@ -143,7 +141,7 @@ const onSubmitEdit = handleSubmit(async () => {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+    notif.success(t('toast.success.add'))
 
     return true
   } else {

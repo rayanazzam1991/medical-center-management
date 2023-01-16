@@ -9,8 +9,8 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 import sleep from "/@src/utils/sleep"
+import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import { title } from 'process'
 
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
@@ -18,7 +18,7 @@ viewWrapper.setPageTitle(t('department.table.title'))
 useHead({
   title: t('department.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultDepartmentSearchFilter)
 const departmentsList = ref<Array<Department>>([])
 const deleteDepartmentPopup = ref(false)
@@ -47,7 +47,7 @@ const removeDepartment = async (departmentId: number) => {
   // @ts-ignore
   await sleep(200);
 
-  notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  notif.success(t('toast.success.remove'))
 
 }
 

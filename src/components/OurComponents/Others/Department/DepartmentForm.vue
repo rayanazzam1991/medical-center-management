@@ -13,6 +13,7 @@ import { departmentvalidationSchema } from '/@src/rules/Others/Department/depart
 import sleep from '/@src/utils/sleep';
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 export default defineComponent({
     props: {
@@ -30,7 +31,7 @@ export default defineComponent({
             title: t('department.form.page_title'),
         });
         const departmentStore = useDepartment()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -85,7 +86,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/department/${department.id}` });
             } else {
@@ -104,7 +105,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500)
                 router.push({ path: `/department/${departmentData.id}` });
             } else {

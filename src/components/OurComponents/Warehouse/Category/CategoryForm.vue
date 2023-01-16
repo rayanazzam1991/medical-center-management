@@ -121,7 +121,7 @@ export default defineComponent({
             if (success) {
                 notif.dismissAll();
                 await sleep(200);
-                notif.success(`${category.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 router.push({ path: `/category` });
             } else {
                 await sleep(200);
@@ -139,7 +139,7 @@ export default defineComponent({
             if (success) {
                 notif.dismissAll();
                 await sleep(200);
-                notif.success(`${categoryData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 router.push({ path: `/category` });
             } else {
                 await sleep(200);

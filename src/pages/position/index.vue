@@ -85,7 +85,7 @@ const changestatusPosition = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${positionChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
 

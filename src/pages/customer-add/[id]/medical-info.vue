@@ -9,13 +9,14 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo'
 import { medicalinfoAddValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoAddValidation'
 import sleep from "/@src/utils/sleep"
+import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
-const {t} = useI18n()
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
@@ -98,7 +99,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         medicalInfoData.any_other_info == undefined) {
         await sleep(200);
 
-        notif.error(`Please add some data or skip this step`)
+        notif.error(t('toast.error.steps_error'))
 
         return false
 
@@ -110,7 +111,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }

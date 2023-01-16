@@ -9,6 +9,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { useService } from '/@src/stores/Others/Service/serviceStore';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -27,7 +28,7 @@ export default defineComponent({
             title: t('service.form.page_title'),
         });
         const serviceStore = useService()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -93,7 +94,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${service.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/service/${service.id}` });
             } else {
@@ -112,7 +113,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${serviceData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/service/${serviceData.id}` });
             } else {

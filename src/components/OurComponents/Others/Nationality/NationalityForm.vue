@@ -9,6 +9,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep";
 import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore';
 import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 export default defineComponent({
     props: {
         formType: {
@@ -25,7 +26,7 @@ export default defineComponent({
             title: t('nationality.form.page_title'),
         });
         const nationalityStore = useNationality()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
@@ -81,7 +82,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${nationality.name} ${viewWrapper.pageTitle} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/nationality/${nationality.id}` });
             } else {
@@ -100,7 +101,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${nationalityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500);
                 router.push({ path: `/nationality/${nationalityData.id}` });
             } else {

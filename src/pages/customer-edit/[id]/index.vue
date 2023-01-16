@@ -192,7 +192,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }

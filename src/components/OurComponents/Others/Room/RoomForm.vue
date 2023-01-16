@@ -111,7 +111,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
+                notif.success(t('toast.success.add'))
                 await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
@@ -139,7 +139,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
+                notif.success(t('toast.success.edit'))
                 await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {

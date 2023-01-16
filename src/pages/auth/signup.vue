@@ -9,10 +9,11 @@ import { z as zod } from 'zod'
 import { useDarkmode } from '/@src/stores/darkmode'
 import { useNotyf } from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
+import { Notyf } from 'notyf'
 
 const darkmode = useDarkmode()
 const router = useRouter()
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 
 const isLoading = ref(false)
 const { t } = useI18n()
@@ -67,9 +68,9 @@ const onSignup = handleSubmit(async (values) => {
     await sleep(800)
 
     notif.dismissAll()
-    notif.success('Welcome, Erik Kovalsky')
+    notif.success(t('auth.success_signUp'))
 
-    router.push({ name: '/app' })
+    router.push({ name: '/dashboard' })
     isLoading.value = false
   }
 })

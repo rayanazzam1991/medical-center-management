@@ -59,7 +59,7 @@ const changestatusUser = async () => {
         await sleep(200);
         // @ts-ignore
 
-        notif.success(`${customerChangeStatus.value.user.first_name} ${customerChangeStatus.value.user.last_name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
         // @ts-ignore

@@ -79,7 +79,7 @@ const changestatusCategory = async () => {
         notif.dismissAll()
         await sleep(200);
         // @ts-ignore
-        notif.success(`${categoryChangeStatus.value.name} status was edited successfully`)
+        notif.success(t('toast.success.add'))
     } else {
         await sleep(200);
         notif.error(message)
