@@ -147,7 +147,7 @@ const toEdit = () => {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser(changeStatus)">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusUser">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 

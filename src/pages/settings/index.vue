@@ -20,12 +20,12 @@ export default defineComponent({
     props: {},
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Edit Settings");
+        viewWrapper.setPageTitle(t('settings.form.page_title'));
         const head = useHead({
-            title: "Edit Settings",
+            title: t('settings.form.page_title'),
         });
-        const { t } = useI18n();
         const notif = useNotyf() as Notyf;
         const formType = ref("Edit");
         const route = useRoute();
@@ -147,7 +147,7 @@ export default defineComponent({
 
             }
         };
-        return { daysName, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+        return { t, daysName, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, pageTitle, settingsList, onSubmit, viewWrapper, formType };
     },
     components: { ErrorMessage }
 })
@@ -165,16 +165,16 @@ export default defineComponent({
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
-                            <h4>Edit HR/Attendance Settings</h4>
+                            <h4>{{ t('settings.form.hr_section') }}</h4>
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <h2 class="mb-3 required">Start Day</h2>
+                                <h2 class="mb-3 required">{{ t('settings.form.start_day') }}</h2>
 
                                 <VField id="start_day">
                                     <VControl>
                                         <VSelect v-model="start_day">
-                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`) }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="start_day" />
@@ -182,12 +182,12 @@ export default defineComponent({
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <h2 class="mb-3 required">End Day</h2>
+                                <h2 class="mb-3 required">{{ t('settings.form.end_day') }}</h2>
 
                                 <VField id="end_day">
                                     <VControl>
                                         <VSelect v-model="end_day">
-                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`) }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="end_day" />
@@ -195,7 +195,7 @@ export default defineComponent({
                                 </VField>
                             </div>
                             <div class="column is-12">
-                                <h2 class="mb-3 required">Starting Time</h2>
+                                <h2 class="mb-3 required">{{t('settings.form.start_time')}}</h2>
                                 <div class="columns">
 
                                     <VField class="column is-6 ">
@@ -225,7 +225,7 @@ export default defineComponent({
 
                             </div>
                             <div class="column is-12">
-                                <h2 class="mb-3 required">End Time</h2>
+                                <h2 class="mb-3 required">{{t('settings.form.end_time')}}</h2>
                                 <div class="columns ">
                                     <VField class="column is-6">
                                         <VControl>
@@ -254,12 +254,12 @@ export default defineComponent({
 
                             </div>
                             <div class="column is-6">
-                                <h2 class="mb-3 required">Start of Week</h2>
+                                <h2 class="mb-3 required">{{t('settings.form.start_of_week')}}</h2>
 
                                 <VField id="start_of_week">
                                     <VControl>
                                         <VSelect v-model="start_of_week">
-                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ day }}
+                                            <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`) }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="start_of_week" />
@@ -268,7 +268,7 @@ export default defineComponent({
                             </div>
 
                             <div class="column is-6">
-                                <h2 class="mb-3 required">Late Tolerance</h2>
+                                <h2 class="mb-3 required">{{t('settings.form.late_tolerance')}}</h2>
 
                                 <VField>
                                     <VControl>

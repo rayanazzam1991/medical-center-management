@@ -2,8 +2,15 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { CreateContractor, defaultCreateContractor, UpdateContractor, defaultUpdateContractor, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
 import { Service } from "/@src/models/Others/Service/service"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
-
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
+})
 
 
 interface ContractorFormStepOptions {
@@ -37,11 +44,11 @@ export const useContractorForm = defineStore('ContractorForm', () => {
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
-        return 'Main Info'
+        return i18n.global.t('contractor.form.step_1_abbr_title')
       case 2:
-        return 'Services'
+        return i18n.global.t('contractor.form.step_2_abbr_title')
       default:
-        return 'Main Info'
+        return i18n.global.t('contractor.form.step_1_abbr_title')
     }
   })
 

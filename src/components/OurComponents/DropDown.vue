@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const {t} = useI18n()
 const emits = defineEmits<{
     (e: 'view'): void
     (e: 'edit'): void
@@ -19,7 +22,7 @@ const emits = defineEmits<{
                     <i aria-hidden="true" class="fas fa-eye"></i>
                 </div>
                 <div class="meta">
-                    <span>View</span>
+                    <span>{{t('drop_down.view')}}</span>
                 </div>
             </a>
 
@@ -34,7 +37,7 @@ const emits = defineEmits<{
                     <i class="fas fa-edit" aria-hidden="true"></i>
                 </div>
                 <div class="meta">
-                    <span>Edit</span>
+                    <span>{{t('drop_down.edit')}}</span>
                 </div>
             </a>
         </template>

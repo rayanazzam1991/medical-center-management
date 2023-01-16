@@ -7,6 +7,7 @@ import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
 import { defaultUserSearchFilter } from '/@src/models/Others/User/user'
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { getCitiesList } from '/@src/services/Others/City/cityService'
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
     props: {
@@ -29,6 +30,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref()
         const searchGender = ref()
         const searchPhoneNumber = ref()
@@ -90,7 +92,7 @@ export default defineComponent({
         })
 
 
-        return { search, resetFilter, rooms2, cities2, search_filter_popup, statuses2, searchName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber }
+        return { t ,  search, resetFilter, rooms2, cities2, search_filter_popup, statuses2, searchName, searchRoom, searchCity, searchStatus, searchGender, searchPhoneNumber }
 
 
 
@@ -106,33 +108,33 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search User" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('user.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="name..." />
+                        <input v-model="searchName" type="text" class="input is-rounded" :placeholder="t('user.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
                         <input v-model="searchPhoneNumber" type="text" class="input is-rounded"
-                            placeholder="phone_number..." />
+                            :placeholder="t('user.search_filter.phone_number')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchGender" class="is-rounded">
-                            <VOption value="">Gender</VOption>
-                            <VOption value="Male">Male</VOption>
-                            <VOption value="Female">Female</VOption>
+                            <VOption value="">{{t('user.search_filter.gender')}}</VOption>
+                            <VOption value="Male">{{t('gender.male')}}</VOption>
+                            <VOption value="Female">{{t('gender.female')}}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchRoom" class="is-rounded">
-                            <VOption value="">Room</VOption>
+                            <VOption value="">{{t('user.search_filter.room')}}</VOption>
                             <VOption v-for="room in rooms2" :key="room.id" :value="room.id">{{ room.number
                             }}
                             </VOption>
@@ -142,7 +144,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchCity" class="is-rounded">
-                            <VOption value="">City</VOption>
+                            <VOption value="">{{t('user.search_filter.city')}}</VOption>
                             <VOption v-for="city in cities2" :key="city.id" :value="city.id">{{ city.name }}
                             </VOption>
                         </VSelect>
@@ -151,7 +153,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchStatus" class="is-rounded">
-                            <VOption value="">Status</VOption>
+                            <VOption value="">{{t('user.search_filter.status')}}</VOption>
                             <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
@@ -164,7 +166,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="search">Search</VButton>
+            <VButton color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

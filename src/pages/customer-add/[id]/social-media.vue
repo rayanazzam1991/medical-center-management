@@ -11,6 +11,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { BaseConsts } from '/@src/utils/consts/base';
 import sleep from "/@src/utils/sleep"
 
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -18,11 +19,10 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle(t('customer.form.step_3_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
-const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
@@ -48,7 +48,7 @@ customerForm.setStep({
     }
 
 })
-const pageTitle = 'Step 5: Customer Social Media'
+const pageTitle = t('customer.form.step_3_subtitle')
 const socialMediasList = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
     socialMedia: SocialMedia
@@ -141,10 +141,8 @@ const onSubmitAdd = async () => {
                             <div class="column is-12">
                                 <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
-                                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-                                            socialMedia.socialMedia.name
-                                    }}
-                                        URL:
+                                    <VLabel class="required" v-if="socialMedia.checked">
+                                    {{t('customer.form.social_media_url', {social_media : socialMedia.socialMedia.name })}}
                                     </VLabel>
                                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                                         <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"

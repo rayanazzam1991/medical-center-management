@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 import { defaultPagination } from "/@src/utils/response"
 
@@ -25,6 +26,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -100,7 +102,7 @@ export default defineComponent({
 
         }
 
-        return { searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts, quickSearch, quickSearchField }
+        return {t , searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts, quickSearch, quickSearchField }
     },
 
 
@@ -119,7 +121,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" placeholder="Name..." />
+                                <VInput v-model="quickSearchField" type="text" :placeholder="t('service.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

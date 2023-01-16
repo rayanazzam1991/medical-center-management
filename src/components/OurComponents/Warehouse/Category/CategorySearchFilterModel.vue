@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
 
@@ -23,6 +24,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref('')
         const searchParent = ref()
         const searchStatus = ref()
@@ -61,7 +63,7 @@ export default defineComponent({
             const { categories } = await getCategoriesList(mainCategorySearchFilter)
             mainCategoriesList.value = categories
         })
-        return { mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }
+        return {t , mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }
     },
 })
 
@@ -69,18 +71,18 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Category" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('category.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('category.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchParent" class="">
-                            <VOption value="">Parent</VOption>
+                            <VOption value="">{{t('category.search_filter.parent')}}</VOption>
                             <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">{{
         parent.name
 }}
@@ -91,7 +93,7 @@ export default defineComponent({
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Status</VOption>
+                            <VOption value="">{{t('category.search_filter.status')}}</VOption>
                             <VOption value="0">{{ CategoryConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ CategoryConsts.showStatusName(1) }}</VOption>
                         </VSelect>
@@ -102,7 +104,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

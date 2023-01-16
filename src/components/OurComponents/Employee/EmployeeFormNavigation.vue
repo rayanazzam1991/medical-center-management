@@ -3,12 +3,13 @@ import { useDropdown } from '/@src/composable/useDropdown'
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps'
 import { useDarkmode } from '/@src/stores/darkmode'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
+import { useI18n } from 'vue-i18n';
 
 const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-
+const {t} = useI18n()
 const employeeForm = useEmployeeForm()
 </script>
 
@@ -23,7 +24,7 @@ const employeeForm = useEmployeeForm()
       <span class="title-wrap">
         <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/employee" darkOutlined
           color="white">
-          Back to employees page
+          {{t('employee.form.back_button')}}
         </VButton>
       </span>
     </div>

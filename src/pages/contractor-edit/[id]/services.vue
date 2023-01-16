@@ -14,17 +14,18 @@ import sleep from "/@src/utils/sleep"
 
 
 const viewWrapper = useViewWrapper()
+const {t} = useI18n()
 const route = useRoute()
 const router = useRouter()
 const contractorId = ref<number>(0)
 // @ts-ignore
 contractorId.value = route.params?.id
 
-viewWrapper.setPageTitle('Edit Contractor Services')
+
+viewWrapper.setPageTitle(t('contractor.form.edit_step_2_title'))
 const head = useHead({
-    title: 'Contractor',
+    title: t('contractor.form.page_title'),
 })
-const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const contractorForm = useContractorForm()
 contractorForm.setStep({
@@ -157,7 +158,7 @@ const onSubmitEdit = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
-                            <h4>Choose Services:</h4>
+                            <h4>{{t('contractor.form.choose_services')}}</h4>
                         </div>
                         <div v-if="servicesList.length != 0" class="columns is-multiline">
                             <div class="column is-12">
@@ -172,7 +173,7 @@ const onSubmitEdit = handleSubmit(async () => {
                             </div>
                         </div>
                         <div v-else class="fieldset-heading mt-6">
-                            <h4 class="has-text-centered ">There are no services...</h4>
+                            <h4 class="has-text-centered ">{{t('contractor.form.no_services_placeholder')}}</h4>
                         </div>
 
                     </div>
@@ -183,10 +184,8 @@ const onSubmitEdit = handleSubmit(async () => {
                                     <VField v-if="service.checked" :key="service.service.id"
                                         :id="`service_price_${service.service.id}`">
 
-                                        <VLabel class="required" v-if="service.checked">Contractor's {{
-        service.service.name
-}}
-                                            Price:
+                                        <VLabel class="required" v-if="service.checked">
+                                            {{ t('contractor.form.service_price',{service : service.service.name}) }}
                                         </VLabel>
                                         <VControl v-if="service.checked" icon="feather:chevrons-right">
                                             <VInput :placeholder="service.price" class="input" type="number"
@@ -205,15 +204,13 @@ const onSubmitEdit = handleSubmit(async () => {
 
                                 <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
                                     :id="service.service.name" :key="service.service.id">
-                                    <span class="label custom-label" v-if="service.checked"> Contractor's {{
-        service.service.name
-}}
-                                        Service
-                                        amount: </span>
+                                    <span class="label custom-label" v-if="service.checked">
+                                    {{ t('contractor.form.service_amount',{service: service.service.name}) }}
+                         </span>
                                     <div v-if="service.checked" class="control">
                                         <div class="input">
-                                            {{ (service.price *
-        (contractorForm.dataUpdate.payment_percentage / 100 ?? 0))
+                                            {{  contractorForm.dataUpdate.payment_percentage != undefined ? (service.price *
+        (contractorForm.dataUpdate.payment_percentage / 100 )) : 0
                                             }}
 
 

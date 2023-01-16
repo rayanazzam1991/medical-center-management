@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
 import { defaultItemHistorySearchFilter, ItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
 import { defaultPagination } from "/@src/utils/response"
@@ -22,6 +23,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -84,7 +86,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
+        return {t , searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
     },
 
 
@@ -122,11 +124,11 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl class="mr-4">
-                                <VButton class="" to="/add-quantity" color="primary">Add Quantity
+                                <VButton class="" to="/add-quantity" color="primary">{{t('list_stock_movement.add_quantity_button')}}
                                 </VButton>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/withdraw-quantity" color="primary">Withdraw Quantity
+                                <VButton class="" to="/withdraw-quantity" color="primary">{{t('list_stock_movement.withdraw_quantity_button')}}
                                 </VButton>
                             </VControl>
                         </div>

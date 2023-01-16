@@ -13,14 +13,14 @@ import sleep from "/@src/utils/sleep"
 import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { Notyf } from 'notyf';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 
-const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Category')
-useHead({
-    title: 'Category',
-})
 const { t } = useI18n()
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle(t('category.table.title'))
+useHead({
+    title: t('category.table.title'),
+})
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
@@ -92,6 +92,7 @@ const columns = {
         align: 'center',
         sortable: true,
         grow: true,
+        label: t('category.table.columns.name')
 
     },
     parent_id: {
@@ -99,7 +100,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Parent',
+        label: t('category.table.columns.parent'),
         renderRow: (row: any) =>
             h('span', row?.parent?.name ? row?.parent?.name : '-')
     },
@@ -108,13 +109,13 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: 'Created_by',
+        label: t('category.table.columns.created_by'),
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
     created_at: {
         align: 'center',
-        label: 'Create Date',
+        label: t('category.table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -124,6 +125,7 @@ const columns = {
     },
     status: {
         align: 'center',
+        label: t('category.table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -146,6 +148,7 @@ const columns = {
     },
     actions: {
         align: 'center',
+        label: t('category.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoViewDropDownVue, {
                 onEdit: () => {
@@ -162,7 +165,7 @@ const columns = {
 </script>
 
 <template>
-    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
         :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="categoriesList" @update:sort="categorySort">
         <VFlexTable separators clickable>
@@ -175,8 +178,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="categoriesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
-                        class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')"
+                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
                     </VPlaceholderSection>
                 </div>
             </template>
@@ -185,20 +188,22 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCategoriesPerPage" />
-        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">Showing {{
-            paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-    paginationVar.page !=
-        paginationVar.max_page ?
-        paginationVar.page *
-        paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">
+            {{
+                t('tables.pagination_footer', { from_number: paginationVar.page !=
+                    paginationVar.max_page
+                    ?
+                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                , to_number: paginationVar.page !=
+                    paginationVar.max_page ?
+                    paginationVar.page *
+                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+            })}}
+        </h6>
         <VPlaceloadText v-if="categoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal title="Change Category Status" :open="changeStatusPopup" actions="center"
+    <VModal :title="t('category.table.modal_title')" :open="changeStatusPopup" actions="center"
         @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
@@ -207,11 +212,10 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField id="status" v-slot="{ field }">
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel class="required">{{ t('category.table.columns.status') }}</VLabel>
                                 <VControl>
-                                    <VRadio v-model="selectedStatus"
-                                        :value="CategoryConsts.INACTIVE" :label="CategoryConsts.showStatusName(0)"
-                                        name="status" color="danger" />
+                                    <VRadio v-model="selectedStatus" :value="CategoryConsts.INACTIVE"
+                                        :label="CategoryConsts.showStatusName(0)" name="status" color="danger" />
                                     <VRadio v-model="selectedStatus" :value="CategoryConsts.ACTIVE"
                                         :label="CategoryConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
@@ -223,7 +227,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusCategory()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusCategory()">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 </template>

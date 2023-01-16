@@ -1,4 +1,6 @@
 <script lang="ts">
+import { useI18n } from 'vue-i18n'
+
 
 
 
@@ -24,11 +26,12 @@ export default defineComponent({
 
   emits: ['onSubmit'],
   setup(props, context) {
+    const {t} = useI18n()
     var submited = false
     const onSubmit = () => {
       context.emit('onSubmit', submited)
     }
-    return { onSubmit }
+    return { onSubmit , t }
   },
 
 
@@ -53,9 +56,9 @@ export default defineComponent({
               <div v-if="isLoading" class="loader is-loading m-r-15 m-b-05-rem w35-h35"></div>
               <VButton v-if="back_route != ''" icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light
                 dark-outlined>
-                Back
+                {{ t('forms.back_button')}}
               </VButton>
-              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name }} </VButton>
+              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name == "Add" ? t('forms.type.add') : t('forms.type.edit') }} </VButton>
             </div>
           </div>
         </div>

@@ -24,11 +24,11 @@ import { useI18n } from 'vue-i18n';
 
 
 
-
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Edit Customer Main Info')
+viewWrapper.setPageTitle(t('customer.form.edit_step_1_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
@@ -47,7 +47,6 @@ customerForm.setStep({
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
@@ -231,7 +230,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">
-                                        <VLabel class="required">First name</VLabel>
+                                        <VLabel class="required">{{t('customer.form.first_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -241,7 +240,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="last_name">
-                                        <VLabel class="required">Last name</VLabel>
+                                        <VLabel class="required">{{t('customer.form.last_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -255,7 +254,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="phone_number">
-                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VLabel class="required">{{t('customer.form.phone_number')}} <span>(+964)</span></VLabel>
                                         <VControl icon="feather:chevrons-right">
 
                                             <VInput disabled v-model="currentUser.phone_number" type="number"
@@ -267,7 +266,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
                                 <div class="column is-6">
                                     <VField id="birth_date">
-                                        <VLabel>Birth date </VLabel>
+                                        <VLabel>{{t('customer.form.birth_date')}} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -283,7 +282,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="gender">
-                                        <VLabel class="">Gender</VLabel>
+                                        <VLabel class="">{{t('customer.form.gender')}}</VLabel>
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                                 color="success" />
@@ -296,10 +295,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
-                                        <VLabel>City</VLabel>
+                                        <VLabel>{{t('customer.form.city')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                                <VOption value="">City</VOption>
+                                                <VOption value="">{{t('customer.form.city')}}</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
         city.name
 }}
@@ -317,7 +316,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel>Address </VLabel>
+                                        <VLabel>{{t('customer.form.address')}} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -331,10 +330,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="user_status_id">
-                                        <VLabel class="required">Status</VLabel>
+                                        <VLabel class="required">{{t('customer.form.status')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">Status</VOption>
+                                                <VOption value="">{{t('customer.form.status')}}</VOption>
                                                 <VOption v-for="status in statusesList" :key="status.id"
                                                     :value="status.id">
                                                     {{
@@ -348,7 +347,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="customer_group_id">
-                                        <VLabel class="required">Customer Group</VLabel>
+                                        <VLabel class="required">{{t('customer.form.customer_group')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
                                                 <VOption v-for="customerGroup in customerGroupsList"
@@ -368,7 +367,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="emergency_contact_name">
-                                        <VLabel>Emergency Contact Name</VLabel>
+                                        <VLabel>{{t('customer.form.emergency_contract_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_name" type="text"
                                                 placeholder="" autocomplete="given-emergency_contact_name" />
@@ -378,7 +377,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="emergency_contact_phone">
-                                        <VLabel>Emergency Contact Phone</VLabel>
+                                        <VLabel>{{t('customer.form.emergency_contract_phone')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_phone" type="number"
                                                 placeholder="" autocomplete="given-emergency_contact_phone" />

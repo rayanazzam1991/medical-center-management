@@ -10,7 +10,7 @@ import sleep from "/@src/utils/sleep";
 import { useCategory } from '/@src/stores/Warehouse/Category/CategoryStore';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
     props: {
@@ -21,19 +21,21 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Category");
+
+        viewWrapper.setPageTitle(t('category.form.page_title'));
         const head = useHead({
-            title: "Category",
+            title: t('category.form.page_title'),
         });
         const categoryStore = useCategory()
-        const { t } = useI18n();
         const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
         const router = useRouter()
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+        const pageTitle = t('category.form.form_header' , {type : formTypeName})
         const backRoute = '/category'
         const currentCategory = ref(defaultCategory)
         const currentCreateUpdateCategory = ref(defaultCreateUpdateCategory)
@@ -144,7 +146,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-        return { resetPerant, keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
+        return { t, resetPerant, keyIncrement, isCategory, pageTitle, onSubmit, mainCategoriesList, currentCategory, viewWrapper, backRoute, CategoryConsts, categoryStore };
     },
     components: { ErrorMessage }
 })
@@ -163,7 +165,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{t('category.form.name')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCategory.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -179,7 +181,7 @@ export default defineComponent({
                             <div class="is-flex is-justify-content-center">
                                 <VControl class="ml-3">
                                     <VSwitchSegment @change="resetPerant" :key="keyIncrement" v-model="isCategory"
-                                        label-true="Level 2" label-false="Level 1" color="success" />
+                                        :label-true="t('category.form.level_2')" :label-false="t('category.form.level_1')" color="success" />
                                 </VControl>
                             </div>
                         </div>
@@ -189,12 +191,12 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField v-if="currentCategory.parent" id="parent_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} Parent</VLabel>
+                                    <VLabel>{{t('category.form.parent')}}</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select v-if="currentCategory" v-model="currentCategory.parent.id"
                                                 :disabled="!isCategory">
-                                                <VOption value="">Parent</VOption>
+                                                <VOption value="">{{t('category.form.parent')}}</VOption>
                                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id"
                                                     :value="parent.id">{{ parent.name }}
                                                 </VOption>
@@ -211,7 +213,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ t('category.form.status') }}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentCategory.status" :value="CategoryConsts.ACTIVE"
                                             :label="CategoryConsts.showStatusName(1)" name="status" color="success" />

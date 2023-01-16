@@ -8,7 +8,9 @@ import { getCustomerGroup, addCustomerGroup, editCustomerGroup } from '/@src/ser
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep";
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
+
 
 export default defineComponent({
     props: {
@@ -19,19 +21,20 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Customer Group");
+        viewWrapper.setPageTitle(t('customer_group.form.page_title'));
         const head = useHead({
-            title: "Customer Group",
+            title: t('customer_group.form.page_title'),
         });
         const customerGroupStore = useCustomerGroup()
-        const { t } = useI18n();
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+        const pageTitle = t('customer_group.form.form_header' , {type : formTypeName});
         const backRoute = "/customer-group";
         const currentCustomerGroup = ref(defaultCustomerGroup);
         const customerGroupId = ref(0);
@@ -109,7 +112,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-        return { pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts, customerGroupStore };
+        return { t, pageTitle, onSubmit, currentCustomerGroup, viewWrapper, backRoute, CustomerGroupConsts, customerGroupStore };
     },
     components: { ErrorMessage }
 })
@@ -133,7 +136,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('customer_group.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentCustomerGroup.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -149,7 +152,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('customer_group.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentCustomerGroup.status"

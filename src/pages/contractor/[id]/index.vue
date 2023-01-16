@@ -662,7 +662,7 @@ const RemoveProfilePicture = async () => {
         file.created_at
 }}
                               <i aria-hidden="true" class="fas fa-circle"></i>
-                              By: {{ file.uploaded_by.first_name }}{{ file.uploaded_by.last_name }}
+                              By: {{ file.uploaded_by?.first_name }}{{ file.uploaded_by?.last_name }}
     
                                                         </span>
                                                     </div>

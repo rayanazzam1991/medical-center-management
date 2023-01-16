@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultMainCategorySearchFilter, Category, defaultCategorySearchFilter, defaultSubCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { defaultItemSearchFilter, ItemConsts, Item, ItemSearchFilter } from "/@src/models/Warehouse/Item/item"
 import { defaultItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
@@ -27,6 +28,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchItem = ref()
         const searchParent = ref()
         const searchSubCategory = ref()
@@ -104,7 +106,7 @@ export default defineComponent({
             const Item = allItemsList.value.filter((item) => item.category.id == ItemFilter.category_id)
             itemsList.value = Item
         }
-        return { selectedSubCategoryId, getItemBySubCategroy, itemsList, subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchItem, searchParent,  searchFrom, searchTo, searchSubCategory, searchType }
+        return {t , selectedSubCategoryId, getItemBySubCategroy, itemsList, subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchItem, searchParent,  searchFrom, searchTo, searchSubCategory, searchType }
     },
 })
 
@@ -112,14 +114,14 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Item" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('list_stock_movement.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl>
                         <div class="select">
                             <select @change="getSubCategory" v-model="searchParent">
-                                <VOption>Select Level 1</VOption>
+                                <VOption>{{t('list_stock_movement.search_filter.select_level_1')}}</VOption>
                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">
                                     {{ parent.name }}
                                 </VOption>
@@ -132,7 +134,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == undefined"
                             @change="getItemBySubCategroy" v-model="selectedSubCategoryId">
-                            <VOption value="">Select Level 2</VOption>
+                            <VOption value="">{{t('list_stock_movement.search_filter.select_level_2')}}</VOption>
                             <VOption v-for="subCategory in subCategoriesList" :key="subCategory.id"
                                 :value="subCategory.id">
                                 {{ subCategory.name }}
@@ -143,7 +145,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect :disabled="itemsList.length <= 0" @change="getItemBySubCategroy" v-model="searchItem">
-                            <VOption value="">Select Item</VOption>
+                            <VOption value="">{{t('list_stock_movement.search_filter.select_item')}}</VOption>
                             <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </VOption>
@@ -153,22 +155,22 @@ export default defineComponent({
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchType" class="">
-                            <VOption value="">Select Type</VOption>
-                            <VOption value="in">In</VOption>
-                            <VOption value="out">Out</VOption>
+                            <VOption value="">{{t('list_stock_movement.search_filter.select_type')}}</VOption>
+                            <VOption value="in">{{t('list_stock_movement.search_filter.in')}}</VOption>
+                            <VOption value="out">{{t('list_stock_movement.search_filter.out')}}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">Create Date:</h1>
+                    <h1 class="column-is-12">{{t('list_stock_movement.search_filter.create_date')}}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>From : </VLabel>
+                        <VLabel>{{t('list_stock_movement.search_filter.to')}}</VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
                     </VField>
                     <VField class="column-is-6 filter">
-                        <VLabel>To : </VLabel>
+                        <VLabel>{{t('list_stock_movement.search_filter.to')}}</VLabel>
 
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchTo" type="date" />
@@ -179,7 +181,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

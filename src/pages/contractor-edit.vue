@@ -7,6 +7,7 @@
 </route>
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useContractorForm } from '../stores/Contractor/contractorFormSteps';
 import { useContractor } from '/@src/stores/Contractor/contractorStore';
@@ -14,7 +15,7 @@ import { useContractor } from '/@src/stores/Contractor/contractorStore';
 const contractorStore = useContractor()
 
 const contractorForm = useContractorForm()
-
+const {t} = useI18n()
 useHead({
     title: computed(() => `${contractorForm.stepTitle} - Contractor`),
 })
@@ -35,7 +36,7 @@ useHead({
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="contractorStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                Submit
+                                {{ t('contractor.form.edit_submit')}}
                             </VButton>
                         </VLoader>
                     </div>

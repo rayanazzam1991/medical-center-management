@@ -8,6 +8,7 @@ import { AttendanceConsts } from '/@src/models/HR/Attendance/EmployeeAttendance/
 import { DateConsts, DaysPerMonth } from '/@src/models/HR/Attendance/Date/date'
 import { getDaysPerMonth } from '/@src/services/HR/Attendance/Date/dateService'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
 
 
 
@@ -52,6 +53,7 @@ export default defineComponent({
 
 
     setup(props, context) {
+        const {t} = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -161,7 +163,7 @@ export default defineComponent({
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
             statusesList.value = userstatuses
         })
-        return { AttendanceConsts, months, selectedMonth, selectedYear, keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
+        return {t ,AttendanceConsts, months, selectedMonth, selectedYear, keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
@@ -174,14 +176,14 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" placeholder="Name/Number..." />
+                                <VInput v-model="quickSearchField" type="text" :placeholder="t('employee_attendance.search_filter.quick_search')" />
                             </VControl>
                             <VControl class="mr-2">
                                 <VSelect v-model="selectedMonth">
                                     <VOption :key="index" v-for="(month, index) in months"
                                         :value="index + 1 < 10 ? '0' + (index + 1).toString() : (index + 1).toString()">
                                         {{
-                                            month
+                                           t(`dates.months.${month.toLowerCase()}`) 
                                         }}</VOption>
                                 </VSelect>
                             </VControl>
@@ -220,47 +222,47 @@ export default defineComponent({
                         </div>
                     </div>
                 </div>
-                <h6 class="is-size-7 mt-2"><span class="has-text-info">Note: </span>
+                <h6 class="is-size-7 mt-2"><span class="has-text-info">{{t('employee_attendance.search_filter.note')}} </span>
                     <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.ATTEND) }}</span> ➡
-                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND) }}  | 
+                    {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND).replace(' ', '_').toLowerCase()}`)  }}  | 
                     <Tippy placement="bottom">
                         {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
-                        Absence  | 
+                        {{t('attendance_status.absence')}}  | 
                         <template #content>
                             <p>
                                 {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
-                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_ABSENCE) }}
+                                {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_ABSENCE).replace(' ', '_').toLowerCase()}`) }}
                             </p>
                             <p>
                                 <span class="green">{{
                                     AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_ABSENCE)
                                 }}</span> ➡
-                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_ABSENCE) }}
+                                {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_ABSENCE).replace(' ', '_').toLowerCase()}`) }}
                             </p>
                             <p>
                                 <span class="red">{{
                                     AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.UNJUTIFIED_ABSENCE)
                                 }}</span>
                                 ➡
-                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUTIFIED_ABSENCE) }}
+                                {{  t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUTIFIED_ABSENCE).replace(' ', '_').toLowerCase()}`) }}
                             </p>
                         </template>
                     </Tippy>
                     <Tippy placement="bottom">
                         {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }} ➡
-                        Partial Absence  | 
+                        {{t('attendance_status.partial_absence')}}  | 
                         <template #content>
                             <p>
                                 {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
                                 ➡
-                                {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
+                                {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`) }}
                             </p>
                             <p>
                                 <span class="green">{{
                                     AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE)
                                 }}</span> ➡
                                 {{
-                                    AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE)
+                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`)
                                 }}
                             </p>
                             <p>
@@ -269,18 +271,19 @@ export default defineComponent({
                                 }}</span>
                                 ➡
                                 {{
-                                    AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE)
+                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`)
                                 }}
                             </p>
                         </template>
                     </Tippy>
                     <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.VACATION) }}</span>
                     ➡
-                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.VACATION) }}  | 
+                    {{                                     t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.VACATION).replace(' ', '_').toLowerCase()}`)
+ }}  | 
                     <span class="yellow">{{
                         AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.MISSING_CHECK)
                     }}</span> ➡
-                    {{ AttendanceConsts.getAttendanceStatusName(AttendanceConsts.MISSING_CHECK) }}
+                    {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.MISSING_CHECK).replace(' ', '_').toLowerCase()}`) }}
 
 
                 </h6>

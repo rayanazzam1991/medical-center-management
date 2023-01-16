@@ -8,7 +8,8 @@ import { socialmediavalidationSchema } from '../../../../rules/CRM/SocialMedia/s
 import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -20,18 +21,19 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Social Media");
+        viewWrapper.setPageTitle(t('social_media.form.page_title'));
         const head = useHead({
-            title: "Social Media",
+            title: t('social_media.form.page_title'),
         });
-        const { t } = useI18n();
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('social_media.form.form_header' , {type : formTypeName});
         const backRoute = "/social-media";
         const currentSocialMedia = ref(defaultSocialMedia);
         const socialMediaId = ref(0);
@@ -106,7 +108,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-        return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
+        return {t, pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
     },
     components: { ErrorMessage }
 })
@@ -130,7 +132,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('social_media.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -146,14 +148,14 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="icon">
-                                    <VLabel class="optional">{{ viewWrapper.pageTitle }} icon</VLabel>
+                                    <VLabel class="optional">{{ t('social_media.form.icon') }}</VLabel>
                                     <VControl :icon="currentSocialMedia.icon">
                                         <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
-                                            <VOption value="">Icon</VOption>
-                                            <VOption :value="'lnir lnir-facebook'">facebook</VOption>
-                                            <VOption :value="'lnir lnir-instagram'">Instagram</VOption>
-                                            <VOption :value="'lnir lnir-whatsapp'">Whatsapp</VOption>
-                                            <VOption :value="'lnir lnir-snapchat'">Snapchat</VOption>
+                                            <VOption value="">{{ t('social_media.form.icon') }}</VOption>
+                                            <VOption :value="'lnir lnir-facebook'">{{t('social_media.form.facebook')}}</VOption>
+                                            <VOption :value="'lnir lnir-instagram'">{{t('social_media.form.instagram')}}</VOption>
+                                            <VOption :value="'lnir lnir-whatsapp'">{{t('social_media.form.whatsapp')}}</VOption>
+                                            <VOption :value="'lnir lnir-snapchat'">{{t('social_media.form.snapchat')}}</VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="icon" />
                                     </VControl>
@@ -166,7 +168,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('social_medial.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts } from "/@src/models/Warehouse/Category/category"
 import { defaultPagination } from "/@src/utils/response"
 
@@ -25,6 +26,8 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
+
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -69,6 +72,7 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
             searchFilter.value.is_main_category = undefined
             context.emit('search', searchFilter.value)
         }
@@ -99,7 +103,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
+        return {  t , searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
     },
 
 
@@ -118,7 +122,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" placeholder="Name..." />
+                                <VInput v-model="quickSearchField" type="text" :placeholder="t('category.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

@@ -21,11 +21,11 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 const itemStore = useItem()
-
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Withdraw Quantity')
+viewWrapper.setPageTitle(t('withdraw_quantity.form.title'))
 const head = useHead({
-    title: 'Withdraw Quantity',
+    title: t('withdraw_quantity.form.title'),
 })
 const withdarwQuantityForm = useWithdrawItemForm()
 withdarwQuantityForm.setStep({
@@ -39,9 +39,8 @@ withdarwQuantityForm.setStep({
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
 const notif = useNotyf() as Notyf
-const pageTitle = 'Withdraw Quantity'
+const pageTitle = t('withdraw_quantity.form.title')
 const phoneCheck = ref<string>('false')
 const currentwithdrawQuantity = ref(defaultWithdrawQuantityItem)
 const selectedCategoryId = ref()
@@ -179,12 +178,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField >
-                                    <VLabel class="required">Level 1</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.level_1')}}</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentwithdrawQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption :value="0">Select Level 1</VOption>
+                                                <VOption :value="0">{{t('withdraw_quantity.form.select_level_1')}}</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -195,11 +194,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="sub_category_id">
-                                    <VLabel class="required">Level 2</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.level_2')}}</VLabel>
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
                                             v-if="currentwithdrawQuantity" v-model="selectedSubCategoryId">
-                                            <VOption>Select Level 2</VOption>
+                                            <VOption>{{t('withdraw_quantity.form.select_level_1')}}</VOption>
                                             <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
                                                 :value="subCategory.id">
                                                 {{ subCategory.name }}
@@ -216,7 +215,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="item_id">
                                     <VLabel class="required" style="position:relative">
-                                        {{ viewWrapper.pageTitle }} Item
+                                        {{t('withdraw_quantity.form.item')}}
                                         <div v-if="itemStore.loading"
                                             class="loader is-loading m-r-15 m-b-05-rem w35-h35 custom-loader">
                                         </div>
@@ -224,7 +223,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                             <VSelect :disabled="itemsList.length <= 0" v-if="currentwithdrawQuantity"
                                                 v-model="selectedItem">
-                                                <VOption >Select Item</VOption>
+                                                <VOption >{{t('withdraw_quantity.form.select_item')}}</VOption>
                                                 <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                                                     {{ item.name }}
                                                 </VOption>
@@ -235,7 +234,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="item_quantity">
-                                    <VLabel class="required"> Item Quantity</VLabel>
+                                    <VLabel class="required"> {{t('withdraw_quantity.form.item_quantity')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentwithdrawQuantity.item_quantity" type="number"
                                             placeholder="" autocomplete="given-item_quantity" />
@@ -248,7 +247,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="withdraw_item_price">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} Item Price</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.item_price')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="Price" type="number" placeholder=""
                                             autocomplete="given-withdraw_item_price" />
@@ -258,7 +257,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="status">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.status')}}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentwithdrawQuantity.status"
                                             :value="ItemHsitoryConsts.ACTIVE"
@@ -277,26 +276,27 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6 is-flex is-justify-content">
                                 <VField>
-                                    <VLabel class="required">Requester Type</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.requester_type')}}</VLabel>
                                     <VControl>
-                                        <VSwitchSegment v-model="isType" label-true="Employee" label-false="Contractor"
+                                        <VSwitchSegment v-model="isType" 
+                                        :label-true="t('withdraw_quantity.form.employee')" :label-false="t('withdraw_quantity.form.contractor')"
                                             color="success" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-6" v-if="employeesList">
                                 <VField id="user_id">
-                                    <VLabel class="required">Requester Name</VLabel>
+                                    <VLabel class="required">{{t('withdraw_quantity.form.requester_name')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="isType" v-model="requesterId">
-                                            <VOption value="0">Employee</VOption>
+                                            <VOption value="0">{{t('withdraw_quantity.form.employee')}}</VOption>
                                             <VOption v-for="employee in employeesList" :key="employee.id"
                                                 :value="employee.id">
                                                 {{ employee.user.first_name }} {{ employee.user.last_name }}
                                             </VOption>
                                         </VSelect>
                                         <VSelect v-else v-model="requesterId">
-                                            <VOption :value="0">Contractor</VOption>
+                                            <VOption :value="0">{{t('withdraw_quantity.form.contractor')}}</VOption>
                                             <VOption v-for="contractor in contractorsList" :key="contractor.user.id"
                                                 :value="contractor.id">
                                                 {{ contractor.user.first_name }} {{ contractor.user.last_name }}
@@ -311,7 +311,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="note">
-                                    <VLabel class="optinal">{{ viewWrapper.pageTitle }} Note</VLabel>
+                                    <VLabel class="optinal">{{t('withdraw_quantity.form.item_note')}}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentwithdrawQuantity.note" />
                                         <ErrorMessage class="help is-danger" name="note" />

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultMainCategorySearchFilter, Category, defaultCategorySearchFilter, defaultSubCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { defaultItemSearchFilter, ItemConsts, Item, ItemSearchFilter } from "/@src/models/Warehouse/Item/item"
 import { defaultItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
@@ -27,6 +28,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchType = ref()
         const searchDateBetween = ref()
         const searchFrom = ref()
@@ -62,7 +64,7 @@ export default defineComponent({
             searchFilter.value.type = undefined
             context.emit('resetFilter', searchFilter.value)
         }
-        return { ItemConsts, search, resetFilter, search_filter_popup, searchFrom, searchTo, searchType }
+        return { t , ItemConsts, search, resetFilter, search_filter_popup, searchFrom, searchTo, searchType }
     },
 })
 
@@ -70,28 +72,28 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Item" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('item.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchType" class="">
-                            <VOption value="">Select Type</VOption>
-                            <VOption value="in">In</VOption>
-                            <VOption value="out">Out</VOption>
+                            <VOption value="">{{t('item.search_filter.select_type')}}</VOption>
+                            <VOption value="in">{{t('item.search_filter.in')}}</VOption>
+                            <VOption value="out">{{t('item.search_filter.out')}}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">Create Date:</h1>
+                    <h1 class="column-is-12">{{t('item.search_filter.create_date')}}}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>From : </VLabel>
+                        <VLabel>{{t('item.search_filter.from')}}</VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
                     </VField>
                     <VField class="column-is-6 filter">
-                        <VLabel>To : </VLabel>
+                        <VLabel>{{t('item.search_filter.to')}} </VLabel>
 
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchTo" type="date" />
@@ -102,7 +104,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

@@ -21,9 +21,9 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Medical Info')
+viewWrapper.setPageTitle(t('customer.form.step_2_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
@@ -62,7 +62,7 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 2: Customer Medical Info'
+const pageTitle = t('customer.form.step_2_subtitle')
 onMounted(() => {
     getCurrentMedicalInfo()
 }
@@ -144,10 +144,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="blood_type">
-                                    <VLabel class="optional">Blood Type</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.blood_type') }}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
-                                            <VOption value="">Blood Type</VOption>
+                                            <VOption value="">{{}}</VOption>
                                             <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES"
                                                 :key="blood_type" :value="blood_type">{{ blood_type }}
                                             </VOption>
@@ -158,7 +158,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="allergic">
-                                    <VLabel class="optional">Allergic Reactions:</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.allergic') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.allergic" type="text" placeholder=""
                                             autocomplete="" />
@@ -174,7 +174,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="infectious_diseases">
-                                    <VLabel class="optional">Infectious Diseases:</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.infectious_diseases') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
@@ -185,7 +185,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
                             <div class="column is-6">
                                 <VField id="chronic_diseases">
-                                    <VLabel class="optional">Chronic Diseases:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.chronic_diseases')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
                                             autocomplete="" />
@@ -199,7 +199,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="smooking">
-                                    <VLabel class="optional">Smoke?</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.smoke')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
@@ -219,7 +219,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="any_other_info">
-                                    <VLabel class="optional">Other Info:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.other_info')}}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentMedicalInfo.any_other_info" />
                                         <ErrorMessage class="help is-danger" name="any_other_info" />

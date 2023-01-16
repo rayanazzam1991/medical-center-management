@@ -8,7 +8,8 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { specialityvalidationSchema } from '/@src/rules/Others/Speciality/specialityValidation';
 import sleep from "/@src/utils/sleep";
 import { useSpeciality } from "/@src/stores/Others/Speciality/specialityStore";
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -20,19 +21,21 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Speciality");
+        viewWrapper.setPageTitle(t('speciality.form.page_title'));
         const head = useHead({
-            title: "Speciality",
+            title: t('speciality.form.page_title'),
         });
         const specialityStore = useSpeciality()
-        const { t } = useI18n();
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('speciality.form.form_header' , {type : formTypeName});
+
         const backRoute = "/speciality";
         const currentSpeciality = ref(defaultSpeciality);
         const specialityId = ref(0);
@@ -111,7 +114,7 @@ export default defineComponent({
             }
         };
 
-        return { pageTitle, onSubmit, currentSpeciality, viewWrapper, backRoute, SpecialityConsts, specialityStore };
+        return {t, pageTitle, onSubmit, currentSpeciality, viewWrapper, backRoute, SpecialityConsts, specialityStore };
     },
     components: { ErrorMessage }
 })
@@ -134,7 +137,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('speciality.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentSpeciality.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -150,7 +153,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{ t('speciality.form.status') }}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentSpeciality.status" :value="SpecialityConsts.INACTIVE"

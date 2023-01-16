@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultSpecialitySearchFilter, SpecialityConsts } from "/@src/models/Others/Speciality/speciality"
 import { defaultPagination } from "/@src/utils/response"
 
@@ -24,6 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -49,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SpecialityConsts }
+        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SpecialityConsts }
     },
 
 
@@ -68,11 +70,11 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" placeholder="Name..." />
+                                <VInput v-model="searchName" type="text" :placeholder="t('speciality.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">Status</VOption>
+                                    <VOption value="">{{t('speciality.search_filter.status')}}</VOption>
                                     <VOption value="0">{{ SpecialityConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ SpecialityConsts.showStatusName(1) }}</VOption>
                                 </VSelect>

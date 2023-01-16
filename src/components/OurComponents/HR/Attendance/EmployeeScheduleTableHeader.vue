@@ -4,6 +4,7 @@ import { defaultEmployeeScheduleSearchFilter, EmployeeScheduleSearchFilter } fro
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { defaultPagination } from '/@src/utils/response'
+import { useI18n } from 'vue-i18n'
 
 
 
@@ -25,6 +26,7 @@ export default defineComponent({
 
 
     setup(props, context) {
+        const {t} = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -115,7 +117,7 @@ export default defineComponent({
             const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
             statusesList.value = userstatuses
         })
-        return { keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
+        return {t, keyIncrement, quickSearch, quickSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, statusesList, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
@@ -128,7 +130,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" placeholder="Name/Number..." />
+                                <VInput v-model="quickSearchField" type="text" :placeholder="t('employee_schedule.search_filter.quick_search')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

@@ -10,10 +10,11 @@ import { useHead } from '@vueuse/head'
 
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useCustomer } from '../stores/CRM/Customer/customerStore';
+import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-
+const {t} = useI18n()
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
 })
@@ -35,7 +36,7 @@ useHead({
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="customerStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                Submit
+                                {{t('customer.form.edit_submit')}}
                             </VButton>
                         </VLoader>
 

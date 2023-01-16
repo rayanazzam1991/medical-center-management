@@ -4,6 +4,7 @@ import type { UserPopover } from '/@src/models/users'
 import { popovers } from '/@src/data/users/userPopovers'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { usePanels } from '/@src/stores/panels'
+import { useI18n } from 'vue-i18n'
 
 export type NavbarTheme = 'default' | 'colored' | 'fade'
 export type SubnavId =
@@ -31,6 +32,7 @@ const filter = ref('')
 const isMobileSidebarOpen = ref(false)
 const activeMobileSubsidebar = ref('dashboard')
 const activeSubnav = ref<SubnavId>('closed')
+const { t } = useI18n()
 
 const filteredUsers = computed(() => {
   if (!filter.value) {
@@ -194,7 +196,7 @@ watch(
 ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
             <i class="iconify" data-icon="feather:layers" aria-hidden="true"></i>
-            <span>Others</span>
+            <span>{{ t("navbar.others")}}</span>
           </a>
           <a :class="[
   (activeSubnav === 'CRM' ||
@@ -207,7 +209,7 @@ watch(
 ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
             @click="toggleSubnav('CRM')">
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
-            <span>CRM</span>
+            <span>{{ t("navbar.crm")}}</span>
           </a>
           <a :class="[((activeSubnav === 'contractor') ||
   route.path.startsWith('/contractor') ||
@@ -220,7 +222,7 @@ watch(
 ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-            <span>Contractors</span>
+            <span>{{ t("navbar.contractor")}}</span>
           </a>
           <a :class="[(activeSubnav === 'HR' ||
   route.path.startsWith('/employee') ||
@@ -231,7 +233,7 @@ watch(
 ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
             @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
-            <span>Human Resources</span>
+            <span>{{ t('navbar.human_resources')}}</span>
           </a>
           <a :class="[(activeSubnav === 'warehouse' ||
   route.path.startsWith('/category') ||
@@ -242,34 +244,9 @@ watch(
 ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
             <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
-            <span>Warehouse</span>
+            <span>{{ t('navbar.warehouse')}}</span>
           </a>
         </div>
-        <!--
-        <div class="centered-search" :class="[activeSubnav !== 'search' && 'is-hidden']">
-          <div class="field">
-            <div class="control has-icon">
-              <input v-model="filter" type="text" class="input is-rounded search-input"
-                placeholder="Search records..." />
-              <div class="form-icon">
-                <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
-              </div>
-              <div class="form-icon is-right" tabindex="0" @keydown.space.prevent="toggleSubnav('search')"
-                @click="toggleSubnav('search')">
-                <i aria-hidden="true" class="iconify" data-icon="feather:x"></i>
-              </div>
-              <div v-if="filteredUsers.length > 0" class="search-results has-slimscroll is-active">
-                <div v-for="user in filteredUsers" :key="user.id" class="search-result">
-                  <VAvatar v-bind="getAvatarData(user)" />
-                  <div class="meta">
-                    <span>{{ user.username }}</span>
-                    <span>{{ user.position }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </template>
 
       <!-- Custom navbar sub navigation -->

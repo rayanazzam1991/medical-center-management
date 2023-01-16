@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultMainCategorySearchFilter, Category, defaultCategorySearchFilter, defaultSubCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { defaultItemSearchFilter, ItemConsts, Item } from "/@src/models/Warehouse/Item/item"
 import { getFilterCategoriesList } from "/@src/services/Warehouse/Category/CategoryService"
@@ -26,6 +27,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref('')
         const searchParent = ref()
         const searchSubCategory = ref()
@@ -73,7 +75,7 @@ export default defineComponent({
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subCategoriesList.value = SubCategory
         }
-        return { subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
+        return {t , subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
     },
 })
 
@@ -81,19 +83,19 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Item" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('item.search_filter.item')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('item.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <div class="select">
                             <select @change="getSubCategory" v-model="searchParent">
-                                <VOption >Level 1</VOption>
+                                <VOption >{{t('item.search_filter.level_1')}}</VOption>
                                 <VOption v-for="parent in mainCategoriesList" :key="parent.id" :value="parent.id">
                                     {{ parent.name }}
                                 </VOption>
@@ -106,7 +108,7 @@ export default defineComponent({
                     <VControl>
                         <VSelect :disabled="subCategoriesList.length <= 0 && searchParent == undefined"
                             v-model="searchSubCategory" class="">
-                            <VOption value="">Level 2</VOption>
+                            <VOption value="">{{t('item.search_filter.level_2')}}</VOption>
                             <VOption v-for="sub_category in subCategoriesList" :key="sub_category.id"
                                 :value="sub_category.id">{{
                                     sub_category.name
@@ -118,7 +120,7 @@ export default defineComponent({
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Status</VOption>
+                            <VOption value="">{{t('item.search_filter.status')}}</VOption>
                             <VOption value="0">{{ ItemConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ ItemConsts.showStatusName(1) }}</VOption>
                         </VSelect>
@@ -128,7 +130,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

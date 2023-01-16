@@ -11,13 +11,12 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
-
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Group')
+viewWrapper.setPageTitle(t('customer_group.table.title'))
 useHead({
-  title: 'Customer Group',
+  title: t('customer_group.table.title'),
 })
-const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCustomerGroupSearchFilter)
 const customerGroupsList = ref<Array<CustomerGroup>>([])
@@ -99,16 +98,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
+    label : t('customer_group.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
+    label : t('customer_group.table.columns.name')
 
 
   },
   status: {
     align: 'center',
+    label : t('customer_group.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -132,6 +134,7 @@ const columns = {
   },
   actions: {
     align: 'center',
+    label : t('customer_group.table.columns.actions'),
 
     renderRow: (row: any) =>
       h(MyDropDown, {
@@ -155,7 +158,7 @@ const columns = {
 
 <template>
   <CustomerGroupTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+    :button_name="t('customer_group.header_button')" @search="search" :pagination="paginationVar"
     :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="customerGroupsList" @update:sort="customerGroupSort">
 
@@ -170,7 +173,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="customerGroupsList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection title="No matches" subtitle="There is no data that match your search." class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" 
+          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
           </VPlaceholderSection>
         </div>
 
@@ -180,27 +184,29 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getcustomerGroupsPerPage" />
-    <h6 v-if="customerGroupsList.length != 0 && !customerGroupStore?.loading">Showing {{ paginationVar.page !=
-        paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-    }} to {{
-    paginationVar.page !=
-      paginationVar.max_page ?
-      paginationVar.page *
-      paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
-
+    <h6 v-if="customerGroupsList.length != 0 && !customerGroupStore?.loading">
+    
+      {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
     <VPlaceloadText v-if="customerGroupStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal title="Remove Customer Group" :open="deleteCustomerGroupPopup" actions="center"
+  <VModal :title="t('customer_group.table.modal_title')" :open="deleteCustomerGroupPopup" actions="center"
     @close="deleteCustomerGroupPopup = false">
     <template #content>
-      <VPlaceholderSection title="Are you sure?"
-        :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+      <VPlaceholderSection :title="t('modal.delete_modal.title')"
+        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeCustomerGroup(deleteCustomerGroupId)">Confirm</VButton>
+      <VButton color="primary" raised @click="removeCustomerGroup(deleteCustomerGroupId)">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
 
