@@ -70,7 +70,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" :laceholder="t('nationality.search_filter.name')" />
+                                <VInput v-model="searchName" type="text" :placeholder="t('nationality.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">

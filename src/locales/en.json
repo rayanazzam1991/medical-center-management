@@ -220,7 +220,7 @@
         "not_selected" : "Not Selected"
     },
     "forms" : {
-        "types" : {
+        "type" : {
             "add" : "Add" ,
             "edit" : "Edit"
         },

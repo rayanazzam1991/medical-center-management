@@ -230,7 +230,7 @@ const columns = {
     first_day: {
         align: 'center',
 
-        label: t(`dates.days.${daysName.value[0].toLowerCase()}`),
+        label: t(`dates.days.${daysName?.value[0]?.toLowerCase()}`),
         grow: false,
         renderRow: (row: any) =>
             h(

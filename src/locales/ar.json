@@ -1,1283 +1,1286 @@
-{  
-    "select-language": "Select Language",
-    "cancel-label": "Cancel",  
-    "auth": {
-        "success_login": "Welcome back",
-        "success_signUp": "Welcome",
-        "title": "Join Us Now.",
-        "subtitle": "Start by creating your account",
-        "label": {
-          "promotional": "Receive promotional offers"
-        },
-        "action": {
-          "login": "I already have an account",
-          "signup": "Sign Up"
-        },
-        "placeholder": {
-          "name": "Name",
-          "email": "Email Address",
-          "password": "Password",
-          "passwordCheck": "Password Verification"
-        },
-        "errors": {
-          "name": {
-            "required": "Your first name is required"
-          },
-          "email": {
-            "required": "Enter your email, it will be required to login",
-            "format": "Please, enter a valid email"
-          },
-          "password": {
-            "required": "Enter your password with at least 8 characters, it will be required to login",
-            "length": "The password should contains at leat 8 characters"
-          },
-          "passwordCheck": {
-            "required": "Please, confirm your password",
-            "match": "The password does not match"
-          }
-        },
-        "form" : {
-            "welcome_back" : "Welcome Back.",
-            "sign_in" : "Please sign in to your account",
-            "placeholders" : { 
-                "phone" : "Phone",
-                "password" : "Password"
-            },
-            "sign_in_button" : "Sign In"
-        }
+{
+  "select-language": "تحديد اللغة",
+  "cancel-label": "الغاء",
+  "auth": {
+    "success_login": "أهلاً بعودتك",
+    "success_signUp": "مرحبا",
+    "title": "أنضم الينا الآن.",
+    "subtitle": "ابدأ بإنشاء حسابك",
+    "label": {
+      "promotional": "تلقي العروض الترويجية"
     },
-    "validation": {
-        "required": "This field is required",
-        "number": {
-          "price": "Please enter a valid price",
-          "invalid_type_error": "Please enter a valid number",
-          "payment_percentage": "Please enter a number from 0-100",
-          "phone_number": "Please enter a valid phone number"
-        },
-        "redio": {
-          "required": "Please choose one"
-        },
-        "date": {
-          "required_error": "Please select a date and time",
-          "invalid_type_error": "That's not a date!",
-          "format": "Date must be a vaild date format YYYY-MM-DD"
-        },
-        "text": {
-          "invalid_type_error": "Please enter a text"
-        },
-        "URL": {
-          "invalid_type_error": "Please enter a valid URL"
-        }
+    "action": {
+      "login": "لدي حساب بالفعل",
+      "signup": "انشاء حساب"
     },
-      "navbar": {
-        "others": "Others",
-        "crm": "CRM",
-        "contractor": "Contractor",
-        "human_resources": "Human Resources",
-        "warehouse": "Warehouse"
+    "placeholder": {
+      "name": "الاسم",
+      "email": "البريد الالكتروني",
+      "password": "كلمة المرور",
+      "passwordCheck": "التحقق من كلمة المرور"
+    },
+    "errors": {
+      "name": {
+        "required": "الاسم الأول مطلوب"
       },
-      "others_subnav": {
-        "nationality": {
-          "nationalities": "Nationalities",
-          "create_nationality": "Create Nationality"
-        },
-        "service": {
-          "services": "Services",
-          "create_service": "Create Service"
-        },
-        "department": {
-          "departments": "Departments",
-          "create_department": "Create Department"
-        },
-        "room": {
-          "rooms": "Rooms",
-          "create_room": "Create Room"
-        },
-        "city": {
-          "cities": "Cities",
-          "create_city": "Create City"
-        },
-        "setting": {
-          "settings": "Settings",
-          "edit_settings": "Edit Settings"
-        },
-        "user_status": {
-          "user_statuses": "User Statuses",
-          "create_user_status": "Create User Status"
-        }
+      "email": {
+        "required": "ادخل بريدك الالكتروني, مطلوب لتسجيل الدخول",
+        "format": "من فضلك, ادخل بريد الكتروني صالح"
       },
-      "crm_subnav": {
-        "customer": {
-          "customers": "Customers",
-          "create_customer": "Create Customer"
-        },
-        "customer_group": {
-          "customer_groups": "Customer Groups",
-          "create_customer_group": "Create Customer Group"
-        },
-        "social_media": {
-          "social_medias": "Social Media",
-          "create_social_media": "Create Social Media"
-        }
+      "password": {
+        "required": "ادخل كلمة المرور الخاصة بك مع 8 أحرف على الأقل, مطلوب لتسجيل الدخول",
+        "length": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل"
       },
-      "contractor_subnav": {
-        "contractor": {
-          "contractors": "Contractors",
-          "create_contractor": "Create Contractor"
-        },
-        "speciality": {
-          "specialities": "Specialities",
-          "create_speciality": "Create Speciality"
-        }
-      },
-      "human_resources_subnav": {
-        "employee": {
-          "employees": "Employees",
-          "create_employee": "Create Employee"
-        },
-        "position": {
-          "positions": "Positions",
-          "create_position": "Create Position"
-        },
-        "employees_schedule": "Employees Schedule",
-        "employees_attendance": "Employees Attendance"
-      },
-      "warehouse_subnav": {
-        "category": {
-          "categories": "Categories",
-          "create_category": "Create Category"
-        },
-        "item": {
-          "items": "Items",
-          "create_item": "Create Item"
-        },
-        "quantity": {
-          "quantity": "Quantity",
-          "add_quantity": "Add Quantity",
-          "withdraw_quantity": "Withdray Quantity"
-        },
-        "item_history": {
-          "item_history": "Item History",
-          "list_stock_movement": "List Stock Movement"
-        }
-      },
-      "user_profile_dropdown": {
-        "logout": "Logout"
-      },
-      "toast": {
-        "success": {
-          "add": "Added successfully",
-          "edit": "Edited successfully",
-          "remove": "Removed successfully",
-          "customer_note": "Customer notes was edited successfully",
-          "justified": "justified successfully",
-          "unjustified": "Unjustified successfully",
-          "withdraw": "Withdrawed successfully"
-        },
-        "error": {
-          "steps_error": "Please add some data or skip this step",
-          "Attendance": {
-            "time": "Start time cant be after end time",
-            "check_in": "New check in can't be after original check in",
-            "check_out": "New check out can't be before original check out"
-          }
-        },
-        "file": {
-          "type": "Please choose an accepted file type",
-          "size": "File size must be less than 2MB",
-          "image": "Please select a valid image to be uploaded"
-        }
-      },
-      "modal": {
-        "buttons": {
-          "confirm": "Confirm",
-          "cancel": "Cancel",
-          "update": "Update",
-          "delete": "Delete",
-          "save": "Save",
-          "filter" : "Filter"
-        },
-        "delete_modal": {
-          "title": "Are you sure?",
-          "subtitle": "you are about to delete this {title} permenantly"
-        }
-      },
-      "tables": {
-        "placeholder": {
-          "title": "No matches",
-          "subtitle": "There is no data that match your search."
-        },
-        "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
-      },
-    "images" : {
-        "image_name_placeholder" : "Choose an image",
-        "image_select_file" : "Select File",
-        "accepted_file" : "Max size: 2 MB | Accepted image… types: png, jpg, webp"
-    },
-    "gender" : {
-        "male" : "Male" ,
-        "female" : "Female",
-        "not_selected" : "Not Selected"
-    },
-    "forms" : {
-        "types" : {
-            "add" : "Add" ,
-            "edit" : "Edit"
-        },
-        "back_button" : "Back"
-
-    },
-    "drop_down" : {
-      "view" : "View",
-      "edit" : "Edit",
-      "remove" : "Remove" ,
-      "change_status" : "Change Status"
-    },
-    "add_quantity" : {
-        "form" : {
-            "title" : "Add Quantity",
-            "back_button" :"Back to items page",
-            "level_1" : "Level 1",
-            "select_level_1" : "Select Level 1",
-            "level_2" : "Level 2",
-            "select_level_2" : "Select Level 2",
-            "item" : "Item",
-            "select_item" : "Select Item",
-            "item_quantity" : "Item Quantity",
-            "item_cost" : "Item Cost",
-            "status" : "Status",
-            "item_note" : "Item Note",
-            "invoice_number" : "Invoice Number",
-            "invoice_image" : "Invoice Image",
-            "submit" : "Submit"
-        }
-    },
-    "category" : {
-        "table": {
-            "title": "Category",
-            "columns": {
-              "name": "Name",
-              "parent": "Parent",
-              "created_by": "Created By",
-              "created_at": "Created At",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Category Status"
-          },
-      
-        "form" : {
-            "page_title" : "Category" ,
-            "form_header" : "{type} Category",
-            "add_category_title" : "Add Category",
-            "edit_category_title" : "Edit Category",
-            "name" : "Name",
-            "level_1" : "Level 1",
-            "level_2" : "Level 2",
-            "parent" : "Parent",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Category",
-          "name" : "Name...",
-          "parent" :"Parent",
-          "status" : "Status"
-        },
-        "header_button" :"Add Category"
-
-
-    },
-    "city" : {
-        "table": {
-            "title": "City",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove City"
-          },
-          "details": {
-            "title": "City",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "City" ,
-            "form_header" : "{type} City",
-            "add_city_title" : "Add City",
-            "edit_city_title" : "Edit City",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add City"
-
-
-    },
-    "contractor" : {
-        "table": {
-            "title": "Contractor",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "speciality": "Speciality",
-              "department": "Department",
-              "room": "Room #",
-              "status": "Status",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Customer File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Contractor",
-            "tabs": {
-              "details": "Details",
-              "services": "Sevices",
-              "files": "Files"
-            },
-            "service": "Contractor Service",
-            "file": "Contractor Files",
-            "name": "{title} Name",
-            "speciality": "{title} Speciality",
-            "status": "{title} Status",
-            "user_status": "User Status",
-            "birth_date": "Birth Date",
-            "phone_number": "Phone Number",
-            "payment_percentage": "Payment Percentage",
-            "starting_date": "Starting Date",
-            "end_date": "End Date",
-            "department": "Department",
-            "room_number": "Room Number",
-            "address": "Address",
-            "price": "{title} Service Price",
-            "service_ammount": "{title} Service Ammount",
-            "gender": "gender",
-            "upload_file": "Upload File",
-            "choose_file": "Choose a file…",
-            "upload": "Upload",
-            "accepted_file": "Max size: 2 MB | Accepted file types :png, jpg, webp",
-            "tabs_content_placeholder": {
-              "service": "Contractor have no services for now...",
-              "files": "Contractor have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Contractor" ,
-            "step_1_title" : "Contractor Main Info" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "step_2_abbr_title" : "Services" ,
-            "step_1_subtitle" : "Step 1: Contractor Main Info" ,
-            "step_2_subtitle" : "Step 2: Contractor Services" ,
-            "back_button" : "Back to contractors page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "department" : "Department",
-            "room" : "Room",
-            "starting_date" : "Starting date",
-            "end_date" : "End date",
-            "payment_percentage" : "Payment Percentage",
-            "speciality" : "Speciality",
-            "status" : "Status",
-            "no_services_placeholder" : "There are no services...",
-            "service_price" : "{service} Price:",
-            "service_amount" : "{service} Service Amount:",
-            "edit_step_1_title" : "Edit Contractor Main Info" ,
-            "edit_step_2_title" : "Edit Contractor Services" ,
-            "edit_submit" : "Submit",
-            "choose_services" : "Choose Services:",
-            "submit_and_finish_button" : "Submit & Finish",
-            "submit_and_next_button" : "Submit & Next",
-            "skip_button" : "Skip",
-            "skip_and_finish_button" : "Skip & Finish"
-        },
-        "search_filter" : {
-          "title" : "Filter Contractor",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "room_number" : "Room Number",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-          
-        },
-        "header_button" : "Add Contractor"
-
-    },
-    "customer" : {
-        "table": {
-            "title": "Customer",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "group": "Group",
-              "is_completed": "Completed",
-              "status": "Status",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Customer File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Customer",
-            "tabs": {
-              "details": "Details",
-              "medical_info": "Medical Info",
-              "social_media": "Social Media",
-              "files": "Files"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "group": "Group",
-            "gender": "Gender",
-            "note": "Note",
-            "last_update": "Last Update at",
-            "by": "By",
-            "phone_number": "Phone Number",
-            "emergency_contact_name": "Emergency Contact Name",
-            "emergency_contact_phone": "Emergency Contact Phone",
-            "address": "Address",
-            "is_completed": "Completed",
-            "status": "Status",
-            "birth_date": "Birth Date",
-            "medical_info": "Customer Medical Info",
-            "blood_type": "Blood Type",
-            "smooke": "Smoke",
-            "more_info": "More Info",
-            "allergic": "Allergic",
-            "infectious_diseases": "Infectious Diseases",
-            "chronic_diseases": "Chronic Diseases",
-            "other_medical_info": "Other Medical Info",
-            "customer_social_media": "Customer Social Media",
-            "customer_URL": "Customer URL",
-            "customer_files": "Customer Files",
-            "upload_file": "Upload File",
-            "upload": "Upload",
-            "customer_status": "Customer Status",
-            "select_customer_status": "Select Customer Status",
-            "tabs_content_placeholder": {
-              "medical_info": "Customer have no medical info...",
-              "social_modia": "Customer have no social media...",
-              "files": "Customer have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Customer" ,
-            "step_1_title" : "Customer Main Info" ,
-            "step_2_title" : "Customer Medical Info" ,
-            "step_3_title" : "Customer Social Media" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "step_2_abbr_title" : "Medical Info" ,
-            "step_3_abbr_title" : "Social Media" ,
-            "step_1_subtitle" : "Step 1: Customer Main Info" ,
-            "step_2_subtitle" : "Step 2: Customer Medical Info" ,
-            "step_3_subtitle" : "Step 3: Customer Social Media" ,
-            "back_button" :"Back to customers page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "status" : "Status",
-            "customer_group" : "Customer Group",
-            "emergency_contract_name" : "Emergency Contract Name",
-            "emergency_contract_phone" : "Emergency Contract Phone",
-            "blood_type" : "Blood Type",
-            "allergic" : "Allergic Reactions",
-            "infectious_diseases" : "Infectious Diseases",
-            "chronic_diseases" : "Chronic Diseases",
-            "smoke" : "Smoke?",
-            "other_info" : "Other Info",
-            "social_media_url" : "Customer's {social_media} URL",
-            "edit_step_1_title" : "Edit Customer Main Info" ,
-            "edit_step_2_title" : "Edit Customer Medical Info" ,
-            "edit_submit" : "Submit",
-            "choose_social_media" : "Choose Social Media:",
-            "submit_and_finish_button" : "Submit & Finish",
-            "submit_and_next_button" : "Submit & Next",
-            "skip_button" : "Skip",
-            "skip_and_finish_button" : "Skip & Finish"
-        },
-        "search_filter" : {
-          "title" : "Filter Customer",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "group" : "Group",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-          
-        },
-        "header_button" : "Add Customer"
-
-
-    },
-    "customer_group" : {
-        "table": {
-            "title": "Customer Group",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Customer Group"
-          },
-          "details": {
-            "title": "Customer Group",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "Customer Group" ,
-            "form_header" : "{type} Customer Group",
-            "add_customer_group_title" : "Add Customer Group",
-            "edit_customer_group_title" : "Edit Customer Group",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Customer Group" 
-
-
-    },
-    "department" : {
-        "table": {
-            "title": "Department",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Department"
-          },
-          "details": {
-            "title": "Department",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "Department" ,
-            "form_header" : "{type} Department",
-            "add_department_title" : "Add Department",
-            "edit_department_title" : "Edit Department",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Department"
-
-
-    },
-    "employee" : {
-        "table": {
-            "title": "Employee",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "department": "Department",
-              "room": "Room #",
-              "status": "Status",
-              "position": "Position",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Employee File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Employee",
-            "tabs": {
-              "details": "Details",
-              "files": "Files"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "starting_date": "Starting Date",
-            "end_date": "End Date",
-            "gender": "Gender",
-            "department": "Department",
-            "room_number": "Room Number",
-            "nationality": "Nationality",
-            "position": "Position",
-            "phone_number": "Phone Number",
-            "address": "Address",
-            "employee_number": "Employee Number",
-            "last_employee_number": "Last Employee Number",
-            "status": "Status",
-            "birth_date": "Birth Date",
-            "employee_files": "Employee Files",
-            "upload_file": "Upload File",
-            "upload": "Upload",
-            "employee_status": "Employee Status",
-            "select_employee_status": "Select Employee Status",
-            "tabs_content_placeholder": {
-              "files": "Employee have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Customer" ,
-            "step_1_title" : "Employee Main Info" ,
-            "step_1_subtitle" : "Step 1: Employee Main Info" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "back_button" : "Back to employees page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "department" : "Department",
-            "room" : "Room",
-            "starting_date" :"Starting date",
-            "end_date" :"End date",
-            "basic_salary" :"Basic Salary",
-            "nationality" :"Nationality",
-            "position" :"Position",
-            "status" : "Status",
-            "edit_step_1_title" : "Edit Employee Main Info" ,
-            "edit_submit" : "Submit"
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "group" : "Group",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-
-
-        },
-        "header_button" :"Add Employee"
-
-
-    },
-    "employee_attendance": {
-        "table": {
-          "title": "Employees Attendance",
-          "columns": {
-            "employee_name": "Employee Name"
-          },
-          "attendance_details_modal": {
-            "title": "Attendance Details",
-            "date": "Date:",
-            "status": "Status:",
-            "mark_attendance": "Mark Attendance",
-            "check_in": "Check In",
-            "check_out": "Check Out",
-            "no_data": "No Data",
-            "justify_attendance": "Justify Attendance",
-            "unjustify_attendance": "Unjustify Attendance"
-          },
-          "mark_attendance_modal": {
-            "title": "Mark Attendance",
-            "date": "Date:",
-            "status": "Status:",
-            "check_in": "Check In",
-            "check_out": "Check Out"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "department" : "Department",
-          "position" : "Position",
-          "status" : "Status",
-          "quick_search" : "Name/Number...",
-          "note" : "Note:"
-        }
-      },
-      "employee_schedule": {
-        "table": {
-          "title": "Employees Schedule",
-          "columns": {
-            "employee_name": "Employee Name"
-          },
-          "modal": {
-            "title": "Edit Employee Schedule",
-            "day": "Day:",
-            "start_time": "Start Time",
-            "end_time": "End Time",
-            "make_vacation": "Make Vacation"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "department" : "Department",
-          "position" : "Position",
-          "status" : "Status",
-          "quick_search" : "Name/Number..."
-        }
-
-      },
-    "item" : {
-        "table": {
-            "title": "Item",
-            "columns": {
-              "name": "Name",
-              "level_1": "Level 1",
-              "level_2": "Level 2",
-              "quantity": "Quantity",
-              "price": "Price",
-              "cost": "Cost",
-              "created_by": "Created By",
-              "created_at": "Created At",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": {
-              "item": "Change Item Status",
-              "item_history": "Change Item History Status"
-            }
-          },
-          "details": {
-            "title": "Item",
-            "tabs": {
-              "details": "Details",
-              "item_history": "Item History"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "leve_1": "Item Level 1",
-            "leve_2": "Item Level 2",
-            "quantity": "Item Quantity",
-            "min_quantity": "Item Min Quantity",
-            "price": "Price",
-            "cost": "Cost",
-            "description": "Description",
-            "status": "Item Status",
-            "history_status": "Item History Status",
-            "employee_status": "Item Status",
-            "select_employee_status": "Select Item Status",
-            "item_history_table": {
-              "columns": {
-                "requester_name": "Requester",
-                "item_quantity": "Item Quantity",
-                "withdraw_item_price": "Price",
-                "add_item_cost": "Cost",
-                "invoice_number": "Invoice number",
-                "created_at": "Created At",
-                "Image": "Invoice",
-                "status": "Status",
-                "type": "Type",
-                "action": "Edit Status"
-              }
-            },
-            "tabs_content_placeholder": {
-              "item_history": "Item have no history..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Item" ,
-            "form_header" : "{type} Item",
-            "add_item_title" : "Add Item",
-            "edit_item_title" : "Edit Item",
-            "name" : "Name",
-            "level_1" : "Level 1",
-            "level_2" : "Level 2",
-            "price" : "Price",
-            "cost" : "Cost",
-            "quantity" : "Quantity",
-            "min_quantity" : "Min Quantity",
-            "description" : "Description",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Item",
-          "select_type" : "Select Type",
-          "in" : "In",
-          "out" : "Out",
-          "level_1" : "Level 1",
-          "level_2" : "Level 2",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Item"
-
-
-
-    },
-    "list_stock_movement": {
-        "table": {
-          "title": "List Stock Movement",
-          "columns": {
-            "item": "Item",
-            "type": "Type",
-            "quantity": "Quantity",
-            "price": "Price",
-            "cost": "Cost",
-            "requester": "Requester",
-            "note": "Note",
-            "created_at": "Created At",
-            "created_by": "Created By"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Item",
-          "select_level_1" : "Select Level 1",
-          "select_level_2" : "Select Level 2",
-          "select_item" : "Select Item",
-          "select_type" : "Select Type",
-          "in" : "In",
-          "out" : "Out",
-          "level_1" : "Level 1",
-          "level_2" : "Level 2",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: "
-        },
-        "add_quantity_button" : "Add Quantity",
-        "withdraw_quantity_button" : "Withdraw Quantity"
-      },
-    "nationality" : {
-        "table": {
-            "title": "Nationality",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Nationality"
-          },
-          "details": {
-            "title": "Nationality",
-            "name": "Nationality Name",
-            "status": "Nationality Status"
-          },      
-        "form" : {
-            "page_title" : "Nationality" ,
-            "form_header" : "{type} Nationality",
-            "add_nationality_title" : "Add Nationality",
-            "edit_nationality_title" : "Edit Nationality",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Nationality"
-
-
-
-    },
-    "position" : {
-        "table": {
-            "title": "Position",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "description": "Description",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Position Status"
-          },
-          "details": {
-            "title": "Position",
-            "name": "Position Name",
-            "description": "Position Description",
-            "status": "Position Status"
-          },      
-        "form" : {
-            "page_title" : "Position" ,
-            "form_header" : "{type} Position",
-            "add_position_title" : "Add Position",
-            "edit_position_title" : "Edit Position",
-            "name" : "Name",
-            "description" : "Description",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Position"
-
-
-    },
-    "room" : {
-        "table": {
-            "title": "Room",
-            "columns": {
-              "id": "ID",
-              "number": "Number",
-              "floor": "Floor",
-              "department": "Department",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Room"
-          },
-          "details": {
-            "title": "Room",
-            "number": "Room Number",
-            "floor": "Room Floor",
-            "department": "Room Department",
-            "status": "Room Status"
-          },      
-        "form" : {
-            "page_title" : "Room" ,
-            "form_header" : "{type} Room",
-            "add_room_title" : "Add Room",
-            "edit_room_title" : "Edit Room",
-            "number" : "Number",
-            "floor" : "Floor",
-            "department" : "Department",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Room",
-          "number" : "Number...",
-          "floor" : "Floor...",
-          "department" : "Department",
-          "status" : "Status"
-        },
-        "header_button" :"Add Room"
-
-
-    },
-    "service" : {
-        "table": {
-            "title": "Service",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "duration": "Duration",
-              "price": "Price",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Service"
-          },
-          "details": {
-            "title": "Service",
-            "name": "Service Name",
-            "price": "Service Price",
-            "description": "Service Description",
-            "estimated": "Estimated Duration",
-            "status": "Service Status"
-          },      
-        "form" : {
-            "page_title" : "Service" ,
-            "form_header" : "{type} Service",
-            "add_service_title" : "Add Service",
-            "edit_service_title" : "Edit Service",
-            "name" : "Name",
-            "desciption" : "Desciption",
-            "price" : "Price",
-            "duration" : "Duration",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Service",
-          "name" : "Name...",
-          "duration" : "Duration...",
-          "price" : "Price...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Service"
-
-
-    },
-    "settings" : {
-        "form" : {
-            "page_title" : "Edit Settings" ,
-            "hr_section" : "Edit HR/Attendance Settings",
-            "start_day" : "Start Day",
-            "end_day" : "End Day",
-            "start_time" : "Starting Time",
-            "end_time" : "End Time",
-            "start_of_week" : "Start of Week",
-            "late_tolerance" : "Late Tolerance"
-        }
-    },
-    "social_media" : {
-        "table": {
-            "title": "Social Media",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "icon": "Icon",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Social Media"
-          },      
-        "form" : {
-            "page_title" : "Social Media" ,
-            "form_header" : "{type} Social Media",
-            "add_social_media_title" : "Add Social Media",
-            "edit_social_media_title" : "Edit Social Media",
-            "name" : "Name",
-            "facebook" : "Facebook",
-            "instagram" : "Instagram",
-            "whatsapp" : "Whatsapp",
-            "snapchat" : "Snapchat",
-            "icon" : "Icon",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" :"Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Social Media"
-
-    },
-    "speciality" : {
-        "table": {
-            "title": "Speciality",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Speciality Status"
-          },
-          "details": {
-            "title": "Speciality",
-            "name": "Speciality Name",
-            "status": "Speciality Status"
-          },      
-        "form" : {
-            "page_title" : "Speciality" ,
-            "form_header" : "{type} Speciality",
-            "add_speciality_title" : "Add Speciality",
-            "edit_speciality_title" : "Edit Speciality",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Speciality"
-
-
-    },
-    "user" : {
-        "table": {
-            "title": "User",
-            "columns": {
-              "id": "ID",
-              "first_name": "First Name",
-              "last_name": "Last Name",
-              "gender": "Gender",
-              "phone": "Phone",
-              "room": "Room #",
-              "city": "City",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "place_holder" : "No Data Returned...",
-            "modal_title": {
-              "remove": "Remove User",
-              "status": "Change User Status"
-            }
-          },
-          "details": {
-            "title": "User Status",
-            "first_name": "First Name",
-            "last_name": "Last Name",
-            "gender": "Gender",
-            "phone": "Phone",
-            "city": "City",
-            "room": "Room ",
-            "status": "Status",
-            "address": "Address",
-            "birth_date": "Birth Date"
-          },      
-        "form" : {
-            "page_title" : "User" ,
-            "form_header" : "{type} User",
-            "add_user_title" : "Add User",
-            "edit_user_title" : "Edit User",
-            "first_name" : "First Name",
-            "last_name" : "Last Name",
-            "birth_date" : "Birth Date",
-            "phone_number" : "Phone Number",
-            "address" : "Address",
-            "gender" : "Gender",
-            "room" : "Room",
-            "city" : "City",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter User",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "gender" : "Gender",
-          "room" : "Room",
-          "city" : "City",
-          "status" : "Status"
-        },
-        "header_button" :"Add User"
-
-
-    },
-    "user_status" : {
-        "table": {
-            "title": "User Status",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove User Status"
-          },
-          "details": {
-            "title": "User Status",
-            "name": "User Status Name"
-          },      
-        "form" : {
-            "page_title" : "User Status" ,
-            "form_header" : "{type} User Status",
-            "add_user_status_title" : "Add User Status",
-            "edit_user_status_title" : "Edit User Status",
-            "name" : "Name"
-        },
-        "search_filter" : {
-          "name" : "Name..."
-        },
-        "header_button" :"Add User Status"
-
-
-    },
-    "withdraw_quantity" : {
-        "form" : {
-            "title" : "Withdraw Quantity",
-            "back_button" :"Back to items page",
-            "level_1" : "Level 1",
-            "select_level_1" : "Select Level 1",
-            "level_2" : "Level 2",
-            "select_level_2" : "Select Level 2",
-            "item" : "Item",
-            "select_item" : "Select Item",
-            "item_quantity" : "Item Quantity",
-            "item_price" : "Item Price",
-            "status" : "Status",
-            "requester_type" : "Requester Type",
-            "employee" : "Employee",
-            "contractor" : "Contractor",
-            "requester_name" : "Requester Name",
-            "item_note" : "Item Note",
-            "submit" : "Submit"
-
-        }
-    },
-    "dates" : {
-      "days" : {
-        "sunday" : "Sunday",
-        "monday" : "Monday",
-        "tuesday" : "Tuesday",
-        "wednesday" : "Wednesday",
-        "thursday" : "Thursday",
-        "friday" : "Friday",
-        "saturday" : "Saturday"
-      },
-      "days_abbr" : {
-        "sun" : "Sun",
-        "mon" : "Mon",
-        "tue" : "Tue",
-        "wed" : "Wed",
-        "thu" : "Thu",
-        "fri" : "Fri",
-        "sat" : "Sat"
-      },
-      "months" : {
-        "january" : "January",
-        "february" : "February",
-        "march" : "March",
-        "april" : "April",
-        "may" : "May",
-        "june" : "June",
-        "july" : "July",
-        "august" : "August",
-        "september" : "September",
-        "october" : "October",
-        "november" : "November",
-        "december" : "December"
+      "passwordCheck": {
+        "required": "من فضلك, قم بتأكيد كلمة المرور الخاصة بك",
+        "match": "كلمة المرور غير متطابقة"
       }
     },
-    "attendance_status" : {
-        "attend" : "Attend" , 
-        "absence" : "Absence" , 
-        "pending_absence" : "Pending Absence" , 
-        "justified_absence" : "Justified Absence" , 
-        "unjustified_absence" : "Unjustified Absence" , 
-        "partial_absence" : "Partial Absence" , 
-        "pending_partial_absence" : "Pending Partial Absence" , 
-        "justified_partial_absence" : "Justified Partial Absence" , 
-        "unjustified_partial_absence" : "Unjustified Partial Absence" , 
-        "missing_check" : "Missing Check" , 
-        "vacation" : "Vacation" , 
-        "no_data" : "No Data"  
+    "form" : {
+      "welcome_back" : "أهلاً بعودتك.",
+      "sign_in" : "من فضلك قم بتسجيل الدخول الى حسابك",
+      "placeholders" : { 
+          "phone" : "رقم الهاتف",
+          "password" : "كلمة المرور"
+      },
+      "sign_in_button" : "تسجيل الدخول"
+   }
+   
+  },
+  "gender" : {
+    "male" : "ذكر" ,
+    "female" : "أنثى",
+    "not_selected" : "غير محدد"
+  },
+
+  "validation": {
+    "required": "هذاالحقل مطلوب",
+    "number": {
+      "price": "يرجى ادخال سعر صالح",
+      "invalid_type_error": "يرجى ادخال رقم صالح",
+      "payment_percentage": "يرجى ادخال رقم من 0-100",
+      "phone_number": "يرجى ادخال رقم هاتف صالح"
     },
-    "status" : {
-      "active" : "Active" ,
-      "inactive" : "Inactive"
+    "redio": {
+      "required": "يرجى الاختيار"
     },
-    "boolean" : {
-      "true" : "Yes" ,
-      "false" : "No"
+    "date": {
+      "required_error": "يرجى تحديد تاريخ ووقت",
+      "invalid_type_error": "تاريخ غير صحيح!",
+      "format": "يجب أن يكون نسيق التاريخ صحيح YYYY-MM-DD"
+    },
+    "text": {
+      "invalid_type_error": "يرجى إدخال نص"
+    },
+    "URL": {
+      "invalid_type_error": "يرجى ادخال رابط صحيح"
     }
+  },
+  "navbar": {
+    "others": "أخرى",
+    "crm": "CRM",
+    "contractor": "الأخصائيون",
+    "human_resources": "الموارد البشرية",
+    "warehouse": "المستودع"
+  },
+  "others_subnav": {
+    "nationality": {
+      "nationalities": "الجنسيات",
+      "create_nationality": "انشاء جنسية"
+    },
+    "service": {
+      "services": "الخدمات",
+      "create_service": "انشاء خدمة"
+    },
+    "department": {
+      "departments": "الأقسام",
+      "create_department": "انشاء قسم"
+    },
+    "room": {
+      "rooms": "الغرف",
+      "create_room": "انشاء غرفة"
+    },
+    "city": {
+      "cities": "المدن",
+      "create_city": "انشاء مدينة"
+    },
+    "setting": {
+      "settings": "الاعدادات",
+      "edit_settings": "تعديل الاعدادات"
+    },
+    "user_status": {
+      "user_statuses": "حالات المستخدم",
+      "create_user_status": "انشاء حالة للمستخدم"
+    }
+  },
+  "crm_subnav": {
+    "customer": {
+      "customers": "الزبائن",
+      "create_customer": "انشاء زبون"
+    },
+    "customer_group": {
+      "customer_groups": "مجموعة الزبائن",
+      "create_customer_group": "انشاء مجموعة زبائن"
+    },
+    "social_media": {
+      "social_medias": "وسائل التواصل الاجتماعي",
+      "create_social_media": "انشاء وسائل تواصل اجتماعي"
+    }
+  },
+  "contractor_subnav": {
+    "contractor": {
+      "contractors": "الاخصائيون",
+      "create_contractor": "انشاء اخصائي"
+    },
+    "speciality": {
+      "specialities": "التخصصات",
+      "create_speciality": "انشاء تخصص"
+    }
+  },
+  "human_resources_subnav": {
+    "employee": {
+      "employees": "الموظفين",
+      "create_employee": "انشاء موظف"
+    },
+    "position": {
+      "positions": "المنصب",
+      "create_position": "انشاء منصب"
+    },
+    "employees_schedule": "جدول الموظفين",
+    "employees_attendance": "حضور الموظفين"
+  },
+  "warehouse_subnav": {
+    "category": {
+      "categories": "الفئات",
+      "create_category": "انشاء فئة"
+    },
+    "item": {
+      "items": "المواد",
+      "create_item": "انشاء مادة"
+    },
+    "quantity": {
+      "quantity": "الكميّات",
+      "add_quantity": "إضافة كمية",
+      "withdraw_quantity": "الكميّات المسحوبة"
+    },
+    "item_history": {
+      "item_history": "سجل المادة",
+      "list_stock_movement": "حركة المخزون"
+    }
+  },
+  "user_profile_dropdown": {
+    "logout": "تسجيل الخروج"
+  },
+  "forms" : {
+    "type" : {
+        "add" : "إضافة" ,
+        "edit" : "تعديل"
+    },
+    "back_button" : "العودة"
+
+  },
+
+  "toast": {
+    "success": {
+      "add": "تمت الإضافة بنجاح",
+      "edit": "تم التعديل بنجاح",
+      "remove": "تم الحذف بنجاح",
+      "customer_note": "تم تعديل ملاحظات الزبون بنجاح",
+      "justified": "تم التغيير لمبرر بنجاح",
+      "unjustified": "تم التغيير لغير مبرر بنجاح",
+      "withdraw": "تم السحب بنجاح"
+    },
+    "error": {
+      "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
+      "Attendance": {
+        "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
+        "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
+        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي"
+      }
+    },
+    "file": {
+      "type": "الرجاء اختيار نمط ملف مقبول",
+      "size": "لا يجب ان يتجاوز حجم الملف ال 2 ميغا",
+      "image": "الرجاء اختيار صورة صالحة للتحميل"
+    }
+  },
+  "modal": {
+    "buttons": {
+      "confirm": "تأكيد",
+      "cancel": "إالغاء",
+      "update": "تحديث",
+      "delete": "حذف",
+      "save": "حفظ"
+    },
+    "delete_modal": {
+      "title": "هل أنت متأكد؟",
+      "subtitle": "انت على وشك حذف ال {title} نهائياً"
+    }
+  },
+  "tables": {
+    "placeholder": {
+      "title": "لا يوجد تطابق",
+      "subtitle": "لا يوجد بيانات تطابق البحث."
+    },
+    "pagination_footer": "إظهار {from_number} الى {to_number} ل {all_number} المدخلة"
+  },
+  "images": {
+    "image_name_placeholder": "اختيار صورة",
+    "image_select_file": "تحديد ملف",
+    "accepted_file": "الحجم الأقصى: 2ميغا| الصورة المقبولة … النمط  :png, jpg, webp"
+  },
+  "drop_down" : {
+    "view" : "معاينة",
+    "edit" : "تعديل",
+    "remove" : "إزالة" ,
+    "change_status" : "تغيير الحالة"
+  },
+  "add_quantity" : {
+      "form" : {
+          "title" : "إضافة الكمية",
+          "back_button" :"الرجوع إلى واحهة العناصر",
+          "level_1" : "المستوى الأول",
+          "select_level_1" : "اختيار المستوى الأول",
+          "level_2" : "المستوى الثاني",
+          "select_level_2" : "اختيار المستوى الثاني",
+          "item" : "العنصر",
+          "select_item" : "اختيار عنصر",
+          "item_quantity" : "كمية العنصر",
+          "item_cost" : "تكلفة العنصر",
+          "status" : "الحالة",
+          "item_note" : "ملاحظة حول العنصر",
+          "invoice_number" : "رقم الفاتورة",
+          "invoice_image" : "صورة الفاتورة",
+          "submit" : "تأكيد"
+      }
+  },
+  "category" : {
+      "table": {
+          "title": "الصنف",
+          "columns": {
+            "name": "الاسم",
+            "parent": "الرئيسية",
+            "created_by": "تم انشاؤه بواسطة",
+            "created_at": "تم انشاؤه في",
+            "status": "الحالة",
+            "actions": "الإجراءات"
+          },
+          "modal_title": "تغيير حالة الصنف"
+        },
+    
+      "form" : {
+          "page_title" : "الصنف" ,
+          "form_header" : "{type} الصنف",
+          "add_category_title" : "إضافة صنف",
+          "edit_category_title" : "تعديل الصنف",
+          "name" : "الاسم",
+          "level_1" : "المستوى الأول",
+          "level_2" : "المستوى الثاني",
+          "parent" : "الرئيسية",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "title" : "تصفية الصنف",
+        "name" : "الاسم...",
+        "parent" :"الرئيسية",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة صنف"
+
+
+  },
+  "city" : {
+      "table": {
+          "title": "المدينة",
+          "columns": {
+            "id": "ID",
+            "name": "الاسم",
+            "status": "الحالة",
+            "actions": "الإجراءات"
+          },
+          "modal_title": "إزالة المدينة"
+        },
+        "details": {
+          "title": "المدينة",
+          "name": "{title} الاسم",
+          "status": "{title} الحالة"
+        },      
+      "form" : {
+          "page_title" : "المدينة" ,
+          "form_header" : "{type} المدينة",
+          "add_city_title" : "إضافة مدينة",
+          "edit_city_title" : "تعديل المدينة",
+          "name" : "الاسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة مدينة"
+
+
+  },
+  "contractor" : {
+      "table": {
+          "title": "المتخصص",
+          "columns": {
+            "phone": "رقم الهاتف",
+            "name": "الاسم",
+            "speciality": "التخصص",
+            "department": "القسم",
+            "room": "غرفة #",
+            "status": "الحالة",
+            "actions": "الإجراءات",
+            "created_at": "تم انشاؤه في"
+          },
+          "modal_title": {
+            "status": "تغيير حالة المستخدم",
+            "delete_file": "حذف ملف الزبون",
+            "profile_picture": "تحديث صورة الملف الشخصي",
+            "placeholderSection": {
+              "title": "هل أنت متأكد?",
+              "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+            }
+          }
+        },
+        "details": {
+          "title": "المتخصص",
+          "tabs": {
+            "details": "التفاصيل",
+            "services": "الخدمات",
+            "files": "الملفات"
+          },
+          "service": "الخدمة التي يقدمها المتخصص",
+          "file": "ملفات المتخصص",
+          "name": "{title} الاسم",
+          "speciality": "{title} التخصص",
+          "status": "{title} الحالة",
+          "user_status": "حالة المستخدم",
+          "birth_date": "تاريخ الميلاد",
+          "phone_number": "رقم الهاتف",
+          "payment_percentage": "النسبة المستحقة",
+          "starting_date": "تاريخ البدء",
+          "end_date": "تاريخ الانتهاء",
+          "department": "القسم",
+          "room_number": "رقم الغرفة",
+          "address": "العنوان",
+          "price": "{title} سعر الخدمة",
+          "service_ammount": "{title} كمية الخدمات المطلوبة",
+          "gender": "الجنس",
+          "upload_file": "تحميل ملف",
+          "choose_file": "اختيار ملف…",
+          "upload": "تحميل",
+          "accepted_file": "أقصى حجم مسموح: 2 ميغابايت | صيغ الملفات المقبولة :png, jpg, webp",
+          "tabs_content_placeholder": {
+            "service": "لا يمتلك المتخصص أي خدمة بعد...",
+            "files": "لا يمتلك المتخصص أي ملف..."
+          }
+        },      
+      "form" : {
+          "page_title" : "المتخصص" ,
+          "step_1_title" : "معلومات المتخصص الأساسية" ,
+          "step_1_abbr_title" : "المعلومات الأساسية" ,
+          "step_2_abbr_title" : "الخدمات" ,
+          "step_1_subtitle" : "Step 1: معلومات المتخصص الأساسية" ,
+          "step_2_subtitle" : "Step 2: خدمات المتخصص" ,
+          "back_button" : "الرجوع إلى واجهة المتخصص",
+          "first_name" : "الاسم الأول",
+          "last_name" : "الاسم الأخير",
+          "phone_number" : "رقم الهاتف",
+          "birth_date" : "تاريخ الميلاد",
+          "gender" : "الجنس",
+          "city" : "المدينة",
+          "address" : "العنوان",
+          "department" : "القسم",
+          "room" : "الغرفة",
+          "starting_date" : "تاريخ البدء",
+          "end_date" : "تاريخ الانتهاء",
+          "payment_percentage" : "النسبة المستحقة",
+          "speciality" : "التخصص",
+          "status" : "الحالة",
+          "no_services_placeholder" : "لا يوجد خدمات...",
+          "service_price" : "{service} السعر:",
+          "service_amount" : "{service} كمية الخدمات المطلوبة:",
+          "edit_step_1_title" : "تعديل معلومات المتخصص الأساسية" ,
+          "edit_step_2_title" : "تعديل خدمات المتخصص" ,
+          "edit_submit" : "تأكيد",
+          "choose_services" : "اختيار الخدمات:",
+          "submit_and_finish_button" : "تأكيد وإنهاء",
+          "submit_and_next_button" : "تأكيد والانتقال للتالي",
+          "skip_button" : "تخطي",
+          "skip_and_finish_button" : "تخطي وإنهاء"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات المتخصص",
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "room_number" : "رقم الغرفة",
+        "status" : "الحالة",
+        "create_date" : "إنشاء تاريخ: ",
+        "from" : "من: ",
+        "to" : "إلى: ",
+        "quick_search" : "الاسم/الرقم..."
+        
+      },
+      "header_button" : "إضافة متخصص"
+
+  },
+  "customer" : {
+      "table": {
+          "title": "الزبون",
+          "columns": {
+            "phone": "رقم الهاتف",
+            "name": "الاسم",
+            "group": "المجموعة",
+            "is_completed": "منتهية",
+            "status": "الحالة",
+            "actions": "الإجراءات",
+            "created_at": "تم انشاؤه في"
+          },
+          "modal_title": {
+            "status": "تغيير حالة المستخدم",
+            "delete_file": "حذف ملف الزبون",
+            "profile_picture": "تحديث الصورة الشخصية",
+            "placeholderSection": {
+              "title": "هل أنت متأكد?",
+              "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+            }
+          }
+        },
+        "details": {
+          "title": "الزبون",
+          "tabs": {
+            "details": "التفاصيل",
+            "medical_info": "المعلومات الطبية",
+            "social_media": "وسائل التواصل الاجتماعي",
+            "files": "الملفات"
+          },
+          "main_details": "المعلومات الرئيسية",
+          "name": "{title} الاسم",
+          "group": "المجموعة",
+          "gender": "الجنس",
+          "note": "ملاحظة",
+          "last_update": "آخر تحديث في",
+          "by": "من قِبَل",
+          "phone_number": "رقم الهاتف",
+          "emergency_contact_name": "اسم شخص للتواصل معه عند الحالات الطارئة",
+          "emergency_contact_phone": "رقم شخص للتواصل معه عند الحالات الطارئة",
+          "address": "العنوان",
+          "is_completed": "منتهية",
+          "status": "الحالة",
+          "birth_date": "تاريخ الميلاد",
+          "medical_info": "معلومات الزبون الطبية",
+          "blood_type": "زمرة الدم",
+          "smooke": "مدخّن",
+          "more_info": "معلومات إضافية",
+          "allergic": "الحساسية",
+          "infectious_diseases": "الأمراض المعدية",
+          "chronic_diseases": "الأمراض المزمنة",
+          "other_medical_info": "معلومات طبية أخرى",
+          "customer_social_media": "وسائل التواصل الاجتماعي للزبون",
+          "customer_URL": "رابط الزبون",
+          "customer_files": "ملفات الزبون",
+          "upload_file": "تحميل ملف",
+          "upload": "تحميل",
+          "customer_status": "حالة الزبون",
+          "select_customer_status": "اختيار حالة الزبون",
+          "tabs_content_placeholder": {
+            "medical_info": "لا يمتلك الزبون معلومات طبية...",
+            "social_modia": "لا يمتلك الزبون وسائل تواصل اجتماعي...",
+            "files": "لا يمتلك الزبون أية ملفات..."
+          }
+        },      
+      "form" : {
+          "page_title" : "الزبون" ,
+          "step_1_title" : "معلومات الزبون الأساسية" ,
+          "step_2_title" : "معلومات الزبون الطبية" ,
+          "step_3_title" : "معلومات الزبون الطبية" ,
+          "step_1_abbr_title" : "المعلومات الرئيسية" ,
+          "step_2_abbr_title" : "المعلومات الطبية" ,
+          "step_3_abbr_title" : "وسائل التواصل الاجتماعي" ,
+          "step_1_subtitle" : "Step 1: معلومات الزبون الرئيسية" ,
+          "step_2_subtitle" : "Step 2: معلومات الزبون الطبية" ,
+          "step_3_subtitle" : "Step 3: وسائل التواصل الاجتماعي للزبون" ,
+          "back_button" :"الرجوع إلى واجهة الزبون",
+          "first_name" : "الاسم الأول",
+          "last_name" : "الاسم الأخير",
+          "phone_number" : "رقم الهاتف",
+          "birth_date" : "تاريخ الميلاد",
+          "gender" : "الجنس",
+          "city" : "المدينة",
+          "address" : "العنوان",
+          "status" : "الحالة",
+          "customer_group" : "مجموعة الزبون",
+          "emergency_contract_name" : "اسم شخص للتواصل معه عند الحالات الطارئة",
+          "emergency_contract_phone" : "رقم شخص للتواصل معه عند الحالات الطارئة",
+          "blood_type" : "زمرة الدم",
+          "allergic" : "ردود الفعل التحسسية",
+          "infectious_diseases" : "الأمراض المعدية",
+          "chronic_diseases" : "الأمراض المزمنة",
+          "smoke" : "مدخّن?",
+          "other_info" : "معلومات أخرى",
+          "social_media_url" : "الزبون {social_media} روابط",
+          "edit_step_1_title" : "تعديل المعلومات الرئيسية للزبون" ,
+          "edit_step_2_title" : "تعديل المعلومات الطبية للزبون" ,
+          "edit_submit" : "تأكيد",
+          "choose_social_media" : "اختيار وسائل التواصل الاجتماعي:",
+          "submit_and_finish_button" : "تأكيد وإنهاء",
+          "submit_and_next_button" : "تأكيد والانتقال للتالي",
+          "skip_button" : "تخطي",
+          "skip_and_finish_button" : "تخطي وإنهاء"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات الزبون",
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "group" : "المجموعة",
+        "status" : "الحالة",
+        "create_date" : "إنشاء تاريخ: ",
+        "from" : "من: ",
+        "to" : "إلى: ",
+        "quick_search" : "الاسم/الرقم..."
+        
+      },
+      "header_button" : "إضافة زبون"
+
+
+  },
+  "customer_group" : {
+      "table": {
+          "title": "مجموعة الزبون",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "status": "الحالة",
+            "actions": "الإجراءات"
+          },
+          "modal_title": "إزالة مجموعة الزبون"
+        },
+        "details": {
+          "title": "مجموعة الزبون",
+          "name": "{title} الاسم",
+          "status": "{title} الحالة"
+        },      
+      "form" : {
+          "page_title" : "مجموعة الزبون" ,
+          "form_header" : "{type} مجموعة الزبون",
+          "add_customer_group_title" : "إضافة مجموعة الزبون",
+          "edit_customer_group_title" : "تعديل مجموعة الزبون",
+          "name" : "الاسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة مجموعة الزبون" 
+
+
+  },
+  "department" : {
+      "table": {
+          "title": "القسم",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "status": "الحالة",
+            "actions": "الإجراءات"
+          },
+          "modal_title": "إزالة القسم"
+        },
+        "details": {
+          "title": "القسم",
+          "name": "{title} الاسم",
+          "status": "{title} الحالة"
+        },      
+      "form" : {
+          "page_title" : "القسم" ,
+          "form_header" : "{type} القسم",
+          "add_department_title" : "إضافة قسم",
+          "edit_department_title" : "تعديل القسم",
+          "name" : "الاسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة قسم"
+
+
+  },
+  "employee" : {
+      "table": {
+          "title": "الموظف",
+          "columns": {
+            "phone": "رقم الهاتف",
+            "name": "الاسم",
+            "department": "القسم",
+            "room": "غرفة #",
+            "status": "الحالة",
+            "position": "المنصب",
+            "actions": "الإجراءات",
+            "created_at": "تم انشاؤه في"
+          },
+          "modal_title": {
+            "status": "تغيير حالة المستخدم",
+            "delete_file": "حذف ملف الموظف",
+            "profile_picture": "تحديث الصورة الشخصية",
+            "placeholderSection": {
+              "title": "هل أنت متأكد?",
+              "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+            }
+          }
+        },
+        "details": {
+          "title": "الموظف",
+          "tabs": {
+            "details": "التفاصيل",
+            "files": "الملفات"
+          },
+          "main_details": "المعلومات الأساسية",
+          "name": "{title} الاسم",
+          "starting_date": "تاريخ البدء",
+          "end_date": "تاريخ الانتهاء",
+          "gender": "الجنس",
+          "department": "القسم",
+          "room_number": "رقم الغرفة",
+          "nationality": "الجنسية",
+          "position": "المنصب",
+          "phone_number": "رقم الهاتف",
+          "address": "العنوان",
+          "employee_number": "رقم الموظف",
+          "last_employee_number": "الرقم الأخير للموظف",
+          "status": "الحالة",
+          "birth_date": "تاريخ الميلاد",
+          "employee_files": "ملفات الموظف",
+          "upload_file": "تحميل ملف",
+          "upload": "تحميل",
+          "employee_status": "حالة الموظف",
+          "select_employee_status": "اختيار حالة الموظف",
+          "tabs_content_placeholder": {
+            "files": "لا يمتلك الموظف أية ملفات..."
+          }
+        },      
+      "form" : {
+          "page_title" : "الموظف" ,
+          "step_1_title" : "المعلومات الرئيسية للموظف" ,
+          "step_1_subtitle" : "Step 1: المعلومات الرئيسية للموظف" ,
+          "step_1_abbr_title" : "المعلومات الرئيسية" ,
+          "back_button" : "الرجوع إلى واجهة الموظف",
+          "first_name" : "الاسم الأول",
+          "last_name" : "الاسم الأخير",
+          "phone_number" : "رقم الهاتف",
+          "birth_date" : "تاريخ الميلاد",
+          "gender" : "الجنس",
+          "city" : "المدينة",
+          "address" : "العنوان",
+          "department" : "القسم",
+          "room" : "الغرفة",
+          "starting_date" :"تاريخ البدء",
+          "end_date" :"تاريخ الانتهاء",
+          "basic_salary" :"الراتب الأساسي",
+          "nationality" :"الجنسية",
+          "position" :"المنصب",
+          "status" : "الحالة",
+          "edit_step_1_title" : "تعديل المعلومات الرئيسية للموظف" ,
+          "edit_submit" : "تأكيد"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات الموظف" ,
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "group" : "المجموعة",
+        "status" : "الحالة",
+        "create_date" : "إنشاء تاريخ: ",
+        "from" : "من: ",
+        "to" : "إلى: ",
+        "quick_search" : "الاسم/الرقم..."
+
+
+      },
+      "header_button" :"إضافة موظف"
+
+
+  },
+  "employee_attendance": {
+      "table": {
+        "title": "جدول حضور الموظفين",
+        "columns": {
+          "employee_name": "اسم الموظف"
+        },
+        "attendance_details_modal": {
+          "title": "معلومات الحضور",
+          "date": "التاريخ:",
+          "status": "الحالة:",
+          "mark_attendance": "تسجيل الحضور",
+          "check_in": "تسجيل دخول الموظف",
+          "check_out": "تسجيل خروج الموظف",
+          "no_data": "لا يوجد بيانات",
+          "justify_attendance": "حضور مبرر",
+          "unjustify_attendance": "حضور غير مبرر"
+        },
+        "mark_attendance_modal": {
+          "title": "تسجيل الحضور",
+          "date": "التاريخ:",
+          "status": "الحالة:",
+          "check_in": "تسجيل دخول الموظفين",
+          "check_out": "تسجيل خروج الموظفين"
+        }
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات الموظف" ,
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "department" : "القسم",
+        "position" : "المنصب",
+        "status" : "الحالة",
+        "quick_search" : "الاسم/الرقم...",
+        "note" : "ملاحظة:"
+      }
+    },
+     "employee_schedule": {
+      "table": {
+        "title": "جدول الموظفين",
+        "columns": {
+          "employee_name": "اسم الموظف"
+        },
+        "modal": {
+          "title": "تعديل جدول الموظف",
+          "day": "Day:",
+          "start_time": "تاريخ البدء",
+          "end_time": "تاريخ الانتهاء",
+          "make_vacation": "تحديد اجازة"
+        }
+      },
+      "search_filter" : {
+        "title" : "تصفية" ,
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "department" : "القسم",
+        "position" : "المنصب",
+        "status" : "الحالة",
+        "quick_search" : "الاسم/الرقم..."
+      }
+
+    },
+  "item" : {
+      "table": {
+          "title": "عنصر",
+          "columns": {
+            "name": "الاسم",
+            "level_1": "المستوى 1",
+            "level_2": "المستوى 2",
+            "quantity": "الكمية",
+            "price": "السعر",
+            "cost": "التكلفة",
+            "created_by": "تم انشاؤه بواسطة",
+            "created_at": "تم انشاؤه في ",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": {
+            "item": "تغير حالة عنصر",
+            "item_history": "تغيير حالة تاريخ عنصر"
+          }
+        },
+        "details": {
+          "title": "عنصر",
+          "tabs": {
+            "details": "تفاصيل",
+            "item_history": "تاريخ عنصر"
+          },
+          "main_details": "المعلومات الرئيسية",
+          "name": "{title} الاسم",
+          "leve_1": "عنصر المستوى 1",
+          "leve_2": "عنصر المستوى 2",
+          "quantity": "كمية العنصر",
+          "min_quantity": "الحد الادنى لكمية عنصر",
+          "price": "السعر",
+          "cost": "التكلفة",
+          "description": "التوصيف",
+          "status": "حالة عنصر",
+          "history_status": "حالة تاريخ عنصر",
+          "employee_status": "حالة عنصر",
+          "select_employee_status": "تحديد حالة عنصر",
+          "العنصر_تاريخ_قائمة": {
+            "columns": {
+              "requester_name": "اسم الشخص الطالب",
+              "item_quantity": "كمية العنصر",
+              "withdraw_item_price": "السعر",
+              "add_item_cost": "الكلفة",
+              "invoice_number": "رقم الفاتورة",
+              "created_at": "تم انشاؤه في",
+              "Image": "الفاتورة",
+              "status": "الحالة",
+              "type": "النوع",
+              "action": "تعديل الحالة "
+            }
+          },
+          "tabs_content_placeholder": {
+            "item_history": "ليس لدى العنصر تاريخ..."
+          }
+        },      
+      "form" : {
+          "page_title" : "العنصر" ,
+          "form_header" : "{type} العنصر",
+          "add_item_title" : "إضافة العنصر",
+          "edit_item_title" : "تعديل العنصر",
+          "name" : "الاسم",
+          "level_1" : "المستوى 1",
+          "level_2" : "المستوى 2",
+          "price" : "السعر",
+          "cost" : "الكلفة",
+          "quantity" : "الكمية",
+          "min_quantity" : "الحد الادنى للكمية",
+          "description" : "التوصيف",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات عنصر",
+        "select_type" : "تحديد النوع",
+        "in" : "الداخل",
+        "out" : "الخارج",
+        "level_1" : "المستوى 1",
+        "level_2" : "المستوى 2",
+        "create_date" : "تم انشاؤه في: ",
+        "from" : "من: ",
+        "to" : "الى: ",
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"اضافة عنصر"
+
+
+
+  },
+  "list_stock_movement": {
+      "table": {
+        "title": "قائمة حركة المخزن",
+        "columns": {
+          "item": "العنصر",
+          "type": "النوع",
+          "quantity": "الكمية",
+          "price": "السعر",
+          "cost": "التكلفة",
+          "requester": "اسم الشخص الطالب",
+          "note": "ملاحظة",
+          "created_at": "تم انشاؤه في",
+          "created_by": "تم انشاؤه بواسطة"
+        }
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات العنصر",
+        "select_level_1" : "تحديد المستوى 1",
+        "select_level_2" : "تحديد المستوى 2",
+        "select_item" : "تحديد عنصر",
+        "select_type" : "تحديد النوع",
+        "in" : "الداخل",
+        "out" : "الخارج",
+        "level_1" : "المستوى 1",
+        "level_2" : "المستوى 2",
+        "create_date" : "تاريخ الإنشاء: ",
+        "from" : "من: ",
+        "to" : "الى: "
+      },
+      "add_quantity_button" : "إضافة كمية",
+      "withdraw_quantity_button" : "الكمية المسحوبة"
+    },
+  "nationality" : {
+      "table": {
+          "title": "الجنسية",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "إزالة جنسية"
+        },
+        "details": {
+          "title": "جنسية",
+          "name": "اسم الجنسية",
+          "status": "حالة الجنسية"
+        },      
+      "form" : {
+          "page_title" : "الجنسية" ,
+          "form_header" : "{type} الجنسية",
+          "add_nationality_title" : "إضافة جنسية",
+          "edit_nationality_title" : "تعديل جنسية",
+          "name" : "الاسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة جنسية"
+
+
+
+  },
+  "position" : {
+      "table": {
+          "title": "المنصب",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "description": "التوصيف",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "تغيير حالة منصب"
+        },
+        "details": {
+          "title": "منصب",
+          "name": "اسم المنصب",
+          "description": "توصيف المنصب",
+          "status": "حالة المنصب"
+        },      
+      "form" : {
+          "page_title" : "المنصب" ,
+          "form_header" : "{type} المنصب",
+          "add_position_title" : "إضافة منصب",
+          "edit_position_title" : "تعديل منصب",
+          "name" : "الاسم",
+          "description" : "التوصيف",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة منصب"
+
+
+  },
+  "room" : {
+      "table": {
+          "title": "الغرفة",
+          "columns": {
+            "id": "رقم المعرّف",
+            "number": "الرقم",
+            "floor": "الطابق",
+            "department": "القسم",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "إزالة غرفة"
+        },
+        "details": {
+          "title": "الغرفة",
+          "number": "رقم الغرفة",
+          "floor": "طابق الغرفة",
+          "department": "قسم الغرفة",
+          "status": "حالة الغرفة"
+        },      
+      "form" : {
+          "page_title" : "الغرفة" ,
+          "form_header" : "{type} الغرفة",
+          "add_room_title" : "إضافة غرفة",
+          "edit_room_title" : "تعديل غرفة",
+          "number" : "الرقم",
+          "floor" : "الطابق",
+          "department" : "القسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات الغرفة",
+        "number" : "الرقم...",
+        "floor" : "الطابق...",
+        "department" : "القسم",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة غرفة"
+
+
+  },
+  "service" : {
+      "table": {
+          "title": "الخدمة",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "duration": "المدّة",
+            "price": "السعر",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "إزالة خدمة"
+        },
+        "details": {
+          "title": "الخدمة",
+          "name": "اسم الخدمة",
+          "price": "سعر الخدمة",
+          "description": "توصيف الخدمة",
+          "estimated": "المدّة المقدرة",
+          "status": "حالة الخدمة"
+        },      
+      "form" : {
+          "page_title" : "الخدمة" ,
+          "form_header" : "{type} الخدمة",
+          "add_service_title" : "إضافة خدمة",
+          "edit_service_title" : "تعديل خدمة",
+          "name" : "الاسم",
+          "desciption" : "التوصيف",
+          "price" : "السعر",
+          "duration" : "المدّة",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات الخدمة",
+        "name" : "الاسم...",
+        "duration" : "المدة...",
+        "price" : "السعر...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة خدمة"
+
+
+  },
+  "settings" : {
+      "form" : {
+          "page_title" : "تعديل الاعدادات" ,
+          "hr_section" : "تعديل الموارد البشرية/تعديل الحضور",
+          "start_day" : "يوم البدء",
+          "end_day" : "يوم الانتهاء",
+          "start_time" : "وقت البدء",
+          "end_time" : "وقت الانتهاء",
+          "start_of_week" : "بداية الاسبوع",
+          "late_tolerance" : "التأخير المسموح به"
+      }
+  },
+  "social_media" : {
+      "table": {
+          "title": "وسائل التواصل الاجتماعي",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "icon": "الايقونة",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "إزالة وسائل تواصل اجتماعي"
+        },      
+      "form" : {
+          "page_title" : "وسائل تواصل اجتماعي" ,
+          "form_header" : "{type} وسائل تواصل اجتماعي",
+          "add_social_media_title" : "إضافة وسائل تواصل اجتماعي",
+          "edit_social_media_title" : "تعديل وسائل تواصل اجتماعي",
+          "name" : "الاسم",
+          "facebook" : "الفيسبوك",
+          "instagram" : "الانستغرام",
+          "whatsapp" : "الواتساب",
+          "snapchat" : "السناب شات",
+          "icon" : "الايقونة",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" :"الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة وسائل تواصل اجتماعي"
+
+  },
+  "speciality" : {
+      "table": {
+          "title": "التخصص",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "تغيير حالة التخصص"
+        },
+        "details": {
+          "title": "التخصص",
+          "name": "اسم التخصص",
+          "status": "حالة التخصص"
+        },      
+      "form" : {
+          "page_title" : "التخصص" ,
+          "form_header" : "{type} التخصص",
+          "add_speciality_title" : "إضافة تخصص",
+          "edit_speciality_title" : "تعديل تخصص",
+          "name" : "الاسم",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "name" : "الاسم...",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة تخصص"
+
+
+  },
+  "user" : {
+      "table": {
+          "title": "المستخدم",
+          "columns": {
+            "id": "رقم المعرّف",
+            "first_name": "الاسم الأول",
+            "last_name": "الأسم الاخير",
+            "gender": "الجنس",
+            "phone": "رقم الهاتف",
+            "room": "الغرفة #",
+            "city": "المدينة",
+            "status": "الحالة",
+            "actions": "الاجراءات"
+          },
+          "place_holder" : "لم يتم استرجاع اي بيانات...",
+          "modal_title": {
+            "remove": "إزالة مستخدم",
+            "status": "تغيير حالة مستخدم"
+          }
+        },
+        "details": {
+          "title": "حالة المستخدم",
+          "first_name": "الاسم الأول",
+          "last_name": "الاسم الاخير",
+          "gender": "الجنس",
+          "phone": "رقم الهاتف",
+          "city": "المدينة",
+          "room": "الغرفة ",
+          "status": "الحالة",
+          "address": "العنوان",
+          "birth_date": "تاريخ الميلاد"
+        },      
+      "form" : {
+          "page_title" : "المستخدم" ,
+          "form_header" : "{type} المستخدم",
+          "add_user_title" : "إضافة مستخدم",
+          "edit_user_title" : "تعديل مستخدم",
+          "first_name" : "الاسم الأول",
+          "last_name" : "الاسم الاخير",
+          "birth_date" : "تاريخ الميلاد",
+          "phone_number" : "رقم الهاتف",
+          "address" : "العنوان",
+          "gender" : "الجنس",
+          "room" : "الغرفة",
+          "city" : "المدينة",
+          "status" : "الحالة"
+      },
+      "search_filter" : {
+        "title" : "تصفية معلومات المستخدم",
+        "name" : "الاسم...",
+        "phone_number" : "رقم الهاتف...",
+        "gender" : "الجنس",
+        "room" : "الغرفة",
+        "city" : "المدينة",
+        "status" : "الحالة"
+      },
+      "header_button" :"إضافة مستخدم"
+
+
+  },
+  "user_status" : {
+      "table": {
+          "title": "حالة المستخدم",
+          "columns": {
+            "id": "رقم المعرّف",
+            "name": "الاسم",
+            "actions": "الاجراءات"
+          },
+          "modal_title": "إزالة حالة مستخدم"
+        },
+        "details": {
+          "title": "حالة المستخدم",
+          "name": "اسم حالة المستخدم"
+        },      
+      "form" : {
+          "page_title" : "حالة المستخدم" ,
+          "form_header" : "{type} حالة المستخدم",
+          "add_user_status_title" : "إضافة حالة مستخدم",
+          "edit_user_status_title" : "تعديل حالة مستخدم",
+          "name" : "الاسم"
+      },
+      "search_filter" : {
+        "name" : "الاسم..."
+      },
+      "header_button" :"إضافة حالة مستخدم"
+
+
+  },
+  "withdraw_quantity" : {
+      "form" : {
+          "title" : "الكميّة المسحوبة",
+          "back_button" :"العودة إلى صفحة العناصر",
+          "level_1" : "المستوى 1",
+          "select_level_1" : "تحديد المستوى 1",
+          "level_2" : "المستوى 2",
+          "select_level_2" : "تحديد المستوى 2",
+          "item" : "العنصر",
+          "select_item" : "تحديد عنصر",
+          "item_quantity" : "كمية العنصر",
+          "item_price" : "سعر العنصر",
+          "status" : "الحالة",
+          "requester_type" : "نوع الطالب ",
+          "employee" : "الموظف",
+          "contractor" : "المتخصص",
+          "requester_name" : "اسم الشخص الطالب",
+          "item_note" : "ملاحظة عن العنصر",
+          "submit" : "تاكيد"
+
+      }
+  },
+  "dates" : {
+    "days" : {
+      "sunday" : "الأحد",
+      "monday" : "الاثنين",
+      "tuesday" : "الثلاثاء",
+      "wednesday" : "الاربعاء",
+      "thursday" : "الخميس",
+      "friday" : "الجمعة",
+      "saturday" : "السبت"
+    },
+    "days_abbr" : {
+      "sun" : "أحد",
+      "mon" : "اثنين",
+      "tue" : "ثلاثاء",
+      "wed" : "اربعاء",
+      "thu" : "خميس",
+      "fri" : "جمعة",
+      "sat" : "سبت"
+    },
+    "months" : {
+      "january" : "كانون الثاني",
+      "february" : "شباط",
+      "march" : "آذار",
+      "april" : "نيسان",
+      "may" : "أيّار",
+      "june" : "حزيران",
+      "july" : "تموز",
+      "august" : "آب",
+      "september" : "ايلول",
+      "october" : "تشرين الاول",
+      "november" : "تشرين الثاني",
+      "december" : "كانون الاول"
+    }
+  },
+  "attendance_status" : {
+      "attend" : "الحضور" , 
+      "absence" : "الغياب" , 
+      "pending_absence" : "غياب معلق" , 
+      "justified_absence" : "غياب مبرر" , 
+      "unjustified_absence" : "غياب غير مبرر" , 
+      "partial_absence" : "غياب جزئي" , 
+      "pending_partial_absence" : "غياب جزئي معلق" , 
+      "justified_partial_absence" : "غياب جزئي مبرر" , 
+      "unjustified_partial_absence" : "غياب جزئي غير مبرر" , 
+      "missing_check" : "تسجيل غبر كامل" , 
+      "vacation" : "إجازة" , 
+      "no_data" : "لا يوجد بيانات"  
+  },
+  "status" : {
+    "active" : "فعال" ,
+    "inactive" : "غير فعال"
+  },
+  "boolean" : {
+    "true" : "نعم" ,
+    "false" : "لا"
+  }
+
 
 }

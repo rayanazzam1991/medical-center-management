@@ -165,7 +165,7 @@ const columns = {
 </script>
 
 <template>
-    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('catgory.header_button')" @search="search"
+    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
         :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="categoriesList" @update:sort="categorySort">
         <VFlexTable separators clickable>

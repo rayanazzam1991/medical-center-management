@@ -58,7 +58,7 @@ export default defineComponent({
                 dark-outlined>
                 {{ t('forms.back_button')}}
               </VButton>
-              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name == "Add" ? t('forms.types.add') : t('forms.types.edit') }} </VButton>
+              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name == "Add" ? t('forms.type.add') : t('forms.type.edit') }} </VButton>
             </div>
           </div>
         </div>

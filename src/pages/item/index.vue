@@ -211,7 +211,7 @@ const columns = {
                 </div>
                 <div v-else-if="itemsList.length === 0" class="flex-list-inner">
                     <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitles')"
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>

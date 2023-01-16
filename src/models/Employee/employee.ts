@@ -74,20 +74,8 @@ export const defaultEmployee: Employee = {
     user: defaultUser,
     employee_number: undefined,
 }
-export const defaultEmployeeSearchFilter: EmployeeSearchFilter = {
-    name: undefined,
-    phone_number: undefined,
-    date_between: undefined,
-    from: undefined,
-    to: undefined,
-    user_status_id: undefined,
-    position_id: undefined,
-    page: undefined,
-    per_page: undefined,
-    order_by: undefined,
-    order: undefined,
-    quick_search: undefined,
-}
+export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
+
 export const defaultEmployeeProfilePic: Media = {
     id: undefined,
     model_id: 0,
