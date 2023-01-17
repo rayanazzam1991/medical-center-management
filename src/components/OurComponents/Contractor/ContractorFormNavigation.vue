@@ -11,6 +11,9 @@ const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
 const {t} = useI18n()
 const contractorForm = useContractorForm()
+const locale = useStorage('locale','ar')
+console.log("lang",locale.value)
+const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 </script>
 
 <template>
@@ -18,7 +21,7 @@ const contractorForm = useContractorForm()
 
     <div class="">
       <span class="title-wrap">
-        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/contractor" darkOutlined
+        <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/contractor" darkOutlined
           color="white">
           {{t('contractor.form.back_button')}}
         </VButton>
