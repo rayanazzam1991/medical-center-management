@@ -83,7 +83,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal :title="t('item.search_filter.item')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('item.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">

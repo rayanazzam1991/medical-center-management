@@ -177,7 +177,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="service_price" v-slot="{ field }">
-                                    <VLabel class="required">{{t('service.form.price')}} ({{ ServiceConsts.PRICE_DOLLAR }})</VLabel>
+                                    <VLabel class="required">{{t('service.form.price')}}</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentService.service_price" type="number" />
                                         <ErrorMessage name="service_price" class="help is-danger" />

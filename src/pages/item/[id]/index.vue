@@ -42,7 +42,7 @@ const default_per_page = ref(1)
 const selectedStatus = ref(0)
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
-viewWrapper.setPageTitle(`Item`)
+viewWrapper.setPageTitle(t('item.details.title'))
 useHead({
     title: t('item.details.title'),
 })
@@ -243,7 +243,7 @@ const columns = {
     status: {
         align: 'center',
         grow: true,
-        lable:t('item.details.item_history_table.columns.status'),
+        label: t('item.details.item_history_table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,

@@ -1863,8 +1863,8 @@ Object.assign(columns29, columns28, columns29Sub)
                     }}</h2>
                     <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
                     <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.date') }}<span class="has-text-primary"> {{
-                        daysNamePerMonth.find((day) =>
-                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name
+                        t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
                     }} {{
     selectedCell.date
 }}</span></h2>

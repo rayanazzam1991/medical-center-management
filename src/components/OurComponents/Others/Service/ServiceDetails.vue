@@ -65,7 +65,7 @@ const toEdit = () => {
                             <span>{{ currentService.duration_minutes }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('service.details.price')}} ({{ ServiceConsts.PRICE_DOLLAR }}):</h4>
+                            <h4 class="margin-bottom">{{t('service.details.price')}}:</h4>
                             <span>{{ currentService.service_price }}</span>
                         </div>
                         <div class="column is-12">

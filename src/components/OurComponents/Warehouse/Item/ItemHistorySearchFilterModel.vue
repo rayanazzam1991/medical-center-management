@@ -85,7 +85,7 @@ export default defineComponent({
                     </VControl>
                 </VField>
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">{{t('item.search_filter.create_date')}}}</h1>
+                    <h1 class="column-is-12">{{t('item.search_filter.create_date')}}</h1>
                     <VField class="column-is-6 filter">
                         <VLabel>{{t('item.search_filter.from')}}</VLabel>
                         <VControl icon="feather:chevrons-right">
