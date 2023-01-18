@@ -216,7 +216,7 @@ const columns = {
     created_at: {
         align: 'center',
 
-        label: 'Create Date',
+        label: t('customer.table.columns.created_at'),
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
@@ -224,6 +224,7 @@ const columns = {
     },
     actions: {
         align: 'center',
+        label: t('customer.table.columns.actions'),
 
         renderRow: (row: any) =>
             h(NoEditDropDown, {
