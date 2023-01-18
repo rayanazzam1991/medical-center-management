@@ -1,7 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { CreateVariablePayment, UpdateVariablePayment, VariablePayment } from "/@src/models/HR/Payroll/VariablePayment/variablePayment"
-import { createVariablePaymentApi, getVariablePaymentApi, updateVariablePaymentApi } from "/@src/utils/api/HR/Payroll/VariablePayment"
+import { CreateVariablePayment, UpdateVariablePayment, VariablePayment, VariablePaymentSearchFilter } from "/@src/models/HR/Payroll/VariablePayment/variablePayment"
+import { createVariablePaymentApi, getVariablePaymentApi, getVariablePaymentsApi, updateVariablePaymentApi } from "/@src/utils/api/HR/Payroll/VariablePayment"
+import { defaultPagination, Pagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
 
@@ -11,6 +12,8 @@ export const useVariablePayment = defineStore('variablePayment', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
+    const variablePayments = ref<VariablePayment[]>([])
+    const pagination = ref<Pagination>(defaultPagination)
 
     async function createVariablePaymentStore(variablePayment: CreateVariablePayment) {
         if (loading.value) return
@@ -79,6 +82,31 @@ export const useVariablePayment = defineStore('variablePayment', () => {
             loading.value = false
         }
     }
+    async function getVariablePaymentsStore(searchFilter: VariablePaymentSearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getVariablePaymentsApi(api, searchFilter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data
+
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
 
@@ -87,6 +115,9 @@ export const useVariablePayment = defineStore('variablePayment', () => {
         error_code,
         message,
         loading,
+        pagination,
+        variablePayments,
+        getVariablePaymentsStore,
         createVariablePaymentStore,
         updateVariablePaymentStore,
         getVariablePaymentStore

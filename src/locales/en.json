@@ -1309,6 +1309,10 @@
 
       },
       "search_filter" : {
+        "title" : "Filter Variable Payment",
+        "type" : "Type",
+        "name" :"Name...",
+        "status" : "Status"
       },
       "header_button" :"Add Variable Payment"
   }

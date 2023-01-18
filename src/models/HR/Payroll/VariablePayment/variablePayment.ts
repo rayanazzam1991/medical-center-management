@@ -28,9 +28,24 @@ export interface CreateVariablePayment {
     status?: number
 
 }
+export interface VariablePaymentSearchFilter {
+
+    name?: string
+    type?: number
+    status?: number
+    date_between?: string
+    from?: string
+    to?: string
+    page?: number
+    per_page?: number
+    order_by?: string
+    order?: string
+}
+
 export const defaultVariablePayment = <VariablePayment>{}
 export const defaultUpdateVariablePayment = <UpdateVariablePayment>{}
 export const defaultCreateVariablePayment = <CreateVariablePayment>{}
+export const defaultVariablePaymentSearchFilter = <VariablePaymentSearchFilter>{}
 
 
 class VariablePaymentConsts extends BaseConsts {
