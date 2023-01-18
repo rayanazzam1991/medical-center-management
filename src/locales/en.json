@@ -52,7 +52,7 @@
         "number": {
           "price": "Please enter a valid price",
           "invalid_type_error": "Please enter a valid number",
-          "payment_percentage": "Please enter a number from 0-100",
+          "payment_percentage": "Please enter a number from 1-100",
           "phone_number": "Please enter a valid phone number"
         },
         "redio": {
@@ -213,7 +213,8 @@
     "images" : {
         "image_name_placeholder" : "Choose an image",
         "image_select_file" : "Select File",
-        "accepted_file" : "Max size: 2 MB | Accepted image… types: png, jpg, webp"
+        "accepted_file" : "Max size: 2 MB | Accepted image… types: png, jpg, webp",
+        "by" : "By:"
     },
     "gender" : {
         "male" : "Male" ,
@@ -350,6 +351,8 @@
               "services": "Sevices",
               "files": "Files"
             },
+            "main_details": "Main Details",
+            "more_info" :"More Info",
             "service": "Contractor Service",
             "file": "Contractor Files",
             "name": "{title} Name",

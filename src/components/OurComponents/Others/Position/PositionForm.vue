@@ -23,9 +23,9 @@ export default defineComponent({
     setup(props, context) {
         const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle(t('posisiton.form.page_title'));
+        viewWrapper.setPageTitle(t('position.form.page_title'));
         const head = useHead({
-            title: t('posisiton.form.page_title'),
+            title: t('position.form.page_title'),
         });
         const positionStore = usePosition()
         const notif = useNotyf() as Notyf;
@@ -151,9 +151,6 @@ export default defineComponent({
                     </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description" v-slot="{ field }">

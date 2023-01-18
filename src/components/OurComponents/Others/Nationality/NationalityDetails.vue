@@ -50,11 +50,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} {{t('nationality.details.name')}}:</h4>
+                            <h4 class="margin-bottom">{{t('nationality.details.name')}}:</h4>
                             <span>{{ currentNationality.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} {{t('nationality.details.status')}}:</h4>
+                            <h4 class="margin-bottom">{{t('nationality.details.status')}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentNationality.status === NationalityConsts.INACTIVE ? 'danger' : 'success'">

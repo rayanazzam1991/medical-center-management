@@ -15,7 +15,7 @@ const itemHistoryStore = useitemHistory()
 const itemHistoryForm = useItemHistoryForm()
 const {t} = useI18n()
 useHead({
-    title: computed(() => `${itemHistoryForm.stepTitle} - Item`),
+    title: computed(() => t('add_quantity.form.title')),
 })
 </script>
 

@@ -112,7 +112,8 @@ const columns = {
 
   },
   service_price: {
-    label: t('serivce.table.columns.price') + `(${ServiceConsts.PRICE_DOLLAR})`,
+    label: t('service.table.columns.price'),
+
     align: 'center',
     sortable: true,
 
@@ -166,7 +167,7 @@ const columns = {
 </script>
 
 <template>
-  <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('serivce.header_button')"
+  <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('service.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
     <VFlexTable separators clickable>
