@@ -164,7 +164,7 @@ export default defineComponent({
                 <div class="column filter columns-is-multiliine">
                     <h1 class="column-is-12">{{t('list_stock_movement.search_filter.create_date')}}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>{{t('list_stock_movement.search_filter.to')}}</VLabel>
+                        <VLabel>{{t('list_stock_movement.search_filter.from')}}</VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
