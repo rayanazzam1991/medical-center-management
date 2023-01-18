@@ -1281,6 +1281,36 @@
     "boolean" : {
       "true" : "Yes" ,
       "false" : "No"
-    }
+    },
+    "variable_payment_types" : {
+      "increment" : "Increment",
+      "decrement" : "Decrement"
+    },
+    "variable_payment" : {
+      "table": {
+          "title": "Variable Payment",
+          "columns": {
+            "id": "ID",
+            "name": "Name",
+            "type" : "Type",
+            "status": "Status",
+            "created_at" :"Created At",
+            "actions": "Actions"
+          }
+        },
+      "form" : {
+          "page_title" : "Variable Payment" ,
+          "form_header" : "{type} Variable Payment",
+          "add_variable_payment_title" : "Add Variable Payment",
+          "edit_variable_payment_title" : "Edit Variable Payment",
+          "name" : "Name",
+          "status" : "Status",
+          "type" : "Type"
+
+      },
+      "search_filter" : {
+      },
+      "header_button" :"Add Variable Payment"
+  }
 
 }

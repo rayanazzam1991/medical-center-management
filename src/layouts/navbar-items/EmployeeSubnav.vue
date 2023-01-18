@@ -66,14 +66,31 @@ const {t} = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
-              </div>
-              <div class="column is-3">
                 <h4 class="column-heading">{{t('human_resources_subnav.employees_attendance')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee-attendance">
                       <i class="lnir lnir-calender-alt" aria-hidden="true"></i>
                       <span>{{t('human_resources_subnav.employees_attendance')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-3">
+                <h4 class="column-heading">{{t('human_resources_subnav.variable_payment.variable_payments')}}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/variable-payment">
+                      <i class="fas fa-money-check" aria-hidden="true"></i>                      
+                      <span>{{t('human_resources_subnav.variable_payment.variable_payments')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/variable-payment/add">
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                      <span>{{t('human_resources_subnav.variable_payment.create_variable_payment')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>

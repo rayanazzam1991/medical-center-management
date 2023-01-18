@@ -229,7 +229,7 @@ watch(
   route.path.startsWith('/employee-add') ||
   route.path.startsWith('/employee-edit') ||
   route.path.startsWith('/position') ||
-  route.path.startsWith('/position-add')
+  route.path.startsWith('/variable-payment')
 ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
             @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>

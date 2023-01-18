@@ -140,6 +140,10 @@ declare module 'vue-router/auto/routes' {
     '/userStatus/[id]/': RouteRecordInfo<'/userStatus/[id]/', '/userStatus/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/[id]/edit': RouteRecordInfo<'/userStatus/[id]/edit', '/userStatus/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/userStatus/add': RouteRecordInfo<'/userStatus/add', '/userStatus/add', Record<never, never>, Record<never, never>>,
+    '/variable-payment': RouteRecordInfo<'/variable-payment', '/variable-payment', Record<never, never>, Record<never, never>>,
+    '/variable-payment/': RouteRecordInfo<'/variable-payment/', '/variable-payment/', Record<never, never>, Record<never, never>>,
+    '/variable-payment/[id]/edit': RouteRecordInfo<'/variable-payment/[id]/edit', '/variable-payment/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/variable-payment/add': RouteRecordInfo<'/variable-payment/add', '/variable-payment/add', Record<never, never>, Record<never, never>>,
     '/withdraw-quantity': RouteRecordInfo<'/withdraw-quantity', '/withdraw-quantity', Record<never, never>, Record<never, never>>,
     '/withdraw-quantity/': RouteRecordInfo<'/withdraw-quantity/', '/withdraw-quantity/', Record<never, never>, Record<never, never>>,
   }
