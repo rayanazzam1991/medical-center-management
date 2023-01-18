@@ -1,6 +1,7 @@
 {  
     "select-language": "Select Language",
     "cancel-label": "Cancel",  
+    "main_dashboar":"Main Dashboard",
     "auth": {
         "success_login": "Welcome back",
         "success_signUp": "Welcome",

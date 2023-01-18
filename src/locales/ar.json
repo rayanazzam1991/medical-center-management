@@ -1,6 +1,7 @@
 {
   "select-language": "تحديد اللغة",
   "cancel-label": "الغاء",
+  "main_dashboar":"لوحة التحكم",
   "auth": {
     "success_login": "أهلاً بعودتك",
     "success_signUp": "مرحبا",

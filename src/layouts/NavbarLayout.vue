@@ -5,6 +5,7 @@ import { popovers } from '/@src/data/users/userPopovers'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { usePanels } from '/@src/stores/panels'
 import { useI18n } from 'vue-i18n'
+import { useDarkmode } from '../stores/darkmode'
 
 export type NavbarTheme = 'default' | 'colored' | 'fade'
 export type SubnavId =
@@ -26,6 +27,7 @@ const props = withDefaults(
 )
 
 const viewWrapper = useViewWrapper()
+const darkmode = useDarkmode()
 const panels = usePanels()
 const route = useRoute()
 const filter = ref('')
@@ -157,7 +159,8 @@ watch(
       <!-- Custom navbar title -->
       <template #title>
         <RouterLink to="/" class="brand">
-          <AnimatedLogo width="38px" height="38px" />
+          <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
+             <img v-else src ="/images/logos/logo/logo.png"/>
         </RouterLink>
 
         <div class="separator"></div>

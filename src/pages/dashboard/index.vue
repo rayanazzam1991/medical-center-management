@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
-
 import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Main Dashboard')
+viewWrapper.setPageTitle(t('main_dashboar'))
+
 
 useHead({
   title: 'Main Dashboard - My app',
@@ -13,6 +18,6 @@ useHead({
 
 <template>
   <div class="page-content-inner">
-    <AnalyticsDashboard />
+    <!-- <AnalyticsDashboard /> -->
   </div>
 </template>
