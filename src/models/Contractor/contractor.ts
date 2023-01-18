@@ -1,6 +1,7 @@
 import { Media, MediaConsts } from "../Others/Media/media"
 import { defaultSpeciality, Speciality } from "../Others/Speciality/speciality"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
+import { defaultWallet, Wallet } from "./wallet"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Contractor {
@@ -10,6 +11,7 @@ export interface Contractor {
     speciality: Speciality
     payment_percentage: number
     user: User
+    wallet: Wallet
     services: Array<CreateUpdateServicesHelper>
     is_completed?: boolean
 }
@@ -84,7 +86,7 @@ export const defaultContractor: Contractor = {
     is_completed: false,
     end_date: '',
     speciality: defaultSpeciality,
-
+    wallet: defaultWallet
 }
 
 export const defaultContractorSearchFilter: ContractorSearchFilter = {

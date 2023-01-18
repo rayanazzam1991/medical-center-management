@@ -1,1283 +1,1248 @@
-{  
-    "select-language": "Select Language",
-    "cancel-label": "Cancel",  
-    "auth": {
-        "success_login": "Welcome back",
-        "success_signUp": "Welcome",
-        "title": "Join Us Now.",
-        "subtitle": "Start by creating your account",
-        "label": {
-          "promotional": "Receive promotional offers"
-        },
-        "action": {
-          "login": "I already have an account",
-          "signup": "Sign Up"
-        },
-        "placeholder": {
-          "name": "Name",
-          "email": "Email Address",
-          "password": "Password",
-          "passwordCheck": "Password Verification"
-        },
-        "errors": {
-          "name": {
-            "required": "Your first name is required"
-          },
-          "email": {
-            "required": "Enter your email, it will be required to login",
-            "format": "Please, enter a valid email"
-          },
-          "password": {
-            "required": "Enter your password with at least 8 characters, it will be required to login",
-            "length": "The password should contains at leat 8 characters"
-          },
-          "passwordCheck": {
-            "required": "Please, confirm your password",
-            "match": "The password does not match"
-          }
-        },
-        "form" : {
-            "welcome_back" : "Welcome Back.",
-            "sign_in" : "Please sign in to your account",
-            "placeholders" : { 
-                "phone" : "Phone",
-                "password" : "Password"
-            },
-            "sign_in_button" : "Sign In"
-        }
+{
+  "select-language": "Select Language",
+  "cancel-label": "Cancel",
+  "auth": {
+    "success_login": "Welcome back",
+    "success_signUp": "Welcome",
+    "title": "Join Us Now.",
+    "subtitle": "Start by creating your account",
+    "label": {
+      "promotional": "Receive promotional offers"
     },
-    "validation": {
-        "required": "This field is required",
-        "number": {
-          "price": "Please enter a valid price",
-          "invalid_type_error": "Please enter a valid number",
-          "payment_percentage": "Please enter a number from 0-100",
-          "phone_number": "Please enter a valid phone number"
-        },
-        "redio": {
-          "required": "Please choose one"
-        },
-        "date": {
-          "required_error": "Please select a date and time",
-          "invalid_type_error": "That's not a date!",
-          "format": "Date must be a vaild date format YYYY-MM-DD"
-        },
-        "text": {
-          "invalid_type_error": "Please enter a text"
-        },
-        "URL": {
-          "invalid_type_error": "Please enter a valid URL"
-        }
+    "action": {
+      "login": "I already have an account",
+      "signup": "Sign Up"
     },
-      "navbar": {
-        "others": "Others",
-        "crm": "CRM",
-        "contractor": "Contractor",
-        "human_resources": "Human Resources",
-        "warehouse": "Warehouse"
+    "placeholder": {
+      "name": "Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordCheck": "Password Verification"
+    },
+    "errors": {
+      "name": {
+        "required": "Your first name is required"
       },
-      "others_subnav": {
-        "nationality": {
-          "nationalities": "Nationalities",
-          "create_nationality": "Create Nationality"
-        },
-        "service": {
-          "services": "Services",
-          "create_service": "Create Service"
-        },
-        "department": {
-          "departments": "Departments",
-          "create_department": "Create Department"
-        },
-        "room": {
-          "rooms": "Rooms",
-          "create_room": "Create Room"
-        },
-        "city": {
-          "cities": "Cities",
-          "create_city": "Create City"
-        },
-        "setting": {
-          "settings": "Settings",
-          "edit_settings": "Edit Settings"
-        },
-        "user_status": {
-          "user_statuses": "User Statuses",
-          "create_user_status": "Create User Status"
-        }
+      "email": {
+        "required": "Enter your email, it will be required to login",
+        "format": "Please, enter a valid email"
       },
-      "crm_subnav": {
-        "customer": {
-          "customers": "Customers",
-          "create_customer": "Create Customer"
-        },
-        "customer_group": {
-          "customer_groups": "Customer Groups",
-          "create_customer_group": "Create Customer Group"
-        },
-        "social_media": {
-          "social_medias": "Social Media",
-          "create_social_media": "Create Social Media"
-        }
+      "password": {
+        "required": "Enter your password with at least 8 characters, it will be required to login",
+        "length": "The password should contains at leat 8 characters"
       },
-      "contractor_subnav": {
-        "contractor": {
-          "contractors": "Contractors",
-          "create_contractor": "Create Contractor"
-        },
-        "speciality": {
-          "specialities": "Specialities",
-          "create_speciality": "Create Speciality"
-        }
-      },
-      "human_resources_subnav": {
-        "employee": {
-          "employees": "Employees",
-          "create_employee": "Create Employee"
-        },
-        "position": {
-          "positions": "Positions",
-          "create_position": "Create Position"
-        },
-        "employees_schedule": "Employees Schedule",
-        "employees_attendance": "Employees Attendance"
-      },
-      "warehouse_subnav": {
-        "category": {
-          "categories": "Categories",
-          "create_category": "Create Category"
-        },
-        "item": {
-          "items": "Items",
-          "create_item": "Create Item"
-        },
-        "quantity": {
-          "quantity": "Quantity",
-          "add_quantity": "Add Quantity",
-          "withdraw_quantity": "Withdray Quantity"
-        },
-        "item_history": {
-          "item_history": "Item History",
-          "list_stock_movement": "List Stock Movement"
-        }
-      },
-      "user_profile_dropdown": {
-        "logout": "Logout"
-      },
-      "toast": {
-        "success": {
-          "add": "Added successfully",
-          "edit": "Edited successfully",
-          "remove": "Removed successfully",
-          "customer_note": "Customer notes was edited successfully",
-          "justified": "justified successfully",
-          "unjustified": "Unjustified successfully",
-          "withdraw": "Withdrawed successfully"
-        },
-        "error": {
-          "steps_error": "Please add some data or skip this step",
-          "Attendance": {
-            "time": "Start time cant be after end time",
-            "check_in": "New check in can't be after original check in",
-            "check_out": "New check out can't be before original check out"
-          }
-        },
-        "file": {
-          "type": "Please choose an accepted file type",
-          "size": "File size must be less than 2MB",
-          "image": "Please select a valid image to be uploaded"
-        }
-      },
-      "modal": {
-        "buttons": {
-          "confirm": "Confirm",
-          "cancel": "Cancel",
-          "update": "Update",
-          "delete": "Delete",
-          "save": "Save",
-          "filter" : "Filter"
-        },
-        "delete_modal": {
-          "title": "Are you sure?",
-          "subtitle": "you are about to delete this {title} permenantly"
-        }
-      },
-      "tables": {
-        "placeholder": {
-          "title": "No matches",
-          "subtitle": "There is no data that match your search."
-        },
-        "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
-      },
-    "images" : {
-        "image_name_placeholder" : "Choose an image",
-        "image_select_file" : "Select File",
-        "accepted_file" : "Max size: 2 MB | Accepted image… types: png, jpg, webp"
-    },
-    "gender" : {
-        "male" : "Male" ,
-        "female" : "Female",
-        "not_selected" : "Not Selected"
-    },
-    "forms" : {
-        "type" : {
-            "add" : "Add" ,
-            "edit" : "Edit"
-        },
-        "back_button" : "Back"
-
-    },
-    "drop_down" : {
-      "view" : "View",
-      "edit" : "Edit",
-      "remove" : "Remove" ,
-      "change_status" : "Change Status"
-    },
-    "add_quantity" : {
-        "form" : {
-            "title" : "Add Quantity",
-            "back_button" :"Back to items page",
-            "level_1" : "Level 1",
-            "select_level_1" : "Select Level 1",
-            "level_2" : "Level 2",
-            "select_level_2" : "Select Level 2",
-            "item" : "Item",
-            "select_item" : "Select Item",
-            "item_quantity" : "Item Quantity",
-            "item_cost" : "Item Cost",
-            "status" : "Status",
-            "item_note" : "Item Note",
-            "invoice_number" : "Invoice Number",
-            "invoice_image" : "Invoice Image",
-            "submit" : "Submit"
-        }
-    },
-    "category" : {
-        "table": {
-            "title": "Category",
-            "columns": {
-              "name": "Name",
-              "parent": "Parent",
-              "created_by": "Created By",
-              "created_at": "Created At",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Category Status"
-          },
-      
-        "form" : {
-            "page_title" : "Category" ,
-            "form_header" : "{type} Category",
-            "add_category_title" : "Add Category",
-            "edit_category_title" : "Edit Category",
-            "name" : "Name",
-            "level_1" : "Level 1",
-            "level_2" : "Level 2",
-            "parent" : "Parent",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Category",
-          "name" : "Name...",
-          "parent" :"Parent",
-          "status" : "Status"
-        },
-        "header_button" :"Add Category"
-
-
-    },
-    "city" : {
-        "table": {
-            "title": "City",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove City"
-          },
-          "details": {
-            "title": "City",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "City" ,
-            "form_header" : "{type} City",
-            "add_city_title" : "Add City",
-            "edit_city_title" : "Edit City",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add City"
-
-
-    },
-    "contractor" : {
-        "table": {
-            "title": "Contractor",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "speciality": "Speciality",
-              "department": "Department",
-              "room": "Room #",
-              "status": "Status",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Customer File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Contractor",
-            "tabs": {
-              "details": "Details",
-              "services": "Sevices",
-              "files": "Files"
-            },
-            "service": "Contractor Service",
-            "file": "Contractor Files",
-            "name": "{title} Name",
-            "speciality": "{title} Speciality",
-            "status": "{title} Status",
-            "user_status": "User Status",
-            "birth_date": "Birth Date",
-            "phone_number": "Phone Number",
-            "payment_percentage": "Payment Percentage",
-            "starting_date": "Starting Date",
-            "end_date": "End Date",
-            "department": "Department",
-            "room_number": "Room Number",
-            "address": "Address",
-            "price": "{title} Service Price",
-            "service_ammount": "{title} Service Ammount",
-            "gender": "gender",
-            "upload_file": "Upload File",
-            "choose_file": "Choose a file…",
-            "upload": "Upload",
-            "accepted_file": "Max size: 2 MB | Accepted file types :png, jpg, webp",
-            "tabs_content_placeholder": {
-              "service": "Contractor have no services for now...",
-              "files": "Contractor have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Contractor" ,
-            "step_1_title" : "Contractor Main Info" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "step_2_abbr_title" : "Services" ,
-            "step_1_subtitle" : "Step 1: Contractor Main Info" ,
-            "step_2_subtitle" : "Step 2: Contractor Services" ,
-            "back_button" : "Back to contractors page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "department" : "Department",
-            "room" : "Room",
-            "starting_date" : "Starting date",
-            "end_date" : "End date",
-            "payment_percentage" : "Payment Percentage",
-            "speciality" : "Speciality",
-            "status" : "Status",
-            "no_services_placeholder" : "There are no services...",
-            "service_price" : "{service} Price:",
-            "service_amount" : "{service} Service Amount:",
-            "edit_step_1_title" : "Edit Contractor Main Info" ,
-            "edit_step_2_title" : "Edit Contractor Services" ,
-            "edit_submit" : "Submit",
-            "choose_services" : "Choose Services:",
-            "submit_and_finish_button" : "Submit & Finish",
-            "submit_and_next_button" : "Submit & Next",
-            "skip_button" : "Skip",
-            "skip_and_finish_button" : "Skip & Finish"
-        },
-        "search_filter" : {
-          "title" : "Filter Contractor",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "room_number" : "Room Number",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-          
-        },
-        "header_button" : "Add Contractor"
-
-    },
-    "customer" : {
-        "table": {
-            "title": "Customer",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "group": "Group",
-              "is_completed": "Completed",
-              "status": "Status",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Customer File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Customer",
-            "tabs": {
-              "details": "Details",
-              "medical_info": "Medical Info",
-              "social_media": "Social Media",
-              "files": "Files"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "group": "Group",
-            "gender": "Gender",
-            "note": "Note",
-            "last_update": "Last Update at",
-            "by": "By",
-            "phone_number": "Phone Number",
-            "emergency_contact_name": "Emergency Contact Name",
-            "emergency_contact_phone": "Emergency Contact Phone",
-            "address": "Address",
-            "is_completed": "Completed",
-            "status": "Status",
-            "birth_date": "Birth Date",
-            "medical_info": "Customer Medical Info",
-            "blood_type": "Blood Type",
-            "smooke": "Smoke",
-            "more_info": "More Info",
-            "allergic": "Allergic",
-            "infectious_diseases": "Infectious Diseases",
-            "chronic_diseases": "Chronic Diseases",
-            "other_medical_info": "Other Medical Info",
-            "customer_social_media": "Customer Social Media",
-            "customer_URL": "Customer URL",
-            "customer_files": "Customer Files",
-            "upload_file": "Upload File",
-            "upload": "Upload",
-            "customer_status": "Customer Status",
-            "select_customer_status": "Select Customer Status",
-            "tabs_content_placeholder": {
-              "medical_info": "Customer have no medical info...",
-              "social_modia": "Customer have no social media...",
-              "files": "Customer have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Customer" ,
-            "step_1_title" : "Customer Main Info" ,
-            "step_2_title" : "Customer Medical Info" ,
-            "step_3_title" : "Customer Social Media" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "step_2_abbr_title" : "Medical Info" ,
-            "step_3_abbr_title" : "Social Media" ,
-            "step_1_subtitle" : "Step 1: Customer Main Info" ,
-            "step_2_subtitle" : "Step 2: Customer Medical Info" ,
-            "step_3_subtitle" : "Step 3: Customer Social Media" ,
-            "back_button" :"Back to customers page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "status" : "Status",
-            "customer_group" : "Customer Group",
-            "emergency_contract_name" : "Emergency Contract Name",
-            "emergency_contract_phone" : "Emergency Contract Phone",
-            "blood_type" : "Blood Type",
-            "allergic" : "Allergic Reactions",
-            "infectious_diseases" : "Infectious Diseases",
-            "chronic_diseases" : "Chronic Diseases",
-            "smoke" : "Smoke?",
-            "other_info" : "Other Info",
-            "social_media_url" : "Customer's {social_media} URL",
-            "edit_step_1_title" : "Edit Customer Main Info" ,
-            "edit_step_2_title" : "Edit Customer Medical Info" ,
-            "edit_submit" : "Submit",
-            "choose_social_media" : "Choose Social Media:",
-            "submit_and_finish_button" : "Submit & Finish",
-            "submit_and_next_button" : "Submit & Next",
-            "skip_button" : "Skip",
-            "skip_and_finish_button" : "Skip & Finish"
-        },
-        "search_filter" : {
-          "title" : "Filter Customer",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "group" : "Group",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-          
-        },
-        "header_button" : "Add Customer"
-
-
-    },
-    "customer_group" : {
-        "table": {
-            "title": "Customer Group",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Customer Group"
-          },
-          "details": {
-            "title": "Customer Group",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "Customer Group" ,
-            "form_header" : "{type} Customer Group",
-            "add_customer_group_title" : "Add Customer Group",
-            "edit_customer_group_title" : "Edit Customer Group",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Customer Group" 
-
-
-    },
-    "department" : {
-        "table": {
-            "title": "Department",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Department"
-          },
-          "details": {
-            "title": "Department",
-            "name": "{title} Name",
-            "status": "{title} Status"
-          },      
-        "form" : {
-            "page_title" : "Department" ,
-            "form_header" : "{type} Department",
-            "add_department_title" : "Add Department",
-            "edit_department_title" : "Edit Department",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Department"
-
-
-    },
-    "employee" : {
-        "table": {
-            "title": "Employee",
-            "columns": {
-              "phone": "Phone",
-              "name": "Name",
-              "department": "Department",
-              "room": "Room #",
-              "status": "Status",
-              "position": "Position",
-              "actions": "Actions",
-              "created_at": "Created At"
-            },
-            "modal_title": {
-              "status": "Change User Status",
-              "delete_file": "Delete Employee File",
-              "profile_picture": "Update Profile Picture",
-              "placeholderSection": {
-                "title": "Are you sure?",
-                "subtitle": "you are about to delete this file permenantly"
-              }
-            }
-          },
-          "details": {
-            "title": "Employee",
-            "tabs": {
-              "details": "Details",
-              "files": "Files"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "starting_date": "Starting Date",
-            "end_date": "End Date",
-            "gender": "Gender",
-            "department": "Department",
-            "room_number": "Room Number",
-            "nationality": "Nationality",
-            "position": "Position",
-            "phone_number": "Phone Number",
-            "address": "Address",
-            "employee_number": "Employee Number",
-            "last_employee_number": "Last Employee Number",
-            "status": "Status",
-            "birth_date": "Birth Date",
-            "employee_files": "Employee Files",
-            "upload_file": "Upload File",
-            "upload": "Upload",
-            "employee_status": "Employee Status",
-            "select_employee_status": "Select Employee Status",
-            "tabs_content_placeholder": {
-              "files": "Employee have no files..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Customer" ,
-            "step_1_title" : "Employee Main Info" ,
-            "step_1_subtitle" : "Step 1: Employee Main Info" ,
-            "step_1_abbr_title" : "Main Info" ,
-            "back_button" : "Back to employees page",
-            "first_name" : "First name",
-            "last_name" : "Last name",
-            "phone_number" : "Phone Number",
-            "birth_date" : "Birth Date",
-            "gender" : "Gender",
-            "city" : "City",
-            "address" : "Address",
-            "department" : "Department",
-            "room" : "Room",
-            "starting_date" :"Starting date",
-            "end_date" :"End date",
-            "basic_salary" :"Basic Salary",
-            "nationality" :"Nationality",
-            "position" :"Position",
-            "status" : "Status",
-            "edit_step_1_title" : "Edit Employee Main Info" ,
-            "edit_submit" : "Submit"
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "group" : "Group",
-          "status" : "Status",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "quick_search" : "Name/Number..."
-
-
-        },
-        "header_button" :"Add Employee"
-
-
-    },
-    "employee_attendance": {
-        "table": {
-          "title": "Employees Attendance",
-          "columns": {
-            "employee_name": "Employee Name"
-          },
-          "attendance_details_modal": {
-            "title": "Attendance Details",
-            "date": "Date:",
-            "status": "Status:",
-            "mark_attendance": "Mark Attendance",
-            "check_in": "Check In",
-            "check_out": "Check Out",
-            "no_data": "No Data",
-            "justify_attendance": "Justify Attendance",
-            "unjustify_attendance": "Unjustify Attendance"
-          },
-          "mark_attendance_modal": {
-            "title": "Mark Attendance",
-            "date": "Date:",
-            "status": "Status:",
-            "check_in": "Check In",
-            "check_out": "Check Out"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "department" : "Department",
-          "position" : "Position",
-          "status" : "Status",
-          "quick_search" : "Name/Number...",
-          "note" : "Note:"
-        }
-      },
-      "employee_schedule": {
-        "table": {
-          "title": "Employees Schedule",
-          "columns": {
-            "employee_name": "Employee Name"
-          },
-          "modal": {
-            "title": "Edit Employee Schedule",
-            "day": "Day:",
-            "start_time": "Start Time",
-            "end_time": "End Time",
-            "make_vacation": "Make Vacation"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Employee" ,
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "department" : "Department",
-          "position" : "Position",
-          "status" : "Status",
-          "quick_search" : "Name/Number..."
-        }
-
-      },
-    "item" : {
-        "table": {
-            "title": "Item",
-            "columns": {
-              "name": "Name",
-              "level_1": "Level 1",
-              "level_2": "Level 2",
-              "quantity": "Quantity",
-              "price": "Price",
-              "cost": "Cost",
-              "created_by": "Created By",
-              "created_at": "Created At",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": {
-              "item": "Change Item Status",
-              "item_history": "Change Item History Status"
-            }
-          },
-          "details": {
-            "title": "Item",
-            "tabs": {
-              "details": "Details",
-              "item_history": "Item History"
-            },
-            "main_details": "Main Details",
-            "name": "{title} Name",
-            "leve_1": "Item Level 1",
-            "leve_2": "Item Level 2",
-            "quantity": "Item Quantity",
-            "min_quantity": "Item Min Quantity",
-            "price": "Price",
-            "cost": "Cost",
-            "description": "Description",
-            "status": "Item Status",
-            "history_status": "Item History Status",
-            "employee_status": "Item Status",
-            "select_employee_status": "Select Item Status",
-            "item_history_table": {
-              "columns": {
-                "requester_name": "Requester",
-                "item_quantity": "Item Quantity",
-                "withdraw_item_price": "Price",
-                "add_item_cost": "Cost",
-                "invoice_number": "Invoice number",
-                "created_at": "Created At",
-                "Image": "Invoice",
-                "status": "Status",
-                "type": "Type",
-                "action": "Edit Status"
-              }
-            },
-            "tabs_content_placeholder": {
-              "item_history": "Item have no history..."
-            }
-          },      
-        "form" : {
-            "page_title" : "Item" ,
-            "form_header" : "{type} Item",
-            "add_item_title" : "Add Item",
-            "edit_item_title" : "Edit Item",
-            "name" : "Name",
-            "level_1" : "Level 1",
-            "level_2" : "Level 2",
-            "price" : "Price",
-            "cost" : "Cost",
-            "quantity" : "Quantity",
-            "min_quantity" : "Min Quantity",
-            "description" : "Description",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Item",
-          "select_type" : "Select Type",
-          "in" : "In",
-          "out" : "Out",
-          "level_1" : "Level 1",
-          "level_2" : "Level 2",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: ",
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Item"
-
-
-
-    },
-    "list_stock_movement": {
-        "table": {
-          "title": "List Stock Movement",
-          "columns": {
-            "item": "Item",
-            "type": "Type",
-            "quantity": "Quantity",
-            "price": "Price",
-            "cost": "Cost",
-            "requester": "Requester",
-            "note": "Note",
-            "created_at": "Created At",
-            "created_by": "Created By"
-          }
-        },
-        "search_filter" : {
-          "title" : "Filter Item",
-          "select_level_1" : "Select Level 1",
-          "select_level_2" : "Select Level 2",
-          "select_item" : "Select Item",
-          "select_type" : "Select Type",
-          "in" : "In",
-          "out" : "Out",
-          "level_1" : "Level 1",
-          "level_2" : "Level 2",
-          "create_date" : "Create Date: ",
-          "from" : "From: ",
-          "to" : "To: "
-        },
-        "add_quantity_button" : "Add Quantity",
-        "withdraw_quantity_button" : "Withdraw Quantity"
-      },
-    "nationality" : {
-        "table": {
-            "title": "Nationality",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Nationality"
-          },
-          "details": {
-            "title": "Nationality",
-            "name": "Nationality Name",
-            "status": "Nationality Status"
-          },      
-        "form" : {
-            "page_title" : "Nationality" ,
-            "form_header" : "{type} Nationality",
-            "add_nationality_title" : "Add Nationality",
-            "edit_nationality_title" : "Edit Nationality",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Nationality"
-
-
-
-    },
-    "position" : {
-        "table": {
-            "title": "Position",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "description": "Description",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Position Status"
-          },
-          "details": {
-            "title": "Position",
-            "name": "Position Name",
-            "description": "Position Description",
-            "status": "Position Status"
-          },      
-        "form" : {
-            "page_title" : "Position" ,
-            "form_header" : "{type} Position",
-            "add_position_title" : "Add Position",
-            "edit_position_title" : "Edit Position",
-            "name" : "Name",
-            "description" : "Description",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Position"
-
-
-    },
-    "room" : {
-        "table": {
-            "title": "Room",
-            "columns": {
-              "id": "ID",
-              "number": "Number",
-              "floor": "Floor",
-              "department": "Department",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Room"
-          },
-          "details": {
-            "title": "Room",
-            "number": "Room Number",
-            "floor": "Room Floor",
-            "department": "Room Department",
-            "status": "Room Status"
-          },      
-        "form" : {
-            "page_title" : "Room" ,
-            "form_header" : "{type} Room",
-            "add_room_title" : "Add Room",
-            "edit_room_title" : "Edit Room",
-            "number" : "Number",
-            "floor" : "Floor",
-            "department" : "Department",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Room",
-          "number" : "Number...",
-          "floor" : "Floor...",
-          "department" : "Department",
-          "status" : "Status"
-        },
-        "header_button" :"Add Room"
-
-
-    },
-    "service" : {
-        "table": {
-            "title": "Service",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "duration": "Duration",
-              "price": "Price",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Service"
-          },
-          "details": {
-            "title": "Service",
-            "name": "Service Name",
-            "price": "Service Price",
-            "description": "Service Description",
-            "estimated": "Estimated Duration",
-            "status": "Service Status"
-          },      
-        "form" : {
-            "page_title" : "Service" ,
-            "form_header" : "{type} Service",
-            "add_service_title" : "Add Service",
-            "edit_service_title" : "Edit Service",
-            "name" : "Name",
-            "desciption" : "Desciption",
-            "price" : "Price",
-            "duration" : "Duration",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter Service",
-          "name" : "Name...",
-          "duration" : "Duration...",
-          "price" : "Price...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Service"
-
-
-    },
-    "settings" : {
-        "form" : {
-            "page_title" : "Edit Settings" ,
-            "hr_section" : "Edit HR/Attendance Settings",
-            "start_day" : "Start Day",
-            "end_day" : "End Day",
-            "start_time" : "Starting Time",
-            "end_time" : "End Time",
-            "start_of_week" : "Start of Week",
-            "late_tolerance" : "Late Tolerance"
-        }
-    },
-    "social_media" : {
-        "table": {
-            "title": "Social Media",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "icon": "Icon",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove Social Media"
-          },      
-        "form" : {
-            "page_title" : "Social Media" ,
-            "form_header" : "{type} Social Media",
-            "add_social_media_title" : "Add Social Media",
-            "edit_social_media_title" : "Edit Social Media",
-            "name" : "Name",
-            "facebook" : "Facebook",
-            "instagram" : "Instagram",
-            "whatsapp" : "Whatsapp",
-            "snapchat" : "Snapchat",
-            "icon" : "Icon",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" :"Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Social Media"
-
-    },
-    "speciality" : {
-        "table": {
-            "title": "Speciality",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "modal_title": "Change Speciality Status"
-          },
-          "details": {
-            "title": "Speciality",
-            "name": "Speciality Name",
-            "status": "Speciality Status"
-          },      
-        "form" : {
-            "page_title" : "Speciality" ,
-            "form_header" : "{type} Speciality",
-            "add_speciality_title" : "Add Speciality",
-            "edit_speciality_title" : "Edit Speciality",
-            "name" : "Name",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "name" : "Name...",
-          "status" : "Status"
-        },
-        "header_button" :"Add Speciality"
-
-
-    },
-    "user" : {
-        "table": {
-            "title": "User",
-            "columns": {
-              "id": "ID",
-              "first_name": "First Name",
-              "last_name": "Last Name",
-              "gender": "Gender",
-              "phone": "Phone",
-              "room": "Room #",
-              "city": "City",
-              "status": "Status",
-              "actions": "Actions"
-            },
-            "place_holder" : "No Data Returned...",
-            "modal_title": {
-              "remove": "Remove User",
-              "status": "Change User Status"
-            }
-          },
-          "details": {
-            "title": "User Status",
-            "first_name": "First Name",
-            "last_name": "Last Name",
-            "gender": "Gender",
-            "phone": "Phone",
-            "city": "City",
-            "room": "Room ",
-            "status": "Status",
-            "address": "Address",
-            "birth_date": "Birth Date"
-          },      
-        "form" : {
-            "page_title" : "User" ,
-            "form_header" : "{type} User",
-            "add_user_title" : "Add User",
-            "edit_user_title" : "Edit User",
-            "first_name" : "First Name",
-            "last_name" : "Last Name",
-            "birth_date" : "Birth Date",
-            "phone_number" : "Phone Number",
-            "address" : "Address",
-            "gender" : "Gender",
-            "room" : "Room",
-            "city" : "City",
-            "status" : "Status"
-        },
-        "search_filter" : {
-          "title" : "Filter User",
-          "name" : "Name...",
-          "phone_number" : "Phone Number...",
-          "gender" : "Gender",
-          "room" : "Room",
-          "city" : "City",
-          "status" : "Status"
-        },
-        "header_button" :"Add User"
-
-
-    },
-    "user_status" : {
-        "table": {
-            "title": "User Status",
-            "columns": {
-              "id": "ID",
-              "name": "Name",
-              "actions": "Actions"
-            },
-            "modal_title": "Remove User Status"
-          },
-          "details": {
-            "title": "User Status",
-            "name": "User Status Name"
-          },      
-        "form" : {
-            "page_title" : "User Status" ,
-            "form_header" : "{type} User Status",
-            "add_user_status_title" : "Add User Status",
-            "edit_user_status_title" : "Edit User Status",
-            "name" : "Name"
-        },
-        "search_filter" : {
-          "name" : "Name..."
-        },
-        "header_button" :"Add User Status"
-
-
-    },
-    "withdraw_quantity" : {
-        "form" : {
-            "title" : "Withdraw Quantity",
-            "back_button" :"Back to items page",
-            "level_1" : "Level 1",
-            "select_level_1" : "Select Level 1",
-            "level_2" : "Level 2",
-            "select_level_2" : "Select Level 2",
-            "item" : "Item",
-            "select_item" : "Select Item",
-            "item_quantity" : "Item Quantity",
-            "item_price" : "Item Price",
-            "status" : "Status",
-            "requester_type" : "Requester Type",
-            "employee" : "Employee",
-            "contractor" : "Contractor",
-            "requester_name" : "Requester Name",
-            "item_note" : "Item Note",
-            "submit" : "Submit"
-
-        }
-    },
-    "dates" : {
-      "days" : {
-        "sunday" : "Sunday",
-        "monday" : "Monday",
-        "tuesday" : "Tuesday",
-        "wednesday" : "Wednesday",
-        "thursday" : "Thursday",
-        "friday" : "Friday",
-        "saturday" : "Saturday"
-      },
-      "days_abbr" : {
-        "sun" : "Sun",
-        "mon" : "Mon",
-        "tue" : "Tue",
-        "wed" : "Wed",
-        "thu" : "Thu",
-        "fri" : "Fri",
-        "sat" : "Sat"
-      },
-      "months" : {
-        "january" : "January",
-        "february" : "February",
-        "march" : "March",
-        "april" : "April",
-        "may" : "May",
-        "june" : "June",
-        "july" : "July",
-        "august" : "August",
-        "september" : "September",
-        "october" : "October",
-        "november" : "November",
-        "december" : "December"
+      "passwordCheck": {
+        "required": "Please, confirm your password",
+        "match": "The password does not match"
       }
     },
-    "attendance_status" : {
-        "attend" : "Attend" , 
-        "absence" : "Absence" , 
-        "pending_absence" : "Pending Absence" , 
-        "justified_absence" : "Justified Absence" , 
-        "unjustified_absence" : "Unjustified Absence" , 
-        "partial_absence" : "Partial Absence" , 
-        "pending_partial_absence" : "Pending Partial Absence" , 
-        "justified_partial_absence" : "Justified Partial Absence" , 
-        "unjustified_partial_absence" : "Unjustified Partial Absence" , 
-        "missing_check" : "Missing Check" , 
-        "vacation" : "Vacation" , 
-        "no_data" : "No Data"  
-    },
-    "status" : {
-      "active" : "Active" ,
-      "inactive" : "Inactive"
-    },
-    "boolean" : {
-      "true" : "Yes" ,
-      "false" : "No"
+    "form": {
+      "welcome_back": "Welcome Back.",
+      "sign_in": "Please sign in to your account",
+      "placeholders": {
+        "phone": "Phone",
+        "password": "Password"
+      },
+      "sign_in_button": "Sign In"
     }
+  },
+  "validation": {
+    "required": "This field is required",
+    "number": {
+      "price": "Please enter a valid price",
+      "invalid_type_error": "Please enter a valid number",
+      "payment_percentage": "Please enter a number from 0-100",
+      "phone_number": "Please enter a valid phone number"
+    },
+    "redio": {
+      "required": "Please choose one"
+    },
+    "date": {
+      "required_error": "Please select a date and time",
+      "invalid_type_error": "That's not a date!",
+      "format": "Date must be a vaild date format YYYY-MM-DD"
+    },
+    "text": {
+      "invalid_type_error": "Please enter a text"
+    },
+    "URL": {
+      "invalid_type_error": "Please enter a valid URL"
+    }
+  },
+  "navbar": {
+    "others": "Others",
+    "crm": "CRM",
+    "contractor": "Contractor",
+    "human_resources": "Human Resources",
+    "warehouse": "Warehouse"
+  },
+  "others_subnav": {
+    "nationality": {
+      "nationalities": "Nationalities",
+      "create_nationality": "Create Nationality"
+    },
+    "service": {
+      "services": "Services",
+      "create_service": "Create Service"
+    },
+    "department": {
+      "departments": "Departments",
+      "create_department": "Create Department"
+    },
+    "room": {
+      "rooms": "Rooms",
+      "create_room": "Create Room"
+    },
+    "city": {
+      "cities": "Cities",
+      "create_city": "Create City"
+    },
+    "setting": {
+      "settings": "Settings",
+      "edit_settings": "Edit Settings"
+    },
+    "user_status": {
+      "user_statuses": "User Statuses",
+      "create_user_status": "Create User Status"
+    }
+  },
+  "crm_subnav": {
+    "customer": {
+      "customers": "Customers",
+      "create_customer": "Create Customer"
+    },
+    "customer_group": {
+      "customer_groups": "Customer Groups",
+      "create_customer_group": "Create Customer Group"
+    },
+    "social_media": {
+      "social_medias": "Social Media",
+      "create_social_media": "Create Social Media"
+    }
+  },
+  "contractor_subnav": {
+    "contractor": {
+      "contractors": "Contractors",
+      "create_contractor": "Create Contractor"
+    },
+    "speciality": {
+      "specialities": "Specialities",
+      "create_speciality": "Create Speciality"
+    }
+  },
+  "human_resources_subnav": {
+    "employee": {
+      "employees": "Employees",
+      "create_employee": "Create Employee"
+    },
+    "position": {
+      "positions": "Positions",
+      "create_position": "Create Position"
+    },
+    "employees_schedule": "Employees Schedule",
+    "employees_attendance": "Employees Attendance"
+  },
+  "warehouse_subnav": {
+    "category": {
+      "categories": "Categories",
+      "create_category": "Create Category"
+    },
+    "item": {
+      "items": "Items",
+      "create_item": "Create Item"
+    },
+    "quantity": {
+      "quantity": "Quantity",
+      "add_quantity": "Add Quantity",
+      "withdraw_quantity": "Withdray Quantity"
+    },
+    "item_history": {
+      "item_history": "Item History",
+      "list_stock_movement": "List Stock Movement"
+    }
+  },
+  "user_profile_dropdown": {
+    "logout": "Logout"
+  },
+  "toast": {
+    "success": {
+      "add": "Added successfully",
+      "edit": "Edited successfully",
+      "remove": "Removed successfully",
+      "customer_note": "Customer notes was edited successfully",
+      "justified": "justified successfully",
+      "unjustified": "Unjustified successfully",
+      "withdraw": "Withdrawed successfully"
+    },
+    "error": {
+      "steps_error": "Please add some data or skip this step",
+      "Attendance": {
+        "time": "Start time cant be after end time",
+        "check_in": "New check in can't be after original check in",
+        "check_out": "New check out can't be before original check out"
+      }
+    },
+    "file": {
+      "type": "Please choose an accepted file type",
+      "size": "File size must be less than 2MB",
+      "image": "Please select a valid image to be uploaded"
+    }
+  },
+  "modal": {
+    "buttons": {
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "update": "Update",
+      "delete": "Delete",
+      "save": "Save",
+      "filter": "Filter"
+    },
+    "delete_modal": {
+      "title": "Are you sure?",
+      "subtitle": "you are about to delete this {title} permenantly"
+    }
+  },
+  "tables": {
+    "placeholder": {
+      "title": "No matches",
+      "subtitle": "There is no data that match your search."
+    },
+    "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
+  },
+  "images": {
+    "image_name_placeholder": "Choose an image",
+    "image_select_file": "Select File",
+    "accepted_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp"
+  },
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "not_selected": "Not Selected"
+  },
+  "forms": {
+    "type": {
+      "add": "Add",
+      "edit": "Edit"
+    },
+    "back_button": "Back"
+  },
+  "drop_down": {
+    "view": "View",
+    "edit": "Edit",
+    "remove": "Remove",
+    "change_status": "Change Status"
+  },
+  "add_quantity": {
+    "form": {
+      "title": "Add Quantity",
+      "back_button": "Back to items page",
+      "level_1": "Level 1",
+      "select_level_1": "Select Level 1",
+      "level_2": "Level 2",
+      "select_level_2": "Select Level 2",
+      "item": "Item",
+      "select_item": "Select Item",
+      "item_quantity": "Item Quantity",
+      "item_cost": "Item Cost",
+      "status": "Status",
+      "item_note": "Item Note",
+      "invoice_number": "Invoice Number",
+      "invoice_image": "Invoice Image",
+      "submit": "Submit"
+    }
+  },
+  "category": {
+    "table": {
+      "title": "Category",
+      "columns": {
+        "name": "Name",
+        "parent": "Parent",
+        "created_by": "Created By",
+        "created_at": "Created At",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Category Status"
+    },
 
+    "form": {
+      "page_title": "Category",
+      "form_header": "{type} Category",
+      "add_category_title": "Add Category",
+      "edit_category_title": "Edit Category",
+      "name": "Name",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "parent": "Parent",
+      "status": "Status"
+    },
+    "search_filter": {
+      "title": "Filter Category",
+      "name": "Name...",
+      "parent": "Parent",
+      "status": "Status"
+    },
+    "header_button": "Add Category"
+  },
+  "city": {
+    "table": {
+      "title": "City",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove City"
+    },
+    "details": {
+      "title": "City",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    },
+    "form": {
+      "page_title": "City",
+      "form_header": "{type} City",
+      "add_city_title": "Add City",
+      "edit_city_title": "Edit City",
+      "name": "Name",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add City"
+  },
+  "contractor": {
+    "table": {
+      "title": "Contractor",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "speciality": "Speciality",
+        "department": "Department",
+        "room": "Room #",
+        "status": "Status",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Contractor",
+      "tabs": {
+        "details": "Details",
+        "services": "Sevices",
+        "files": "Files",
+        "wallet": "wallet"
+      },
+      "service": "Contractor Service",
+      "file": "Contractor Files",
+      "name": "{title} Name",
+      "speciality": "{title} Speciality",
+      "status": "{title} Status",
+      "user_status": "User Status",
+      "birth_date": "Birth Date",
+      "phone_number": "Phone Number",
+      "payment_percentage": "Payment Percentage",
+      "starting_date": "Starting Date",
+      "end_date": "End Date",
+      "department": "Department",
+      "room_number": "Room Number",
+      "address": "Address",
+      "price": "{title} Service Price",
+      "service_ammount": "{title} Service Ammount",
+      "gender": "gender",
+      "upload_file": "Upload File",
+      "choose_file": "Choose a file…",
+      "upload": "Upload",
+      "wallet": "Contractor wallet",
+      "amount": "amount",
+      "wallet_status": "wallet status",
+      "created_at": "creation date",
+      "accepted_file": "Max size: 2 MB | Accepted file types :png, jpg, webp",
+      "tabs_content_placeholder": {
+        "service": "Contractor have no services for now...",
+        "files": "Contractor have no files..."
+      }
+    },
+    "form": {
+      "page_title": "Contractor",
+      "step_1_title": "Contractor Main Info",
+      "step_1_abbr_title": "Main Info",
+      "step_2_abbr_title": "Services",
+      "step_1_subtitle": "Step 1: Contractor Main Info",
+      "step_2_subtitle": "Step 2: Contractor Services",
+      "back_button": "Back to contractors page",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "phone_number": "Phone Number",
+      "birth_date": "Birth Date",
+      "gender": "Gender",
+      "city": "City",
+      "address": "Address",
+      "department": "Department",
+      "room": "Room",
+      "starting_date": "Starting date",
+      "end_date": "End date",
+      "payment_percentage": "Payment Percentage",
+      "speciality": "Speciality",
+      "status": "Status",
+      "no_services_placeholder": "There are no services...",
+      "service_price": "{service} Price:",
+      "service_amount": "{service} Service Amount:",
+      "edit_step_1_title": "Edit Contractor Main Info",
+      "edit_step_2_title": "Edit Contractor Services",
+      "edit_submit": "Submit",
+      "choose_services": "Choose Services:",
+      "submit_and_finish_button": "Submit & Finish",
+      "submit_and_next_button": "Submit & Next",
+      "skip_button": "Skip",
+      "skip_and_finish_button": "Skip & Finish"
+    },
+    "search_filter": {
+      "title": "Filter Contractor",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "room_number": "Room Number",
+      "status": "Status",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: ",
+      "quick_search": "Name/Number..."
+    },
+    "header_button": "Add Contractor"
+  },
+  "customer": {
+    "table": {
+      "title": "Customer",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "group": "Group",
+        "is_completed": "Completed",
+        "status": "Status",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Customer File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Customer",
+      "tabs": {
+        "details": "Details",
+        "medical_info": "Medical Info",
+        "social_media": "Social Media",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "group": "Group",
+      "gender": "Gender",
+      "note": "Note",
+      "last_update": "Last Update at",
+      "by": "By",
+      "phone_number": "Phone Number",
+      "emergency_contact_name": "Emergency Contact Name",
+      "emergency_contact_phone": "Emergency Contact Phone",
+      "address": "Address",
+      "is_completed": "Completed",
+      "status": "Status",
+      "birth_date": "Birth Date",
+      "medical_info": "Customer Medical Info",
+      "blood_type": "Blood Type",
+      "smooke": "Smoke",
+      "more_info": "More Info",
+      "allergic": "Allergic",
+      "infectious_diseases": "Infectious Diseases",
+      "chronic_diseases": "Chronic Diseases",
+      "other_medical_info": "Other Medical Info",
+      "customer_social_media": "Customer Social Media",
+      "customer_URL": "Customer URL",
+      "customer_files": "Customer Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "customer_status": "Customer Status",
+      "select_customer_status": "Select Customer Status",
+      "tabs_content_placeholder": {
+        "medical_info": "Customer have no medical info...",
+        "social_modia": "Customer have no social media...",
+        "files": "Customer have no files..."
+      }
+    },
+    "form": {
+      "page_title": "Customer",
+      "step_1_title": "Customer Main Info",
+      "step_2_title": "Customer Medical Info",
+      "step_3_title": "Customer Social Media",
+      "step_1_abbr_title": "Main Info",
+      "step_2_abbr_title": "Medical Info",
+      "step_3_abbr_title": "Social Media",
+      "step_1_subtitle": "Step 1: Customer Main Info",
+      "step_2_subtitle": "Step 2: Customer Medical Info",
+      "step_3_subtitle": "Step 3: Customer Social Media",
+      "back_button": "Back to customers page",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "phone_number": "Phone Number",
+      "birth_date": "Birth Date",
+      "gender": "Gender",
+      "city": "City",
+      "address": "Address",
+      "status": "Status",
+      "customer_group": "Customer Group",
+      "emergency_contract_name": "Emergency Contract Name",
+      "emergency_contract_phone": "Emergency Contract Phone",
+      "blood_type": "Blood Type",
+      "allergic": "Allergic Reactions",
+      "infectious_diseases": "Infectious Diseases",
+      "chronic_diseases": "Chronic Diseases",
+      "smoke": "Smoke?",
+      "other_info": "Other Info",
+      "social_media_url": "Customer's {social_media} URL",
+      "edit_step_1_title": "Edit Customer Main Info",
+      "edit_step_2_title": "Edit Customer Medical Info",
+      "edit_submit": "Submit",
+      "choose_social_media": "Choose Social Media:",
+      "submit_and_finish_button": "Submit & Finish",
+      "submit_and_next_button": "Submit & Next",
+      "skip_button": "Skip",
+      "skip_and_finish_button": "Skip & Finish"
+    },
+    "search_filter": {
+      "title": "Filter Customer",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "group": "Group",
+      "status": "Status",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: ",
+      "quick_search": "Name/Number..."
+    },
+    "header_button": "Add Customer"
+  },
+  "customer_group": {
+    "table": {
+      "title": "Customer Group",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Customer Group"
+    },
+    "details": {
+      "title": "Customer Group",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    },
+    "form": {
+      "page_title": "Customer Group",
+      "form_header": "{type} Customer Group",
+      "add_customer_group_title": "Add Customer Group",
+      "edit_customer_group_title": "Edit Customer Group",
+      "name": "Name",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Customer Group"
+  },
+  "department": {
+    "table": {
+      "title": "Department",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Department"
+    },
+    "details": {
+      "title": "Department",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    },
+    "form": {
+      "page_title": "Department",
+      "form_header": "{type} Department",
+      "add_department_title": "Add Department",
+      "edit_department_title": "Edit Department",
+      "name": "Name",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Department"
+  },
+  "employee": {
+    "table": {
+      "title": "Employee",
+      "columns": {
+        "phone": "Phone",
+        "name": "Name",
+        "department": "Department",
+        "room": "Room #",
+        "status": "Status",
+        "position": "Position",
+        "actions": "Actions",
+        "created_at": "Created At"
+      },
+      "modal_title": {
+        "status": "Change User Status",
+        "delete_file": "Delete Employee File",
+        "profile_picture": "Update Profile Picture",
+        "placeholderSection": {
+          "title": "Are you sure?",
+          "subtitle": "you are about to delete this file permenantly"
+        }
+      }
+    },
+    "details": {
+      "title": "Employee",
+      "tabs": {
+        "details": "Details",
+        "files": "Files"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "starting_date": "Starting Date",
+      "end_date": "End Date",
+      "gender": "Gender",
+      "department": "Department",
+      "room_number": "Room Number",
+      "nationality": "Nationality",
+      "position": "Position",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "employee_number": "Employee Number",
+      "last_employee_number": "Last Employee Number",
+      "status": "Status",
+      "birth_date": "Birth Date",
+      "employee_files": "Employee Files",
+      "upload_file": "Upload File",
+      "upload": "Upload",
+      "employee_status": "Employee Status",
+      "select_employee_status": "Select Employee Status",
+      "tabs_content_placeholder": {
+        "files": "Employee have no files..."
+      }
+    },
+    "form": {
+      "page_title": "Customer",
+      "step_1_title": "Employee Main Info",
+      "step_1_subtitle": "Step 1: Employee Main Info",
+      "step_1_abbr_title": "Main Info",
+      "back_button": "Back to employees page",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "phone_number": "Phone Number",
+      "birth_date": "Birth Date",
+      "gender": "Gender",
+      "city": "City",
+      "address": "Address",
+      "department": "Department",
+      "room": "Room",
+      "starting_date": "Starting date",
+      "end_date": "End date",
+      "basic_salary": "Basic Salary",
+      "nationality": "Nationality",
+      "position": "Position",
+      "status": "Status",
+      "edit_step_1_title": "Edit Employee Main Info",
+      "edit_submit": "Submit"
+    },
+    "search_filter": {
+      "title": "Filter Employee",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "group": "Group",
+      "status": "Status",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: ",
+      "quick_search": "Name/Number..."
+    },
+    "header_button": "Add Employee"
+  },
+  "employee_attendance": {
+    "table": {
+      "title": "Employees Attendance",
+      "columns": {
+        "employee_name": "Employee Name"
+      },
+      "attendance_details_modal": {
+        "title": "Attendance Details",
+        "date": "Date:",
+        "status": "Status:",
+        "mark_attendance": "Mark Attendance",
+        "check_in": "Check In",
+        "check_out": "Check Out",
+        "no_data": "No Data",
+        "justify_attendance": "Justify Attendance",
+        "unjustify_attendance": "Unjustify Attendance"
+      },
+      "mark_attendance_modal": {
+        "title": "Mark Attendance",
+        "date": "Date:",
+        "status": "Status:",
+        "check_in": "Check In",
+        "check_out": "Check Out"
+      }
+    },
+    "search_filter": {
+      "title": "Filter Employee",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "department": "Department",
+      "position": "Position",
+      "status": "Status",
+      "quick_search": "Name/Number...",
+      "note": "Note:"
+    }
+  },
+  "employee_schedule": {
+    "table": {
+      "title": "Employees Schedule",
+      "columns": {
+        "employee_name": "Employee Name"
+      },
+      "modal": {
+        "title": "Edit Employee Schedule",
+        "day": "Day:",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "make_vacation": "Make Vacation"
+      }
+    },
+    "search_filter": {
+      "title": "Filter Employee",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "department": "Department",
+      "position": "Position",
+      "status": "Status",
+      "quick_search": "Name/Number..."
+    }
+  },
+  "item": {
+    "table": {
+      "title": "Item",
+      "columns": {
+        "name": "Name",
+        "level_1": "Level 1",
+        "level_2": "Level 2",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "created_by": "Created By",
+        "created_at": "Created At",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": {
+        "item": "Change Item Status",
+        "item_history": "Change Item History Status"
+      }
+    },
+    "details": {
+      "title": "Item",
+      "tabs": {
+        "details": "Details",
+        "item_history": "Item History"
+      },
+      "main_details": "Main Details",
+      "name": "{title} Name",
+      "leve_1": "Item Level 1",
+      "leve_2": "Item Level 2",
+      "quantity": "Item Quantity",
+      "min_quantity": "Item Min Quantity",
+      "price": "Price",
+      "cost": "Cost",
+      "description": "Description",
+      "status": "Item Status",
+      "history_status": "Item History Status",
+      "employee_status": "Item Status",
+      "select_employee_status": "Select Item Status",
+      "item_history_table": {
+        "columns": {
+          "requester_name": "Requester",
+          "item_quantity": "Item Quantity",
+          "withdraw_item_price": "Price",
+          "add_item_cost": "Cost",
+          "invoice_number": "Invoice number",
+          "created_at": "Created At",
+          "Image": "Invoice",
+          "status": "Status",
+          "type": "Type",
+          "action": "Edit Status"
+        }
+      },
+      "tabs_content_placeholder": {
+        "item_history": "Item have no history..."
+      }
+    },
+    "form": {
+      "page_title": "Item",
+      "form_header": "{type} Item",
+      "add_item_title": "Add Item",
+      "edit_item_title": "Edit Item",
+      "name": "Name",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "price": "Price",
+      "cost": "Cost",
+      "quantity": "Quantity",
+      "min_quantity": "Min Quantity",
+      "description": "Description",
+      "status": "Status"
+    },
+    "search_filter": {
+      "title": "Filter Item",
+      "select_type": "Select Type",
+      "in": "In",
+      "out": "Out",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: ",
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Item"
+  },
+  "list_stock_movement": {
+    "table": {
+      "title": "List Stock Movement",
+      "columns": {
+        "item": "Item",
+        "type": "Type",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost",
+        "requester": "Requester",
+        "note": "Note",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      }
+    },
+    "search_filter": {
+      "title": "Filter Item",
+      "select_level_1": "Select Level 1",
+      "select_level_2": "Select Level 2",
+      "select_item": "Select Item",
+      "select_type": "Select Type",
+      "in": "In",
+      "out": "Out",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: "
+    },
+    "add_quantity_button": "Add Quantity",
+    "withdraw_quantity_button": "Withdraw Quantity"
+  },
+  "nationality": {
+    "table": {
+      "title": "Nationality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Nationality"
+    },
+    "details": {
+      "title": "Nationality",
+      "name": "Nationality Name",
+      "status": "Nationality Status"
+    },
+    "form": {
+      "page_title": "Nationality",
+      "form_header": "{type} Nationality",
+      "add_nationality_title": "Add Nationality",
+      "edit_nationality_title": "Edit Nationality",
+      "name": "Name",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Nationality"
+  },
+  "position": {
+    "table": {
+      "title": "Position",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "description": "Description",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Position Status"
+    },
+    "details": {
+      "title": "Position",
+      "name": "Position Name",
+      "description": "Position Description",
+      "status": "Position Status"
+    },
+    "form": {
+      "page_title": "Position",
+      "form_header": "{type} Position",
+      "add_position_title": "Add Position",
+      "edit_position_title": "Edit Position",
+      "name": "Name",
+      "description": "Description",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Position"
+  },
+  "room": {
+    "table": {
+      "title": "Room",
+      "columns": {
+        "id": "ID",
+        "number": "Number",
+        "floor": "Floor",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Room"
+    },
+    "details": {
+      "title": "Room",
+      "number": "Room Number",
+      "floor": "Room Floor",
+      "department": "Room Department",
+      "status": "Room Status"
+    },
+    "form": {
+      "page_title": "Room",
+      "form_header": "{type} Room",
+      "add_room_title": "Add Room",
+      "edit_room_title": "Edit Room",
+      "number": "Number",
+      "floor": "Floor",
+      "department": "Department",
+      "status": "Status"
+    },
+    "search_filter": {
+      "title": "Filter Room",
+      "number": "Number...",
+      "floor": "Floor...",
+      "department": "Department",
+      "status": "Status"
+    },
+    "header_button": "Add Room"
+  },
+  "service": {
+    "table": {
+      "title": "Service",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "duration": "Duration",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Service"
+    },
+    "details": {
+      "title": "Service",
+      "name": "Service Name",
+      "price": "Service Price",
+      "description": "Service Description",
+      "estimated": "Estimated Duration",
+      "status": "Service Status"
+    },
+    "form": {
+      "page_title": "Service",
+      "form_header": "{type} Service",
+      "add_service_title": "Add Service",
+      "edit_service_title": "Edit Service",
+      "name": "Name",
+      "desciption": "Desciption",
+      "price": "Price",
+      "duration": "Duration",
+      "status": "Status"
+    },
+    "search_filter": {
+      "title": "Filter Service",
+      "name": "Name...",
+      "duration": "Duration...",
+      "price": "Price...",
+      "status": "Status"
+    },
+    "header_button": "Add Service"
+  },
+  "settings": {
+    "form": {
+      "page_title": "Edit Settings",
+      "hr_section": "Edit HR/Attendance Settings",
+      "start_day": "Start Day",
+      "end_day": "End Day",
+      "start_time": "Starting Time",
+      "end_time": "End Time",
+      "start_of_week": "Start of Week",
+      "late_tolerance": "Late Tolerance"
+    }
+  },
+  "social_media": {
+    "table": {
+      "title": "Social Media",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "icon": "Icon",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove Social Media"
+    },
+    "form": {
+      "page_title": "Social Media",
+      "form_header": "{type} Social Media",
+      "add_social_media_title": "Add Social Media",
+      "edit_social_media_title": "Edit Social Media",
+      "name": "Name",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "whatsapp": "Whatsapp",
+      "snapchat": "Snapchat",
+      "icon": "Icon",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Social Media"
+  },
+  "speciality": {
+    "table": {
+      "title": "Speciality",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Change Speciality Status"
+    },
+    "details": {
+      "title": "Speciality",
+      "name": "Speciality Name",
+      "status": "Speciality Status"
+    },
+    "form": {
+      "page_title": "Speciality",
+      "form_header": "{type} Speciality",
+      "add_speciality_title": "Add Speciality",
+      "edit_speciality_title": "Edit Speciality",
+      "name": "Name",
+      "status": "Status"
+    },
+    "search_filter": {
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Speciality"
+  },
+  "user": {
+    "table": {
+      "title": "User",
+      "columns": {
+        "id": "ID",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "gender": "Gender",
+        "phone": "Phone",
+        "room": "Room #",
+        "city": "City",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "place_holder": "No Data Returned...",
+      "modal_title": {
+        "remove": "Remove User",
+        "status": "Change User Status"
+      }
+    },
+    "details": {
+      "title": "User Status",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "gender": "Gender",
+      "phone": "Phone",
+      "city": "City",
+      "room": "Room ",
+      "status": "Status",
+      "address": "Address",
+      "birth_date": "Birth Date"
+    },
+    "form": {
+      "page_title": "User",
+      "form_header": "{type} User",
+      "add_user_title": "Add User",
+      "edit_user_title": "Edit User",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "birth_date": "Birth Date",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "gender": "Gender",
+      "room": "Room",
+      "city": "City",
+      "status": "Status"
+    },
+    "search_filter": {
+      "title": "Filter User",
+      "name": "Name...",
+      "phone_number": "Phone Number...",
+      "gender": "Gender",
+      "room": "Room",
+      "city": "City",
+      "status": "Status"
+    },
+    "header_button": "Add User"
+  },
+  "user_status": {
+    "table": {
+      "title": "User Status",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove User Status"
+    },
+    "details": {
+      "title": "User Status",
+      "name": "User Status Name"
+    },
+    "form": {
+      "page_title": "User Status",
+      "form_header": "{type} User Status",
+      "add_user_status_title": "Add User Status",
+      "edit_user_status_title": "Edit User Status",
+      "name": "Name"
+    },
+    "search_filter": {
+      "name": "Name..."
+    },
+    "header_button": "Add User Status"
+  },
+  "withdraw_quantity": {
+    "form": {
+      "title": "Withdraw Quantity",
+      "back_button": "Back to items page",
+      "level_1": "Level 1",
+      "select_level_1": "Select Level 1",
+      "level_2": "Level 2",
+      "select_level_2": "Select Level 2",
+      "item": "Item",
+      "select_item": "Select Item",
+      "item_quantity": "Item Quantity",
+      "item_price": "Item Price",
+      "status": "Status",
+      "requester_type": "Requester Type",
+      "employee": "Employee",
+      "contractor": "Contractor",
+      "requester_name": "Requester Name",
+      "item_note": "Item Note",
+      "submit": "Submit"
+    }
+  },
+  "dates": {
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "days_abbr": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  },
+  "attendance_status": {
+    "attend": "Attend",
+    "absence": "Absence",
+    "pending_absence": "Pending Absence",
+    "justified_absence": "Justified Absence",
+    "unjustified_absence": "Unjustified Absence",
+    "partial_absence": "Partial Absence",
+    "pending_partial_absence": "Pending Partial Absence",
+    "justified_partial_absence": "Justified Partial Absence",
+    "unjustified_partial_absence": "Unjustified Partial Absence",
+    "missing_check": "Missing Check",
+    "vacation": "Vacation",
+    "no_data": "No Data"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "boolean": {
+    "true": "Yes",
+    "false": "No"
+  }
 }

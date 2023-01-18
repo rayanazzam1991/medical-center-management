@@ -15,6 +15,7 @@ import { useContractorForm } from "/@src/stores/Contractor/contractorFormSteps"
 import { Media, MediaConsts } from "/@src/models/Others/Media/media"
 import {useI18n} from "vue-i18n";
 import { Notyf } from "notyf"
+import { WalletConsts } from "/@src/models/Contractor/wallet"
 
 const { t } = useI18n()
 const route = useRoute()
@@ -49,14 +50,14 @@ useHead({
 const contractorStore = useContractor()
 const props = withDefaults(
     defineProps<{
-        activeTab?: 'Details' | 'Services' | 'Files'
+        activeTab?: 'Details' | 'Services' | 'Files' | 'Wallet'
     }>(),
     {
         activeTab: 'Details',
     }
 )
 const tab = ref(props.activeTab)
-if (route.query.tab === 'Details' || route.query.tab === 'Services' || route.query.tab === 'Files') {
+if (route.query.tab === 'Details' || route.query.tab === 'Services' || route.query.tab === 'Files' || route.query.tab === 'Wallet') {
     tab.value = route.query.tab
 }
 
@@ -102,11 +103,7 @@ const fetchContractor = async () => {
     for (let i = 0; i < contractor.services.length; i++) {
         // @ts-ignore
         contractorForm.contractorServicesForm.push({ service_id: contractor.services[i].id, price: contractor.services[i].price, contractor_service_amount: contractor.services[i].contractor_service_amount })
-
-
     }
-
-
     contractorForm.userForm.id = contractor.user.id
     contractorForm.userForm.first_name = contractor.user.first_name
     contractorForm.userForm.last_name = contractor.user.last_name
@@ -125,8 +122,6 @@ const fetchContractor = async () => {
 
 
 }
-
-
 
 const onClickEditServices = async () => {
     await fetchContractor()
@@ -405,8 +400,7 @@ const RemoveProfilePicture = async () => {
         </VLoader>
 
         <div class="project-details">
-            <div class="tabs-wrapper is-triple-slider">
-
+            <div class="tabs-wrapper is-quad-slider">
                 <div :hidden="loading" class="tabs-inner">
                     <div class="tabs tabs-width">
                         <ul>
@@ -421,6 +415,10 @@ const RemoveProfilePicture = async () => {
                             <li :class="[tab === 'Files' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Files'"
                                     @click="tab = 'Files'"><span>{{t('contractor.details.tabs.files')}} </span></a>
+                            </li>
+                            <li :class="[tab === 'Wallet' && 'is-active']">
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Wallet'"
+                                    @click="tab = 'Wallet'"><span>{{t('contractor.details.tabs.wallet')}} </span></a>
                             </li>
                             <li class="tab-naver"></li>
                         </ul>
@@ -677,6 +675,58 @@ const RemoveProfilePicture = async () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div v-if="tab === 'Wallet'" class="tab-content is-active">
+                    <div class="columns project-details-inner">
+                        <div class="column is-12">
+                            <div class="project-details-card">
+                                <div class="card-head">
+                                    <div class="title-wrap">
+                                        <h3>
+                                            <span>
+                                                <VTag
+                                                    :color="currentContractor.wallet.status === WalletConsts.INACTIVE ? 'danger' : 'success'">
+                                                    {{ WalletConsts.showStatusName(currentContractor.wallet.status) }}</VTag>
+                                            </span>
+                                        {{t('contractor.details.wallet')}}
+
+                                        </h3>
+                                    </div>
+
+                                </div>
+                                <div class="project-files">
+                                    <h4>More Info</h4>
+                                    <div class="columns is-multiline">
+                                        <div class="column is-6">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>{{t('contractor.details.amount')}}</span>
+                                                    <span>
+                                                        {{ currentContractor.wallet.amount }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="column is-6">
+                                            <div class="file-box">
+                                                <div class="meta">
+                                                    <span>{{t('contractor.details.created_at')}}</span>
+                                                    <span>
+                                                        {{ currentContractor.wallet.created_at }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
