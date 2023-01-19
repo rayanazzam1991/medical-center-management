@@ -700,7 +700,6 @@ const RemoveProfilePicture = async () => {
 
                                 </div>
                                 <div class="project-files">
-                                    <h4>More Info</h4>
                                     <div class="columns is-multiline">
                                         <div class="column is-6">
                                             <div class="file-box">
