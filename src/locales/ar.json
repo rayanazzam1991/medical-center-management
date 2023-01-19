@@ -349,7 +349,8 @@
       "tabs": {
         "details": "التفاصيل",
         "services": "الخدمات",
-        "files": "الملفات"
+        "files": "الملفات",
+        "wallet": "المحفظة"
       },
       "main_details": "المعلومات الرئيسية",
       "more_info": "معلومات إضافية",
@@ -373,6 +374,10 @@
       "upload_file": "تحميل ملف",
       "choose_file": "اختيار ملف…",
       "upload": "تحميل",
+      "wallet": "محفظة الأخصًائي",
+      "amount": "المبلغ الإجمالي",
+      "wallet_status": "حالة المحفظة",
+      "created_at": "تاريخ الإنشاء ",
       "accepted_file": "أقصى حجم مسموح: 2 ميغابايت صيغ الملفات المقبولة :png, jpg, webp",
       "tabs_content_placeholder": {
         "service": "لا يمتلك الأخصّائي أي خدمة بعد...",
