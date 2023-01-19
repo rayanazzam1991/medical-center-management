@@ -1,15 +1,20 @@
-<script lang="ts" setup>
-import {useHead} from '@vueuse/head'
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
 
 useHead({
-  title: 'Home Page',
+  title: 'Grand Samara Beauty Center',
 })
 const router = useRouter();
-router.push({
-  path: '/dashboard/'
-})
+
+  router.push({
+    name: '/dashboard/'
+  })
+
 </script>
 
 <template>
-
+  <LandingLayout theme="light">
+    
+  </LandingLayout>
 </template>
+
