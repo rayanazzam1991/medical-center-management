@@ -195,7 +195,8 @@
       "update": "Update",
       "delete": "Delete",
       "save": "Save",
-      "filter": "Filter"
+      "filter": "Filter",
+      "cash_out": "cash_out"
     },
     "delete_modal": {
       "title": "Are you sure?",

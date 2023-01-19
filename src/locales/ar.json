@@ -209,7 +209,8 @@
       "update": "تحديث",
       "delete": "حذف",
       "save": "حفظ",
-      "filter": "تصفية"
+      "filter": "تصفية",
+      "cash_out": "سحب مبلغ"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",

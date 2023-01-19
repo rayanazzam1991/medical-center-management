@@ -697,6 +697,10 @@ const RemoveProfilePicture = async () => {
 
                                         </h3>
                                     </div>
+                                    <div class="buttons">
+                                        <VButton color="dark"> {{t('modal.buttons.cash_out')}}
+                                        </VButton>
+                                    </div>
 
                                 </div>
                                 <div class="project-files">
