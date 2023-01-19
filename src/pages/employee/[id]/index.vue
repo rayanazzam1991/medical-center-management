@@ -480,7 +480,7 @@ updateLoading.value= true
                   </div>
                   <div class="buttons">
                     <VButton @click.prevent="onOpen" color="dark">
-                      {{t('employee.table.modal_title')}}
+                      {{t('employee.table.modal_title.status')}}
                     </VButton>
                     <VIconButton
                       size="small"
@@ -510,7 +510,7 @@ updateLoading.value= true
                       "
                     ></i>
                     <h4>{{t('employee.details.gender')}}</h4>
-                    <p>{{ currentEmployee.user.gender }}.</p>
+                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
@@ -710,10 +710,10 @@ updateLoading.value= true
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
                               </span>
-                              <span class="file-label"> {{t('images.image_select_file')}} </span>
+                              <span class="file-label"> {{t('images.image_name_placeholder')}} </span>
                             </span>
                             <span class="file-name light-text">
-                              {{ filesToUpload?.name ?? 'Select File' }}
+                              {{ filesToUpload?.name ?? t('images.image_select_file') }}
                             </span>
                           </label>
                         </div>
@@ -741,7 +741,7 @@ updateLoading.value= true
                   class="project-files project-section"
                 >
                   <div>
-                    <h4>Files</h4>
+                    <h4>{{t('employee.details.tabs.files')}}</h4>
                     <div class="columns is-multiline">
                       <div v-for="file in employeeFiles" class="column is-6">
                         <div class="file-box">
@@ -895,11 +895,11 @@ updateLoading.value= true
           class="mr-2"
           @click="RemoveProfilePicture"
         >
-          Delete</VButton
+          {{t('modal.buttons.delete')}}</VButton
         >
       </VLoader>
       <VLoader size="small" :active="uploadLoading">
-        <VButton color="primary" raised @click="UploadProfilePicture">Update</VButton>
+        <VButton color="primary" raised @click="UploadProfilePicture">{{t('modal.buttons.update')}}</VButton>
       </VLoader>
     </template>
   </VModal>

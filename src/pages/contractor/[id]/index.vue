@@ -430,10 +430,10 @@ const RemoveProfilePicture = async () => {
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>Main Details</h3>
+                                        <h3>{{t('contractor.details.main_details')}}</h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton @click.prevent="onOpen" color="dark"> {{t('contractor.table.modal_title')}}
+                                        <VButton @click.prevent="onOpen" color="dark"> {{t('contractor.table.modal_title.status')}}
                                         </VButton>
                                         <VIconButton size="small" icon="feather:edit-3" tabindex="0"
                                             @click="onClickEditMainInfo" />
@@ -462,7 +462,7 @@ const RemoveProfilePicture = async () => {
                                             :class="currentContractor.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
                                         <h4>{{t('contractor.details.gender')}}</h4>
                                         <p>
-                                            {{ currentContractor.user.gender }}.
+                                            {{ t(`gender.${currentContractor.user.gender.toLowerCase()}`) }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
@@ -487,7 +487,7 @@ const RemoveProfilePicture = async () => {
                                 </div>
 
                                 <div class="project-files">
-                                    <h4>More Info</h4>
+                                    <h4>{{t('contractor.details.more_info')}}</h4>
                                     <div class="columns is-multiline">
                                         <div class="column is-6">
                                             <div class="file-box">
@@ -618,10 +618,10 @@ const RemoveProfilePicture = async () => {
                                                             <span class="file-icon">
                                                                 <i class="fas fa-cloud-upload-alt"></i>
                                                             </span>
-                                                            <span class="file-label"> {{t('contractor.details.choose_file')}}</span>
+                                                            <span class="file-label"> {{t('images.image_name_placeholder')}}</span>
                                                         </span>
                                                         <span class="file-name light-text"> {{ filesToUpload?.name ??
-        'Select File'
+        t('images.image_select_file')
 }}
                                                         </span>
                                                     </label>
@@ -635,7 +635,7 @@ const RemoveProfilePicture = async () => {
                                             </VButton>
                                         </VLoader>
                                     </div>
-                                    <h6 class="ml-2 mt-2 help">{{ t('contractor.details.accepted_file') }}
+                                    <h6 class="ml-2 mt-2 help">{{ t('images.accepted_file') }}
                                     </h6>
                                 </div>
                                 <div v-if="contractorFiles.length != 0" class="project-files project-section">
@@ -660,7 +660,7 @@ const RemoveProfilePicture = async () => {
         file.created_at
 }}
                               <i aria-hidden="true" class="fas fa-circle"></i>
-                              By: {{ file.uploaded_by?.first_name }}{{ file.uploaded_by?.last_name }}
+                              {{t('images.by')}} {{ file.uploaded_by?.first_name }}{{ file.uploaded_by?.last_name }}
     
                                                         </span>
                                                     </div>
@@ -802,7 +802,7 @@ const RemoveProfilePicture = async () => {
 
                 <VButton v-if="contractorProfilePicture.id != undefined" color="danger" outlined class="mr-2"
                     @click="RemoveProfilePicture">
-                    >{{ t('modal.buttons.delete') }}</VButton>
+                    {{ t('modal.buttons.delete') }}</VButton>
             </VLoader>
             <VLoader size="small" :active="uploadLoading">
 

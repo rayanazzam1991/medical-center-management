@@ -531,7 +531,7 @@ const RemoveProfilePicture = async () => {
                   </div>
                   <div class="buttons">
                     <VButton @click.prevent="onOpen" color="dark">
-                      {{t('customer.table.modal_title')}}
+                      {{t('customer.table.modal_title.status')}}
                     </VButton>
                     <VIconButton
                       size="small"
@@ -564,8 +564,8 @@ const RemoveProfilePicture = async () => {
                     <p>
                       {{
                         currentCustomer.user.gender == 'Not_Selected'
-                          ? 'Unknown'
-                          : currentCustomer.user.gender
+                          ? t('gender.not_selected')
+                          : t(`gender.${currentCustomer.user.gender.toLowerCase()}`)
                       }}.
                     </p>
                   </div>
@@ -582,7 +582,7 @@ const RemoveProfilePicture = async () => {
                 </div>
 
                 <div class="project-files">
-                  <h4>More Info</h4>
+                  <h4>{{ t('customer.details.more_info')}}</h4>
                   <div class="columns is-multiline">
                     <div class="column is-12">
                       <div class="file-box">
@@ -851,10 +851,10 @@ const RemoveProfilePicture = async () => {
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
                               </span>
-                              <span class="file-label">{{t('images.image_select_file')}}</span>
+                              <span class="file-label">{{t('images.image_name_placeholder')}}</span>
                             </span>
                             <span class="file-name light-text">
-                              {{ filesToUpload?.name ?? 'Select File' }}
+                              {{ filesToUpload?.name ?? t('images.image_select_file') }}
                             </span>
                           </label>
                         </div>
@@ -910,7 +910,7 @@ const RemoveProfilePicture = async () => {
                               <i aria-hidden="true" class="fas fa-circle"></i>
                               {{ file.created_at }}
                               <i aria-hidden="true" class="fas fa-circle"></i>
-                              By: {{ file.uploaded_by?.first_name
+                              {{t('images.by')}} {{ file.uploaded_by?.first_name
                               }}{{ file.uploaded_by?.last_name }}
                             </span>
                           </div>
@@ -1051,7 +1051,7 @@ const RemoveProfilePicture = async () => {
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-  min-width: 500px;
+  min-width: 700px;
   min-height: 40px;
 
   .is-active {

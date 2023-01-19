@@ -1,5 +1,14 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
 import { addQuantity, defaultAddQuantityItem, defaultWithdrawQuantityItem, itemHistory, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 
 
 
@@ -25,9 +34,9 @@ export const useItemHistoryForm = defineStore('ItemHistoryForm', () => {
     const stepTitle = computed(() => {
         switch (step.value) {
             case 1:
-                return 'Add Quantity'
+                return i18n.global.t('add_quantity.form.title')
             default:
-                return 'Add Quantity'
+                return i18n.global.t('add_quantity.form.title')
         }
     })
 
@@ -88,9 +97,9 @@ export const useWithdrawItemForm = defineStore('useWithdrawItemForm', () => {
     const stepTitle = computed(() => {
         switch (step.value) {
             case 1:
-                return 'Withdraw Quantity'
+                return i18n.global.t('withdraw_quantity.form.title')
             default:
-                return 'Withdraw Quantity'
+                return i18n.global.t('withdraw_quantity.form.title')
         }
     })
 

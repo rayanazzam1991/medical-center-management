@@ -53,7 +53,7 @@ const emits = defineEmits<{
                   </li>
                 </ul><br />
               </div>
-              <div class="column is-3">
+              <!-- <div class="column is-3">
                 <h4 class="column-heading">{{t('crm_subnav.social_media.social_medias')}}</h4>
                 <ul>
                   <li>
@@ -71,7 +71,7 @@ const emits = defineEmits<{
                     </RouterLink>
                   </li>
                 </ul><br />
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

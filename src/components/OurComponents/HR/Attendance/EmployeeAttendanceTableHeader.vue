@@ -255,14 +255,14 @@ export default defineComponent({
                             <p>
                                 {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
                                 ➡
-                                {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`) }}
+                                {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.PENDING_PARTIAL_ABSENCE).replaceAll(' ', '_').toLowerCase()}`) }}
                             </p>
                             <p>
                                 <span class="green">{{
                                     AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE)
                                 }}</span> ➡
                                 {{
-                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`)
+                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE).replaceAll(' ', '_').toLowerCase()}`)
                                 }}
                             </p>
                             <p>
@@ -271,7 +271,7 @@ export default defineComponent({
                                 }}</span>
                                 ➡
                                 {{
-                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE).replace(' ', '_').toLowerCase()}`)
+                                    t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE).replaceAll(' ', '_').toLowerCase()}`)
                                 }}
                             </p>
                         </template>
