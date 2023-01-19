@@ -1276,7 +1276,12 @@
         "type" : "النوع"
 
     },
-    "search_filter" : {},
+    "search_filter" : {
+      "title" : "تصفية المتغير المالي",
+      "type" : "النوع",
+      "name" :"الاسم...",
+      "status" : "الحالة"
+    },
     "header_button" :"إضافة متغير مالي"
 }
 

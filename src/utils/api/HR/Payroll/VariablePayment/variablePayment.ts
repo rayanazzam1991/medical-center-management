@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateVariablePayment, UpdateVariablePayment, VariablePayment } from "/@src/models/HR/Payroll/VariablePayment/variablePayment"
+import { CreateVariablePayment, UpdateVariablePayment, VariablePayment, VariablePaymentSearchFilter } from "/@src/models/HR/Payroll/VariablePayment/variablePayment"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createVariablePaymentApi(
@@ -26,6 +26,15 @@ export async function getVariablePaymentApi(
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`variablePayment/${variablePaymentId}`)
 
+  return { response }
+}
+export async function getVariablePaymentsApi(
+  api: AxiosInstance,
+  searchFilter: VariablePaymentSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('variablePayment/getVariablePaymentsList', {
+    params: searchFilter,
+  })
   return { response }
 }
 

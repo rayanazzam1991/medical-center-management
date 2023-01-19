@@ -152,6 +152,8 @@ declare module '@vue/runtime-core' {
     VAction: typeof import('./src/components/base/button/VAction.vue')['default']
     VAnimatedCheckbox: typeof import('./src/components/base/form/VAnimatedCheckbox.vue')['default']
     VariablePaymentForm: typeof import('./src/components/OurComponents/HR/Payroll/VariablePayment/VariablePaymentForm.vue')['default']
+    VariablePaymentSearchFilterModal: typeof import('./src/components/OurComponents/HR/Payroll/VariablePayment/VariablePaymentSearchFilterModal.vue')['default']
+    VariablePaymentTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/VariablePayment/VariablePaymentTableHeader.vue')['default']
     VAvatar: typeof import('./src/components/base/avatar/VAvatar.vue')['default']
     VAvatarStack: typeof import('./src/components/base/avatar/VAvatarStack.vue')['default']
     VBillboardJS: typeof import('./src/components/base/plugins/VBillboardJS.vue')['default']
