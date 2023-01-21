@@ -1,13 +1,15 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
-import { z as zod } from 'zod'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { lineIcons } from '/@src/data/icons/lineIcons';
 import { defaultSocialMedia, SocialMedia, SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { socialmediavalidationSchema } from '../../../../rules/CRM/SocialMedia/socialmediaValidation';
 import { getSocialMedia, addSocialMedia, editSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from '/@src/utils/sleep';
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -19,17 +21,19 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Social Media");
+        viewWrapper.setPageTitle(t('social_media.form.page_title'));
         const head = useHead({
-            title: "Social Media",
+            title: t('social_media.form.page_title'),
         });
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('social_media.form.form_header' , {type : formTypeName});
         const backRoute = "/social-media";
         const currentSocialMedia = ref(defaultSocialMedia);
         const socialMediaId = ref(0);
@@ -43,27 +47,13 @@ export default defineComponent({
                 return
             }
 
-            const socialMedia = await getSocialMedia(socialMediaId.value);
+            const { socialMedia } = await getSocialMedia(socialMediaId.value);
             currentSocialMedia.value = socialMedia != undefined ? socialMedia : defaultSocialMedia;
         };
         onMounted(() => {
             getCurrentSocialMedia();
         });
-        const validationSchema = toFormValidator(zod
-            .object({
-                name: zod
-                    .string({
-                        required_error: "This field is required",
-                    })
-                    .min(1, "This field is required"),
-                // icon: zod
-                // .string({ required_error: "This field is required" }).regex(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|ico|png)/, "Please enter a valid icon or image"),
-                icon: zod
-                    .string({ required_error: "This field is required" }).min(1, "This field is required"),
-
-                status: zod
-                    .number({ required_error: "Please choose one" }),
-            }));
+        const validationSchema = socialmediavalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
@@ -84,23 +74,41 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             var socialMediaData = currentSocialMedia.value;
-            socialMediaData = await addSocialMedia(socialMediaData) as SocialMedia;
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was added successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
+            const { socialMedia, success, message } = await addSocialMedia(socialMediaData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                await sleep(200);
+                // @ts-ignore
+                notif.success(t('toast.success.add'));
+                router.push({ path: `/social-media/${socialMedia.id}` });
+            } else {
+                await sleep(200);
+
+                notif.error(message)
+            }
         });
         const onSubmitEdit = async () => {
             const socialMediaData = currentSocialMedia.value;
-            await editSocialMedia(socialMediaData);
-            // @ts-ignore
-            notif.dismissAll();
-            // @ts-ignore
-            notif.success(`${socialMediaData.name} ${viewWrapper.pageTitle} was edited successfully`);
-            router.push({ path: `/social-media/${socialMediaData.id}` });
+            const { success, message } = await editSocialMedia(socialMediaData);
+            if (success) {
+
+                // @ts-ignore
+                notif.dismissAll();
+                await sleep(200);
+
+                // @ts-ignore
+                notif.success(t('toast.success.edit'));
+                router.push({ path: `/social-media/${socialMediaData.id}` });
+            }
+            else {
+                await sleep(200);
+
+                notif.error(message)
+            }
         };
-        return { pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
+        return {t, pageTitle, onSubmit, lineIcons, currentSocialMedia, viewWrapper, backRoute, SocialMediaConsts };
     },
     components: { ErrorMessage }
 })
@@ -124,7 +132,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{ t('social_media.form.name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentSocialMedia.name" type="text" placeholder=""
                                             autocomplete="given-name" />
@@ -140,14 +148,14 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="icon">
-                                    <VLabel>{{ viewWrapper.pageTitle }} icon</VLabel>
+                                    <VLabel class="optional">{{ t('social_media.form.icon') }}</VLabel>
                                     <VControl :icon="currentSocialMedia.icon">
                                         <VSelect v-if="currentSocialMedia" v-model="currentSocialMedia.icon">
-                                            <VOption value="">Icon</VOption>
-                                            <VOption :value="'lnir lnir-facebook'">facebook</VOption>
-                                            <VOption :value="'lnir lnir-instagram'">Instagram</VOption>
-                                            <VOption :value="'lnir lnir-whatsapp'">Whatsapp</VOption>
-                                            <VOption :value="'lnir lnir-snapchat'">Snapchat</VOption>
+                                            <VOption value="">{{ t('social_media.form.icon') }}</VOption>
+                                            <VOption :value="'lnir lnir-facebook'">{{t('social_media.form.facebook')}}</VOption>
+                                            <VOption :value="'lnir lnir-instagram'">{{t('social_media.form.instagram')}}</VOption>
+                                            <VOption :value="'lnir lnir-whatsapp'">{{t('social_media.form.whatsapp')}}</VOption>
+                                            <VOption :value="'lnir lnir-snapchat'">{{t('social_media.form.snapchat')}}</VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="icon" />
                                     </VControl>
@@ -160,12 +168,12 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('social_medial.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.INACTIVE"
                                             :label="SocialMediaConsts.showStatusName(0)" name="status"
-                                            color="warning" />
+                                            color="danger" />
 
                                         <VRadio v-model="currentSocialMedia.status" :value="SocialMediaConsts.ACTIVE"
                                             :label="SocialMediaConsts.showStatusName(1)" name="status"
@@ -187,227 +195,5 @@ export default defineComponent({
     </div>
 </template>
 <style  scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/forms-outer';
-
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
-}
-
-.filter {
-    margin: 1rem;
-}
-
-.justify-content {
-    display: flex;
-    align-items: baseline;
-}
-
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
-}
+@import '/@src/scss/styles/formPage.scss';
 </style>

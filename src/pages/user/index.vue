@@ -7,12 +7,16 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultUserSearchFilter, UserSearchFilter } from '/@src/models/Others/User/user'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
+import sleep from '/@src/utils/sleep'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('User')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('user.table.title'))
 useHead({
-    title: 'User',
+    title: t('user.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultUserSearchFilter)
 const usersList = ref()
 const deleteUserPopup = ref(false)
@@ -24,12 +28,22 @@ paginationVar.value = pagination
 const router = useRouter()
 
 const removeUser = async (userId: number) => {
-
-    await deleteUser(userId)
+    const { message, success } = await deleteUser(userId)
     await search(searchFilter.value)
+
     deleteUserPopup.value = false
-    // @ts-ignore
-    notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+    if (success) {
+        await sleep(200);
+
+        // @ts-ignore
+        notif.success(t('toast.success.remove'))
+
+    } else {
+        await sleep(200);
+
+        notif.error(message)
+    }
+
 
 }
 const search = async (searchFilter2: UserSearchFilter) => {
@@ -70,31 +84,37 @@ const columns = {
     id: {
         searchable: true,
         sortable: true,
+        label : t('user.table.columns.id')
     },
     first_name: {
         sortable: true,
         searchable: true,
+        label : t('user.table.columns.first_name')
 
     },
     last_name: {
         sortable: true,
         searchable: true,
+        label : t('user.table.columns.last_name')
 
     },
     gender: {
         sortable: true,
         searchable: true,
+        label : t('user.table.columns.gender')
 
     },
     phone_number: {
         sortable: true,
         searchable: true,
+        label : t('user.table.columns.phone')
+
 
     },
     room: {
         sortable: true,
         searchable: true,
-        label: 'Room',
+        label : t('user.table.columns.room'),
         renderRow: (row: any) =>
             h('span', row?.room?.number)
     },
@@ -102,20 +122,21 @@ const columns = {
     city: {
         sortable: true,
         searchable: true,
-        label: 'City',
+        label : t('user.table.columns.city'),
         renderRow: (row: any) =>
             h('span', row?.city?.name)
     },
     status: {
         sortable: true,
         searchable: true,
-        label: 'UserStatus',
+        label : t('user.table.columns.status'),
         renderRow: (row: any) =>
             h('span', row?.status?.name)
     },
 
     actions: {
         align: 'center',
+        label : t('user.table.columns.actions'),
 
         renderRow: (row: any) =>
             h(MyDropDown, {
@@ -138,7 +159,7 @@ const columns = {
 </script>
 
 <template>
-    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
+    <UserTableHeader :title="viewWrapper.pageTitle" :button_name="t('user.header_button')" @search="search"
         :pagination="paginationVar" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="usersList" @update:sort="userSort">
 
@@ -147,25 +168,28 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getUsersPerPage" />
-        <h6 v-if="usersList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="usersList.length != 0">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
-        <h1 v-if="usersList.length == 0">No Data Returned...</h1>
+        <h1 v-if="usersList.length == 0">{{ t('user.table.placeholder') }}</h1>
     </VFlexTableWrapper>
-    <VModal title="Remove User" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
+    <VModal :title="t('user.table.modal_title.remove')" :open="deleteUserPopup" actions="center" @close="deleteUserPopup = false">
         <template #content>
-            <VPlaceholderSection title="Are you sure?"
-                :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+            <VPlaceholderSection :title="t('modal.delete_modal.title')"
+                :subtitle="t('modal.delete_modal.subtitle', {title: viewWrapper.pageTitle})" />
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="removeUser(deleteUserId)">Confirm</VButton>
+            <VButton color="primary" raised @click="removeUser(deleteUserId)">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 

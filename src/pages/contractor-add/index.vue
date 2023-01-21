@@ -1,31 +1,34 @@
 <script setup  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateContractor } from '/@src/models/Contractor/contractor';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { addContractor } from '/@src/services/Contractor/contractorService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-
-
-
-
-
+import { contractorAddvalidationSchema } from '/@src/rules/Contractor/contractorAddValidation';
+import sleep from '/@src/utils/sleep';
+import { defaultSpecialitySearchFilter, Speciality, SpecialitySearchFilter } from '/@src/models/Others/Speciality/speciality';
+import { getSpecialitiesList } from '/@src/services/Others/Speciality/specialityService';
+import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
+import { BaseConsts } from '/@src/utils/consts/base';
+import {useI18n} from "vue-i18n";
+import Notyf from 'notyf/notyf';
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Contractor Main Info')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('contractor.form.step_1_title'))
 const head = useHead({
-    title: 'Contractor',
+    title: t('contractor.form.page_title'),
 })
 const contractorForm = useContractorForm()
 contractorForm.setStep({
@@ -36,204 +39,141 @@ contractorForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/contractor-add/${contractorForm.data.id}/profile-picture`,
+                path: `/contractor-add/${contractorForm.data.id}/services`,
             })
 
         }
     },
 })
-
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
-const pageTitle = 'Step 1: Contractor Main Info'
+const notif = useNotyf() as Notyf
+const pageTitle = t('contractor.form.step_1_subtitle')
 const phoneCheck = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentContractor = ref(defaultCreateContractor)
+const selectedDepartmentId = ref(0)
 const getCurrentContractor = () => {
 
     currentUser.value = contractorForm.userForm
     currentContractor.value = contractorForm.data
+    currentUser.value.gender = 'Male'
 
 
 }
 const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
+const specialitiesList = ref<Speciality[]>([])
+const departmentsList = ref<Department[]>([])
 
 onMounted(async () => {
-    const { cities } = await getCitiesList(defaultCitySearchFilter)
+
+    let citySearchFilter = {} as CitySearchFilter
+    citySearchFilter.status = BaseConsts.ACTIVE
+    citySearchFilter.per_page = 500
+    const { cities } = await getCitiesList(citySearchFilter)
     citiesList.value = cities
-    const { rooms } = await getRoomsList(defaultRoomSearchFilter)
-    roomsList.value = rooms
-    const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+
+    let userStatusSearchFilter = {} as UserStatusSearchFilter
+    userStatusSearchFilter.per_page = 500
+    const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
     statusesList.value = userstatuses
+
+    let specialitySearchFilter = {} as SpecialitySearchFilter 
+    specialitySearchFilter.status = BaseConsts.ACTIVE
+    specialitySearchFilter.per_page = 500 
+    const { specialities } = await getSpecialitiesList(specialitySearchFilter)
+    specialitiesList.value = specialities
+
+    let departmentSearchFilter = {} as DepartmentSearchFilter 
+    departmentSearchFilter.per_page = 500
+    departmentSearchFilter.status = BaseConsts.ACTIVE
+    const { departments } = await getDepartmentsList(departmentSearchFilter)
+    departmentsList.value = departments
+
 
 })
 onMounted(() => {
     getCurrentContractor()
+})
+
+const getRoomsByDepartment = async () => {
+    let RoomsFilter: RoomSearchFilter = defaultRoomSearchFilter
+    RoomsFilter.department_id = selectedDepartmentId.value
+    RoomsFilter.status = BaseConsts.ACTIVE
+    const { rooms } = await getRoomsList(RoomsFilter)
+    roomsList.value = rooms
+
 }
-)
 
 
-const validationSchema = toFormValidator(zod
-    .object({
-        first_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .min(1, "This field is required"),
-        last_name:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-        birth_date:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod.string({})
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, 'Date must be a vaild date format YYYY-MM-DD')
-                        .optional()),
-        gender: zod.string(),
-        phone_number:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                        .min(9, "Please enter a valid number"),
-                ),
-        address:
-            zod
-                .string({
-                    required_error: "This field is required",
-                })
-                .optional(),
-
-        city_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        room_id:
-            zod
-                .preprocess(
-                    val => val === "" ? undefined : val,
-                    zod
-                        .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                        .optional()),
-        user_status_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                    .min(1, "This field is required"),
-            ),
-        starting_date:
-            zod
-                .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
-
-                    },
-                    zod.date({
-                        invalid_type_error: "That's not a date!",
-                    }).optional(),
-                ),
-        payment_percentage:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({ invalid_type_error: "Please enter a valid number" })
-                        .min(0, 'Please enter a number from 0-100').max(100, 'Please enter a number from 0-100'),
-                ),
-
-    }));
-
+const validationSchema = contractorAddvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        first_name: currentUser.value.first_name,
-        last_name: currentUser.value.last_name,
-        gender: currentUser.value.gender,
-        birth_date: currentUser.value.birth_date,
-        phone_number: currentUser.value.phone_number,
-        address: currentUser.value.address,
-        room_id: currentUser.value.room_id,
-        city_id: currentUser.value.city_id,
-        user_status_id: currentUser.value.user_status_id,
-        starting_date: currentContractor.value.starting_date,
-        payment_percentage: currentContractor.value.payment_percentage,
+        first_name: "",
+        last_name: "",
+        gender: "",
+        birth_date: "",
+        phone_number: "",
+        address: "",
+        room_id: undefined,
+        city_id: "",
+        user_status_id: "",
+        starting_date: "",
+        payment_percentage: "",
+        end_date: undefined,
+        speciality_id: ""
     },
 })
 
-
 const onSubmitAdd = handleSubmit(async (values) => {
-
     var userData = currentUser.value
-    const { result } = await phoneExistsCheck(userData.phone_number)
+    const { result } = await phoneExistsCheck('964' + userData.phone_number)
     phoneCheck.value = result as string
     if (phoneCheck.value === 'false') {
-
         var customerData = currentContractor.value
         contractorForm.data.starting_date = customerData.starting_date
+        if(customerData.end_date != ''){
+            contractorForm.data.end_date = customerData.end_date 
+
+        }else {
+            contractorForm.data.end_date = undefined 
+
+        }
+        contractorForm.data.speciality_id = customerData.speciality_id
         contractorForm.data.payment_percentage = customerData.payment_percentage
         contractorForm.userForm.first_name = userData.first_name
         contractorForm.userForm.last_name = userData.last_name
         contractorForm.userForm.password = userData.password
         contractorForm.userForm.gender = userData.gender
         contractorForm.userForm.birth_date = userData.birth_date
-        contractorForm.userForm.phone_number = '964' + userData.phone_number
+        contractorForm.userForm.phone_number = userData.phone_number
         contractorForm.userForm.address = userData.address
         contractorForm.userForm.room_id = userData.room_id
         contractorForm.userForm.city_id = userData.city_id
         contractorForm.userForm.user_status_id = userData.user_status_id
+        const { success, message, contractor } = await addContractor(contractorForm.data, contractorForm.userForm)
+        if (success) {
+            contractorForm.data.id = contractor.id
+            await sleep(200);
 
-        const contractor = await addContractor(contractorForm.data, contractorForm.userForm)
-
-        if (contractor.success) {
-            contractorForm.data.id = contractor.contractor.id
             // @ts-ignore
-            notif.success(`${contractorForm.userForm.first_name} ${contractorForm.userForm.last_name} was added successfully`)
-
+            notif.success(t('toast.success.add'))
             return true
         }
         else {
+            await sleep(200);
             // @ts-ignore
-
-            notif.error(contractor.success)
+            notif.error(message)
             return false
         }
-
-
     }
     else {
         return false
     }
 })
-
-
-
-
-
 </script>
 
 <template>
@@ -247,9 +187,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="first_name">
-                                    <VLabel>First name</VLabel>
+                                    <VLabel class="required">{{t('contractor.form.first_name')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
@@ -257,14 +197,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="last_name">
-                                    <VLabel>Last name</VLabel>
+                                    <VLabel class="required">{{t('contractor.form.last_name')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -272,14 +207,30 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
+                                <VField id="phone_number">
+                                    <VLabel class="required">{{t('contractor.form.phone_number')}} <span>(+964)</span></VLabel>
+                                    <VControl icon="feather:chevrons-right"
+                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''">
+                                        <VInput v-model="currentUser.phone_number" type="number" placeholder=""
+                                            autocomplete="given-first_name" />
+                                        <ErrorMessage class="help is-danger" name="phone_number" />
+                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-6">
                                 <VField id="birth_date">
-                                    <VLabel>Birth date </VLabel>
+                                    <VLabel class="required">{{t('contractor.form.birth_date')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -290,23 +241,39 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="columns column is-multiline ">
-                            <label class="lab">phone number </label>
-                            <div class="columns column is-12">
-                                <div class="column is-2 ">
-                                    <input class="input" type="text" placeholder="+964" readonly />
-                                </div>
-                                <VField class="column is-10 " id="phone_number">
-                                    <VControl class="Vi"
-                                        :class="phoneCheck != 'false' ? 'has-validation has-error' : ''"
-                                        icon="feather:chevrons-right">
-                                        <VInput v-model="currentUser.phone_number" type="number" />
-                                        <ErrorMessage class="help is-danger" name="phone_number" />
-                                        <p v-if="phoneCheck != 'false'" class="help is-danger">{{ phoneCheck }}</p>
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <VField id="gender">
+                                    <VLabel class="required">{{t('contractor.form.gender')}}</VLabel>
+
+                                    <VControl>
+                                        <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')" name="gender"
+                                            color="success" />
+
+                                        <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')" name="gender"
+                                            color="success" />
+                                        <ErrorMessage class="help is-danger" name="gender" />
                                     </VControl>
                                 </VField>
                             </div>
+                            <div class="column is-6">
+                                <VField id="city_id">
+                                    <VLabel class="required">{{t('contractor.form.city')}}</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                            <VOption value="">{{t('contractor.form.city')}}</VOption>
+                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
+        city.name
+}}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="city_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
                         </div>
                     </div>
                     <!--Fieldset-->
@@ -314,8 +281,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel>Address </VLabel>
-                                    <VControl icon="feather:chevrons-right">
+                                    <VLabel class="required">{{t('contractor.form.address')}} </VLabel>
+                                    <VControl>
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage class="help is-danger" name="address" />
                                     </VControl>
@@ -326,128 +293,135 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="gender">
-                                    <VLabel>Gender</VLabel>
-
+                            <div class="column is-6">
+                                <VField>
+                                    <VLabel class="required">{{t('contractor.form.department')}}</VLabel>
                                     <VControl>
-                                        <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                            color="success" />
+                                        <div class="select">
 
-                                        <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
-                                            color="success" />
-                                        <ErrorMessage class="help is-danger" name="gender" />
+                                            <select @change="getRoomsByDepartment" v-if="currentUser"
+                                                v-model="selectedDepartmentId">
+                                                <VOption :value="0">{{t('contractor.form.department')}}</VOption>
+                                                <VOption v-for="department in departmentsList" :key="department.id"
+                                                    :value="department.id">{{ department.name }}
+                                                </VOption>
+                                            </select>
+                                        </div>
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="room_id">
-                                    <VLabel>Room</VLabel>
+                                    <VLabel class="required">{{t('contractor.form.room')}}</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.room_id">
-                                            <VOption>Room</VOption>
+                                        <VSelect :disabled="roomsList.length <= 0" v-if="currentUser"
+                                            v-model="currentUser.room_id">
+                                            <VOption>{{t('contractor.form.room')}}</VOption>
                                             <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-                                                    room.number
-                                            }}
+        room.number
+}}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="room_id" />
                                     </VControl>
                                 </VField>
                             </div>
+
                         </div>
                     </div>
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="city_id">
-                                    <VLabel>City</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                            <VOption value="">City</VOption>
-                                            <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                    city.name
-                                            }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="city_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField id="user_status_id">
-                                    <VLabel>Status</VLabel>
-                                    <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                            <VOption value="">Status</VOption>
-                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
-                                                {{
-                                                        status.name
-                                                }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="user_status_id" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div class="column is-6">
                                 <VField id="starting_date">
-                                    <VLabel>Starting date </VLabel>
+                                    <VLabel class="required">{{t('contractor.form.starting_date')}} </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentContractor.starting_date" type="date" />
                                         <ErrorMessage class="help is-danger" name="starting_date" />
                                     </VControl>
                                 </VField>
                             </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField v-slot="{ id }" class="has-curved-tooltip" id="payment_percentage">
-                                    <VLabel>Payment Percentage</VLabel>
-
-                                    <VControl>
-                                        <Slider :id="id" v-model="currentContractor.payment_percentage" />
-                                        <ErrorMessage class="help is-danger" name="payment_percentage" />
-
+                            <div class="column is-6">
+                                <VField id="end_date">
+                                    <VLabel >{{t('contractor.form.end_date')}} </VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="currentContractor.end_date" type="date" />
+                                        <ErrorMessage class="help is-danger" name="end_date" />
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <VField id="payment_percentage">
+                                    <VLabel class="required">{{t('contractor.form.payment_percentage')}}</VLabel>
+                                    <VControl icon="feather:percent">
+                                        <VInput v-model="currentContractor.payment_percentage" type="number" />
+                                        <ErrorMessage class="help is-danger" name="payment_percentage" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <VField id="speciality_id">
+                                    <VLabel class="required">{{t('contractor.form.speciality')}}</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentUser" v-model="currentContractor.speciality_id">
+                                            <VOption value="">{{t('contractor.form.speciality')}}</VOption>
+                                            <VOption v-for="speciality in specialitiesList" :key="speciality.id"
+                                                :value="speciality.id">
+                                                {{ speciality.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="speciality_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <VField id="user_status_id">
+                                    <VLabel class="required">{{t('contractor.form.status')}}</VLabel>
+                                    <VControl>
+                                        <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                            <VOption value="">{{t('contractor.form.status')}}</VOption>
+                                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                {{ status.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="user_status_id" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </form>
-
-
-
     </div>
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+
 .Vi {
     width: 28.5em;
 }
+
+.form-layout .form-outer .form-body {
+    padding: 20px 40px 40px;
+    padding-bottom: 72px;
+
+}
+
 
 .lab {
     margin-left: .77em;
@@ -455,224 +429,11 @@ const onSubmitAdd = handleSubmit(async (values) => {
     display: block;
 }
 
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
+.layout {
+    min-width: 50%;
 }
 
-.filter {
-    margin: 1rem;
-}
-
-.justify-content {
-    display: flex;
-    align-items: baseline;
-}
-
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
+.form-fieldset {
+    max-width: 40%;
 }
 </style>

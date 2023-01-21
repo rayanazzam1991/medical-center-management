@@ -1,40 +1,63 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts } from '/@src/models/Others/Service/service';
+import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts, Service } from '/@src/models/Others/Service/service';
 import { getServicesList, deleteService } from '/@src/services/Others/Service/serviceService';
+import { useService } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import sleep from '/@src/utils/sleep';
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Service')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('service.table.title'))
 useHead({
-  title: 'Service',
+  title: t('service.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultServiceSearchFilter)
-const servicesList = ref()
+const servicesList = ref<Array<Service>>([])
 const deleteServicePopup = ref(false)
 const deleteServiceId = ref()
 const paginationVar = ref(defaultPagination)
-const { services, pagination } = await getServicesList(searchFilter.value)
-servicesList.value = services
-paginationVar.value = pagination
 const router = useRouter()
+const serviceStore = useService()
+const keyIncrement = ref(0)
+const default_per_page = ref(1)
+onMounted(async () => {
+  const { services, pagination } = await getServicesList(searchFilter.value)
+  servicesList.value = services
+  paginationVar.value = pagination
+  keyIncrement.value = keyIncrement.value + 1
+  default_per_page.value = pagination.per_page
+
+});
 
 const removeService = async (serviceId: number) => {
 
-  await deleteService(serviceId)
+  const { message, success } = await deleteService(serviceId)
   await search(searchFilter.value)
 
   deleteServicePopup.value = false
-  // @ts-ignore
-  notif.success(`${viewWrapper.pageTitle} was deleted successfully`)
+  if (success) {
 
+    // @ts-ignore
+    await sleep(200);
+
+    notif.success(t('toast.success.remove'))
+
+  } else {
+    await sleep(200);
+
+    notif.error(message)
+  }
 }
 
 const search = async (searchFilter2: ServiceSearchFilter) => {
+  paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
   const { services, pagination } = await getServicesList(searchFilter2)
 
@@ -46,12 +69,12 @@ const search = async (searchFilter2: ServiceSearchFilter) => {
 
 const resetFilter = async (searchFilter2: ServiceSearchFilter) => {
   searchFilter.value = searchFilter2
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 
 const getServicesPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
-  search(searchFilter.value)
+  await search(searchFilter.value)
 }
 const serviceSort = async (value: string) => {
   if (value != undefined) {
@@ -72,28 +95,32 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
+    label : t('service.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
+    label : t('service.table.columns.name')
 
 
   },
   duration_minutes: {
-    label: 'Duration',
     align: 'center',
     sortable: true,
+    label : t('service.table.columns.duration')
 
   },
   service_price: {
-    label: `Price (${ServiceConsts.PRICE_DOLLAR})`,
+    label: t('service.table.columns.price'),
+
     align: 'center',
     sortable: true,
 
   },
   status: {
     align: 'center',
+    label : t('service.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -102,7 +129,7 @@ const columns = {
           rounded: true,
           color:
             row?.status === ServiceConsts.INACTIVE
-              ? 'orange'
+              ? 'danger'
               : row?.status === ServiceConsts.ACTIVE
                 ? 'success'
                 : undefined,
@@ -117,6 +144,7 @@ const columns = {
   },
   actions: {
     align: 'center',
+    label : t('service.table.columns.actions'),
 
     renderRow: (row: any) =>
       h(MyDropDown, {
@@ -139,34 +167,50 @@ const columns = {
 </script>
 
 <template>
-  <ServiceTableHeader :title="viewWrapper.pageTitle" :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-    :pagination="paginationVar" @resetFilter="resetFilter" />
+  <ServiceTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('service.header_button')"
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="servicesList" @update:sort="serviceSort" :limit="searchFilter.per_page">
-
-    <VFlexTable v-if="servicesList.length != 0" :clickable="true" :separators="true">
+    <VFlexTable separators clickable>
+      <template #body>
+        <div v-if="serviceStore?.loading" class="flex-list-inner">
+          <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+            <VFlexTableCell>
+              <VPlaceload />
+            </VFlexTableCell>
+          </div>
+        </div>
+        <div v-else-if="servicesList.length === 0" class="flex-list-inner">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" 
+          :subtitle="t('tables.placeholder.subtitle')"  class="my-6">
+          </VPlaceholderSection>
+        </div>
+      </template>
     </VFlexTable>
     <VFlexPagination v-if="servicesList.length != 0 && paginationVar.max_page != 1" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getServicesPerPage" />
-    <h6 v-if="servicesList.length != 0">Showing {{ paginationVar.page != paginationVar.max_page
-        ?
-        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-    }} to {{
-    paginationVar.page !=
-      paginationVar.max_page ?
-      paginationVar.page *
-      paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+    <h6 v-if="servicesList.length != 0 && !serviceStore?.loading">
+      {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
-    <h1 v-if="servicesList.length == 0">No Data Returned...</h1>
+    <VPlaceloadText v-if="serviceStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal title="Remove Service" :open="deleteServicePopup" actions="center" @close="deleteServicePopup = false">
+  <VModal :title="t('service.table.modal_title')" :open="deleteServicePopup" actions="center" @close="deleteServicePopup = false">
     <template #content>
-      <VPlaceholderSection title="Are you sure?"
-        :subtitle="`you are about to delete this ${viewWrapper.pageTitle} permenantly`" />
+      <VPlaceholderSection :title="t('modal.delete_modal.title')"
+        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeService(deleteServiceId)">Confirm</VButton>
+      <VButton color="primary" raised @click="removeService(deleteServiceId)">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
 

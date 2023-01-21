@@ -3,8 +3,9 @@ import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatus
 import { defaultEmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
 import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
-import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
+import { useI18n } from "vue-i18n"
 
 export default defineComponent({
     props: {
@@ -27,13 +28,12 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref()
-        const searchGender = ref()
         const searchPhoneNumber = ref()
         const searchDateBetween = ref()
         const searchFrom = ref()
         const searchTo = ref()
-        const searchNationality = ref()
         const searchStatus = ref()
 
         const searchFilter = ref(defaultEmployeeSearchFilter)
@@ -44,7 +44,6 @@ export default defineComponent({
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
 
             },
         })
@@ -53,35 +52,28 @@ export default defineComponent({
         const search = () => {
             searchFilter.value = {
                 name: searchName.value,
-                gender: searchGender.value,
                 phone_number: searchPhoneNumber.value,
                 user_status_id: searchStatus.value,
-                nationality_id: searchNationality.value,
                 date_between: 'created_at',
                 from: searchFrom.value,
                 to: searchTo.value,
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
 
 
         }
         const resetFilter = () => {
             searchName.value = undefined
-            searchGender.value = undefined
             searchPhoneNumber.value = undefined
             searchPhoneNumber.value = undefined
             searchStatus.value = undefined
-            searchNationality.value = undefined
             searchDateBetween.value = undefined
             searchFrom.value = undefined
             searchTo.value = undefined
             searchFilter.value.name = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.phone_number = undefined
             searchFilter.value.user_status_id = undefined
-            searchFilter.value.nationality_id = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
@@ -89,18 +81,16 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        const cities2 = ref<City[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        const nationalities2 = ref<Nationality[]>([])
+        const statusesList = ref<UserStatus[]>([])
         onMounted(async () => {
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
-            const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-            nationalities2.value = nationalities
+            let userStatusSearchFilter = {} as UserStatusSearchFilter
+            userStatusSearchFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
+            statusesList.value = userstatuses
         })
 
 
-        return { search, resetFilter, nationalities2, search_filter_popup, statuses2, searchName, searchGender, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo, searchNationality }
+        return { t, search, resetFilter, search_filter_popup, statusesList, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
 
 
 
@@ -116,44 +106,24 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Employee" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('employee.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input is-rounded" placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('employee.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input is-rounded"
-                            placeholder="phone_number..." />
+                        <input v-model="searchPhoneNumber" type="text" class="input " :placeholder="t('employee.search_filter.phone_number')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
-                        <VSelect v-model="searchGender" class="is-rounded">
-                            <VOption value="">Gender</VOption>
-                            <VOption value="Male">Male</VOption>
-                            <VOption value="Female">Female</VOption>
-                        </VSelect>
-                    </VControl>
-                </VField>
-                <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchNationality" class="is-rounded">
-                            <VOption value="">Nationality</VOption>
-                            <VOption v-for="nationality in nationalities2" :key="nationality.id"
-                                :value="nationality.id">{{ nationality.name }}
-                            </VOption>
-                        </VSelect>
-                    </VControl>
-                </VField>
-                <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchStatus" class="is-rounded">
-                            <VOption value="">Status</VOption>
-                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                        <VSelect v-model="searchStatus" class="">
+                            <VOption value="">{{t('employee.search_filter.status')}}</VOption>
+                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
                             </VOption>
@@ -161,15 +131,15 @@ export default defineComponent({
                     </VControl>
                 </VField>
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">Create Date:</h1>
+                    <h1 class="column-is-12">{{t('employee.search_filter.create_date')}}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>From : </VLabel>
+                        <VLabel>{{ t('employee.search_filter.from') }} </VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
                     </VField>
                     <VField class="column-is-6 filter">
-                        <VLabel>To : </VLabel>
+                        <VLabel>{{t('employee.search_filter.to')}} </VLabel>
 
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchTo" type="date" />
@@ -181,16 +151,8 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="feather:search" color="primary" raised @click="search">Search</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{ t('modal.buttons.filter')}}</VButton>
         </template>
-
-
-
-        <VField class="column filter">
-            <VControl icon="feather:search">
-                <input v-model="searchPhoneNumber" type="text" class="input is-rounded" placeholder="phone_number..." />
-            </VControl>
-        </VField>
     </VModal>
 </template>
 

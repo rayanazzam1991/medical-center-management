@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
 import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi } from "/@src/utils/api/Others/User"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useUser = defineStore('user', () => {
@@ -10,6 +11,9 @@ export const useUser = defineStore('user', () => {
   const users = ref<User[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
 
   async function deleteUserStore(userId: number) {
     if (loading.value) return
@@ -22,7 +26,16 @@ export const useUser = defineStore('user', () => {
         users.value.findIndex((user: User) => user.id === userId),
         1
       )
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -30,36 +43,52 @@ export const useUser = defineStore('user', () => {
     if (loading.value) return
 
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await getUserApi(api, userId)
       var returnedUser: User
       returnedUser = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedUser
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
   async function addUserStore(user: CreateUpdateUser) {
     if (loading.value) return
 
-    loading.value = true
-
+    sleep(2000)
     try {
       const response = await addUserApi(api, user)
       var returnedUser: User
       returnedUser = response.response.data
       users.value.push(returnedUser)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedUser
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
   async function editUserStore(user: CreateUpdateUser) {
     if (loading.value) return
-
     loading.value = true
-
+    sleep(2000)
     try {
       const response = await editUserApi(api, user)
       var returnedUser: User
@@ -68,8 +97,17 @@ export const useUser = defineStore('user', () => {
         users.value.findIndex((userElement) => (userElement.id = user.id)),
         1
       )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       users.value.push(returnedUser)
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -86,8 +124,17 @@ export const useUser = defineStore('user', () => {
         users.value.findIndex((userElement) => (userElement.id = user.id)),
         1
       )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       users.value.push(returnedUser)
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -100,7 +147,16 @@ export const useUser = defineStore('user', () => {
       const returnedResponse = await getUsersApi(api, searchFilter)
       users.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -111,22 +167,35 @@ export const useUser = defineStore('user', () => {
 
     try {
       const returnedResponse = await phoneExistsCheckApi(api, phone_number)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
       return returnedResponse.response.data as string
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     users,
     pagination,
+    loading,
     deleteUserStore,
     addUserStore,
     editUserStore,
     getUserStore,
     getUsersStore,
     phoneExistsCheckStore,
-    changeUserStatusStore,
+    changeUserStatusStore
   } as const
 })
 

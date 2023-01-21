@@ -34,6 +34,10 @@ const sliderClass = computed(() => {
   }
 
   if (props.type === 'rounded') {
+    if (props.tabs.length === 4) {
+      return 'is-quad-slider'
+    }
+
     if (props.tabs.length === 3) {
       return 'is-triple-slider'
     }
@@ -45,6 +49,9 @@ const sliderClass = computed(() => {
   }
 
   if (!props.type) {
+    if (props.tabs.length === 4) {
+      return 'is-squared is-quad-slider'
+    }
     if (props.tabs.length === 3) {
       return 'is-squared is-triple-slider'
     }
@@ -75,48 +82,31 @@ watch(activeValue, (value) => {
 <template>
   <div class="tabs-wrapper" :class="[sliderClass]">
     <div class="tabs-inner">
-      <div
-        class="tabs"
-        :class="[
-          props.align === 'centered' && 'is-centered',
-          props.align === 'right' && 'is-right',
-          props.type === 'rounded' && !props.slider && 'is-toggle is-toggle-rounded',
-          props.type === 'toggle' && 'is-toggle',
-          props.type === 'boxed' && 'is-boxed',
-        ]"
-      >
+      <div class="tabs" :class="[
+        props.align === 'centered' && 'is-centered',
+        props.align === 'right' && 'is-right',
+        props.type === 'rounded' && !props.slider && 'is-toggle is-toggle-rounded',
+        props.type === 'toggle' && 'is-toggle',
+        props.type === 'boxed' && 'is-boxed',
+      ]">
         <ul>
-          <li
-            v-for="(tab, key) in tabs"
-            :key="key"
-            :class="[activeValue === tab.value && 'is-active']"
-          >
-            <slot
-              name="tab-link"
-              v-bind="{
-                activeValue,
-                tab,
-                key,
-                toggle,
-              }"
-            >
-              <RouterLink
-                tabindex="0"
-                :to="tab.to ?? '#'"
-                @keydown.enter="toggle(tab.value)"
-                @click="toggle(tab.value)"
-              >
+          <li v-for="(tab, key) in tabs" :key="key" :class="[activeValue === tab.value && 'is-active']">
+            <slot name="tab-link" v-bind="{
+              activeValue,
+              tab,
+              key,
+              toggle,
+            }">
+              <RouterLink tabindex="0" :to="tab.to ?? '#'" @keydown.enter="toggle(tab.value)"
+                @click="toggle(tab.value)">
                 <VIcon v-if="tab.icon" :icon="tab.icon" />
                 <span>
-                  <slot
-                    name="tab-link-label"
-                    v-bind="{
-                      activeValue,
-                      tab,
-                      key,
-                      toggle,
-                    }"
-                  >
+                  <slot name="tab-link-label" v-bind="{
+                    activeValue,
+                    tab,
+                    key,
+                    toggle,
+                  }">
                     {{ tab.label }}
                   </slot>
                 </span>
@@ -130,12 +120,9 @@ watch(activeValue, (value) => {
 
     <div class="tab-content is-active">
       <Transition :name="props.slow ? 'fade-slow' : 'fade-fast'" mode="out-in">
-        <slot
-          name="tab"
-          v-bind="{
-            activeValue,
-          }"
-        ></slot>
+        <slot name="tab" v-bind="{
+          activeValue,
+        }"></slot>
       </Transition>
     </div>
   </div>

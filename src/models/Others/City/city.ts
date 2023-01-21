@@ -18,8 +18,8 @@ export const defaultCity: City = {
     id: 0,
     name: '',
     status: 1,
-  }
-  
+}
+
 export const defaultCitySearchFilter: CitySearchFilter = {
     name: undefined,
     status: undefined,
@@ -30,4 +30,4 @@ export const defaultCitySearchFilter: CitySearchFilter = {
 }
 
 const CityConsts = BaseConsts
-export {CityConsts}
+export { CityConsts }

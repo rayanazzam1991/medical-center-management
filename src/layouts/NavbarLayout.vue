@@ -4,19 +4,17 @@ import type { UserPopover } from '/@src/models/users'
 import { popovers } from '/@src/data/users/userPopovers'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { usePanels } from '/@src/stores/panels'
+import { useI18n } from 'vue-i18n'
+import { useDarkmode } from '../stores/darkmode'
 
 export type NavbarTheme = 'default' | 'colored' | 'fade'
 export type SubnavId =
   | 'closed'
-  | 'home'
-  | 'layouts'
-  | 'elements'
-  | 'components'
-  | 'search'
-'others'
-'CRM'
-'employee'
-'contractor'
+  | 'others'
+  | 'CRM'
+  | 'HR'
+  | 'contractor'
+  | 'warehouse'
 
 const props = withDefaults(
   defineProps<{
@@ -29,13 +27,15 @@ const props = withDefaults(
 )
 
 const viewWrapper = useViewWrapper()
+const darkmode = useDarkmode()
 const panels = usePanels()
 const route = useRoute()
 const filter = ref('')
 const isMobileSidebarOpen = ref(false)
 const activeMobileSubsidebar = ref('dashboard')
 const activeSubnav = ref<SubnavId>('closed')
-
+const { t ,locale} = useI18n()
+const LR = locale.value == "ar" ? "left" : "right"
 const filteredUsers = computed(() => {
   if (!filter.value) {
     return []
@@ -55,6 +55,12 @@ function toggleSubnav(subnav: SubnavId) {
   } else {
     activeSubnav.value = subnav
   }
+}
+function activateSubnav(subnav: SubnavId) {
+  activeSubnav.value = subnav
+}
+function deactivateSubnav() {
+  activeSubnav.value = 'closed'
 }
 
 function getAvatarData(user: UserPopover): VAvatarProps {
@@ -153,7 +159,8 @@ watch(
       <!-- Custom navbar title -->
       <template #title>
         <RouterLink to="/" class="brand">
-          <AnimatedLogo width="38px" height="38px" />
+          <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
+             <img v-else src ="/images/logos/logo/logo.png"/>
         </RouterLink>
 
         <div class="separator"></div>
@@ -174,79 +181,88 @@ watch(
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
-        <UserProfileDropdown right />
+        <UserProfileDropdown LR />
       </template>
 
       <!-- Custom navbar links -->
       <template #links>
-        <div class="centered-links" :class="[activeSubnav === 'search' && 'is-hidden']">
+        <div class="centered-links" :class="''">
           <a :class="[
-            (activeSubnav === 'others' || route.path.startsWith('/navbar/dashboards')) &&
-            'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
+  (activeSubnav === 'others' ||
+    route.path.startsWith('/nationality') ||
+    route.path.startsWith('/department') ||
+    route.path.startsWith('/city') ||
+    route.path.startsWith('/userStatus') ||
+    route.path.startsWith('/service') ||
+    route.path.startsWith('/room')) &&
+  'is-active',
+]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
             <i class="iconify" data-icon="feather:layers" aria-hidden="true"></i>
-            <span>Others</span>
+            <span>{{ t("navbar.others")}}</span>
           </a>
           <a :class="[
-            (activeSubnav === 'CRM' || route.path.startsWith('/navbar/CRM')) &&
-            'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
+  (activeSubnav === 'CRM' ||
+    route.path.startsWith('/customer') ||
+    route.path.startsWith('/customer-add') ||
+    route.path.startsWith('/customer-edit') ||
+    route.path.startsWith('/customer-group') ||
+    route.path.startsWith('/social-media')) &&
+  'is-active',
+]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
             @click="toggleSubnav('CRM')">
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
-            <span>CRM</span>
+            <span>{{ t("navbar.crm")}}</span>
           </a>
-          <a :class="[activeSubnav === 'contractor' && 'is-active']" class="centered-link centered-link-toggle"
-            tabindex="0" @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+          <a :class="[((activeSubnav === 'contractor') ||
+  route.path.startsWith('/contractor') ||
+  route.path.startsWith('/contractor-add') ||
+  route.path.startsWith('/contractor-edit') ||
+  route.path.startsWith('/speciality') ||
+  route.path.startsWith('/speciality-add')
+
+
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-            <span>Contractors</span>
+            <span>{{ t("navbar.contractor")}}</span>
           </a>
-          <a :class="[activeSubnav === 'employee' && 'is-active']" class="centered-link centered-link-toggle"
-            tabindex="0" @keydown.space.prevent="toggleSubnav('employee')" @click="toggleSubnav('employee')">
-            <i class="iconify" data-icon="feather:users" aria-hidden="true"></i>
-            <span>Employees</span>
+          <a :class="[(activeSubnav === 'HR' ||
+  route.path.startsWith('/employee') ||
+  route.path.startsWith('/employee-add') ||
+  route.path.startsWith('/employee-edit') ||
+  route.path.startsWith('/position') ||
+  route.path.startsWith('/position-add')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
+            @click="toggleSubnav('HR')">
+            <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
+            <span>{{ t('navbar.human_resources')}}</span>
+          </a>
+          <a :class="[(activeSubnav === 'warehouse' ||
+  route.path.startsWith('/category') ||
+  route.path.startsWith('/category-add') ||
+  route.path.startsWith('/category-edit') ||
+  route.path.startsWith('/item-edit') ||
+  route.path.startsWith('/item-add')
+) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
+            <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
+            <span>{{ t('navbar.warehouse')}}</span>
           </a>
         </div>
-        <!-- 
-        <div class="centered-search" :class="[activeSubnav !== 'search' && 'is-hidden']">
-          <div class="field">
-            <div class="control has-icon">
-              <input v-model="filter" type="text" class="input is-rounded search-input"
-                placeholder="Search records..." />
-              <div class="form-icon">
-                <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
-              </div>
-              <div class="form-icon is-right" tabindex="0" @keydown.space.prevent="toggleSubnav('search')"
-                @click="toggleSubnav('search')">
-                <i aria-hidden="true" class="iconify" data-icon="feather:x"></i>
-              </div>
-              <div v-if="filteredUsers.length > 0" class="search-results has-slimscroll is-active">
-                <div v-for="user in filteredUsers" :key="user.id" class="search-result">
-                  <VAvatar v-bind="getAvatarData(user)" />
-                  <div class="meta">
-                    <span>{{ user.username }}</span>
-                    <span>{{ user.position }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </template>
 
       <!-- Custom navbar sub navigation -->
       <template #subnav>
         <div :class="[
-          !(activeSubnav === 'closed' || activeSubnav === 'search') && 'is-active',
-        ]" class="navbar-subnavbar">
+  !(activeSubnav === 'closed') && 'is-active',
+]" class="navbar-subnavbar">
 
-          <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" />
-
-          <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" />
-
-          <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" />
-
-          <EmployeeSubnav :class="[activeSubnav === 'employee' && 'is-active']" />
+          <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" @close="deactivateSubnav" />
+          <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" @close="deactivateSubnav" />
+          <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" />
+          <EmployeeSubnav :class="[activeSubnav === 'HR' && 'is-active']" @close="deactivateSubnav" />
+          <WarehouseSubnav :class="[activeSubnav === 'warehouse' && 'is-active']" @close="deactivateSubnav" />
         </div>
       </template>
     </Navbar>

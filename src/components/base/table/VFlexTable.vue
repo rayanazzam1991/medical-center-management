@@ -206,7 +206,8 @@ const columns = computed(() => {
   .flex-table-header {
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 5px;
+    text-align: center;
 
     > span,
     .text {
@@ -217,8 +218,9 @@ const columns = computed(() => {
       font-weight: 600;
       color: var(--muted-grey);
       text-transform: uppercase;
-      padding: 0 10px 10px;
-
+      padding: 0 5px 10px;
+      word-wrap: break-word;
+      
       &.is-checkbox {
         display: flex;
         justify-content: center;

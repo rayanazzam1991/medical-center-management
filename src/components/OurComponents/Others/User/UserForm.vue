@@ -1,8 +1,6 @@
 <script  lang="ts">
-import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { z as zod } from 'zod';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { addUser, getUser, editUser } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
@@ -13,7 +11,11 @@ import { defaultUser, defaultCreateUpdateUser, User } from '/@src/models/Others/
 import { defaultUserStatus, UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-
+import { uservalidationSchema } from '/@src/rules/Others/User/userValidation';
+import { useUser } from '/@src/stores/Others/User/userStore';
+import sleep from '/@src/utils/sleep';
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 export default defineComponent({
     props: {
@@ -26,19 +28,21 @@ export default defineComponent({
 
     emits: ['onSubmit'],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('User')
+        viewWrapper.setPageTitle(t('user.form.page_title'))
         const head = useHead({
-            title: 'User',
+            title: t('user.form.page_title'),
         })
-        const notif = useNotyf()
-
+        const userStore = useUser()
+        const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
         const router = useRouter()
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('user.form.form_header' , {type : formTypeName});
 
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
         const backRoute = '/user'
         const currentUser = ref(defaultUser)
         const currentCreateUpdateUser = ref(defaultCreateUpdateUser)
@@ -58,7 +62,7 @@ export default defineComponent({
                 currentUser.value.status = defaultUserStatus
                 return
             }
-            const user = await getUser(userId.value)
+            const { user } = await getUser(userId.value)
             currentUser.value = user != undefined ? user : defaultUser
 
         }
@@ -80,75 +84,7 @@ export default defineComponent({
         )
 
 
-        const validationSchema = toFormValidator(zod
-            .object({
-                first_name:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                last_name:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-                // birth_date:
-                //     zod
-                //         .date({
-                //             required_error: "This field is required",
-                //         }),
-                phone_number:
-                    zod
-                        .preprocess(
-                            (input) => {
-                                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                                return processed.success ? processed.data : input;
-                            },
-                            zod
-                                .number({ required_error: 'This field is required', invalid_type_error: "Please enter a valid number" })
-                                .min(9, "Please enter a valid number"),
-                        ),
-                address:
-                    zod
-                        .string({
-                            required_error: "This field is required",
-                        })
-                        .min(1, "This field is required"),
-
-                city_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                room_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-                user_status_id: zod
-                    .preprocess(
-                        (input) => {
-                            const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                            return processed.success ? processed.data : input;
-                        },
-                        zod
-                            .number({ required_error: 'This field is required', invalid_type_error: "This field is required" })
-                            .min(1, "This field is required"),
-                    ),
-            }));
-
+        const validationSchema = uservalidationSchema
         const { handleSubmit } = useForm({
             validationSchema,
             initialValues: {
@@ -176,7 +112,6 @@ export default defineComponent({
         const onSubmitAdd = handleSubmit(async (values) => {
 
             var userData = currentUser.value
-            console.log(userData)
             var userForm = currentCreateUpdateUser.value
             userForm.first_name = userData.first_name
             userForm.last_name = userData.last_name
@@ -187,15 +122,24 @@ export default defineComponent({
             userForm.room_id = userData.room?.id
             userForm.city_id = userData.city?.id
             userForm.user_status_id = userData.status?.id
-            userData = await addUser(userForm) as User
-            // @ts-ignore
-            notif.dismissAll()
-            // @ts-ignore
+            const { user, success, message } = await addUser(userForm)
+            if (success) {
 
-            notif.success(` ${viewWrapper.pageTitle} was added successfully`)
+                // @ts-ignore
+                notif.dismissAll()
+                await sleep(200);
 
+                // @ts-ignore
 
-            router.push({ path: `/user/${userData.id}` })
+                notif.success(t('toast.success.add'))
+                await sleep(500)
+                router.push({ path: `/user/${user.id}` })
+            }
+            else {
+                await sleep(200);
+
+                notif.error(message)
+            }
 
         })
         const onSubmitEdit = async () => {
@@ -211,21 +155,29 @@ export default defineComponent({
             userForm.room_id = userData.room?.id
             userForm.city_id = userData.city?.id
             userForm.user_status_id = userData.status?.id
-            console.log(userForm)
-            await editUser(userForm)
-            // @ts-ignore
+            const { message, success } = await editUser(userForm)
+            if (success) {
 
-            notif.dismissAll()
-            // @ts-ignore
+                // @ts-ignore
 
-            notif.success(`${viewWrapper.pageTitle} ${userData.number} was edited successfully`)
+                notif.dismissAll()
+                await sleep(200);
 
-            router.push({ path: `/user/${userData.id}` })
+                // @ts-ignore
+
+                notif.success(t('toast.success.edit'))
+                await sleep(500)
+                router.push({ path: `/user/${userData.id}` })
+            } else {
+                await sleep(200);
+
+                notif.error(message)
+            }
 
 
         }
 
-        return { pageTitle, onSubmit, currentUser, viewWrapper, backRoute, citiesList, roomsList, statusesList }
+        return { t, pageTitle, onSubmit, currentUser, userStore, viewWrapper, backRoute, citiesList, roomsList, statusesList }
     },
 
 
@@ -238,7 +190,7 @@ export default defineComponent({
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmit(formType)" />
+            @onSubmit="onSubmit(formType)" :isLoading="userStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmit(formType)">
             <div class="form-outer">
                 <div class="form-body">
@@ -250,7 +202,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="first_name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} first name</VLabel>
+                                    <VLabel>{{ t('user.form.first_name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                             autocomplete="given-first_name" />
@@ -265,7 +217,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="last_name">
-                                    <VLabel>{{ viewWrapper.pageTitle }} last name</VLabel>
+                                    <VLabel>{{ t('user.form.last_name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                             autocomplete="given-last_name" />
@@ -280,7 +232,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="birth_date">
-                                    <VLabel>{{ viewWrapper.pageTitle }} birth date </VLabel>
+                                    <VLabel>{{ t('user.form.birth_date') }} </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                             autocomplete="given-birth_date" />
@@ -295,7 +247,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="phone_number">
-                                    <VLabel>{{ viewWrapper.pageTitle }} phone number </VLabel>
+                                    <VLabel>{{ t('user.form.phone_number') }} </VLabel>
                                     <VControl icon="feather:chevrons-right">
 
                                         <VInput v-model="currentUser.phone_number" type="number" placeholder=""
@@ -311,7 +263,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="address">
-                                    <VLabel>{{ viewWrapper.pageTitle }} address </VLabel>
+                                    <VLabel>{{ t('user.form.address') }} </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VTextarea v-model="currentUser.address" />
                                         <ErrorMessage name="address" />
@@ -325,13 +277,13 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="gender">
-                                    <VLabel>{{ viewWrapper.pageTitle }} gender</VLabel>
+                                    <VLabel>{{ t('user.form.gender') }}</VLabel>
 
                                     <VControl>
-                                        <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
+                                        <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')" name="gender"
                                             color="warning" />
 
-                                        <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
+                                        <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')" name="gender"
                                             color="success" />
                                         <ErrorMessage name="gender" />
                                     </VControl>
@@ -344,10 +296,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="room_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} room</VLabel>
+                                    <VLabel>{{t('user.form.room')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser.room" v-model="currentUser.room.id">
-                                            <VOption value="">Department</VOption>
+                                            <VOption value="">{{t('user.form.room')}}</VOption>
                                             <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
                                                     room.number
                                             }}
@@ -364,10 +316,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="city_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} city</VLabel>
+                                    <VLabel>{{t('user.form.city')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser.city" v-model="currentUser.city.id">
-                                            <VOption value="">Department</VOption>
+                                            <VOption value="">{{t('user.form.city')}}</VOption>
                                             <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
                                                     city.name
                                             }}
@@ -384,10 +336,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField class="column " id="user_status_id">
-                                    <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel>{{t('user.form.status')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentUser.status" v-model="currentUser.status.id">
-                                            <VOption value="">User Status</VOption>
+                                            <VOption value="">{{t('user.form.status')}}</VOption>
                                             <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
                                                 {{
         status.name
@@ -410,227 +362,5 @@ export default defineComponent({
     </div>
 </template>
 <style  scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/forms-outer';
-
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
-}
-
-.filter {
-    margin: 1rem;
-}
-
-.justify-content {
-    display: flex;
-    align-items: baseline;
-}
-
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
-}
+@import '/@src/scss/styles/formPage.scss';
 </style>

@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateCustomer, UpdateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
+import { CreateCustomer, UpdateCustomer, CreateUpdateCustomerSocialMediaHelper, CustomerSearchFilter, UpdateNotes } from "/@src/models/CRM/Customer/customer"
 import { MedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { CustomResponseSingle, CustomResponseCollection } from "/@src/utils/response"
 
@@ -9,7 +9,6 @@ export async function addCustomerApi(
   customer: CreateCustomer
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`customer`, customer)
-  console.log(response)
   return { response }
 }
 export async function updateCustomerApi(
@@ -18,7 +17,6 @@ export async function updateCustomerApi(
   customer: UpdateCustomer
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`customer/${customerId}`, customer)
-  console.log(response)
 
   return { response }
 }
@@ -43,7 +41,6 @@ export async function addSocialMediaApi(
     `customer/${customer_id}/addSocialMedia`,
     { social_medias: social_medias }
   )
-  console.log(response)
   return { response }
 }
 
@@ -52,7 +49,6 @@ export async function getCustomerApi(
   customer_id: number
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`customer/${customer_id}`)
-
   return { response }
 }
 
@@ -63,6 +59,14 @@ export async function getCustomersApi(
   const { data: response, headers } = await api.get('customer/getCustomersList', {
     params: searchFilter,
   })
+  return { response }
+}
+export async function UpdateNotesApi(
+  api: AxiosInstance,
+  customer_id: number,
+  notes: UpdateNotes
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(`customer/${customer_id}/updateNotes`, notes)
   return { response }
 }
 

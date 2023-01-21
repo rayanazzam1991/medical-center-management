@@ -1,10 +1,16 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
+<script lang="ts" setup>
+import {useHead} from '@vueuse/head'
+import {useViewWrapper} from '/@src/stores/viewWrapper'
+import {useI18n} from 'vue-i18n'
+import { locale } from 'dayjs';
 
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-
+const {t} = useI18n()
+const route = useRoute()
+const router = useRouter()
+const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Main Dashboard')
+viewWrapper.setPageTitle(t('main_dashboard'))
+
 
 useHead({
   title: 'Main Dashboard - My app',
@@ -13,6 +19,6 @@ useHead({
 
 <template>
   <div class="page-content-inner">
-    <AnalyticsDashboard />
+    <!-- <AnalyticsDashboard /> -->
   </div>
 </template>

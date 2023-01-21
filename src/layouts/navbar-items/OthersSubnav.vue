@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+
 type TabId = 'others' | 'templates'
 const activeTab = ref<TabId>('others')
+const { t } = useI18n()
+const emits = defineEmits<{
+    (e: 'close'): void
+}>()
+
 </script>
 
 <template>
-    <div class="navbar-subnavbar-inner tabs-wrapper">
+    <div class="navbar-subnavbar-inner tabs-wrapper" @mouseleave="() => emits('close')">
 
 
         <div class="container">
@@ -13,108 +20,121 @@ const activeTab = ref<TabId>('others')
                     <div class="center has-slimscroll">
                         <div class="columns">
                             <div class="column is-3">
-                                <h4 class="column-heading">Nationality</h4>
+                                <h4 class="column-heading">{{t('others_subnav.nationality.nationalities')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/nationality">
-                                            <i aria-hidden="true" class="lnil lnil-pizza"></i>
-                                            <span>All Nationality</span>
+                                            <i class="lnir lnir-flag-alt" aria-hidden="true"></i>
+                                            <span>{{t('others_subnav.nationality.nationalities')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/nationality/add">
-                                            <i aria-hidden="true" class="lnil lnil-map"></i>
-                                            <span>Create Nationality</span>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.nationality.create_nationality')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">Service</h4>
+                                <h4 class="column-heading">{{t('others_subnav.service.services')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/service">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
-                                            <span>All Service</span>
+                                            <i class="lnir lnir-briefcase-alt" aria-hidden="true"></i>
+                                            <span>{{t('others_subnav.service.services')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/service/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
-                                            <span>Create Service</span>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.service.create_service')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
-                                <!-- <h4 class="column-heading">User Status</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/userstatus">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>All UserStatus</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/userstatus/add">
-                                            <i aria-hidden="true" class="lnil lnil-pie-chart"></i>
-                                            <span>Create UserStatus</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul> -->
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">Department</h4>
+                                <h4 class="column-heading">{{t('others_subnav.department.departments')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/department">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>All Department</span>
+                                            <i class="lnir lnir-grid-alt" aria-hidden="true"></i>
+                                            <span>{{t('others_subnav.department.departments')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/department/add">
-                                            <i aria-hidden="true" class="lnil lnil-stats-up"></i>
-                                            <span>Create Department</span>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.department.create_department')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">Room</h4>
+                                <h4 class="column-heading">{{ t('others_subnav.room.rooms') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/room">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>All Room</span>
+                                            <i class="lnir lnir-door-alt" aria-hidden="true"></i>
+                                            <span>{{  t('others_subnav.room.rooms') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/room/add">
-                                            <i aria-hidden="true" class="lnil lnil-stats-up"></i>
-                                            <span>Create Room</span>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.room.create_room')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                             </div>
                             <div class="column is-3">
-                                <h4 class="column-heading">City</h4>
+                                <h4 class="column-heading">{{t('others_subnav.city.cities')}}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/city">
-                                            <i aria-hidden="true" class="lnil lnil-cardiology"></i>
-                                            <span>All City</span>
+                                            <i class="lnir lnir-map" aria-hidden="true"></i>
+                                            <span>{{t('others_subnav.city.cities')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/city/add">
-                                            <i aria-hidden="true" class="lnil lnil-plane-alt"></i>
-                                            <span>Create City</span>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.city.create_city')}}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul><br />
+                                <h4 class="column-heading">{{t('others_subnav.setting.settings')}}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/settings">
+                                            <i class="fas fa-wrench" aria-hidden="true"></i>
+                                            <span>{{ t('others_subnav.setting.edit_settings')}}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="column is-3">
+                                <h4 class="column-heading">{{t('others_subnav.user_status.user_statuses')}}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/userStatus">
+                                            <i class="fas fa-user-check" aria-hidden="true"></i>
+                                            <span>{{t('others_subnav.user_status.user_statuses')}}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                    <li>
+                                        <RouterLink to="/userStatus/add">
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('others_subnav.user_status.create_user_status')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
@@ -339,7 +359,7 @@ const activeTab = ref<TabId>('others')
 </template>
 
 <style lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/layout/navbar';
-@import '/@src/scss/layout/responsive';
+// @import '/@src/scss/abstracts/all';
+// @import '/@src/scss/layout/navbar';
+// @import '/@src/scss/layout/responsive';
 </style>

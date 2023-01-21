@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
@@ -7,7 +6,12 @@ import { getCustomer, updateCustomer } from "/@src/services/CRM/Customer/custome
 import { getSocialMediasList } from "/@src/services/CRM/SocialMedia/socialMediaService"
 import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-
+import { ErrorMessage, useForm } from "vee-validate";
+import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
+import sleep from "/@src/utils/sleep"
+import { Notyf } from "notyf"
+import { useI18n } from "vue-i18n"
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -15,420 +19,245 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle(t('customer.form.step_3_title'))
 const head = useHead({
-    title: 'Customer',
+  title: t('customer.form.page_title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
-    number: 4,
-    canNavigate: true,
-    skipable: true,
-    validateStepFn: async () => {
-        var isValid = await onSubmitEdit()
-        if (isValid) {
-            customerForm.reset()
-            router.push({
-                path: `/customer/${customerId.value}`,
-            })
-        }
-
-    },
-    skipStepFn: async () => {
-        customerForm.reset()
-        router.push({
-            path: `/customer/${customerId.value}`,
-        })
+  number: 3,
+  canNavigate: true,
+  validateStepFn: async () => {
+    var isValid = await onSubmitEdit()
+    if (isValid) {
+      customerForm.reset()
+      router.push({
+        path: `/customer/${customerId.value}`,
+        query: { tab: 'Social Media' }
+      })
     }
+  },
 
 })
-const pageTitle = 'Step 4: Customer Social Media'
 const socialMediasList = ref<SocialMedia[]>([])
+
 interface SocialMediaChecked {
-    socialMedia: SocialMedia
-    checked: boolean
-    url: string
+  socialMedia: SocialMedia
+  checked: boolean
+  url: string
 }
 
 const fetchCustomer = async () => {
 
-    const { customer } = await getCustomer(customerId.value)
-    for (let i = 0; i < customer.social_medias.length; i++) {
-        // @ts-ignore
+  const { customer } = await getCustomer(customerId.value)
+  for (let i = 0; i < customer.social_medias.length; i++) {
+    // @ts-ignore
 
-        customerForm.customerSocialMediaForm.push({ social_media_id: customer.social_medias[i].id, url: customer.social_medias[i].url })
+    customerForm.customerSocialMediaForm.push({
+      social_media_id: customer.social_medias[i].id,
+      url: customer.social_medias[i].url
+    })
 
-    }
+  }
 
-    customerForm.medicalInfoForm.allergic = customer?.medical_info?.allergic ?? undefined
-    customerForm.medicalInfoForm.any_other_info = customer?.medical_info?.any_other_info ?? undefined
-    customerForm.medicalInfoForm.blood_type = customer?.medical_info?.blood_type ?? undefined
-    customerForm.medicalInfoForm.chronic_diseases = customer?.medical_info?.chronic_diseases ?? undefined
-    customerForm.medicalInfoForm.infectious_diseases = customer?.medical_info?.infectious_diseases ?? undefined
-    customerForm.medicalInfoForm.smoking = customer?.medical_info?.smoking ?? undefined
-    customerForm.medicalInfoForm.id = customer?.medical_info?.id ?? undefined
+  customerForm.medicalInfoForm.allergic = customer?.medical_info?.allergic ?? undefined
+  customerForm.medicalInfoForm.any_other_info = customer?.medical_info?.any_other_info ?? undefined
+  customerForm.medicalInfoForm.blood_type = customer?.medical_info?.blood_type ?? undefined
+  customerForm.medicalInfoForm.chronic_diseases = customer?.medical_info?.chronic_diseases ?? undefined
+  customerForm.medicalInfoForm.infectious_diseases = customer?.medical_info?.infectious_diseases ?? undefined
+  customerForm.medicalInfoForm.smoking = customer?.medical_info?.smoking ?? undefined
+  customerForm.medicalInfoForm.id = customer?.medical_info?.id ?? undefined
 
-    customerForm.userForm.id = customer.user.id
-    customerForm.userForm.first_name = customer.user.first_name
-    customerForm.userForm.last_name = customer.user.last_name
-    customerForm.userForm.gender = customer.user.gender
-    customerForm.userForm.birth_date = customer.user.birth_date
-    customerForm.userForm.phone_number = customer.user.phone_number
-    customerForm.userForm.address = customer.user.address
-    customerForm.userForm.room_id = customer.user.room.id
-    customerForm.userForm.city_id = customer.user.city.id
-    customerForm.userForm.user_status_id = customer.user.status.id
-    customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
-    customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
-    customerForm.dataUpdate.customer_group_id = customer.customer_group.id
-    customerForm.dataUpdate.id = customerId.value
-
-
+  customerForm.userForm.id = customer.user.id
+  customerForm.userForm.first_name = customer.user.first_name
+  customerForm.userForm.last_name = customer.user.last_name
+  customerForm.userForm.gender = customer.user.gender
+  customerForm.userForm.birth_date = customer.user.birth_date
+  customerForm.userForm.phone_number = customer.user.phone_number
+  customerForm.userForm.address = customer.user.address
+  customerForm.userForm.room_id = customer.user?.room?.id
+  customerForm.userForm.city_id = customer.user.city.id
+  customerForm.userForm.room_id = undefined
+  customerForm.userForm.user_status_id = customer.user.status.id
+  customerForm.dataUpdate.emergency_contact_name = customer.emergency_contact_name
+  customerForm.dataUpdate.emergency_contact_phone = customer.emergency_contact_phone
+  customerForm.dataUpdate.customer_group_id = customer.customer_group.id
+  customerForm.dataUpdate.id = customerId.value
 
 }
-
 
 
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
+let validationObject = ref({})
+var validationObjectSchema = ref({})
+
+const initialValuesObject: Record<string, any> = {};
+
 onMounted(async () => {
-    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
-    socialMediasList.value = socialMedias
-    if (customerForm.dataUpdate.id != customerId.value) {
+  const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+  socialMediasList.value = socialMedias
+  if (customerForm.dataUpdate.id != customerId.value) {
 
-        await fetchCustomer()
-    }
+    await fetchCustomer()
+  }
 
 
-    for (let index = 0; index < socialMediasList.value.length; index++) {
-        // @ts-ignore
-        var socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
-        if (socialMedia) {
-
-            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url })
-        }
-        else {
-            socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
-        }
+  for (let index = 0; index < socialMediasList.value.length; index++) {
+    // @ts-ignore
+    let socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
+    if (socialMedia) {
+      socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: true, url: socialMedia.url })
+    } else {
+      socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
     }
 
-
+  }
 })
 
+const validationSchema = customerEditSocialMediaValidationSchema
+
+const { handleSubmit } = useForm({
+  validationSchema
+});
 
 
-const onSubmitEdit = async () => {
-    customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
-    for (let i = 0; i < socialMediaChecked.value.length; i++) {
-        if (socialMediaChecked.value[i].checked == true) {
-            customerForm.customerSocialMediaForm.push({ social_media_id: socialMediaChecked.value[i].socialMedia.id as number, url: socialMediaChecked.value[i].url })
-
-        }
-
-    }
-    customerForm.dataUpdate.is_completed = true
-    console.log(customerForm.userForm)
-    const customer = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
-    if (customer.success) {
-        // @ts-ignore
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
-
-        return true
-    }
-    else {
-        // @ts-ignore
-
-        notif.error(customer.success)
+const onSubmitEdit = handleSubmit(async () => {
+  customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
+  for (let i = 0; i < socialMediaChecked.value.length; i++) {
+    if (socialMediaChecked.value[i].checked == true) {
+      customerForm.customerSocialMediaForm.push({
+        social_media_id: socialMediaChecked.value[i].socialMedia.id as number,
+        url: socialMediaChecked.value[i].url
+      })
 
     }
 
-}
+  }
+  customerForm.dataUpdate.is_completed = true
+  const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
+  if (success) {
+    // @ts-ignore
+    await sleep(200);
 
+    notif.success(t('toast.success.add'))
 
+    return true
+  } else {
+    // @ts-ignore
+    await sleep(200);
+
+    notif.error(message)
+
+  }
+
+})
 
 
 </script>
 
 <template>
-    <div class="page-content-inner">
-        <form class="form-layout" @submit.prevent="onSubmitEdit()">
-            <div class="form-outer">
-                <div class="form-body">
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
+  <div class="page-content-inner">
+    <form class="form-layout" @submit.prevent="onSubmitEdit()">
+      <div class="form-outer">
+        <div class="form-body">
+          <!--Fieldset-->
+          <div class="form-fieldset">
+            <div class="fieldset-heading">
+              <h4>{{ t('customer.form.choose_social_media') }}</h4>
+            </div>
+            <div class="columns is-multiline">
+              <div class="column is-12">
 
-                                <VField>
+                <VField>
 
-                                    <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
-                                        <VCheckbox :label="socialMedia.socialMedia.name"
-                                            :name="socialMedia.socialMedia.id" color="primary"
-                                            :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
-                                        <VIcon :icon="socialMedia.socialMedia.icon"
-                                            class="has-text-primary is-size-5" />
+                  <VControl v-for="socialMedia in socialMediaChecked" raw nogrow subcontrol>
+                    <VCheckbox :label="socialMedia.socialMedia.name" :name="socialMedia.socialMedia.id" color="primary"
+                      :key="socialMedia.socialMedia.id" v-model="socialMedia.checked" />
+                    <VIcon :icon="socialMedia.socialMedia.icon" class="has-text-primary is-size-5" />
 
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-12">
-                                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
+                  </VControl>
+                </VField>
+              </div>
+            </div>
+          </div>
+          <!--Fieldset-->
+          <div class="form-fieldset">
+            <div class="columns is-multiline">
+              <!-- <div class="column is-12">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
 
-                                    <VLabel v-if="socialMedia.checked">Customer's {{ socialMedia.socialMedia.name }}
-                                        URL:
-                                    </VLabel>
-                                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
-                                        <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
-                                            :key="socialMedia.socialMedia.id" />
+                  <VField :key="socialMedia.socialMedia.id" :id="`social_media_${socialMedia.socialMedia.id}`">
 
-                                    </VControl>
+                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
+    socialMedia.socialMedia.name
+}}
+                      URL:
+                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput v-if="socialMedia.checked" type="text" placeholder="" autocomplete=""
+                        v-model="socialMedia.url" :key="socialMedia.socialMedia.id" />
 
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_${socialMedia.socialMedia.id}`" />
 
 
+                  </VField>
 
                 </div>
+              </div> -->
+              <div class="column is-12">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+                  <VField v-if="socialMedia.checked" :key="socialMedia.socialMedia.id"
+                    :id="`social_media_url_${socialMedia.socialMedia.id}`">
+
+                    <VLabel class="required" v-if="socialMedia.checked">
+                    {{ t('customer.form.social_media_url', {social_media:socialMedia.socialMedia.name }) }}
+                                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput :placeholder="socialMedia.url" class="input" type="text" v-model="socialMedia.url"
+                        :key="socialMedia.socialMedia.id" />
+
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_url_${socialMedia.socialMedia.id}`" />
+
+
+                  </VField>
+                </div>
+
+              </div>
+
             </div>
-        </form>
+          </div>
 
 
+        </div>
+      </div>
+    </form>
 
-    </div>
+
+  </div>
 </template>
-<style  scoped lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.is-navbar {
-    .form-layout {
-        margin-top: 30px;
-    }
+.required::after {
+  content: " *";
+  color: var(--danger);
 }
 
-.filter {
-    margin: 1rem;
+
+.form-layout .form-outer .form-body {
+  padding: 20px 40px 40px;
 }
 
-.justify-content {
-    display: flex;
-    align-items: baseline;
+.layout {
+  min-width: 50%;
 }
 
-.form-layout {
-    &.is-split {
-        max-width: 840px;
-
-        .form-outer {
-            .form-body {
-                padding: 0;
-                width: 100%;
-
-                .form-section {
-                    display: flex;
-                    padding: 20px;
-
-                    &.is-grey {
-                        background: #fafafa;
-                    }
-
-                    .left,
-                    .right {
-                        padding: 20px 40px;
-                        width: 50%;
-
-                        h3 {
-                            font-family: var(--font-alt);
-                            font-weight: 600;
-                            font-size: 0.95rem;
-                            color: var(--dark-text);
-                            margin-bottom: 20px;
-                        }
-                    }
-
-
-                    .left {
-                        width: 20%;
-                        position: relative;
-                        border-right: 1px solid var(--fade-grey-dark-3);
-
-                        .operator {
-                            position: absolute;
-                            top: 17px;
-                            right: -10px;
-                            text-transform: uppercase;
-                            font-family: var(--font);
-                            font-weight: 500;
-                            color: var(--dark-text);
-                            background: var(--white);
-                            padding: 4px 0;
-                        }
-                    }
-
-                    .radio-pills {
-                        display: flex;
-                        justify-content: space-between;
-
-                        .radio-pill {
-                            position: relative;
-
-                            input {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                height: 100%;
-                                width: 100%;
-                                opacity: 0;
-                                cursor: pointer;
-
-                                &:checked {
-                                    +.radio-pill-inner {
-                                        background: var(--primary);
-                                        border-color: var(--primary);
-                                        box-shadow: var(--primary-box-shadow);
-                                        color: var(--white);
-                                    }
-                                }
-                            }
-
-                            .radio-pill-inner {
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                width: 60px;
-                                height: 40px;
-                                background: var(--white);
-                                border: 1px solid var(--fade-grey-dark-3);
-                                border-radius: 8px;
-                                font-family: var(--font);
-                                font-weight: 600;
-                                font-size: 0.9rem;
-                                transition: color 0.3s, background-color 0.3s, border-color 0.3s,
-                                    height 0.3s, width 0.3s;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.is-dark {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        &.is-grey {
-                            background: var(--dark-sidebar-light-4) !important;
-                        }
-
-                        h3 {
-                            color: var(--dark-dark-text);
-                        }
-
-                        .left {
-                            border-color: var(--dark-sidebar-light-12) !important;
-
-                            .operator {
-                                background: var(--dark-sidebar-light-6) !important;
-                                color: var(--dark-dark-text);
-                            }
-
-                            .radio-pills {
-                                .radio-pill {
-                                    input {
-                                        &:checked+.radio-pill-inner {
-                                            border-color: var(--primary);
-                                            background: var(--primary);
-                                            box-shadow: var(--primary-box-shadow);
-                                            color: var(--smoke-white);
-                                        }
-                                    }
-
-                                    .radio-pill-inner {
-                                        background: var(--dark-sidebar-light-2);
-                                        border-color: var(--dark-sidebar-light-12);
-                                        color: var(--dark-dark-text);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 767px) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        flex-direction: column;
-                        padding-right: 0;
-                        padding-left: 0;
-
-                        .left,
-                        .right {
-                            width: 100%;
-                            padding-right: 30px;
-                            padding-left: 30px;
-                        }
-
-
-                        .left {
-                            border-right: none;
-                            border-bottom: 1px solid var(--fade-grey-dark-3);
-                            padding-bottom: 40px;
-
-                            .operator {
-                                top: unset;
-                                bottom: -14px;
-                                left: 0;
-                                right: 0;
-                                margin: 0 auto;
-                                text-align: center;
-                                max-width: 60px;
-                            }
-                        }
-
-                        .right {
-                            padding-top: 30px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .form-layout {
-        &.is-split {
-            .form-outer {
-                .form-body {
-                    .form-section {
-                        padding-right: 0;
-                        padding-left: 0;
-                    }
-                }
-            }
-        }
-    }
+.form-fieldset {
+  max-width: 40%;
 }
 </style>

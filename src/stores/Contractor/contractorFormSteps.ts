@@ -1,8 +1,16 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { CreateContractor, defaultCreateContractor, UpdateContractor, defaultUpdateContractor, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { Service } from "/@src/models/Others/Service/service"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
-
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
+})
 
 
 interface ContractorFormStepOptions {
@@ -13,6 +21,12 @@ interface ContractorFormStepOptions {
   validateStepFn?: () => Promise<void>
   skipStepFn?: () => Promise<void>
 
+}
+interface ServicesChecked {
+  service: Service
+  checked: boolean
+  price: number
+  contractor_service_amount: number
 }
 
 export const useContractorForm = defineStore('ContractorForm', () => {
@@ -30,13 +44,11 @@ export const useContractorForm = defineStore('ContractorForm', () => {
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
-        return 'Main Info'
+        return i18n.global.t('contractor.form.step_1_abbr_title')
       case 2:
-        return 'Personal ID'
-      case 3:
-        return 'Services'
+        return i18n.global.t('contractor.form.step_2_abbr_title')
       default:
-        return 'Main Info'
+        return i18n.global.t('contractor.form.step_1_abbr_title')
     }
   })
 
@@ -58,7 +70,8 @@ export const useContractorForm = defineStore('ContractorForm', () => {
     data.value.payment_percentage = 0
     data.value.starting_date = ''
     data.value.is_completed = false
-    data.value.starting_date = ''
+    data.value.speciality_id = 0
+    data.value.end_date = ''
     data.value.user.first_name = ''
     data.value.user.last_name = ''
     data.value.user.gender = ''
@@ -82,14 +95,13 @@ export const useContractorForm = defineStore('ContractorForm', () => {
     dataUpdate.value.user.city_id = 0
     dataUpdate.value.user.room_id = 0
     dataUpdate.value.user.user_status_id = 0
-    contractorServicesForm.value = []
+    contractorServicesForm.value.splice(0, contractorServicesForm.value.length)
 
   }
 
   async function save() {
     loading.value = true
 
-    console.log(data.value)
 
     loading.value = false
   }

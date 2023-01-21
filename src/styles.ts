@@ -16,4 +16,13 @@ import 'tippy.js/dist/border.css'
 import 'tippy.js/dist/backdrop.css'
 import 'tippy.js/themes/light.css'
 
-import './scss/main.scss'
+import { useStorage } from '@vueuse/core'
+
+const locale = useStorage('locale', 'ar')
+let direction = "ltr"
+if (locale.value == "ar") {
+    direction = "_rtl"
+}
+
+import(`./scss/main${direction}.scss`)
+

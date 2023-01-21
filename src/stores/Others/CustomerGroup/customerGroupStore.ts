@@ -3,6 +3,8 @@ import { useApi } from "/@src/composable/useApi"
 import { CustomerGroup, CustomerGroupSearchFilter } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { deleteCustomerGroupApi, getCustomerGroupApi, addCustomerGroupApi, editCustomerGroupApi, getCustomerGroupsApi } from "/@src/utils/api/Others/CustomerGroup"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep";
+
 
 
 export const useCustomerGroup = defineStore('customerGroup', () => {
@@ -10,6 +12,9 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
   const customerGroups = ref<CustomerGroup[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
 
   async function deleteCustomerGroupStore(customerGroupId: number) {
     if (loading.value) return
@@ -22,7 +27,16 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
         customerGroups.value.findIndex((customerGroup: CustomerGroup) => customerGroup.id === customerGroupId),
         1
       )
-    } finally {
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -35,8 +49,17 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
       const response = await getCustomerGroupApi(api, customerGroupId)
       var returnedCustomerGroup: CustomerGroup
       returnedCustomerGroup = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
       return returnedCustomerGroup
-    } finally {
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
@@ -44,36 +67,58 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
     if (loading.value) return
 
     loading.value = true
-
-  try {
-    const response = await addCustomerGroupApi(api, customerGroup)
-    var returnedCustomerGroup : CustomerGroup
-    returnedCustomerGroup = response.response.data 
-    customerGroups.value.push(returnedCustomerGroup)
-    return returnedCustomerGroup
+    sleep(2000)
 
 
-  } finally {
-    loading.value = false
+    try {
+      const response = await addCustomerGroupApi(api, customerGroup)
+      var returnedCustomerGroup: CustomerGroup
+      returnedCustomerGroup = response.response.data
+      customerGroups.value.push(returnedCustomerGroup)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedCustomerGroup
+
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
   }
-}
   async function editCustomerGroupStore(customerGroup: CustomerGroup) {
     if (loading.value) return
 
     loading.value = true
-
-  try {
-    const response = await editCustomerGroupApi(api, customerGroup)
-    var returnedCustomerGroup : CustomerGroup
-    returnedCustomerGroup = response.response.data 
-    customerGroups.value.splice( customerGroups.value.findIndex((customerGroupElement) => customerGroupElement.id = customerGroup.id ),1)
-    customerGroups.value.push(returnedCustomerGroup)
+    sleep(2000)
 
 
-  } finally {
-    loading.value = false
+    try {
+      const response = await editCustomerGroupApi(api, customerGroup)
+      var returnedCustomerGroup: CustomerGroup
+      returnedCustomerGroup = response.response.data
+      customerGroups.value.splice(customerGroups.value.findIndex((customerGroupElement) => customerGroupElement.id = customerGroup.id), 1)
+      customerGroups.value.push(returnedCustomerGroup)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
   }
-}
   async function getCustomerGroupsStore(searchFilter: CustomerGroupSearchFilter) {
     if (loading.value) return
 
@@ -83,14 +128,27 @@ export const useCustomerGroup = defineStore('customerGroup', () => {
       const returnedResponse = await getCustomerGroupsApi(api, searchFilter)
       customerGroups.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
-    } finally {
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
       loading.value = false
     }
   }
 
   return {
+    success,
+    error_code,
+    message,
     customerGroups,
     pagination,
+    loading,
     deleteCustomerGroupStore,
     addCustomerGroupStore,
     editCustomerGroupStore,
