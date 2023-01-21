@@ -2,6 +2,7 @@
 import {useHead} from '@vueuse/head'
 import {useViewWrapper} from '/@src/stores/viewWrapper'
 import {useI18n} from 'vue-i18n'
+import { locale } from 'dayjs';
 
 const {t} = useI18n()
 const route = useRoute()

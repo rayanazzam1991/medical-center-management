@@ -126,7 +126,7 @@
 
           .column {
             &:not(:last-child) {
-              border-right: 1px solid var(--fade-grey-dark-3);
+              border-left: 1px solid var(--fade-grey-dark-3);
             }
           }
 
@@ -267,7 +267,7 @@
           .center {
             .column {
               &:not(:last-child) {
-                border-right: 1px solid var(--dark-sidebar-light-12) !important;
+                border-left: 1px solid var(--dark-sidebar-light-12) !important;
               }
             }
 

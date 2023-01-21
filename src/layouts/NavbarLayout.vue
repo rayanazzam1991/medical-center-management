@@ -34,8 +34,8 @@ const filter = ref('')
 const isMobileSidebarOpen = ref(false)
 const activeMobileSubsidebar = ref('dashboard')
 const activeSubnav = ref<SubnavId>('closed')
-const { t } = useI18n()
-
+const { t ,locale} = useI18n()
+const LR = locale.value == "ar" ? "left" : "right"
 const filteredUsers = computed(() => {
   if (!filter.value) {
     return []
@@ -181,7 +181,7 @@ watch(
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
-        <UserProfileDropdown right />
+        <UserProfileDropdown LR />
       </template>
 
       <!-- Custom navbar links -->
