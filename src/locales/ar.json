@@ -64,7 +64,7 @@
       "required": "يرجى الاختيار"
     },
     "date": {
-      "required_error": "يرجى تحديد تاريخ ووقت",
+      "required_error": "يرجى تحديد تاريخ",
       "invalid_type_error": "تاريخ غير صحيح!",
       "format": "يجب أن يكون تنسيق التاريخ صحيح YYYY-MM-DD"
     },
@@ -149,6 +149,10 @@
       "variable_payments": "المتغيرات المالية",
       "create_variable_payment": "انشاء متغير مالي"
     },
+    "employee_variable_payment": {
+      "employee_variable_payments": "المتغيرات المالية للموظفين",
+      "create_employee_variable_payment": "اضافة متغير مالي لموظف"
+    },
     "employees_schedule": "جدول الدوام",
     "employees_attendance": "جدول الحضور"
   },
@@ -198,6 +202,9 @@
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
         "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي"
+      },
+      "employee_variable_payment" : {
+        "cant_edit" : "لا يمكن تعديل المتغير المالي لموظف بعد تحريره او الغاءه"
       }
     },
     "file": {
@@ -1259,6 +1266,13 @@
     "increment" : "زيادة",
     "decrement" : "خصم"
   },
+  "employee_variable_payment_statuses" : {
+    "pending" : "معلق",
+    "approved" : "موافق",
+    "waiting" : "انتظار",
+    "released" : "محرر",
+    "inactive" : "غير فعال"
+  },
   "variable_payment" : {
     "table": {
         "title": "المتغيرات المالية",
@@ -1288,6 +1302,49 @@
       "status" : "الحالة"
     },
     "header_button" :"إضافة متغير مالي"
+},
+"employee_variable_payment" : {
+  "table": {
+      "title": "المتغيرات المالية للموظفين",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "variable_payment" : "المتغير المالي",
+        "amount": "القيمة",
+        "type" :"النوع",
+        "status" :"الحالة",
+        "created_at" :"تاريخ الإنشاء",
+        "release_date" :"تاريخ التحرير",
+        "due_date" :"تاريخ الاستحقاق",
+        "created_by" :"بواسطة",
+        "actions": "الإجراءات",
+        "note" : "ملاحظة"
+      },
+      "modal_title" : "تغيير حالة متغير مالي",
+      "deactivate_caution" : "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
+    },
+  "form" : {
+      "page_title" : "المتغيرات المالية للموظفين" ,
+      "form_header" : "{type} متغير مالي",
+      "add_variable_payment_title" : "إضافة متغير مالي لموظف",
+      "edit_variable_payment_title" : "تعديل متغير مالي لموظف",
+      "employee_name" : "اسم الموظف",
+      "variable_payment" : "المتغير المالي",
+      "amount": "القيمة",
+      "status" :"الحالة",
+      "due_at" :"تاريخ الاستحقاق",
+      "note" : "ملاحظة"
+
+  },
+  "search_filter" : {
+    "title" : "تصفية المتغير المالي",
+    "name": "اسم الموظف...",
+    "type": "النوع",
+    "status": "الحالة",
+    "date": "التاريخ:",
+    "from": "من: ",
+    "to": "إلى: "
+  },
+  "header_button" :"إضافة متغير مالي لموظف"
 }
 
 

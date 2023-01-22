@@ -2,6 +2,7 @@
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
+import EditDropDown from '/@src/components/OurComponents/EditDropDown.vue';
 import NoViewDropDown from '/@src/components/OurComponents/NoViewDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultVariablePaymentSearchFilter, VariablePayment, VariablePaymentSearchFilter, VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
@@ -130,13 +131,10 @@ const columns = {
     align: 'center',
     label: t("variable_payment.table.columns.actions"),
     renderRow: (row: any) =>
-      h(NoViewDropDown, {
+      h(EditDropDown, {
 
         onEdit: () => {
           router.push({ path: `/variable-payment/${row?.id}/edit` })
-        },
-        onChangeStatus: () => {
-            ////
         },
 
       }),
@@ -146,7 +144,7 @@ const columns = {
 </script>
 
 <template>
-  <VariablePaymentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('variable_payment.header_button')"
+  <VariablePaymentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('variable_payment.header_button')" 
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
