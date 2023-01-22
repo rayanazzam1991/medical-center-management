@@ -57,7 +57,10 @@ const props = withDefaults(
     }
 )
 const tab = ref(props.activeTab)
-if (route.query.tab === 'Details' || route.query.tab === 'Services' || route.query.tab === 'Files' || route.query.tab === 'Wallet') {
+if (route.query.tab === 'Details'
+ || route.query.tab === 'Services' 
+ || route.query.tab === 'Files' 
+ || route.query.tab === 'Wallet') {
     tab.value = route.query.tab
 }
 
@@ -127,6 +130,15 @@ const onClickEditServices = async () => {
     await fetchContractor()
     router.push({
         path: `/contractor-edit/${contractorId.value}/services`
+    })
+}
+const onClickCashOut = async () => {
+    console.log(contractorId.value)
+    router.push({
+        path: `/contractor/cash-out/add`,
+        query : {
+            id : contractorId.value
+        }
     })
 }
 const onClickEditMainInfo = async () => {
@@ -698,7 +710,7 @@ const RemoveProfilePicture = async () => {
                                         </h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton color="dark"> {{t('modal.buttons.cash_out')}}
+                                        <VButton color="dark" @click="onClickCashOut" > {{t('modal.buttons.cash_out')}}
                                         </VButton>
                                     </div>
 

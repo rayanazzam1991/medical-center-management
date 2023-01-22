@@ -34,11 +34,14 @@ const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
 
-const { categories, pagination } = await getCategoriesList(searchFilter.value)
-categoriesList.value = categories
-paginationVar.value = pagination
-keyIncrement.value = keyIncrement.value + 1
-default_per_page.value = pagination.per_page
+// onMounted(async () => {
+    const { categories, pagination } = await getCategoriesList(searchFilter.value)
+    searchFilter.value = defaultCategorySearchFilter
+    categoriesList.value = categories
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+// });
 
 const search = async (searchFilter2: CategorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page

@@ -1256,40 +1256,54 @@
     "true": "نعم",
     "false": "لا"
   },
-  "variable_payment_types" : {
-    "increment" : "زيادة",
-    "decrement" : "خصم"
+  "variable_payment_types": {
+    "increment": "زيادة",
+    "decrement": "خصم"
   },
-  "variable_payment" : {
+  "Wallet_movement_types": {
+    "out": "سحب",
+    "in": "إضافة"
+  },
+  "Wallet_movement_actions": {
+    "cash_out": "سحب مبلغ"
+  },
+  "variable_payment": {
     "table": {
-        "title": "المتغيرات المالية",
-        "columns": {
-          "id": "رقم المعرّف",
-          "name": "الاسم",
-          "type" : "النوع",
-          "status": "الحالة",
-          "created_at" :"تاريخ الإنشاء",
-          "actions": "الإجراءات"
-        }
-      },
-    "form" : {
-        "page_title" : "المتغيرات المالية" ,
-        "form_header" : "{type} متغير مالي",
-        "add_variable_payment_title" : "إضافة متغير مالي",
-        "edit_variable_payment_title" : "تعديل متغير مالي",
-        "name" : "الاسم",
-        "status" : "الحالة",
-        "type" : "النوع"
-
+      "title": "المتغيرات المالية",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "type": "النوع",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء",
+        "actions": "الإجراءات"
+      }
     },
-    "search_filter" : {
-      "title" : "تصفية المتغير المالي",
-      "type" : "النوع",
-      "name" :"الاسم...",
-      "status" : "الحالة"
+    "form": {
+      "page_title": "المتغيرات المالية",
+      "form_header": "{type} متغير مالي",
+      "add_variable_payment_title": "إضافة متغير مالي",
+      "edit_variable_payment_title": "تعديل متغير مالي",
+      "name": "الاسم",
+      "status": "الحالة",
+      "type": "النوع"
     },
-    "header_button" :"إضافة متغير مالي"
-}
-
-
+    "search_filter": {
+      "title": "تصفية المتغير المالي",
+      "type": "النوع",
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة متغير مالي"
+  },
+  "walletMovement": {
+    "cash_out_form": {
+      "page_title": " سحب مبلغ",
+      "form_header": "سحب مبلغ ",
+      "contarctor": "اسم الأخصائي",
+      "cash_out_total": "المبلغ المراد سحبه",
+      "my_total": "المبلغ الحالي",
+      "note": "ملاحظة"
+    }
+  }
 }

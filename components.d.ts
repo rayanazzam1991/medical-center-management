@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AttendanceTableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
+    CashOutForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/CashOutForm.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
     CategorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Category/CategorySearchFilterModel.vue')['default']
     CategoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryTableHeader.vue')['default']
@@ -223,6 +224,7 @@ declare module '@vue/runtime-core' {
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
+    WalletMovementForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/walletMovementForm.vue')['default']
     WarehouseSubnav: typeof import('./src/layouts/navbar-items/WarehouseSubnav.vue')['default']
     WithdrawQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/WithdrawQuantityFormNavigation.vue')['default']
   }
