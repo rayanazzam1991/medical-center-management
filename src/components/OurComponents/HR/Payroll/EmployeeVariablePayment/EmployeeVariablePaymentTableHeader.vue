@@ -1,4 +1,6 @@
 <script lang="ts">import { useI18n } from 'vue-i18n'
+import { defaultEmployeeSearchFilter } from '/@src/models/Employee/employee'
+import { defaultEmployeeVariablePaymentSearchFilter } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment'
 import { defaultVariablePaymentSearchFilter, VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment'
 import { defaultPagination } from '/@src/utils/response'
 
@@ -44,7 +46,7 @@ export default defineComponent({
         const searchFilterPop = ref(false)
         const nameSearchField = ref('')
         const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultVariablePaymentSearchFilter)
+        const searchFilter = ref(defaultEmployeeVariablePaymentSearchFilter)
         const is_reseted = ref(false)
         const keyIncrement = ref(0)
 
@@ -64,16 +66,20 @@ export default defineComponent({
             searchFilter.value.name = undefined
             searchFilter.value.type = undefined
             searchFilter.value.status = undefined
+            searchFilter.value.from = undefined
+            searchFilter.value.to = undefined            
             nameSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
 
         }
-        const resetFilter_popup = (value: VariablePaymentSearchFilter) => {
+        const resetFilter_popup = () => {
             searchFilter.value.name = undefined
             searchFilter.value.type = undefined
             searchFilter.value.status = undefined
+            searchFilter.value.from = undefined
+            searchFilter.value.to = undefined
             context.emit('resetFilter', searchFilter.value)
 
         }
@@ -90,7 +96,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="nameSearchField" type="text" :placeholder="t('variable_payment.search_filter.name')" />
+                                <VInput v-model="nameSearchField" type="text" :placeholder="t('employee_variable_payment.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -116,7 +122,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/variable-payment/add" color="primary">{{ button_name }}
+                                <VButton class="" to="/employee-variable-payment/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 
@@ -125,7 +131,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <VariablePaymentSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
+        <EmployeeVariablePaymentSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

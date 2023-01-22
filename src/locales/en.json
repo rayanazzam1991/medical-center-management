@@ -139,6 +139,16 @@
       "positions": "Positions",
       "create_position": "Create Position"
     },
+    "variable_payment": {
+      "variable_payments": "Variable Payments",
+      "create_variable_payment": "Create Variable Payment"
+    },
+
+    "employee_variable_payment": {
+      "employee_variable_payments": "Employees Variable Payments",
+      "create_employee_variable_payment": "Create Employee Variable Payment"
+    },
+
     "employees_schedule": "Employees Schedule",
     "employees_attendance": "Employees Attendance"
   },
@@ -180,7 +190,11 @@
         "time": "Start time cant be after end time",
         "check_in": "New check in can't be after original check in",
         "check_out": "New check out can't be before original check out"
+      },
+      "employee_variable_payment" : {
+        "cant_edit" : "Released and Inactive variable payments can't be edited"
       }
+
     },
     "file": {
       "type": "Please choose an accepted file type",
@@ -1253,6 +1267,13 @@
       "increment" : "Increment",
       "decrement" : "Decrement"
     },
+    "employee_variable_payment_statuses" : {
+      "pending" : "Pending",
+      "approved" : "Approved",
+      "waiting" : "Waiting",
+      "released" : "Released",
+      "inactive" : "Inactive"
+    },  
     "variable_payment" : {
       "table": {
           "title": "Variable Payment",
@@ -1282,5 +1303,51 @@
         "status" : "Status"
       },
       "header_button" :"Add Variable Payment"
+  },
+  "employee_variable_payment" : {
+    "table": {
+        "title": "Employee Variable Payments",
+        "columns": {
+          "employee_name": "Employee Name",
+          "variable_payment" : "Variable Payment",
+          "amount": "Amount",
+          "type" :"Type",
+          "status" :"Status",
+          "created_at" :"Created At",
+          "release_date" :"Released At",
+          "due_date" :"Due At",
+          "created_by" :"Created By",
+          "actions": "Actions",
+          "note" : "Note"
+        },
+        "modal_title" : "Change Employee Payment Variable Status",
+        "deactivate_caution" : "Note: This variable payment cannot be modified after making it inactive"
+
+
+      },
+    "form" : {
+        "page_title" : "Employee Variable Payments" ,
+        "form_header" : "{type} Variable Payment",
+        "add_variable_payment_title" : "Add Employee Variable Payment",
+        "edit_variable_payment_title" : "Edit Employee Variable Payment",
+        "employee_name" : "Employee Name",
+        "variable_payment" : "Variable Payment",
+        "amount": "Amount",
+        "status" :"Status",
+        "due_at" :"Due At",
+        "note" : "Note"
+  
+    },
+    "search_filter" : {
+      "title" : "Filter Variable Payment",
+      "name": "ُEmployee Name...",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date:",
+      "from": "From: ",
+      "to": "To: "
+    },
+      "header_button" :"Add Employee Variable Payment"
   }
+  
 }

@@ -95,6 +95,23 @@ const {t} = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+                <h4 class="column-heading">{{t('human_resources_subnav.employee_variable_payment.employee_variable_payments')}}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/employee-variable-payment">
+                      <i class="fas fa-money-check" aria-hidden="true"></i>                      
+                      <span>{{t('human_resources_subnav.employee_variable_payment.employee_variable_payments')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/employee-variable-payment/add">
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                      <span>{{t('human_resources_subnav.employee_variable_payment.create_employee_variable_payment')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

@@ -39,6 +39,7 @@ export default defineComponent({
         const currentVariablePayment = ref(defaultVariablePayment);
         const variablePaymentId = ref(0);
         const originalVariablePaymentName = ref<string>();
+            const originalVariablePaymentStatus = ref<number>();
 
         // @ts-ignore
         variablePaymentId.value = route.params?.id as number ?? 0;
@@ -53,6 +54,7 @@ export default defineComponent({
             const { variablePayment } = await getVariablePayment(variablePaymentId.value);
             currentVariablePayment.value = variablePayment != undefined ? variablePayment : defaultVariablePayment;
             originalVariablePaymentName.value = currentVariablePayment.value.name
+            originalVariablePaymentStatus.value = currentVariablePayment.value.status
         };
 
         onMounted(() => {
@@ -113,8 +115,14 @@ export default defineComponent({
                 variablePaymentData.name = undefined
 
             }
+            if(currentVariablePayment.value.status !== originalVariablePaymentStatus.value) {
+                variablePaymentData.status = currentVariablePayment.value.status
+
+            }else {
+                variablePaymentData.status = undefined
+
+            }
             variablePaymentData.type = currentVariablePayment.value.type
-            variablePaymentData.status = currentVariablePayment.value.status
 
             const { message, success } = await editVariablePayment(variablePaymentId.value, variablePaymentData);
             if (success) {
@@ -129,7 +137,7 @@ export default defineComponent({
             } else {
                 await sleep(200);
 
-                notif.error(message)
+                notif.error({message : message , duration : 5000})
 
             }
         };

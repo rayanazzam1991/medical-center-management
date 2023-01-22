@@ -20,7 +20,7 @@ export interface VariablePayment {
 export interface UpdateVariablePayment {
     name?: string
     type: number
-    status: number
+    status?: number
 }
 export interface CreateVariablePayment {
     name: string
@@ -42,7 +42,14 @@ export interface VariablePaymentSearchFilter {
     order?: string
 }
 
-export const defaultVariablePayment = <VariablePayment>{}
+export const defaultVariablePayment: VariablePayment = {
+    id: 0,
+    name: '',
+    type: 1,
+    status: 1,
+    created_at: ''
+
+}
 export const defaultUpdateVariablePayment = <UpdateVariablePayment>{}
 export const defaultCreateVariablePayment = <CreateVariablePayment>{}
 export const defaultVariablePaymentSearchFilter = <VariablePaymentSearchFilter>{}
