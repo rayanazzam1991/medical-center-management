@@ -51,6 +51,7 @@ declare module 'vue-router/auto/routes' {
     '/contractor': RouteRecordInfo<'/contractor', '/contractor', Record<never, never>, Record<never, never>>,
     '/contractor/': RouteRecordInfo<'/contractor/', '/contractor/', Record<never, never>, Record<never, never>>,
     '/contractor/[id]/': RouteRecordInfo<'/contractor/[id]/', '/contractor/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/contractor/cash-out/add': RouteRecordInfo<'/contractor/cash-out/add', '/contractor/cash-out/add', Record<never, never>, Record<never, never>>,
     '/contractor-add': RouteRecordInfo<'/contractor-add', '/contractor-add', Record<never, never>, Record<never, never>>,
     '/contractor-add/': RouteRecordInfo<'/contractor-add/', '/contractor-add/', Record<never, never>, Record<never, never>>,
     '/contractor-add/[id]/services': RouteRecordInfo<'/contractor-add/[id]/services', '/contractor-add/:id/services', { id: ParamValue<true> }, { id: ParamValue<false> }>,

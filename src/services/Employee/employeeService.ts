@@ -20,17 +20,10 @@ export async function addEmployee(
   userData: CreateUpdateUser
 ) {
   userData.password = '1231313'
-  const newEmployeeData: CreateEmployee = {
-    starting_date: employeeData.starting_date,
-    end_date: employeeData.end_date,
-    basic_salary: employeeData.basic_salary,
-    nationality_id: employeeData.nationality_id,
-    position_id: employeeData.position_id,
-    user: userData,
-  }
+  employeeData.user = userData
   const employeeResponse = useEmployee()
   var employee: Employee =
-    (await employeeResponse.addEmployeeStore(newEmployeeData)) ?? defaultEmployee
+    (await employeeResponse.addEmployeeStore(employeeData)) ?? defaultEmployee
   var success: boolean = employeeResponse.success ?? false
   var error_code: string = employeeResponse.error_code ?? ''
   var message: string = employeeResponse.message ?? ''

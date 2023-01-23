@@ -209,7 +209,8 @@
       "update": "Update",
       "delete": "Delete",
       "save": "Save",
-      "filter": "Filter"
+      "filter": "Filter",
+      "cash_out": "cash_out"
     },
     "delete_modal": {
       "title": "Are you sure?",
@@ -1207,6 +1208,111 @@
     }
   },
 
+  "dates": {
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "days_abbr": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  },
+  "attendance_status": {
+    "attend": "Attend",
+    "absence": "Absence",
+    "pending_absence": "Pending Absence",
+    "justified_absence": "Justified Absence",
+    "unjustified_absence": "Unjustified Absence",
+    "partial_absence": "Partial Absence",
+    "pending_partial_absence": "Pending Partial Absence",
+    "justified_partial_absence": "Justified Partial Absence",
+    "unjustified_partial_absence": "Unjustified Partial Absence",
+    "missing_check": "Missing Check",
+    "vacation": "Vacation",
+    "no_data": "No Data"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "boolean": {
+    "true": "Yes",
+    "false": "No"
+  },
+  "variable_payment_types": {
+    "increment": "Increment",
+    "decrement": "Decrement"
+  },
+  "Wallet_movement_types": {
+    "out": "out",
+    "in": "in"
+  },
+  "Wallet_movement_actions": {
+    "cash_out": "cash_out"
+  },
+  "variable_payment": {
+    "table": {
+      "title": "Variable Payment",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "type": "Type",
+        "status": "Status",
+        "created_at": "Created At",
+        "actions": "Actions"
+      }
+    },
+    "form": {
+      "page_title": "Variable Payment",
+      "form_header": "{type} Variable Payment",
+      "add_variable_payment_title": "Add Variable Payment",
+      "edit_variable_payment_title": "Edit Variable Payment",
+      "name": "Name",
+      "status": "Status",
+      "type": "Type"
+    },
+    "search_filter": {
+      "title": "Filter Variable Payment",
+      "type": "Type",
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Variable Payment"
+  },
+  "walletMovement": {
+    "cash_out_form": {
+      "page_title": "chash_out",
+      "form_header": " chash_out ",
+      "contarctor": " contarctor",
+      "cash_out_total": "The amount to be withdrawn",
+      "my_total": "the amount I have",
+      "note": "note"
+    }
     "dates" : {
       "days" : {
         "sunday" : "Sunday",
@@ -1273,7 +1379,7 @@
       "waiting" : "Waiting",
       "released" : "Released",
       "inactive" : "Inactive"
-    },  
+    },
     "variable_payment" : {
       "table": {
           "title": "Variable Payment",
@@ -1336,7 +1442,7 @@
         "status" :"Status",
         "due_at" :"Due At",
         "note" : "Note"
-  
+
     },
     "search_filter" : {
       "title" : "Filter Variable Payment",
@@ -1349,5 +1455,5 @@
     },
       "header_button" :"Add Employee Variable Payment"
   }
-  
+
 }

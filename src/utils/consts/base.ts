@@ -26,11 +26,11 @@ export class BaseConsts {
         if (boolean === BaseConsts.TRUE)
             return i18n.global.t('boolean.true')
 
-            if (boolean === BaseConsts.FALSE)
+        if (boolean === BaseConsts.FALSE)
             return i18n.global.t('boolean.false')
-            if (boolean === undefined)
+        if (boolean === undefined)
             return ''
-            
+
         return ''
     }
 }

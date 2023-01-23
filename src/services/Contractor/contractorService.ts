@@ -9,17 +9,9 @@ export async function addContractor(
     userData: CreateUpdateUser,
 ) {
     userData.password = '1231313'
-
-    const newContractorData: CreateContractor = {
-        starting_date: contractorData.starting_date,
-        payment_percentage: contractorData.payment_percentage,
-        end_date: contractorData.end_date,
-        speciality_id: contractorData.speciality_id,
-        user: userData,
-        services: []
-    }
+    contractorData.user = userData
     const contractorResponse = useContractor()
-    var contractor: Contractor = await contractorResponse.addContractorStore(newContractorData) ?? defaultContractor
+    var contractor: Contractor = await contractorResponse.addContractorStore(contractorData) ?? defaultContractor
     var success: boolean = contractorResponse.success ?? false
     var error_code: string = contractorResponse.error_code ?? ''
     var message: string = contractorResponse.message ?? ''
