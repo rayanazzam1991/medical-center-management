@@ -1802,22 +1802,22 @@ Object.assign(columns29, columns28, columns29Sub)
         <template #content>
             <div class="is-flex is-justify-content-space-between">
                 <div>
-                    <h2 class="is-size-5 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+                    <h2 class="is-size-6 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
                         selectedEmployee.user.last_name
                     }}</h2>
-                    <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.date')}} <span class="has-text-primary"> {{
+                    <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.date')}} <span class="has-text-primary is-size-6"> {{
                         t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
                             day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
                     }} {{
     selectedCell.date
 }}</span></h2>
-                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span class="has-text-primary">{{
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span class="has-text-primary is-size-6">{{
                         t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(' ','_').toLowerCase()}`)
                     }}</span></h2>
                 </div>
                 <div>
-                    <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised
+                    <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised class="is-size-7"
                         @click="markAttendancePopup = true">{{ t('employee_attendance.table.attendance_details_modal.mark_attendance') }}</VButton>
                 </div>
             </div>
@@ -1826,11 +1826,11 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-6 mb-2">{{ t('employee_attendance.table.attendance_details_modal.check_in') }}</h3>
+                            <h3 class="title is-7 mb-2">{{ t('employee_attendance.table.attendance_details_modal.check_in') }}</h3>
                             <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-6 mb-2"> {{ t('employee_attendance.table.attendance_details_modal.check_out') }} </h3>
+                            <h3 class="title is-7 mb-2"> {{ t('employee_attendance.table.attendance_details_modal.check_out') }} </h3>
                             <p> {{ selectedCell.check_out != undefined ? selectedCell.check_out : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
                         </VCard>
                     </div>
@@ -1858,17 +1858,17 @@ Object.assign(columns29, columns28, columns29Sub)
         <template #content>
             <div class="is-flex is-justify-content-space-between">
                 <div>
-                    <h2 class="is-size-5 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+                    <h2 class="is-size-6 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
                         selectedEmployee.user.last_name
                     }}</h2>
-                    <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.date') }}<span class="has-text-primary"> {{
+                    <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.mark_attendance_modal.date') }}<span class="has-text-primary is-size-6"> {{
                         t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
                             day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
                     }} {{
     selectedCell.date
 }}</span></h2>
-                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span class="has-text-primary">{{
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span class="has-text-primary is-size-6">{{
                        t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(" ", "_").toLowerCase()}`) 
                     }}</span></h2>
                 </div>
@@ -1878,7 +1878,7 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-6 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_in')}}</h3>
+                            <h3 class="title is-7 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_in')}}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
@@ -1910,7 +1910,7 @@ Object.assign(columns29, columns28, columns29Sub)
                             </div>
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-6 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_out')}}</h3>
+                            <h3 class="title is-7 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_out')}}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
