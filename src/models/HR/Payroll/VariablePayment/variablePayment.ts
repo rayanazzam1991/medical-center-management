@@ -60,9 +60,9 @@ class VariablePaymentConsts extends BaseConsts {
     static readonly DECREMENT_TYPE = 2;
 
     public static getTypeName(type: number) {
-        if (type == 1)
+        if (type == this.INCREMENT_TYPE)
             return i18n.global.t('variable_payment_types.increment')
-        if (type == 2)
+        if (type == this.DECREMENT_TYPE)
             return i18n.global.t('variable_payment_types.decrement')
         else return '';
     }

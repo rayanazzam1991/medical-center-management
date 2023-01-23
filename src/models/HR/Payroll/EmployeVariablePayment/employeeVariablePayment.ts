@@ -80,28 +80,28 @@ class EmployeeVariablePaymentConsts {
     static readonly INACTIVE = 5;
 
     public static getStatusName(status: number) {
-        if (status == 1)
+        if (status == this.PENDING)
             return i18n.global.t('employee_variable_payment_statuses.pending')
-        if (status == 2)
+        if (status == this.APPROVED)
             return i18n.global.t('employee_variable_payment_statuses.approved')
-        if (status == 3)
+        if (status == this.WAITING)
             return i18n.global.t('employee_variable_payment_statuses.waiting')
-        if (status == 4)
+        if (status == this.RELEASED)
             return i18n.global.t('employee_variable_payment_statuses.released')
-        if (status == 5)
+        if (status == this.INACTIVE)
             return i18n.global.t('employee_variable_payment_statuses.inactive')
         else return '';
     }
     public static getStatusColor(status: number) {
-        if (status == 1)
+        if (status == this.PENDING)
             return 'light'
-        if (status == 2)
+        if (status == this.APPROVED)
             return 'green'
-        if (status == 3)
+        if (status == this.WAITING)
             return 'blue'
-        if (status == 4)
+        if (status == this.RELEASED)
             return 'success'
-        if (status == 5)
+        if (status == this.INACTIVE)
             return 'danger'
         else return undefined;
     }
