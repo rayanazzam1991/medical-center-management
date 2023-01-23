@@ -17,7 +17,6 @@ export class BaseConsts {
     public static showStatusName(status: number): string {
         if (status === BaseConsts.ACTIVE)
             return i18n.global.t('status.active')
-
         if (status === BaseConsts.INACTIVE)
             return i18n.global.t('status.inactive')
         return ''
