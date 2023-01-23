@@ -49,12 +49,10 @@ export default defineComponent({
 
     onMounted( async() =>{
       if(contractorId != undefined){
-        
         const {contractor} = await getContractor(Number(contractorId)) 
         contractorList.value.push(contractor)
         selectedContractor.value = contractor.id
         contractorName.value = contractor.user.first_name + ' '+ contractor.user.last_name
-
       }
       else{
         let searchFlter = {} as ContractorSearchFilter
@@ -85,7 +83,7 @@ export default defineComponent({
     const { handleSubmit } = useForm({
       validationSchema,
       initialValues : {
-        wallet_id : contractorId ? contractorId : 0 , 
+        contractor_id : contractorId ? contractorId : 0 , 
         total : Amount.value ?? 0 , 
         note : ""
       }
@@ -142,7 +140,7 @@ export default defineComponent({
                     <div v-if="!contractorId" class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="wallet_id">
+                                <VField id="contractor_id">
                                     <VLabel class="required">{{t('walletMovement.cash_out_form.contarctor')}}</VLabel>
                                     <VControl>
                                         <VSelect v-model="selectedContractor">
@@ -152,7 +150,7 @@ export default defineComponent({
                                                 {{ contarctor.user.first_name +' '+ contarctor.user.last_name }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage class="help is-danger" name="wallet_id" />
+                                        <ErrorMessage class="help is-danger" name="contractor_id" />
                                     </VControl>
                                 </VField>
                             </div>

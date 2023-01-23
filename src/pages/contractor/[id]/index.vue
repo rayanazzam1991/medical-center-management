@@ -133,7 +133,6 @@ const onClickEditServices = async () => {
     })
 }
 const onClickCashOut = async () => {
-    console.log(contractorId.value)
     router.push({
         path: `/contractor/cash-out/add`,
         query : {

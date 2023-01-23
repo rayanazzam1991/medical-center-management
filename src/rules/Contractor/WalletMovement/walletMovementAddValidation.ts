@@ -13,7 +13,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 const walletMovementAddvalidationSchema = toFormValidator(zod
     .object({
-        wallet_id: zod
+        contractor_id: zod
             .preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
