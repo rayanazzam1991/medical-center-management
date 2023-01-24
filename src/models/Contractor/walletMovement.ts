@@ -4,6 +4,7 @@ import { BaseConsts } from "/@src/utils/consts/base"
 import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
 import ar from '/@src/locales/ar.json';
 import messages from "@intlify/vite-plugin-vue-i18n/messages";
+import { User } from "../Others/User/user";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -30,6 +31,18 @@ export interface CreateWalletMovement {
     note?: string
 
 }
+export interface WalletMovementSearchFilter {
+    contractor_name?: string
+    created_by?: User
+    date_between?: string
+    from?: string
+    to?: string
+    action?: string
+    page?: number
+    per_page?: number
+    order_by?: string
+    order?: string
+}
 
 export const defaultWalletMovement: WalletMovement = {
     id: 0,
@@ -48,6 +61,19 @@ export const defaultCreateWalletMovement: CreateWalletMovement = {
     wallet_id: 0,
     total: 0,
     note: ''
+}
+
+export const defaultWalletMovementSearchFilter: WalletMovementSearchFilter = {
+    contractor_name: undefined,
+    created_by: undefined,
+    date_between: undefined,
+    from: undefined,
+    to: undefined,
+    action: 'cash_out',
+    page: undefined,
+    per_page: undefined,
+    order_by: 'created_at',
+    order: 'desc',
 }
 class WalletMovementConsts extends BaseConsts {
     static readonly OUT = 'out'

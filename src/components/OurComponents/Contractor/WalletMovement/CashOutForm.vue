@@ -38,7 +38,7 @@ export default defineComponent({
     const router = useRouter();
     const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
     const pageTitle = t('walletMovement.cash_out_form.form_header' , {type : formTypeName});
-    const backRoute = "/walletMovement";
+    const backRoute = "/contractor/cash-out";
     const currentWalletMovement = ref(defaultCreateWalletMovement);
     const selectedContractor = ref();
     const contractorName = ref();

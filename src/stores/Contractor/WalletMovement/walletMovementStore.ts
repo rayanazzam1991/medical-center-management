@@ -3,8 +3,8 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
-import { addWalletMovementApi } from "/@src/utils/api/Contractor/WalletMovement"
-import { CreateWalletMovement, WalletMovement } from "/@src/models/Contractor/walletMovement"
+import { addWalletMovementApi, getWalletMovementsApi } from "/@src/utils/api/Contractor/WalletMovement"
+import { CreateWalletMovement, WalletMovement, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
 
 
 
@@ -44,6 +44,32 @@ export const useWalletMovement = defineStore('walletMovement', () => {
             loading.value = false
         }
     }
+    async function getWalletMovementsStore(searchFilter: WalletMovementSearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        try {
+            const returnedResponse = await getWalletMovementsApi(api, searchFilter)
+
+            walletMovements.value = returnedResponse.response.data
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+
+
+        }
+        catch (error: any) {
+            console.log(success.value)
+
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
     return {
         success,
         error_code,
@@ -52,6 +78,7 @@ export const useWalletMovement = defineStore('walletMovement', () => {
         pagination,
         loading,
         addWalletMovementStore,
+        getWalletMovementsStore
     } as const
 })
 
