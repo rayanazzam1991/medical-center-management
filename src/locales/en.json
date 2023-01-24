@@ -180,7 +180,8 @@
       "customer_note": "Customer notes was edited successfully",
       "justified": "justified successfully",
       "unjustified": "Unjustified successfully",
-      "withdraw": "Withdrawed successfully"
+      "withdraw": "Withdrawed successfully",
+      "generate_salaries": "Salaries was generated successfully"
     },
     "error": {
       "steps_error": "Please add some data or skip this step",
@@ -652,6 +653,7 @@
       "nationality": "Nationality",
       "position": "Position",
       "phone_number": "Phone Number",
+      "basic_salary": "Basic Salary",
       "address": "Address",
       "employee_number": "Employee Number",
       "last_employee_number": "Last Employee Number",
@@ -1357,5 +1359,32 @@
       "to": "To: "
     },
     "header_button": "Add Employee Variable Payment"
+  },
+  "generate_salaries": {
+    "table": {
+      "title": "Generate Salaries",
+      "columns": {
+        "employee_name": "Employee Name",
+        "basic_salary": "Basic Salary",
+        "unjustified_hours": "Unjustified Hours",
+        "attendance_deduction": "Attendance Deduction",
+        "variable_payments": "Variable Payments",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "Select required month for preview"
+      },
+      "footer": {
+        "salaries_sum": "Sum of net salaries",
+        "generate": "Generate Salaries"
+      },
+      "approve_modal": {
+        "title": "الموافقة على المتغير المالي للموظف",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم تعديل حالة هذا المتغير المالي"
+      }
+    },
+    "header_button": "Preview Salaries"
   }
 }

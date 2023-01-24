@@ -157,7 +157,6 @@ export default defineComponent({
                 originalEmployeeVariablePaymentStatus.value == EmployeeVariablePaymentConsts.INACTIVE) {
                 notif.error(t('toast.error.employee_variable_payment.cant_edit'))
                 return
-
             }
 
             let employeeVariablePaymentData = defaultUpdateEmployeeVariablePayment

@@ -96,6 +96,8 @@ declare module 'vue-router/auto/routes' {
     '/employee-variable-payment/': RouteRecordInfo<'/employee-variable-payment/', '/employee-variable-payment/', Record<never, never>, Record<never, never>>,
     '/employee-variable-payment/[id]/edit': RouteRecordInfo<'/employee-variable-payment/[id]/edit', '/employee-variable-payment/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/employee-variable-payment/add': RouteRecordInfo<'/employee-variable-payment/add', '/employee-variable-payment/add', Record<never, never>, Record<never, never>>,
+    '/generate-salaries': RouteRecordInfo<'/generate-salaries', '/generate-salaries', Record<never, never>, Record<never, never>>,
+    '/generate-salaries/': RouteRecordInfo<'/generate-salaries/', '/generate-salaries/', Record<never, never>, Record<never, never>>,
     '/item': RouteRecordInfo<'/item', '/item', Record<never, never>, Record<never, never>>,
     '/item/': RouteRecordInfo<'/item/', '/item/', Record<never, never>, Record<never, never>>,
     '/item/[id]/': RouteRecordInfo<'/item/[id]/', '/item/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

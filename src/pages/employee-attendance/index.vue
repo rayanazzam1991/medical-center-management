@@ -14,10 +14,12 @@ import { Notyf } from 'notyf';
 import { Attendance, defaultAttendance, defaultEmployeeAttendance, defaultEmployeeAttendanceSearchFilter, EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
 import { DateConsts, DaysNamePerMonth, DaysPerMonth } from '/@src/models/HR/Attendance/Date/date';
 import { AttendanceConsts, UpdateAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
-import { updateAttendance , justifyAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
+import { updateAttendance, justifyAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
 import { useI18n } from 'vue-i18n';
+import { GeneratedSalariesMonth } from '/@src/models/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonth';
+import { getGeneratedMonths } from '/@src/services/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonthService';
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('employee_attendance.table.title'))
 useHead({
     title: t('employee_attendance.table.title'),
@@ -47,6 +49,7 @@ const selectedYear = ref(currentYear)
 const selectedMonth = ref(currentMonth)
 const selectedMonthDays = ref(28)
 const daysPerMonthResult = await getDaysPerMonth(currentYear);
+const generatedSalariesMonthsList = ref<GeneratedSalariesMonth[]>([])
 daysPerMonth.value = daysPerMonthResult.daysPerMonth
 const originalDaysPerMonth = daysPerMonthResult.daysPerMonth.find((month) => month.month == Number(currentMonth))?.number_of_days
 const daysNamePerMonthResult = await getDaysNamePerMonth(currentYear, Number(currentMonth));
@@ -60,6 +63,8 @@ onMounted(async () => {
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
+    const { generatedSalariesMonths } = await getGeneratedMonths()
+    generatedSalariesMonthsList.value = generatedSalariesMonths
 
 
 });
@@ -250,16 +255,16 @@ const updateEmployeeAttendance = async () => {
 
 
 }
-const justifyEmployeeAttendance = async (isJustify : boolean) => {
-    if(isJustify)
-    loading.value.update = true
-    else 
-    loading.value.delete = true
+const justifyEmployeeAttendance = async (isJustify: boolean) => {
+    if (isJustify)
+        loading.value.update = true
+    else
+        loading.value.delete = true
 
     const { message, success, attendance } = await justifyAttendance(selectedCell.value.id, isJustify)
     if (success) {
         await search(searchFilter.value, selectedMonthDays.value)
-        if(isJustify) {
+        if (isJustify) {
             notif.dismissAll()
             await sleep(200);
             notif.success(t('toast.success.justified'))
@@ -288,41 +293,21 @@ const justifyEmployeeAttendance = async (isJustify : boolean) => {
 
 }
 
-const canMarkAttendance = async () => {
-    const selectedCellDateSplitter = selectedCell.value.date.split("-")
-    const selectedCellMonth = selectedCellDateSplitter[1]
-    if (selectedCellMonth == currentMonth) {
-
-        return true
-    } else {
-        const selectedCellDay = selectedCellDateSplitter[2]
-        const previousMonthName = DateConsts.MONTHS[Number(selectedCellMonth) - 1]
-        const previousMonthNumber = DateConsts.getMonthNumber(previousMonthName)
-        let previousMonthDaysNumber
-        if (previousMonthNumber > Number(currentMonth)) {
-
-            const { daysPerMonth } = await getDaysPerMonth(currentYear - 1)
-
-
-            previousMonthDaysNumber = daysPerMonth.find((month) => month.month == previousMonthNumber)?.number_of_days
-
-        } else {
-            previousMonthDaysNumber = daysPerMonth.value.find((month) => month.month == previousMonthNumber)?.number_of_days
+const canMarkAttendance = () => {
+    let canMark = true
+    const [sellectedYear, selectedMonth, selectedDay] = selectedCell.value.date.split("-")
+    generatedSalariesMonthsList.value.forEach(generatedMonth => {
+        let [generatedFromYear, generatedFromMonth, generatedFromDay] = generatedMonth.generated_from.split("-")
+        let [generatedToYear, generatedToMonth, generatedToDay] = generatedMonth.generated_to.split("-")
+        let generatedFromDate = new Date(Number(generatedFromYear), Number(generatedFromMonth) - 1, Number(generatedFromDay));
+        let generatedToDate = new Date(Number(generatedToYear), Number(generatedToMonth) - 1, Number(generatedToDay));
+        let selectedDate = new Date(Number(sellectedYear), Number(selectedMonth) - 1, Number(selectedDay));
+        if (selectedDate >= generatedFromDate && selectedDate <= generatedToDate) {
+            canMark = false;
         }
-        if (previousMonthDaysNumber != undefined) {
+    });
 
-
-            if (Number(selectedCellDay) >= previousMonthDaysNumber - 3) {
-
-
-                return true
-            }
-        }
-
-
-        return false
-
-    }
+    return canMark;
 }
 
 const columns28 = {
@@ -389,7 +374,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -428,7 +413,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -469,7 +454,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -510,7 +495,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -553,7 +538,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
 
                     }
@@ -595,7 +580,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -636,7 +621,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -677,7 +662,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -718,7 +703,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
 
                     }
@@ -759,7 +744,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -800,7 +785,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -841,7 +826,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -881,7 +866,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -922,7 +907,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -941,7 +926,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[15 - 1 ].day_name.toLowerCase()}`)}`,
+                headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[15 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -963,7 +948,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1003,7 +988,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1043,7 +1028,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1083,7 +1068,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1123,7 +1108,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1163,7 +1148,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1181,7 +1166,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[21 -1 ].day_name.toLowerCase()}`)}`,
+                headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[21 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1203,7 +1188,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1221,7 +1206,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[22-1].day_name.toLowerCase()}`)}`,
+                headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[22 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1243,7 +1228,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1283,7 +1268,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1301,7 +1286,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[24 -1 ].day_name.toLowerCase()}`)}`,
+                headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[24 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1323,7 +1308,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1341,7 +1326,7 @@ const columns28 = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[25 - 1 ].day_name.toLowerCase()}`)}`,
+                headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[25 - 1].day_name.toLowerCase()}`)}`,
             }
 
             ),
@@ -1363,7 +1348,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1402,7 +1387,7 @@ const columns28 = {
                         selectedCell.value = row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`)
                         selectedEmployee.value = row
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
                         tableCellPopup.value = true
                     }
 
@@ -1441,7 +1426,7 @@ const columns28 = {
                         selectedCell.value = row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`)
                         selectedEmployee.value = row
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
                         tableCellPopup.value = true
                     }
 
@@ -1481,7 +1466,7 @@ const columns28 = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1524,7 +1509,7 @@ const columns29Sub = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1567,7 +1552,7 @@ const columns30Sub = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1585,7 +1570,7 @@ const columns30Sub = {
                 AttendanceTableCellCard, {
                 isHeader: true,
                 radius: 'none',
-                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1 ].day_name.toLowerCase()}`)}` : '',
+                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1].day_name.toLowerCase()}`)}` : '',
             }
 
             ),
@@ -1607,7 +1592,7 @@ const columns30Sub = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1651,7 +1636,7 @@ const columns31Sub = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1690,7 +1675,7 @@ const columns31Sub = {
                         selectedCell.value = row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`)
                         selectedEmployee.value = row
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
                         tableCellPopup.value = true
                     }
 
@@ -1720,7 +1705,7 @@ const columns31Sub = {
                 clickable: true,
                 title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31`).status) : '-',
                 titleSize: 'small',
-                statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31 `) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31   `).status) : 'grey',
+                statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-31`).status) : 'grey',
 
                 color: 'disabled',
                 onClick: async () => {
@@ -1730,7 +1715,7 @@ const columns31Sub = {
                         selectedEmployee.value = row
                         tableCellPopup.value = true
                         formatTime()
-                        canMarkAttendanceSelectedCell.value = await canMarkAttendance()
+                        canMarkAttendanceSelectedCell.value = canMarkAttendance()
 
                     }
 
@@ -1770,9 +1755,8 @@ Object.assign(columns29, columns28, columns29Sub)
                     </div>
                 </div>
                 <div v-else-if="employeesAttendanceList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitle')"
-                        class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')"
+                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
                     </VPlaceholderSection>
                 </div>
 
@@ -1784,21 +1768,21 @@ Object.assign(columns29, columns28, columns29Sub)
             @update:current-page="getEmployeesAttendancePerPage" />
         <h6 v-if="employeesAttendanceList.length != 0 && !employeeStore?.loading && !loading.fetch">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', { from_number: paginationVar.page !=
+                    paginationVar.max_page
+                    ?
+                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                , to_number: paginationVar.page !=
+                    paginationVar.max_page ?
+                    paginationVar.page *
+                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+            })}}</h6>
 
-        <VPlaceloadText v-if="employeeStore?.loading || loading.fetch" :lines="1" last-line-width="20%" class="mx-2"  />
+        <VPlaceloadText v-if="employeeStore?.loading || loading.fetch" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :key="keyIncement" :title="t('employee_attendance.table.attendance_details_modal.title')" :open="tableCellPopup" actions="right"
-        @close="tableCellPopup = false">
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.attendance_details_modal.title')"
+        :open="tableCellPopup" actions="right" @close="tableCellPopup = false">
         <template #content>
             <div class="is-flex is-justify-content-space-between">
                 <div>
@@ -1806,19 +1790,25 @@ Object.assign(columns29, columns28, columns29Sub)
                         selectedEmployee.user.last_name
                     }}</h2>
                     <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.date')}} <span class="has-text-primary is-size-6"> {{
-                        t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
-                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
-                    }} {{
-    selectedCell.date
-}}</span></h2>
-                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span class="has-text-primary is-size-6">{{
-                        t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(' ','_').toLowerCase()}`)
-                    }}</span></h2>
+                    <h2 class="is-size-7 mb-3">{{ t('employee_attendance.table.attendance_details_modal.date') }} <span
+                            class="has-text-primary is-size-6"> {{
+    t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+        day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()
+}`)
+                            }} {{
+                            selectedCell.date
+                            }}</span></h2>
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span
+                            class="has-text-primary is-size-6">{{
+                            t(`attendance_status.${
+    AttendanceConsts.getAttendanceStatusName(selectedCell.status).replaceAll(' ','_').toLowerCase()}`)
+                            }}</span></h2>
                 </div>
                 <div>
                     <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised class="is-size-7"
-                        @click="markAttendancePopup = true">{{ t('employee_attendance.table.attendance_details_modal.mark_attendance') }}</VButton>
+                        @click="markAttendancePopup = true">{{
+                            t('employee_attendance.table.attendance_details_modal.mark_attendance')
+                        }}</VButton>
                 </div>
             </div>
 
@@ -1826,12 +1816,22 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-7 mb-2">{{ t('employee_attendance.table.attendance_details_modal.check_in') }}</h3>
-                            <p> {{ selectedCell.check_in != undefined ? selectedCell.check_in : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
+                            <h3 class="title is-7 mb-2">{{
+                                t('employee_attendance.table.attendance_details_modal.check_in')
+                            }}</h3>
+                            <p> {{
+                                selectedCell.check_in != undefined ? selectedCell.check_in :
+                                    t('employee_attendance.table.attendance_details_modal.no_data')
+                            }} </p>
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-7 mb-2"> {{ t('employee_attendance.table.attendance_details_modal.check_out') }} </h3>
-                            <p> {{ selectedCell.check_out != undefined ? selectedCell.check_out : t('employee_attendance.table.attendance_details_modal.no_data') }} </p>
+                            <h3 class="title is-7 mb-2"> {{
+                                t('employee_attendance.table.attendance_details_modal.check_out')
+                            }} </h3>
+                            <p> {{
+                                selectedCell.check_out != undefined ? selectedCell.check_out :
+                                    t('employee_attendance.table.attendance_details_modal.no_data')
+                            }} </p>
                         </VCard>
                     </div>
                 </div>
@@ -1840,21 +1840,33 @@ Object.assign(columns29, columns28, columns29Sub)
         </template>
         <template #action="{ close }">
             <VLoader size="small" :active="loading.delete">
-                <VButton :disabled="loading.update" v-if="(selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
-                selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE) && canMarkAttendanceSelectedCell"
+                <VButton :disabled="loading.update" v-if="(
+                    selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
+                    selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.JUSTIFIED_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.UNJUTIFIED_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE)
+                    && canMarkAttendanceSelectedCell"
                     class="mr-2" color="danger" outlined @click="justifyEmployeeAttendance(false)">
                     {{ t('employee_attendance.table.attendance_details_modal.unjustify_attendance') }}</VButton>
             </VLoader>
             <VLoader size="small" :active="loading.update">
-                <VButton :disabled="loading.delete" v-if="(selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
-                selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE) && canMarkAttendanceSelectedCell"
+                <VButton :disabled="loading.delete" v-if="(
+                    selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
+                    selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.JUSTIFIED_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.UNJUTIFIED_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.JUSTIFIED_PARTIAL_ABSENCE || 
+                    selectedCell.status == AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE)
+                    && canMarkAttendanceSelectedCell"
                     class="mr-2" color="primary" outlined @click="justifyEmployeeAttendance(true)">
                     {{ t('employee_attendance.table.attendance_details_modal.justify_attendance') }}</VButton>
             </VLoader>
         </template>
     </VModal>
-    <VModal :key="keyIncement" :title="t('employee_attendance.table.mark_attendance_modal.title')" :open="markAttendancePopup" actions="right"
-        @close="markAttendancePopup = false">
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.mark_attendance_modal.title')"
+        :open="markAttendancePopup" actions="right" @close="markAttendancePopup = false">
         <template #content>
             <div class="is-flex is-justify-content-space-between">
                 <div>
@@ -1862,15 +1874,19 @@ Object.assign(columns29, columns28, columns29Sub)
                         selectedEmployee.user.last_name
                     }}</h2>
                     <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
-                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.mark_attendance_modal.date') }}<span class="has-text-primary is-size-6"> {{
-                        t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
-                            day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()}`)
-                    }} {{
-    selectedCell.date
-}}</span></h2>
-                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span class="has-text-primary is-size-6">{{
-                       t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(" ", "_").toLowerCase()}`) 
-                    }}</span></h2>
+                    <h2 class="is-size-7 mb-3">{{ t('employee_attendance.table.mark_attendance_modal.date') }}<span
+                            class="has-text-primary is-size-6"> {{
+    t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+        day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()
+}`)
+                            }} {{
+                            selectedCell.date
+                            }}</span></h2>
+                    <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span
+                            class="has-text-primary is-size-6">{{
+                            t(`attendance_status.${
+    AttendanceConsts.getAttendanceStatusName(selectedCell.status).replaceAll(" ", "_").toLowerCase()}`)
+                            }}</span></h2>
                 </div>
             </div>
 
@@ -1878,7 +1894,8 @@ Object.assign(columns29, columns28, columns29Sub)
                 <div class="columns is-multiline">
                     <div class="column is-12">
                         <VCard elevated>
-                            <h3 class="title is-7 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_in')}}</h3>
+                            <h3 class="title is-7 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_in') }}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
@@ -1910,7 +1927,8 @@ Object.assign(columns29, columns28, columns29Sub)
                             </div>
                         </VCard>
                         <VCard elevated class="mt-2">
-                            <h3 class="title is-7 mb-2">{{t('employee_attendance.table.mark_attendance_modal.check_out')}}</h3>
+                            <h3 class="title is-7 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_out') }}</h3>
                             <div class="column is-12">
                                 <div class="columns">
 
@@ -1949,7 +1967,7 @@ Object.assign(columns29, columns28, columns29Sub)
         <template #action="{ close }">
             <VLoader size="small" :active="loading.update">
                 <VButton class="mr-2" color="primary" @click="updateEmployeeAttendance">
-                    {{t('modal.buttons.update')}}</VButton>
+                    {{ t('modal.buttons.update') }}</VButton>
             </VLoader>
         </template>
     </VModal>

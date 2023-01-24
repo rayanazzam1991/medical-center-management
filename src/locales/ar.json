@@ -192,7 +192,8 @@
       "customer_note": "تم تعديل ملاحظات الزبون بنجاح",
       "justified": "تم التغيير لمبرر بنجاح",
       "unjustified": "تم التغيير لغير مبرر بنجاح",
-      "withdraw": "تم السحب بنجاح"
+      "withdraw": "تم السحب بنجاح",
+      "generate_salaries" : "تم توليد الراوتب بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -653,6 +654,7 @@
       "nationality": "الجنسية",
       "position": "المنصب",
       "phone_number": "رقم الهاتف",
+      "basic_salary": "الراتب الأساسي",
       "address": "العنوان",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
@@ -718,8 +720,8 @@
         "check_in": "تسجيل دخول الموظف",
         "check_out": "تسجيل خروج الموظف",
         "no_data": "لا يوجد بيانات",
-        "justify_attendance": "حضور مبرر",
-        "unjustify_attendance": "حضور غير مبرر"
+        "justify_attendance": "تبرير الغياب",
+        "unjustify_attendance": "عدم تبرير الغياب"
       },
       "mark_attendance_modal": {
         "title": "تسجيل الحضور",
@@ -1358,5 +1360,32 @@
       "my_total": "المبلغ الحالي",
       "note": "ملاحظة"
     }
+  },
+  "generate_salaries": {
+    "table": {
+      "title": "توليد الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "basic_salary": "الراتب الأساسي",
+        "unjustified_hours": "ساعات التأخير الغير مبررة",
+        "attendance_deduction": "خصومات التأخير",
+        "variable_payments": "المتغيرات المالية",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "يرجى تحديد الشهر المطلوب للمعاينة"
+      },
+      "footer": {
+        "salaries_sum": "المجموع الكلي لصافي الراوتب: ",
+        "generate": "توليد الراوتب"
+      },
+      "approve_modal": {
+        "title": "الموافقة على المتغير المالي للموظف",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم تعديل حالة هذا المتغير المالي"
+      }
+    },
+    "header_button": "معاينة الراوتب"
   }
 }
