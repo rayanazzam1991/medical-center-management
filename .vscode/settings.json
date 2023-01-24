@@ -20,5 +20,8 @@
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

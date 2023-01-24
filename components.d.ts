@@ -56,7 +56,6 @@ declare module '@vue/runtime-core' {
     EmployeeSubnav: typeof import('./src/layouts/navbar-items/EmployeeSubnav.vue')['default']
     EmployeeTableHeader: typeof import('./src/components/OurComponents/Employee/EmployeeTableHeader.vue')['default']
     EmployeeVariablePaymentForm: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentForm.vue')['default']
-    EmployeeVariablePaymentHeader: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentHeader.vue')['default']
     EmployeeVariablePaymentSearchFilterModal: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentSearchFilterModal.vue')['default']
     EmployeeVariablePaymentTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentTableHeader.vue')['default']
     FlexTableDropdown: typeof import('./src/components/partials/dropdowns/FlexTableDropdown.vue')['default']
@@ -229,7 +228,6 @@ declare module '@vue/runtime-core' {
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
-    WalletMovementForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/walletMovementForm.vue')['default']
     WarehouseSubnav: typeof import('./src/layouts/navbar-items/WarehouseSubnav.vue')['default']
     WithdrawQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/WithdrawQuantityFormNavigation.vue')['default']
   }

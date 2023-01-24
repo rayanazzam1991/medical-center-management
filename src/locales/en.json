@@ -143,12 +143,10 @@
       "variable_payments": "Variable Payments",
       "create_variable_payment": "Create Variable Payment"
     },
-
     "employee_variable_payment": {
       "employee_variable_payments": "Employees Variable Payments",
       "create_employee_variable_payment": "Create Employee Variable Payment"
     },
-
     "employees_schedule": "Employees Schedule",
     "employees_attendance": "Employees Attendance"
   },
@@ -191,10 +189,9 @@
         "check_in": "New check in can't be after original check in",
         "check_out": "New check out can't be before original check out"
       },
-      "employee_variable_payment" : {
-        "cant_edit" : "Released and Inactive variable payments can't be edited"
+      "employee_variable_payment": {
+        "cant_edit": "Released and Inactive variable payments can't be edited"
       }
-
     },
     "file": {
       "type": "Please choose an accepted file type",
@@ -280,7 +277,6 @@
       },
       "modal_title": "Change Category Status"
     },
-
     "form": {
       "page_title": "Category",
       "form_header": "{type} Category",
@@ -1207,7 +1203,6 @@
       "submit": "Submit"
     }
   },
-
   "dates": {
     "days": {
       "sunday": "Sunday",
@@ -1275,6 +1270,23 @@
   "Wallet_movement_actions": {
     "cash_out": "cash_out"
   },
+  "walletMovement": {
+    "cash_out_form": {
+      "page_title": "chash_out",
+      "form_header": " chash_out ",
+      "contarctor": " contarctor",
+      "cash_out_total": "The amount to be withdrawn",
+      "my_total": "the amount I have",
+      "note": "note"
+    }
+  },
+  "employee_variable_payment_statuses": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "waiting": "Waiting",
+    "released": "Released",
+    "inactive": "Inactive"
+  },
   "variable_payment": {
     "table": {
       "title": "Variable Payment",
@@ -1304,148 +1316,39 @@
     },
     "header_button": "Add Variable Payment"
   },
-  "walletMovement": {
-    "cash_out_form": {
-      "page_title": "chash_out",
-      "form_header": " chash_out ",
-      "contarctor": " contarctor",
-      "cash_out_total": "The amount to be withdrawn",
-      "my_total": "the amount I have",
-      "note": "note"
-    }
-    "dates" : {
-      "days" : {
-        "sunday" : "Sunday",
-        "monday" : "Monday",
-        "tuesday" : "Tuesday",
-        "wednesday" : "Wednesday",
-        "thursday" : "Thursday",
-        "friday" : "Friday",
-        "saturday" : "Saturday"
-      },
-      "days_abbr" : {
-        "sun" : "Sun",
-        "mon" : "Mon",
-        "tue" : "Tue",
-        "wed" : "Wed",
-        "thu" : "Thu",
-        "fri" : "Fri",
-        "sat" : "Sat"
-      },
-      "months" : {
-        "january" : "January",
-        "february" : "February",
-        "march" : "March",
-        "april" : "April",
-        "may" : "May",
-        "june" : "June",
-        "july" : "July",
-        "august" : "August",
-        "september" : "September",
-        "october" : "October",
-        "november" : "November",
-        "december" : "December"
-      }
-    },
-    "attendance_status" : {
-        "attend" : "Attend" ,
-        "absence" : "Absence" ,
-        "pending_absence" : "Pending Absence" ,
-        "justified_absence" : "Justified Absence" ,
-        "unjustified_absence" : "Unjustified Absence" ,
-        "partial_absence" : "Partial Absence" ,
-        "pending_partial_absence" : "Pending Partial Absence" ,
-        "justified_partial_absence" : "Justified Partial Absence" ,
-        "unjustified_partial_absence" : "Unjustified Partial Absence" ,
-        "missing_check" : "Missing Check" ,
-        "vacation" : "Vacation" ,
-        "no_data" : "No Data"
-    },
-    "status" : {
-      "active" : "Active" ,
-      "inactive" : "Inactive"
-    },
-    "boolean" : {
-      "true" : "Yes" ,
-      "false" : "No"
-    },
-    "variable_payment_types" : {
-      "increment" : "Increment",
-      "decrement" : "Decrement"
-    },
-    "employee_variable_payment_statuses" : {
-      "pending" : "Pending",
-      "approved" : "Approved",
-      "waiting" : "Waiting",
-      "released" : "Released",
-      "inactive" : "Inactive"
-    },
-    "variable_payment" : {
-      "table": {
-          "title": "Variable Payment",
-          "columns": {
-            "id": "ID",
-            "name": "Name",
-            "type" : "Type",
-            "status": "Status",
-            "created_at" :"Created At",
-            "actions": "Actions"
-          }
-        },
-      "form" : {
-          "page_title" : "Variable Payment" ,
-          "form_header" : "{type} Variable Payment",
-          "add_variable_payment_title" : "Add Variable Payment",
-          "edit_variable_payment_title" : "Edit Variable Payment",
-          "name" : "Name",
-          "status" : "Status",
-          "type" : "Type"
-
-      },
-      "search_filter" : {
-        "title" : "Filter Variable Payment",
-        "type" : "Type",
-        "name" :"Name...",
-        "status" : "Status"
-      },
-      "header_button" :"Add Variable Payment"
-  },
-  "employee_variable_payment" : {
+  "employee_variable_payment": {
     "table": {
-        "title": "Employee Variable Payments",
-        "columns": {
-          "employee_name": "Employee Name",
-          "variable_payment" : "Variable Payment",
-          "amount": "Amount",
-          "type" :"Type",
-          "status" :"Status",
-          "created_at" :"Created At",
-          "release_date" :"Released At",
-          "due_date" :"Due At",
-          "created_by" :"Created By",
-          "actions": "Actions",
-          "note" : "Note"
-        },
-        "modal_title" : "Change Employee Payment Variable Status",
-        "deactivate_caution" : "Note: This variable payment cannot be modified after making it inactive"
-
-
-      },
-    "form" : {
-        "page_title" : "Employee Variable Payments" ,
-        "form_header" : "{type} Variable Payment",
-        "add_variable_payment_title" : "Add Employee Variable Payment",
-        "edit_variable_payment_title" : "Edit Employee Variable Payment",
-        "employee_name" : "Employee Name",
-        "variable_payment" : "Variable Payment",
+      "title": "Employee Variable Payments",
+      "columns": {
+        "employee_name": "Employee Name",
+        "variable_payment": "Variable Payment",
         "amount": "Amount",
-        "status" :"Status",
-        "due_at" :"Due At",
-        "note" : "Note"
-
+        "type": "Type",
+        "status": "Status",
+        "created_at": "Created At",
+        "release_date": "Released At",
+        "due_date": "Due At",
+        "created_by": "Created By",
+        "actions": "Actions",
+        "note": "Note"
+      },
+      "modal_title": "Change Employee Payment Variable Status",
+      "deactivate_caution": "Note: This variable payment cannot be modified after making it inactive"
     },
-    "search_filter" : {
-      "title" : "Filter Variable Payment",
+    "form": {
+      "page_title": "Employee Variable Payments",
+      "form_header": "{type} Variable Payment",
+      "add_variable_payment_title": "Add Employee Variable Payment",
+      "edit_variable_payment_title": "Edit Employee Variable Payment",
+      "employee_name": "Employee Name",
+      "variable_payment": "Variable Payment",
+      "amount": "Amount",
+      "status": "Status",
+      "due_at": "Due At",
+      "note": "Note"
+    },
+    "search_filter": {
+      "title": "Filter Variable Payment",
       "name": "ُEmployee Name...",
       "type": "Type",
       "status": "Status",
@@ -1453,7 +1356,6 @@
       "from": "From: ",
       "to": "To: "
     },
-      "header_button" :"Add Employee Variable Payment"
+    "header_button": "Add Employee Variable Payment"
   }
-
 }
