@@ -229,7 +229,9 @@ watch(
   route.path.startsWith('/employee-add') ||
   route.path.startsWith('/employee-edit') ||
   route.path.startsWith('/position') ||
-  route.path.startsWith('/variable-payment')
+  route.path.startsWith('/variable-payment') ||
+  route.path.startsWith('/employee-variable-payment') ||
+  route.path.startsWith('/generate-salaries')
 ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
             @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>

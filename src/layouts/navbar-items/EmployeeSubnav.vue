@@ -76,6 +76,16 @@ const {t} = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+                <h4 class="column-heading">{{t('human_resources_subnav.generate_salaries')}}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/generate-salaries">
+                      <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                      <span>{{t('human_resources_subnav.generate_salaries')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
               </div>
               <div class="column is-3">
                 <h4 class="column-heading">{{t('human_resources_subnav.variable_payment.variable_payments')}}</h4>

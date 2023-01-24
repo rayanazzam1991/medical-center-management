@@ -148,7 +148,8 @@
       "create_employee_variable_payment": "Create Employee Variable Payment"
     },
     "employees_schedule": "Employees Schedule",
-    "employees_attendance": "Employees Attendance"
+    "employees_attendance": "Employees Attendance",
+    "generate_salaries": "Generate Salaries"
   },
   "warehouse_subnav": {
     "category": {

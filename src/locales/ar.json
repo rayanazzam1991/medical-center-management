@@ -153,7 +153,8 @@
       "create_employee_variable_payment": "اضافة متغير مالي لموظف"
     },
     "employees_schedule": "جدول الدوام",
-    "employees_attendance": "جدول الحضور"
+    "employees_attendance": "جدول الحضور",
+    "generate_salaries" : "توليد الراوتب"
   },
   "warehouse_subnav": {
     "category": {
