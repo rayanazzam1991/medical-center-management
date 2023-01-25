@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
-import { CreateWalletMovement, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
+import { CreateBulkCashOut, CreateWalletMovement, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
 
 
 export async function addWalletMovementApi(
@@ -20,5 +20,13 @@ export async function getWalletMovementsApi(
     const { data: response, headers } = await api.get('walletMovement/getWalletMovementsList', {
         params: searchFilter,
     })
+    return { response }
+}
+
+export async function addBulkCashOutsApi(
+    api: AxiosInstance,
+    bulkCashOut: CreateBulkCashOut
+): Promise<{ response: CustomResponseCollection }> {
+    const { data: response, headers } = await api.post('walletMovement/bulkCashOut', bulkCashOut)
     return { response }
 }

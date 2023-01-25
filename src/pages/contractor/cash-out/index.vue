@@ -97,8 +97,7 @@ const columns = {
         h(
                 WalletMovementClickName, {
                 clickable: true,
-                title: row?.wallet.contractor.user.first_name +
-             ' ' + row?.wallet.contractor.user.last_name,
+                title: row?.wallet.contractor.user.first_name + ' ' + row?.wallet.contractor.user.last_name,
                 onClick: () => {
                     router.push({ path: `/contractor/${row?.wallet?.contractor?.id}` ,  
                        query: { tab: 'Wallet' }});
@@ -117,8 +116,8 @@ const columns = {
         label: t('walletMovement.table.columns.note'),
         renderRow: (row: any) =>
             h('span', {
-                innerHTML:
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`,
+                innerHTML: row?.note ?
+                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
             }),
     },
     created_by: {

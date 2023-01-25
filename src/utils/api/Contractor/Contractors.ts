@@ -46,6 +46,14 @@ export async function getContractorApi(
   return { response }
 }
 
+export async function ContractorApi(
+  api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`contractor/`)
+
+  return { response }
+}
+
 export async function getContractorsApi(
   api: AxiosInstance,
   searchFilter: ContractorSearchFilter

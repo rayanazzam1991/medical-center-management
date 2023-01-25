@@ -3,8 +3,8 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
-import { addWalletMovementApi, getWalletMovementsApi } from "/@src/utils/api/Contractor/WalletMovement"
-import { CreateWalletMovement, WalletMovement, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
+import { addBulkCashOutsApi, addWalletMovementApi, getWalletMovementsApi } from "/@src/utils/api/Contractor/WalletMovement"
+import { CreateBulkCashOut, CreateWalletMovement, WalletMovement, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
 
 
 
@@ -25,7 +25,7 @@ export const useWalletMovement = defineStore('walletMovement', () => {
         try {
             const response = await addWalletMovementApi(api, walletMovement)
 
-            var returnedWalletMovement: WalletMovement
+            let returnedWalletMovement: WalletMovement
             returnedWalletMovement = response.response.data
             walletMovements.value.push(returnedWalletMovement)
             success.value = response.response.success
@@ -59,17 +59,34 @@ export const useWalletMovement = defineStore('walletMovement', () => {
 
         }
         catch (error: any) {
-            console.log(success.value)
-
             success.value = error?.response.data.success
             error_code.value = error?.response.data.error_code
             message.value = error?.response.data.message
-
         }
         finally {
             loading.value = false
         }
     }
+    async function createBulkCashOutStore(bulkCashOut: CreateBulkCashOut) {
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await addBulkCashOutsApi(api, bulkCashOut)
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+
+        finally {
+            loading.value = false
+        }
+    }
+
     return {
         success,
         error_code,
@@ -78,7 +95,8 @@ export const useWalletMovement = defineStore('walletMovement', () => {
         pagination,
         loading,
         addWalletMovementStore,
-        getWalletMovementsStore
+        getWalletMovementsStore,
+        createBulkCashOutStore
     } as const
 })
 

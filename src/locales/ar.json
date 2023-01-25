@@ -133,6 +133,11 @@
     "speciality": {
       "specialities": "التخصصات",
       "create_speciality": "انشاء تخصص"
+    },
+    "wallet": {
+      "wallet": "المحفظة",
+      "list_cash_out": "قائمة المسحوبات",
+      "cash_out": "سحب مبلغ"
     }
   },
   "human_resources_subnav": {
@@ -1353,11 +1358,15 @@
     "table": {
       "title": " قائمة المسحوبات ",
       "columns": {
-        "contractor_name": "اسم الموظف",
+        "contractor_name": "اسم الأخصائي",
         "total": " المبلغ المسحوب",
-        "created_at": "تاريخ الإنشاء",
-        "created_by": "بواسطة",
+        "created_at": "تاريخ السحب",
+        "created_by": "سحب بواسطة",
         "note": "ملاحظة"
+      },
+      "bulk_cash_out": {
+        "title": "قائمة السحب الكلي",
+        "header_button": "سحب"
       }
     },
     "cash_out_form": {

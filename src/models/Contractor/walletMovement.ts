@@ -5,6 +5,7 @@ import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
 import ar from '/@src/locales/ar.json';
 import messages from "@intlify/vite-plugin-vue-i18n/messages";
 import { User } from "../Others/User/user";
+import exp from "constants";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -31,6 +32,15 @@ export interface CreateWalletMovement {
     note?: string
 
 }
+export interface createCashOut {
+    wallet_id: number
+    total: number
+}
+export interface CreateBulkCashOut {
+    bulkCashOuts: createCashOut[]
+}
+
+
 export interface WalletMovementSearchFilter {
     contractor_name?: string
     created_by?: User
@@ -61,6 +71,9 @@ export const defaultCreateWalletMovement: CreateWalletMovement = {
     wallet_id: 0,
     total: 0,
     note: ''
+}
+export const defaultCreateBulkCashOut: CreateBulkCashOut = {
+    bulkCashOuts: [],
 }
 
 export const defaultWalletMovementSearchFilter: WalletMovementSearchFilter = {
