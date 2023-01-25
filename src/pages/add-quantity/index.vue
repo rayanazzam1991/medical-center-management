@@ -131,7 +131,6 @@ const onAddFile = async (event: any) => {
 }
 
 const onSubmitAdd = handleSubmit(async (values) => {
-    console.log("fasf")
     let addQuantityForm = currentaddQuantity.value
     const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
     if (success) {

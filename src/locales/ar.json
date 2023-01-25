@@ -79,7 +79,8 @@
     "crm": "الزبائن",
     "contractor": "الأخصائيون",
     "human_resources": "الموارد البشرية",
-    "warehouse": "المستودع"
+    "warehouse": "المستودع",
+    "accounting": "المالية"
   },
   "others_subnav": {
     "nationality": {
@@ -175,6 +176,14 @@
       "list_stock_movement": "حركة المخزون"
     }
   },
+  "accounting_subnav": {
+    "salary": {
+      "salaries" : "الراوتب",
+      "salaries_history": "سجل الراوتب",
+      "deliver_salaries": "تسليم الراوتب",
+      "onhold_salaries": "صندوق الأمانات"
+    }
+  },
   "user_profile_dropdown": {
     "logout": "تسجيل الخروج"
   },
@@ -194,7 +203,10 @@
       "justified": "تم التغيير لمبرر بنجاح",
       "unjustified": "تم التغيير لغير مبرر بنجاح",
       "withdraw": "تم السحب بنجاح",
-      "generate_salaries": "تم توليد الراوتب بنجاح"
+      "generate_salaries": "تم توليد الراوتب بنجاح",
+      "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
+      "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
+      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -1374,8 +1386,10 @@
         "net_salary": "الراتب الصافي"
       },
       "placeholder": {
-        "title": "لا يوجد بيانات",
-        "subtitle": "يرجى تحديد الشهر المطلوب للمعاينة"
+        "select_month_title": "يرجى تحديد الشهر المطلوب للمعاينة",
+        "select_month_subtitle": "يرجى تحديد الشهر المطلوب للمعاينة",
+        "no_month_title": "لا يوجد بيانات",
+        "no_month_subtitle": "لا توجد أية أشهر غير مولدة للمعاينة"
       },
       "footer": {
         "salaries_sum": "المجموع النهائي: ",
@@ -1388,5 +1402,81 @@
       }
     },
     "header_button": "معاينة الراوتب"
+  },
+  "salary_statuses": {
+    "pending": "معلق",
+    "paid": "مدفوع",
+    "onhold": "قيد الانتظار",
+    "returned": "مرتجع"
+  },
+  "deliver_salaries": {
+    "table": {
+      "title": "تسليم الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "لا توجد أية رواتب للتسليم"
+      },
+      "approve_modal": {
+        "title": "إغلاق صندوق الراوتب",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم نقل جميع الراوتب الى قائمة الأمانات"
+      }
+    },
+    "drop_down": {
+      "pay": "تسديد"
+    },
+    "header_button": "إغلاق صندوق الراوتب"
+  },
+  "onhold_salaries": {
+    "table": {
+      "title": "صندوق الأمانات",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "لا توجد أية رواتب ضمن صندوق الأمانات"
+      }
+    },
+    "drop_down": {
+      "pay": "تسديد",
+      "return": "إرجاع"
+    }
+  },
+  "salary": {
+    "table": {
+      "title": "سجل الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "basic_salary": "الراتب الأساسي",
+        "earnings": "الأرباح الإضافية",
+        "variable_deductions": "الخصومات الإضافية",
+        "attendance_deduction": "خصومات التأخير",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "يرجى اختيار الشهر والسنة لعرض الرواتب"
+      }
+    },
+    "search_filter": {
+      "name": "اسم الموظف...",
+      "department": "القسم"
+    },
+    "header_button": "عرض الرواتب"
   }
 }

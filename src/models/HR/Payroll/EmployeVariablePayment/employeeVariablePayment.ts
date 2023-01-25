@@ -42,7 +42,6 @@ export interface CreateEmployeeVariablePayment {
     status: number
 }
 export interface EmployeeVariablePaymentSearchFilter {
-
     name?: string
     type?: number
     status?: number

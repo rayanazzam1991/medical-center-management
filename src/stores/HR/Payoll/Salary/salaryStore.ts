@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { ReviewGenerateSalariesRequestBody, ReviewSalaries } from "/@src/models/HR/Payroll/Salary/salary"
-import { generateSalariesApi, reviewSalariesApi } from "/@src/utils/api/HR/Payroll/Salary"
+import { DeliveringSalariesSearchFilter, DeliveringSalary, OnholdSalariesSearchFilter, OnholdSalary, ReviewGenerateSalariesRequestBody, ReviewSalaries, Salary, SalarySearchFilter } from "/@src/models/HR/Payroll/Salary/salary"
+import { generateSalariesApi, getDeliveringSalariesApi, getOnholdSalariesApi, getSalariesListApi, moveSalariesToOnholdApi, paySalaryApi, returnSalaryApi, reviewSalariesApi } from "/@src/utils/api/HR/Payroll/Salary"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
@@ -52,6 +52,126 @@ export const useSalary = defineStore('salary', () => {
             loading.value = false
         }
     }
+    async function getDeliveringSalariesStore(filter: DeliveringSalariesSearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getDeliveringSalariesApi(api, filter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as DeliveringSalary[]
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function getOnholdSalariesStore(filter: OnholdSalariesSearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getOnholdSalariesApi(api, filter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as OnholdSalary[]
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function getSalariesStore(selectedMonth: ReviewGenerateSalariesRequestBody, filter: SalarySearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getSalariesListApi(api, selectedMonth, filter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as Salary[]
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function paySalaryStore(salaryId: number) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await paySalaryApi(api, salaryId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function returnSalaryStore(salaryId: number) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await returnSalaryApi(api, salaryId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function moveSalariesToOnholdStore() {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await moveSalariesToOnholdApi(api)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
 
@@ -62,7 +182,13 @@ export const useSalary = defineStore('salary', () => {
         loading,
         pagination,
         reviewSalariesStore,
-        generateSalariesStore
+        generateSalariesStore,
+        getDeliveringSalariesStore,
+        getOnholdSalariesStore,
+        getSalariesStore,
+        paySalaryStore,
+        returnSalaryStore,
+        moveSalariesToOnholdStore
     } as const
 })
 

@@ -172,7 +172,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     var contractorData = currentContractor.value
-    console.log(contractorData)
     contractorForm.dataUpdate.starting_date = contractorData.starting_date
     contractorForm.dataUpdate.payment_percentage = contractorData.payment_percentage
     contractorForm.dataUpdate.speciality_id = contractorData.speciality_id

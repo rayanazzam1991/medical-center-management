@@ -35,7 +35,6 @@ const selectedMonth = ref<GeneratableMonth>(defaultGeneratableMonth)
 onMounted(async () => {
     const { generatableMonths } = await getGeneratableMonths()
     generatableMonthsList.value = generatableMonths
-    console.log(generatableMonthsList.value)
     keyIncrement.value = keyIncrement.value + 1
 
 });
@@ -153,8 +152,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="salariesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('generate_salaries.table.placeholder.title')"
-                        :subtitle="t('generate_salaries.table.placeholder.subtitle')" class="my-6">
+                    <VPlaceholderSection :title=" generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_title') : t('generate_salaries.table.placeholder.select_month_title')"
+                        :subtitle="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_subtitle') : '' " class="my-6">
                     </VPlaceholderSection>
                 </div>
 

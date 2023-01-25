@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/AddQuantityFormNavigation.vue')['default']
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
@@ -40,6 +41,8 @@ declare module '@vue/runtime-core' {
     DashboardsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/DashboardsMobileSubsidebar.vue')['default']
     DashboardsSubnav: typeof import('./src/layouts/navbar-items/DashboardsSubnav.vue')['default']
     DashboardsSubsidebar: typeof import('./src/layouts/sidebar-subsidebar/DashboardsSubsidebar.vue')['default']
+    DeliverSalariesDropDown: typeof import('./src/components/OurComponents/HR/Payroll/Salary/DeliverSalariesDropDown.vue')['default']
+    DeliverSalariesTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/DeliverSalariesTableHeader.vue')['default']
     DepartmentDetails: typeof import('./src/components/OurComponents/Others/Department/DepartmentDetails.vue')['default']
     DepartmentForm: typeof import('./src/components/OurComponents/Others/Department/DepartmentForm.vue')['default']
     DepartmentTableHeader: typeof import('./src/components/OurComponents/Others/Department/DepartmentTableHeader.vue')['default']
@@ -100,6 +103,8 @@ declare module '@vue/runtime-core' {
     NoEditDropDown: typeof import('./src/components/OurComponents/NoEditDropDown.vue')['default']
     NotificationsMobileDropdown: typeof import('./src/components/partials/dropdowns/NotificationsMobileDropdown.vue')['default']
     NoViewDropDown: typeof import('./src/components/OurComponents/NoViewDropDown.vue')['default']
+    OnholdSalariesDropDown: typeof import('./src/components/OurComponents/HR/Payroll/Salary/OnholdSalariesDropDown.vue')['default']
+    OnholdSalariesTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/OnholdSalariesTableHeader.vue')['default']
     OthersSubnav: typeof import('./src/layouts/navbar-items/OthersSubnav.vue')['default']
     PositionDetails: typeof import('./src/components/OurComponents/Others/Position/PositionDetails.vue')['default']
     PositionForm: typeof import('./src/components/OurComponents/Others/Position/PositionForm.vue')['default']
@@ -115,6 +120,7 @@ declare module '@vue/runtime-core' {
     RoomTableHeader: typeof import('./src/components/OurComponents/Others/Room/RoomTableHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SalaryTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryTableHeader.vue')['default']
     SalaryVariablePaymentsCell: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryVariablePaymentsCell.vue')['default']
     SearchPanel: typeof import('./src/components/partials/panels/SearchPanel.vue')['default']
     ServiceDetails: typeof import('./src/components/OurComponents/Others/Service/ServiceDetails.vue')['default']

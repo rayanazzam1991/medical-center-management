@@ -65,7 +65,6 @@ export default defineComponent({
             }
             const { employeeVariablePayment } = await getEmployeeVariablePayment(employeeVariablePaymentId.value);
             currentEmployeeVariablePayment.value = employeeVariablePayment != undefined ? employeeVariablePayment : defaultEmployeeVariablePayment;
-            console.log(currentEmployeeVariablePayment.value.due_date)
             originalEmployeeVariablePaymentStatus.value = currentEmployeeVariablePayment.value.status
 
 
@@ -77,8 +76,6 @@ export default defineComponent({
             variablePaymentSearchFilter.status = EmployeeVariablePaymentConsts.PENDING
             const { variablePayments } = await getVariablePaymentsList(variablePaymentSearchFilter)
             variablePaymentsList.value = variablePayments
-            console.log(variablePaymentsList.value)
-
             let employeesSearchFilter = {} as EmployeeSearchFilter
             employeesSearchFilter.per_page = 500
             const { employees } = await getEmployeesList(employeesSearchFilter)
