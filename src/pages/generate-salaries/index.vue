@@ -59,8 +59,9 @@ const generateSalaries = async () => {
         notif.dismissAll();
         await sleep(200);
         notif.success(t('toast.success.edit'));
-        await getSalariesReview(selectedMonth.value)
         approveVariablePaymentPopUp.value = false
+        router.push({ path: '/employee' });
+
     }
     else {
         notif.error({ message: message, duration: 10000 })
@@ -78,7 +79,6 @@ const approveVariablePayment = async () => {
         notif.success(t('toast.success.generate_salaries'));
         await getSalariesReview(selectedMonth.value)
         approveVariablePaymentPopUp.value = false
-        router.push({ path: '/employee' });
     } else {
         await sleep(200);
         notif.error(message)
@@ -110,8 +110,10 @@ const columns = {
         align: 'center',
         grow: true,
         label: t("generate_salaries.table.columns.variable_payments"),
-        renderRow: (row: any) =>
-            h(SalaryVariablePaymentsCell,
+        renderRow: (row: any) => {
+            if(row?.variable_payments.length != 0) {
+
+                return h(SalaryVariablePaymentsCell,
                 {
                     employeeVariablePayments: row?.variable_payments,
                     onApproveClick: (employeeVariablePayment) => {
@@ -119,7 +121,13 @@ const columns = {
                         approveVariablePaymentPopUp.value = true
                         selectedVariablePayment.value = employeeVariablePayment
                     }
-                }),
+                });
+            }
+            else {
+                return h('span','-');
+ 
+            }
+        }
     },
     net_salary: {
         align: 'center',
@@ -152,21 +160,34 @@ const columns = {
 
             </template>
         </VFlexTable>
-    </VFlexTableWrapper>
+        <form v-if="salariesList.length > 0" class="form-layout">
+            <div class="form-outer-footer">
+                <div class="form-header stuck-header">
+                    <div class="form-header-inner-footer columns">
+                        <div class="left column is-10 is-flex is-justify-content-center left-footer ">
+                        </div>
+                        <div class="left column is-2 is-flex is-justify-content-center left-footer ">
+                            <div class="left">
+                                <h3 class="is-size-6">
+                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span class="has-text-weight-semibold has-text-primary"> {{ salaries.salaries_sum }}</span> 
 
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </VFlexTableWrapper>
     <form v-if="salariesList.length > 0" class="form-layout">
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="form-header-inner columns">
-                    <div class="left my-4  column is-6 is-flex is-justify-content-center left-footer ">
-                        <div class="left">
-                            <h3 class="is-size-6">
-                                {{ t('generate_salaries.table.footer.salaries_sum') }} {{ salaries.salaries_sum }}
-
-                            </h3>
-                        </div>
+                    <div class="left mt-0  column is-10 is-flex is-justify-content-center">
                     </div>
-                    <div class="left my-4  column is-6 is-flex is-justify-content-center right-footer ">
+
+                    <div class="left my-2  column is-2 is-flex is-justify-content-center">
                         <div class="left">
                             <VButton @click="generateSalaries" class="px-6 py-5" color="primary">{{
                                 t('generate_salaries.table.footer.generate')
@@ -178,6 +199,7 @@ const columns = {
             </div>
         </div>
     </form>
+
 
     <VModal :title="t('generate_salaries.table.approve_modal.title')" :open="approveVariablePaymentPopUp"
         actions="center" @close="approveVariablePaymentPopUp = false">
@@ -196,8 +218,19 @@ const columns = {
 
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.form-header-inner-footer {
+    margin: 0 !important;
+    margin-top: 1rem !important;
+}
+
+.form-outer-footer {
+    border: 0 !important;
+    border-radius: 0 !important;
+    border-top: 2px solid var(--fade-grey-dark-3) !important;
+}
 
 .right-footer {
     border-left: 1px dashed var(--fade-grey-dark-3);
@@ -209,5 +242,13 @@ const columns = {
         border-left: 1px dashed var(--dark-sidebar-light-12);
 
     }
+
+    .form-outer-footer {
+        border: 0 !important;
+        border-radius: 0 !important;
+        border-top: 2px solid var(--dark-sidebar-light-12) !important;
+    }
+
 }
+
 </style>

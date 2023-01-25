@@ -41,7 +41,7 @@ const approvePopup = (employeeVariablePayment : EmployeeVariablePayment) => {
                     <h3 :class="employeeVariablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE ? 'has-text-primary' : 'has-text-danger'">{{ employeeVariablePayment.amount }}</h3>
                 </div>
                 <div class="column is-3 field is-flex is-justify-content-center is-align-items-center">
-                    <h3>{{ EmployeeVariablePaymentConsts.getStatusName(employeeVariablePayment.status)  }}</h3>
+                    <VTag :color="EmployeeVariablePaymentConsts.getStatusColor(employeeVariablePayment.status)" :label="EmployeeVariablePaymentConsts.getStatusName(employeeVariablePayment.status)" rounded />
                 </div>
                 <div v-if="employeeVariablePayment.status == EmployeeVariablePaymentConsts.PENDING" class="column is-3 field is-flex is-justify-content-center is-align-items-center">
                     <VIconButton @click="approvePopup(employeeVariablePayment)" color="primary" outlined icon="feather:check-circle" />
@@ -102,5 +102,4 @@ const approvePopup = (employeeVariablePayment : EmployeeVariablePayment) => {
 
 
 }
-
 </style>

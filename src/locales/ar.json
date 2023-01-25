@@ -154,7 +154,7 @@
     },
     "employees_schedule": "جدول الدوام",
     "employees_attendance": "جدول الحضور",
-    "generate_salaries" : "توليد الراوتب"
+    "generate_salaries": "توليد الراوتب"
   },
   "warehouse_subnav": {
     "category": {
@@ -194,7 +194,7 @@
       "justified": "تم التغيير لمبرر بنجاح",
       "unjustified": "تم التغيير لغير مبرر بنجاح",
       "withdraw": "تم السحب بنجاح",
-      "generate_salaries" : "تم توليد الراوتب بنجاح"
+      "generate_salaries": "تم توليد الراوتب بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -1378,7 +1378,7 @@
         "subtitle": "يرجى تحديد الشهر المطلوب للمعاينة"
       },
       "footer": {
-        "salaries_sum": "المجموع الكلي لصافي الراوتب: ",
+        "salaries_sum": "المجموع النهائي: ",
         "generate": "توليد الراوتب"
       },
       "approve_modal": {

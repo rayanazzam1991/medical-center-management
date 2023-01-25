@@ -94,13 +94,13 @@ class EmployeeVariablePaymentConsts {
     }
     public static getStatusColor(status: number) {
         if (status == this.PENDING)
-            return 'light'
+            return 'orange'
         if (status == this.APPROVED)
             return 'green'
         if (status == this.WAITING)
             return 'blue'
         if (status == this.RELEASED)
-            return 'success'
+            return 'primary'
         if (status == this.INACTIVE)
             return 'danger'
         else return undefined;
