@@ -19,7 +19,9 @@ import 'tippy.js/themes/light.css'
 import { useStorage } from '@vueuse/core'
 
 const locale = useStorage('locale', 'ar')
-let direction = "ltr"
+
+let direction = ""
+
 if (locale.value == "ar") {
     direction = "_rtl"
 }

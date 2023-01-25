@@ -74,12 +74,11 @@ useHead({
 <template>
   <div class="auth-wrapper-inner columns is-gapless">
     <!-- Image section (hidden on mobile) -->
-    <div class="column login-column is-8 h-hidden-mobile h-hidden-tablet-p hero-banner">
+    <div class="column login-column is-8 h-hidden-mobile h-hidden-tablet-p hero-banner login-bg">
       <div class="hero login-hero is-fullheight is-app-grey">
         <div class="hero-body p-0 m-0">
           <div class="columns m-0 p-0">
             <div class="column p-0 m-0">
-              <img src="/images/photo/banners/login_banner.jpg"/>
             </div>
           </div>
         </div>
@@ -164,3 +163,10 @@ useHead({
     </div>
   </div>
 </template>
+<style lang="scss">
+.login-bg{
+  background: url("/images/photo/banners/login_banner.jpg") !important;
+  background-position: top !important;
+  background-size: cover !important;
+}
+</style>

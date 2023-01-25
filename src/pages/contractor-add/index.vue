@@ -403,8 +403,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
     </div>
 </template>
 <style  scoped lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/components/forms-outer';
+// @import '/@src/scss/abstracts/all';
+// @import '/@src/scss/components/forms-outer';
 
 .required::after {
     content: " *";

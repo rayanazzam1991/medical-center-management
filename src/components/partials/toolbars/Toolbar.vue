@@ -8,7 +8,6 @@ const darkmode = useDarkmode()
 const { locale } = useI18n()
 const panels = usePanels()
 
-const marginAuto = locale.value =="ar" ? "mr-auto" : "ml-auto"
 const localFlagSrc = computed(() => {
   switch (locale.value) {
     case 'fr':
@@ -29,7 +28,7 @@ const localFlagSrc = computed(() => {
 </script>
 
 <template>
-  <div class="toolbar" :class="marginAuto">
+  <div class="toolbar ml-auto">
     <div class="toolbar-link">
       <label tabindex="0" class="dark-mode ml-auto" 
         @keydown.space.prevent="(e) => (e.target as HTMLLabelElement).click()">

@@ -77,7 +77,7 @@
     }
   },
   "navbar": {
-    "others": "أخرى",
+    "others": "الإعدادات العامة",
     "crm": "الزبائن",
     "contractor": "الأخصائيون",
     "human_resources": "الموارد البشرية",
@@ -219,8 +219,8 @@
   },
   "tables": {
     "placeholder": {
-      "title": "لا يوجد تطابق",
-      "subtitle": "لا يوجد بيانات تطابق البحث."
+      "title": "لا يوجد بيانات",
+      "subtitle": ""
     },
     "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج"
   },

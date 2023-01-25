@@ -39,7 +39,7 @@ SCSS Imports
 @import './components/placeload';
 @import './components/popovers';
 @import './components/theme-switch';
-@import './components/tabs';
+@import './components_rtl/tabs';
 @import './components/table';
 @import './components/toasts';
 @import './components/toolbar';
@@ -49,4 +49,4 @@ SCSS Imports
 @import './components/credit-card';
 @import './components/widgets';
 @import './components/layout-selector';
-@import './Styles/custom';
+@import './styles_rtl/custom';
