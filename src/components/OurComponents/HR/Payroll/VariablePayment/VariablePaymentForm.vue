@@ -106,8 +106,6 @@ export default defineComponent({
         });
         const onSubmitEdit = async () => {
             let variablePaymentData = defaultUpdateVariablePayment
-            console.log(currentVariablePayment.value.name)
-            console.log(originalVariablePaymentName.value)
             if(currentVariablePayment.value.name !== originalVariablePaymentName.value) {
                 variablePaymentData.name = currentVariablePayment.value.name
             }

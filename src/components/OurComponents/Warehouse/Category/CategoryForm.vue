@@ -92,7 +92,6 @@ export default defineComponent({
         const resetPerant = () => {
             if (isCategory.value == false && currentCategory.value.parent?.id != undefined) {
                 currentCategory.value.parent.id = undefined
-                console.log(currentCategory.value.parent.id)
             }
         }
         const onSubmit = async (method: String) => {

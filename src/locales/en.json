@@ -74,7 +74,8 @@
     "crm": "CRM",
     "contractor": "Contractor",
     "human_resources": "Human Resources",
-    "warehouse": "Warehouse"
+    "warehouse": "Warehouse",
+    "accounting": "Accounting"
   },
   "others_subnav": {
     "nationality": {
@@ -148,7 +149,8 @@
       "create_employee_variable_payment": "Create Employee Variable Payment"
     },
     "employees_schedule": "Employees Schedule",
-    "employees_attendance": "Employees Attendance"
+    "employees_attendance": "Employees Attendance",
+    "generate_salaries": "Generate Salaries"
   },
   "warehouse_subnav": {
     "category": {
@@ -169,6 +171,14 @@
       "list_stock_movement": "List Stock Movement"
     }
   },
+  "accounting_subnav": {
+    "salary": {
+      "salaries": "Salaries",
+      "salaries_history": "Salaries History",
+      "deliver_salaries": "Deliver Salaries",
+      "onhold_salaries": "On-Hold Salaries"
+    }
+  },
   "user_profile_dropdown": {
     "logout": "Logout"
   },
@@ -178,9 +188,13 @@
       "edit": "Edited successfully",
       "remove": "Removed successfully",
       "customer_note": "Customer notes was edited successfully",
-      "justified": "justified successfully",
+      "justified": "Justified successfully",
       "unjustified": "Unjustified successfully",
-      "withdraw": "Withdrawed successfully"
+      "withdraw": "Withdrawed successfully",
+      "generate_salaries": "Salaries was generated successfully",
+      "salaries_to_onhold": "ٍSalaries was moved to On-Hold list successfully",
+      "pay_salary": "Salary status changed to paid successfully",
+      "return_salary": "Salary status changed to returned successfully"
     },
     "error": {
       "steps_error": "Please add some data or skip this step",
@@ -652,6 +666,7 @@
       "nationality": "Nationality",
       "position": "Position",
       "phone_number": "Phone Number",
+      "basic_salary": "Basic Salary",
       "address": "Address",
       "employee_number": "Employee Number",
       "last_employee_number": "Last Employee Number",
@@ -1357,5 +1372,110 @@
       "to": "To: "
     },
     "header_button": "Add Employee Variable Payment"
+  },
+  "generate_salaries": {
+    "table": {
+      "title": "Generate Salaries",
+      "columns": {
+        "employee_name": "Employee Name",
+        "basic_salary": "Basic Salary",
+        "unjustified_hours": "Unjustified Hours",
+        "attendance_deduction": "Attendance Deduction",
+        "variable_payments": "Variable Payments",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "select_month_title": "Select required month for preview",
+        "select_month_subtitle": "Select required month for preview",
+        "no_month_title": "No Data",
+        "no_month_subtitle": "There are no months for preview"
+      },
+      "footer": {
+        "salaries_sum": "Sum of net salaries",
+        "generate": "Generate Salaries"
+      },
+      "approve_modal": {
+        "title": "ِApprove Employee Variable Payment",
+        "caution": "Are You Sure?",
+        "subtitle": "Employee variable payment will be approved"
+      }
+    },
+    "header_button": "Preview Salaries"
+  },
+  "salary_statuses": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "onhold": "On-Hold",
+    "returned": "Returned"
+  },
+  "deliver_salaries": {
+    "table": {
+      "title": "Deliver Salaries",
+      "columns": {
+        "employee_name": "Employee Name",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "There are no salaries to deliver"
+      },
+      "approve_modal": {
+        "title": "Close Payroll Fund",
+        "caution": "Are You Sure?",
+        "subtitle": "All pending salaries will be moved to On-Hold list"
+      }
+    },
+    "drop_down": {
+      "pay": "Pay"
+    },
+    "header_button": "Close Payroll Fund"
+  },
+  "onhold_salaries": {
+    "table": {
+      "title": "On-Hold List",
+      "columns": {
+        "employee_name": "Employee Name",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "There are no salaries in on-hold list"
+      }
+    },
+    "drop_down": {
+      "pay": "Pay",
+      "return": "Return"
+    }
+  },
+  "salary": {
+    "table": {
+      "title": "ٍSalaries History",
+      "columns": {
+        "employee_name": "Employee Name",
+        "basic_salary": "Basic Salary",
+        "earnings": "Earnings",
+        "variable_deductions": "Variable Deductions",
+        "attendance_deduction": "Attendance Deduction",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "Select month & year to view its salaries "
+      }
+    },
+    "search_filter": {
+      "name": "ُEmployee Name...",
+      "department": "Department"
+    },
+    "header_button": "View Salaries"
   }
 }

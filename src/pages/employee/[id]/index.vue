@@ -266,7 +266,7 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
       await sleep(200)
       notif.error(_message)
     } else if (_file.size > 2 * 1024 * 1024) {
-      _message =t('toast.file.size')
+      _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
@@ -372,7 +372,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     editEmployeeNumberTrigger.value = false
     return
   }
-updateLoading.value= true
+  updateLoading.value = true
   const { message, success } = await updateEmployeeNumber(
     employeeId.value,
     newEmployeeNumber.value
@@ -394,7 +394,7 @@ updateLoading.value= true
     // @ts-ignore
     notif.error(message)
   }
-  updateLoading.value= false
+  updateLoading.value = false
 
 })
 </script>
@@ -402,20 +402,9 @@ updateLoading.value= true
   <div class="profile-wrapper">
     <VLoader size="large" :active="loading">
       <div class="profile-header has-text-centered">
-        <VAvatar
-          v-if="employeeProfilePicture.id == undefined"
-          size="xl"
-          :picture="MediaConsts.getAvatarIcon(currentEmployee.user.gender)"
-          edit
-          @edit="editProfilePicture"
-        />
-        <VAvatar
-          v-else
-          size="xl"
-          :picture="employeeProfilePicture.relative_path"
-          edit
-          @edit="editProfilePicture"
-        />
+        <VAvatar v-if="employeeProfilePicture.id == undefined" size="xl"
+          :picture="MediaConsts.getAvatarIcon(currentEmployee.user.gender)" edit @edit="editProfilePicture" />
+        <VAvatar v-else size="xl" :picture="employeeProfilePicture.relative_path" edit @edit="editProfilePicture" />
 
         <h3 class="title is-4 is-narrow is-thin">
           {{ currentEmployee.user.first_name }} {{ currentEmployee.user.last_name }}
@@ -428,17 +417,12 @@ updateLoading.value= true
           <div class="separator"></div>
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
-            <span
-              >{{t('employee.details.status')}}:
-              <span
-                :class="
-                  currentEmployee.user.status.name == 'Busy'
-                    ? 'has-text-danger'
-                    : 'has-text-primary'
-                "
-                >{{ currentEmployee.user.status.name }}</span
-              ></span
-            >
+            <span>{{ t('employee.details.status') }}:
+              <span :class="
+                currentEmployee.user.status.name == 'Busy'
+                  ? 'has-text-danger'
+                  : 'has-text-primary'
+              ">{{ currentEmployee.user.status.name }}</span></span>
           </div>
           <div class="separator"></div>
         </div>
@@ -451,20 +435,14 @@ updateLoading.value= true
           <div class="tabs tabs-width">
             <ul>
               <li :class="[tab === 'Details' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Details'"
-                  @click="tab = 'Details'"
-                  ><span>{{ t('employee.details.tabs.details') }}</span></a
-                >
+                <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
+                  t('employee.details.tabs.details')
+                }}</span></a>
               </li>
               <li :class="[tab === 'Files' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Files'"
-                  @click="tab = 'Files'"
-                  ><span>{{ t('employee.details.tabs.files') }} </span></a
-                >
+                <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
+                  t('employee.details.tabs.files')
+                }} </span></a>
               </li>
               <li class="tab-naver"></li>
             </ul>
@@ -476,41 +454,33 @@ updateLoading.value= true
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>{{t('employee.details.main_details')}}</h3>
+                    <h3>{{ t('employee.details.main_details') }}</h3>
                   </div>
                   <div class="buttons">
                     <VButton @click.prevent="onOpen" color="dark">
-                      {{t('employee.table.modal_title.status')}}
+                      {{ t('employee.table.modal_title.status') }}
                     </VButton>
-                    <VIconButton
-                      size="small"
-                      icon="feather:edit-3"
-                      tabindex="0"
-                      @click="onClickEditMainInfo"
-                    />
+                    <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditMainInfo" />
                   </div>
                 </div>
 
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>{{t('employee.details.name',{title :viewWrapper.pageTitle  })}}</h4>
+                    <h4>{{ t('employee.details.name', { title: viewWrapper.pageTitle })}}</h4>
                     <p>
                       {{ currentEmployee.user.first_name }}
                       {{ currentEmployee.user.last_name }}.
                     </p>
                   </div>
                   <div class="project-feature">
-                    <i
-                      aria-hidden="true"
-                      :class="
-                        currentEmployee.user.gender == 'Male'
-                          ? 'lnir lnir-male'
-                          : 'lnir lnir-female'
-                      "
-                    ></i>
-                    <h4>{{t('employee.details.gender')}}</h4>
-                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}.</p>
+                    <i aria-hidden="true" :class="
+                      currentEmployee.user.gender == 'Male'
+                        ? 'lnir lnir-male'
+                        : 'lnir lnir-female'
+                    "></i>
+                    <h4>{{ t('employee.details.gender') }}</h4>
+                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase() }`) }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
@@ -567,17 +537,7 @@ updateLoading.value= true
                         </div>
                       </div>
                     </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{t('employee.details.nationality')}}</span>
-                          <span>
-                            {{ currentEmployee.nationality?.name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
+                    <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
                           <span>{{t('employee.details.position')}}</span>
@@ -587,7 +547,27 @@ updateLoading.value= true
                         </div>
                       </div>
                     </div>
-                    <div class="column is-12">
+                    <div class="column is-6">
+                      <div class="file-box">
+                        <div class="meta">
+                          <span>{{t('employee.details.basic_salary')}}</span>
+                          <span>
+                            {{ currentEmployee.basic_salary }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-6">
+                      <div class="file-box">
+                        <div class="meta">
+                          <span>{{t('employee.details.nationality')}}</span>
+                          <span>
+                            {{ currentEmployee.nationality?.name }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
                           <span>{{t('employee.details.address')}}</span>
@@ -600,73 +580,44 @@ updateLoading.value= true
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta full-width">
-                          <div
-                            class="
-                              is-justify-content-space-between
-                              is-align-items-flex-start
-                              is-flex
-                              mt-2
-                            "
-                          >
+                          <div class="
+                            is-justify-content-space-between
+                            is-align-items-flex-start
+                            is-flex
+                            mt-2
+                          ">
                             <div class="columns is-multiline">
-                              <span
-                                class="column is-12 pb-0"
-                                :class="editEmployeeNumberTrigger ? 'required' : ''"
-                                >{{t('employee.details.employee_number')}}</span
-                              >
+                              <span class="column is-12 pb-0"
+                                :class="editEmployeeNumberTrigger ? 'required' : ''">{{t('employee.details.employee_number')}}</span>
                               <span v-if="!editEmployeeNumberTrigger" class="column py-0">
                                 {{ currentEmployee.employee_number ?? 'None' }}
                               </span>
                               <div v-else class="column is-12 mb-0 pb-0">
                                 <form @submit.prevent="onSubmitEditEmployeeNumber">
 
-                                <VField id="employee_number">
-                                  <VControl icon="feather:hash">
-                                    <VInput type="number" v-model="newEmployeeNumber" />
-                                    <ErrorMessage
-                                      name="employee_number"
-                                      class="is-size-7 mt-1 has-text-danger"
-                                    />
-                                  </VControl>
-                                </VField>
-                                                                                              </form>
+                                  <VField id="employee_number">
+                                    <VControl icon="feather:hash">
+                                      <VInput type="number" v-model="newEmployeeNumber" />
+                                      <ErrorMessage name="employee_number" class="is-size-7 mt-1 has-text-danger" />
+                                    </VControl>
+                                  </VField>
+                                </form>
 
                               </div>
 
-                              <div
-                                v-if="editEmployeeNumberTrigger"
-                                class="column is-12 has-text-info is-size-7 mt-0 pt-2"
-                              >
+                              <div v-if="editEmployeeNumberTrigger"
+                                class="column is-12 has-text-info is-size-7 mt-0 pt-2">
                                 {{t('employee.details.last_employee_number')}}: {{ maxEmployeeNumber ?? 0 }}
                               </div>
                             </div>
                             <div>
-                              <VIconButton
-                                v-if="!editEmployeeNumberTrigger"
-                                class="mb-3"
-                                icon="feather:edit-3"
-                                tabindex="0"
-                                @click="editEmployeeNumberTrigger = true"
-                              />
-                              <VIconButton 
-                              :loading="updateLoading"
-                                v-if="editEmployeeNumberTrigger"
-                                class="mr-2"
-                                icon="feather:x"
-                                tabindex="0"
-                                @click="editEmployeeNumberTrigger = false"
-                              />
-                              <VIconButton
-                              :loading="updateLoading"
-
-                              type="submit"
-                                v-if="editEmployeeNumberTrigger"
-                                class="mb-3"
-                                icon="feather:check-square"
-                                color="primary"
-                                tabindex="0"
-                                @click="onSubmitEditEmployeeNumber"
-                              />
+                              <VIconButton v-if="!editEmployeeNumberTrigger" class="mb-3" icon="feather:edit-3"
+                                tabindex="0" @click="editEmployeeNumberTrigger = true" />
+                              <VIconButton :loading="updateLoading" v-if="editEmployeeNumberTrigger" class="mr-2"
+                                icon="feather:x" tabindex="0" @click="editEmployeeNumberTrigger = false" />
+                              <VIconButton :loading="updateLoading" type="submit" v-if="editEmployeeNumberTrigger"
+                                class="mb-3" icon="feather:check-square" color="primary" tabindex="0"
+                                @click="onSubmitEditEmployeeNumber" />
 
                             </div>
                           </div>
@@ -701,11 +652,7 @@ updateLoading.value= true
                       <VControl>
                         <div class="file has-name">
                           <label class="file-label">
-                            <input
-                              class="file-input"
-                              type="file"
-                              v-on:change="onAddFile"
-                            />
+                            <input class="file-input" type="file" v-on:change="onAddFile" />
                             <span class="file-cta">
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
@@ -720,14 +667,8 @@ updateLoading.value= true
                       </VControl>
                     </VField>
                     <VLoader size="small" :active="uploadLoading">
-                      <VButton
-                        v-if="filesToUpload != undefined"
-                        @click="UploadFile"
-                        class=""
-                        icon="lnir lnir-add-files rem-100"
-                        light
-                        dark-outlined
-                      >
+                      <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                        icon="lnir lnir-add-files rem-100" light dark-outlined>
                         {{t('employee.details.upload')}}
                       </VButton>
                     </VLoader>
@@ -736,34 +677,23 @@ updateLoading.value= true
                     {{t('images.accepted_file')}}
                   </h6>
                 </div>
-                <div
-                  v-if="employeeFiles.length != 0"
-                  class="project-files project-section"
-                >
+                <div v-if="employeeFiles.length != 0" class="project-files project-section">
                   <div>
                     <h4>{{t('employee.details.tabs.files')}}</h4>
                     <div class="columns is-multiline">
                       <div v-for="file in employeeFiles" class="column is-6">
                         <div class="file-box">
-                          <img
-                            :src="MediaConsts.getMediaIcon(file.mime_type ?? '')"
-                            alt=""
-                          />
+                          <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
                           <div class="meta">
                             <span class="file-link">
-                              <a
-                                target="_blank"
-                                class="file-link"
-                                :href="file.relative_path"
-                              >
-                                {{ file.file_name }}</a
-                              >
+                              <a target="_blank" class="file-link" :href="file.relative_path">
+                                {{ file.file_name }}</a>
                             </span>
                             <span>
                               {{
-                                file.size != undefined
-                                  ? (file.size / (1024 * 1024)).toFixed(2)
-                                  : 'Unknown'
+                              file.size != undefined
+                              ? (file.size / (1024 * 1024)).toFixed(2)
+                              : 'Unknown'
                               }}
                               {{ file.size != undefined ? 'MB' : '' }}
                               <i aria-hidden="true" class="fas fa-circle"></i>
@@ -773,15 +703,9 @@ updateLoading.value= true
                               }}{{ file.uploaded_by?.last_name }}
                             </span>
                           </div>
-                          <VIconButton
-                            v-if="file.id"
-                            class="is-right is-dots is-spaced dropdown end-action mr-2"
-                            size="small"
-                            icon="feather:trash"
-                            tabindex="0"
-                            color="danger"
-                            @click="onDeleteFile(file.id ?? 0)"
-                          />
+                          <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
+                            size="small" icon="feather:trash" tabindex="0" color="danger"
+                            @click="onDeleteFile(file.id ?? 0)" />
                         </div>
                       </div>
                     </div>
@@ -794,12 +718,8 @@ updateLoading.value= true
       </div>
     </div>
   </div>
-  <VModal
-    :title="t('employee.table.modal_title.status')"
-    :open="changeStatusPopup"
-    actions="center"
-    @close="changeStatusPopup = false"
-  >
+  <VModal :title="t('employee.table.modal_title.status')" :open="changeStatusPopup" actions="center"
+    @close="changeStatusPopup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
         <!--Fieldset-->
@@ -809,16 +729,9 @@ updateLoading.value= true
               <VField class="column" id="user_status_id">
                 <VLabel>{{t('employee.details.employee_status')}}</VLabel>
                 <VControl>
-                  <VSelect
-                    v-if="currentEmployee.user.status"
-                    v-model="currentEmployee.user.status.id"
-                  >
+                  <VSelect v-if="currentEmployee.user.status" v-model="currentEmployee.user.status.id">
                     <VOption value="">{{t('employee.details.select_employee_status')}}</VOption>
-                    <VOption
-                      v-for="status in statusesList"
-                      :key="status.id"
-                      :value="status.id"
-                      >{{ status.name }}
+                    <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{ status.name }}
                     </VOption>
                   </VSelect>
                   <ErrorMessage name="user_status_id" />
@@ -833,17 +746,11 @@ updateLoading.value= true
       <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
     </template>
   </VModal>
-  <VModal
-    :title="t('employee.table.modal_title.delete_file')"
-    :open="deleteFilePopup"
-    actions="center"
-    @close="deleteFilePopup = false"
-  >
+  <VModal :title="t('employee.table.modal_title.delete_file')" :open="deleteFilePopup" actions="center"
+    @close="deleteFilePopup = false">
     <template #content>
-      <VPlaceholderSection
-        :title="t('employee.table.modal_title.placeholderSection.title')"
-        :subtitle="t('employee.table.modal_title.placeholderSection.subtitle')"
-      />
+      <VPlaceholderSection :title="t('employee.table.modal_title.placeholderSection.title')"
+        :subtitle="t('employee.table.modal_title.placeholderSection.subtitle')" />
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
@@ -851,34 +758,18 @@ updateLoading.value= true
       </VLoader>
     </template>
   </VModal>
-  <VModal
-    :key="keyIncrement"
-    :title="t('employee.table.modal_title.profile_picture')"
-    :open="updateProfilePicturePopup"
-    actions="center"
-    @close="updateProfilePicturePopup = false"
-  >
+  <VModal :key="keyIncrement" :title="t('employee.table.modal_title.profile_picture')" :open="updateProfilePicturePopup"
+    actions="center" @close="updateProfilePicturePopup = false">
     <template #content>
       <VField class="is-flex is-justify-content-center">
         <VControl>
-          <VFilePond
-            size="large"
-            class="profile-filepond"
-            name="profile_filepond"
-            :chunk-retry-delays="[500, 1000, 3000]"
-            label-idle="<i class='lnil lnil-cloud-upload'></i>"
-            :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']"
-            :image-preview-height="140"
-            :image-resize-target-width="140"
-            :image-resize-target-height="140"
-            image-crop-aspect-ratio="1:1"
-            style-panel-layout="compact circle"
-            style-load-indicator-position="center bottom"
-            style-progress-indicator-position="right bottom"
-            style-button-remove-item-position="left bottom"
-            style-button-process-item-position="right bottom"
-            @addfile="onEditProfilePicture"
-          />
+          <VFilePond size="large" class="profile-filepond" name="profile_filepond"
+            :chunk-retry-delays="[500, 1000, 3000]" label-idle="<i class='lnil lnil-cloud-upload'></i>"
+            :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']" :image-preview-height="140"
+            :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
+            style-panel-layout="compact circle" style-load-indicator-position="center bottom"
+            style-progress-indicator-position="right bottom" style-button-remove-item-position="left bottom"
+            style-button-process-item-position="right bottom" @addfile="onEditProfilePicture" />
         </VControl>
       </VField>
       <h6 class="is-flex is-justify-content-center help">
@@ -888,15 +779,9 @@ updateLoading.value= true
 
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton
-          v-if="employeeProfilePicture.id != undefined"
-          color="danger"
-          outlined
-          class="mr-2"
-          @click="RemoveProfilePicture"
-        >
-          {{t('modal.buttons.delete')}}</VButton
-        >
+        <VButton v-if="employeeProfilePicture.id != undefined" color="danger" outlined class="mr-2"
+          @click="RemoveProfilePicture">
+          {{t('modal.buttons.delete')}}</VButton>
       </VLoader>
       <VLoader size="small" :active="uploadLoading">
         <VButton color="primary" raised @click="UploadProfilePicture">{{t('modal.buttons.update')}}</VButton>
@@ -904,7 +789,7 @@ updateLoading.value= true
     </template>
   </VModal>
 </template>
-  
+
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
@@ -933,13 +818,14 @@ updateLoading.value= true
 .file-link:hover {
   color: var(--primary) !important;
 }
+
 .full-width {
   width: 100%;
   margin-right: 12px;
 }
+
 .required::after {
   content: ' *';
   color: var(--danger);
 }
 </style>
-  

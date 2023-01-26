@@ -21,13 +21,13 @@ export class BaseConsts {
             return i18n.global.t('status.inactive')
         return ''
     }
-    public static showBoolean(boolean: number | undefined): string {
-        if (boolean === BaseConsts.TRUE)
+    public static showBoolean(value: number | undefined): string {
+        if (value === BaseConsts.TRUE)
             return i18n.global.t('boolean.true')
 
-        if (boolean === BaseConsts.FALSE)
+        if (value === BaseConsts.FALSE)
             return i18n.global.t('boolean.false')
-        if (boolean === undefined)
+        if (value === undefined)
             return ''
 
         return ''

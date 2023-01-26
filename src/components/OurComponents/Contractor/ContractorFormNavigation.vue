@@ -12,7 +12,6 @@ const dropdown = useDropdown(dropdownElement)
 const {t} = useI18n()
 const contractorForm = useContractorForm()
 const locale = useStorage('locale','ar')
-console.log("lang",locale.value)
 const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 </script>
 
