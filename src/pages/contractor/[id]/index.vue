@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
-import { Contractor, defaultContractor, defaultContractorProfilePic } from "/@src/models/Contractor/contractor"
+import {Contractor, defaultContractorProfilePic, defaultContractor } from "/@src/models/Contractor/contractor"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getContractor, getContractorFiles, getProfilePicture, addContractorFile, deleteFile, addProfilePicture } from "/@src/services/Contractor/contractorService"
@@ -701,8 +701,8 @@ const RemoveProfilePicture = async () => {
                                         <h3>
                                             <span>
                                                 <VTag
-                                                    :color="currentContractor.wallet.status === WalletConsts.INACTIVE ? 'danger' : 'success'">
-                                                    {{ WalletConsts.showStatusName(currentContractor.wallet.status) }}</VTag>
+                                                    :color="currentContractor?.wallet?.status === WalletConsts.INACTIVE ? 'danger' : 'success'">
+                                                    {{ WalletConsts.showStatusName(currentContractor?.wallet.status) }}</VTag>
                                             </span>
                                         {{t('contractor.details.wallet')}}
 
@@ -721,7 +721,7 @@ const RemoveProfilePicture = async () => {
                                                 <div class="meta">
                                                     <span>{{t('contractor.details.amount')}}</span>
                                                     <span>
-                                                        {{ currentContractor.wallet.amount }}
+                                                        {{ currentContractor?.wallet?.amount }}
                                                     </span>
                                                 </div>
 
@@ -732,7 +732,7 @@ const RemoveProfilePicture = async () => {
                                                 <div class="meta">
                                                     <span>{{t('contractor.details.created_at')}}</span>
                                                     <span>
-                                                        {{ currentContractor.wallet.created_at }}
+                                                        {{ currentContractor?.wallet?.created_at }}
                                                     </span>
                                                 </div>
 

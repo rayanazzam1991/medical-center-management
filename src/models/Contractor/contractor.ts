@@ -11,7 +11,17 @@ export interface Contractor {
     speciality: Speciality
     payment_percentage: number
     user: User
-    wallet: Wallet
+    wallet: Wallet,
+    services: Array<CreateUpdateServicesHelper>
+    is_completed?: boolean
+}
+export interface ContractorWithOutWallet {
+    id?: number
+    starting_date: string
+    end_date: string
+    speciality: Speciality
+    payment_percentage: number
+    user: User
     services: Array<CreateUpdateServicesHelper>
     is_completed?: boolean
 }
@@ -77,7 +87,7 @@ export const defaultUpdateContractor: UpdateContractor = {
     speciality_id: 0
 
 }
-export const defaultContractor: Contractor = {
+export const defaultContractorWithOutWallet: ContractorWithOutWallet = {
     id: 0,
     starting_date: '',
     payment_percentage: 0,
@@ -86,8 +96,21 @@ export const defaultContractor: Contractor = {
     is_completed: false,
     end_date: '',
     speciality: defaultSpeciality,
-    wallet: defaultWallet
 }
+
+export const defaultContractor: Contractor = {
+    id: 0,
+    starting_date: '',
+    payment_percentage: 0,
+    user: defaultUser,
+    services: [],
+    is_completed: false,
+    end_date: '',
+    wallet: defaultWallet,
+    speciality: defaultSpeciality,
+}
+
+
 
 export const defaultContractorSearchFilter: ContractorSearchFilter = {
     name: undefined,

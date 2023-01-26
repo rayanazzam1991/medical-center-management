@@ -134,6 +134,11 @@
     "speciality": {
       "specialities": "التخصصات",
       "create_speciality": "انشاء تخصص"
+    },
+    "wallet": {
+      "wallet": "المحفظة",
+      "list_cash_out": "قائمة المسحوبات",
+      "cash_out": "سحب مبلغ"
     }
   },
   "human_resources_subnav": {
@@ -233,7 +238,8 @@
       "delete": "حذف",
       "save": "حفظ",
       "filter": "تصفية",
-      "cash_out": "سحب مبلغ"
+      "cash_out": "سحب مبلغ",
+      "bulk_cash_out": "سحب كلي"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
@@ -1365,6 +1371,20 @@
     "header_button": "إضافة متغير مالي لموظف"
   },
   "walletMovement": {
+    "table": {
+      "title": " قائمة المسحوبات ",
+      "columns": {
+        "contractor_name": "اسم الأخصائي",
+        "total": " المبلغ المسحوب",
+        "created_at": "تاريخ السحب",
+        "created_by": "سحب بواسطة",
+        "note": "ملاحظة"
+      },
+      "bulk_cash_out": {
+        "title": "قائمة السحب الكلي",
+        "header_button": "سحب"
+      }
+    },
     "cash_out_form": {
       "page_title": " سحب مبلغ",
       "form_header": "سحب مبلغ ",
@@ -1372,6 +1392,16 @@
       "cash_out_total": "المبلغ المراد سحبه",
       "my_total": "المبلغ الحالي",
       "note": "ملاحظة"
+    },
+    "search_filter": {
+      "title": "  تصفية المسحوبات",
+      "contractor_name": "اسم الأخصائي...",
+      "created_by": "سحب بواسطة",
+      "date": "التاريخ:",
+      "from": "من: ",
+      "to": "إلى: "
+    },
+    "header_button": "سحب مبلغ "
     }
   },
   "generate_salaries": {

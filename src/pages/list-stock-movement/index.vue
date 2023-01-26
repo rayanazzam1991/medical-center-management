@@ -189,8 +189,8 @@ const columns = {
 
         renderRow: (row: any) =>
             h('span', {
-                innerHTML:
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`,
+                innerHTML: row?.note ?
+                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
 
             }),
 
