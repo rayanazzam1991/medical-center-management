@@ -55,6 +55,32 @@ const {t} = useI18n()
                   </li>
                 </ul>
               </div>
+              <div class="column is-3">
+                <h4 class="column-heading">{{ t('contractor_subnav.wallet.wallet') }}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/contractor/cash-out">
+                      <i class="lnir lnir-file-name" aria-hidden="true"></i>
+                      <span>{{ t('contractor_subnav.wallet.list_cash_out') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/contractor/cash-out/add">
+                      <i class="lnil lnil-add-files" aria-hidden="true"></i>
+                      <span>{{ t('contractor_subnav.wallet.cash_out') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/bulk-cash-out">
+                      <i class="lnil lnil-add-files" aria-hidden="true"></i>
+                      <span>{{ t('walletMovement.table.bulk_cash_out.title') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

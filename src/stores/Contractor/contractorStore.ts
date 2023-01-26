@@ -1,7 +1,7 @@
 import { AxiosError } from "axios"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper, ContractorWithWallet } from "/@src/models/Contractor/contractor"
 import { Media } from "/@src/models/Others/Media/media"
 import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
@@ -27,7 +27,7 @@ export const useContractor = defineStore('contractor', () => {
     try {
       const response = await addContractorApi(api, contractor)
 
-      var returnedContractor: Contractor
+      let returnedContractor: Contractor
       returnedContractor = response.response.data
       contractors.value.push(returnedContractor)
       success.value = response.response.success
@@ -53,7 +53,7 @@ export const useContractor = defineStore('contractor', () => {
     try {
       const response = await updateContractorApi(api, contractorId, contractor)
 
-      var returnedContractor: Contractor
+      let returnedContractor: Contractor
       returnedContractor = response.response.data
       contractors.value.push(returnedContractor)
       success.value = response.response.success
@@ -104,7 +104,7 @@ export const useContractor = defineStore('contractor', () => {
     sleep(2000)
     try {
       const response = await addServicesApi(api, contractor_id, services)
-      var returnedContractor: Contractor
+      let returnedContractor: Contractor
       returnedContractor = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
@@ -130,7 +130,7 @@ export const useContractor = defineStore('contractor', () => {
     sleep(2000)
     try {
       const response = await getContractorApi(api, contractor_id)
-      var returnedContractor: Contractor
+      let returnedContractor: Contractor
       returnedContractor = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
@@ -156,7 +156,7 @@ export const useContractor = defineStore('contractor', () => {
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      var returnedMedia: Media[]
+      let returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
@@ -182,7 +182,7 @@ export const useContractor = defineStore('contractor', () => {
     sleep(2000)
     try {
       const response = await getMediaApi(api, media)
-      var returnedMedia: Media[]
+      let returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
@@ -209,7 +209,7 @@ export const useContractor = defineStore('contractor', () => {
     sleep(2000)
     try {
       const response = await uploadMediaApi(api, media)
-      var returnedMedia: Media[]
+      let returnedMedia: Media[]
       returnedMedia = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
