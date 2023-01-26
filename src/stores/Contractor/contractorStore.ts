@@ -1,7 +1,7 @@
 import { AxiosError } from "axios"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
+import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper, ContractorWithWallet } from "/@src/models/Contractor/contractor"
 import { Media } from "/@src/models/Others/Media/media"
 import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"

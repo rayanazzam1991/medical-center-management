@@ -1,11 +1,11 @@
-import { Contractor, defaultContractor } from "./contractor"
+import { ContractorWithOutWallet, defaultContractorWithOutWallet } from "./contractor"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Wallet {
     id?: number
     amount: number
     status: number
-    contractor: Contractor
+    created_at: string
 }
 export interface WalletSearchFilter {
     order_by?: string,
@@ -16,8 +16,7 @@ export const defaultWallet: Wallet = {
     id: 0,
     amount: 0,
     status: 1,
-    contractor: defaultContractor,
-
+    created_at: '',
 }
 export const defaultWalletSearchFilter: WalletSearchFilter = {
     order_by: 'amount',

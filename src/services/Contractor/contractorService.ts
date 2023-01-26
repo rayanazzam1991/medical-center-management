@@ -1,4 +1,4 @@
-import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles, ContractorWalletSearchFilter, ContractorWallet } from "/@src/models/Contractor/contractor"
+import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles, ContractorWalletSearchFilter, ContractorWallet, ContractorWithWallet, defaultContractorWithWallet } from "/@src/models/Contractor/contractor"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser } from "/@src/models/Others/User/user"
 import { useContractor } from "/@src/stores/Contractor/contractorStore"
