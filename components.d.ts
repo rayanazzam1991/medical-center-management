@@ -120,6 +120,7 @@ declare module '@vue/runtime-core' {
     RoomTableHeader: typeof import('./src/components/OurComponents/Others/Room/RoomTableHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SalaryHistoryDropDown: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryHistoryDropDown.vue')['default']
     SalaryTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryTableHeader.vue')['default']
     SalaryVariablePaymentsCell: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryVariablePaymentsCell.vue')['default']
     SearchPanel: typeof import('./src/components/partials/panels/SearchPanel.vue')['default']

@@ -60,7 +60,7 @@ const moveToOnhold = async () => {
         notif.success(t('toast.success.salaries_to_onhold'))
         moveSalariesToOnholdPopUp.value = false
     } else {
-        await sleep(200);3
+        await sleep(200);
         notif.error(message)
     }
 }

@@ -6,6 +6,7 @@ import { defaultEmployee, Employee } from "/@src/models/Employee/employee";
 import { defaultVariablePayment, VariablePayment } from "../VariablePayment/variablePayment";
 import { defaultUser, User } from "/@src/models/Others/User/user";
 import { EmployeeVariablePayment } from "../EmployeVariablePayment/employeeVariablePayment";
+import { defaultGeneratedSalariesMonth, GeneratedSalariesMonth } from "../GeneratedSalariesMonth/generatedSalariesMonth";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -78,6 +79,8 @@ export interface Salary {
     status: number
     updated_at?: string
     created_at?: string
+    salary_month?: GeneratedSalariesMonth
+    unjustified_hours?: number
 }
 
 export const defaultDeliveringSalariesSearchFilter = <Partial<DeliveringSalariesSearchFilter>>{}
@@ -110,6 +113,8 @@ export const defaultSalary: Salary = {
     status: 1,
     updated_at: undefined,
     created_at: undefined,
+    salary_month: defaultGeneratedSalariesMonth,
+    unjustified_hours: undefined
 }
 export const defaultDeliveringSalary: DeliveringSalary = {
     id: 0,
