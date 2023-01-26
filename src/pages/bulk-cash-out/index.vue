@@ -106,21 +106,13 @@ function toggleSelection() {
   }
 }
 function clickOnRow(row: any) {
-
   if (selectedRowsId.value.includes(row.id)) {
     selectedRowsId.value = selectedRowsId.value.filter((i) => i !== row.id)
-    // keyIncrement.value = keyIncrement.value + 1
 
   } else {
     selectedRowsId.value = [...selectedRowsId.value, row.id]
     keyIncrement.value = keyIncrement.value + 1
   }
-}
-
-const VFocus = {
-  mounted(el: HTMLInputElement) {
-    el.focus()
-  },
 }
 </script>
 
@@ -144,7 +136,7 @@ const VFocus = {
             />
             </template>
             <!-- body-cell slot -->
-            <template #body-cell="{ row, column }" >
+            <template #body-cell="{ row, column ,value}" >
             <!--This is the slot for row.select cells-->
             <VCheckbox
                 v-if="column.key === 'select'"

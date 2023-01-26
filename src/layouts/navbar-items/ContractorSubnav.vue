@@ -72,6 +72,13 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/bulk-cash-out">
+                      <i class="lnil lnil-add-files" aria-hidden="true"></i>
+                      <span>{{ t('walletMovement.table.bulk_cash_out.title') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul>
               </div>
             </div>
