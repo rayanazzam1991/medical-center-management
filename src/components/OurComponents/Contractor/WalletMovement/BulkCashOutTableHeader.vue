@@ -26,6 +26,9 @@ export default defineComponent({
     setup(props, context) {
         const { t } = useI18n()
         const title = ref('')
+        const disabled =ref(false)
+        disabled.value = props.enable_button
+        console.log(disabled.value)
         title.value = props.title
         let submited = false
         const onSubmit = () => {
@@ -33,7 +36,7 @@ export default defineComponent({
         }
         
 
-        return { t, title ,onSubmit}
+        return { t,disabled, title ,onSubmit}
     },
 })
 </script>
@@ -51,7 +54,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
                             <VControl>
-                                <VButton @click="onSubmit"  color="primary">
+                                <VButton @click="onSubmit"  color="primary" :disabled="!disabled">
                                     {{ button_name }}
                                 </VButton>
                             </VControl>

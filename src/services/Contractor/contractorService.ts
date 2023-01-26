@@ -1,4 +1,4 @@
-import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles } from "/@src/models/Contractor/contractor"
+import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles, ContractorWalletSearchFilter, ContractorWallet } from "/@src/models/Contractor/contractor"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser } from "/@src/models/Others/User/user"
 import { useContractor } from "/@src/stores/Contractor/contractorStore"
@@ -34,14 +34,6 @@ export async function getContractor(contractor_id: number) {
     let error_code: string = contractorResponse.error_code ?? ''
     let message: string = contractorResponse.message ?? ''
     return { success, error_code, message, contractor }
-}
-export async function getAllContractor() {
-    const contractorResponse = useContractor()
-    let contractors: Contractor[] = await contractorResponse.getAllContractorsStore() ?? []
-    let success: boolean = contractorResponse.success ?? false
-    let error_code: string = contractorResponse.error_code ?? ''
-    let message: string = contractorResponse.message ?? ''
-    return { success, error_code, message, contractors }
 }
 
 export async function getContractorsList(searchFilter: ContractorSearchFilter) {

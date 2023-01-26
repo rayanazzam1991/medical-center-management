@@ -3,7 +3,7 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Contractor/contractor"
 import { Media } from "/@src/models/Others/Media/media"
-import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi, ContractorApi } from "/@src/utils/api/Contractor"
+import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -149,31 +149,6 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
-  async function getAllContractorsStore() {
-    if (loading.value) return
-    loading.value = true
-    sleep(2000)
-    try {
-      const response = await ContractorApi(api)
-      let returnedContractors: Contractor[]
-      returnedContractors = response.response.data
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-
-      return returnedContractors
-
-    }
-    catch (error: any) {
-      success.value = error?.response.data.success
-      error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.message
-
-    }
-    finally {
-      loading.value = false
-    }
-  }
 
   async function getContractorProfilePicture(media: Media) {
     if (loading.value) return
@@ -296,7 +271,6 @@ export const useContractor = defineStore('contractor', () => {
     getContractorProfilePicture,
     getContractorFilesStore,
     addContractorFileStore,
-    getAllContractorsStore,
     deleteContractorFile
   } as const
 })
