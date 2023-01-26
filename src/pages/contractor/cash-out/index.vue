@@ -97,7 +97,7 @@ const columns = {
         h(
                 WalletMovementClickName, {
                 clickable: true,
-                title: row?.wallet.contractor.user.first_name + ' ' + row?.wallet.contractor.user.last_name,
+                title: row?.contractor_name,
                 onClick: () => {
                     router.push({ path: `/contractor/${row?.wallet?.contractor?.id}` ,  
                        query: { tab: 'Wallet' }});
