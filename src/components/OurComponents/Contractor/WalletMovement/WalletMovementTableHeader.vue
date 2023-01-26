@@ -136,11 +136,14 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl>
+                            <VControl class="mr-2 ">
                                 <VButton class="" to="/contractor/cash-out/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
-
+                            <VControl>
+                                <VButton class="mr-l" to="/bulk-cash-out" color="primary">{{t('modal.buttons.bulk_cash_out')}}
+                                </VButton>
+                            </VControl>
                         </div>
 
                     </div>

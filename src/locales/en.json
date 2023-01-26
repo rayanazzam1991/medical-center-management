@@ -212,7 +212,8 @@
       "delete": "Delete",
       "save": "Save",
       "filter": "Filter",
-      "cash_out": "cash_out"
+      "cash_out": "cash out",
+      "bulk_cash_out": "bulk cash out "
     },
     "delete_modal": {
       "title": "Are you sure?",
@@ -1284,6 +1285,10 @@
         "created_at": "creation date",
         "created_by": "Created By",
         "note": "note"
+      },
+      "bulk_cash_out": {
+        "title": "bulk cash out list  ",
+        "header_button": "withdraw"
       }
     },
     "cash_out_form": {

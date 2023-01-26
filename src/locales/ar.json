@@ -224,7 +224,8 @@
       "delete": "حذف",
       "save": "حفظ",
       "filter": "تصفية",
-      "cash_out": "سحب مبلغ"
+      "cash_out": "سحب مبلغ",
+      "bulk_cash_out": "سحب كلي"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
