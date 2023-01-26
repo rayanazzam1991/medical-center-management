@@ -85,7 +85,7 @@ const columns = {
         label: t('walletMovement.cash_out_form.contarctor'),
         grow: true,
         renderRow: (row: any) =>
-            h('span', row?.contractor?.user?.first_name + ' ' + row?.contractor?.user?.last_name),
+            h('span', row?.contractor_name),
     },
   amount: {
     grow: true,

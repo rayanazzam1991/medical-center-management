@@ -5,6 +5,7 @@ export interface Wallet {
     id?: number
     amount: number
     status: number
+    contractor_name: string
     created_at: string
 }
 export interface WalletSearchFilter {
@@ -17,6 +18,7 @@ export const defaultWallet: Wallet = {
     amount: 0,
     status: 1,
     created_at: '',
+    contractor_name: '',
 }
 export const defaultWalletSearchFilter: WalletSearchFilter = {
     order_by: 'amount',
