@@ -1,10 +1,5 @@
-<script lang="ts">import { useI18n } from 'vue-i18n'
-import { boolean } from 'zod'
-import { defaultPagination } from '/@src/utils/response'
-
-
-
-
+<script lang="ts">
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
     props: {
@@ -34,8 +29,6 @@ export default defineComponent({
         const onSubmit = () => {
         context.emit('onSubmit', submited)
         }
-        
-
         return { t,disabled, title ,onSubmit}
     },
 })
