@@ -52,6 +52,9 @@ const onSubmit = async () => {
         await bulkCashOut();
         return;
 };
+watch(selectedRowsId,(value)=>{
+  keyIncrement.value = keyIncrement.value + 1
+})
 const bulkCashOut = (async () => {
   getSelectedWallets()
     let bulkCashOut = createBulkCashOut.value
