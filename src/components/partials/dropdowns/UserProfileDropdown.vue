@@ -5,10 +5,11 @@ import { useAuth } from "/@src/stores/Others/User/authStore";
 
 const userAuth = useAuth();
 const router = useRouter();
-const {t} = useI18n();
+const {t,locale} = useI18n();
 const user = ref<Partial<User>>(userAuth.getUser());
 const userFullName = ref('')
 userFullName.value = userAuth.getUserFulLName()
+const LR = locale.value == "ar" ? "left" : "right"
 const logoutUser = async () => {
   try {
     await userAuth.logoutUser();
@@ -22,7 +23,7 @@ const logoutUser = async () => {
 }
 </script>
 <template>
-  <VDropdown right spaced class="user-dropdown profile-dropdown">
+  <VDropdown LR spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
       <a tabindex="0" class="is-trigger dropdown-trigger" aria-haspopup="true" @keydown.space.prevent="toggle"
         @click="toggle">
