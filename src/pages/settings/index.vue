@@ -8,7 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
 import { useCity } from "/@src/stores/Others/City/cityStore";
-import { Setting } from '/@src/models/Others/Setting/setting';
+import { Setting, UnjustifiedHoursRoundConsts } from '/@src/models/Others/Setting/setting';
 import { editSettings, getSettings } from '/@src/services/Others/Setting/settingService';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 import { useSetting } from '/@src/stores/Others/Setting/settingStore';
@@ -26,6 +26,7 @@ export default defineComponent({
         const head = useHead({
             title: t('settings.form.page_title'),
         });
+        const roundingOptions = UnjustifiedHoursRoundConsts.ROUNDING_OPTIONS
         const notif = useNotyf() as Notyf;
         const formType = ref("Edit");
         const route = useRoute();
@@ -40,7 +41,10 @@ export default defineComponent({
         const start_time = ref({ hour: '00', minute: '00' })
         const end_time = ref({ hour: '00', minute: '00' })
         const late_tolerance = ref('')
-
+        const deduction_factor = ref('')
+        const hr_cycle_start_day = ref('')
+        const unjustified_hours_round = ref('')
+        
 
         onMounted(async () => {
             const { settings } = await getSettings()
@@ -52,6 +56,9 @@ export default defineComponent({
             const settings_start_time = settingsList.value.find((setting) => setting.key == 'start_time')?.value ?? ''
             const settings_end_time = settingsList.value.find((setting) => setting.key == 'end_time')?.value ?? ''
             late_tolerance.value = settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value ?? ''
+            deduction_factor.value = settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value ?? ''
+            hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
+            unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
 
             const [start_hour, start_minute, start_second] = settings_start_time.split(':')
             start_time.value = { hour: start_hour, minute: start_minute }
@@ -90,24 +97,23 @@ export default defineComponent({
 
             if (Number(formatedStartTimeHour) > Number(formatedEndTimeHour)) {
                 await sleep(500);
-
-                // @ts-ignore
                 notif.error(t('toast.error.Attendance.time'))
-
                 return
             }
 
             else if (Number(formatedStartTimeHour) == Number(formatedEndTimeHour)) {
                 if (Number(formatedStartTimeMinute) >= Number(formatedEndTimeMinute)) {
                     await sleep(500);
-
-                    // @ts-ignore
                     notif.error(t('toast.error.Attendance.time'))
-
                     return
                 }
             }
+            if((Number(deduction_factor.value) < 1 ) || !(Number.isInteger(deduction_factor.value))) {
+                await sleep(500);
+                    notif.error(t('toast.error.payroll.deduction_factor'))
+                    return
 
+            }
             const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
             const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
             if (updateStartTime != settingsList.value.find((setting) => setting.key == 'start_time')?.value || updateEndTime != settingsList.value.find((setting) => setting.key == 'end_time')?.value) {
@@ -129,15 +135,23 @@ export default defineComponent({
             if (late_tolerance.value != settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value) {
                 updateSettings.push({ key: 'late_tolerance', value: late_tolerance.value })
             }
+            if (deduction_factor.value != settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value) {
+                updateSettings.push({ key: 'deduction_factor', value: deduction_factor.value })
+            }
+            if (hr_cycle_start_day.value != settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value) {
+                updateSettings.push({ key: 'hr_cycle_start_day', value: hr_cycle_start_day.value })
+            }
+            if (unjustified_hours_round.value != settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value) {
+                updateSettings.push({ key: 'unjustified_hours_round', value: unjustified_hours_round.value })
+            }
+
 
             const { message, success } = await editSettings(updateSettings);
             if (success) {
 
-                // @ts-ignore
                 notif.dismissAll();
                 await sleep(200);
 
-                // @ts-ignore
                 notif.success(t('toast.success.edit'));
                 router.push({ path: `/dashboard` });
             } else {
@@ -147,7 +161,7 @@ export default defineComponent({
 
             }
         };
-        return { t, daysName, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+        return { t, daysName,roundingOptions , UnjustifiedHoursRoundConsts, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round , hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
     },
     components: { ErrorMessage }
 })
@@ -287,6 +301,49 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ t('settings.form.payroll_section') }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">{{ t('settings.form.deduction_factor') }}</h2>
+                                <VField id="deduction_factor">
+                                    <VControl>
+                                        <VInput v-model="deduction_factor" type="number" />
+                                        <ErrorMessage class="help is-danger" name="deduction_factor" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">{{ t('settings.form.hr_cycle_start_day') }}</h2>
+                                <VField id="hr_cycle_start_day">
+                                    <VControl>
+                                        <VSelect v-model="hr_cycle_start_day">
+
+                                        <VOption v-for="day in 28" :key="day" :value="day">{{ day < 10 ? "0" + day : day }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="hr_cycle_start_day" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">{{ t('settings.form.unjustified_hours_round') }}</h2>
+
+                                <VField id="unjustified_hours_round">
+                                    <VControl>
+                                        <VSelect v-model="unjustified_hours_round">
+                                            <VOption v-for="option in roundingOptions" :key="option" :value="option">{{ UnjustifiedHoursRoundConsts.getRoundingOptionName(option) }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="unjustified_hours_round" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </form>
