@@ -5,6 +5,7 @@ import { popovers } from '/@src/data/users/userPopovers'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { usePanels } from '/@src/stores/panels'
 import { useI18n } from 'vue-i18n'
+import { useDarkmode } from '../stores/darkmode'
 import AccountingSubnav from './navbar-items/AccountingSubnav.vue'
 
 export type NavbarTheme = 'default' | 'colored' | 'fade'
@@ -28,14 +29,15 @@ const props = withDefaults(
 )
 
 const viewWrapper = useViewWrapper()
+const darkmode = useDarkmode()
 const panels = usePanels()
 const route = useRoute()
 const filter = ref('')
 const isMobileSidebarOpen = ref(false)
 const activeMobileSubsidebar = ref('dashboard')
 const activeSubnav = ref<SubnavId>('closed')
-const { t } = useI18n()
-
+const { t ,locale} = useI18n()
+const LR = locale.value == "ar" ? "left" : "right"
 const filteredUsers = computed(() => {
   if (!filter.value) {
     return []
@@ -159,7 +161,8 @@ watch(
       <!-- Custom navbar title -->
       <template #title>
         <RouterLink to="/" class="brand">
-          <AnimatedLogo width="38px" height="38px" />
+          <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
+             <img v-else src ="/images/logos/logo/logo.png"/>
         </RouterLink>
 
         <div class="separator"></div>
@@ -180,7 +183,7 @@ watch(
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
-        <UserProfileDropdown right />
+        <UserProfileDropdown LR />
       </template>
 
       <!-- Custom navbar links -->
@@ -219,8 +222,8 @@ watch(
             route.path.startsWith('/contractor-edit') ||
             route.path.startsWith('/speciality') ||
             route.path.startsWith('/speciality-add')
-          
-          
+
+
           ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>

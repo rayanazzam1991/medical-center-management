@@ -30,7 +30,6 @@ export async function createApp() {
 
   const pinia = createPinia()
   app.use(pinia)
-
   const vuero = {
     app,
     api,

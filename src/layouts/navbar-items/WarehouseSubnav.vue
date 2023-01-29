@@ -6,7 +6,8 @@ const activeTab = ref<TabId>('warehouse')
 const emits = defineEmits<{
     (e: 'close'): void
 }>()
-const {t} = useI18n()
+const {t,locale} = useI18n()
+// const marginLR = locale.value =="ar" ? "ml-2" : ""
 
 </script>
 
@@ -31,9 +32,9 @@ const {t} = useI18n()
                                     </li>
                                     <li>
                                         <RouterLink to="/category/add">
-                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <i  aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                             <span>{{t('warehouse_subnav.category.create_category')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
@@ -41,16 +42,16 @@ const {t} = useI18n()
                                 <ul>
                                     <li>
                                         <RouterLink to="/item">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{t('warehouse_subnav.item.items')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/item/add">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{t('warehouse_subnav.item.create_item')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
@@ -60,18 +61,18 @@ const {t} = useI18n()
                                 <ul>
                                     <li>
                                         <RouterLink to="/add-quantity">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{ t('warehouse_subnav.quantity.add_quantity') }}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                                 <ul>
                                     <li>
                                         <RouterLink to="/withdraw-quantity">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{ t('warehouse_subnav.quantity.withdraw_quantity') }}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
@@ -81,9 +82,9 @@ const {t} = useI18n()
                                 <ul>
                                     <li>
                                         <RouterLink to="/list-stock-movement">
-                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{t('warehouse_subnav.item_history.list_stock_movement')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
@@ -97,7 +98,7 @@ const {t} = useI18n()
 </template>
 
 <style lang="scss">
-@import '/@src/scss/abstracts/all';
-@import '/@src/scss/layout/navbar';
-@import '/@src/scss/layout/responsive';
+// @import '/@src/scss/abstracts/all';
+// @import '/@src/scss/layout/navbar';
+// @import '/@src/scss/layout/responsive';
 </style>
