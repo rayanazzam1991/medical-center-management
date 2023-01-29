@@ -40,7 +40,10 @@ export default defineComponent({
         const start_time = ref({ hour: '00', minute: '00' })
         const end_time = ref({ hour: '00', minute: '00' })
         const late_tolerance = ref('')
-
+        const deduction_factor = ref('')
+        const hr_cycle_start_day = ref('')
+        const unjustified_hours_round = ref('')
+        
 
         onMounted(async () => {
             const { settings } = await getSettings()
@@ -52,6 +55,9 @@ export default defineComponent({
             const settings_start_time = settingsList.value.find((setting) => setting.key == 'start_time')?.value ?? ''
             const settings_end_time = settingsList.value.find((setting) => setting.key == 'end_time')?.value ?? ''
             late_tolerance.value = settingsList.value.find((setting) => setting.key == 'late_tolerance')?.value ?? ''
+            deduction_factor.value = settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value ?? ''
+            hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
+            unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
 
             const [start_hour, start_minute, start_second] = settings_start_time.split(':')
             start_time.value = { hour: start_hour, minute: start_minute }
