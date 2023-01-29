@@ -35,6 +35,7 @@ export interface CreateWalletMovement {
 export interface createCashOut {
     wallet_id: number
     total: number
+    contractor_id: number
 }
 export interface CreateBulkCashOut {
     bulkCashOuts: createCashOut[]
