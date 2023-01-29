@@ -28,6 +28,11 @@ const employeeVariablePayments = computed(() => {
 const approvePopup = (employeeVariablePayment : EmployeeVariablePayment) => {
     emits('approveClick', employeeVariablePayment)
 }
+const numberFormat = (number : number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+}
+
 </script>
 
 <template>
@@ -38,7 +43,7 @@ const approvePopup = (employeeVariablePayment : EmployeeVariablePayment) => {
                     <h3 class="">{{ employeeVariablePayment.variable_payment.name }}</h3>
                 </div>
                 <div class="column is-3 field is-flex is-justify-content-center is-align-items-center">
-                    <h3 :class="employeeVariablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE ? 'has-text-primary' : 'has-text-danger'">{{ employeeVariablePayment.amount }}</h3>
+                    <h3 :class="employeeVariablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE ? 'has-text-primary' : 'has-text-danger'">{{ numberFormat(employeeVariablePayment.amount) }}</h3>
                 </div>
                 <div class="column is-3 field is-flex is-justify-content-center is-align-items-center">
                     <VTag :color="EmployeeVariablePaymentConsts.getStatusColor(employeeVariablePayment.status)" :label="EmployeeVariablePaymentConsts.getStatusName(employeeVariablePayment.status)" rounded />

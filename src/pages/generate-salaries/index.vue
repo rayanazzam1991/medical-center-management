@@ -57,9 +57,9 @@ const generateSalaries = async () => {
     if (success) {
         notif.dismissAll();
         await sleep(200);
-        notif.success(t('toast.success.edit'));
+        notif.success(t('toast.success.generate_salaries'));
         approveVariablePaymentPopUp.value = false
-        router.push({ path: '/employee' });
+        router.push({ path: '/salary' });
 
     }
     else {
@@ -86,6 +86,11 @@ const approveVariablePayment = async () => {
 
 
 }
+const numberFormat = (number : number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+}
+
 const columns = {
     employee_name: {
         align: 'center',
@@ -96,14 +101,21 @@ const columns = {
     basic_salary: {
         align: 'center',
         label: t("generate_salaries.table.columns.basic_salary"),
+        renderRow: (row: any) =>
+            h('span', numberFormat(row?.basic_salary)),
+
     },
     unjustified_hours: {
         align: 'center',
         label: t("generate_salaries.table.columns.unjustified_hours"),
+        
     },
     attendance_deduction: {
         align: 'center',
         label: t("generate_salaries.table.columns.attendance_deduction"),
+        renderRow: (row: any) =>
+            h('span', numberFormat(row?.attendance_deduction)),
+
     },
     variable_payments: {
         align: 'center',
@@ -131,6 +143,10 @@ const columns = {
     net_salary: {
         align: 'center',
         label: t("generate_salaries.table.columns.net_salary"),
+        renderRow: (row: any) =>
+            h('span', numberFormat(row?.net_salary)),
+
+
     },
 } as const
 </script>
@@ -159,7 +175,7 @@ const columns = {
 
             </template>
         </VFlexTable>
-        <form v-if="salariesList.length > 0" class="form-layout">
+        <form v-if="salariesList.length > 0 && !salaryStore?.loading" class="form-layout">
             <div class="form-outer-footer">
                 <div class="form-header stuck-header">
                     <div class="form-header-inner-footer columns">
@@ -168,7 +184,7 @@ const columns = {
                         <div class="left column is-2 is-flex is-justify-content-center left-footer ">
                             <div class="left">
                                 <h3 class="is-size-6">
-                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span class="has-text-weight-semibold has-text-primary"> {{ salaries.salaries_sum }}</span> 
+                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span class="has-text-weight-semibold has-text-primary"> {{ numberFormat(salaries.salaries_sum) }}</span> 
 
                                 </h3>
                             </div>
@@ -179,7 +195,7 @@ const columns = {
         </form>
 
     </VFlexTableWrapper>
-    <form v-if="salariesList.length > 0" class="form-layout">
+    <form v-if="salariesList.length > 0 && !salaryStore?.loading" class="form-layout">
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="form-header-inner columns">
@@ -220,6 +236,9 @@ const columns = {
 <style scoped lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 
+.left {
+    text-align: center;
+}
 .form-header-inner-footer {
     margin: 0 !important;
     margin-top: 1rem !important;

@@ -154,11 +154,11 @@ class SalaryConsts {
     }
     public static getStatusColor(status: number) {
         if (status == this.PENDING)
-            return 'orange'
+            return 'warning'
         if (status == this.PAID)
             return 'success'
         if (status == this.ONHOLD)
-            return 'warning'
+            return 'info'
         if (status == this.RETURNED)
             return 'danger'
         else return undefined;

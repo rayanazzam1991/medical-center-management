@@ -61,7 +61,7 @@ const numberFormat = (number: number) => {
 const unjustifiedColumns = {
   name: {
     label: '',
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', t('salary.payslip.unjustified_hours')),
@@ -69,7 +69,6 @@ const unjustifiedColumns = {
   },
   value: {
     label: '',
-    grow: true,
     inverted: true,
     renderRow: (row: any) =>
       h('span',  `${currentSalary.value.unjustified_hours} ${t('salary.payslip.hour')}`),
@@ -79,7 +78,7 @@ const unjustifiedColumns = {
 const statusColumns = {
   name: {
     label: '',
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', t('salary.payslip.status')),
@@ -87,7 +86,6 @@ const statusColumns = {
   },
   value: {
     label: '',
-    grow: true,
     inverted: true,
     renderRow: (row: any) =>
       h('span', { class :`has-text-${SalaryConsts.getStatusColor(currentSalary.value.status)}`} , SalaryConsts.getStatusName(currentSalary.value.status)),
@@ -97,7 +95,7 @@ const statusColumns = {
 const salaryColumns = {
   name: {
     label: '',
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', t('salary.payslip.basic_salary')),
@@ -105,7 +103,6 @@ const salaryColumns = {
   },
   value: {
     label: '',
-    grow: true,
     inverted: true,
     renderRow: (row: any) =>
       h('span', { class :`has-text-primary`} , numberFormat(currentSalary.value.basic_salary)),
@@ -115,7 +112,7 @@ const salaryColumns = {
 const attendanceDeductionColumns = {
   name: {
     label: '',
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', t('salary.payslip.attendance_deduction')),
@@ -123,7 +120,6 @@ const attendanceDeductionColumns = {
   },
   value: {
     label: '',
-    grow: true,
     inverted: true,
     renderRow: (row: any) =>
       h('span', { class :`has-text-danger`} , numberFormat(currentSalary.value.attendance_deduction)),
@@ -134,7 +130,7 @@ const attendanceDeductionColumns = {
 const earningsColumns = {
   name: {
     label: '',
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', row?.variable_payment?.name),
@@ -142,7 +138,6 @@ const earningsColumns = {
   },
   amount: {
     label: '',
-    grow: true,
     inverted: true,
     renderRow: (row: any) =>
       h('span', { class: 'has-text-primary' }, numberFormat(row?.amount)),
@@ -173,16 +168,15 @@ const totalEarningsColumns = {
 
 const deductionsColumns = {
   name: {
-    label: t('salary.payslip.table.deductions.columns.name'),
-    grow: true,
+    label: '',
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', row?.variable_payment?.name),
 
   },
   amount: {
-    label: t('salary.payslip.table.deductions.columns.amount'),
-    grow: true,
+    label: '',
     inverted: true,
     renderRow: (row: any) =>
       h('span', { class: 'has-text-danger' }, numberFormat(row?.amount)),
@@ -212,7 +206,7 @@ const totalDeductionsColumns = {
 const totalColumns = {
   name: {
     label: t('salary.payslip.table.total.columns.net_salary'),
-    grow: true,
+    grow: 'xl',
     inverted: true,
     renderRow: (row: any) =>
       h('span', row?.variable_payment?.net_salary),
@@ -355,7 +349,7 @@ const totalTotalColumns = {
 
 .mid-table{
   .flex-table-header {
-    display: none;
+    display: none ;
   }
 }
 
@@ -432,7 +426,7 @@ const totalTotalColumns = {
           align-items: center;
 
           .meta {
-            margin-left: 16px;
+            margin-left: auto;
             font-family: var(--font);
 
             h3 {
@@ -451,7 +445,7 @@ const totalTotalColumns = {
           }
 
           .end {
-            margin-left: auto;
+            margin-left: 0;
             text-align: right;
             
             &.is-left {
