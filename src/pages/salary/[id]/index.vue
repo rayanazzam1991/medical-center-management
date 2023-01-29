@@ -27,10 +27,6 @@ salaryId.value = route.params?.id as number ?? 0
 const currentSalary = ref(defaultSalary)
 const earningsVariablePayments = ref<EmployeeVariablePayment[]>([])
 const deductionsVariablePayments = ref<EmployeeVariablePayment[]>([])
-const totalVPEarnings = ref(0)
-const totalEarnings = ref(0)
-const totalVPDeductions = ref(0)
-const totalDeductions = ref(0)
 const getCurrentSalary = async () => {
   const { salary } = await getSalaryPayslip(salaryId.value)
   if (salary != undefined)
@@ -39,20 +35,13 @@ const getCurrentSalary = async () => {
 }
 onMounted(async () => {
   await getCurrentSalary()
-  totalEarnings.value = currentSalary.value.basic_salary
-  totalDeductions.value = currentSalary.value.attendance_deduction
-  currentSalary.value.variable_payments.forEach(variablePayment => {
+  currentSalary.value.variable_payments?.forEach(variablePayment => {
     if (variablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE) {
       earningsVariablePayments.value.push(variablePayment)
-      totalVPEarnings.value += variablePayment.amount
     } else {
       deductionsVariablePayments.value.push(variablePayment)
-      totalVPDeductions.value += variablePayment.amount
     }
   });
-  totalEarnings.value += totalVPEarnings.value;
-  totalDeductions.value += totalVPDeductions.value;
-
 })
 const numberFormat = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -148,7 +137,7 @@ const totalEarningsData = computed(() => {
   return [
     {
       label: t('salary.payslip.table.earnings.columns.total_earnings'),
-      value: totalEarnings.value,
+      value: currentSalary.value.total_earnings,
     },
   ]
 })
@@ -187,7 +176,7 @@ const totalDeductionsData = computed(() => {
   return [
     {
       label: t('salary.payslip.table.deductions.columns.total_deductions'),
-      value: totalDeductions.value,
+      value: currentSalary.value.total_deductions,
     },
   ]
 })

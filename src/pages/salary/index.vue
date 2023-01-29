@@ -64,7 +64,6 @@ const salarySort = async (value: string) => {
     searchFilter.value.order = undefined
     searchFilter.value.order_by = undefined
   }
-  console.log(searchFilter.value)
   await getSalaries(selectedMonth.value,searchFilter.value)
 }
 const numberFormat = (number : number) => {
@@ -91,26 +90,14 @@ const columns = {
     align: 'center',
     label: t("salary.table.columns.earnings"),
     renderRow: (row: any) => {
-        let total_earnings = 0 
-        row?.variable_payments.forEach((variablePayment : EmployeeVariablePayment) => {
-            console.log(variablePayment)
-            if(variablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE)
-            total_earnings = total_earnings + variablePayment.amount
-        });
-       return h('span',{class: 'has-text-primary'}, numberFormat(total_earnings) );
+       return h('span',{class: 'has-text-primary'}, numberFormat(row?.total_variable_payment_earnings) );
     }
   },
   variable_deductions: {
     align: 'center',
     label: t("salary.table.columns.variable_deductions"),
     renderRow: (row: any) => {
-        let total_variable_deductions = 0 
-        row?.variable_payments.forEach((variablePayment : EmployeeVariablePayment) => {
-            if(variablePayment.variable_payment.type == VariablePaymentConsts.DECREMENT_TYPE)
-            total_variable_deductions = total_variable_deductions + variablePayment.amount
-
-        });
-       return h('span',{class: 'has-text-danger'}, numberFormat(total_variable_deductions) );
+       return h('span',{class: 'has-text-danger'}, numberFormat(row?.total_variable_payment_deductions) );
     }
   },
   attendance_deduction: {

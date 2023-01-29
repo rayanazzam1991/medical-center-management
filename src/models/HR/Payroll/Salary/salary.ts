@@ -73,7 +73,7 @@ export interface Salary {
     id: number
     employee: Employee
     basic_salary: number
-    variable_payments: EmployeeVariablePayment[]
+    variable_payments?: EmployeeVariablePayment[]
     attendance_deduction: number
     net_salary: number
     status: number
@@ -81,6 +81,10 @@ export interface Salary {
     created_at?: string
     salary_month?: GeneratedSalariesMonth
     unjustified_hours?: number
+    total_variable_payment_deductions: number
+    total_variable_payment_earnings: number
+    total_deductions: number
+    total_earnings: number
 }
 
 export const defaultDeliveringSalariesSearchFilter = <Partial<DeliveringSalariesSearchFilter>>{}
@@ -114,7 +118,11 @@ export const defaultSalary: Salary = {
     updated_at: undefined,
     created_at: undefined,
     salary_month: defaultGeneratedSalariesMonth,
-    unjustified_hours: undefined
+    unjustified_hours: undefined,
+    total_variable_payment_deductions: 0.00,
+    total_variable_payment_earnings: 0.00,
+    total_deductions: 0.00,
+    total_earnings: 0.00
 }
 export const defaultDeliveringSalary: DeliveringSalary = {
     id: 0,
