@@ -2,6 +2,7 @@
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
+import SalaryHistoryDropDown from '/@src/components/OurComponents/HR/Payroll/Salary/SalaryHistoryDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { EmployeeVariablePayment } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment';
 import { defaultSalarySearchFilter, Salary, SalarySearchFilter, SalaryConsts, defaultReviewGenerateSalariesRequestBody, ReviewGenerateSalariesRequestBody } from '/@src/models/HR/Payroll/Salary/salary';
@@ -63,7 +64,6 @@ const salarySort = async (value: string) => {
     searchFilter.value.order = undefined
     searchFilter.value.order_by = undefined
   }
-  console.log(searchFilter.value)
   await getSalaries(selectedMonth.value,searchFilter.value)
 }
 const numberFormat = (number : number) => {
@@ -90,26 +90,14 @@ const columns = {
     align: 'center',
     label: t("salary.table.columns.earnings"),
     renderRow: (row: any) => {
-        let total_earnings = 0 
-        row?.variable_payments.forEach((variablePayment : EmployeeVariablePayment) => {
-            console.log(variablePayment)
-            if(variablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE)
-            total_earnings = total_earnings + variablePayment.amount
-        });
-       return h('span',{class: 'has-text-primary'}, numberFormat(total_earnings) );
+       return h('span',{class: 'has-text-primary'}, numberFormat(row?.total_variable_payment_earnings) );
     }
   },
   variable_deductions: {
     align: 'center',
     label: t("salary.table.columns.variable_deductions"),
     renderRow: (row: any) => {
-        let total_variable_deductions = 0 
-        row?.variable_payments.forEach((variablePayment : EmployeeVariablePayment) => {
-            if(variablePayment.variable_payment.type == VariablePaymentConsts.DECREMENT_TYPE)
-            total_variable_deductions = total_variable_deductions + variablePayment.amount
-
-        });
-       return h('span',{class: 'has-text-danger'}, numberFormat(total_variable_deductions) );
+       return h('span',{class: 'has-text-danger'}, numberFormat(row?.total_variable_payment_deductions) );
     }
   },
   attendance_deduction: {
@@ -156,39 +144,17 @@ const columns = {
       h('span', row?.updated_at ? row?.updated_at : '-'),
   },
 
-//   actions: {
-//     align: 'center',
-//     label: t("variable_payment.table.columns.actions"),
-//     renderRow: (row: any) =>
-//       h(NoViewDropDown, {
+  actions: {
+    align: 'center',
+    label: t("salary.table.columns.actions"),
+    renderRow: (row: any) =>
+      h(SalaryHistoryDropDown, {
+        onView: () => {
+          router.push({path : `/salary/${row?.id}`})
+        },
+      }),
 
-//         onEdit: () => {
-//           (row?.status != EmployeeVariablePaymentConsts.RELEASED && row?.status != EmployeeVariablePaymentConsts.INACTIVE) ?
-//             router.push({ path: `/employee-variable-payment/${row?.id}/edit` }) :
-//             notif.error({
-//               message: t('toast.error.salary.cant_edit'),
-//               duration: 5000,
-//             })
-//         },
-//         onChangeStatus: () => {
-//           if (row?.status != EmployeeVariablePaymentConsts.RELEASED && row?.status != EmployeeVariablePaymentConsts.INACTIVE) {
-//             keyIncrement.value++
-//             changeStatusPopUp.value = true
-//             selectedEmployeeVariablePayment.value = row
-//             newStatus.value = row?.status
-//             newDueDate.value = row?.due_date
-//           }
-//           else {
-//             notif.error({
-//               message: t('toast.error.salary.cant_edit'),
-//               duration: 5000,
-//             })
-//           }
-//         }
-
-//       }),
-
-//   },
+  },
 } as const
 </script>
 

@@ -383,6 +383,21 @@ const columns = computed(() => {
     }
   }
 }
+.rtl {
+  .flex-table {
+    &.with-separators {
+    .flex-table-item {
+      .flex-table-cell {
+        &:not(:first-of-type) {
+          border-left: none;
+          border-right: dashed 1px var(--fade-grey-dark-3);
+        }
+      }
+    }
+  }
+  }
+}
+
 
 /* ==========================================================================
 2. Flex Table Dark mode
@@ -416,8 +431,23 @@ const columns = computed(() => {
       }
     }
   }
-}
 
+}
+.is-dark.rtl {
+  .flex-table {
+    &.with-separators {
+      .flex-table-item {
+        .flex-table-cell {
+          &:not(:first-of-type) {
+            border: none;
+            border-right: dashed 1px var(--dark-sidebar-light-12);
+          }
+        }
+      }
+    }
+
+  }
+}
 /* ==========================================================================
 3. Media Queries
 ========================================================================== */
