@@ -52,18 +52,32 @@ const getSalariesReview = async (selectedGeneratableMonth: GeneratableMonth) => 
     }
 }
 const generateSalaries = async () => {
-    const reviewSalariesRequestBody: ReviewGenerateSalariesRequestBody = selectedMonth.value
-    const { message, success } = await getGenerateSalary(reviewSalariesRequestBody)
-    if (success) {
-        notif.dismissAll();
-        await sleep(200);
-        notif.success(t('toast.success.generate_salaries'));
-        approveVariablePaymentPopUp.value = false
-        router.push({ path: '/salary' });
+    let netSalariesCheck = true
+    salariesList.value.forEach(salary => {
+        if (salary.net_salary < 0) {
+            netSalariesCheck = false
+            return
 
-    }
-    else {
-        notif.error({ message: message, duration: 10000 })
+        }
+    });
+
+    if (netSalariesCheck) {
+
+        const reviewSalariesRequestBody: ReviewGenerateSalariesRequestBody = selectedMonth.value
+        const { message, success } = await getGenerateSalary(reviewSalariesRequestBody)
+        if (success) {
+            notif.dismissAll();
+            await sleep(200);
+            notif.success(t('toast.success.generate_salaries'));
+            approveVariablePaymentPopUp.value = false
+            router.push({ path: '/salary' });
+
+        }
+        else {
+            notif.error({ message: message, duration: 10000 })
+        }
+    } else {
+        notif.error({ message: t('toast.error.generate_salaries'), duration: 10000 })
     }
 }
 
@@ -86,7 +100,7 @@ const approveVariablePayment = async () => {
 
 
 }
-const numberFormat = (number : number) => {
+const numberFormat = (number: number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 }
@@ -108,7 +122,7 @@ const columns = {
     unjustified_hours: {
         align: 'center',
         label: t("generate_salaries.table.columns.unjustified_hours"),
-        
+
     },
     attendance_deduction: {
         align: 'center',
@@ -122,21 +136,21 @@ const columns = {
         grow: true,
         label: t("generate_salaries.table.columns.variable_payments"),
         renderRow: (row: any) => {
-            if(row?.variable_payments.length != 0) {
+            if (row?.variable_payments.length != 0) {
 
                 return h(SalaryVariablePaymentsCell,
-                {
-                    employeeVariablePayments: row?.variable_payments,
-                    onApproveClick: (employeeVariablePayment) => {
-                        keyIncrement.value++
-                        approveVariablePaymentPopUp.value = true
-                        selectedVariablePayment.value = employeeVariablePayment
-                    }
-                });
+                    {
+                        employeeVariablePayments: row?.variable_payments,
+                        onApproveClick: (employeeVariablePayment) => {
+                            keyIncrement.value++
+                            approveVariablePaymentPopUp.value = true
+                            selectedVariablePayment.value = employeeVariablePayment
+                        }
+                    });
             }
             else {
-                return h('span','-');
- 
+                return h('span', '-');
+
             }
         }
     },
@@ -144,7 +158,7 @@ const columns = {
         align: 'center',
         label: t("generate_salaries.table.columns.net_salary"),
         renderRow: (row: any) =>
-            h('span', numberFormat(row?.net_salary)),
+            h('span', { class: row?.net_salary < 0 ? 'has-text-warning' : '' }, numberFormat(row?.net_salary)),
 
 
     },
@@ -168,8 +182,10 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="salariesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title=" generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_title') : t('generate_salaries.table.placeholder.select_month_title')"
-                        :subtitle="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_subtitle') : '' " class="my-6">
+                    <VPlaceholderSection
+                        :title="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_title') : t('generate_salaries.table.placeholder.select_month_title')"
+                        :subtitle="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_subtitle') : ''"
+                        class="my-6">
                     </VPlaceholderSection>
                 </div>
 
@@ -184,7 +200,10 @@ const columns = {
                         <div class="left column is-2 is-flex is-justify-content-center left-footer ">
                             <div class="left">
                                 <h3 class="is-size-6">
-                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span class="has-text-weight-semibold has-text-primary"> {{ numberFormat(salaries.salaries_sum) }}</span> 
+                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span
+                                        class="has-text-weight-semibold has-text-primary"> {{
+                                            numberFormat(salaries.salaries_sum)
+                                        }}</span>
 
                                 </h3>
                             </div>
@@ -239,6 +258,7 @@ const columns = {
 .left {
     text-align: center;
 }
+
 .form-header-inner-footer {
     margin: 0 !important;
     margin-top: 1rem !important;
@@ -268,5 +288,4 @@ const columns = {
     }
 
 }
-
 </style>
