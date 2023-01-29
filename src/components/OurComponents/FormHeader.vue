@@ -26,12 +26,13 @@ export default defineComponent({
 
   emits: ['onSubmit'],
   setup(props, context) {
-    const {t} = useI18n()
+    const {t,locale} = useI18n()
+    const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
     var submited = false
     const onSubmit = () => {
       context.emit('onSubmit', submited)
     }
-    return { onSubmit , t }
+    return { onSubmit , t,iconArrow }
   },
 
 
@@ -54,7 +55,7 @@ export default defineComponent({
           <div class="right">
             <div class="buttons">
               <div v-if="isLoading" class="loader is-loading m-r-15 m-b-05-rem w35-h35"></div>
-              <VButton v-if="back_route != ''" icon="lnir lnir-arrow-left rem-100" :to="`${back_route}`" light
+              <VButton v-if="back_route != ''" :icon="`lnir ${iconArrow} rem-100`" :to="`${back_route}`" light
                 dark-outlined>
                 {{ t('forms.back_button')}}
               </VButton>

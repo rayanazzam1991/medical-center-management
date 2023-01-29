@@ -6,6 +6,7 @@ import { defaultEmployee, Employee } from "/@src/models/Employee/employee";
 import { defaultVariablePayment, VariablePayment } from "../VariablePayment/variablePayment";
 import { defaultUser, User } from "/@src/models/Others/User/user";
 import { EmployeeVariablePayment } from "../EmployeVariablePayment/employeeVariablePayment";
+import { defaultGeneratedSalariesMonth, GeneratedSalariesMonth } from "../GeneratedSalariesMonth/generatedSalariesMonth";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -72,12 +73,18 @@ export interface Salary {
     id: number
     employee: Employee
     basic_salary: number
-    variable_payments: EmployeeVariablePayment[]
+    variable_payments?: EmployeeVariablePayment[]
     attendance_deduction: number
     net_salary: number
     status: number
     updated_at?: string
     created_at?: string
+    salary_month?: GeneratedSalariesMonth
+    unjustified_hours?: number
+    total_variable_payment_deductions: number
+    total_variable_payment_earnings: number
+    total_deductions: number
+    total_earnings: number
 }
 
 export const defaultDeliveringSalariesSearchFilter = <Partial<DeliveringSalariesSearchFilter>>{}
@@ -110,6 +117,12 @@ export const defaultSalary: Salary = {
     status: 1,
     updated_at: undefined,
     created_at: undefined,
+    salary_month: defaultGeneratedSalariesMonth,
+    unjustified_hours: undefined,
+    total_variable_payment_deductions: 0.00,
+    total_variable_payment_earnings: 0.00,
+    total_deductions: 0.00,
+    total_earnings: 0.00
 }
 export const defaultDeliveringSalary: DeliveringSalary = {
     id: 0,
@@ -149,11 +162,11 @@ class SalaryConsts {
     }
     public static getStatusColor(status: number) {
         if (status == this.PENDING)
-            return 'orange'
+            return 'warning'
         if (status == this.PAID)
             return 'success'
         if (status == this.ONHOLD)
-            return 'warning'
+            return 'info'
         if (status == this.RETURNED)
             return 'danger'
         else return undefined;

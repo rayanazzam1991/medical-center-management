@@ -1511,6 +1511,9 @@
       "name": "ُEmployee Name...",
       "department": "Department"
     },
+    "drop_down": {
+      "view_payslip": "View Payslip"
+    },
     "header_button": "View Salaries"
   }
 }

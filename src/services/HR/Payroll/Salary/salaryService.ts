@@ -1,4 +1,4 @@
-import { defaultReviewSalaries, DeliveringSalariesSearchFilter, DeliveringSalary, OnholdSalariesSearchFilter, OnholdSalary, ReviewGenerateSalariesRequestBody, ReviewSalaries, Salary, SalarySearchFilter } from "/@src/models/HR/Payroll/Salary/salary"
+import { defaultReviewSalaries, defaultSalary, DeliveringSalariesSearchFilter, DeliveringSalary, OnholdSalariesSearchFilter, OnholdSalary, ReviewGenerateSalariesRequestBody, ReviewSalaries, Salary, SalarySearchFilter } from "/@src/models/HR/Payroll/Salary/salary"
 import { useSalary } from "/@src/stores/HR/Payoll/Salary/salaryStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -80,3 +80,14 @@ export async function moveSalariesToOnholdList() {
     let message: string = salaryResponse.message ?? ''
     return { success, error_code, message }
 }
+export async function getSalaryPayslip(salaryId: number) {
+    const salaryResponse = useSalary()
+    let salary: Salary = await salaryResponse.getSalaryPayslipStore(salaryId) ?? defaultSalary
+    let success: boolean = salaryResponse.success ?? false
+    let error_code: string = salaryResponse.error_code ?? ''
+    let message: string = salaryResponse.message ?? ''
+
+    return { salary, success, error_code, message }
+
+}
+

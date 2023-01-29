@@ -38,7 +38,6 @@ export default defineComponent({
         const searchFilter = ref(defaultSalarySearchFilter)
         const selectedMonth = ref(defaultReviewGenerateSalariesRequestBody)
         selectedMonth.value.month = new Date().getMonth() + 1
-        console.log(selectedMonth.value.month)
         selectedMonth.value.year = new Date().getFullYear()
         const months = DateConsts.MONTHS
         const search = () => {

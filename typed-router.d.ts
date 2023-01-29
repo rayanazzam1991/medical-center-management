@@ -129,6 +129,7 @@ declare module 'vue-router/auto/routes' {
     '/room/add': RouteRecordInfo<'/room/add', '/room/add', Record<never, never>, Record<never, never>>,
     '/salary': RouteRecordInfo<'/salary', '/salary', Record<never, never>, Record<never, never>>,
     '/salary/': RouteRecordInfo<'/salary/', '/salary/', Record<never, never>, Record<never, never>>,
+    '/salary/[id]/': RouteRecordInfo<'/salary/[id]/', '/salary/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/service': RouteRecordInfo<'/service', '/service', Record<never, never>, Record<never, never>>,
     '/service/': RouteRecordInfo<'/service/', '/service/', Record<never, never>, Record<never, never>>,
     '/service/[id]/': RouteRecordInfo<'/service/[id]/', '/service/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

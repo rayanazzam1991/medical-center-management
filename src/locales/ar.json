@@ -1,6 +1,7 @@
 {
   "select-language": "تحديد اللغة",
   "cancel-label": "الغاء",
+  "main_dashboard": "لوحة التحكم",
   "auth": {
     "success_login": "أهلاً بعودتك",
     "success_signUp": "مرحبا",
@@ -75,7 +76,7 @@
     }
   },
   "navbar": {
-    "others": "أخرى",
+    "others": "الإعدادات العامة",
     "crm": "الزبائن",
     "contractor": "الأخصائيون",
     "human_resources": "الموارد البشرية",
@@ -249,8 +250,8 @@
   },
   "tables": {
     "placeholder": {
-      "title": "لا يوجد تطابق",
-      "subtitle": "لا يوجد بيانات تطابق البحث."
+      "title": "لا يوجد بيانات",
+      "subtitle": ""
     },
     "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج"
   },
@@ -1516,6 +1517,49 @@
       "name": "اسم الموظف...",
       "department": "القسم"
     },
-    "header_button": "عرض الرواتب"
+    "drop_down": {
+      "view_payslip": "عرض كشف الراتب"
+    },
+    "header_button": "عرض الرواتب",
+    "payslip": {
+      "title": "كشف الراتب",
+      "header": "كشف الراتب لموظف",
+      "salary_month": "راتب شهر:",
+      "salary_month_duration": "فترة الدوام المحسوبة:",
+      "created_at": "تاريخ توليد الراتب:",
+      "updated_at": "تاريخ اخر تعديل للحالة:",
+      "unjustified_hours": "ساعات التأخير الغير مبررة",
+      "status": "الحالة",
+      "hour": "ساعة",
+      "basic_salary": "الراتب الأساسي",
+      "attendance_deduction": "خصومات التأخير",
+      "earnings": "المكتسبات",
+      "deductions": "الخصومات",
+      "table": {
+        "earnings": {
+          "columns": {
+            "name": "المتغير المالي",
+            "amount": "القيمة",
+            "basic_salary": "الراتب الأساسي",
+            "total_variable_payments_earnings": "الأرباح الإضافية",
+            "total_earnings": "مجموع المكتسبات"
+          }
+        },
+        "deductions": {
+          "columns": {
+            "name": "المتغير المالي",
+            "amount": "القيمة",
+            "attendance_deduction": "خصومات التأخير",
+            "total_variable_payments_deductions": "الخصومات الإضافية",
+            "total_deductions": "مجموع الخصومات"
+          }
+        },
+        "total": {
+          "columns": {
+            "total": "الراتب الصافي"
+          }
+        }
+      }
+    }
   }
 }
