@@ -67,12 +67,12 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
-    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
-    searchFilter.value = {} as ItemHistorySearchFilter
-    itemHistoryList.value = itemHistories
-    paginationVar.value = pagination
-    keyIncrement.value = keyIncrement.value + 1
-    default_per_page.value = pagination.per_page
+    // const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
+    // searchFilter.value = {} as ItemHistorySearchFilter
+    // itemHistoryList.value = itemHistories
+    // paginationVar.value = pagination
+    // keyIncrement.value = keyIncrement.value + 1
+    // default_per_page.value = pagination.per_page
 })
 
 const search = async (searchFilter2: ItemHistorySearchFilter) => {
@@ -352,29 +352,6 @@ const columns = {
                                                     <span>{{t('item.details.leve_2')}}</span>
                                                     <span>
                                                         {{ currentItem.category.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>{{t('item.details.quantity')}}</span>
-                                                    <span
-                                                        :class="currentItem.min_quantity >= currentItem.quantity ? 'has-text-danger' : ''">
-                                                        {{ currentItem.quantity }} Items left
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>{{t('item.details.min_quantity')}}</span>
-                                                    <span>
-                                                        {{ currentItem.min_quantity }}
                                                     </span>
                                                 </div>
 

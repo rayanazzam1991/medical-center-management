@@ -86,7 +86,8 @@ export default defineComponent({
             } : {
                 name: "",
                 status: 1,
-                parent_id: undefined
+                parent_id: undefined,
+                category_type_id:undefined,
             },
         });
         const resetPerant = () => {

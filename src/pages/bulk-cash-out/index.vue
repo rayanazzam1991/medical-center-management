@@ -80,7 +80,7 @@ const columns = {
     cellClass: 'is-flex-grow-0',
     align : 'center'
   },
-  "contarctor.users.name": {
+  contractor_name: {
         align: 'center',
         label: t('walletMovement.cash_out_form.contarctor'),
         grow: true,

@@ -88,7 +88,6 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.parent_id = undefined
             searchFilter.value.is_main_category = undefined
-
             quickSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++

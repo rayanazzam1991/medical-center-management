@@ -17,5 +17,5 @@ const head = useHead({
 </script>
 
 <template>
-    <CashOutForm :formType="'Add'" />
+    <CashOutForm :formType="'Withdraw'" />
 </template>

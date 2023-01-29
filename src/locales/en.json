@@ -255,7 +255,8 @@
   "forms": {
     "type": {
       "add": "Add",
-      "edit": "Edit"
+      "edit": "Edit",
+      "withdraw": "Withdraw"
     },
     "back_button": "Back"
   },
@@ -292,6 +293,7 @@
         "parent": "Parent",
         "created_by": "Created By",
         "created_at": "Created At",
+        "category_type": " category type",
         "status": "Status",
         "actions": "Actions"
       },
@@ -306,13 +308,17 @@
       "level_1": "Level 1",
       "level_2": "Level 2",
       "parent": "Parent",
+      "category_type": "type",
+      "for_sale": "for sale",
+      "to_consume": "to consume",
       "status": "Status"
     },
     "search_filter": {
       "title": "Filter Category",
       "name": "Name...",
       "parent": "Parent",
-      "status": "Status"
+      "status": "Status",
+      "type": "Type"
     },
     "header_button": "Add Category"
   },

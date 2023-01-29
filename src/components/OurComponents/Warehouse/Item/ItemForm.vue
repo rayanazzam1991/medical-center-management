@@ -56,8 +56,7 @@ export default defineComponent({
                 currentItem.value.category = defaultCategory
                 currentItem.value.price = 0
                 currentItem.value.cost = 0
-                currentItem.value.quantity = 0
-                currentItem.value.min_quantity = 0
+                currentItem.value.is_for_sale = undefined
                 return
             }
             const { item } = await getItem(itemId.value);
@@ -98,12 +97,8 @@ export default defineComponent({
                 category_id: currentItem.value.category.id ?? undefined,
                 price: currentItem.value.price ?? 0,
                 cost: currentItem.value.cost ?? 0,
-                quantity: currentItem.value.quantity ?? 0,
-                min_quantity: currentItem.value.min_quantity ?? 0,
             } : {
                 name: '',
-                quantity: 0,
-                min_quantity: 0,
                 price: 0,
                 cost: 0,
                 description: '',
@@ -122,17 +117,19 @@ export default defineComponent({
             else
                 return;
         };
+        
+    
         const onSubmitAdd = handleSubmit(async (values) => {
             let itemData = currentItem.value
             let itemForm = currentCreateUpdateItem.value
+            console.log(itemForm.is_for_sale)
             itemForm.name = itemData.name
-            itemForm.quantity = itemData.quantity
-            itemForm.min_quantity = itemData.min_quantity
             itemForm.price = itemData.price
             itemForm.cost = itemData.cost
             itemForm.description = itemData.description
             itemForm.category_id = itemData.category.id ?? 0
             itemForm.status = itemData.status
+            itemForm.is_for_sale = itemData.is_for_sale
             const { item, success, message } = await addItem(itemForm)
 
             if (success) {
@@ -154,13 +151,12 @@ export default defineComponent({
             let itemForm = currentCreateUpdateItem.value
             itemForm.id = itemData.id
             itemForm.name = itemData.name
-            itemForm.quantity = itemData.quantity
-            itemForm.min_quantity = itemData.min_quantity
             itemForm.price = itemData.price
             itemForm.cost = itemData.cost
             itemForm.description = itemData.description
             itemForm.category_id = itemData.category.id ?? 0
             itemForm.status = itemData.status
+            itemForm.is_for_sale = itemData.is_for_sale
             const { success, message } = await editItem(itemForm);
             if (success) {
                 // @ts-ignore
@@ -247,7 +243,7 @@ export default defineComponent({
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField id="price" v-slot="{ field }">
+                                <VField id="price">
                                     <VLabel class="required">{{ t('item.form.price') }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.price" type="number" />
@@ -256,35 +252,11 @@ export default defineComponent({
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField id="cost" v-slot="{ field }">
+                                <VField id="cost">
                                     <VLabel class="required">{{ t('item.form.cost')  }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.cost" type="number" />
                                         <ErrorMessage name="cost" class="help is-danger" />
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <VField id="quantity" v-slot="{ field }">
-                                    <VLabel class="required">{{ t('item.form.quantity') }}</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentItem.quantity" type="number" />
-                                        <ErrorMessage name="quantity" class="help is-danger" />
-
-                                    </VControl>
-                                </VField>
-                            </div>
-                            <div class="column is-6">
-                                <VField id="min_quantity" v-slot="{ field }">
-                                    <VLabel class="optional">{{ t('item.form.min_quantity') }}</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentItem.min_quantity" type="number" />
-                                        <ErrorMessage name="min_quantity" class="help is-danger" />
-
                                     </VControl>
                                 </VField>
                             </div>
@@ -304,10 +276,24 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset" >
+                        <div class="columns is-multiline">
+                            <div class="is-flex is-justify-content-center">
+                                <VField >
+                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
+                                <VControl class="ml-3">
+                                    <VSwitchSegment v-model="currentItem.is_for_sale"
+                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
+                                </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="status" v-slot="{ field }">
+                                <VField id="status">
                                     <VLabel class="required">{{t('item.form.status') }} </VLabel>
                                     <VControl>
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"

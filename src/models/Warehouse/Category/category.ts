@@ -1,4 +1,5 @@
 import { User } from "../../Others/User/user"
+import { CategoryType } from "./categoryType"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Category {
@@ -88,5 +89,6 @@ export const defaultChangeCategoryStatus: ChangeCategoryStatus = {
     id: undefined,
     status: undefined
 }
+
 const CategoryConsts = BaseConsts
 export { CategoryConsts }

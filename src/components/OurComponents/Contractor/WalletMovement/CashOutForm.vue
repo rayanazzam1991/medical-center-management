@@ -89,11 +89,7 @@ export default defineComponent({
       }
     });
     const onSubmit = async (method: String) => {
-      if (method == "Add") {
         await onSubmitAdd();
-      } 
-      else
-        return;
     };
     const onSubmitAdd = handleSubmit(async (values) => {
       var walletMovementData = currentWalletMovement.value;

@@ -183,7 +183,7 @@
   },
   "accounting_subnav": {
     "salary": {
-      "salaries" : "الراوتب",
+      "salaries": "الراوتب",
       "salaries_history": "سجل الراوتب",
       "deliver_salaries": "تسليم الراوتب",
       "onhold_salaries": "صندوق الأمانات"
@@ -195,7 +195,8 @@
   "forms": {
     "type": {
       "add": "إضافة",
-      "edit": "تعديل"
+      "edit": "تعديل",
+      "withdraw": "سحب"
     },
     "back_button": "العودة"
   },
@@ -292,6 +293,7 @@
         "parent": "الرئيسية",
         "created_by": " بواسطة",
         "created_at": "تاريخ الإنشاء",
+        "category_type": "نوع الفئة",
         "status": "الحالة",
         "actions": "الإجراءات"
       },
@@ -306,13 +308,17 @@
       "level_1": "المستوى الأول",
       "level_2": "المستوى الثاني",
       "parent": "الرئيسية",
+      "category_type": "نوع ",
+      "for_sale": "للبيع",
+      "to_consume": "للاستهلاك",
       "status": "الحالة"
     },
     "search_filter": {
       "title": "تصفية الفئة",
       "name": "الاسم...",
       "parent": "الرئيسية",
-      "status": "الحالة"
+      "status": "الحالة",
+      "type": "النوع"
     },
     "header_button": "إضافة فئة"
   },
@@ -791,6 +797,7 @@
       "columns": {
         "name": "الاسم",
         "level_1": "المستوى 1",
+        "for_sale": "للبيع",
         "level_2": "المستوى 2",
         "quantity": "الكميًة",
         "price": "السعر",
@@ -853,6 +860,9 @@
       "price": "السعر",
       "cost": "الكلفة",
       "quantity": "الكميًة",
+      "for_sale": "للبيع",
+      "yes": "نعم",
+      "no": "لا",
       "min_quantity": "الحد الادنى للكميًة",
       "description": "التوصيف",
       "status": "الحالة"
@@ -1402,7 +1412,6 @@
       "to": "إلى: "
     },
     "header_button": "سحب مبلغ "
-    }
   },
   "generate_salaries": {
     "table": {
