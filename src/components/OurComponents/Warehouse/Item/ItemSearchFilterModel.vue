@@ -99,8 +99,8 @@ export default defineComponent({
                         <VSelect 
                             v-model="searchIsForSale" class="">
                             <VOption value="">{{t('item.form.for_sale')}}</VOption>
-                            <VOption value="true">{{t('item.form.yes')}}</VOption>
-                            <VOption value="false">{{t('item.form.no')}}</VOption>
+                            <VOption value="1">{{t('item.form.yes')}}</VOption>
+                            <VOption value="0">{{t('item.form.no')}}</VOption>
                         </VSelect>
                     </VControl>
                 </VField>
