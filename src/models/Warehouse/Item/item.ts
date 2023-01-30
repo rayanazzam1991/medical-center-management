@@ -18,7 +18,7 @@ export interface Item {
     created_by?: User
     description?: string
     status: number
-    is_for_sale?: boolean
+    is_for_sale?: number
 }
 
 export interface CreateUpdateItem {
@@ -29,7 +29,7 @@ export interface CreateUpdateItem {
     category_id: number
     description?: string
     status: number
-    is_for_sale?: boolean
+    is_for_sale?: number
 
 
 }
@@ -42,7 +42,7 @@ export interface ItemSearchFilter {
     sub_category_id?: number
     category_id?: number
     status?: number
-    is_for_sale?: boolean
+    is_for_sale?: number
     page?: number
     per_page?: number
     order_by?: string
@@ -90,7 +90,7 @@ class ItemConsts extends BaseConsts {
     static readonly IS_FORE_SALE = 1
     static readonly IS_NOT_FORE_SALE = 0
 
-    public static showForSale(type: number): string {
+    public static showForSale(type: number | undefined): string {
         if (type === ItemConsts.IS_FORE_SALE)
             return i18n.global.t('item.form.yes')
 

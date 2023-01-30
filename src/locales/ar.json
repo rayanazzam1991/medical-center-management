@@ -180,6 +180,10 @@
     "item_history": {
       "item_history": "سجل المادة",
       "list_stock_movement": "حركة المخزون"
+    },
+    "inventory": {
+      "inventory": "المستودعات",
+      "inventory_table": "قائمة المستودعات الفرعية"
     }
   },
   "accounting_subnav": {
@@ -1560,6 +1564,27 @@
           }
         }
       }
+    }
+  },
+  "inventory": {
+    "table": {
+      "title": " قائمة المستودعات الفرعية  ",
+      "columns": {
+        "name": "اسم المستودع",
+        "items_count": "عدد المواد",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "custody": "عهدة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية المستودعات الفرعية",
+      "name": "اسم المستودع",
+      "status": "الحالة",
+      "action_by": "انشأ بواسطة",
+      "date": "التاريخ:",
+      "from": "من: ",
+      "to": "إلى: "
     }
   }
 }

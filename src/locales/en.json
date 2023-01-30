@@ -174,6 +174,10 @@
     "item_history": {
       "item_history": "Item History",
       "list_stock_movement": "List Stock Movement"
+    },
+    "inventory": {
+      "inventory": "inventory",
+      "inventory_table": " list inventory table"
     }
   },
   "accounting_subnav": {
@@ -1515,5 +1519,25 @@
       "view_payslip": "View Payslip"
     },
     "header_button": "View Salaries"
+  },
+  "inventory": {
+    "table": {
+      "title": "list sub inventories",
+      "columns": {
+        "name": "inventory name ",
+        "items_count": "items count",
+        "created_at": "created at",
+        "status": "status"
+      }
+    },
+    "search_filter": {
+      "title": "filter sub inventories",
+      "name": " inventory name",
+      "status": "status",
+      "action_by": "action by",
+      "date": "date:",
+      "from": "from: ",
+      "to": "to: "
+    }
   }
 }

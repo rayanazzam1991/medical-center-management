@@ -297,6 +297,13 @@ const columns = {
                                     {{ ItemConsts.showStatusName(currentItem.status) }}</VTag>
                             </span></span>
                     </div>
+                    <div class="profile-stat">
+                        <i aria-hidden="true" class="lnil "></i>
+                        <span>{{t('item.table.columns.for_sale')}}: <span>
+                                <VTag :color="currentItem.is_for_sale === ItemConsts.IS_NOT_FORE_SALE ? 'warning' : 'success'">
+                                    {{ ItemConsts.showForSale(currentItem.is_for_sale) }}</VTag>
+                            </span></span>
+                    </div>
                 </div>
             </div>
         </VLoader>

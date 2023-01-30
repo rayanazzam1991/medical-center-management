@@ -69,6 +69,8 @@ declare module '@vue/runtime-core' {
     FormLayoutSplit: typeof import('./src/components/pages/forms/form-layout/FormLayoutSplit.vue')['default']
     GenerateSalariesHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/GenerateSalariesHeader.vue')['default']
     IconButton: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue')['default']
+    InventorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Inventory/InventorySearchFilterModel.vue')['default']
+    InventoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Inventory/InventoryTableHeader.vue')['default']
     ItemForm: typeof import('./src/components/OurComponents/Warehouse/Item/ItemForm.vue')['default']
     ItemHistorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Item/ItemHistorySearchFilterModel.vue')['default']
     ItemHistoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Item/ItemHistoryTableHeader.vue')['default']
