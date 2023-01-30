@@ -1,4 +1,4 @@
-{
+ {
   "select-language": "تحديد اللغة",
   "cancel-label": "الغاء",
   "main_dashboard": "لوحة التحكم",
@@ -194,7 +194,9 @@
       "Attendance": {
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
-        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي"
+        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
+        "required_reason" : "حقل السبب مطلوب",
+        "out_of_length_reason" : "السبب لا يمكن أن يكون أكبر من 255 محرف"
       }
     },
     "file": {
@@ -714,6 +716,17 @@
         "status": "الحالة:",
         "check_in": "تسجيل دخول الموظفين",
         "check_out": "تسجيل خروج الموظفين"
+      },
+      "unjustify_attendance" : {
+        "title" : "عدم تبرير الحضور",
+        "confirmation" : "هل أنت متأكد؟",
+        "caution" : "سيتم تعديل حضور الموظف إلى غير مبرر"
+      },
+      "justify_attendance" : {
+        "title" : "تبرير الحضور",
+        "reason" : "السبب",
+        "proof" : "الإثبات"
+
       }
     },
     "search_filter": {
@@ -1246,5 +1259,24 @@
   "boolean": {
     "true": "نعم",
     "false": "لا"
+  },
+  "attendance_justification": {
+    "table": {
+      "title": "تبريرات الغياب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "date": "التاريخ",
+        "absence_hours": "ساعات الغياب",
+        "reason": "السبب",
+        "proof": "الإثبات",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": " بواسطة"
+      }
+    },
+    "search_filter" : {
+      "name" : "اسم الموظف...",
+      "creator_name" : "بواسطة..."
+    }
   }
+
 }

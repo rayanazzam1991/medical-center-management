@@ -180,7 +180,10 @@
           "Attendance": {
             "time": "Start time cant be after end time",
             "check_in": "New check in can't be after original check in",
-            "check_out": "New check out can't be before original check out"
+            "check_out": "New check out can't be before original check out",
+            "required_reason" : "Reason field is required",
+            "out_of_length_reason" : "Reason cannot be longer than 255 characters"
+    
           }
         },
         "file": {
@@ -729,7 +732,19 @@
             "status": "Status:",
             "check_in": "Check In",
             "check_out": "Check Out"
+          },
+          "unjustify_attendance" : {
+            "title" : "Unjustify Attendance",
+            "confirmation" : "Are you sure?",
+            "caution" : "This will change employee attendance to unjustified"
+          },
+          "justify_attendance" : {
+            "title" : "Justify Attendance",
+            "reason" : "Reason",
+            "proof" : "Proof"
+    
           }
+    
         },
         "search_filter" : {
           "title" : "Filter Employee" ,
