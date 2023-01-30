@@ -15,7 +15,6 @@ export async function addUserStatusApi(
   api: AxiosInstance,
   userstatus: UserStatus
 ): Promise<{ response: CustomResponseSingle }> {
-  console.log('api', userstatus)
 
   const { data: response, headers } = await api.post(`userstatus`, userstatus)
 
@@ -25,13 +24,10 @@ export async function editUserStatusApi(
   api: AxiosInstance,
   userstatus: UserStatus
 ): Promise<{ response: CustomResponseSingle }> {
-  console.log('api', userstatus)
-  console.log(typeof userstatus.id)
   const { data: response, headers } = await api.put(
     `userstatus/${userstatus.id}`,
     userstatus
   )
-  console.log(response)
   return { response }
 }
 export async function getUserStatusApi(

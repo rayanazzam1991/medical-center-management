@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { number } from "zod"
 import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
@@ -24,7 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-
+        const {t} = useI18n()
         const pagination = props.pagination
         const searchName = ref('')
         const perPage = ref(pagination.per_page)
@@ -37,7 +38,6 @@ export default defineComponent({
                 status: searchStatus.value,
                 per_page: perPage.value
             }
-            console.log(searchFilter.value)
             context.emit('search', searchFilter.value)
 
         }
@@ -51,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, NationalityConsts }
+        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, NationalityConsts }
     },
 
 
@@ -70,11 +70,11 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" placeholder="Name..." />
+                                <VInput v-model="searchName" type="text" :placeholder="t('nationality.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">Status</VOption>
+                                    <VOption value="">{{t('nationality.search_filter.status')}}</VOption>
                                     <VOption value="0">{{ NationalityConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ NationalityConsts.showStatusName(1) }}</VOption>
                                 </VSelect>

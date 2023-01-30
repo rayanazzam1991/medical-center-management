@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
-import { CreateContractor, UpdateContractor, CreateUpdateServicesHelper, ContractorSearchFilter } from "/@src/models/Contractor/contractor"
+import { CreateContractor, UpdateContractor, CreateUpdateServicesHelper, ContractorSearchFilter, ContractorWalletSearchFilter } from "/@src/models/Contractor/contractor"
 
 
 
@@ -45,6 +45,7 @@ export async function getContractorApi(
 
   return { response }
 }
+
 
 export async function getContractorsApi(
   api: AxiosInstance,

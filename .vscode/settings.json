@@ -8,7 +8,7 @@
     "editor.rulers": [80]
   },
   "[vue]": {
-    "editor.defaultFormatter": "Vue.volar",
+    "editor.defaultFormatter": "stylelint.vscode-stylelint",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
     }
@@ -16,11 +16,12 @@
   "eslint.alwaysShowStatus": true,
   "eslint.validate": ["javascript", "javascriptreact", "markdown", "vue"],
   "i18n-ally.localesPaths": "src/locales",
-  "stylelint.validate": [
-    "scss",
-    "vue"
-  ],
+  "stylelint.validate": ["scss", "vue"],
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "i18n-ally.keystyle": "nested",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   }
 }

@@ -5,9 +5,11 @@ import { ErrorMessage, useForm } from 'vee-validate';
 import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
 import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import {cityvalidationSchema, schemaObj} from '/@src/rules/Others/City/cityValidation';
+import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
 import { useCity } from "/@src/stores/Others/City/cityStore";
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 
 export default defineComponent({
@@ -19,18 +21,20 @@ export default defineComponent({
   },
   emits: ["onSubmit"],
   setup(props, context) {
+    const {t} = useI18n()
     const viewWrapper = useViewWrapper();
-    viewWrapper.setPageTitle("City");
+    viewWrapper.setPageTitle(t('city.form.page_title'));
     const head = useHead({
-      title: "City",
+      title: t('city.form.page_title'),
     });
     const cityStore = useCity()
-    const notif = useNotyf();
+    const notif = useNotyf() as Notyf;
     const formType = ref("");
     formType.value = props.formType;
     const route = useRoute();
     const router = useRouter();
-    const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+    const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('city.form.form_header' , {type : formTypeName});
     const backRoute = "/city";
     const currentCity = ref(defaultCity);
     const cityId = ref(0);
@@ -52,7 +56,6 @@ export default defineComponent({
       getCurrentCity();
     });
 
-    const validationSchemaObj = schemaObj
     const validationSchema = cityvalidationSchema
     const { handleSubmit } = useForm({
       validationSchema,
@@ -82,7 +85,7 @@ export default defineComponent({
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${city.name} ${viewWrapper.pageTitle} was added successfully`);
+        notif.success(t('toast.success.add'));
         router.push({ path: `/city/${city.id}` });
       } else {
         await sleep(200);
@@ -100,7 +103,7 @@ export default defineComponent({
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${cityData.name} ${viewWrapper.pageTitle} was edited successfully`);
+        notif.success(t('toast.success.edit'));
         router.push({ path: `/city/${cityData.id}` });
       } else {
         await sleep(200);
@@ -110,7 +113,7 @@ export default defineComponent({
       }
     };
 
-    return { pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore ,validationSchema,validationSchemaObj};
+    return { t, pageTitle, onSubmit, currentCity, viewWrapper, backRoute, CityConsts, cityStore };
   },
   components: { ErrorMessage }
 })
@@ -132,8 +135,8 @@ export default defineComponent({
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
-                <VField id="name">
-                  <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                <VField id="name" v-slot="{ field }">
+                  <VLabel class="required">{{ t('city.form.name') }}</VLabel>
                   <VControl icon="feather:chevrons-right">
                     <VInput v-model="currentCity.name" type="text" placeholder="" autocomplete="given-name" />
                     <ErrorMessage class="help is-danger" name="name" />
@@ -148,11 +151,11 @@ export default defineComponent({
             <div class="columns is-multiline">
               <div class="column is-12">
                 <VField id="status" v-slot="{ field }">
-                  <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                  <VLabel class="required">{{ t('city.form.status') }}</VLabel>
 
                   <VControl>
                     <VRadio v-model="currentCity.status" :value="CityConsts.INACTIVE"
-                      :label="CityConsts.showStatusName(0)" name="status" color="warning" />
+                      :label="CityConsts.showStatusName(0)" name="status" color="danger" />
 
                     <VRadio v-model="currentCity.status" :value="CityConsts.ACTIVE"
                       :label="CityConsts.showStatusName(1)" name="status" color="success" />

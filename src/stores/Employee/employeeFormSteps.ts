@@ -1,6 +1,15 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { CreateEmployee, defaultCreateEmployee, UpdateEmployee, defaultUpdateEmployee } from "/@src/models/Employee/employee"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
+})
 
 interface EmployeeFormStepOptions {
   number: number
@@ -25,11 +34,9 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
-        return 'Main Info'
-      case 2:
-        return 'Personal ID'
+        return i18n.global.t('employee.form.step_1_abbr_title')
       default:
-        return 'Main Info'
+        return i18n.global.t('employee.form.step_1_abbr_title')
     }
   })
 
@@ -78,7 +85,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   async function save() {
     loading.value = true
 
-    console.log(data.value)
 
     loading.value = false
   }
@@ -99,7 +105,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     setLoading,
     setStep,
     getStep,
-
     save,
     reset,
   } as const

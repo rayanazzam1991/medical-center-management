@@ -6,13 +6,16 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { useCustomerGroup } from "/@src/stores/Others/CustomerGroup/customerGroupStore"
 import sleep from "/@src/utils/sleep"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Group')
+viewWrapper.setPageTitle(t('customer_group.details.title'))
 const head = useHead({
-    title: 'Customer Group',
+    title: t('customer_group.details.title'),
 })
 
 
@@ -49,11 +52,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{t('customer_group.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>{{ currentCustomerGroup.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom">{{t('customer_group.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
                             <span>
                                 <VTag
                                     :color="currentCustomerGroup.status === CustomerGroupConsts.INACTIVE ? 'danger' : 'success'">

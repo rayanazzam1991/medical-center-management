@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { getEmployeesList } from '/@src/services/Employee/employeeService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultEmployee, defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
@@ -15,12 +13,16 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import sleep from '/@src/utils/sleep'
+import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Employee')
+const {t} = useI18n()
+viewWrapper.setPageTitle(t('employee.table.title'))
 useHead({
-    title: 'Employee',
+    title: t('employee.table.title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultEmployeeSearchFilter)
 const employeesList = ref<Array<Employee>>([])
 const statusesList = ref<Array<UserStatus>>([])
@@ -55,10 +57,10 @@ const changestatusUser = async () => {
         await sleep(200);
 
         // @ts-ignore
-        notif.success(`${emplyeeChangeStatus.value.user.first_name} ${emplyeeChangeStatus.value.user.last_name} status was edited successfully`)
+        notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
-
+        // @ts-ignore
         notif.error(message)
     }
     changeStatusPopup.value = false
@@ -103,7 +105,7 @@ const columns = {
     "users.name": {
         align: 'center',
 
-        label: 'Name',
+        label: t('employee.table.columns.name'),
         grow: 'lg',
         renderRow: (row: any) =>
             h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
@@ -115,7 +117,7 @@ const columns = {
     "users.phone_number": {
         align: 'center',
         grow: true,
-        label: 'Phone',
+        label: t('employee.table.columns.phone'),
         renderRow: (row: any) =>
             h('span', row?.user?.phone_number),
 
@@ -127,7 +129,7 @@ const columns = {
     department: {
         align: 'center',
         grow: true,
-        label: 'Department',
+        label: t('employee.table.columns.department'),
         renderRow: (row: any) =>
             h('span', row?.user?.room?.department?.name),
 
@@ -137,7 +139,7 @@ const columns = {
     },
     room: {
         align: 'center',
-        label: 'Room #',
+        label: t('employee.table.columns.room'),
         renderRow: (row: any) =>
             h('span', row?.user?.room?.number),
 
@@ -147,8 +149,9 @@ const columns = {
     },
     status: {
         align: 'center',
+        grow: true,
 
-        label: 'status',
+        label: t('employee.table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -177,10 +180,21 @@ const columns = {
 
 
     },
+    position: {
+        align: 'center',
+        grow: true,
+        label: t('employee.table.columns.position'),
+        renderRow: (row: any) =>
+            h('span', row?.position.name),
+
+        searchable: true,
+
+
+    },
     created_at: {
         align: 'center',
 
-        label: 'Create Date',
+        label: t('employee.table.columns.created_at'),
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
@@ -190,11 +204,10 @@ const columns = {
     },
     actions: {
         align: 'center',
+        label: t('employee.table.columns.actions'),
+
         renderRow: (row: any) =>
-            h(NoDeleteDropDown, {
-                onEdit: () => {
-                    router.push({ path: `/employee-edit/${row?.id}/` })
-                },
+            h(NoEditDropDown, {
                 onView: () => {
                     router.push({ path: `/employee/${row?.id}` })
                 },
@@ -210,7 +223,7 @@ const columns = {
 
 <template>
     <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="`Add ${viewWrapper.pageTitle}`" @search="search" :pagination="paginationVar"
+        :button_name="t('employee.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
         @update:sort="employeeSort">
@@ -226,7 +239,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="employeesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection title="No matches" subtitle="There is no data that match your search."
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
+                    :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -237,20 +251,22 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getEmployeesPerPage" />
-        <h6 v-if="employeesList.length != 0 && !employeeStore?.loading">Showing {{ paginationVar.page !=
-                paginationVar.max_page
-                ?
-                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        }} to {{
-        paginationVar.page !=
-            paginationVar.max_page ?
-            paginationVar.page *
-            paginationVar.per_page : paginationVar.total
-}} of {{ paginationVar.total }} entries</h6>
+        <h6 v-if="employeesList.length != 0 && !employeeStore?.loading">
+            {{
+        t('tables.pagination_footer', { from_number: paginationVar.page !=
+          paginationVar.max_page
+          ?
+          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+        , to_number: paginationVar.page !=
+          paginationVar.max_page ?
+          paginationVar.page *
+          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+      })}}</h6>
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal title="Change User Status" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('employee.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -258,12 +274,12 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="user_status_id">
-                                <VLabel>{{ viewWrapper.pageTitle }} status</VLabel>
+                                <VLabel>{{ t('employee.table.columns.status') }}</VLabel>
                                 <VControl>
                                     <VSelect v-model="emplyeeChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                                status.name
-                                        }}
+        status.name
+}}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />
@@ -275,7 +291,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser()">Confirm</VButton>
+            <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
         </template>
     </VModal>
 

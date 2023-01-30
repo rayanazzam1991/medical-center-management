@@ -6,11 +6,11 @@ import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateCustomer } from '/@src/models/CRM/Customer/customer';
-import { City, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { CustomerGroup, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
-import { Room, defaultRoomSearchFilter } from '/@src/models/Others/Room/room';
-import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
+import { CustomerGroup, CustomerGroupSearchFilter, defaultCustomerGroupSearchFilter } from '/@src/models/Others/CustomerGroup/customerGroup';
+import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
+import { defaultCreateUpdateUser, UserSearchFilter } from '/@src/models/Others/User/user';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getCustomer, updateCustomer } from '/@src/services/CRM/Customer/customerService';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
@@ -18,42 +18,36 @@ import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { customerEditvalidationSchema } from '/@src/rules/CRM/Customer/customerEditValidation';
 import sleep from "/@src/utils/sleep"
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 
 
-
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Customer Main Info')
+viewWrapper.setPageTitle(t('customer.form.edit_step_1_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 1,
     canNavigate: true,
-    skipable: true,
     validateStepFn: async () => {
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-edit/${customerForm.dataUpdate.id}/medical-info`,
+                path: `/customer/${customerForm.dataUpdate.id}`,
             })
 
         }
     },
-    skipStepFn: async () => {
-        router.push({
-            path: `/customer-edit/${customerForm.dataUpdate.id}/medical-info`,
-        })
-
-    }
 })
 const isLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
-const pageTitle = 'Step 1: Customer Main Info'
+const notif = useNotyf() as Notyf
 const currentUser = ref(defaultCreateUpdateUser)
 const currentCustomer = ref(defaultCreateCustomer)
 const customerId = ref(0)
@@ -67,7 +61,6 @@ const fetchCustomer = async () => {
     currentUser.value.birth_date = customer.user.birth_date
     currentUser.value.phone_number = customer.user.phone_number
     currentUser.value.address = customer.user.address
-    console.log(currentUser.value.city_id)
     currentUser.value.city_id = customer.user?.city?.id
     currentUser.value.user_status_id = customer.user?.status?.id
     currentUser.value.id = customer.user.id
@@ -126,13 +119,27 @@ const customerGroupsList = ref<CustomerGroup[]>([])
 onMounted(async () => {
     if (!isLoading.value) {
         isLoading.value = true
-        const { cities } = await getCitiesList(defaultCitySearchFilter)
+        let citySearchFilter = {} as CitySearchFilter
+        citySearchFilter.per_page = 500
+        const { cities } = await getCitiesList(citySearchFilter)
         citiesList.value = cities
-        const { rooms } = await getRoomsList(defaultRoomSearchFilter)
+        
+        let roomSearchFilter = {} as RoomSearchFilter
+        roomSearchFilter.per_page = 500
+
+        const { rooms } = await getRoomsList(roomSearchFilter)
         roomsList.value = rooms
-        const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
+
+        let userStatusSearchFilter = {} as UserStatusSearchFilter
+        userStatusSearchFilter.per_page = 500
+
+        const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
         statusesList.value = userstatuses
-        const { customerGroups } = await getCustomerGroupsList(defaultCustomerGroupSearchFilter)
+
+        let customerGroupSearchFilter = {} as CustomerGroupSearchFilter
+        customerGroupSearchFilter.per_page = 500
+
+        const { customerGroups } = await getCustomerGroupsList(customerGroupSearchFilter)
         customerGroupsList.value = customerGroups
         await fetchCustomer()
         isLoading.value = false
@@ -185,7 +192,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }
@@ -220,13 +227,10 @@ const onSubmitEdit = handleSubmit(async (values) => {
                     <div :hidden="isLoading">
                         <!--Fieldset-->
                         <div class="form-fieldset">
-                            <div class="fieldset-heading">
-                                <h4>{{ pageTitle }}</h4>
-                            </div>
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">
-                                        <VLabel class="required">First name</VLabel>
+                                        <VLabel class="required">{{t('customer.form.first_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -236,7 +240,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="last_name">
-                                        <VLabel class="required">Last name</VLabel>
+                                        <VLabel class="required">{{t('customer.form.last_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -250,7 +254,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="phone_number">
-                                        <VLabel class="required">Phone number <span>(+964)</span></VLabel>
+                                        <VLabel class="required">{{t('customer.form.phone_number')}} <span>(+964)</span></VLabel>
                                         <VControl icon="feather:chevrons-right">
 
                                             <VInput disabled v-model="currentUser.phone_number" type="number"
@@ -262,7 +266,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
                                 <div class="column is-6">
                                     <VField id="birth_date">
-                                        <VLabel>Birth date </VLabel>
+                                        <VLabel>{{t('customer.form.birth_date')}} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -278,7 +282,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="gender">
-                                        <VLabel class="">Gender</VLabel>
+                                        <VLabel class="">{{t('customer.form.gender')}}</VLabel>
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                                 color="success" />
@@ -291,13 +295,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
-                                        <VLabel>City</VLabel>
+                                        <VLabel>{{t('customer.form.city')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                                <VOption value="">City</VOption>
+                                                <VOption value="">{{t('customer.form.city')}}</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-                                                        city.name
-                                                }}
+        city.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -312,7 +316,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel>Address </VLabel>
+                                        <VLabel>{{t('customer.form.address')}} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -326,15 +330,15 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="user_status_id">
-                                        <VLabel class="required">Status</VLabel>
+                                        <VLabel class="required">{{t('customer.form.status')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">Status</VOption>
+                                                <VOption value="">{{t('customer.form.status')}}</VOption>
                                                 <VOption v-for="status in statusesList" :key="status.id"
                                                     :value="status.id">
                                                     {{
-                                                            status.name
-                                                    }}
+        status.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="user_status_id" />
@@ -343,13 +347,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="customer_group_id">
-                                        <VLabel class="required">Customer Group</VLabel>
+                                        <VLabel class="required">{{t('customer.form.customer_group')}}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentCustomer" v-model="currentCustomer.customer_group_id">
                                                 <VOption v-for="customerGroup in customerGroupsList"
                                                     :key="customerGroup.id" :value="customerGroup.id">{{
-                                                            customerGroup.name
-                                                    }}
+        customerGroup.name
+}}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="customer_group_id" />
@@ -363,7 +367,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="emergency_contact_name">
-                                        <VLabel>Emergency Contact Name</VLabel>
+                                        <VLabel>{{t('customer.form.emergency_contract_name')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_name" type="text"
                                                 placeholder="" autocomplete="given-emergency_contact_name" />
@@ -373,7 +377,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="emergency_contact_phone">
-                                        <VLabel>Emergency Contact Phone</VLabel>
+                                        <VLabel>{{t('customer.form.emergency_contract_phone')}}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentCustomer.emergency_contact_phone" type="number"
                                                 placeholder="" autocomplete="given-emergency_contact_phone" />

@@ -4,6 +4,15 @@ import { CreateCustomer, defaultCreateCustomer, UpdateCustomer, defaultUpdateCus
 import { MedicalInfo, defaultMedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 
 interface CustomerFormStepOptions {
     number: number
@@ -28,11 +37,11 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     const stepTitle = computed(() => {
         switch (step.value) {
             case 1:
-                return 'Main Info'
+                return i18n.global.t('customer.form.step_1_abbr_title')
             case 2:
-                return 'Medical Info'
+                return i18n.global.t('customer.form.step_2_abbr_title')
             default:
-                return 'Customer Form'
+                return i18n.global.t('customer.form.step_1_abbr_title')
         }
     })
 

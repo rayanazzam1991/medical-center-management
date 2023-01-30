@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultContractorSearchFilter, ContractorSearchFilter } from "/@src/models/Contractor/contractor"
 import { CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
 import { defaultPagination } from "/@src/utils/response"
@@ -25,6 +26,7 @@ export default defineComponent({
 
 
     setup(props, context) {
+        const {t} = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -79,6 +81,8 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.page = 1
+
             context.emit('search', searchFilter.value)
         }
         const search_filter = (value: ContractorSearchFilter) => {
@@ -90,11 +94,9 @@ export default defineComponent({
         const resetFilter = () => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
             searchFilter.value.room_id = undefined
             searchFilter.value.quick_search = undefined
@@ -107,20 +109,17 @@ export default defineComponent({
         const resetFilter_popup = (value: CustomerSearchFilter) => {
             searchFilter.value.name = undefined
             searchFilter.value.phone_number = undefined
-            searchFilter.value.gender = undefined
             searchFilter.value.date_between = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
-            searchFilter.value.is_completed = undefined
             searchFilter.value.user_status_id = undefined
             searchFilter.value.room_id = undefined
 
 
-            console.log(searchFilter)
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
+        return { t, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
     },
 
 
@@ -139,7 +138,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" placeholder="Name/Number..." />
+                                <VInput v-model="quickSearchField" type="text" :placeholder="t('contractor.search_filter.quick_search')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

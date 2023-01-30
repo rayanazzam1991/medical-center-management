@@ -3,8 +3,9 @@ import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatus
 import { defaultEmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
 import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
-import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
+import { useI18n } from "vue-i18n"
 
 export default defineComponent({
     props: {
@@ -27,6 +28,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const {t} = useI18n()
         const searchName = ref()
         const searchPhoneNumber = ref()
         const searchDateBetween = ref()
@@ -42,7 +44,6 @@ export default defineComponent({
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
 
             },
         })
@@ -59,7 +60,6 @@ export default defineComponent({
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
 
 
         }
@@ -81,18 +81,16 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        const cities2 = ref<City[]>([])
-        const statuses2 = ref<UserStatus[]>([])
-        const nationalities2 = ref<Nationality[]>([])
+        const statusesList = ref<UserStatus[]>([])
         onMounted(async () => {
-            const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
-            statuses2.value = userstatuses
-            const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-            nationalities2.value = nationalities
+            let userStatusSearchFilter = {} as UserStatusSearchFilter
+            userStatusSearchFilter.per_page = 500
+            const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
+            statusesList.value = userstatuses
         })
 
 
-        return { search, resetFilter, nationalities2, search_filter_popup, statuses2, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
+        return { t, search, resetFilter, search_filter_popup, statusesList, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo }
 
 
 
@@ -108,24 +106,24 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Filter Employee" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('employee.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('employee.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input " placeholder="Phone Number..." />
+                        <input v-model="searchPhoneNumber" type="text" class="input " :placeholder="t('employee.search_filter.phone_number')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Status</VOption>
-                            <VOption v-for="status in statuses2" :key="status.id" :value="status.id">{{
+                            <VOption value="">{{t('employee.search_filter.status')}}</VOption>
+                            <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                     status.name
                             }}
                             </VOption>
@@ -133,15 +131,15 @@ export default defineComponent({
                     </VControl>
                 </VField>
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">Create Date:</h1>
+                    <h1 class="column-is-12">{{t('employee.search_filter.create_date')}}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>From : </VLabel>
+                        <VLabel>{{ t('employee.search_filter.from') }} </VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
                     </VField>
                     <VField class="column-is-6 filter">
-                        <VLabel>To : </VLabel>
+                        <VLabel>{{t('employee.search_filter.to')}} </VLabel>
 
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchTo" type="date" />
@@ -153,7 +151,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{ t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

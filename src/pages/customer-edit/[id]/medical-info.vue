@@ -10,21 +10,23 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { MedicalInfoConsts } from '/@src/models/CRM/MedicalInfo/medicalInfo';
 import { medicalinfoEditValidationSchema } from '/@src/rules/CRM/MedicalInfo/medicalinfoEditValidation';
 import sleep from "/@src/utils/sleep"
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 
 
 
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
-const notif = useNotyf()
-
+const notif = useNotyf() as Notyf
+const { t } = useI18n()
 const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Medical Info')
+viewWrapper.setPageTitle(t('customer.form.edit_step_2_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
 const customerForm = useCustomerForm()
 customerForm.setStep({
@@ -35,18 +37,12 @@ customerForm.setStep({
         var isValid = await onSubmitEdit()
         if (isValid) {
             router.push({
-                path: `/customer-edit/${customerId.value}/profile-picture`,
+                path: `/customer/${customerId.value}`,
+                query: { tab: 'Medical Info' }
             })
         }
 
     },
-    skipStepFn: async () => {
-        router.push({
-            path: `/customer-edit/${customerId.value}/profile-picture`,
-        })
-
-    }
-
 })
 
 const fetchCustomer = async () => {
@@ -97,7 +93,6 @@ const getCurrentMedicalInfo = () => {
 }
 
 const currentMedicalInfo = ref(defaultMedicalInfo)
-const pageTitle = 'Step 2: Customer Medical Info'
 onMounted(async () => {
     if (customerForm.dataUpdate.id != customerId.value) {
 
@@ -129,6 +124,20 @@ const onSubmitEdit = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
+    if (medicalInfoData.allergic == undefined &&
+        medicalInfoData.blood_type == undefined &&
+        medicalInfoData.chronic_diseases == undefined &&
+        medicalInfoData.infectious_diseases == undefined &&
+        medicalInfoData.smoking == undefined &&
+        medicalInfoData.any_other_info == undefined) {
+        await sleep(200);
+
+        notif.error(t('toast.error.steps_error'))
+
+        return false
+
+    }
+
     var _customer, _message, _success
     if (customerForm.dataUpdate.medical_info.id) {
 
@@ -149,7 +158,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} medical info was updated successfully`)
+        notif.success(t('toast.success.edit'))
 
         return true
     }
@@ -175,16 +184,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
                 <div class="form-body">
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
-                        </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="blood_type">
-                                    <VLabel class="optional">Blood Type</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.blood_type')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
-                                            <VOption value="">Blood Type</VOption>
+                                            <VOption value="">{{t('customer.form.blood_type')}}</VOption>
                                             <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES"
                                                 :key="blood_type" :value="blood_type">{{ blood_type }}
                                             </VOption>
@@ -195,7 +201,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="allergic">
-                                    <VLabel class="optional">Allergic Reactions:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.allergic')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.allergic" type="text" placeholder=""
                                             autocomplete="" />
@@ -211,7 +217,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="infectious_diseases">
-                                    <VLabel class="optional">Infectious Diseases:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.infectious_diseases')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
                                             placeholder="" autocomplete="" />
@@ -222,7 +228,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
                             <div class="column is-6">
                                 <VField id="chronic_diseases">
-                                    <VLabel class="optional">Chronic Diseases:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.chronic_diseases')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
                                             autocomplete="" />
@@ -236,7 +242,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="smooking">
-                                    <VLabel class="optional">Smoke?</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.smoke')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
@@ -256,7 +262,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="any_other_info">
-                                    <VLabel class="optional">Other Info:</VLabel>
+                                    <VLabel class="optional">{{t('customer.form.other_info')}}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentMedicalInfo.any_other_info" />
                                         <ErrorMessage class="help is-danger" name="any_other_info" />

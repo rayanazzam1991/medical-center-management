@@ -1,5 +1,6 @@
 
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 
 export default defineComponent({
@@ -23,20 +24,18 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
+        const { t} = useI18n()
         const searchName = ref('')
         const searchPrice = ref()
         const searchDuration = ref()
         const searchStatus = ref()
         const searchFilter = ref(defaultServiceSearchFilter)
-        const test = ref()
 
         let search_filter_popup = computed({
             get: () => props.search_filter_popup as boolean,
             set(value) {
                 value = false
                 context.emit('search_filter_popup', value)
-                console.log(value)
-
             },
         })
         const search = () => {
@@ -48,7 +47,6 @@ export default defineComponent({
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
-            console.log(searchFilter.value)
         }
         const resetFilter = () => {
             searchName.value = ''
@@ -62,7 +60,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return { ServiceConsts, search, resetFilter, search_filter_popup, searchName, searchPrice, searchDuration, searchStatus }
+        return {t , ServiceConsts, search, resetFilter, search_filter_popup, searchName, searchPrice, searchDuration, searchStatus }
 
 
 
@@ -78,28 +76,28 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal title="Search Service" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('service.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="search">
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchName" type="text" class="input " placeholder="Name..." />
+                        <input v-model="searchName" type="text" class="input " :placeholder="t('service.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchDuration" type="number" class="input " placeholder="Duration..." />
+                        <input v-model="searchDuration" type="number" class="input " :placeholder="t('service.search_filter.duration')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:search">
-                        <input v-model="searchPrice" type="number" class="input " placeholder="Price..." />
+                        <input v-model="searchPrice" type="number" class="input " :placeholder="t('service.search_filter.price')" />
                     </VControl>
                 </VField>
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">Status</VOption>
+                            <VOption value="">{{t('service.search_filter.status')}}</VOption>
                             <VOption value="0">{{ ServiceConsts.showStatusName(0) }}</VOption>
                             <VOption value="1">{{ ServiceConsts.showStatusName(1) }}</VOption>
                         </VSelect>
@@ -110,7 +108,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">Filter</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
         </template>
     </VModal>
 </template>

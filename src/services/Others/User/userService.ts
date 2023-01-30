@@ -64,8 +64,6 @@ export async function phoneExistsCheck(phone_number: string) {
   var success: boolean = userResponse.success ?? false
   var error_code: string = userResponse.error_code ?? ''
   var message: string = userResponse.message ?? ''
-  var users: User[] = userResponse.users
-  var pagination: Pagination = userResponse.pagination
   return { success, error_code, message, result }
 
 }

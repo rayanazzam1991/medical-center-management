@@ -10,10 +10,11 @@ import { useHead } from '@vueuse/head'
 
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps'
 import { useCustomer } from '../stores/CRM/Customer/customerStore';
+import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-
+const {t} = useI18n()
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
 })
@@ -22,11 +23,7 @@ useHead({
 <template>
     <MinimalLayout>
         <!--Wizard Navbar-->
-        <CustomerFormNavigation v-model:step="customerForm.step" :title="customerForm.stepTitle" />
-
-        <!--Wizard Progress Bar-->
-        <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(customerForm.step / 4) * 100" :max="100" />
+        <CustomerFormNavigation :title="customerForm.stepTitle" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => customerForm?.validateStepFn?.()">
@@ -38,20 +35,11 @@ useHead({
                     <div class="column is-one-quarter"></div>
                     <div class="wizard-buttons-inner">
                         <VLoader size="small" :active="customerStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
-                                :disabled="customerForm.validateStepFn === null"
-                                :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ customerForm.getStep() == 4 ? 'Submit & Finish' : 'Submit & Next'
-                                }}
+                            <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
+                                {{t('customer.form.edit_submit')}}
                             </VButton>
                         </VLoader>
 
-                        <VButton class="wizard-button-previous" :disabled="customerForm.skipable === false"
-                            :color="customerForm.skipable === true ? 'dark' : 'dark'"
-                            @click="() => customerForm?.skipStepFn?.()">
-                            {{ customerForm.getStep() == 4 ? 'Skip & Finish' : 'Skip'
-                            }}
-                        </VButton>
                     </div>
                 </div>
             </div>

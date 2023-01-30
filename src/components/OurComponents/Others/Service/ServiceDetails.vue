@@ -6,13 +6,16 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { ServiceConsts } from '/@src/models/Others/Service/service'
 import { useService } from '/@src/stores/Others/Service/serviceStore'
 import sleep from '/@src/utils/sleep'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Service')
+viewWrapper.setPageTitle(t('service.details.title'))
 const head = useHead({
-    title: 'Service',
+    title: t('service.details.title'),
 })
 
 
@@ -49,24 +52,24 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Name:</h4>
+                            <h4 class="margin-bottom">{{t('service.details.name')}}:</h4>
                             <span>{{ currentService.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Description:</h4>
+                            <h4 class="margin-bottom">{{t('service.details.description')}}:</h4>
                             <span v-if="currentService.description"> {{ currentService.description }} </span>
                             <span v-else> Null </span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Estimated Duration:</h4>
+                            <h4 class="margin-bottom">{{t('service.details.estimated')}}:</h4>
                             <span>{{ currentService.duration_minutes }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">Price ({{ ServiceConsts.PRICE_DOLLAR }}):</h4>
+                            <h4 class="margin-bottom">{{t('service.details.price')}}:</h4>
                             <span>{{ currentService.service_price }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{ viewWrapper.pageTitle }} Status:</h4>
+                            <h4 class="margin-bottom">{{t('service.details.status')}}:</h4>
                             <span>
                                 <VTag :color="currentService.status === ServiceConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ ServiceConsts.showStatusName(currentService.status) }}</VTag>

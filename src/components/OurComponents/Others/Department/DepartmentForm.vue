@@ -12,6 +12,8 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { departmentvalidationSchema } from '/@src/rules/Others/Department/departmentValidation';
 import sleep from '/@src/utils/sleep';
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore';
+import { useI18n } from 'vue-i18n';
+import { Notyf } from 'notyf';
 
 export default defineComponent({
     props: {
@@ -22,18 +24,20 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper();
-        viewWrapper.setPageTitle("Department");
+        viewWrapper.setPageTitle(t('department.form.page_title'));
         const head = useHead({
-            title: "Department",
+            title: t('department.form.page_title'),
         });
         const departmentStore = useDepartment()
-        const notif = useNotyf();
+        const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-        const pageTitle = formType.value + " " + viewWrapper.pageTitle;
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+        const pageTitle = t('department.form.form_header' , {type : formTypeName})
         const backRoute = "/department";
         const currentDepartment = ref(defaultDepartment);
         const departmentId = ref(0);
@@ -82,7 +86,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(` ${viewWrapper.pageTitle} ${department.name} was added successfully`);
+                notif.success(t('toast.success.add'));
                 await sleep(500)
                 router.push({ path: `/department/${department.id}` });
             } else {
@@ -101,7 +105,7 @@ export default defineComponent({
                 await sleep(200);
 
                 // @ts-ignore
-                notif.success(`${departmentData.name} ${viewWrapper.pageTitle} was edited successfully`);
+                notif.success(t('toast.success.edit'));
                 await sleep(500)
                 router.push({ path: `/department/${departmentData.id}` });
             } else {
@@ -110,7 +114,7 @@ export default defineComponent({
                 notif.error(message)
             }
         };
-        return { pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts, departmentStore };
+        return { t, pageTitle, onSubmit, currentDepartment, viewWrapper, backRoute, DepartmentConsts, departmentStore };
     },
     components: { ErrorMessage }
 })
@@ -134,7 +138,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="name">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} name</VLabel>
+                                    <VLabel class="required">{{t('department.form.name')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentDepartment.name" type="text"
                                             autocomplete="given-name" />
@@ -149,11 +153,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('department.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentDepartment.status" :value="DepartmentConsts.INACTIVE"
-                                            :label="DepartmentConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="DepartmentConsts.showStatusName(0)" name="status" color="danger" />
 
                                         <VRadio v-model="currentDepartment.status" :value="DepartmentConsts.ACTIVE"
                                             :label="DepartmentConsts.showStatusName(1)" name="status" color="success" />

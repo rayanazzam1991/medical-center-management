@@ -14,7 +14,6 @@ export async function addDepartmentApi(
   api: AxiosInstance,
   department: Department
 ): Promise<{ response: CustomResponseSingle }> {
-  console.log('api', department)
 
   const { data: response, headers } = await api.post(`department`, department)
 
@@ -24,13 +23,10 @@ export async function editDepartmentApi(
   api: AxiosInstance,
   department: Department
 ): Promise<{ response: CustomResponseSingle }> {
-  console.log('api', department)
-  console.log(typeof department.id)
   const { data: response, headers } = await api.put(
     `department/${department.id}`,
     department
   )
-  console.log(response)
   return { response }
 }
 export async function getDepartmentApi(

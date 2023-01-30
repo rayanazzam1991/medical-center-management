@@ -33,6 +33,5 @@ export async function deleteMediaApi(
 
   const { data: response } = await api.delete(
     `media/deleteFile/${media_id}`)
-    console.log(response)
   return { response }
 }

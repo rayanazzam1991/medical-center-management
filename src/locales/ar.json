@@ -1,0 +1,1579 @@
+{
+  "select-language": "تحديد اللغة",
+  "cancel-label": "الغاء",
+  "main_dashboard": "لوحة التحكم",
+  "auth": {
+    "success_login": "أهلاً بعودتك",
+    "success_signUp": "مرحبا",
+    "title": "أنضم الينا الآن.",
+    "subtitle": "ابدأ بإنشاء حسابك",
+    "label": {
+      "promotional": "تلقي العروض الترويجية"
+    },
+    "action": {
+      "login": "لدي حساب بالفعل",
+      "signup": "انشاء حساب"
+    },
+    "placeholder": {
+      "name": "الاسم",
+      "email": "البريد الالكتروني",
+      "password": "كلمة المرور",
+      "passwordCheck": "التحقق من كلمة المرور"
+    },
+    "errors": {
+      "name": {
+        "required": "الاسم الأول مطلوب"
+      },
+      "email": {
+        "required": "ادخل بريدك الالكتروني, مطلوب لتسجيل الدخول",
+        "format": "من فضلك, ادخل بريد الكتروني صالح"
+      },
+      "password": {
+        "required": "ادخل كلمة المرور الخاصة بك مع 8 أحرف على الأقل, مطلوب لتسجيل الدخول",
+        "length": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل"
+      },
+      "passwordCheck": {
+        "required": "من فضلك, قم بتأكيد كلمة المرور الخاصة بك",
+        "match": "كلمة المرور غير متطابقة"
+      }
+    },
+    "form": {
+      "welcome_back": "أهلاً بعودتك.",
+      "sign_in": "من فضلك قم بتسجيل الدخول الى حسابك",
+      "placeholders": {
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور"
+      },
+      "sign_in_button": "تسجيل الدخول"
+    }
+  },
+  "gender": {
+    "male": "ذكر",
+    "female": "أنثى",
+    "not_selected": "غير محدد"
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "number": {
+      "price": "يرجى ادخال سعر صالح",
+      "invalid_type_error": "يرجى ادخال رقم صالح",
+      "payment_percentage": "يرجى ادخال رقم من 1-100",
+      "phone_number": "يرجى ادخال رقم هاتف صالح"
+    },
+    "redio": {
+      "required": "يرجى الاختيار"
+    },
+    "date": {
+      "required_error": "يرجى تحديد تاريخ",
+      "invalid_type_error": "تاريخ غير صحيح!",
+      "format": "يجب أن يكون تنسيق التاريخ صحيح YYYY-MM-DD"
+    },
+    "text": {
+      "invalid_type_error": "يرجى إدخال نص"
+    },
+    "URL": {
+      "invalid_type_error": "يرجى ادخال رابط صحيح"
+    }
+  },
+  "navbar": {
+    "others": "الإعدادات العامة",
+    "crm": "الزبائن",
+    "contractor": "الأخصائيون",
+    "human_resources": "الموارد البشرية",
+    "warehouse": "المستودع",
+    "accounting": "المالية"
+  },
+  "others_subnav": {
+    "nationality": {
+      "nationalities": "الجنسيات",
+      "create_nationality": "انشاء جنسية"
+    },
+    "service": {
+      "services": "الخدمات",
+      "create_service": "انشاء خدمة"
+    },
+    "department": {
+      "departments": "الأقسام",
+      "create_department": "انشاء قسم"
+    },
+    "room": {
+      "rooms": "الغرف",
+      "create_room": "انشاء غرفة"
+    },
+    "city": {
+      "cities": "المدن",
+      "create_city": "انشاء مدينة"
+    },
+    "setting": {
+      "settings": "الاعدادات",
+      "edit_settings": "تعديل الاعدادات"
+    },
+    "user_status": {
+      "user_statuses": "حالات المستخدم",
+      "create_user_status": "انشاء حالة للمستخدم"
+    }
+  },
+  "crm_subnav": {
+    "customer": {
+      "customers": "الزبائن",
+      "create_customer": "انشاء زبون"
+    },
+    "customer_group": {
+      "customer_groups": "مجموعات الزبون",
+      "create_customer_group": "انشاء مجموعة زبون"
+    },
+    "social_media": {
+      "social_medias": "وسائل التواصل الاجتماعي",
+      "create_social_media": "انشاء وسائل تواصل اجتماعي"
+    }
+  },
+  "contractor_subnav": {
+    "contractor": {
+      "contractors": "الاخصائيون",
+      "create_contractor": "انشاء اخصائي"
+    },
+    "speciality": {
+      "specialities": "التخصصات",
+      "create_speciality": "انشاء تخصص"
+    },
+    "wallet": {
+      "wallet": "المحفظة",
+      "list_cash_out": "قائمة المسحوبات",
+      "cash_out": "سحب مبلغ"
+    }
+  },
+  "human_resources_subnav": {
+    "employee": {
+      "employees": "الموظفين",
+      "create_employee": "انشاء موظف"
+    },
+    "position": {
+      "positions": "المناصب",
+      "create_position": "انشاء منصب"
+    },
+    "variable_payment": {
+      "variable_payments": "المتغيرات المالية",
+      "create_variable_payment": "انشاء متغير مالي"
+    },
+    "employee_variable_payment": {
+      "employee_variable_payments": "المتغيرات المالية للموظفين",
+      "create_employee_variable_payment": "اضافة متغير مالي لموظف"
+    },
+    "employees_schedule": "جدول الدوام",
+    "employees_attendance": "جدول الحضور",
+    "generate_salaries": "توليد الراوتب"
+  },
+  "warehouse_subnav": {
+    "category": {
+      "categories": "الفئات",
+      "create_category": "انشاء فئة"
+    },
+    "item": {
+      "items": "المواد",
+      "create_item": "انشاء مادة"
+    },
+    "quantity": {
+      "quantity": "الكميّات",
+      "add_quantity": "إضافة كميًة",
+      "withdraw_quantity": " سحب كميًة"
+    },
+    "item_history": {
+      "item_history": "سجل المادة",
+      "list_stock_movement": "حركة المخزون"
+    }
+  },
+  "accounting_subnav": {
+    "salary": {
+      "salaries": "الراوتب",
+      "salaries_history": "سجل الراوتب",
+      "deliver_salaries": "تسليم الراوتب",
+      "onhold_salaries": "صندوق الأمانات"
+    }
+  },
+  "user_profile_dropdown": {
+    "logout": "تسجيل الخروج"
+  },
+  "forms": {
+    "type": {
+      "add": "إضافة",
+      "edit": "تعديل",
+      "withdraw": "سحب"
+    },
+    "back_button": "العودة"
+  },
+  "toast": {
+    "success": {
+      "add": "تمت الإضافة بنجاح",
+      "edit": "تم التعديل بنجاح",
+      "remove": "تم الحذف بنجاح",
+      "customer_note": "تم تعديل ملاحظات الزبون بنجاح",
+      "justified": "تم التغيير لمبرر بنجاح",
+      "unjustified": "تم التغيير لغير مبرر بنجاح",
+      "withdraw": "تم السحب بنجاح",
+      "generate_salaries": "تم توليد الراوتب بنجاح",
+      "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
+      "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
+      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح"
+    },
+    "error": {
+      "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
+      "Attendance": {
+        "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
+        "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
+        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي"
+      },
+      "payroll": {
+        "deduction_factor": "معامل خصم التأخير يجب أن يكون رقم صحيح أكبر أو يساوي الواحد"
+      },
+      "generate_salaries": "هناك بعض المرتبات الصافية السالبة. يرجى معالجة هذه المشكلة والمحاولة مرة أخرى.",
+      "employee_variable_payment": {
+        "cant_edit": "لا يمكن تعديل المتغير المالي لموظف بعد تحريره او الغاءه"
+      }
+    },
+    "file": {
+      "type": "الرجاء اختيار نمط ملف مقبول",
+      "size": "لا يجب ان يتجاوز حجم الملف ال 2 ميغا",
+      "image": "الرجاء اختيار صورة صالحة للتحميل"
+    }
+  },
+  "modal": {
+    "buttons": {
+      "confirm": "تأكيد",
+      "cancel": "إلغاء",
+      "update": "تحديث",
+      "delete": "حذف",
+      "save": "حفظ",
+      "filter": "تصفية",
+      "cash_out": "سحب مبلغ",
+      "bulk_cash_out": "سحب كلي"
+    },
+    "delete_modal": {
+      "title": "هل أنت متأكد؟",
+      "subtitle": "انت على وشك الحذف نهائياً"
+    }
+  },
+  "tables": {
+    "placeholder": {
+      "title": "لا يوجد بيانات",
+      "subtitle": ""
+    },
+    "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج"
+  },
+  "images": {
+    "image_name_placeholder": "اختيار صورة",
+    "image_select_file": "تحديد ملف",
+    "accepted_file": "الحجم الأقصى: 2ميغا الانواع المقبولة  : png, jpg, webp",
+    "by": ":بواسطة"
+  },
+  "drop_down": {
+    "view": "معاينة",
+    "edit": "تعديل",
+    "remove": "إزالة",
+    "change_status": "تغيير الحالة"
+  },
+  "add_quantity": {
+    "form": {
+      "title": "إضافة الكميًة",
+      "back_button": "الرجوع إلى واحهة المواد",
+      "level_1": "المستوى الأول",
+      "select_level_1": "اختيار المستوى الأول",
+      "level_2": "المستوى الثاني",
+      "select_level_2": "اختيار المستوى الثاني",
+      "item": "المادة",
+      "select_item": "اختيار مادة",
+      "item_quantity": "كميًة المادة",
+      "item_cost": "تكلفة المادة",
+      "status": "الحالة",
+      "item_note": "ملاحظات  ",
+      "invoice_number": "رقم الفاتورة",
+      "invoice_image": "صورة الفاتورة",
+      "submit": "تأكيد"
+    }
+  },
+  "category": {
+    "table": {
+      "title": "الفئات",
+      "columns": {
+        "name": "الاسم",
+        "parent": "الرئيسية",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "category_type": "نوع الفئة",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "modal_title": "تغيير حالة الفئة"
+    },
+    "form": {
+      "page_title": "الفئة",
+      "form_header": "{type} الفئة",
+      "add_category_title": "إضافة فئة",
+      "edit_category_title": "تعديل الفئة",
+      "name": "الاسم",
+      "level_1": "المستوى الأول",
+      "level_2": "المستوى الثاني",
+      "parent": "الرئيسية",
+      "category_type": "نوع ",
+      "for_sale": "للبيع",
+      "to_consume": "للاستهلاك",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "title": "تصفية الفئة",
+      "name": "الاسم...",
+      "parent": "الرئيسية",
+      "status": "الحالة",
+      "type": "النوع"
+    },
+    "header_button": "إضافة فئة"
+  },
+  "city": {
+    "table": {
+      "title": "المدن",
+      "columns": {
+        "id": "ID",
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "modal_title": "إزالة المدينة"
+    },
+    "details": {
+      "title": "المدن",
+      "name": "اسم {title}",
+      "status": "حالة {title}"
+    },
+    "form": {
+      "page_title": "المدن",
+      "form_header": "{type} المدينة",
+      "add_city_title": "إضافة مدينة",
+      "edit_city_title": "تعديل المدينة",
+      "name": "الاسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة مدينة"
+  },
+  "contractor": {
+    "table": {
+      "title": "الأخصّائيون",
+      "columns": {
+        "phone": "رقم الهاتف",
+        "name": "الاسم",
+        "speciality": "التخصص",
+        "department": "القسم",
+        "room": "رقم الغرفة",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "created_at": "تاريخ الإنشاء"
+      },
+      "modal_title": {
+        "status": "تغيير حالة المستخدم",
+        "delete_file": "حذف ملف الأخصائي",
+        "profile_picture": "تحديث صورة الملف الشخصي",
+        "placeholderSection": {
+          "title": "هل أنت متأكد?",
+          "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+        }
+      }
+    },
+    "details": {
+      "title": "الأخصّائي",
+      "tabs": {
+        "details": "التفاصيل",
+        "services": "الخدمات",
+        "files": "الملفات",
+        "wallet": "المحفظة"
+      },
+      "main_details": "المعلومات الرئيسية",
+      "more_info": "معلومات إضافية",
+      "service": "الخدمات",
+      "file": "الملفات  ",
+      "name": "الاسم",
+      "speciality": "التخصص",
+      "status": "الحالة",
+      "user_status": "حالة المستخدم",
+      "birth_date": "تاريخ الميلاد",
+      "phone_number": "رقم الهاتف",
+      "payment_percentage": "النسبة المستحقة",
+      "starting_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "department": "القسم",
+      "room_number": "رقم الغرفة",
+      "address": "العنوان",
+      "price": "سعر الخدمة",
+      "service_ammount": "نسبة الأخصائي من الخدمة",
+      "gender": "الجنس",
+      "upload_file": "تحميل ملف",
+      "choose_file": "اختيار ملف…",
+      "upload": "تحميل",
+      "wallet": "محفظة الأخصًائي",
+      "amount": "المبلغ الإجمالي",
+      "wallet_status": "حالة المحفظة",
+      "created_at": "تاريخ الإنشاء ",
+      "accepted_file": "أقصى حجم مسموح: 2 ميغابايت صيغ الملفات المقبولة :png, jpg, webp",
+      "tabs_content_placeholder": {
+        "service": "لا يمتلك الأخصّائي أي خدمة بعد...",
+        "files": "لا يمتلك الأخصّائي أي ملف..."
+      }
+    },
+    "form": {
+      "page_title": "الأخصّائي",
+      "step_1_title": "معلومات الأخصّائي الأساسية",
+      "step_1_abbr_title": "المعلومات الأساسية",
+      "step_2_abbr_title": "الخدمات",
+      "step_1_subtitle": "الخطوة 1: معلومات الأخصّائي الأساسية",
+      "step_2_subtitle": "الخطوة 2: خدمات الأخصّائي",
+      "back_button": "الرجوع إلى واجهة الأخصّائي",
+      "first_name": "الاسم الأول",
+      "last_name": "الاسم الأخير",
+      "phone_number": "رقم الهاتف",
+      "birth_date": "تاريخ الميلاد",
+      "gender": "الجنس",
+      "city": "المدينة",
+      "address": "العنوان",
+      "department": "القسم",
+      "room": "الغرفة",
+      "starting_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "payment_percentage": "النسبة المستحقة",
+      "speciality": "التخصص",
+      "status": "الحالة",
+      "no_services_placeholder": "لا يوجد خدمات...",
+      "service_price": "سعر {service}:",
+      "service_amount": " نسبة الأخصائي من الخدمة",
+      "edit_step_1_title": "تعديل معلومات الأخصّائي الأساسية",
+      "edit_step_2_title": "تعديل خدمات الأخصّائي",
+      "edit_submit": "تأكيد",
+      "choose_services": "اختيار الخدمات:",
+      "submit_and_finish_button": "تأكيد وإنهاء",
+      "submit_and_next_button": "تأكيد والانتقال للتالي",
+      "skip_button": "تخطي",
+      "skip_and_finish_button": "تخطي وإنهاء"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الأخصّائي",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "room_number": "رقم الغرفة",
+      "status": "الحالة",
+      "create_date": "تاريخ الإنشاء: ",
+      "from": "من: ",
+      "to": "إلى: ",
+      "quick_search": "الاسم/الرقم..."
+    },
+    "header_button": "إضافة أخصّائي"
+  },
+  "customer": {
+    "table": {
+      "title": "الزبائن",
+      "columns": {
+        "phone": "رقم الهاتف",
+        "name": "الاسم",
+        "group": "المجموعة",
+        "is_completed": "منتهية",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "created_at": "تاريخ الإنشاء"
+      },
+      "modal_title": {
+        "status": "تغيير حالة المستخدم",
+        "delete_file": "حذف ملف الزبون",
+        "profile_picture": "تحديث الصورة الشخصية",
+        "placeholderSection": {
+          "title": "هل أنت متأكد?",
+          "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+        }
+      }
+    },
+    "details": {
+      "title": "الزبائن",
+      "tabs": {
+        "details": "التفاصيل",
+        "medical_info": "المعلومات الطبية",
+        "social_media": "التواصل الاجتماعي",
+        "files": "الملفات"
+      },
+      "main_details": "المعلومات الرئيسية",
+      "name": "الاسم",
+      "group": "المجموعة",
+      "gender": "الجنس",
+      "note": "ملاحظات",
+      "last_update": "آخر تحديث في",
+      "by": "من قِبَل",
+      "phone_number": "رقم الهاتف",
+      "emergency_contact_name": "اسم شخص للطوارئ",
+      "emergency_contact_phone": "اسم شخص للطوارئ",
+      "address": "العنوان",
+      "is_completed": "منتهية",
+      "status": "الحالة",
+      "birth_date": "تاريخ الميلاد",
+      "medical_info": "المعلومات الطبية",
+      "blood_type": "زمرة الدم",
+      "smooke": "مدخّن",
+      "more_info": "معلومات إضافية",
+      "allergic": "ردود الفعل التحسسية",
+      "infectious_diseases": "الأمراض المعدية",
+      "chronic_diseases": "الأمراض المزمنة",
+      "other_medical_info": "معلومات طبية أخرى",
+      "customer_social_media": "وسائل التواصل الاجتماعي",
+      "customer_URL": "رابط الزبون",
+      "customer_files": "الملفات",
+      "upload_file": "تحميل ملف",
+      "upload": "تحميل",
+      "customer_status": "حالة الزبون",
+      "select_customer_status": "اختيار حالة الزبون",
+      "tabs_content_placeholder": {
+        "medical_info": "لا يمتلك الزبون معلومات طبية...",
+        "social_modia": "لا يمتلك الزبون وسائل تواصل اجتماعي...",
+        "files": "لا يمتلك الزبون أية ملفات..."
+      }
+    },
+    "form": {
+      "page_title": "الزبون",
+      "step_1_title": "معلومات الزبون الأساسية",
+      "step_2_title": "معلومات الزبون الطبية",
+      "step_3_title": "معلومات الزبون الطبية",
+      "step_1_abbr_title": "المعلومات الرئيسية",
+      "step_2_abbr_title": "المعلومات الطبية",
+      "step_3_abbr_title": "وسائل التواصل الاجتماعي",
+      "step_1_subtitle": "الخطوة 1: معلومات الزبون الرئيسية",
+      "step_2_subtitle": "الخطوة 2: معلومات الزبون الطبية",
+      "step_3_subtitle": "الخطوة 3: وسائل التواصل الاجتماعي للزبون",
+      "back_button": "الرجوع إلى واجهة الزبائن",
+      "first_name": "الاسم الأول",
+      "last_name": "الاسم الأخير",
+      "phone_number": "رقم الهاتف",
+      "birth_date": "تاريخ الميلاد",
+      "gender": "الجنس",
+      "city": "المدينة",
+      "address": "العنوان",
+      "status": "الحالة",
+      "customer_group": "مجموعة الزبون",
+      "emergency_contract_name": "اسم شخص للطوارئ",
+      "emergency_contract_phone": "رقم شخص للطوارئ",
+      "blood_type": "زمرة الدم",
+      "allergic": "ردود الفعل التحسسية",
+      "infectious_diseases": "الأمراض المعدية",
+      "chronic_diseases": "الأمراض المزمنة",
+      "smoke": "مدخّن?",
+      "other_info": "معلومات أخرى",
+      "social_media_url": "الزبون {social_media} رابط",
+      "edit_step_1_title": "تعديل المعلومات الرئيسية للزبون",
+      "edit_step_2_title": "تعديل المعلومات الطبية للزبون",
+      "edit_submit": "تأكيد",
+      "choose_social_media": "اختيار وسائل التواصل الاجتماعي:",
+      "submit_and_finish_button": "تأكيد وإنهاء",
+      "submit_and_next_button": "تأكيد والانتقال للتالي",
+      "skip_button": "تخطي",
+      "skip_and_finish_button": "تخطي وإنهاء"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الزبون",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "group": "المجموعة",
+      "status": "الحالة",
+      "create_date": "تاريخ الإنشاء: ",
+      "from": "من: ",
+      "to": "إلى: ",
+      "quick_search": "الاسم/الرقم..."
+    },
+    "header_button": "إضافة زبون"
+  },
+  "customer_group": {
+    "table": {
+      "title": "مجموعات الزبون",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "modal_title": "إزالة مجموعة الزبون"
+    },
+    "details": {
+      "title": "مجموعة الزبون",
+      "name": "اسم {title}",
+      "status": "حالة {title}"
+    },
+    "form": {
+      "page_title": "مجموعات الزبون",
+      "form_header": "{type} مجموعة زبون",
+      "add_customer_group_title": "إضافة مجموعة الزبون",
+      "edit_customer_group_title": "تعديل مجموعة الزبون",
+      "name": "الاسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة مجموعة زبون"
+  },
+  "department": {
+    "table": {
+      "title": "الأقسام",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "modal_title": "إزالة القسم"
+    },
+    "details": {
+      "title": "الأقسام",
+      "name": "اسم {title}",
+      "status": "حالة {title}"
+    },
+    "form": {
+      "page_title": "الأقسام",
+      "form_header": "{type} القسم",
+      "add_department_title": "إضافة قسم",
+      "edit_department_title": "تعديل القسم",
+      "name": "الاسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة قسم"
+  },
+  "employee": {
+    "table": {
+      "title": "الموظفين",
+      "columns": {
+        "phone": "رقم الهاتف",
+        "name": "الاسم",
+        "department": "القسم",
+        "room": "رقم الغرفة",
+        "status": "الحالة",
+        "position": "المنصب",
+        "actions": "الإجراءات",
+        "created_at": "تاريخ الإنشاء"
+      },
+      "modal_title": {
+        "status": "تغيير حالة المستخدم",
+        "delete_file": "حذف ملف الموظف",
+        "profile_picture": "تحديث الصورة الشخصية",
+        "placeholderSection": {
+          "title": "هل أنت متأكد?",
+          "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
+        }
+      }
+    },
+    "details": {
+      "title": "الموظف",
+      "tabs": {
+        "details": "التفاصيل",
+        "files": "الملفات"
+      },
+      "main_details": "المعلومات الأساسية",
+      "more_info": "معلومات إضافية",
+      "name": " اسم {title}",
+      "starting_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "gender": "الجنس",
+      "department": "القسم",
+      "room_number": "رقم الغرفة",
+      "nationality": "الجنسية",
+      "position": "المنصب",
+      "phone_number": "رقم الهاتف",
+      "basic_salary": "الراتب الأساسي",
+      "address": "العنوان",
+      "employee_number": "رقم الموظف",
+      "last_employee_number": "الرقم الأخير للموظف",
+      "status": "الحالة",
+      "birth_date": "تاريخ الميلاد",
+      "employee_files": "الملفات ",
+      "upload_file": "تحميل ملف",
+      "upload": "تحميل",
+      "employee_status": "حالة الموظف",
+      "select_employee_status": "اختيار حالة الموظف",
+      "tabs_content_placeholder": {
+        "files": "لا يمتلك الموظف أية ملفات..."
+      }
+    },
+    "form": {
+      "page_title": "الموظف",
+      "step_1_title": "المعلومات الرئيسية للموظف",
+      "step_1_subtitle": "Step 1: المعلومات الرئيسية للموظف",
+      "step_1_abbr_title": "المعلومات الرئيسية",
+      "back_button": "الرجوع إلى واجهة الموظفين",
+      "first_name": "الاسم الأول",
+      "last_name": "الاسم الأخير",
+      "phone_number": "رقم الهاتف",
+      "birth_date": "تاريخ الميلاد",
+      "gender": "الجنس",
+      "city": "المدينة",
+      "address": "العنوان",
+      "department": "القسم",
+      "room": "الغرفة",
+      "starting_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "basic_salary": "الراتب الأساسي",
+      "nationality": "الجنسية",
+      "position": "المنصب",
+      "status": "الحالة",
+      "edit_step_1_title": "تعديل المعلومات الرئيسية للموظف",
+      "edit_submit": "تأكيد"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الموظف",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "group": "المجموعة",
+      "status": "الحالة",
+      "create_date": "تاريخ الإنشاء: ",
+      "from": "من: ",
+      "to": "إلى: ",
+      "quick_search": "الاسم/الرقم..."
+    },
+    "header_button": "إضافة موظف"
+  },
+  "employee_attendance": {
+    "table": {
+      "title": "جدول حضور الموظفين",
+      "columns": {
+        "employee_name": "اسم الموظف"
+      },
+      "attendance_details_modal": {
+        "title": "معلومات الحضور",
+        "date": "التاريخ:",
+        "status": "الحالة:",
+        "mark_attendance": "تسجيل الحضور",
+        "check_in": "تسجيل دخول الموظف",
+        "check_out": "تسجيل خروج الموظف",
+        "no_data": "لا يوجد بيانات",
+        "justify_attendance": "تبرير الغياب",
+        "unjustify_attendance": "عدم تبرير الغياب"
+      },
+      "mark_attendance_modal": {
+        "title": "تسجيل الحضور",
+        "date": "التاريخ:",
+        "status": "الحالة:",
+        "check_in": "تسجيل دخول الموظفين",
+        "check_out": "تسجيل خروج الموظفين"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الموظف",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "department": "القسم",
+      "position": "المنصب",
+      "status": "الحالة",
+      "quick_search": "الاسم/الرقم...",
+      "note": "ملاحظة:"
+    }
+  },
+  "employee_schedule": {
+    "table": {
+      "title": "جدول الدوام",
+      "columns": {
+        "employee_name": "اسم الموظف"
+      },
+      "modal": {
+        "title": "تعديل جدول الموظف",
+        "day": "Day:",
+        "start_time": "تاريخ البدء",
+        "end_time": "تاريخ الانتهاء",
+        "make_vacation": "تحديد اجازة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "department": "القسم",
+      "position": "المنصب",
+      "status": "الحالة",
+      "quick_search": "الاسم/الرقم..."
+    }
+  },
+  "item": {
+    "table": {
+      "title": "المواد",
+      "columns": {
+        "name": "الاسم",
+        "level_1": "المستوى 1",
+        "for_sale": "للبيع",
+        "level_2": "المستوى 2",
+        "quantity": "الكميًة",
+        "price": "السعر",
+        "cost": "التكلفة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء ",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": {
+        "item": "تغير حالة مادة",
+        "item_history": "تغيير حالة تاريخ مادة"
+      }
+    },
+    "details": {
+      "title": "مادة",
+      "tabs": {
+        "details": "تفاصيل",
+        "item_history": "تاريخ مادة"
+      },
+      "main_details": "المعلومات الرئيسية",
+      "name": "{title} الاسم",
+      "leve_1": " المستوى 1",
+      "leve_2": " المستوى 2",
+      "quantity": "كميًة المادة",
+      "min_quantity": "الحد الادنى لكميًة مادة",
+      "price": "السعر",
+      "cost": "التكلفة",
+      "description": "التوصيف",
+      "status": "حالة مادة",
+      "history_status": "حالة تاريخ مادة",
+      "employee_status": "حالة مادة",
+      "select_employee_status": "تحديد حالة مادة",
+      "item_history_table": {
+        "columns": {
+          "requester_name": " الشخص الطالب",
+          "item_quantity": "كميًة المادة",
+          "withdraw_item_price": "السعر",
+          "add_item_cost": "الكلفة",
+          "invoice_number": "رقم الفاتورة",
+          "created_at": "تاريخ الإنشاء",
+          "Image": "الفاتورة",
+          "status": "الحالة",
+          "type": "النوع",
+          "action": "تعديل الحالة "
+        }
+      },
+      "tabs_content_placeholder": {
+        "item_history": "ليس لدى المادة تاريخ..."
+      }
+    },
+    "form": {
+      "page_title": "المادة",
+      "form_header": "{type} المادة",
+      "add_item_title": "إضافة المادة",
+      "edit_item_title": "تعديل المادة",
+      "name": "الاسم",
+      "level_1": "المستوى 1",
+      "level_2": "المستوى 2",
+      "price": "السعر",
+      "cost": "الكلفة",
+      "quantity": "الكميًة",
+      "for_sale": "للبيع",
+      "yes": "نعم",
+      "no": "لا",
+      "min_quantity": "الحد الادنى للكميًة",
+      "description": "التوصيف",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات مادة",
+      "select_type": "تحديد النوع",
+      "in": "الداخل",
+      "out": "الخارج",
+      "level_1": "المستوى 1",
+      "level_2": "المستوى 2",
+      "create_date": "تاريخ الإنشاء: ",
+      "from": "من: ",
+      "to": "الى: ",
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "اضافة مادة"
+  },
+  "list_stock_movement": {
+    "table": {
+      "title": " حركة المخزون",
+      "columns": {
+        "item": "المادة",
+        "type": "النوع",
+        "quantity": "الكميًة",
+        "price": "السعر",
+        "cost": "التكلفة",
+        "requester": " الشخص الطالب",
+        "note": "ملاحظة",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": "  بواسطة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية معلومات المادة",
+      "select_level_1": "تحديد المستوى 1",
+      "select_level_2": "تحديد المستوى 2",
+      "select_item": "تحديد مادة",
+      "select_type": "تحديد النوع",
+      "in": "الداخل",
+      "out": "الخارج",
+      "level_1": "المستوى 1",
+      "level_2": "المستوى 2",
+      "create_date": "تاريخ الإنشاء: ",
+      "from": "من: ",
+      "to": "الى: "
+    },
+    "add_quantity_button": "إضافة كميًة",
+    "withdraw_quantity_button": " سحب كميًة"
+  },
+  "nationality": {
+    "table": {
+      "title": "الجنسيات",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "إزالة جنسية"
+    },
+    "details": {
+      "title": "الجنسيات",
+      "name": "اسم الجنسية",
+      "status": "حالة الجنسية"
+    },
+    "form": {
+      "page_title": "الجنسيات",
+      "form_header": "{type} الجنسية",
+      "add_nationality_title": "إضافة جنسية",
+      "edit_nationality_title": "تعديل جنسية",
+      "name": "الاسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة جنسية"
+  },
+  "position": {
+    "table": {
+      "title": "المنصب",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "description": "التوصيف",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "تغيير حالة منصب"
+    },
+    "details": {
+      "title": "منصب",
+      "name": "اسم المنصب",
+      "description": "توصيف المنصب",
+      "status": "حالة المنصب"
+    },
+    "form": {
+      "page_title": "المنصب",
+      "form_header": "{type} المنصب",
+      "add_position_title": "إضافة منصب",
+      "edit_position_title": "تعديل منصب",
+      "name": "الاسم",
+      "description": "التوصيف",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة منصب"
+  },
+  "room": {
+    "table": {
+      "title": "الغرف",
+      "columns": {
+        "id": "رقم المعرّف",
+        "number": "الرقم",
+        "floor": "الطابق",
+        "department": "القسم",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "إزالة غرفة"
+    },
+    "details": {
+      "title": "الغرف",
+      "number": "رقم الغرفة",
+      "floor": "طابق الغرفة",
+      "department": "قسم الغرفة",
+      "status": "حالة الغرفة"
+    },
+    "form": {
+      "page_title": "الغرف",
+      "form_header": "{type} الغرفة",
+      "add_room_title": "إضافة غرفة",
+      "edit_room_title": "تعديل غرفة",
+      "number": "الرقم",
+      "floor": "الطابق",
+      "department": "القسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الغرفة",
+      "number": "الرقم...",
+      "floor": "الطابق...",
+      "department": "القسم",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة غرفة"
+  },
+  "service": {
+    "table": {
+      "title": "الخدمات",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "duration": "المدّة",
+        "price": "السعر",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "إزالة خدمة"
+    },
+    "details": {
+      "title": "الخدمات",
+      "name": "اسم الخدمة",
+      "price": "سعر الخدمة",
+      "description": "توصيف الخدمة",
+      "estimated": "المدّة المقدرة",
+      "status": "حالة الخدمة"
+    },
+    "form": {
+      "page_title": "الخدمات",
+      "form_header": "{type} الخدمة",
+      "add_service_title": "إضافة خدمة",
+      "edit_service_title": "تعديل خدمة",
+      "name": "الاسم",
+      "desciption": "التوصيف",
+      "price": "السعر",
+      "duration": "المدّة",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الخدمة",
+      "name": "الاسم...",
+      "duration": "المدة...",
+      "price": "السعر...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة خدمة"
+  },
+  "settings": {
+    "form": {
+      "page_title": "تعديل الاعدادات",
+      "hr_section": "تعديل إعدادات الحضور",
+      "payroll_section": "تعديل إعدادات الراوتب",
+      "start_day": "يوم البدء",
+      "end_day": "يوم الانتهاء",
+      "start_time": "وقت البدء",
+      "end_time": "وقت الانتهاء",
+      "start_of_week": "بداية الاسبوع",
+      "late_tolerance": "التأخير المسموح به",
+      "deduction_factor": "معامل خصم التأخير",
+      "hr_cycle_start_day": "بداية دورة الموارد البشرية",
+      "unjustified_hours_round": "تقريب الساعات الغير مبررة"
+    }
+  },
+  "social_media": {
+    "table": {
+      "title": "وسائل التواصل الاجتماعي",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "icon": "الايقونة",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "إزالة وسائل تواصل اجتماعي"
+    },
+    "form": {
+      "page_title": "وسائل تواصل اجتماعي",
+      "form_header": "{type} وسائل تواصل اجتماعي",
+      "add_social_media_title": "إضافة وسائل تواصل اجتماعي",
+      "edit_social_media_title": "تعديل وسائل تواصل اجتماعي",
+      "name": "الاسم",
+      "facebook": "الفيسبوك",
+      "instagram": "الانستغرام",
+      "whatsapp": "الواتساب",
+      "snapchat": "السناب شات",
+      "icon": "الايقونة",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة وسيلة تواصل اجتماعي"
+  },
+  "speciality": {
+    "table": {
+      "title": "التخصصات",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "تغيير حالة التخصص"
+    },
+    "details": {
+      "title": "التخصصات",
+      "name": "اسم التخصص",
+      "status": "حالة التخصص"
+    },
+    "form": {
+      "page_title": "التخصصات",
+      "form_header": "{type} تخصص",
+      "add_speciality_title": "إضافة تخصص",
+      "edit_speciality_title": "تعديل تخصص",
+      "name": "الاسم",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة تخصص"
+  },
+  "user": {
+    "table": {
+      "title": "المستخدم",
+      "columns": {
+        "id": "رقم المعرّف",
+        "first_name": "الاسم الأول",
+        "last_name": "الأسم الاخير",
+        "gender": "الجنس",
+        "phone": "رقم الهاتف",
+        "room": "الغرفة #",
+        "city": "المدينة",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "place_holder": "لم يتم استرجاع اي بيانات...",
+      "modal_title": {
+        "remove": "إزالة مستخدم",
+        "status": "تغيير حالة مستخدم"
+      }
+    },
+    "details": {
+      "title": "حالة المستخدم",
+      "first_name": "الاسم الأول",
+      "last_name": "الاسم الاخير",
+      "gender": "الجنس",
+      "phone": "رقم الهاتف",
+      "city": "المدينة",
+      "room": "الغرفة ",
+      "status": "الحالة",
+      "address": "العنوان",
+      "birth_date": "تاريخ الميلاد"
+    },
+    "form": {
+      "page_title": "المستخدم",
+      "form_header": "{type} المستخدم",
+      "add_user_title": "إضافة مستخدم",
+      "edit_user_title": "تعديل مستخدم",
+      "first_name": "الاسم الأول",
+      "last_name": "الاسم الاخير",
+      "birth_date": "تاريخ الميلاد",
+      "phone_number": "رقم الهاتف",
+      "address": "العنوان",
+      "gender": "الجنس",
+      "room": "الغرفة",
+      "city": "المدينة",
+      "status": "الحالة"
+    },
+    "search_filter": {
+      "title": "تصفية معلومات المستخدم",
+      "name": "الاسم...",
+      "phone_number": "رقم الهاتف...",
+      "gender": "الجنس",
+      "room": "الغرفة",
+      "city": "المدينة",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة مستخدم"
+  },
+  "user_status": {
+    "table": {
+      "title": "حالة المستخدم",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "إزالة حالة مستخدم"
+    },
+    "details": {
+      "title": "حالات المستخدم",
+      "name": "اسم حالة المستخدم"
+    },
+    "form": {
+      "page_title": "حالات المستخدم",
+      "form_header": "{type} حالة المستخدم",
+      "add_user_status_title": "إضافة حالة مستخدم",
+      "edit_user_status_title": "تعديل حالة مستخدم",
+      "name": "الاسم"
+    },
+    "search_filter": {
+      "name": "الاسم..."
+    },
+    "header_button": "إضافة حالة مستخدم"
+  },
+  "withdraw_quantity": {
+    "form": {
+      "title": "سحب كميًة ",
+      "back_button": "العودة إلى صفحة المواد",
+      "level_1": "المستوى 1",
+      "select_level_1": "تحديد المستوى 1",
+      "level_2": "المستوى 2",
+      "select_level_2": "تحديد المستوى 2",
+      "item": "المادة",
+      "select_item": "تحديد مادة",
+      "item_quantity": "كميًة المادة",
+      "item_price": "سعر المادة",
+      "status": "الحالة",
+      "requester_type": "نوع الشخص الطالب ",
+      "employee": "موظف",
+      "contractor": "أخصائي",
+      "requester_name": "اسم الشخص الطالب",
+      "item_note": "ملاحظات ",
+      "submit": "تاكيد"
+    }
+  },
+  "dates": {
+    "days": {
+      "sunday": "الأحد",
+      "monday": "الاثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الاربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت"
+    },
+    "days_abbr": {
+      "sun": "أحد",
+      "mon": "اثنين",
+      "tue": "ثلاثاء",
+      "wed": "أربعاء",
+      "thu": "خميس",
+      "fri": "جمعة",
+      "sat": "سبت"
+    },
+    "months": {
+      "january": "كانون الثاني",
+      "february": "شباط",
+      "march": "آذار",
+      "april": "نيسان",
+      "may": "أيّار",
+      "june": "حزيران",
+      "july": "تموز",
+      "august": "آب",
+      "september": "ايلول",
+      "october": "تشرين الاول",
+      "november": "تشرين الثاني",
+      "december": "كانون الاول"
+    }
+  },
+  "attendance_status": {
+    "attend": "حضور",
+    "absence": "غياب",
+    "pending_absence": "غياب معلق",
+    "justified_absence": "غياب مبرر",
+    "unjustified_absence": "غياب غير مبرر",
+    "partial_absence": "غياب جزئي",
+    "pending_partial_absence": "غياب جزئي معلق",
+    "justified_partial_absence": "غياب جزئي مبرر",
+    "unjustified_partial_absence": "غياب جزئي غير مبرر",
+    "missing_check": "تسجيل غبر كامل",
+    "vacation": "إجازة",
+    "no_data": "لا يوجد بيانات"
+  },
+  "status": {
+    "active": "فعال",
+    "inactive": "غير فعال"
+  },
+  "boolean": {
+    "true": "نعم",
+    "false": "لا"
+  },
+  "variable_payment_types": {
+    "increment": "زيادة",
+    "decrement": "خصم"
+  },
+  "employee_variable_payment_statuses": {
+    "pending": "معلق",
+    "approved": "موافق",
+    "waiting": "انتظار",
+    "released": "محرر",
+    "inactive": "غير فعال"
+  },
+  "Wallet_movement_types": {
+    "out": "سحب",
+    "in": "إضافة"
+  },
+  "Wallet_movement_actions": {
+    "cash_out": "سحب مبلغ"
+  },
+  "variable_payment": {
+    "table": {
+      "title": "المتغيرات المالية",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "type": "النوع",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء",
+        "actions": "الإجراءات"
+      }
+    },
+    "form": {
+      "page_title": "المتغيرات المالية",
+      "form_header": "{type} متغير مالي",
+      "add_variable_payment_title": "إضافة متغير مالي",
+      "edit_variable_payment_title": "تعديل متغير مالي",
+      "name": "الاسم",
+      "status": "الحالة",
+      "type": "النوع"
+    },
+    "search_filter": {
+      "title": "تصفية المتغير المالي",
+      "type": "النوع",
+      "name": "الاسم...",
+      "status": "الحالة"
+    },
+    "header_button": "إضافة متغير مالي"
+  },
+  "employee_variable_payment": {
+    "table": {
+      "title": "المتغيرات المالية للموظفين",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "variable_payment": "المتغير المالي",
+        "amount": "القيمة",
+        "type": "النوع",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء",
+        "release_date": "تاريخ التحرير",
+        "due_date": "تاريخ الاستحقاق",
+        "created_by": "بواسطة",
+        "actions": "الإجراءات",
+        "note": "ملاحظة"
+      },
+      "modal_title": "تغيير حالة متغير مالي",
+      "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
+    },
+    "form": {
+      "page_title": "المتغيرات المالية للموظفين",
+      "form_header": "{type} متغير مالي",
+      "add_variable_payment_title": "إضافة متغير مالي لموظف",
+      "edit_variable_payment_title": "تعديل متغير مالي لموظف",
+      "employee_name": "اسم الموظف",
+      "variable_payment": "المتغير المالي",
+      "amount": "القيمة",
+      "status": "الحالة",
+      "due_at": "تاريخ الاستحقاق",
+      "note": "ملاحظة"
+    },
+    "search_filter": {
+      "title": "تصفية المتغير المالي",
+      "name": "اسم الموظف...",
+      "type": "النوع",
+      "status": "الحالة",
+      "date": "التاريخ:",
+      "from": "من: ",
+      "to": "إلى: "
+    },
+    "header_button": "إضافة متغير مالي لموظف"
+  },
+  "walletMovement": {
+    "table": {
+      "title": " قائمة المسحوبات ",
+      "columns": {
+        "contractor_name": "اسم الأخصائي",
+        "total": " المبلغ المسحوب",
+        "created_at": "تاريخ السحب",
+        "created_by": "سحب بواسطة",
+        "note": "ملاحظة"
+      },
+      "bulk_cash_out": {
+        "title": "قائمة السحب الكلي",
+        "header_button": "سحب"
+      }
+    },
+    "cash_out_form": {
+      "page_title": " سحب مبلغ",
+      "form_header": "سحب مبلغ ",
+      "contarctor": "اسم الأخصائي",
+      "cash_out_total": "المبلغ المراد سحبه",
+      "my_total": "المبلغ الحالي",
+      "note": "ملاحظة"
+    },
+    "search_filter": {
+      "title": "  تصفية المسحوبات",
+      "contractor_name": "اسم الأخصائي...",
+      "created_by": "سحب بواسطة",
+      "date": "التاريخ:",
+      "from": "من: ",
+      "to": "إلى: "
+    },
+    "header_button": "سحب مبلغ "
+  },
+  "generate_salaries": {
+    "table": {
+      "title": "توليد الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "basic_salary": "الراتب الأساسي",
+        "unjustified_hours": "ساعات التأخير الغير مبررة",
+        "attendance_deduction": "خصومات التأخير",
+        "variable_payments": "المتغيرات المالية",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "select_month_title": "يرجى تحديد الشهر المطلوب للمعاينة",
+        "select_month_subtitle": "يرجى تحديد الشهر المطلوب للمعاينة",
+        "no_month_title": "لا يوجد بيانات",
+        "no_month_subtitle": "لا توجد أية أشهر غير مولدة للمعاينة"
+      },
+      "footer": {
+        "salaries_sum": "المجموع النهائي: ",
+        "generate": "توليد الراوتب"
+      },
+      "approve_modal": {
+        "title": "الموافقة على المتغير المالي للموظف",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم تعديل حالة هذا المتغير المالي"
+      }
+    },
+    "header_button": "معاينة الراوتب"
+  },
+  "salary_statuses": {
+    "pending": "معلق",
+    "paid": "مدفوع",
+    "onhold": "قيد الانتظار",
+    "returned": "مرتجع"
+  },
+  "deliver_salaries": {
+    "table": {
+      "title": "تسليم الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "لا توجد أية رواتب للتسليم"
+      },
+      "approve_modal": {
+        "title": "إغلاق صندوق الراوتب",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم نقل جميع الراوتب الى قائمة الأمانات"
+      }
+    },
+    "drop_down": {
+      "pay": "تسديد"
+    },
+    "header_button": "إغلاق صندوق الراوتب"
+  },
+  "onhold_salaries": {
+    "table": {
+      "title": "صندوق الأمانات",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "لا توجد أية رواتب ضمن صندوق الأمانات"
+      }
+    },
+    "drop_down": {
+      "pay": "تسديد",
+      "return": "إرجاع"
+    }
+  },
+  "salary": {
+    "table": {
+      "title": "سجل الراوتب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "basic_salary": "الراتب الأساسي",
+        "earnings": "الأرباح الإضافية",
+        "variable_deductions": "الخصومات الإضافية",
+        "attendance_deduction": "خصومات التأخير",
+        "status": "الحالة",
+        "updated_at": "تاريخ التعديل",
+        "actions": "الإجراءات",
+        "net_salary": "الراتب الصافي"
+      },
+      "placeholder": {
+        "title": "لا يوجد بيانات",
+        "subtitle": "يرجى اختيار الشهر والسنة لعرض الرواتب"
+      }
+    },
+    "search_filter": {
+      "name": "اسم الموظف...",
+      "department": "القسم"
+    },
+    "drop_down": {
+      "view_payslip": "عرض كشف الراتب"
+    },
+    "header_button": "عرض الرواتب",
+    "payslip": {
+      "title": "كشف الراتب",
+      "header": "كشف الراتب لموظف",
+      "salary_month": "راتب شهر:",
+      "salary_month_duration": "فترة الدوام المحسوبة:",
+      "created_at": "تاريخ توليد الراتب:",
+      "updated_at": "تاريخ اخر تعديل للحالة:",
+      "unjustified_hours": "ساعات التأخير الغير مبررة",
+      "status": "الحالة",
+      "hour": "ساعة",
+      "basic_salary": "الراتب الأساسي",
+      "attendance_deduction": "خصومات التأخير",
+      "earnings": "المكتسبات",
+      "deductions": "الخصومات",
+      "table": {
+        "earnings": {
+          "columns": {
+            "name": "المتغير المالي",
+            "amount": "القيمة",
+            "basic_salary": "الراتب الأساسي",
+            "total_variable_payments_earnings": "الأرباح الإضافية",
+            "total_earnings": "مجموع المكتسبات"
+          }
+        },
+        "deductions": {
+          "columns": {
+            "name": "المتغير المالي",
+            "amount": "القيمة",
+            "attendance_deduction": "خصومات التأخير",
+            "total_variable_payments_deductions": "الخصومات الإضافية",
+            "total_deductions": "مجموع الخصومات"
+          }
+        },
+        "total": {
+          "columns": {
+            "total": "الراتب الصافي"
+          }
+        }
+      }
+    }
+  },
+  "unjustified_hours_rounding_options": {
+    "no_round": "بدون تقريب",
+    "nearest_15": "إلى أقرب 15 دقيقة",
+    "nearest_30": "إلى أقرب 30 دقيقة",
+    "nearest_60": "إلى أقرب 60 دقيقة"
+  }
+}

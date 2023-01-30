@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { useDropdown } from '/@src/composable/useDropdown'
 import { useContractorForm } from '/@src/stores/Contractor/contractorFormSteps';
 import { useDarkmode } from '/@src/stores/darkmode'
@@ -8,28 +9,26 @@ const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-
+const {t} = useI18n()
 const contractorForm = useContractorForm()
+const locale = useStorage('locale','ar')
+const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 </script>
 
 <template>
   <nav class="wizard-navigation">
-    <!-- 
-    <RouterLink to="/" class="wizard-brand">
-      <AnimatedLogo width="38px" height="38px" />
-    </RouterLink> -->
 
     <div class="">
       <span class="title-wrap">
-        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/contractor" darkOutlined
+        <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/contractor" darkOutlined
           color="white">
-          Back to contractors page
+          {{t('contractor.form.back_button')}}
         </VButton>
       </span>
     </div>
     <div class="navbar-item is-wizard-title wizard-brand">
       <span class="title-wrap">
-        Step {{ contractorForm.step }}: <span>{{ contractorForm.stepTitle }}</span>
+        <span>{{ contractorForm.stepTitle }}</span>
       </span>
     </div>
 

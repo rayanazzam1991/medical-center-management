@@ -6,10 +6,11 @@
 }
 </route>
 <script setup lang="ts">import { useHead } from '@vueuse/head';
+import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useContractorForm } from '../stores/Contractor/contractorFormSteps';
 import { useContractor } from '/@src/stores/Contractor/contractorStore';
-
+const {t} = useI18n()
 const contractorStore = useContractor()
 const contractorForm = useContractorForm()
 
@@ -25,7 +26,7 @@ useHead({
 
         <!--Wizard Progress Bar-->
         <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(contractorForm.step / 3) * 100" :max="100" />
+            :value="(contractorForm.step / 2) * 100" :max="100" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => contractorForm?.validateStepFn?.()">
@@ -40,14 +41,14 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous"
                                 :disabled="contractorForm.validateStepFn === null"
                                 :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ contractorForm.getStep() == 3 ? 'Submit & Finish' : 'Submit & Next'
-                                }}
+                                {{ contractorForm.getStep() == 2 ? t('contractor.form.submit_and_finish_button') : t('contractor.form.submit_and_next_button')
+}}
                             </VButton>
                         </VLoader>
                         <VButton v-if="contractorForm.skipable === true" class="wizard-button-previous"
                             :color="contractorForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => contractorForm?.skipStepFn?.()">
-                            {{ contractorForm.getStep() == 3 ? 'Skip & Finish' : 'Skip'
+                            {{ contractorForm.getStep() == 2 ? t('contractor.form.skip_and_finish_button') : t('contractor.form.skip_button')
                             }}
                         </VButton>
 
@@ -59,5 +60,5 @@ useHead({
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/wizardForm.scss';
+@import '/@src/scss/styles_rtl/wizardForm.scss';
 </style>

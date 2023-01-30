@@ -4,12 +4,15 @@ import { ErrorMessage, useForm } from 'vee-validate'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultDepartment, Department, defaultDepartmentSearchFilter } from '/@src/models/Others/Department/department'
-import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts } from '/@src/models/Others/Room/room'
+import { defaultDepartment, Department, defaultDepartmentSearchFilter, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts, RoomSearchFilter, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
 import sleep from "/@src/utils/sleep"
 import { useRoom } from '/@src/stores/Others/Room/roomStore'
+import { BaseConsts } from '/@src/utils/consts/base'
+import { Notyf } from 'notyf'
+import { useI18n } from 'vue-i18n'
 
 
 export default defineComponent({
@@ -23,19 +26,20 @@ export default defineComponent({
 
     emits: ['onSubmit'],
     setup(props, context) {
+        const {t} = useI18n()
         const viewWrapper = useViewWrapper()
-        viewWrapper.setPageTitle('Room')
+        viewWrapper.setPageTitle(t('room.form.page_title'))
         const head = useHead({
-            title: 'Room',
+            title: t('room.form.page_title'),
         })
         const roomStore = useRoom()
-        const notif = useNotyf()
+        const notif = useNotyf() as Notyf
         const formType = ref('')
         formType.value = props.formType
         const route = useRoute()
         const router = useRouter()
-
-        const pageTitle = formType.value + ' ' + viewWrapper.pageTitle
+        const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
+    const pageTitle = t('room.form.form_header' , {type : formTypeName});
         const backRoute = '/room'
         const currentRoom = ref(defaultRoom)
         const currentCreateUpdateRoom = ref(defaultCreateUpdateRoom)
@@ -52,19 +56,17 @@ export default defineComponent({
             }
             const { room } = await getRoom(roomId.value)
             currentRoom.value = room != undefined ? room : defaultRoom
-
         }
         const departmentsList = ref<Department[]>([])
         onMounted(async () => {
-            const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
+            let departmentSearchFilter  = {} as DepartmentSearchFilter
+            departmentSearchFilter.status = BaseConsts.ACTIVE
+            const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
         })
         onMounted(() => {
             getCurrentRoom()
-        }
-        )
-
-
+        })
         const validationSchema = roomvalidationSchema
 
         const { handleSubmit } = useForm({
@@ -81,6 +83,7 @@ export default defineComponent({
                 department_id: 0,
             },
         })
+
 
         const onSubmit = async (method: String) => {
             if (method == 'Add') {
@@ -108,7 +111,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(` ${viewWrapper.pageTitle} ${room.number} was added successfully`)
+                notif.success(t('toast.success.add'))
                 await sleep(500)
                 router.push({ path: `/room/${room.id}` })
             } else {
@@ -136,7 +139,7 @@ export default defineComponent({
 
                 // @ts-ignore
 
-                notif.success(`${viewWrapper.pageTitle} ${roomData.number} was edited successfully`)
+                notif.success(t('toast.success.edit'))
                 await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {
@@ -148,7 +151,7 @@ export default defineComponent({
 
         }
 
-        return { pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
+        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
     },
 
 
@@ -173,7 +176,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="number">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} number</VLabel>
+                                    <VLabel class="required">{{t('room.form.number')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
@@ -189,7 +192,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="floor">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} floor</VLabel>
+                                    <VLabel class="required">{{ t('room.form.floor') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.floor" type="number" autocomplete="given-floor" />
                                         <ErrorMessage class="help is-danger" name="floor" />
@@ -203,10 +206,10 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="department_id">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} department</VLabel>
+                                    <VLabel class="required">{{t('room.form.department')}}</VLabel>
                                     <VControl>
                                         <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
-                                            <VOption value="">Department</VOption>
+                                            <VOption value="">{{t('room.form.department')}}</VOption>
                                             <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
@@ -222,11 +225,11 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
+                                    <VLabel class="required">{{t('room.form.status')}}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"
-                                            :label="RoomConsts.showStatusName(0)" name="status" color="warning" />
+                                            :label="RoomConsts.showStatusName(0)" name="status" color="danger" />
 
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.ACTIVE"
                                             :label="RoomConsts.showStatusName(1)" name="status" color="success" />

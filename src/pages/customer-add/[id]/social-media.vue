@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { SocialMedia, defaultSocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
+import { SocialMedia, defaultSocialMediaSearchFilter, SocialMediaSearchFilter } from '/@src/models/CRM/SocialMedia/socialMedia';
 import { addSocialMediasToCustomer } from '/@src/services/CRM/Customer/customerService';
 import { getSocialMediasList } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useCustomerForm } from '/@src/stores/CRM/Customer/customerFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { BaseConsts } from '/@src/utils/consts/base';
 import sleep from "/@src/utils/sleep"
 
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -15,11 +19,11 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle(t('customer.form.step_3_title'))
 const head = useHead({
-    title: 'Customer',
+    title: t('customer.form.page_title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
     number: 4,
@@ -37,7 +41,6 @@ customerForm.setStep({
     },
     skipStepFn: async () => {
         customerForm.reset()
-        console.log(customerForm.data)
 
         router.push({
             path: `/customer/${customerId.value}`,
@@ -45,7 +48,7 @@ customerForm.setStep({
     }
 
 })
-const pageTitle = 'Step 5: Customer Social Media'
+const pageTitle = t('customer.form.step_3_subtitle')
 const socialMediasList = ref<SocialMedia[]>([])
 interface SocialMediaChecked {
     socialMedia: SocialMedia
@@ -54,8 +57,12 @@ interface SocialMediaChecked {
 }
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
 onMounted(async () => {
-    const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
+
+    let socialMediaSearchFilter: SocialMediaSearchFilter = defaultSocialMediaSearchFilter
+    socialMediaSearchFilter.status = BaseConsts.ACTIVE
+    const { socialMedias } = await getSocialMediasList(socialMediaSearchFilter)
     socialMediasList.value = socialMedias
+    
     for (let index = 0; index < socialMediasList.value.length; index++) {
         socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
@@ -82,7 +89,7 @@ const onSubmitAdd = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+        notif.success(t('toast.success.add'))
 
         return true
     }
@@ -90,7 +97,7 @@ const onSubmitAdd = async () => {
         // @ts-ignore
         await sleep(200);
 
-        notif.error(customer.success)
+        notif.error(customer.message)
 
     }
 
@@ -134,10 +141,8 @@ const onSubmitAdd = async () => {
                             <div class="column is-12">
                                 <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
-                                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-                                            socialMedia.socialMedia.name
-                                    }}
-                                        URL:
+                                    <VLabel class="required" v-if="socialMedia.checked">
+                                    {{t('customer.form.social_media_url', {social_media : socialMedia.socialMedia.name })}}
                                     </VLabel>
                                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                                         <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"

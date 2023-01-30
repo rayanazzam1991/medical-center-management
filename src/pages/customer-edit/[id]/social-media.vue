@@ -6,11 +6,12 @@ import { getCustomer, updateCustomer } from "/@src/services/CRM/Customer/custome
 import { getSocialMediasList } from "/@src/services/CRM/SocialMedia/socialMediaService"
 import { useCustomerForm } from "/@src/stores/CRM/Customer/customerFormSteps"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
-import { useForm } from "vee-validate";
-import { toFormValidator } from '@vee-validate/zod';
-import { z as zod } from 'zod';
+import { ErrorMessage, useForm } from "vee-validate";
+import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Customer/customerEditSocialMediaValidationSchema';
 import sleep from "/@src/utils/sleep"
-
+import { Notyf } from "notyf"
+import { useI18n } from "vue-i18n"
+const {t} = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -18,35 +19,27 @@ const customerId = ref<number>(0)
 // @ts-ignore
 customerId.value = route.params?.id
 
-viewWrapper.setPageTitle('Customer Social Media')
+viewWrapper.setPageTitle(t('customer.form.step_3_title'))
 const head = useHead({
-  title: 'Customer',
+  title: t('customer.form.page_title'),
 })
-const notif = useNotyf()
+const notif = useNotyf() as Notyf
 const customerForm = useCustomerForm()
 customerForm.setStep({
-  number: 4,
+  number: 3,
   canNavigate: true,
-  skipable: true,
   validateStepFn: async () => {
     var isValid = await onSubmitEdit()
     if (isValid) {
       customerForm.reset()
       router.push({
         path: `/customer/${customerId.value}`,
+        query: { tab: 'Social Media' }
       })
     }
-
   },
-  skipStepFn: async () => {
-    customerForm.reset()
-    router.push({
-      path: `/customer/${customerId.value}`,
-    })
-  }
 
 })
-const pageTitle = 'Step 4: Customer Social Media'
 const socialMediasList = ref<SocialMedia[]>([])
 
 interface SocialMediaChecked {
@@ -122,31 +115,15 @@ onMounted(async () => {
 
   }
 })
-// if (socialMediaChecked.length > 0) {
-//   for (let i = 0; i < socialMediaChecked.length; i++) {
-//     console.log("i", i)
-//     validationObject.socialMediaChecked.value[index] = zod
-//       .string({
-//         required_error: "This field is required",
-//       })
-//       .min(4, "This field is required");
 
-//   }
-// }
-//   validationObjectSchema = toFormValidator(zod
-//     .object(validationObject));
+const validationSchema = customerEditSocialMediaValidationSchema
 
-//     console.log("initialValuesObject",initialValuesObject)
+const { handleSubmit } = useForm({
+  validationSchema
+});
 
-// })
 
-// const validationSchema = validationObjectSchema;
-// const {handleSubmit} = useForm({
-//   validationSchema,
-//   initialValues:initialValuesObject
-// });
-
-const onSubmitEdit = async () => {
+const onSubmitEdit = handleSubmit(async () => {
   customerForm.customerSocialMediaForm.splice(0, customerForm.customerSocialMediaForm.length)
   for (let i = 0; i < socialMediaChecked.value.length; i++) {
     if (socialMediaChecked.value[i].checked == true) {
@@ -159,13 +136,12 @@ const onSubmitEdit = async () => {
 
   }
   customerForm.dataUpdate.is_completed = true
-  console.log(customerForm.userForm)
   const { customer, message, success } = await updateCustomer(customerId.value, customerForm.dataUpdate, customerForm.userForm, customerForm.medicalInfoForm, customerForm.customerSocialMediaForm)
   if (success) {
     // @ts-ignore
     await sleep(200);
 
-    notif.success(`${customerForm.userForm.first_name} ${customerForm.userForm.last_name} social medias was added successfully`)
+    notif.success(t('toast.success.add'))
 
     return true
   } else {
@@ -176,7 +152,7 @@ const onSubmitEdit = async () => {
 
   }
 
-}
+})
 
 
 </script>
@@ -189,7 +165,7 @@ const onSubmitEdit = async () => {
           <!--Fieldset-->
           <div class="form-fieldset">
             <div class="fieldset-heading">
-              <h4>{{ pageTitle }}</h4>
+              <h4>{{ t('customer.form.choose_social_media') }}</h4>
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
@@ -209,22 +185,49 @@ const onSubmitEdit = async () => {
           <!--Fieldset-->
           <div class="form-fieldset">
             <div class="columns is-multiline">
+              <!-- <div class="column is-12">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+
+                  <VField :key="socialMedia.socialMedia.id" :id="`social_media_${socialMedia.socialMedia.id}`">
+
+                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
+    socialMedia.socialMedia.name
+}}
+                      URL:
+                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput v-if="socialMedia.checked" type="text" placeholder="" autocomplete=""
+                        v-model="socialMedia.url" :key="socialMedia.socialMedia.id" />
+
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_${socialMedia.socialMedia.id}`" />
+
+
+                  </VField>
+
+                </div>
+              </div> -->
               <div class="column is-12">
-                <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
+                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+                  <VField v-if="socialMedia.checked" :key="socialMedia.socialMedia.id"
+                    :id="`social_media_url_${socialMedia.socialMedia.id}`">
 
-                  <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-                      socialMedia.socialMedia.name
-                  }}
-                    URL:
-                  </VLabel>
-                  <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
-                    <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"
-                      :key="socialMedia.socialMedia.id" />
+                    <VLabel class="required" v-if="socialMedia.checked">
+                    {{ t('customer.form.social_media_url', {social_media:socialMedia.socialMedia.name }) }}
+                                    </VLabel>
+                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                      <VInput :placeholder="socialMedia.url" class="input" type="text" v-model="socialMedia.url"
+                        :key="socialMedia.socialMedia.id" />
 
-                  </VControl>
+                    </VControl>
+                    <ErrorMessage class="help is-danger" :name="`social_media_url_${socialMedia.socialMedia.id}`" />
 
-                </VField>
+
+                  </VField>
+                </div>
+
               </div>
+
             </div>
           </div>
 

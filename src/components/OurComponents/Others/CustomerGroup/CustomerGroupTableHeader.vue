@@ -1,4 +1,5 @@
 <script lang="ts">
+import { useI18n } from "vue-i18n"
 import { defaultCustomerGroupSearchFilter, CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { defaultPagination } from "/@src/utils/response"
 
@@ -25,6 +26,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
+        const {t} = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -51,7 +53,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, CustomerGroupConsts }
+        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, CustomerGroupConsts }
     },
 
 
@@ -70,11 +72,11 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" placeholder="Name..." />
+                                <VInput v-model="searchName" type="text" :placeholder="t('customer_group.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">Status</VOption>
+                                    <VOption value="">{{t('customer_group.search_filter.status')}}</VOption>
                                     <VOption value="0">{{ CustomerGroupConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ CustomerGroupConsts.showStatusName(1) }}</VOption>
                                 </VSelect>

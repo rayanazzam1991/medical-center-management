@@ -4,6 +4,15 @@ import { CreateCustomer, defaultCreateCustomer, UpdateCustomer, defaultUpdateCus
 import { MedicalInfo, defaultMedicalInfo } from "/@src/models/CRM/MedicalInfo/medicalInfo"
 import { Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
+import ar from '/@src/locales/ar.json';
+import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
+})
 
 interface CustomerFormStepOptions {
   number: number
@@ -26,20 +35,17 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
   const dataUpdate = ref<UpdateCustomer>(defaultUpdateCustomer)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
   const medicalInfoForm = ref<MedicalInfo>(defaultMedicalInfo)
-  const profilePicture = ref<Media>(defaultCustomerProfilePic)
   const customerSocialMediaForm = ref<Array<CreateUpdateCustomerSocialMediaHelper>>([])
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
-        return 'Main Info'
+        return i18n.global.t('customer.form.step_1_abbr_title')
       case 2:
-        return 'Medical Info'
+        return i18n.global.t('customer.form.step_2_abbr_title')
       case 3:
-        return 'Medical File'
-      case 4:
-        return 'Social Media'
+        return i18n.global.t('customer.form.step_3_abbr_title')
       default:
-        return 'Customer Form'
+        return i18n.global.t('customer.form.step_1_abbr_title')
     }
   })
 
@@ -77,13 +83,14 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     data.value.user.city_id = 0
     data.value.user.room_id = 0
     data.value.user.user_status_id = 0
-    data.value.medical_info_id = 0
-    medicalInfoForm.value.allergic = ''
-    medicalInfoForm.value.blood_type = ''
-    medicalInfoForm.value.chronic_diseases = ''
-    medicalInfoForm.value.any_other_info = ''
-    medicalInfoForm.value.infectious_diseases = ''
-    medicalInfoForm.value.id = 0
+    data.value.medical_info_id = undefined
+    medicalInfoForm.value.allergic = undefined
+    medicalInfoForm.value.blood_type = undefined
+    medicalInfoForm.value.chronic_diseases = undefined
+    medicalInfoForm.value.any_other_info = undefined
+    medicalInfoForm.value.infectious_diseases = undefined
+    medicalInfoForm.value.smoking = undefined
+    medicalInfoForm.value.id = undefined
     customerSocialMediaForm.value = []
     dataUpdate.value.emergency_contact_name = ''
     dataUpdate.value.emergency_contact_phone = ''
@@ -114,7 +121,6 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     userForm,
     medicalInfoForm,
     customerSocialMediaForm,
-    profilePicture,
     setLoading,
     setStep,
     getStep,

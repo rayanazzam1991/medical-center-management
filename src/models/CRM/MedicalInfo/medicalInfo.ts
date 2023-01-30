@@ -17,11 +17,11 @@ export const defaultMedicalInfo: MedicalInfo = {
     chronic_diseases: undefined,
     infectious_diseases: undefined,
     any_other_info: undefined,
-    status: 1,
+    status: undefined,
     smoking: undefined,
 }
 class MedicalInfoConsts extends BaseConsts {
-    static readonly BLOOD_TYPES = ['A+','A-','B+','B-','AB+','AB-','O+','O-']
+    static readonly BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 }
 
-export {MedicalInfoConsts}
+export { MedicalInfoConsts }
