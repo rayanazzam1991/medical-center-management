@@ -1297,6 +1297,25 @@
     "boolean" : {
       "true" : "Yes" ,
       "false" : "No"
+    },
+    "attendance_justification": {
+      "table": {
+        "title": "Attendance Justifications",
+        "columns": {
+          "employee_name": "Employee Name",
+          "date": "Date",
+          "absence_hours": "Absence Hours",
+          "reason": "Reason",
+          "proof": "Proof",
+          "created_at": "Created At",
+          "created_by": "Created By"
+        }
+      },
+      "search_filter" : {
+        "name" : "Employee Name...",
+        "creator_name" : "Created By..."
+      }
     }
+  
 
 }
