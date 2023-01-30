@@ -267,29 +267,7 @@
           .center {
             .column {
               &:not(:last-child) {
-                border-right: 1px solid var(--dark-sidebar-light-12) !important;
-              }
-            }
-
-            .column-placeholder {
-              @include vuero-card--dark;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-.is_rtl .is-dark {
-  .navbar-subnavbar {
-    .navbar-subnavbar-inner {
-      .tab-content {
-        .tab-content-inner {
-          .center {
-            .column {
-              &:not(:last-child) {
-                border-left: 1px solid var(--dark-sidebar-light-12) !important;
+                border-right: 1px solid var(--dark-sidebar-light-12);
               }
             }
 

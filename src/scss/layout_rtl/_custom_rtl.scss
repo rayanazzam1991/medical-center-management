@@ -44,6 +44,11 @@
     .tab-content {
       .tab-content-inner {
         .center {
+          .column:not(:last-child) {
+            border-right: none !important;
+            border-left: 1px solid var(--fade-grey-dark-3);
+          }
+
           ul {
             li {
               a {
@@ -58,18 +63,21 @@
     }
   }
 }
-.navbar-subnavbar {
-  .navbar-subnavbar-inner {
-    .tab-content {
-      .tab-content-inner {
-        .center {
-          ul {
-            li {
-              a {
-                .fas {
-                  margin-left: 10px;
-                }
+
+.is-dark {
+  .navbar-subnavbar {
+    .navbar-subnavbar-inner {
+      .tab-content {
+        .tab-content-inner {
+          .center {
+            .column {
+              &:not(:last-child) {
+                border-left: 1px solid var(--dark-sidebar-light-12) !important;
               }
+            }
+
+            .column-placeholder {
+              @include vuero-card--dark;
             }
           }
         }
