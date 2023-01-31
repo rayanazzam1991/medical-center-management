@@ -66,6 +66,16 @@ const {t} = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+                <h4 class="column-heading">{{t('human_resources_subnav.attendance_justifications')}}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/attendance-justification">
+                      <i aria-hidden="true" class="lnir lnir-calender-alt-1"></i>
+                      <span>{{t('human_resources_subnav.attendance_justifications')}}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
               </div>
               <div class="column is-3">
                 <h4 class="column-heading">{{t('human_resources_subnav.employees_attendance')}}</h4>
