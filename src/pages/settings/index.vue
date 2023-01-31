@@ -44,6 +44,7 @@ export default defineComponent({
         const deduction_factor = ref('')
         const hr_cycle_start_day = ref('')
         const unjustified_hours_round = ref('')
+        const min_wallet_value = ref('')
         
 
         onMounted(async () => {
@@ -59,6 +60,7 @@ export default defineComponent({
             deduction_factor.value = settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value ?? ''
             hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
             unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
+            min_wallet_value.value = settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value ?? ''
 
             const [start_hour, start_minute, start_second] = settings_start_time.split(':')
             start_time.value = { hour: start_hour, minute: start_minute }
@@ -108,11 +110,15 @@ export default defineComponent({
                     return
                 }
             }
-            if((Number(deduction_factor.value) < 1 ) || !(Number.isInteger(deduction_factor.value))) {
+            if((Number(deduction_factor.value) < 1 ) || !(Number.isInteger(Number(deduction_factor.value)))) {
                 await sleep(500);
                     notif.error(t('toast.error.payroll.deduction_factor'))
                     return
-
+            }
+            if((Number(min_wallet_value.value) > 0 ) || !(Number.isInteger(Number(min_wallet_value.value)))) {
+                await sleep(500);
+                    notif.error(t('toast.error.contractor.min_wallet_value'))
+                    return
             }
             const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
             const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
@@ -144,6 +150,9 @@ export default defineComponent({
             if (unjustified_hours_round.value != settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value) {
                 updateSettings.push({ key: 'unjustified_hours_round', value: unjustified_hours_round.value })
             }
+            if (min_wallet_value.value != settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value) {
+                updateSettings.push({ key: 'min_wallet_value', value: min_wallet_value.value })
+            }
 
 
             const { message, success } = await editSettings(updateSettings);
@@ -161,7 +170,7 @@ export default defineComponent({
 
             }
         };
-        return { t, daysName,roundingOptions , UnjustifiedHoursRoundConsts, settingStore, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round , hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+        return { t, daysName,roundingOptions , UnjustifiedHoursRoundConsts, settingStore,min_wallet_value, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round , hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
     },
     components: { ErrorMessage }
 })
@@ -338,6 +347,23 @@ export default defineComponent({
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="unjustified_hours_round" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ t('settings.form.contractor_section') }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <h2 class="mb-3 required">{{ t('settings.form.min_wallet_value') }}</h2>
+                                <VField id="min_wallet_value">
+                                    <VControl>
+                                        <VInput v-model="min_wallet_value" type="number" />
+                                        <ErrorMessage class="help is-danger" name="min_wallet_value" />
                                     </VControl>
                                 </VField>
                             </div>

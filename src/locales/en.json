@@ -211,6 +211,9 @@
       "payroll": {
         "deduction_factor": "Deduction Factor must be a valid positive number and greater than or equal 1"
       },
+      "contractor": {
+        "min_wallet_value": "Minimum Wallet Value must be a valid negative number"
+      },
       "generate_salaries": "There are some negative net salaries. Please fix this issue and try again.",
       "employee_variable_payment": {
         "cant_edit": "Released and Inactive variable payments can't be edited"
@@ -1061,6 +1064,7 @@
       "page_title": "Edit Settings",
       "hr_section": "Edit HR/Attendance Settings",
       "payroll_section": "Edit HR/Payroll Settings",
+      "contractor_section": "Edit Contractor Settings",
       "start_day": "Start Day",
       "end_day": "End Day",
       "start_time": "Starting Time",
@@ -1069,7 +1073,8 @@
       "late_tolerance": "Late Tolerance",
       "deduction_factor": "Deduction Factor",
       "hr_cycle_start_day": "HR Cycle Starting Day",
-      "unjustified_hours_round": "Unjustified Hours Rounding"
+      "unjustified_hours_round": "Unjustified Hours Rounding",
+      "min_wallet_value": "Minimum Wallet Value"
     }
   },
   "social_media": {
