@@ -90,7 +90,6 @@ declare module '@vue/runtime-core' {
     MobileNavbar: typeof import('./src/components/navigation/mobile/MobileNavbar.vue')['default']
     MobileSidebar: typeof import('./src/components/navigation/mobile/MobileSidebar.vue')['default']
     MyDropDown: typeof import('./src/components/OurComponents/MyDropDown.vue')['default']
-    MyTippy: typeof import('./src/components/OurComponents/MyTippy.vue')['default']
     NationalityDetails: typeof import('./src/components/OurComponents/Others/Nationality/NationalityDetails.vue')['default']
     NationalityForm: typeof import('./src/components/OurComponents/Others/Nationality/NationalityForm.vue')['default']
     NationalityTableHeader: typeof import('./src/components/OurComponents/Others/Nationality/NationalityTableHeader.vue')['default']

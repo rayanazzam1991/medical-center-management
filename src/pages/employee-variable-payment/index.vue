@@ -172,7 +172,6 @@ const columns = {
     renderRow: (row: any) => {
 
       if (row?.status !== EmployeeVariablePaymentConsts.WAITING) {
-        console.log('this is not waiting', row?.status)
         return h(
           VTag,
           {
@@ -186,7 +185,6 @@ const columns = {
           }
         );
       } else {
-        console.log('this is waiting')
         return h(
           VTagTippy,
           {
