@@ -512,6 +512,12 @@ watch(
   }
 }
 
+.rtl {
+  .switch-segment {
+      flex-direction: row-reverse;
+  }
+}
+
 .is-dark {
   .switch-segment {
     .is-label {

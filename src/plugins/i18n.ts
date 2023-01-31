@@ -7,7 +7,8 @@
 import messages from '@intlify/vite-plugin-vue-i18n/messages'
 import { definePlugin } from '/@src/app'
 import { createI18n } from 'vue-i18n'
-
+import ar from '../locales/ar.json'
+import en from '../locales/en.json'
 
 export default definePlugin(({ app }) => {
 	const defaultLocale = useStorage('locale', 'ar')
@@ -17,7 +18,7 @@ export default definePlugin(({ app }) => {
 		legacy: false,
 		globalInjection: true,
 
-		messages,
+		messages: { ar, en },
 	})
 
 	app.use(i18n)
