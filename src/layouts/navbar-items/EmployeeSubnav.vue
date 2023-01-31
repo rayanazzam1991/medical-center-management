@@ -19,7 +19,7 @@ const {t} = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{t('human_resources_subnav.employee.employees')}}</h4>
                 <ul>
                   <li>
@@ -36,7 +36,7 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('human_resources_subnav.position.positions')}}</h4>
                 <ul>
                   <li>
@@ -53,9 +53,9 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
               </div>
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{t('human_resources_subnav.employees_schedule')}}</h4>
                 <ul>
                   <li>
@@ -65,7 +65,7 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('human_resources_subnav.employees_attendance')}}</h4>
                 <ul>
                   <li>
@@ -75,24 +75,24 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('human_resources_subnav.generate_salaries')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/generate-salaries">
-                      <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                      <i class="fas fa-money-check-alt mx-2" aria-hidden="true"></i>
                       <span>{{t('human_resources_subnav.generate_salaries')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                 </ul>
               </div>
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{t('human_resources_subnav.variable_payment.variable_payments')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/variable-payment">
-                      <i class="fas fa-money-check" aria-hidden="true"></i>                      
+                      <i class="fas fa-money-check mx-2" aria-hidden="true"></i>                      
                       <span>{{t('human_resources_subnav.variable_payment.variable_payments')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
@@ -104,12 +104,12 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('human_resources_subnav.employee_variable_payment.employee_variable_payments')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/employee-variable-payment">
-                      <i class="fas fa-money-check" aria-hidden="true"></i>                      
+                      <i class="fas fa-money-check mx-2" aria-hidden="true"></i>                      
                       <span>{{t('human_resources_subnav.employee_variable_payment.employee_variable_payments')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

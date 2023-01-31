@@ -193,7 +193,7 @@ const columns = {
     <VFlexPagination v-if="(roomsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getRoomsPerPage" />
-    <h6 v-if="roomsList.length != 0 && !roomStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="roomsList.length != 0 && !roomStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

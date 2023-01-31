@@ -187,7 +187,7 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getSalariesPerPage" />
-    <h6 v-if="salariesList.length != 0 && !salaryStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="salariesList.length != 0 && !salaryStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

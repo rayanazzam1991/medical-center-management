@@ -2,9 +2,11 @@
 import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
+import { Tippy } from 'vue-tippy';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import EditDropDown from '/@src/components/OurComponents/EditDropDown.vue';
 import NoViewDropDown from '/@src/components/OurComponents/NoViewDropDown.vue';
+import VTagTippy from '/@src/components/OurComponents/VTagTippy.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultEmployeeVariablePayment, defaultEmployeeVariablePaymentSearchFilter, defaultUpdateEmployeeVariablePayment, EmployeeVariablePayment, EmployeeVariablePaymentConsts, EmployeeVariablePaymentSearchFilter, UpdateEmployeeVariablePayment } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment';
 import { VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
@@ -167,23 +169,11 @@ const columns = {
   status: {
     align: 'center',
     label: t("employee_variable_payment.table.columns.status"),
+    renderRow: (row: any) => {
 
-    // renderRow: (row: any) =>
-    //   h(
-    //     VTag,
-    //     {
-    //       rounded: true,
-    //       color: EmployeeVariablePaymentConsts.getStatusColor(row?.status) ,
-    //     },
-    //     {
-    //       default() {
-    //         return EmployeeVariablePaymentConsts.getStatusName(row?.status)
-    //       },
-    //     }
-    //   ),
-    renderRow: (row: any) =>
-      h("div", {}, [
-        h(
+      if (row?.status !== EmployeeVariablePaymentConsts.WAITING) {
+        console.log('this is not waiting', row?.status)
+        return h(
           VTag,
           {
             rounded: true,
@@ -194,15 +184,25 @@ const columns = {
               return EmployeeVariablePaymentConsts.getStatusName(row?.status)
             },
           }
-        ),
+        );
+      } else {
+        console.log('this is waiting')
+        return h(
+          VTagTippy,
+          {
+            rounded: true,
+            tag_color: EmployeeVariablePaymentConsts.getStatusColor(row?.status),
+            tippy_content: t("employee_variable_payment.table.columns.due_date") + " : " + row?.due_date
+          },
+          {
+            default() {
+              return EmployeeVariablePaymentConsts.getStatusName(row?.status)
+            },
+          }
+        );
+      }
+    }
 
-        row?.due_date && row?.status == EmployeeVariablePaymentConsts.WAITING ? h('span', {
-          innerHTML: `<div class="tooltip ml-1"> ! <div class="tooltiptext"><p class="text-white">${t("employee_variable_payment.table.columns.due_date")} : ${row?.due_date}</p></div></div>`,
-
-        }) : undefined,
-
-      ]
-      ),
 
   },
   "note": {
@@ -214,15 +214,6 @@ const columns = {
           `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
 
       }),
-
-  },
-
-  "due_date": {
-    align: 'center',
-    sortable: true,
-    label: t("employee_variable_payment.table.columns.due_date"),
-    renderRow: (row: any) =>
-      h('span', row?.due_date && row?.status == EmployeeVariablePaymentConsts.WAITING ? row?.due_date : '-'),
 
   },
   "release_date": {
@@ -310,7 +301,8 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getEmployeeVariablePaymentsPerPage" />
-    <h6 v-if="employeeVariablePaymentsList.length != 0 && !employeeVariablePaymentStore?.loading">
+    <h6 class="pt-2 is-size-7"
+      v-if="employeeVariablePaymentsList.length != 0 && !employeeVariablePaymentStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page
@@ -324,6 +316,7 @@ const columns = {
       })}}</h6>
     <VPlaceloadText v-if="employeeVariablePaymentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
+
   <VModal :key="keyIncrement" :title="t('employee_variable_payment.table.modal_title')" :open="changeStatusPopUp"
     actions="center" @close="changeStatusPopUp = false">
     <template #content>

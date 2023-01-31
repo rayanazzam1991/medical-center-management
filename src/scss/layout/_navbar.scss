@@ -43,6 +43,10 @@
 
     &.is-active {
       display: block;
+      
+      .container {
+        height: 90% !important;
+      }
     }
 
     .tabs {
@@ -107,16 +111,20 @@
 
     .tab-content {
       padding: 0 20px;
+      height: 100%;
 
       .tab-content-inner {
         display: flex;
         align-items: stretch;
         min-height: 220px;
+        height: 100%;
+
+        
 
         .center {
           flex-grow: 2;
           max-width: 940px;
-          max-height: 220px;
+          max-height: 100%;
           margin: 0 auto;
           padding: 10px 20px 0;
 

@@ -196,7 +196,7 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getSocialMediasPerPage" />
-    <h6 v-if="socialMediasList.length != 0 && !socialMediaStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="socialMediasList.length != 0 && !socialMediaStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

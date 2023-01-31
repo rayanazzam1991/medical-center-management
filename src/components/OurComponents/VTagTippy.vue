@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 export type VTagColor =
   | 'primary'
   | 'secondary'
@@ -17,9 +18,10 @@ export type VTagColor =
 export type VTagSize = 'tiny'
 
 export interface VTagProps {
-  label?: string | number
-  color?: VTagColor
-  size?: VTagSize
+  tippy_content?: string
+  tag_label?: string
+  tag_color?: VTagColor
+  tag_size?: VTagSize
   rounded?: boolean
   curved?: boolean
   outlined?: boolean
@@ -28,26 +30,28 @@ export interface VTagProps {
 }
 
 const props = withDefaults(defineProps<VTagProps>(), {
-  label: undefined,
-  color: undefined,
-  size: undefined,
+  tag_label: undefined,
+  tag_color: undefined,
+  tag_size: undefined,
+  tippy_content: undefined
 })
 </script>
 
 <template>
-  <small
-    class="tag"
-    :class="[
-      props.color && 'is-' + props.color,
-      props.size && 'is-' + props.size,
+  <Tippy>
+    <small class="tag" :class="[
+      props.tag_color && 'is-' + props.tag_color,
+      props.tag_size && 'is-' + props.tag_size,
       props.rounded && 'is-rounded',
       props.curved && 'is-curved',
       props.outlined && 'is-outlined',
       props.elevated && 'is-elevated',
       props.remove && 'is-delete',
-    ]"
-    ><slot >{{ props.label }}</slot></small
-  >
+    ]">
+      <slot>{{ props.tag_label }}</slot>
+    </small>
+    <template #content> {{ props.tippy_content }} </template>
+  </Tippy>
 </template>
 
 <style lang="scss">
