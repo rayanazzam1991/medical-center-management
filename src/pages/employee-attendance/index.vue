@@ -1883,8 +1883,8 @@ Object.assign(columns29, columns28, columns29Sub)
                             class="has-text-primary">{{
                             t(`attendance_status.${
     AttendanceConsts.getAttendanceStatusName(selectedCell.status)
-        .replace(' ', '_').toLowerCase()
-} `)
+        .replaceAll(' ', '_').toLowerCase()
+}`)
                             }}</span></h2>
                 </div>
                 <div>

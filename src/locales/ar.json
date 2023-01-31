@@ -1,4 +1,4 @@
- {
+{
   "select-language": "تحديد اللغة",
   "cancel-label": "الغاء",
   "main_dashboard": "لوحة التحكم",
@@ -195,8 +195,8 @@
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
         "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
-        "required_reason" : "حقل السبب مطلوب",
-        "out_of_length_reason" : "السبب لا يمكن أن يكون أكبر من 255 محرف"
+        "required_reason": "حقل السبب مطلوب",
+        "out_of_length_reason": "السبب لا يمكن أن يكون أكبر من 255 محرف"
       }
     },
     "file": {
@@ -717,16 +717,15 @@
         "check_in": "تسجيل دخول الموظفين",
         "check_out": "تسجيل خروج الموظفين"
       },
-      "unjustify_attendance" : {
-        "title" : "عدم تبرير الحضور",
-        "confirmation" : "هل أنت متأكد؟",
-        "caution" : "سيتم تعديل حضور الموظف إلى غير مبرر"
+      "unjustify_attendance": {
+        "title": "عدم تبرير الحضور",
+        "confirmation": "هل أنت متأكد؟",
+        "caution": "سيتم تعديل حضور الموظف إلى غير مبرر"
       },
-      "justify_attendance" : {
-        "title" : "تبرير الحضور",
-        "reason" : "السبب",
-        "proof" : "الإثبات"
-
+      "justify_attendance": {
+        "title": "تبرير الحضور",
+        "reason": "السبب",
+        "proof": "الإثبات"
       }
     },
     "search_filter": {
@@ -1273,10 +1272,9 @@
         "created_by": " بواسطة"
       }
     },
-    "search_filter" : {
-      "name" : "اسم الموظف...",
-      "creator_name" : "بواسطة..."
+    "search_filter": {
+      "name": "اسم الموظف...",
+      "creator_name": "بواسطة..."
     }
   }
-
 }
