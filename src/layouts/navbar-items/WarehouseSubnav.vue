@@ -20,7 +20,7 @@ const {t,locale} = useI18n()
                 <div class="tab-content-inner">
                     <div class="center has-slimscroll">
                         <div class="columns">
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{ t('warehouse_subnav.category.categories') }}</h4>
                                 <ul>
                                     <li>
@@ -37,7 +37,7 @@ const {t,locale} = useI18n()
                                             <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
-                                </ul>
+                                </ul><br />
                                 <h4 class="column-heading">{{t('warehouse_subnav.item.items')}}</h4>
                                 <ul>
                                     <li>
@@ -56,7 +56,7 @@ const {t,locale} = useI18n()
                                     </li>
                                 </ul>
                             </div>
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{ t('warehouse_subnav.quantity.quantity') }}</h4>
                                 <ul>
                                     <li>
@@ -75,9 +75,7 @@ const {t,locale} = useI18n()
                                             <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
-                                </ul>
-                            </div>
-                            <div class="column is-3">
+                                </ul><br />
                                 <h4 class="column-heading">{{t('warehouse_subnav.item_history.item_history')}}</h4>
                                 <ul>
                                     <li>
@@ -88,6 +86,7 @@ const {t,locale} = useI18n()
                                         </RouterLink>
                                     </li>
                                 </ul>
+
                             </div>
                         </div>
                     </div>

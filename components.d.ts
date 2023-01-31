@@ -234,6 +234,7 @@ declare module '@vue/runtime-core' {
     VTabs: typeof import('./src/components/base/tabs/VTabs.vue')['default']
     VTag: typeof import('./src/components/base/tags/VTag.vue')['default']
     VTags: typeof import('./src/components/base/tags/VTags.vue')['default']
+    VTagTippy: typeof import('./src/components/OurComponents/VTagTippy.vue')['default']
     VTextarea: typeof import('./src/components/base/form/VTextarea.vue')['default']
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']

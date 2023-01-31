@@ -19,7 +19,7 @@ const {t} = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{ t('contractor_subnav.contractor.contractors') }}</h4>
                 <ul>
                   <li>
@@ -36,7 +36,7 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('contractor_subnav.speciality.specialities')}}</h4>
                 <ul>
                   <li>
@@ -55,7 +55,7 @@ const {t} = useI18n()
                   </li>
                 </ul>
               </div>
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{ t('contractor_subnav.wallet.wallet') }}</h4>
                 <ul>
                   <li>
@@ -79,7 +79,7 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
               </div>
             </div>
           </div>

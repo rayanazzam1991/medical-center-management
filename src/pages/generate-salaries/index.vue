@@ -89,7 +89,7 @@ const approveVariablePayment = async () => {
     if (success) {
         notif.dismissAll();
         await sleep(200);
-        notif.success(t('toast.success.generate_salaries'));
+        notif.success(t('toast.success.aprrove_variable_payment'));
         await getSalariesReview(selectedMonth.value)
         approveVariablePaymentPopUp.value = false
     } else {
@@ -252,9 +252,22 @@ const columns = {
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 
+.section-placeholder {
+    .placeholder-content {
+
+        width: 100%;
+
+        p {
+
+            max-width: 90% ;
+
+        }
+
+    }
+}
 .left {
     text-align: center;
 }

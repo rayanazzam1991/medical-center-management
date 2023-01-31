@@ -17,12 +17,12 @@ const emits = defineEmits<{
         <div class="tab-content-inner">
           <div class="center">
             <div class="columns">
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{t('crm_subnav.customer.customers')}}</h4>
                 <ul>
                   <li>
                     <RouterLink to="/customer">
-                      <i class="fas fa-user" aria-hidden="true"></i>
+                      <i class="fas fa-user mx-3" aria-hidden="true"></i>
                       <span>{{t('crm_subnav.customer.customers')}}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

@@ -211,6 +211,7 @@
       "unjustified": "تم التغيير لغير مبرر بنجاح",
       "withdraw": "تم السحب بنجاح",
       "generate_salaries": "تم توليد الراوتب بنجاح",
+      "aprrove_variable_payment": "تمت الموافقة على المتغير المالي بنجاح",
       "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
       "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح"
@@ -260,7 +261,7 @@
       "title": "لا يوجد بيانات",
       "subtitle": ""
     },
-    "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج"
+    "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج."
   },
   "images": {
     "image_name_placeholder": "اختيار صورة",
@@ -1451,7 +1452,7 @@
       "approve_modal": {
         "title": "الموافقة على المتغير المالي للموظف",
         "caution": "هل أنت متأكد؟",
-        "subtitle": "سيتم تعديل حالة هذا المتغير المالي"
+        "subtitle": "سيتم تغيير حالة هذا المتغير المالي إلى موافق."
       }
     },
     "header_button": "معاينة الراوتب"
