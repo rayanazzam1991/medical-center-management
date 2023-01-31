@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { JustificationRequestData, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function updateAttendanceApi(
@@ -14,9 +14,17 @@ export async function updateAttendanceApi(
 export async function justifyAttendanceApi(
   api: AxiosInstance,
   attendance_id: number,
-  isJustify: boolean
+  justificationData: JustificationRequestData
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.put(`attendance/${attendance_id}/justifyAttendance`, { "justify": isJustify })
+  const { data: response, headers } = await api.put(`attendance/${attendance_id}/justifyAttendance`, justificationData)
+
+  return { response }
+}
+export async function unjustifyAttendanceApi(
+  api: AxiosInstance,
+  attendance_id: number,
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(`attendance/${attendance_id}/unjustifyAttendance`)
 
   return { response }
 }

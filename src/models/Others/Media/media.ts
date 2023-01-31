@@ -20,6 +20,8 @@ class MediaConsts extends BaseConsts {
   static readonly ItemHistory_MODEL_ROUTE = "App\\Domain\\Warehouse\\Entity\\ItemHistory";
   static readonly CUSTOMER_MODEL_ROUTE = "App\\Domain\\CRM\\Entity\\Customer";
   static readonly MEDICAL_INFO_ROUTE = "App\\Domain\\CRM\\Entity\\Medical_info";
+  static readonly ATTENDANCE_JUSTIFICATION_ROUTE = "App\\Domain\\HR\\Attendance\\Entity\\AttendanceJustification";
+  
   static readonly MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL;
 
   public static getMediaIcon(mime_type: string): string {
