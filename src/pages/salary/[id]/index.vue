@@ -292,7 +292,7 @@ const totalTotalColumns = {
                 <VFlexTable :data="[{}]" :columns="salaryColumns" rounded reactive class="">
                 </VFlexTable>
                 <VFlexTable
-                  :style="moreVariablePayments.key == 'Deducations' ? `margin-bottom: ${moreVariablePayments.number * 68.5}px;` : ''"
+                  :style="moreVariablePayments.key == 'Deducations' ? `margin-bottom: ${moreVariablePayments.number * 56}px;` : ''"
                   :data="earningsVariablePayments" :columns="earningsColumns" rounded reactive class="mid-table">
                 </VFlexTable>
                 <VFlexTable subtable :data="totalEarningsData" :columns="totalEarningsColumns">
@@ -320,7 +320,7 @@ const totalTotalColumns = {
                 <VFlexTable :data="[{}]" :columns="attendanceDeductionColumns" rounded reactive>
                 </VFlexTable>
                 <VFlexTable
-                  :style="moreVariablePayments.key == 'Earnings' ? `margin-bottom: ${moreVariablePayments.number * 68.5}px;` : ''"
+                  :style="moreVariablePayments.key == 'Earnings' ? `margin-bottom: ${moreVariablePayments.number * 56}px;` : ''"
                   :data="deductionsVariablePayments" :columns="deductionsColumns" rounded reactive class="mid-table">
                 </VFlexTable>
                 <VFlexTable subtable :data="totalDeductionsData" :columns="totalDeductionsColumns">
@@ -369,6 +369,14 @@ const totalTotalColumns = {
 
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
+
+.flex-table{
+  .flex-table-item{
+
+    min-height: 48px !important;
+    
+  }
+}
 
 .net-salary {
 
