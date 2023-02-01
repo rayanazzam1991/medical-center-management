@@ -77,11 +77,11 @@ export default defineComponent({
                         <input v-model="searchName" type="text" class="input " :placeholder="t('inventory.search_filter.name')" />
                     </VControl>
                 </VField>
-                <!-- <VField class="column filter">
+                <VField class="column filter">
                     <VControl icon="feather:search">
                         <input v-model="searchActionBy" type="text" class="input " :placeholder="t('inventory.search_filter.action_by')" />
                     </VControl>
-                </VField> -->
+                </VField>
                 <VField class="column filter ">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">

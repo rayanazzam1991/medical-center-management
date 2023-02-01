@@ -8,7 +8,7 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'

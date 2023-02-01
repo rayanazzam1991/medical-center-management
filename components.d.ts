@@ -67,6 +67,7 @@ declare module '@vue/runtime-core' {
     FlightsDashboard: typeof import('./src/components/pages/dashboards/business/FlightsDashboard.vue')['default']
     FormHeader: typeof import('./src/components/OurComponents/FormHeader.vue')['default']
     FormLayoutSplit: typeof import('./src/components/pages/forms/form-layout/FormLayoutSplit.vue')['default']
+    FromMainInventoryNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItem/FromMainInventoryNavigation.vue')['default']
     GenerateSalariesHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/GenerateSalariesHeader.vue')['default']
     IconButton: typeof import('./src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue')['default']
     InventorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Inventory/InventorySearchFilterModel.vue')['default']

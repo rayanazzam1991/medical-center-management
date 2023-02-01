@@ -27,10 +27,8 @@ const default_per_page = ref(1)
 const selectedStatus = ref(0)
 
 // onMounted(async () => {
-    console.log(searchFilter.value,'filter')
     const { inventories, pagination } = await getInventoriesList(searchFilter.value)
     inventoriesList.value = inventories
-    console.log(inventoriesList.value,'data')
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
@@ -84,12 +82,21 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.items_count)
     },
-    created_at: {
+    last_updated_at: {
         align: 'center',
-        label : t('inventory.table.columns.created_at'),
+        label : t('inventory.table.columns.updated_at'),
         grow: true,
         renderRow: (row: any) =>
-            h('span', row?.created_at),
+            h('span', row?.last_updated_at),
+        searchable: true,
+        sortable: true,
+    },
+    last_action_by: {
+        align: 'center',
+        label : t('inventory.table.columns.action_by'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.last_action_by?.first_name+' '+row?.last_action_by?.last_name),
         searchable: true,
         sortable: true,
     },

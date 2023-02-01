@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { addQuantity, ChangeItemHistoryStatus, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, ChangeItemHistoryStatus, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function addQuantityApi(

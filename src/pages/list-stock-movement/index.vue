@@ -14,7 +14,7 @@ import {
     ItemHistorySearchFilter,
     ItemHsitoryConsts,
     itemHistory
-} from '/@src/models/Warehouse/ItemHistory/itemHistory'
+} from '../../models/Warehouse/ItemHistory/inventoryItemHistory'
 import { Notyf } from 'notyf'
 import { BaseConsts } from '/@src/utils/consts/base'
 import { useI18n } from 'vue-i18n'

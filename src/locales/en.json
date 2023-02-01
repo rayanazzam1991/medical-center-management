@@ -1527,6 +1527,8 @@
         "name": "inventory name ",
         "items_count": "items count",
         "created_at": "created at",
+        "updated_at": "updated at",
+        "action_by": "action by",
         "status": "status"
       }
     },

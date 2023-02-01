@@ -1,3 +1,5 @@
+import { defaultUser, User } from "../../Others/User/user"
+import { defaultInventoryItem, InventoryItem } from "../InventoryItem/inventoryItem"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Inventory {
@@ -8,6 +10,8 @@ export interface Inventory {
     contractor_id: number
     items_count: number
     created_at: string
+    last_updated_at: string
+    last_action_by: User
 }
 export interface InventorySearchFilter {
     name?: string,
@@ -27,6 +31,8 @@ export const defaultInventory: Inventory = {
     contractor_id: 0,
     items_count: 0,
     created_at: '',
+    last_updated_at: '',
+    last_action_by: defaultUser
 }
 export const defaultInventorySearchFilter: InventorySearchFilter = {
     name: undefined,

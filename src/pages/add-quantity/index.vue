@@ -2,7 +2,7 @@
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { addQuantity, defaultAddQuantityItem, ItemHsitoryConsts } from '/@src/models/Warehouse/ItemHistory/itemHistory';
+import { addQuantity, defaultAddQuantityItem, ItemHsitoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
 import { addQuantityService, addItemHistoryFile } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
 import { useItemHistoryForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';

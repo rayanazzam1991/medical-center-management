@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defaultItemHistorySearchFilter, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultItemHistorySearchFilter, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
 
 
