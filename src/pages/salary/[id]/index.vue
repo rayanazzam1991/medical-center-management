@@ -27,6 +27,7 @@ salaryId.value = route.params?.id as number ?? 0
 const currentSalary = ref(defaultSalary)
 const earningsVariablePayments = ref<EmployeeVariablePayment[]>([])
 const deductionsVariablePayments = ref<EmployeeVariablePayment[]>([])
+const moreVariablePayments = ref<{ key: 'Deducations' | 'Earnings', number: number }>({ key: 'Deducations', number: 0 })
 const getCurrentSalary = async () => {
   const { salary } = await getSalaryPayslip(salaryId.value)
   if (salary != undefined)
@@ -42,10 +43,19 @@ onMounted(async () => {
       deductionsVariablePayments.value.push(variablePayment)
     }
   });
+  if (earningsVariablePayments.value.length > deductionsVariablePayments.value.length)
+    moreVariablePayments.value.key = 'Earnings'
+  moreVariablePayments.value.number = Math.abs(earningsVariablePayments.value.length - deductionsVariablePayments.value.length)
 })
+
 const numberFormat = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+}
+const marginButton = () => {
+  return {
+    "margin-button": `120px !important;`
+  }
 }
 const unjustifiedColumns = {
   name: {
@@ -60,7 +70,7 @@ const unjustifiedColumns = {
     label: '',
     inverted: true,
     renderRow: (row: any) =>
-      h('span',  `${currentSalary.value.unjustified_hours} ${t('salary.payslip.hour')}`),
+      h('span', `${currentSalary.value.unjustified_hours} ${t('salary.payslip.hour')}`),
 
   },
 } as const
@@ -77,7 +87,7 @@ const statusColumns = {
     label: '',
     inverted: true,
     renderRow: (row: any) =>
-      h('span', { class :`has-text-${SalaryConsts.getStatusColor(currentSalary.value.status)}`} , SalaryConsts.getStatusName(currentSalary.value.status)),
+      h('span', { class: `has-text-${SalaryConsts.getStatusColor(currentSalary.value.status)}` }, SalaryConsts.getStatusName(currentSalary.value.status)),
 
   },
 } as const
@@ -94,7 +104,7 @@ const salaryColumns = {
     label: '',
     inverted: true,
     renderRow: (row: any) =>
-      h('span', { class :`has-text-primary`} , numberFormat(currentSalary.value.basic_salary)),
+      h('span', { class: `has-text-primary` }, numberFormat(currentSalary.value.basic_salary)),
 
   },
 } as const
@@ -111,7 +121,7 @@ const attendanceDeductionColumns = {
     label: '',
     inverted: true,
     renderRow: (row: any) =>
-      h('span', { class :`has-text-danger`} , numberFormat(currentSalary.value.attendance_deduction)),
+      h('span', { class: `has-text-danger` }, numberFormat(currentSalary.value.attendance_deduction)),
 
   },
 } as const
@@ -129,7 +139,7 @@ const earningsColumns = {
     label: '',
     inverted: true,
     renderRow: (row: any) =>
-      h('span', { class: 'has-text-primary' }, numberFormat(row?.amount)),
+      h('span', { class: 'has-text-success' }, numberFormat(row?.amount)),
 
   },
 } as const
@@ -230,102 +240,126 @@ const totalTotalColumns = {
 
   <div class="invoice-wrapper">
     <div class="invoice-header">
-      <div class="left">
+      <div class="left is-flex is-align-items-center">
+        <VIconButton class="ml-3" color="white" darkOutlined icon="feather:arrow-right" :to="{path : '/salary'}"/>
         <h3>{{ t('salary.payslip.header') }}</h3>
       </div>
     </div>
     <VLoader size="large" :active="salaryStore.loading">
-    <div class="invoice-body">
-      <div class="invoice-card">
-        <div class="invoice-section is-flex mb-0 pb-0">
-          <div class="meta">
-            <h3 class="mb-3">{{ currentSalary.employee.user.first_name }} {{ currentSalary.employee.user.last_name }}</h3>
-            <div>{{ currentSalary.employee.position.name }}</div>
-            <div>{{ currentSalary.employee.user.room.department?.name }}</div>
-            <div>{{ currentSalary.employee.user.phone_number }}</div>
+      <div class="invoice-body">
+        <div class="invoice-card">
+          <div class="invoice-section is-flex mb-0 pb-0">
+            <div class="meta">
+              <h3 class="mb-3">{{ currentSalary.employee.user.first_name }} {{ currentSalary.employee.user.last_name }}
+              </h3>
+              <div>{{ currentSalary.employee.position.name }}</div>
+              <div>{{ currentSalary.employee.user.room.department?.name }}</div>
+              <div>{{ currentSalary.employee.user.phone_number }}</div>
+            </div>
+            <div class="end">
+              <h3 class="mb-3">{{ t('salary.payslip.salary_month') }} {{ currentSalary.salary_month?.month_number }} /
+                {{
+                  currentSalary.salary_month?.year
+                }} </h3>
+              <div>{{ t('salary.payslip.salary_month_duration') }} {{ currentSalary.salary_month?.generated_from }} ← {{
+                currentSalary.salary_month?.generated_to
+              }} </div>
+              <div>{{ t('salary.payslip.created_at') }} {{
+                currentSalary.created_at ? currentSalary.created_at : '-'
+              }}</div>
+              <div>{{ t('salary.payslip.updated_at') }} {{
+                currentSalary.updated_at ? currentSalary.updated_at : '-'
+              }}</div>
+            </div>
           </div>
-          <div class="end">
-            <h3 class="mb-3">{{ t('salary.payslip.salary_month') }} {{ currentSalary.salary_month?.month_number }} / {{
-              currentSalary.salary_month?.year
-            }} </h3>
-            <div>{{ t('salary.payslip.salary_month_duration') }} {{ currentSalary.salary_month?.generated_from }} - {{
-              currentSalary.salary_month?.generated_to
-            }} </div>
-            <div>{{ t('salary.payslip.created_at') }} {{
-              currentSalary.created_at ? currentSalary.created_at : '-'
-            }}</div>
-            <div>{{ t('salary.payslip.updated_at') }} {{
-              currentSalary.updated_at ? currentSalary.updated_at : '-'
-            }}</div>
-          </div>
-        </div>
 
-        <div class="invoice-section is-bordered">
-          <VFlexTable :data="[{}]" :columns="statusColumns" rounded reactive>
-          </VFlexTable>
-          <VFlexTable :data="[{}]" :columns="unjustifiedColumns" rounded reactive class="mid-table">
-          </VFlexTable>
-        </div>
-        <div class="invoice-section is-flex mb-0 pb-0">
-          <div class="meta">
-            <h3 class="mb-3">{{t('salary.payslip.earnings')  }}</h3>
+          <div class="invoice-section is-bordered py-2">
+            <VFlexTable :data="[{}]" :columns="statusColumns" rounded reactive>
+            </VFlexTable>
+            <VFlexTable :data="[{}]" :columns="unjustifiedColumns" rounded reactive class="mid-table">
+            </VFlexTable>
           </div>
-        </div>
-        <div class="invoice-section mt-0 pt-0 is-bordered">
-          <VFlexTable :data="[{}]" :columns="salaryColumns" rounded reactive class="">
-          </VFlexTable>
-          <VFlexTable :data="earningsVariablePayments" :columns="earningsColumns" rounded reactive class="mid-table">
-          </VFlexTable>
-          <VFlexTable subtable :data="totalEarningsData" :columns="totalEarningsColumns">
-            <template #body-cell="{ column, value, row }">
-              <template v-if="column.key === 'label'">
-                <span class="table-label">{{ value }}</span>
-              </template>
-              <template v-else-if="column.key === 'value' && row.label === 'Total'">
-                <span class="table-total is-bigger">{{ value }}</span>
-              </template>
-              <template v-else>
-                <span class="table-total is-bigger">{{ value }}</span>
-              </template>
-            </template>
-          </VFlexTable>
-        </div>
-        <div class="invoice-section is-flex mb-0 pb-0">
-          <div class="meta">
-            <h3 class="mb-3">{{t('salary.payslip.deductions') }}</h3>
+          <div class="columns is=multiline mb-0">
+            <div class="column is-6 pl-0 pb-0">
+
+              <div class="invoice-section is-flex mb-0 pb-0">
+                <div class="meta">
+                  <h3 class="mb-3">{{ t('salary.payslip.earnings') }}</h3>
+                </div>
+              </div>
+
+              <div class="invoice-section mt-0 pt-0 pb-2">
+                <VFlexTable :data="[{}]" :columns="salaryColumns" rounded reactive class="">
+                </VFlexTable>
+                <VFlexTable
+                  :style="moreVariablePayments.key == 'Deducations' ? `margin-bottom: ${moreVariablePayments.number * 68.5}px;` : ''"
+                  :data="earningsVariablePayments" :columns="earningsColumns" rounded reactive class="mid-table">
+                </VFlexTable>
+                <VFlexTable subtable :data="totalEarningsData" :columns="totalEarningsColumns">
+                  <template #body-cell="{ column, value, row }">
+                    <template v-if="column.key === 'label'">
+                      <span class="table-label">{{ value }}</span>
+                    </template>
+                    <template v-else-if="column.key === 'value' && row.label === 'Total'">
+                      <span class="table-total is-bigger">{{ value }}</span>
+                    </template>
+                    <template v-else>
+                      <span class="table-total is-bigger">{{ value }}</span>
+                    </template>
+                  </template>
+                </VFlexTable>
+              </div>
+            </div>
+            <div class="column is-6 pr-0 pb-0">
+              <div class="invoice-section is-flex mb-0 pb-0">
+                <div class="meta">
+                  <h3 class="mb-3">{{ t('salary.payslip.deductions') }}</h3>
+                </div>
+              </div>
+              <div class="invoice-section mt-0 pt-0 pb-2">
+                <VFlexTable :data="[{}]" :columns="attendanceDeductionColumns" rounded reactive>
+                </VFlexTable>
+                <VFlexTable
+                  :style="moreVariablePayments.key == 'Earnings' ? `margin-bottom: ${moreVariablePayments.number * 68.5}px;` : ''"
+                  :data="deductionsVariablePayments" :columns="deductionsColumns" rounded reactive class="mid-table">
+                </VFlexTable>
+                <VFlexTable subtable :data="totalDeductionsData" :columns="totalDeductionsColumns">
+                  <template #body-cell="{ column, value, row }">
+                    <template v-if="column.key === 'label'">
+                      <span class="table-label is-bigger">{{ value }}</span>
+                    </template>
+                    <template v-else>
+                      <span class="table-total is-bigger">{{ value }}</span>
+                    </template>
+                  </template>
+                </VFlexTable>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="invoice-section mt-0 pt-0 is-bordered">
-          <VFlexTable :data="[{}]" :columns="attendanceDeductionColumns" rounded reactive>
-          </VFlexTable>
-          <VFlexTable :data="deductionsVariablePayments" :columns="deductionsColumns" rounded reactive class="mid-table">
-          </VFlexTable>
-          <VFlexTable subtable :data="totalDeductionsData" :columns="totalDeductionsColumns">
-            <template #body-cell="{ column, value, row }">
-              <template v-if="column.key === 'label'">
-                <span class="table-label">{{ value }}</span>
+
+          <div class="invoice-section py-4 net-salary ">
+            <div class="columns">
+              <div class="column is-6">
+                
+              </div>
+              <div class="column is-6">
+                <VFlexTable subtable :data="totalData" :columns="totalTotalColumns" class="mid-table">
+                <template #body-cell="{ column, value, row }">
+                <template v-if="column.key === 'value' && row.label === 'Total'">
+                  <span class="table-total is-bigger">{{ value }}</span>
+                </template>
+                <template v-else>
+                  <span class="table-total is-bigger">{{ value }}</span>
+                </template>
               </template>
-              <template v-else>
-                <span class="table-total is-bigger">{{ value }}</span>
-              </template>
-            </template>
-          </VFlexTable>
-        </div>
-        <div class="invoice-section ">
-          <VFlexTable subtable :data="totalData" :columns="totalTotalColumns">
-            <template #body-cell="{ column, value, row }">
-              <template v-if="column.key === 'value' && row.label === 'Total'">
-                <span class="table-total is-bigger">{{ value }}</span>
-              </template>
-              <template v-else>
-                <span class="table-total is-bigger">{{ value }}</span>
-              </template>
-            </template>
-          </VFlexTable>
+            </VFlexTable>
+
+              </div>
+          </div>
+          </div>
         </div>
       </div>
-    </div>
-  </VLoader>
+    </VLoader>
 
   </div>
 
@@ -336,9 +370,14 @@ const totalTotalColumns = {
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
 
-.mid-table{
+.net-salary {
+
+  border-top: 1px solid var(--fade-grey-dark-3);
+}
+
+.mid-table {
   .flex-table-header {
-    display: none ;
+    display: none;
   }
 }
 
@@ -436,7 +475,7 @@ const totalTotalColumns = {
           .end {
             margin-left: 0;
             text-align: right;
-            
+
             &.is-left {
               text-align: left;
               max-width: 300px;
@@ -454,6 +493,7 @@ const totalTotalColumns = {
               font-weight: 600;
               line-height: 1;
             }
+
             div {
               display: block;
               color: var(--light-text);
@@ -580,7 +620,7 @@ const totalTotalColumns = {
         .flex-table-item {
           .flex-table-cell {
             &.is-grow {
-              > span {
+              >span {
                 margin-left: 0;
               }
             }

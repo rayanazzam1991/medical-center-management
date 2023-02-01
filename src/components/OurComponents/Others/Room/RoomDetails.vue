@@ -60,7 +60,7 @@ const toEdit = () => {
                             <span>{{ currentRoom.floor }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('room.details.department?')}}:</h4>
+                            <h4 class="margin-bottom"> {{t('room.details.department')}}:</h4>
                             <span>{{ currentRoom.department?.name }}</span>
                         </div>
                         <div class="column is-12">
