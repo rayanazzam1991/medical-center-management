@@ -113,7 +113,7 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/settings">
-                                            <i class="fas fa-wrench" aria-hidden="true"></i>
+                                            <i class="fas fa-wrench mx-2" aria-hidden="true"></i>
                                             <span>{{ t('others_subnav.setting.edit_settings')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>

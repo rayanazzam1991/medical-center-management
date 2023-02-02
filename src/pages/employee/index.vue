@@ -8,7 +8,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
 import { ErrorMessage } from 'vee-validate'
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
@@ -157,22 +157,11 @@ const columns = {
                 VTag,
                 {
                     rounded: true,
-                    color:
-                        row?.user?.status?.name === 'Pending'
-                            ? 'orange'
-                            : row?.user?.status?.name === 'Waiting'
-                                ? 'blue'
-                                : row?.user?.status?.name === 'Approved'
-                                    ? 'green'
-                                    : row?.user?.status?.name === 'Deleted'
-                                        ? 'warning'
-                                        : row?.user?.status?.name === 'Busy'
-                                            ? 'danger'
-                                            : undefined,
+                    color: UserStatusConsts.getStatusColor(row?.user?.status?.id)
                 },
                 {
                     default() {
-                        return row?.user?.status?.name
+                        return UserStatusConsts.getStatusName(row?.user?.status?.id)
                     },
                 }
             ),

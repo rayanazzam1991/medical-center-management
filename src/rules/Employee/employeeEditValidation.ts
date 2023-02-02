@@ -24,17 +24,18 @@ const employeeEditvalidationSchema = toFormValidator(zod
             zod
                 .string({})
                 .min(1, i18n.global.t('validation.required')),
+
         birth_date:
             zod
                 .preprocess(
-                    (input) => {
-                        if (typeof input == "string" || input instanceof Date) return new Date(input)
+                    val => val === undefined ? "" : val,
+                    zod.string({
+                        errorMap: (issue, { defaultError }) => ({
+                            message: issue.code === "invalid_date" ? i18n.global.t('validation.date.format') : i18n.global.t('validation.required'),
+                        }),
+                    })
+                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, i18n.global.t('validation.date.format'))
 
-                    },
-                    zod.date({
-                        required_error: i18n.global.t('validation.date.required_error'),
-                        invalid_type_error: i18n.global.t('validation.date.invalid_type_error'),
-                    }),
                 ),
         phone_number:
             zod
@@ -90,10 +91,12 @@ const employeeEditvalidationSchema = toFormValidator(zod
 
                     },
                     zod.date({
-                        required_error: i18n.global.t('validation.date.required_error'),
-                        invalid_type_error: i18n.global.t('validation.date.invalid_type_error'),
+                        errorMap: (issue, { defaultError }) => ({
+                            message: issue.code === "invalid_date" ? i18n.global.t('validation.date.format') : i18n.global.t('validation.required'),
+                        }),
                     }),
                 ),
+
         end_date:
             zod
                 .preprocess(

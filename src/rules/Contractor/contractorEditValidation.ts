@@ -28,9 +28,14 @@ const contractorEditvalidationSchema = toFormValidator(zod
         birth_date:
             zod
                 .preprocess(
-                    val => val == undefined ? "" : val,
-                    zod.string({ required_error: i18n.global.t('validation.required') })
-                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$|^$/, i18n.global.t('validation.date.format'))
+                    val => val === undefined ? "" : val,
+                    zod.string({
+                        errorMap: (issue, { defaultError }) => ({
+                            message: issue.code === "invalid_date" ? i18n.global.t('validation.date.format') : i18n.global.t('validation.required'),
+                        }),
+                    })
+                        .regex(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/, i18n.global.t('validation.date.format'))
+
                 ),
         phone_number:
             zod
@@ -98,8 +103,10 @@ const contractorEditvalidationSchema = toFormValidator(zod
 
                     },
                     zod.date({
-                        invalid_type_error: i18n.global.t('validation.date.invalid_type_error'),
-                    })
+                        errorMap: (issue, { defaultError }) => ({
+                            message: issue.code === "invalid_date" ? i18n.global.t('validation.date.format') : i18n.global.t('validation.required'),
+                        }),
+                    }),
                 ),
         end_date:
             zod

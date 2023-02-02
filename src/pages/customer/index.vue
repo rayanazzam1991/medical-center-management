@@ -9,7 +9,7 @@ import { defaultPagination } from '/@src/utils/response'
 import { useCustomer } from '/@src/stores/CRM/Customer/customerStore'
 import { ErrorMessage } from 'vee-validate'
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus'
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import sleep from '/@src/utils/sleep'
@@ -137,22 +137,11 @@ const columns = {
                 VTag,
                 {
                     rounded: true,
-                    color:
-                        row?.user?.status?.name === 'Pending'
-                            ? 'orange'
-                            : row?.user?.status?.name === 'Waiting'
-                                ? 'blue'
-                                : row?.user?.status?.name === 'Approved'
-                                    ? 'green'
-                                    : row?.user?.status?.name === 'Deleted'
-                                        ? 'warning'
-                                        : row?.user?.status?.name === 'Busy'
-                                            ? 'danger'
-                                            : undefined,
+                    color: UserStatusConsts.getStatusColor(row?.user?.status?.id) 
                 },
                 {
                     default() {
-                        return row?.user?.status?.name
+                        return UserStatusConsts.getStatusName(row?.user?.status?.id) 
                     },
                 }
             ),
