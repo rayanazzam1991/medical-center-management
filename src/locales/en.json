@@ -1554,41 +1554,41 @@
             "basic_salary": "Basic Salary",
             "total_variable_payments_earnings": "Total variable payments earnings",
             "total_earnings": "Total earnings"
-          },
-          "inventory": {
-            "table": {
-              "title": "list sub inventories",
-              "columns": {
-                "name": "inventory name ",
-                "items_count": "items count",
-                "created_at": "created at",
-                "updated_at": "updated at",
-                "action_by": "action by",
-                "status": "status"
-              }
-            },
-            "deductions": {
-              "columns": {
-                "name": "Variable Payment",
-                "amount": "Amount",
-                "attendance_deduction": "Attendance Deduction",
-                "total_variable_payments_deductions": "Total variable payments deductions",
-                "total_deductions": "Total deductions"
-              }
-            },
-            "total": {
-              "columns": {
-                "total": "Net Salary"
-              }
-            }
+          }
+        },
+        "deductions": {
+          "columns": {
+            "name": "Variable Payment",
+            "amount": "Amount",
+            "attendance_deduction": "Attendance Deduction",
+            "total_variable_payments_deductions": "Total variable payments deductions",
+            "total_deductions": "Total deductions"
+          }
+        },
+        "total": {
+          "columns": {
+            "total": "Net Salary"
           }
         }
-      },
-      "unjustified_hours_rounding_options": {
-        "no_round": "No Rounding",
-        "nearest_15": "To Nearest 15 Min",
-        "nearest_30": "To Nearest 30 Min",
-        "nearest_60": "To Nearest 60 Min"
+      }
+    }
+  },
+  "unjustified_hours_rounding_options": {
+    "no_round": "No Rounding",
+    "nearest_15": "To Nearest 15 Min",
+    "nearest_30": "To Nearest 30 Min",
+    "nearest_60": "To Nearest 60 Min"
+  },
+  "inventory": {
+    "table": {
+      "title": "list sub inventories",
+      "columns": {
+        "name": "inventory name ",
+        "items_count": "items count",
+        "created_at": "created at",
+        "updated_at": "updated at",
+        "action_by": "action by",
+        "status": "status"
       }
     },
     "search_filter": {
