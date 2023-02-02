@@ -11,6 +11,8 @@ const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
 const {t} = useI18n()
 const inventoryItemForm = useInventoryItemForm()
+const locale = useStorage('locale','ar')
+const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 </script>
 
 <template>
@@ -18,9 +20,9 @@ const inventoryItemForm = useInventoryItemForm()
 
         <div class="">
             <span class="title-wrap">
-                <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/item" darkOutlined
+                <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/inventory" darkOutlined
                     color="white">
-                    {{t('add_quantity.form.back_button')}}
+                    {{t('inventoryItem.back_button')}}
                 </VButton>
             </span>
         </div>
@@ -32,7 +34,7 @@ const inventoryItemForm = useInventoryItemForm()
 
         <div class="navbar-item is-dark-mode">
             <div class="navbar-icon">
-                <label class="dark-mode">
+                <label class="dark-mode ">
                     <input data-cy="dark-mode-toggle" type="checkbox" :checked="!darkmode.isDark"
                         @change="darkmode.onChange" />
                     <span></span>

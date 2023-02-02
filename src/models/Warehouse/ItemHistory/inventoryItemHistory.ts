@@ -58,11 +58,13 @@ export interface ChangeItemHistoryStatus {
 export interface CreateInventoryItemHistoryMovement {
     from_inventory: Inventory
     to_inventory: Inventory
+    note?: string
 }
 
 export const defaultCreateInventoryItemHistoryMovement: CreateInventoryItemHistoryMovement = {
     from_inventory: defaultInventory,
-    to_inventory: defaultInventory
+    to_inventory: defaultInventory,
+    note: ''
 }
 
 export const defaultItemHistory: itemHistory = {

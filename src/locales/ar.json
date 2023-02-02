@@ -314,7 +314,7 @@
       "level_2": "المستوى الثاني",
       "parent": "الرئيسية",
       "category_type": "نوع ",
-      "for_sale": "للبيع",
+      "for_sale": "قابل للبيع",
       "to_consume": "للاستهلاك",
       "status": "الحالة"
     },
@@ -802,7 +802,7 @@
       "columns": {
         "name": "الاسم",
         "level_1": "المستوى 1",
-        "for_sale": "للبيع",
+        "for_sale": "قابل للبيع",
         "level_2": "المستوى 2",
         "quantity": "الكميًة",
         "price": "السعر",
@@ -865,7 +865,7 @@
       "price": "السعر",
       "cost": "الكلفة",
       "quantity": "الكميًة",
-      "for_sale": "للبيع",
+      "for_sale": "قابل للبيع",
       "yes": "نعم",
       "no": "لا",
       "min_quantity": "الحد الادنى للكميًة",
@@ -1577,6 +1577,10 @@
         "action_by": " عدّل بواسطة",
         "status": "الحالة",
         "custody": "عهدة"
+      },
+      "buttons_name": {
+        "from_main_inventory": "سحب كمية من المستودع الرئيسي",
+        "to_main_inventory": "اعادة كمية للمستودع الرئيسي"
       }
     },
     "search_filter": {
@@ -1588,5 +1592,22 @@
       "from": "من: ",
       "to": "إلى: "
     }
+  },
+  "inventoryItem": {
+    "fromMainInventoryForm": {
+      "title": "سحب كميًة من المستودع الرئيسي",
+      "from_inventory": "من المستودع الرئيسي ",
+      "to_inventory": "إلى عهدة الأخصائي",
+      "level_1": "المستوى الأول",
+      "level_2": "المستوى الثاني",
+      "select_level_1": "اختيار المستوى الأول",
+      "select_level_2": "اختيار المستوى الثاني",
+      "select_item": "اختيار مادة",
+      "select_inventory": "اختيار عهدة أخصائي",
+      "item": "المادة",
+      "note": "ملاحظة",
+      "quantity": "الكميًة"
+    },
+    "back_button": "الرجوع إلى واجهة المستودعات"
   }
 }

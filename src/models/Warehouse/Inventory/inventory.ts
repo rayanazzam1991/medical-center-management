@@ -6,8 +6,8 @@ export interface Inventory {
     id?: number
     name: string
     status: number
-    contractor_name: string
-    contractor_id: number
+    contractor_name?: string
+    contractor_id?: number
     items_count: number
     created_at: string
     last_updated_at: string

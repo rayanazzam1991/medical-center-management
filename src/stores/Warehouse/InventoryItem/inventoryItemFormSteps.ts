@@ -35,9 +35,9 @@ export const useInventoryItemForm = defineStore('InventoryItemForm', () => {
     const stepTitle = computed(() => {
         switch (step.value) {
             case 1:
-                return i18n.global.t('from_main_inventiry.form.title')
+                return i18n.global.t('inventoryItem.fromMainInventoryForm.title')
             default:
-                return i18n.global.t('from_main_inventiry.form.title')
+                return i18n.global.t('inventoryItem.fromMainInventoryForm.title')
         }
     })
 
