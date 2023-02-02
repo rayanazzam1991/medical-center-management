@@ -258,14 +258,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="city_id">
                                     <VLabel>{{t('customer.form.city')}}</VLabel>
                                     <VControl>
-                                        <!-- <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">{{t('customer.form.city')}}</VOption>
                                             <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
         city.name
 }}
                                             </VOption>
-                                        </VSelect> -->
-                                        <Multiselect  v-model="currentUser.city_id"
+                                        </VSelect>
+                                        <!-- <Multiselect  v-model="currentUser.city_id"
                                             mode="single"
                                             :placeholder="t('customer.form.city')"
                                             :close-on-select="false"
@@ -294,7 +294,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                 select$.resolveOptions()
                                                 }
                                             }"
-                                            />
+                                            /> -->
                                         <ErrorMessage class="help is-danger" name="city_id" />
                                     </VControl>
                                 </VField>
