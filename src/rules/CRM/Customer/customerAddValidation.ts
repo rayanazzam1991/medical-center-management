@@ -58,7 +58,6 @@ const customerAddvalidationSchema = toFormValidator(zod
                     return processed.success ? processed.data : input;
                 },
                 zod.number()
-                    .optional(),
             ),
         user_status_id: zod
             .preprocess(

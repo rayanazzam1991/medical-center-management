@@ -1,6 +1,6 @@
 <script setup  lang="ts">
 import { useHead } from '@vueuse/head';
-import { ErrorMessage, useForm } from 'vee-validate';
+import { ErrorMessage, useForm,useField } from 'vee-validate';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
 import { phoneExistsCheck } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
@@ -101,7 +101,7 @@ const getNormalCustomerGroupId = () => {
 
 const validationSchema = customerAddvalidationSchema
 
-const { handleSubmit } = useForm({
+const { handleSubmit,setFieldValue } = useForm({
     validationSchema,
     initialValues: {
         first_name: "",
@@ -118,6 +118,14 @@ const { handleSubmit } = useForm({
         room_id: undefined
     },
 })
+
+const setCityValue = ()=>{
+    setFieldValue("city_id",currentUser?.value?.city_id)
+}
+
+const clearCityValue = () =>{
+    setFieldValue("city_id",undefined)
+}
 
 const onSubmitAdd = handleSubmit(async (values) => {
 
@@ -250,13 +258,43 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="city_id">
                                     <VLabel>{{t('customer.form.city')}}</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentUser" v-model="currentUser.city_id">
+                                        <!-- <VSelect v-if="currentUser" v-model="currentUser.city_id">
                                             <VOption value="">{{t('customer.form.city')}}</VOption>
                                             <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
         city.name
 }}
                                             </VOption>
-                                        </VSelect>
+                                        </VSelect> -->
+                                        <Multiselect  v-model="currentUser.city_id"
+                                            mode="single"
+                                            :placeholder="t('customer.form.city')"
+                                            :close-on-select="false"
+                                            :filter-results="false"
+                                            :min-chars="0"
+                                            :resolve-on-load="false"
+                                            :infinite="true"
+                                            :limit="10"
+                                            :rtl="true"
+                                            :max="1"
+                                            :clear-on-search="true"
+                                            :delay="0"
+                                            :searchable="true"
+                                            @clear="clearCityValue()"
+                                            @select="setCityValue()"
+                                            :options="async (query :any) => {
+                                                let citySearchFilter = {} as CitySearchFilter 
+                                                citySearchFilter.name = query
+                                                const data = await getCitiesList(citySearchFilter)
+                                                return data.cities.map((item :any) => {
+                                                    return { value: item.id, label: item.name }
+                                                })
+                                            }"
+                                            @open="(select$ :any) => {
+                                                if (select$.noOptions) {
+                                                select$.resolveOptions()
+                                                }
+                                            }"
+                                            />
                                         <ErrorMessage class="help is-danger" name="city_id" />
                                     </VControl>
                                 </VField>
