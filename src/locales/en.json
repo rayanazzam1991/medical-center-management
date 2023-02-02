@@ -1574,5 +1574,9 @@
     "nearest_15": "To Nearest 15 Min",
     "nearest_30": "To Nearest 30 Min",
     "nearest_60": "To Nearest 60 Min"
+  },
+  "user_statuses": {
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

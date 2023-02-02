@@ -10,6 +10,7 @@ import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import {
   UserStatus,
   defaultUserStatusSearchFilter,
+  UserStatusConsts,
 } from '/@src/models/Others/UserStatus/userStatus'
 import {
   getEmployee,
@@ -418,11 +419,9 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span>{{ t('employee.details.status') }}:
-              <span :class="
-                currentEmployee.user.status.name == 'Busy'
-                  ? 'has-text-danger'
-                  : 'has-text-primary'
-              ">{{ currentEmployee.user.status.name }}</span></span>
+              <span :class="`has-text-${UserStatusConsts.getStatusColor(currentEmployee.user.status.id)}`">{{
+                UserStatusConsts.getStatusName(currentEmployee.user.status.id)
+              }}</span></span>
           </div>
           <div class="separator"></div>
         </div>
