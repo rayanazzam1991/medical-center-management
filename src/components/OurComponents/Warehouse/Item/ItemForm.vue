@@ -240,13 +240,27 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
+                    <div class="form-fieldset" >
+                        <div class="columns is-multiline">
+                            <div class="is-flex is-justify-content-center">
+                                <VField >
+                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
+                                <VControl class="ml-3">
+                                    <VSwitchSegment v-model="currentItem.is_for_sale"
+                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
+                                </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="price">
                                     <VLabel class="required">{{ t('item.form.price') }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="currentItem.price" type="number" />
+                                        <VInput v-model="currentItem.price" type="number" :disabled="!currentItem.is_for_sale"/>
                                         <ErrorMessage name="price" class="help is-danger" />
                                     </VControl>
                                 </VField>
@@ -272,20 +286,6 @@ export default defineComponent({
                                         <VTextarea v-model="currentItem.description" />
                                         <ErrorMessage class="help is-danger" name="description" />
                                     </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset" >
-                        <div class="columns is-multiline">
-                            <div class="is-flex is-justify-content-center">
-                                <VField >
-                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
-                                <VControl class="ml-3">
-                                    <VSwitchSegment v-model="currentItem.is_for_sale"
-                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
-                                </VControl>
                                 </VField>
                             </div>
                         </div>
