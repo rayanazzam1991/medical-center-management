@@ -33,6 +33,7 @@ const categoryStore = useCategory()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
+const originalSelectedStatus = ref(0)
 
 // onMounted(async () => {
     const { categories, pagination } = await getCategoriesList(searchFilter.value)
@@ -84,6 +85,7 @@ const changestatusCategory = async () => {
         // @ts-ignore
         notif.success(t('toast.success.add'))
     } else {
+        currentChangeStatusCategory.value.status = originalSelectedStatus.value
         await sleep(200);
         notif.error(message)
     }
@@ -158,6 +160,7 @@ const columns = {
                     router.push({ path: `/category/${row.id}/edit` })
                 },
                 onChangeStatus: () => {
+                    originalSelectedStatus.value = row?.status
                     currentChangeStatusCategory.value = row
                     selectedStatus.value = row?.status
                     changeStatusPopup.value = true
@@ -191,7 +194,7 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCategoriesPerPage" />
-        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="categoriesList.length != 0 && !categoryStore?.loading">
             {{
                 t('tables.pagination_footer', { from_number: paginationVar.page !=
                     paginationVar.max_page

@@ -24,6 +24,8 @@ const router = useRouter()
 const viewWrapper = useViewWrapper()
 const itemHistoryStore = useitemHistory()
 const currentItem = ref<Item>(defaultItem)
+const currentItemModel = ref<Item>(defaultItem)
+
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
 const changeHistoryStatusPopup = ref(false)
@@ -110,9 +112,9 @@ const getCurrentItem = async () => {
 
 }
 const changestatusItem = async () => {
-    const itemData = currentItem.value
+    const itemData = currentItemModel.value
     var itemForm = currentChangeStatusItem.value
-    itemForm.id = itemData.id
+    itemForm.id = currentItem.value.id
     itemForm.status = itemData.status
     const { message, success } = await changeItemStatus(itemForm)
     getCurrentItem()
@@ -436,7 +438,7 @@ const columns = {
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
                                         :max-links-displayed="3" no-router
                                         @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
+                                    <h6 class="pt-2 is-size-7" v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page
           ?
@@ -470,9 +472,9 @@ const columns = {
                             <VField class="column " id="status">
                                 <VLabel class="required">{{t('item.details.status')}}</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
+                                    <VRadio v-model="currentItemModel.status" :value="ItemConsts.INACTIVE"
                                         :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
-                                    <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
+                                    <VRadio v-model="currentItemModel.status" :value="ItemConsts.ACTIVE"
                                         :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>

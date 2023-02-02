@@ -212,6 +212,13 @@
         "check_in": "New check in can't be after original check in",
         "check_out": "New check out can't be before original check out"
       },
+      "payroll": {
+        "deduction_factor": "Deduction Factor must be a valid positive number and greater than or equal 1"
+      },
+      "contractor": {
+        "min_wallet_value": "Minimum Wallet Value must be a valid negative number"
+      },
+      "generate_salaries": "There are some negative net salaries. Please fix this issue and try again.",
       "employee_variable_payment": {
         "cant_edit": "Released and Inactive variable payments can't be edited"
       }
@@ -1060,12 +1067,18 @@
     "form": {
       "page_title": "Edit Settings",
       "hr_section": "Edit HR/Attendance Settings",
+      "payroll_section": "Edit HR/Payroll Settings",
+      "contractor_section": "Edit Contractor Settings",
       "start_day": "Start Day",
       "end_day": "End Day",
       "start_time": "Starting Time",
       "end_time": "End Time",
       "start_of_week": "Start of Week",
-      "late_tolerance": "Late Tolerance"
+      "late_tolerance": "Late Tolerance",
+      "deduction_factor": "Deduction Factor",
+      "hr_cycle_start_day": "HR Cycle Starting Day",
+      "unjustified_hours_round": "Unjustified Hours Rounding",
+      "min_wallet_value": "Minimum Wallet Value"
     }
   },
   "social_media": {
@@ -1518,18 +1531,64 @@
     "drop_down": {
       "view_payslip": "View Payslip"
     },
-    "header_button": "View Salaries"
-  },
-  "inventory": {
-    "table": {
-      "title": "list sub inventories",
-      "columns": {
-        "name": "inventory name ",
-        "items_count": "items count",
-        "created_at": "created at",
-        "updated_at": "updated at",
-        "action_by": "action by",
-        "status": "status"
+    "header_button": "View Salaries",
+    "payslip": {
+      "title": "Salary Payslip",
+      "header": "Employee Salary Payslip",
+      "salary_month": "Salary's month:",
+      "salary_month_duration": "Salary duration:",
+      "created_at": "Salary generation date:",
+      "updated_at": "Status's last update date:",
+      "unjustified_hours": "Unjustified Hours",
+      "status": "Status",
+      "hour": "Hour/s",
+      "basic_salary": "Basic Salary",
+      "attendance_deduction": "Attendance Deduction",
+      "earnings": "Earnings",
+      "deductions": "Deductions",
+      "table": {
+        "earnings": {
+          "columns": {
+            "name": "Variable Payment",
+            "amount": "Amount",
+            "basic_salary": "Basic Salary",
+            "total_variable_payments_earnings": "Total variable payments earnings",
+            "total_earnings": "Total earnings"
+          },
+          "inventory": {
+            "table": {
+              "title": "list sub inventories",
+              "columns": {
+                "name": "inventory name ",
+                "items_count": "items count",
+                "created_at": "created at",
+                "updated_at": "updated at",
+                "action_by": "action by",
+                "status": "status"
+              }
+            },
+            "deductions": {
+              "columns": {
+                "name": "Variable Payment",
+                "amount": "Amount",
+                "attendance_deduction": "Attendance Deduction",
+                "total_variable_payments_deductions": "Total variable payments deductions",
+                "total_deductions": "Total deductions"
+              }
+            },
+            "total": {
+              "columns": {
+                "total": "Net Salary"
+              }
+            }
+          }
+        }
+      },
+      "unjustified_hours_rounding_options": {
+        "no_round": "No Rounding",
+        "nearest_15": "To Nearest 15 Min",
+        "nearest_30": "To Nearest 30 Min",
+        "nearest_60": "To Nearest 60 Min"
       }
     },
     "search_filter": {
