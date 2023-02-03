@@ -28,6 +28,7 @@
     &.is-wizard-title {
       margin-right: 15px;
       border-right: 1px solid var(--muted-grey-light-15);
+      border-left: none !important;
       padding-bottom: 6px;
       padding-top: 6px;
       font-family: var(--font);
@@ -81,6 +82,7 @@
 
   .is-dark-mode {
     margin-right: auto;
+    margin-left: 0;
     background: transparent !important;
 
     .navbar-icon {
