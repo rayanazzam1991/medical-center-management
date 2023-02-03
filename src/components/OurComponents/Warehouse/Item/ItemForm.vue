@@ -78,7 +78,7 @@ export default defineComponent({
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
 
-
+  
         })
         const getSubCategoryByCategroy = () => {
             let categoriesFilter = {} as CategorySearchFilter
@@ -87,9 +87,14 @@ export default defineComponent({
             subcategoeisList.value = SubCategory
 
         }
-        watch(currentItem.value,()=>{
+        onMounted(()=>{ // set is_for_sale true to trigger price validation by refresh the schema
+            currentItem.value.is_for_sale = 1;
+        })
+
+        watch(currentItem.value,()=>{ // this to set value of is_for_sale in schema
             setFieldValue("is_for_sale",currentItem.value.is_for_sale!)
         })
+        
         const validationSchema = itemvalidationSchema
         const { handleSubmit,setFieldValue } = useForm({
             validationSchema,
