@@ -58,7 +58,8 @@
       "price": "يرجى ادخال سعر صالح",
       "invalid_type_error": "يرجى ادخال رقم صالح",
       "payment_percentage": "يرجى ادخال رقم من 1-100",
-      "phone_number": "يرجى ادخال رقم هاتف صالح"
+      "phone_number": "يرجى ادخال رقم هاتف صالح",
+      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
     },
     "redio": {
       "required": "يرجى الاختيار"

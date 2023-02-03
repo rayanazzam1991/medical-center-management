@@ -52,7 +52,8 @@
       "price": "Please enter a valid price",
       "invalid_type_error": "Please enter a valid number",
       "payment_percentage": "Please enter a number from 1-100",
-      "phone_number": "Please enter a valid phone number"
+      "phone_number": "Please enter a valid phone number",
+      "larger_thar_zero": "Must be greater than zero"
     },
     "redio": {
       "required": "Please choose one"
