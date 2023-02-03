@@ -267,7 +267,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .custom-loader {
     position: absolute;
-    right: 0;
+    left: 0;
     top: 0;
     width: 16px;
     height: 16px;
