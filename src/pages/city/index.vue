@@ -28,6 +28,7 @@ const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
 const router = useRouter()
 const default_per_page = ref(1)
+
 onMounted(async () => {
   const { cities, pagination } = await getCitiesList(searchFilter.value)
   citiesList.value = cities

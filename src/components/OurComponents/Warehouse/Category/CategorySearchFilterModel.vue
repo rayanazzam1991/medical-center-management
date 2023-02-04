@@ -1,4 +1,5 @@
 <script lang="ts">
+import { PropType } from "vue"
 import { useI18n } from "vue-i18n"
 import { defaultCategorySearchFilter, CategoryConsts, Category, defaultMainCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
@@ -20,6 +21,9 @@ export default defineComponent({
         is_reseted: {
             type: Boolean,
             default: false,
+        },
+        data:{
+            type: Array as PropType<Category[]>
         }
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
@@ -55,14 +59,19 @@ export default defineComponent({
             searchFilter.value.status = undefined
             context.emit('resetFilter', searchFilter.value)
         }
-        const mainCategoriesList = ref<Category[]>([])
-        onMounted(async () => {
-            let mainCategorySearchFilter = {} as CategorySearchFilter
-            mainCategorySearchFilter.is_main_category = true
-            mainCategorySearchFilter.per_page = 500
-            const { categories } = await getCategoriesList(mainCategorySearchFilter)
-            mainCategoriesList.value = categories
-        })
+            const mainCategoriesList = ref<Category[]>([])
+            const allCategoriesList = ref<Category[]>([])
+
+            allCategoriesList.value = props.data!
+            console.log("allCategoriesList",allCategoriesList.value)
+            mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
+        // onMounted(async () => {
+        //     let mainCategorySearchFilter = {} as CategorySearchFilter
+        //     mainCategorySearchFilter.is_main_category = true
+        //     mainCategorySearchFilter.per_page = 500
+        //     const { categories } = await getCategoriesList(mainCategorySearchFilter)
+        //     mainCategoriesList.value = categories
+        // })
         return {t , mainCategoriesList, CategoryConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus }
     },
 })

@@ -21,6 +21,8 @@ viewWrapper.setPageTitle(t('category.table.title'))
 useHead({
     title: t('category.table.title'),
 })
+
+const categoryStore = useCategory()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
@@ -29,20 +31,25 @@ const categoryChangeStatus = ref<Category>(defaultCategory)
 const currentChangeStatusCategory = ref(defaultChangeCategoryStatus)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
-const categoryStore = useCategory()
+
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
 const originalSelectedStatus = ref(0)
 
-// onMounted(async () => {
-    const { categories, pagination } = await getCategoriesList(searchFilter.value)
+console.log("setup");
+
+onMounted(async () => {
+
+    const {categories,pagination} = await getCategoriesList(searchFilter.value)
     searchFilter.value = defaultCategorySearchFilter
     categoriesList.value = categories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
-// });
+   
+});
+
 
 const search = async (searchFilter2: CategorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -171,8 +178,10 @@ const columns = {
 </script>
 
 <template>
-    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
-        :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <CategoryTableHeader  :key="keyIncrement" v-if="categoriesList" :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
+        :pagination="paginationVar" :default_per_page="default_per_page"
+         @resetFilter="resetFilter"
+         :categoriesList="categoriesList" />
     <VFlexTableWrapper :columns="columns" :data="categoriesList" @update:sort="categorySort">
         <VFlexTable separators clickable>
             <template #body>
