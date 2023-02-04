@@ -265,13 +265,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.custom-loader {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 16px;
-    height: 16px;
-}
+
 
 .required::after {
     content: " *";
