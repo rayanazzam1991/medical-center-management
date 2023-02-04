@@ -39,6 +39,3 @@ const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
   </nav>
 </template>
 
-<style lang="scss" scoped>
-@import '/@src/scss/styles/wizardFormNavigation.scss';
-</style>

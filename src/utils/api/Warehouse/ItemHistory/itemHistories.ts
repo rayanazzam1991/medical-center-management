@@ -6,7 +6,7 @@ export async function addQuantityApi(
     api: AxiosInstance,
     addquantity: addQuantity
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.post(`itemHistory/addQuantity`, addquantity)
+    const { data: response, headers } = await api.post(`inventoryItemHistory/addQuantity`, addquantity)
 
     return { response }
 }
@@ -15,7 +15,7 @@ export async function withdrawQuantityApi(
     api: AxiosInstance,
     withdrawquantity: withdrawQuantity
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.post(`itemHistory/withdrawQuantity`, withdrawquantity)
+    const { data: response, headers } = await api.post(`inventoryItemHistory/withdrawQuantity`, withdrawquantity)
 
     return { response }
 }
@@ -23,7 +23,7 @@ export async function getItemHistoriesApi(
     api: AxiosInstance,
     searchFilter: ItemHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('itemHistory/getItemHistoriesList', {
+    const { data: response, headers } = await api.get('inventoryItemHistory/getItemHistoriesList', {
         params: searchFilter,
     })
     return { response }
@@ -33,7 +33,7 @@ export async function changeItemHistoryStatusApi(
     itemHistory: ChangeItemHistoryStatus
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.put(
-        `itemHistory/changeItemHistoryStatus/${itemHistory.id}`,
+        `inventoryItemHistory/changeItemHistoryStatus/${itemHistory.id}`,
         itemHistory
     )
     return { response }
@@ -43,7 +43,7 @@ export async function getItemHistoryApi(
     itemId: number,
     searchFilter: ItemHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get(`itemHistory/getItemHistory/${itemId}`, {
+    const { data: response, headers } = await api.get(`inventoryItemHistory/getItemHistory/${itemId}`, {
         params: searchFilter,
     })
     return { response }
