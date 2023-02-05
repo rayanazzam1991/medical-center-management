@@ -511,6 +511,17 @@ watch(
     margin: 0 0.25rem;
   }
 }
+.rtl {
+  .switch-segment {
+      flex-direction: row-reverse;
+  }
+}
+
+.rtl {
+  .switch-segment {
+      flex-direction: row-reverse;
+  }
+}
 
 .is-dark {
   .switch-segment {

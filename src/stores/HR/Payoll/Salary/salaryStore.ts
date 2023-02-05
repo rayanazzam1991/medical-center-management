@@ -1,8 +1,9 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { DeliveringSalariesSearchFilter, DeliveringSalary, OnholdSalariesSearchFilter, OnholdSalary, ReviewGenerateSalariesRequestBody, ReviewSalaries, Salary, SalarySearchFilter } from "/@src/models/HR/Payroll/Salary/salary"
-import { generateSalariesApi, getDeliveringSalariesApi, getOnholdSalariesApi, getSalariesListApi, moveSalariesToOnholdApi, paySalaryApi, returnSalaryApi, reviewSalariesApi } from "/@src/utils/api/HR/Payroll/Salary"
+import { generateSalariesApi, getDeliveringSalariesApi, getOnholdSalariesApi, getSalariesListApi, getSalaryPayslipApi, moveSalariesToOnholdApi, paySalaryApi, returnSalaryApi, reviewSalariesApi } from "/@src/utils/api/HR/Payroll/Salary"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useSalary = defineStore('salary', () => {
@@ -172,6 +173,26 @@ export const useSalary = defineStore('salary', () => {
             loading.value = false
         }
     }
+    async function getSalaryPayslipStore(salaryId: number) {
+        if (loading.value) return
+
+        loading.value = true
+        await sleep(200)
+        try {
+            const returnedResponse = await getSalaryPayslipApi(api, salaryId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as Salary
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
 
@@ -188,7 +209,8 @@ export const useSalary = defineStore('salary', () => {
         getSalariesStore,
         paySalaryStore,
         returnSalaryStore,
-        moveSalariesToOnholdStore
+        moveSalariesToOnholdStore,
+        getSalaryPayslipStore
     } as const
 })
 

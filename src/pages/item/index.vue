@@ -112,14 +112,6 @@ const columns = {
         renderRow: (row: any) =>
             h('span', row?.category?.name)
     },
-    quantity: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label : t('item.table.columns.quantity')
-
-    },
     price: {
         sortable: true,
         align: 'center',
@@ -151,6 +143,29 @@ const columns = {
             h('span', row?.created_at),
         searchable: true,
         sortable: true,
+    },
+    is_for_sale: {
+        align: 'center',
+        searchable: true,
+        label : t('item.table.columns.for_sale'),
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.is_for_sale === ItemConsts.IS_NOT_FORE_SALE
+                            ? 'warning'
+                            : row?.is_for_sale === ItemConsts.IS_FORE_SALE
+                                ? 'success'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return ItemConsts.showForSale(row?.is_for_sale)
+                    },
+                }
+            ),
     },
     status: {
         align: 'center',
@@ -221,7 +236,7 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getItemsPerPage" />
-        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="itemsList.length != 0 && !itemStore?.loading">
             {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

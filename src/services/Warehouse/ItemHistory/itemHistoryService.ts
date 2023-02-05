@@ -1,4 +1,4 @@
-import { addQuantity, ChangeItemHistoryStatus, defaultItemHistory, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { addQuantity, ChangeItemHistoryStatus, defaultItemHistory, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
 import { Pagination } from "/@src/utils/response"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"

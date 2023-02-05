@@ -8,7 +8,7 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -24,6 +24,8 @@ const router = useRouter()
 const viewWrapper = useViewWrapper()
 const itemHistoryStore = useitemHistory()
 const currentItem = ref<Item>(defaultItem)
+const currentItemModel = ref<Item>(defaultItem)
+
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
 const changeHistoryStatusPopup = ref(false)
@@ -67,12 +69,12 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
-    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
-    searchFilter.value = {} as ItemHistorySearchFilter
-    itemHistoryList.value = itemHistories
-    paginationVar.value = pagination
-    keyIncrement.value = keyIncrement.value + 1
-    default_per_page.value = pagination.per_page
+    // const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
+    // searchFilter.value = {} as ItemHistorySearchFilter
+    // itemHistoryList.value = itemHistories
+    // paginationVar.value = pagination
+    // keyIncrement.value = keyIncrement.value + 1
+    // default_per_page.value = pagination.per_page
 })
 
 const search = async (searchFilter2: ItemHistorySearchFilter) => {
@@ -110,9 +112,9 @@ const getCurrentItem = async () => {
 
 }
 const changestatusItem = async () => {
-    const itemData = currentItem.value
+    const itemData = currentItemModel.value
     var itemForm = currentChangeStatusItem.value
-    itemForm.id = itemData.id
+    itemForm.id = currentItem.value.id
     itemForm.status = itemData.status
     const { message, success } = await changeItemStatus(itemForm)
     getCurrentItem()
@@ -297,6 +299,13 @@ const columns = {
                                     {{ ItemConsts.showStatusName(currentItem.status) }}</VTag>
                             </span></span>
                     </div>
+                    <div class="profile-stat">
+                        <i aria-hidden="true" class="lnil "></i>
+                        <span>{{t('item.table.columns.for_sale')}}: <span>
+                                <VTag :color="currentItem.is_for_sale === ItemConsts.IS_NOT_FORE_SALE ? 'warning' : 'success'">
+                                    {{ ItemConsts.showForSale(currentItem.is_for_sale) }}</VTag>
+                            </span></span>
+                    </div>
                 </div>
             </div>
         </VLoader>
@@ -352,29 +361,6 @@ const columns = {
                                                     <span>{{t('item.details.leve_2')}}</span>
                                                     <span>
                                                         {{ currentItem.category.name }}
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>{{t('item.details.quantity')}}</span>
-                                                    <span
-                                                        :class="currentItem.min_quantity >= currentItem.quantity ? 'has-text-danger' : ''">
-                                                        {{ currentItem.quantity }} Items left
-                                                    </span>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="column is-6">
-                                            <div class="file-box">
-                                                <div class="meta">
-                                                    <span>{{t('item.details.min_quantity')}}</span>
-                                                    <span>
-                                                        {{ currentItem.min_quantity }}
                                                     </span>
                                                 </div>
 
@@ -452,7 +438,7 @@ const columns = {
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
                                         :max-links-displayed="3" no-router
                                         @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
+                                    <h6 class="pt-2 is-size-7" v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page
           ?
@@ -486,9 +472,9 @@ const columns = {
                             <VField class="column " id="status">
                                 <VLabel class="required">{{t('item.details.status')}}</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentItem.status" :value="ItemConsts.INACTIVE"
+                                    <VRadio v-model="currentItemModel.status" :value="ItemConsts.INACTIVE"
                                         :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
-                                    <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
+                                    <VRadio v-model="currentItemModel.status" :value="ItemConsts.ACTIVE"
                                         :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>

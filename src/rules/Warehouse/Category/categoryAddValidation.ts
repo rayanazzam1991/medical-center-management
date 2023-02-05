@@ -28,6 +28,15 @@ const categoryvalidationSchema = toFormValidator(zod
                 zod.number()
                     .optional(),
             ),
+        category_type_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+|^$/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod.number()
+                    .optional(),
+            ),
     }));
 export {
     categoryvalidationSchema

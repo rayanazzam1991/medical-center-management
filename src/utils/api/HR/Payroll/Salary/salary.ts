@@ -58,3 +58,10 @@ export async function moveSalariesToOnholdApi(
   const { data: response, headers } = await api.post(`salary/moveSalariesToOnhold`)
   return { response }
 }
+export async function getSalaryPayslipApi(
+  api: AxiosInstance,
+  salaryId: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`salary/${salaryId}`)
+  return { response }
+}

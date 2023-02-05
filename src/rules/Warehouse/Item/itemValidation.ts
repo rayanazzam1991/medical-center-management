@@ -23,6 +23,8 @@ const itemvalidationSchema = toFormValidator(zod
                 val => val == undefined ? "" : val,
                 zod.string({})
                     .optional()),
+        is_for_sale: zod
+            .boolean({ required_error: i18n.global.t('validation.redio.required') }).optional(),
         price:
             zod.preprocess(
                 (input) => {
@@ -31,7 +33,9 @@ const itemvalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
+                    .gt(0, i18n.global.t('validation.number.larger_thar_zero'))
+                    .optional()
+
             ),
         cost:
             zod.preprocess(
@@ -43,26 +47,6 @@ const itemvalidationSchema = toFormValidator(zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
                     .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
-        quantity:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
-            ),
-        min_quantity:
-            zod
-                .preprocess(
-                    (input) => {
-                        const processed = zod.string({}).regex(/\d+|^$/).transform(Number).safeParse(input);
-                        return processed.success ? processed.data : input;
-                    },
-                    zod
-                        .number({})
-                        .optional()),
         category_id: zod
             .preprocess(
                 (input) => {
@@ -75,7 +59,8 @@ const itemvalidationSchema = toFormValidator(zod
             ),
         status: zod
             .number({ required_error: i18n.global.t('validation.redio.required') }),
-    }));
+    })
+);
 export {
     itemvalidationSchema
 }

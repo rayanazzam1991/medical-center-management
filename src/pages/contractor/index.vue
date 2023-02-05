@@ -8,7 +8,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultContractorSearchFilter, ContractorSearchFilter, Contractor, defaultContractor } from '/@src/models/Contractor/contractor';
 import { CustomerConsts } from '/@src/models/CRM/Customer/customer';
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
 import { changeUserStatus } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
@@ -168,22 +168,11 @@ const columns = {
                 VTag,
                 {
                     rounded: true,
-                    color:
-                        row?.user?.status?.name === 'Pending'
-                            ? 'orange'
-                            : row?.user?.status?.name === 'Waiting'
-                                ? 'blue'
-                                : row?.user?.status?.name === 'Approved'
-                                    ? 'green'
-                                    : row?.user?.status?.name === 'Deleted'
-                                        ? 'warning'
-                                        : row?.user?.status?.name === 'Busy'
-                                            ? 'danger'
-                                            : undefined,
+                    color:UserStatusConsts.getStatusColor(row?.user?.status?.id)
                 },
                 {
                     default() {
-                        return row?.user?.status?.name
+                        return UserStatusConsts.getStatusName(row?.user?.status?.id)
                     },
                 }
             ),
@@ -201,7 +190,7 @@ const columns = {
 
     },
     actions: {
-        align: 'end',
+        align: 'center',
         grow: false,
         label: t('contractor.table.columns.actions'),
         renderRow: (row: any) =>
@@ -249,7 +238,7 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getContractorsPerPage" />
-        <h6 v-if="contractorsList.length != 0 && !contractorStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="contractorsList.length != 0 && !contractorStore?.loading">
             {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

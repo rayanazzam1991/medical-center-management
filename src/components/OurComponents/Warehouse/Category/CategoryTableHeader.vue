@@ -1,6 +1,7 @@
 <script lang="ts">
+import { PropType } from "vue"
 import { useI18n } from "vue-i18n"
-import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts } from "/@src/models/Warehouse/Category/category"
+import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts, Category,defaultCategory } from "/@src/models/Warehouse/Category/category"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -21,6 +22,10 @@ export default defineComponent({
         default_per_page: {
             type: Number,
             default: 1,
+        },
+        
+        categoriesList:{
+            type: Array as PropType<Category[]>
         }
 
     },
@@ -38,6 +43,7 @@ export default defineComponent({
         }
         const default_per_page = props.default_per_page
         const pagination = props.pagination
+        const categoriesList = props.categoriesList
         const searchFilterPop = ref(false)
         const searchName = ref('')
         const searchPrice = ref()
@@ -88,7 +94,6 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.parent_id = undefined
             searchFilter.value.is_main_category = undefined
-
             quickSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++
@@ -103,7 +108,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return {  t , searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
+        return {  t , searchFilterPop, default_per_page, keyIncrement,categoriesList, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
     },
 
 
@@ -158,7 +163,7 @@ export default defineComponent({
             </div>
         </div>
         <CategorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+           :data="categoriesList" @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 

@@ -1,4 +1,5 @@
 import { defaultUser, User } from "../../Others/User/user"
+import { defaultInventory, Inventory } from "../Inventory/inventory"
 import { defaultItem, Item } from "../Item/item"
 import { BaseConsts } from "/@src/utils/consts/base"
 
@@ -53,6 +54,17 @@ export interface withdrawQuantity {
 export interface ChangeItemHistoryStatus {
     id?: number
     status?: number
+}
+export interface CreateInventoryItemHistoryMovement {
+    from_inventory: Inventory
+    to_inventory: Inventory
+    note?: string
+}
+
+export const defaultCreateInventoryItemHistoryMovement: CreateInventoryItemHistoryMovement = {
+    from_inventory: defaultInventory,
+    to_inventory: defaultInventory,
+    note: ''
 }
 
 export const defaultItemHistory: itemHistory = {

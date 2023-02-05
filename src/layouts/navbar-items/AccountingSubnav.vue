@@ -19,12 +19,12 @@ const { t } = useI18n()
                 <div class="tab-content-inner">
                     <div class="center has-slimscroll">
                         <div class="columns">
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{ t('accounting_subnav.salary.salaries') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/salary">
-                                            <i class="fas fa-money-bill-wave" aria-hidden="true"></i> <span>{{
+                                            <i class="fas fa-money-bill-wave mx-3" aria-hidden="true"></i> <span>{{
                                                 t('accounting_subnav.salary.salaries_history')
                                             }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
@@ -32,7 +32,7 @@ const { t } = useI18n()
                                     </li>
                                     <li>
                                         <RouterLink to="/deliver-salaries">
-                                            <i class="fas fa-money-bill-alt" aria-hidden="true"></i> <span>{{
+                                            <i class="fas fa-money-bill-alt mx-3" aria-hidden="true"></i> <span>{{
                                                 t('accounting_subnav.salary.deliver_salaries')
                                             }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
@@ -40,7 +40,7 @@ const { t } = useI18n()
                                     </li>
                                     <li>
                                         <RouterLink to="/onhold-salaries">
-                                            <i class="fas fa-boxes" aria-hidden="true"></i>
+                                            <i class="fas fa-boxes mx-3" aria-hidden="true"></i>
                                             <span>{{ t('accounting_subnav.salary.onhold_salaries') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>

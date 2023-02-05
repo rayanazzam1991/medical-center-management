@@ -6,7 +6,7 @@ export async function getWalletsApi(
     api: AxiosInstance,
     searchFilter: WalletSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('wallet/', {
+    const { data: response, headers } = await api.get('wallet', {
         params: searchFilter,
     })
     return { response }

@@ -2,7 +2,7 @@
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { withdrawQuantity, defaultWithdrawQuantityItem, ItemHsitoryConsts } from '/@src/models/Warehouse/ItemHistory/itemHistory';
+import { withdrawQuantity, defaultWithdrawQuantityItem, ItemHsitoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
 import { withdrawQuantityService } from '/@src/services/Warehouse/ItemHistory/itemHistoryService';
 import { useWithdrawItemForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -329,13 +329,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.custom-loader {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 16px;
-    height: 16px;
-}
 
 .required::after {
     content: " *";

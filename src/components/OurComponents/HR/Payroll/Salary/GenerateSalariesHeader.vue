@@ -56,7 +56,7 @@ export default defineComponent({
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2 ">
-                                <VSelect v-model="selectedGeneratableMonth">
+                                <VSelect v-if="generatableMonths.length != 0" v-model="selectedGeneratableMonth">
                                     <VOption v-for="(generatableMonth, index) in generatableMonths" :key="index"
                                         :value="generatableMonth">
                                         {{ generatableMonth.month }} / {{ generatableMonth.year }}
@@ -64,7 +64,7 @@ export default defineComponent({
                                 </VSelect>
                             </VControl>
                             <VControl>
-                                <VButton @click="getSalariesReview" color="primary">{{ button_name }}
+                                <VButton :disabled="generatableMonths.length == 0"  @click="getSalariesReview" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

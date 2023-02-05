@@ -70,6 +70,7 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.category_id = undefined
             searchFilter.value.sub_category_id = undefined
+            searchFilter.value.is_for_sale = undefined
             quickSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++
@@ -80,6 +81,7 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.category_id = undefined
             searchFilter.value.sub_category_id = undefined
+            searchFilter.value.is_for_sale = undefined
             context.emit('resetFilter', searchFilter.value)
         }
 

@@ -21,6 +21,8 @@ viewWrapper.setPageTitle(t('category.table.title'))
 useHead({
     title: t('category.table.title'),
 })
+
+const categoryStore = useCategory()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
@@ -29,19 +31,25 @@ const categoryChangeStatus = ref<Category>(defaultCategory)
 const currentChangeStatusCategory = ref(defaultChangeCategoryStatus)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
-const categoryStore = useCategory()
+
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
+const originalSelectedStatus = ref(0)
 
-// onMounted(async () => {
-    const { categories, pagination } = await getCategoriesList(searchFilter.value)
+console.log("setup");
+
+onMounted(async () => {
+
+    const {categories,pagination} = await getCategoriesList(searchFilter.value)
     searchFilter.value = defaultCategorySearchFilter
     categoriesList.value = categories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
-// });
+   
+});
+
 
 const search = async (searchFilter2: CategorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -84,6 +92,7 @@ const changestatusCategory = async () => {
         // @ts-ignore
         notif.success(t('toast.success.add'))
     } else {
+        currentChangeStatusCategory.value.status = originalSelectedStatus.value
         await sleep(200);
         notif.error(message)
     }
@@ -158,6 +167,7 @@ const columns = {
                     router.push({ path: `/category/${row.id}/edit` })
                 },
                 onChangeStatus: () => {
+                    originalSelectedStatus.value = row?.status
                     currentChangeStatusCategory.value = row
                     selectedStatus.value = row?.status
                     changeStatusPopup.value = true
@@ -168,8 +178,10 @@ const columns = {
 </script>
 
 <template>
-    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
-        :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <CategoryTableHeader  :key="keyIncrement" v-if="categoriesList" :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
+        :pagination="paginationVar" :default_per_page="default_per_page"
+         @resetFilter="resetFilter"
+         :categoriesList="categoriesList" />
     <VFlexTableWrapper :columns="columns" :data="categoriesList" @update:sort="categorySort">
         <VFlexTable separators clickable>
             <template #body>
@@ -191,7 +203,7 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCategoriesPerPage" />
-        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="categoriesList.length != 0 && !categoryStore?.loading">
             {{
                 t('tables.pagination_footer', { from_number: paginationVar.page !=
                     paginationVar.max_page

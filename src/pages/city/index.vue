@@ -28,6 +28,7 @@ const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
 const router = useRouter()
 const default_per_page = ref(1)
+
 onMounted(async () => {
   const { cities, pagination } = await getCitiesList(searchFilter.value)
   citiesList.value = cities
@@ -184,7 +185,7 @@ const columns = {
     <VFlexPagination v-if="(citiesList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getCitiesPerPage" />
-    <h6 v-if="citiesList.length != 0 && !cityStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="citiesList.length != 0 && !cityStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

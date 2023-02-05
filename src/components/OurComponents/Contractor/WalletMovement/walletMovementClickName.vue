@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<WalletMovementTableProps>(), {
 <template>
     <div v-if="clickable && !isHeader" @click="() => emits('click')" class="card-size cursor ">
         <div class="title-size center">
-            <h3 class=" mb-2 has-text-weight-semibold" >{{ props.title }}</h3>
+            <h3 class=" mb-2" >{{ props.title }}</h3>
         </div>
     </div>
 

@@ -177,7 +177,7 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getNationalitiesPerPage" />
-    <h6 v-if="nationalitiesList.length != 0 && !nationalityStore?.loading">
+    <h6  class="pt-2 is-size-7" v-if="nationalitiesList.length != 0 && !nationalityStore?.loading">
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page

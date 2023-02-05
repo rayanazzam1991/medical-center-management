@@ -31,9 +31,8 @@ useHead({
 
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(itemHistoryForm.canNavigate && 'is-active')]">
-                <div class="columns">
-                    <div class="column is-one-quarter"></div>
-                    <div class="wizard-buttons-inner">
+                <div class="columns buttons-width">
+                    <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="itemHistoryStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
                                 {{t('add_quantity.form.submit')}}
@@ -48,4 +47,17 @@ useHead({
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
+
+.buttons-width {
+
+max-width: 45%;
+margin: 0 auto !important;
+
+}
+.wizard-buttons-inner-padding {
+
+padding : 1rem !important;
+}
+
+
 </style>

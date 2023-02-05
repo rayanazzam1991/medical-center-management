@@ -15,6 +15,7 @@ import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import {
   UserStatus,
   defaultUserStatusSearchFilter,
+UserStatusConsts,
 } from '/@src/models/Others/UserStatus/userStatus'
 import {
   getCustomer,
@@ -467,12 +468,9 @@ const RemoveProfilePicture = async () => {
             <span
               >{{t('customer.details.status')}}:
               <span
-                :class="
-                  currentCustomer.user.status.name == 'Pending'
-                    ? 'has-text-warning'
-                    : 'has-text-primary'
+                :class="`has-text-${UserStatusConsts.getStatusColor(currentCustomer.user.status.id)}`
                 "
-                >{{ currentCustomer.user.status.name }}</span
+                >{{ UserStatusConsts.getStatusName(currentCustomer.user.status.id) }}</span
               ></span
             >
           </div>

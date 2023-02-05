@@ -25,7 +25,7 @@ export const useItem = defineStore('item', () => {
 
         try {
             const response = await getItemApi(api, itemId)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             success.value = response.response.success
             error_code.value = response.response.error_code
@@ -49,7 +49,7 @@ export const useItem = defineStore('item', () => {
         sleep(2000)
         try {
             const response = await addItemApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.push(returnedItem)
             success.value = response.response.success
@@ -74,7 +74,7 @@ export const useItem = defineStore('item', () => {
         sleep(2000)
         try {
             const response = await editItemApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.splice(
                 items.value.findIndex((itemElement) => (itemElement.id = item.id)),
@@ -126,7 +126,7 @@ export const useItem = defineStore('item', () => {
         loading.value = true
         try {
             const response = await changeItemStatusApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.splice(
                 items.value.findIndex((itemElement) => (itemElement.id = item.id)),

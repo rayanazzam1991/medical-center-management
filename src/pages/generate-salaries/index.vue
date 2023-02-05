@@ -52,18 +52,32 @@ const getSalariesReview = async (selectedGeneratableMonth: GeneratableMonth) => 
     }
 }
 const generateSalaries = async () => {
-    const reviewSalariesRequestBody: ReviewGenerateSalariesRequestBody = selectedMonth.value
-    const { message, success } = await getGenerateSalary(reviewSalariesRequestBody)
-    if (success) {
-        notif.dismissAll();
-        await sleep(200);
-        notif.success(t('toast.success.edit'));
-        approveVariablePaymentPopUp.value = false
-        router.push({ path: '/employee' });
+    let netSalariesCheck = true
+    salariesList.value.forEach(salary => {
+        if (salary.net_salary < 0) {
+            netSalariesCheck = false
+            return
 
-    }
-    else {
-        notif.error({ message: message, duration: 10000 })
+        }
+    });
+
+    if (netSalariesCheck) {
+
+        const reviewSalariesRequestBody: ReviewGenerateSalariesRequestBody = selectedMonth.value
+        const { message, success } = await getGenerateSalary(reviewSalariesRequestBody)
+        if (success) {
+            notif.dismissAll();
+            await sleep(200);
+            notif.success(t('toast.success.generate_salaries'));
+            approveVariablePaymentPopUp.value = false
+            router.push({ path: '/salary' });
+
+        }
+        else {
+            notif.error({ message: message, duration: 10000 })
+        }
+    } else {
+        notif.error({ message: t('toast.error.generate_salaries'), duration: 10000 })
     }
 }
 
@@ -75,7 +89,7 @@ const approveVariablePayment = async () => {
     if (success) {
         notif.dismissAll();
         await sleep(200);
-        notif.success(t('toast.success.generate_salaries'));
+        notif.success(t('toast.success.aprrove_variable_payment'));
         await getSalariesReview(selectedMonth.value)
         approveVariablePaymentPopUp.value = false
     } else {
@@ -86,6 +100,11 @@ const approveVariablePayment = async () => {
 
 
 }
+const numberFormat = (number: number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+}
+
 const columns = {
     employee_name: {
         align: 'center',
@@ -96,41 +115,52 @@ const columns = {
     basic_salary: {
         align: 'center',
         label: t("generate_salaries.table.columns.basic_salary"),
+        renderRow: (row: any) =>
+            h('span', numberFormat(row?.basic_salary)),
+
     },
     unjustified_hours: {
         align: 'center',
         label: t("generate_salaries.table.columns.unjustified_hours"),
+
     },
     attendance_deduction: {
         align: 'center',
         label: t("generate_salaries.table.columns.attendance_deduction"),
+        renderRow: (row: any) =>
+            h('span', numberFormat(row?.attendance_deduction)),
+
     },
     variable_payments: {
         align: 'center',
         grow: true,
         label: t("generate_salaries.table.columns.variable_payments"),
         renderRow: (row: any) => {
-            if(row?.variable_payments.length != 0) {
+            if (row?.variable_payments.length != 0) {
 
                 return h(SalaryVariablePaymentsCell,
-                {
-                    employeeVariablePayments: row?.variable_payments,
-                    onApproveClick: (employeeVariablePayment) => {
-                        keyIncrement.value++
-                        approveVariablePaymentPopUp.value = true
-                        selectedVariablePayment.value = employeeVariablePayment
-                    }
-                });
+                    {
+                        employeeVariablePayments: row?.variable_payments,
+                        onApproveClick: (employeeVariablePayment) => {
+                            keyIncrement.value++
+                            approveVariablePaymentPopUp.value = true
+                            selectedVariablePayment.value = employeeVariablePayment
+                        }
+                    });
             }
             else {
-                return h('span','-');
- 
+                return h('span', '-');
+
             }
         }
     },
     net_salary: {
         align: 'center',
         label: t("generate_salaries.table.columns.net_salary"),
+        renderRow: (row: any) =>
+            h('span', { class: row?.net_salary < 0 ? 'has-text-warning' : '' }, numberFormat(row?.net_salary)),
+
+
     },
 } as const
 </script>
@@ -152,14 +182,16 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="salariesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title=" generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_title') : t('generate_salaries.table.placeholder.select_month_title')"
-                        :subtitle="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_subtitle') : '' " class="my-6">
+                    <VPlaceholderSection
+                        :title="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_title') : t('generate_salaries.table.placeholder.select_month_title')"
+                        :subtitle="generatableMonthsList.length == 0 ? t('generate_salaries.table.placeholder.no_month_subtitle') : ''"
+                        class="my-6">
                     </VPlaceholderSection>
                 </div>
 
             </template>
         </VFlexTable>
-        <form v-if="salariesList.length > 0" class="form-layout">
+        <form v-if="salariesList.length > 0 && !salaryStore?.loading" class="form-layout">
             <div class="form-outer-footer">
                 <div class="form-header stuck-header">
                     <div class="form-header-inner-footer columns">
@@ -168,7 +200,10 @@ const columns = {
                         <div class="left column is-2 is-flex is-justify-content-center left-footer ">
                             <div class="left">
                                 <h3 class="is-size-6">
-                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span class="has-text-weight-semibold has-text-primary"> {{ salaries.salaries_sum }}</span> 
+                                    {{ t('generate_salaries.table.footer.salaries_sum') }} <span
+                                        class="has-text-weight-semibold has-text-primary"> {{
+                                            numberFormat(salaries.salaries_sum)
+                                        }}</span>
 
                                 </h3>
                             </div>
@@ -179,7 +214,7 @@ const columns = {
         </form>
 
     </VFlexTableWrapper>
-    <form v-if="salariesList.length > 0" class="form-layout">
+    <form v-if="salariesList.length > 0 && !salaryStore?.loading" class="form-layout">
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="form-header-inner columns">
@@ -217,8 +252,25 @@ const columns = {
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.section-placeholder {
+    .placeholder-content {
+
+        width: 100%;
+
+        p {
+
+            max-width: 90% ;
+
+        }
+
+    }
+}
+.left {
+    text-align: center;
+}
 
 .form-header-inner-footer {
     margin: 0 !important;
@@ -249,5 +301,4 @@ const columns = {
     }
 
 }
-
 </style>

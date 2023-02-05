@@ -19,7 +19,7 @@ const emits = defineEmits<{
                 <div class="tab-content-inner">
                     <div class="center has-slimscroll">
                         <div class="columns">
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{t('others_subnav.nationality.nationalities')}}</h4>
                                 <ul>
                                     <li>
@@ -55,7 +55,7 @@ const emits = defineEmits<{
                                     </li>
                                 </ul>
                             </div>
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{t('others_subnav.department.departments')}}</h4>
                                 <ul>
                                     <li>
@@ -91,7 +91,7 @@ const emits = defineEmits<{
                                     </li>
                                 </ul>
                             </div>
-                            <div class="column is-3">
+                            <div class="column is-4">
                                 <h4 class="column-heading">{{t('others_subnav.city.cities')}}</h4>
                                 <ul>
                                     <li>
@@ -113,32 +113,13 @@ const emits = defineEmits<{
                                 <ul>
                                     <li>
                                         <RouterLink to="/settings">
-                                            <i class="fas fa-wrench" aria-hidden="true"></i>
+                                            <i class="fas fa-wrench mx-2" aria-hidden="true"></i>
                                             <span>{{ t('others_subnav.setting.edit_settings')}}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
 
-                            </div>
-                            <div class="column is-3">
-                                <h4 class="column-heading">{{t('others_subnav.user_status.user_statuses')}}</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/userStatus">
-                                            <i class="fas fa-user-check" aria-hidden="true"></i>
-                                            <span>{{t('others_subnav.user_status.user_statuses')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                    <li>
-                                        <RouterLink to="/userStatus/add">
-                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>{{t('others_subnav.user_status.create_user_status')}}</span>
-                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul><br />
                             </div>
                         </div>
                     </div>

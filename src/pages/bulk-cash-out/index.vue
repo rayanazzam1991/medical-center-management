@@ -39,13 +39,15 @@ onMounted(async () => {
 });
 let walletId = ref()
 let amount = ref()
+let contractorId = ref()
 const createBulkCashOut = ref<CreateBulkCashOut>(defaultCreateBulkCashOut)
 const getSelectedWallets = (()=>{
     for (let i  of selectedRowsId.value) {
         const SelectedWallet = walletList.value.find((wallet) => wallet.id == i)
         walletId.value = SelectedWallet?.id
         amount.value = SelectedWallet?.amount
-        createBulkCashOut.value.bulkCashOuts.push({wallet_id: walletId.value,total:amount.value })
+        contractorId.value = SelectedWallet?.contractor_id
+        createBulkCashOut.value.bulkCashOuts.push({wallet_id: walletId.value,total:amount.value ,contractor_id:contractorId.value})
     }
 });
 const onSubmit = async () => {
@@ -80,7 +82,7 @@ const columns = {
     cellClass: 'is-flex-grow-0',
     align : 'center'
   },
-  "contarctor.users.name": {
+  contractor_name: {
         align: 'center',
         label: t('walletMovement.cash_out_form.contarctor'),
         grow: true,
