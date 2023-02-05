@@ -355,6 +355,7 @@ const onAddFile = async (event: any) => {
 
 
 const canMarkAttendance = async () => {
+    return true
     const selectedCellDateSplitter = selectedCell.value.date.split("-")
     const selectedCellMonth = selectedCellDateSplitter[1]
     if (selectedCellMonth == currentMonth) {
