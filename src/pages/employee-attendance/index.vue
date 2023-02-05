@@ -302,7 +302,7 @@ const justifyEmployeeAttendance = async () => {
                 await search(searchFilter.value, selectedMonthDays.value)
                 notif.dismissAll()
                 await sleep(200);
-                notif.success(t('toast.success.unjustified'))
+                notif.success(t('toast.success.justified'))
 
             } else {
                 await sleep(200)
@@ -315,7 +315,7 @@ const justifyEmployeeAttendance = async () => {
             await search(searchFilter.value, selectedMonthDays.value)
             notif.dismissAll()
             await sleep(200);
-            notif.success(t('toast.success.unjustified'))
+            notif.success(t('toast.success.justified'))
 
         }
 
@@ -2120,4 +2120,11 @@ Object.assign(columns29, columns28, columns29Sub)
     content: " *";
     color: var(--danger);
 }
+
+.file-name {
+
+    border-radius: 0 !important;
+    border-left-width: 1px ;
+}
+
 </style>
