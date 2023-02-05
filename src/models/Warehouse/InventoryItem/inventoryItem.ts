@@ -6,6 +6,8 @@ export interface InventoryItem {
     id?: number
     quantity: number
     min_quantity: number
+    item: string
+    item_id: number
     action_by?: User
     updated_at: string
 }
@@ -21,6 +23,8 @@ export const defaultInventoryItem: InventoryItem = {
     id: 0,
     quantity: 0,
     min_quantity: 0,
+    item: '',
+    item_id: 0,
     action_by: undefined,
     updated_at: ''
 

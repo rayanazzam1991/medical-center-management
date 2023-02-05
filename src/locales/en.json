@@ -172,9 +172,9 @@
       "add_quantity": "Add Quantity",
       "withdraw_quantity": "Withdray Quantity"
     },
-    "item_history": {
-      "item_history": "Item History",
-      "list_stock_movement": "List Stock Movement"
+    "inventory_item_history": {
+      "inventory_item_history": "inventory item history",
+      "list_internal_movement": "list internal movement"
     },
     "inventory": {
       "inventory": "inventory",
@@ -889,37 +889,29 @@
     },
     "header_button": "Add Item"
   },
-  "list_stock_movement": {
+  "list_internal_movement": {
     "table": {
-      "title": "List Stock Movement",
+      "title": " list internal movement",
       "columns": {
-        "item": "Item",
-        "type": "Type",
-        "quantity": "Quantity",
-        "price": "Price",
-        "cost": "Cost",
-        "requester": "Requester",
-        "note": "Note",
-        "created_at": "Created At",
-        "created_by": "Created By"
+        "item": "item",
+        "type": "type",
+        "quantity": "quantity",
+        "from_inventory": "from inventory",
+        "to_inventory": "to inventory",
+        "note": "note",
+        "created_at": "created at",
+        "action_by": "action by"
       }
     },
     "search_filter": {
-      "title": "Filter Item",
-      "select_level_1": "Select Level 1",
-      "select_level_2": "Select Level 2",
-      "select_item": "Select Item",
-      "select_type": "Select Type",
-      "in": "In",
-      "out": "Out",
-      "level_1": "Level 1",
-      "level_2": "Level 2",
-      "create_date": "Create Date: ",
-      "from": "From: ",
-      "to": "To: "
-    },
-    "add_quantity_button": "Add Quantity",
-    "withdraw_quantity_button": "Withdraw Quantity"
+      "title": "Filter list internal movement",
+      "select_from_inventory": "select_from_inventory",
+      "select_to_inventory": "select_to_inventory",
+      "select_item": " select_item",
+      "create_date": " create_date: ",
+      "from": "from: ",
+      "to": "to: "
+    }
   },
   "nationality": {
     "table": {

@@ -9,7 +9,7 @@
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useWithdrawItemForm } from '../stores/Warehouse/ItemHistory/itemHistoryFormSteps';
-import { useitemHistory } from '../stores/Warehouse/ItemHistory/itemHistoryStore';
+import { useitemHistory } from '../stores/Warehouse/ItemHistory/inventoryItemHistoryStoretoryStore';
 
 const {t} = useI18n()
 const itemHistoryStore = useitemHistory()

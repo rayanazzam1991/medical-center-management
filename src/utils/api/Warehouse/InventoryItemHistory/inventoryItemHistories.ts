@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { addQuantity, ChangeItemHistoryStatus, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { addQuantity, ChangeItemHistoryStatus, inventoryItemHistory, InventoryItemHistorySearchFilter, withdrawQuantity } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function addQuantityApi(
@@ -19,11 +19,11 @@ export async function withdrawQuantityApi(
 
     return { response }
 }
-export async function getItemHistoriesApi(
+export async function getInternalInventoryMovementsListApi(
     api: AxiosInstance,
-    searchFilter: ItemHistorySearchFilter
+    searchFilter: InventoryItemHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('inventoryItemHistory/getItemHistoriesList', {
+    const { data: response, headers } = await api.get('inventoryItemHistory/getInternalInventoryMovementsList', {
         params: searchFilter,
     })
     return { response }
@@ -41,7 +41,7 @@ export async function changeItemHistoryStatusApi(
 export async function getItemHistoryApi(
     api: AxiosInstance,
     itemId: number,
-    searchFilter: ItemHistorySearchFilter
+    searchFilter: InventoryItemHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
     const { data: response, headers } = await api.get(`inventoryItemHistory/getItemHistory/${itemId}`, {
         params: searchFilter,
