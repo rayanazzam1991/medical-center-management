@@ -8,11 +8,11 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
-import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
+import { defaultChangeItemHistoryStatus,  defaultInventoryItemHistory,  defaultInventoryItemHistorySearchFilter,inventoryItemHistory,InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { changeItemHistoryStatus,  getItemHistory } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
-import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
+import { useinventoryItemHistory } from "/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
 import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
@@ -22,7 +22,7 @@ import { useI18n } from "vue-i18n"
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
-const itemHistoryStore = useitemHistory()
+const itemHistoryStore = useinventoryItemHistory()
 const currentItem = ref<Item>(defaultItem)
 const currentItemModel = ref<Item>(defaultItem)
 
@@ -32,13 +32,13 @@ const changeHistoryStatusPopup = ref(false)
 const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
 const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
-const itemHistoryChangeStatus = ref<itemHistory>(defaultItemHistory)
+const itemHistoryChangeStatus = ref<inventoryItemHistory>(defaultInventoryItemHistory)
 const keyIncrement = ref(1)
 const loading = ref(false)
-const allItemHistoriesList = ref<itemHistory[]>([])
-const ItemHistoriesList = ref<itemHistory[]>([])
-const searchFilter = ref(defaultItemHistorySearchFilter)
-const itemHistoryList = ref<Array<itemHistory>>([])
+const allItemHistoriesList = ref<inventoryItemHistory[]>([])
+const ItemHistoriesList = ref<inventoryItemHistory[]>([])
+const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
+const inventoryItemHistoryList = ref<Array<inventoryItemHistory>>([])
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
@@ -70,22 +70,22 @@ onMounted(async () => {
     loading.value = false
 
     // const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
-    // searchFilter.value = {} as ItemHistorySearchFilter
+    // searchFilter.value = {} as InventoryItemHistorySearchFilter
     // itemHistoryList.value = itemHistories
     // paginationVar.value = pagination
     // keyIncrement.value = keyIncrement.value + 1
     // default_per_page.value = pagination.per_page
 })
 
-const search = async (searchFilter2: ItemHistorySearchFilter) => {
+const search = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
     const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter2)
-    itemHistoryList.value = itemHistories
+    inventoryItemHistoryList.value = itemHistories
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
 }
 
-const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
+const resetFilter = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     searchFilter.value = searchFilter2
     await search(searchFilter.value)
 }

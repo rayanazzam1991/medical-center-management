@@ -143,14 +143,6 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl class="ml-2 ">
-                                <VButton class="" to="/from-main-inventory" color="primary">{{ t('inventory.table.buttons_name.from_main_inventory') }}
-                                </VButton>
-                            </VControl>
-                            <VControl >
-                                <VButton class="" to="" color="primary">{{ t('inventory.table.buttons_name.to_main_inventory') }}
-                                </VButton>
-                            </VControl>
                         </div>
                     </div>
                 </div>

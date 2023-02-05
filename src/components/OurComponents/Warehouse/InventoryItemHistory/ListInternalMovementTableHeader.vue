@@ -1,7 +1,7 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
-import { defaultItemHistorySearchFilter, ItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { defaultInventoryItemHistorySearchFilter, InventoryItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -37,7 +37,7 @@ export default defineComponent({
         const searchFilterPop = ref(false)
         const searchType = ref('')
         const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultItemHistorySearchFilter)
+        const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
         const is_reseted = ref(false)
         const keyIncrement = ref(0)
         const quickSearchField = ref('')
@@ -53,10 +53,11 @@ export default defineComponent({
             search()
         }
         const search = () => {
+            searchFilter.value.page = 1
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
         }
-        const search_filter = (value: ItemHistorySearchFilter) => {
+        const search_filter = (value: InventoryItemHistorySearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
 
@@ -65,8 +66,8 @@ export default defineComponent({
         const resetFilter = () => {
             searchFilter.value.type = undefined
             searchFilter.value.status = undefined
-            searchFilter.value.category_id = undefined
-            searchFilter.value.sub_category_id = undefined
+            searchFilter.value.from_inventory = undefined
+            searchFilter.value.to_inventory = undefined
             searchFilter.value.item_id = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
@@ -75,11 +76,11 @@ export default defineComponent({
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
         }
-        const resetFilter_popup = (value: ItemHistorySearchFilter) => {
+        const resetFilter_popup = (value: InventoryItemHistorySearchFilter) => {
             searchFilter.value.type = undefined
             searchFilter.value.status = undefined
-            searchFilter.value.category_id = undefined
-            searchFilter.value.sub_category_id = undefined
+            searchFilter.value.from_inventory = undefined
+            searchFilter.value.to_inventory = undefined
             searchFilter.value.item_id = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
@@ -123,12 +124,12 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl class="mr-4">
-                                <VButton class="" to="/add-quantity" color="primary">{{t('list_stock_movement.add_quantity_button')}}
+                            <VControl class="ml-2">
+                                <VButton class="" to="/from-main-inventory" color="primary">{{ t('inventory.table.buttons_name.from_main_inventory') }}
                                 </VButton>
                             </VControl>
-                            <VControl>
-                                <VButton class="" to="/withdraw-quantity" color="primary">{{t('list_stock_movement.withdraw_quantity_button')}}
+                            <VControl >
+                                <VButton class="" to="/to-main-inventory" color="primary">{{ t('inventory.table.buttons_name.to_main_inventory') }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -136,7 +137,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ListStockeMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+        <ListInternalMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

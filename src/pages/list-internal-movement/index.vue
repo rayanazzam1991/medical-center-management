@@ -1,78 +1,62 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import { changeItemHistoryStatus, getItemHistoriesList } from '/@src/services/Warehouse/ItemHistory/itemHistoryService'
+import { changeItemHistoryStatus, getInternalInventoryMovementsList } from '../../services/Warehouse/ItemHistory/inventoryItemHistoryService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
-import { useitemHistory } from '/@src/stores/Warehouse/ItemHistory/itemHistoryStore'
+import { useinventoryItemHistory } from '../../stores/Warehouse/ItemHistory/inventoryItemHistoryStore'
 import sleep from '/@src/utils/sleep'
 import {
     defaultChangeItemHistoryStatus,
-    defaultItemHistory,
-    defaultItemHistorySearchFilter,
-    ItemHistorySearchFilter,
+    defaultInventoryItemHistory,
+    defaultInventoryItemHistorySearchFilter,
+    InventoryItemHistorySearchFilter,
     ItemHsitoryConsts,
-    itemHistory
+    inventoryItemHistory
 } from '../../models/Warehouse/ItemHistory/inventoryItemHistory'
 import { Notyf } from 'notyf'
 import { BaseConsts } from '/@src/utils/consts/base'
 import { useI18n } from 'vue-i18n'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
-viewWrapper.setPageTitle(t('list_stock_movement.table.title'))
+viewWrapper.setPageTitle(t('list_internal_movement.table.title'))
 useHead({
-    title: t('list_stock_movement.table.title'),
+    title: t('list_internal_movement.table.title'),
 })
 const notif = useNotyf() as Notyf
-const searchFilter = ref(defaultItemHistorySearchFilter)
-const itemHistoriesList = ref<Array<itemHistory>>([])
+const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
+const itemHistoriesList = ref<Array<inventoryItemHistory>>([])
 const changeStatusPopup = ref(false)
-const itemChangeStatus = ref<itemHistory>(defaultItemHistory)
+const itemChangeStatus = ref<inventoryItemHistory>(defaultInventoryItemHistory)
 const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
-const itemHistoryStore = useitemHistory()
+const itemHistoryStore = useinventoryItemHistory()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 
 onMounted(async () => {
-    searchFilter.value = {} as ItemHistorySearchFilter
+    searchFilter.value = {} as InventoryItemHistorySearchFilter
     searchFilter.value.status = BaseConsts.ACTIVE
-    const { itemHistories, pagination } = await getItemHistoriesList(searchFilter.value)
+    const { itemHistories, pagination } = await getInternalInventoryMovementsList(searchFilter.value)
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
 });
 
-const changestatusItemHistory = async () => {
-    currentChangeStatusItemHistory.value.id = currentChangeStatusItemHistory.value.id
-    const { message, success } = await changeItemHistoryStatus(currentChangeStatusItemHistory.value)
-    if (success) {
-        await search(searchFilter.value)
-        // @ts-ignore
-        notif.dismissAll()
-        await sleep(200);
-        // @ts-ignore
-        notif.success(t('toast.success.edit'))
-    } else {
-        await sleep(200);
-        notif.error(message)
-    }
-    changeStatusPopup.value = false
-}
-const search = async (searchFilter2: ItemHistorySearchFilter) => {
+const search = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     searchFilter2.status = BaseConsts.ACTIVE
 
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
-    const { itemHistories, pagination } = await getItemHistoriesList(searchFilter2)
+    const { itemHistories, pagination } = await getInternalInventoryMovementsList(searchFilter2)
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
 }
 
-const resetFilter = async (searchFilter2: ItemHistorySearchFilter) => {
+const resetFilter = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     searchFilter.value = searchFilter2
     searchFilter.value.status = BaseConsts.ACTIVE
 
@@ -105,87 +89,43 @@ const noteTrim = (value: string) => {
     }
 }
 const columns = {
-    item: {
-        searchable: true,
-        grow: "xl",
-        align: 'center',
-        label: t('list_stock_movement.table.columns.item'),
-        renderRow: (row: any) =>
-            h('span', row?.item.name)
-    },
-    type: {
+    from_inventory: {
         sortable: true,
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_stock_movement.table.columns.type'),
-
+        label: t('list_internal_movement.table.columns.from_inventory'),
         renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row.type === 'in'
-                            ? 'success'
-                            : row.type === 'out'
-                                ? 'danger'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row.type
-                    },
-                }
-            ),
+            h('span', row?.from_inventory ? row?.from_inventory : '-'),
+    },
+    to_inventory: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        label: t('list_internal_movement.table.columns.to_inventory'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory ? row?.to_inventory : '-'),
+    },
+    item: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: t('list_internal_movement.table.columns.item'),
+        renderRow: (row: any) =>
+            h('span', row?.item)
     },
     item_quantity: {
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_stock_movement.table.columns.quantity'),
-
-    },
-    add_item_cost: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        label: t('list_stock_movement.table.columns.cost'),
-        renderRow: (row: any) =>
-            h('span', row?.add_item_cost ? row?.add_item_cost : '-'),
-
-
-        grow: true,
-    },
-    withdraw_item_price: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        label: t('list_stock_movement.table.columns.price'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-'),
-
-
-    },
-    requester_name: {
-        searchable: true,
-        grow: 'lg',
-        align: 'center',
-        label: t('list_stock_movement.table.columns.requester'),
-        renderRow: (row: any) =>
-            h('span', {
-                innerHTML: row?.requester_name ?
-                    `<div class="tooltip">${noteTrim(row?.requester_name)}<div class="tooltiptext"><p class="text-white">${row?.requester_name}</p></div></div>` : '-',
-
-            }),
-
+        label: t('list_internal_movement.table.columns.quantity'),
     },
     note: {
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_stock_movement.table.columns.note'),
+        label: t('list_internal_movement.table.columns.note'),
 
         renderRow: (row: any) =>
             h('span', {
@@ -197,26 +137,26 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        label: t('list_stock_movement.table.columns.created_at'),
+        label: t('list_internal_movement.table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
         sortable: true,
     },
-    created_by: {
+    action_by: {
         searchable: true,
         grow: true,
         align: 'center',
-        label: t('list_stock_movement.table.columns.created_by'),
+        label: t('list_internal_movement.table.columns.action_by'),
         renderRow: (row: any) =>
-            h('span', row?.created_by?.first_name)
+            h('span', row?.action_by?.first_name)
     },
 } as const
 </script>
 
 <template>
-    <ListStockMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+    <ListInternalMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
         @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="itemHistoriesList" @update:sort="itemSort">
@@ -255,34 +195,6 @@ const columns = {
       })}}</h6>
         <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <!-- <VModal title="Change Item History Status" :open="changeStatusPopup" actions="center"
-        @close="changeStatusPopup = false">
-        <template #content>
-            <form class="form-layout" @submit.prevent="">
-                <div class="form-fieldset">
-                    <div class="columns is-multiline">
-                        <div class="column is-12">
-                            <VField id="status" v-slot="{ field }">
-                                <VLabel class="required">{{ viewWrapper.pageTitle }} status</VLabel>
-                                <VControl>
-                                    <VRadio v-model="currentChangeStatusItemHistory.status"
-                                        :value="ItemHsitoryConsts.INACTIVE" :label="ItemHsitoryConsts.showStatusName(0)"
-                                        name="status" color="danger" />
-                                    <VRadio v-model="currentChangeStatusItemHistory.status"
-                                        :value="ItemHsitoryConsts.ACTIVE" :label="ItemHsitoryConsts.showStatusName(1)"
-                                        name="status" color="success" />
-                                    <ErrorMessage class="help is-danger" name="status" />
-                                </VControl>
-                            </VField>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </template>
-        <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItemHistory()">Confirm</VButton>
-        </template>
-    </VModal> -->
 </template>
 <style  lang="scss">
 .tooltip {

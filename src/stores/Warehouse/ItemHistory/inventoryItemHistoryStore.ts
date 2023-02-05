@@ -1,16 +1,16 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Media } from "/@src/models/Others/Media/media"
-import { itemHistory, addQuantity, withdrawQuantity, ItemHistorySearchFilter, ChangeItemHistoryStatus } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { inventoryItemHistory, addQuantity, withdrawQuantity, InventoryItemHistorySearchFilter, ChangeItemHistoryStatus } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { uploadMediaApi } from "/@src/utils/api/Others/Media"
-import { addQuantityApi, getItemHistoriesApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi } from "/@src/utils/api/Warehouse/ItemHistory"
+import { addQuantityApi, getInternalInventoryMovementsListApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi } from "../../../utils/api/Warehouse/InventoryItemHistory"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
 
-export const useitemHistory = defineStore('itemHistory', () => {
+export const useinventoryItemHistory = defineStore('inventoryItemHistory', () => {
     const api = useApi()
-    const itemHistories = ref<itemHistory[]>([])
+    const inventoryItemHistories = ref<inventoryItemHistory[]>([])
     const pagination = ref<Pagination>(defaultPagination)
     const loading = ref(false)
     const success = ref<boolean>()
@@ -23,14 +23,14 @@ export const useitemHistory = defineStore('itemHistory', () => {
         sleep(2000)
         try {
             const response = await addQuantityApi(api, addquantity)
-            var returneditemHistory: itemHistory
-            returneditemHistory = response.response.data
-            itemHistories.value.push(returneditemHistory)
+            var returnedinventoryItemHistory: inventoryItemHistory
+            returnedinventoryItemHistory = response.response.data
+            inventoryItemHistories.value.push(returnedinventoryItemHistory)
             success.value = response.response.success
             error_code.value = response.response.error_code
             message.value = response.response.message
 
-            return returneditemHistory
+            return returnedinventoryItemHistory
         }
         catch (error: any) {
             success.value = error?.response.data.success
@@ -74,14 +74,14 @@ export const useitemHistory = defineStore('itemHistory', () => {
         sleep(2000)
         try {
             const response = await withdrawQuantityApi(api, withdrawquantity)
-            var returneditemHistory: itemHistory
-            returneditemHistory = response.response.data
-            itemHistories.value.push(returneditemHistory)
+            var returnedinventoryItemHistory: inventoryItemHistory
+            returnedinventoryItemHistory = response.response.data
+            inventoryItemHistories.value.push(returnedinventoryItemHistory)
             success.value = response.response.success
             error_code.value = response.response.error_code
             message.value = response.response.message
 
-            return returneditemHistory
+            return returnedinventoryItemHistory
         }
         catch (error: any) {
             success.value = error?.response.data.success
@@ -93,14 +93,14 @@ export const useitemHistory = defineStore('itemHistory', () => {
             loading.value = false
         }
     }
-    async function getItemHistoriesStore(searchFilter: ItemHistorySearchFilter) {
+    async function getInternalInventoryMovementsListStore(searchFilter: InventoryItemHistorySearchFilter) {
         if (loading.value) return
 
         loading.value = true
 
         try {
-            const returnedResponse = await getItemHistoriesApi(api, searchFilter)
-            itemHistories.value = returnedResponse.response.data
+            const returnedResponse = await getInternalInventoryMovementsListApi(api, searchFilter)
+            inventoryItemHistories.value = returnedResponse.response.data
             pagination.value = returnedResponse.response.pagination
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
@@ -118,22 +118,22 @@ export const useitemHistory = defineStore('itemHistory', () => {
         }
     }
 
-    async function changeItemHistoryStatusStore(itemHistory: ChangeItemHistoryStatus) {
+    async function changeItemHistoryStatusStore(inventoryItemHistory: ChangeItemHistoryStatus) {
         if (loading.value) return
         loading.value = true
         try {
-            const response = await changeItemHistoryStatusApi(api, itemHistory)
-            var returnedItemHistory: itemHistory
+            const response = await changeItemHistoryStatusApi(api, inventoryItemHistory)
+            var returnedItemHistory: inventoryItemHistory
             returnedItemHistory = response.response.data
-            itemHistories.value.splice(
-                itemHistories.value.findIndex((itemHistoryElement) => (itemHistoryElement.id = itemHistory.id)),
+            inventoryItemHistories.value.splice(
+                inventoryItemHistories.value.findIndex((inventoryItemHistoryElement) => (inventoryItemHistoryElement.id = inventoryItemHistory.id)),
                 1
             )
             success.value = response.response.success
             error_code.value = response.response.error_code
             message.value = response.response.message
 
-            itemHistories.value.push(returnedItemHistory)
+            inventoryItemHistories.value.push(returnedItemHistory)
         } catch (error: any) {
             success.value = error?.response.data.success
             error_code.value = error?.response.data.error_code
@@ -144,13 +144,13 @@ export const useitemHistory = defineStore('itemHistory', () => {
         }
     }
     async function getItemHistoryStore(itemId: number,
-        searchFilter: ItemHistorySearchFilter) {
+        searchFilter: InventoryItemHistorySearchFilter) {
         if (loading.value) return
         loading.value = true
 
         try {
             const returnedResponse = await getItemHistoryApi(api, itemId, searchFilter)
-            itemHistories.value = returnedResponse.response.data
+            inventoryItemHistories.value = returnedResponse.response.data
             pagination.value = returnedResponse.response.pagination
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
@@ -174,13 +174,13 @@ export const useitemHistory = defineStore('itemHistory', () => {
         success,
         error_code,
         message,
-        itemHistories,
+        inventoryItemHistories,
         pagination,
         loading,
         addQuantityStore,
         withdrawQuantityStore,
         addItemHistoryFileStore,
-        getItemHistoriesStore,
+        getInternalInventoryMovementsListStore,
         changeItemHistoryStatusStore,
         getItemHistoryStore
     } as const
@@ -194,5 +194,5 @@ export const useitemHistory = defineStore('itemHistory', () => {
  * @see https://vitejs.dev/guide/api-hmr.html
  */
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useitemHistory, import.meta.hot))
+    import.meta.hot.accept(acceptHMRUpdate(useinventoryItemHistory, import.meta.hot))
 }
