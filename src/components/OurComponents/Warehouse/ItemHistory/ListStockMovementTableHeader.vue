@@ -1,7 +1,7 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
-import { defaultItemHistorySearchFilter, ItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultItemHistorySearchFilter, ItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
 
 

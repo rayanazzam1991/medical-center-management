@@ -8,7 +8,7 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultChangeItemHistoryStatus, defaultItemHistory, defaultItemHistorySearchFilter, itemHistory, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { changeItemHistoryStatus, getItemHistoriesList, getItemHistory } from "/@src/services/Warehouse/ItemHistory/itemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -297,6 +297,13 @@ const columns = {
                         <span>{{t('item.details.status')}}: <span>
                                 <VTag :color="currentItem.status === ItemConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ ItemConsts.showStatusName(currentItem.status) }}</VTag>
+                            </span></span>
+                    </div>
+                    <div class="profile-stat">
+                        <i aria-hidden="true" class="lnil "></i>
+                        <span>{{t('item.table.columns.for_sale')}}: <span>
+                                <VTag :color="currentItem.is_for_sale === ItemConsts.IS_NOT_FORE_SALE ? 'warning' : 'success'">
+                                    {{ ItemConsts.showForSale(currentItem.is_for_sale) }}</VTag>
                             </span></span>
                     </div>
                 </div>

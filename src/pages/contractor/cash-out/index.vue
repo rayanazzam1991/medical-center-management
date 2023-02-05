@@ -99,7 +99,7 @@ const columns = {
                 clickable: true,
                 title: row?.wallet?.contractor_name,
                 onClick: () => {
-                    router.push({ path: `/contractor/${row?.wallet?.contractor?.id}` ,  
+                    router.push({ path: `/contractor/${row?.wallet?.contractor_id}` ,  
                        query: { tab: 'Wallet' }});
                 },
             } ),

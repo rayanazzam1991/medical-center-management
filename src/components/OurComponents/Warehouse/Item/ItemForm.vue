@@ -78,7 +78,7 @@ export default defineComponent({
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
 
-
+  
         })
         const getSubCategoryByCategroy = () => {
             let categoriesFilter = {} as CategorySearchFilter
@@ -87,8 +87,16 @@ export default defineComponent({
             subcategoeisList.value = SubCategory
 
         }
+        onMounted(()=>{ // set is_for_sale true to trigger price validation by refresh the schema
+            currentItem.value.is_for_sale = 1;
+        })
+
+        watch(currentItem.value,()=>{ // this to set value of is_for_sale in schema
+            setFieldValue("is_for_sale",currentItem.value.is_for_sale!)
+        })
+        
         const validationSchema = itemvalidationSchema
-        const { handleSubmit } = useForm({
+        const { handleSubmit,setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 name: currentItem.value.name ?? "",
@@ -97,6 +105,7 @@ export default defineComponent({
                 category_id: currentItem.value.category.id ?? undefined,
                 price: currentItem.value.price ?? 0,
                 cost: currentItem.value.cost ?? 0,
+                is_for_sale: currentItem.value.is_for_sale ?? false,
             } : {
                 name: '',
                 price: 0,
@@ -104,6 +113,7 @@ export default defineComponent({
                 description: '',
                 category_id: undefined,
                 status: 1,
+                is_for_sale:false
 
             },
         });
@@ -171,6 +181,7 @@ export default defineComponent({
                 notif.error(message)
             }
         });
+       
         return { t, selectedCategoryId, getSubCategoryByCategroy, subcategoeisList, mainCategoriesList, pageTitle, onSubmit, currentItem, viewWrapper, backRoute, ItemConsts, itemStore };
     },
 })
@@ -240,17 +251,22 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
-                    <div class="form-fieldset">
+                    <div class="form-fieldset" >
                         <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <VField id="price">
-                                    <VLabel class="required">{{ t('item.form.price') }} </VLabel>
-                                    <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="currentItem.price" type="number" />
-                                        <ErrorMessage name="price" class="help is-danger" />
-                                    </VControl>
+                            <div class="is-flex is-justify-content-center">
+                                <VField id="is_for_sale">
+                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
+                                <VControl class="ml-3">
+                                    <VSwitchSegment v-model="currentItem.is_for_sale"
+                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
+                                </VControl>
                                 </VField>
                             </div>
+                        </div>
+                    </div>
+                    <!--Fieldset-->
+                    <div class="form-fieldset">
+                        <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="cost">
                                     <VLabel class="required">{{ t('item.form.cost')  }} </VLabel>
@@ -260,6 +276,16 @@ export default defineComponent({
                                     </VControl>
                                 </VField>
                             </div>
+                            <div class="column is-6">
+                                <VField id="price" v-if="currentItem.is_for_sale">
+                                    <VLabel class="required">{{ t('item.form.price') }} </VLabel>
+                                    <VControl icon="feather:dollar-sign">
+                                        <VInput v-model="currentItem.price" type="number" />
+                                        <ErrorMessage name="price" class="help is-danger" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            
                         </div>
                     </div>
                     <!--Fieldset-->
@@ -272,20 +298,6 @@ export default defineComponent({
                                         <VTextarea v-model="currentItem.description" />
                                         <ErrorMessage class="help is-danger" name="description" />
                                     </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div class="form-fieldset" >
-                        <div class="columns is-multiline">
-                            <div class="is-flex is-justify-content-center">
-                                <VField >
-                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
-                                <VControl class="ml-3">
-                                    <VSwitchSegment v-model="currentItem.is_for_sale"
-                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
-                                </VControl>
                                 </VField>
                             </div>
                         </div>

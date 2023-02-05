@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Media } from "/@src/models/Others/Media/media"
-import { itemHistory, addQuantity, withdrawQuantity, ItemHistorySearchFilter, ChangeItemHistoryStatus } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { itemHistory, addQuantity, withdrawQuantity, ItemHistorySearchFilter, ChangeItemHistoryStatus } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { uploadMediaApi } from "/@src/utils/api/Others/Media"
 import { addQuantityApi, getItemHistoriesApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi } from "/@src/utils/api/Warehouse/ItemHistory"
 import { Pagination, defaultPagination } from "/@src/utils/response"

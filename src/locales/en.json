@@ -52,7 +52,8 @@
       "price": "Please enter a valid price",
       "invalid_type_error": "Please enter a valid number",
       "payment_percentage": "Please enter a number from 1-100",
-      "phone_number": "Please enter a valid phone number"
+      "phone_number": "Please enter a valid phone number",
+      "larger_thar_zero": "Must be greater than zero"
     },
     "redio": {
       "required": "Please choose one"
@@ -174,6 +175,10 @@
     "item_history": {
       "item_history": "Item History",
       "list_stock_movement": "List Stock Movement"
+    },
+    "inventory": {
+      "inventory": "inventory",
+      "inventory_table": " list inventory table"
     }
   },
   "accounting_subnav": {
@@ -1574,6 +1579,28 @@
     "nearest_15": "To Nearest 15 Min",
     "nearest_30": "To Nearest 30 Min",
     "nearest_60": "To Nearest 60 Min"
+  },
+  "inventory": {
+    "table": {
+      "title": "list sub inventories",
+      "columns": {
+        "name": "inventory name ",
+        "items_count": "items count",
+        "created_at": "created at",
+        "updated_at": "updated at",
+        "action_by": "action by",
+        "status": "status"
+      }
+    },
+    "search_filter": {
+      "title": "filter sub inventories",
+      "name": " inventory name",
+      "status": "status",
+      "action_by": "action by",
+      "date": "date:",
+      "from": "from: ",
+      "to": "to: "
+    }
   },
   "user_statuses": {
     "active": "Active",

@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultMainCategorySearchFilter, Category, defaultCategorySearchFilter, defaultSubCategorySearchFilter, CategorySearchFilter } from "/@src/models/Warehouse/Category/category"
 import { defaultItemSearchFilter, ItemConsts, Item, ItemSearchFilter } from "/@src/models/Warehouse/Item/item"
-import { defaultItemHistorySearchFilter } from "/@src/models/Warehouse/ItemHistory/itemHistory"
+import { defaultItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { getFilterCategoriesList } from "/@src/services/Warehouse/Category/CategoryService"
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService'
 

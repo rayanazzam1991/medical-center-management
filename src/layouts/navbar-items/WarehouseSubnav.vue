@@ -86,6 +86,16 @@ const {t,locale} = useI18n()
                                         </RouterLink>
                                     </li>
                                 </ul>
+                                <h4 class="column-heading">{{t('warehouse_subnav.inventory.inventory')}}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/inventory">
+                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{t('warehouse_subnav.inventory.inventory_table')}}</span>
+                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
 
                             </div>
                         </div>

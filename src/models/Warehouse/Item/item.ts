@@ -12,24 +12,24 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 export interface Item {
     id?: number
     name: string
-    price: number
+    price?: number
     cost: number
     category: Category
     created_by?: User
     description?: string
     status: number
-    is_for_sale?: boolean
+    is_for_sale?: number
 }
 
 export interface CreateUpdateItem {
     id?: number
     name: string
-    price: number
+    price?: number
     cost: number
     category_id: number
     description?: string
     status: number
-    is_for_sale?: boolean
+    is_for_sale?: number
 
 
 }
@@ -51,7 +51,7 @@ export interface ItemSearchFilter {
 export const defaultItem: Item = {
     id: 0,
     name: '',
-    price: 0,
+    price: undefined,
     cost: 0,
     description: '',
     category: defaultCategory,
@@ -62,7 +62,7 @@ export const defaultItem: Item = {
 export const defaultCreateUpdateItem: CreateUpdateItem = {
     id: 0,
     name: '',
-    price: 0,
+    price: undefined,
     cost: 0,
     category_id: 0,
     description: '',
@@ -90,7 +90,7 @@ class ItemConsts extends BaseConsts {
     static readonly IS_FORE_SALE = 1
     static readonly IS_NOT_FORE_SALE = 0
 
-    public static showForSale(type: number): string {
+    public static showForSale(type: number | undefined): string {
         if (type === ItemConsts.IS_FORE_SALE)
             return i18n.global.t('item.form.yes')
 

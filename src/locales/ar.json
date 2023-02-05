@@ -58,7 +58,8 @@
       "price": "يرجى ادخال سعر صالح",
       "invalid_type_error": "يرجى ادخال رقم صالح",
       "payment_percentage": "يرجى ادخال رقم من 1-100",
-      "phone_number": "يرجى ادخال رقم هاتف صالح"
+      "phone_number": "يرجى ادخال رقم هاتف صالح",
+      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
     },
     "redio": {
       "required": "يرجى الاختيار"
@@ -180,6 +181,10 @@
     "item_history": {
       "item_history": "سجل المادة",
       "list_stock_movement": "حركة المخزون"
+    },
+    "inventory": {
+      "inventory": "المستودعات",
+      "inventory_table": "قائمة المستودعات الفرعية"
     }
   },
   "accounting_subnav": {
@@ -318,7 +323,7 @@
       "level_2": "المستوى الثاني",
       "parent": "الرئيسية",
       "category_type": "نوع ",
-      "for_sale": "للبيع",
+      "for_sale": "قابل للبيع",
       "to_consume": "للاستهلاك",
       "status": "الحالة"
     },
@@ -806,7 +811,7 @@
       "columns": {
         "name": "الاسم",
         "level_1": "المستوى 1",
-        "for_sale": "للبيع",
+        "for_sale": "قابل للبيع",
         "level_2": "المستوى 2",
         "quantity": "الكميًة",
         "price": "السعر",
@@ -869,7 +874,7 @@
       "price": "السعر",
       "cost": "الكلفة",
       "quantity": "الكميًة",
-      "for_sale": "للبيع",
+      "for_sale": "قابل للبيع",
       "yes": "نعم",
       "no": "لا",
       "min_quantity": "الحد الادنى للكميًة",
@@ -1581,6 +1586,50 @@
     "nearest_15": "إلى أقرب 15 دقيقة",
     "nearest_30": "إلى أقرب 30 دقيقة",
     "nearest_60": "إلى أقرب 60 دقيقة"
+  },
+  "inventory": {
+    "table": {
+      "title": " قائمة المستودعات الفرعية  ",
+      "columns": {
+        "name": "اسم المستودع",
+        "items_count": "عدد المواد",
+        "created_at": "تاريخ الإنشاء",
+        "updated_at": "تاريخ اخر تعديل",
+        "action_by": " عدّل بواسطة",
+        "status": "الحالة",
+        "custody": "عهدة"
+      },
+      "buttons_name": {
+        "from_main_inventory": "سحب كمية من المستودع الرئيسي",
+        "to_main_inventory": "اعادة كمية للمستودع الرئيسي"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية المستودعات الفرعية",
+      "name": "اسم المستودع",
+      "status": "الحالة",
+      "action_by": "انشأ بواسطة",
+      "date": "التاريخ:",
+      "from": "من: ",
+      "to": "إلى: "
+    }
+  },
+  "inventoryItem": {
+    "fromMainInventoryForm": {
+      "title": "سحب كميًة من المستودع الرئيسي",
+      "from_inventory": "من المستودع الرئيسي ",
+      "to_inventory": "إلى عهدة الأخصائي",
+      "level_1": "المستوى الأول",
+      "level_2": "المستوى الثاني",
+      "select_level_1": "اختيار المستوى الأول",
+      "select_level_2": "اختيار المستوى الثاني",
+      "select_item": "اختيار مادة",
+      "select_inventory": "اختيار عهدة أخصائي",
+      "item": "المادة",
+      "note": "ملاحظة",
+      "quantity": "الكميًة"
+    },
+    "back_button": "الرجوع إلى واجهة المستودعات"
   },
   "user_statuses" : {
     "active" : "فعال",
