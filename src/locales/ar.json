@@ -184,7 +184,7 @@
   },
   "accounting_subnav": {
     "salary": {
-      "salaries" : "الراوتب",
+      "salaries": "الراوتب",
       "salaries_history": "سجل الراوتب",
       "deliver_salaries": "تسليم الراوتب",
       "onhold_salaries": "صندوق الأمانات"
@@ -1276,7 +1276,8 @@
   },
   "status": {
     "active": "فعال",
-    "inactive": "غير فعال"
+    "inactive": "غير فعال",
+    "not_recommended": "غير موصى"
   },
   "boolean": {
     "true": "نعم",
@@ -1403,8 +1404,7 @@
       "to": "إلى: "
     },
     "header_button": "سحب مبلغ "
-    },
-  
+  },
   "generate_salaries": {
     "table": {
       "title": "توليد الراوتب",
@@ -1509,5 +1509,48 @@
       "department": "القسم"
     },
     "header_button": "عرض الرواتب"
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "name": " الاسم ",
+      "status": "الحالة"
+    },
+    "form": {
+      "page_title": "المورد",
+      "form_header": "إضافة المورد",
+      "name": " الاسم ",
+      "phone_number": "رقم الهاتف",
+      "address": "العنوان",
+      "notes": "ملاحظات ",
+      "city": "المدينة",
+      "status": "الحالة"
+    },
+    "details": {
+      "title": " المورد  ",
+      "name": "الاسم",
+      "phone_number": "رقم الهاتف",
+      "address": "العنوان ",
+      "city": "المدينة",
+      "notes": "ملاحظات ",
+      "status": "الحالة",
+      "created_by": " بواسطة",
+      "created_at": "تاريخ الإنشاء"
+    },
+    "header_button": "إضافة مورد  "
   }
 }

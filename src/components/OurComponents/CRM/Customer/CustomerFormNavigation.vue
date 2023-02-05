@@ -9,9 +9,8 @@ const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-const {t,locale} = useI18n()
+const {t , locale} = useI18n()
 const customerForm = useCustomerForm()
-const locale = useStorage('locale','ar')
 const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 </script>
 

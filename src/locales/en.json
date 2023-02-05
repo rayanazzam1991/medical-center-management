@@ -1506,5 +1506,48 @@
       "department": "Department"
     },
     "header_button": "View Salaries"
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "name": " الاسم ",
+      "status": "الحالة"
+    },
+    "form": {
+      "page_title": "Supplier",
+      "form_header": "Add Supplier ",
+      "name": " Name ",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "notes": "Notes ",
+      "city": "City",
+      "status": "Status"
+    },
+    "details": {
+      "title": " Supplier  ",
+      "name": "Name",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "city": "City",
+      "notes": "Notes ",
+      "status": "Status",
+      "created_by": "Created By",
+      "created_at": "Created At"
+    },
+    "header_button": "Add Supplier   "
   }
 }
