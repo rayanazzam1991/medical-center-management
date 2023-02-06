@@ -69,11 +69,11 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
-    // const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
-    // searchFilter.value = {} as InventoryItemHistorySearchFilter
-    // itemHistoryList.value = itemHistories
-    // paginationVar.value = pagination
-    // keyIncrement.value = keyIncrement.value + 1
+    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
+    searchFilter.value = {} as InventoryItemHistorySearchFilter
+    inventoryItemHistoryList.value = itemHistories
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
     // default_per_page.value = pagination.per_page
 })
 
@@ -415,7 +415,7 @@ const columns = {
                                     :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
                                     :pagination="paginationVar" :default_per_page="default_per_page"
                                     @resetFilter="resetFilter" />
-                                <VFlexTableWrapper :columns="columns" :data="itemHistoryList" @update:sort="itemSort">
+                                <VFlexTableWrapper :columns="columns" :data="inventoryItemHistoryList" @update:sort="itemSort">
                                     <VFlexTable separators clickable>
                                         <template #body>
                                             <div v-if="itemHistoryStore?.loading" class="flex-list-inner">
@@ -426,19 +426,19 @@ const columns = {
                                                     </VFlexTableCell>
                                                 </div>
                                             </div>
-                                            <div v-else-if="itemHistoryList.length === 0" class="flex-list-inner">
+                                            <div v-else-if="inventoryItemHistoryList.length === 0" class="flex-list-inner">
                                                 <VPlaceholderSection title="No matches"
                                                     subtitle="There is no data that match your search." class="my-6">
                                                 </VPlaceholderSection>
                                             </div>
                                         </template>
                                     </VFlexTable>
-                                    <VFlexPagination v-if="(itemHistoryList.length != 0 && paginationVar.max_page != 1)"
+                                    <VFlexPagination v-if="(inventoryItemHistoryList.length != 0 && paginationVar.max_page != 1)"
                                         :current-page="paginationVar.page" class="mt-6"
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
                                         :max-links-displayed="3" no-router
                                         @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 class="pt-2 is-size-7" v-if="itemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
+                                    <h6 class="pt-2 is-size-7" v-if="inventoryItemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page
           ?
