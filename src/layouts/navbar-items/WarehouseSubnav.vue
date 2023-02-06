@@ -6,7 +6,7 @@ const activeTab = ref<TabId>('warehouse')
 const emits = defineEmits<{
     (e: 'close'): void
 }>()
-const {t,locale} = useI18n()
+const { t, locale } = useI18n()
 // const marginLR = locale.value =="ar" ? "ml-2" : ""
 
 </script>
@@ -26,32 +26,32 @@ const {t,locale} = useI18n()
                                     <li>
                                         <RouterLink to="/category">
                                             <i class="lnir lnir-briefcase" aria-hidden="true"></i>
-                                            <span>{{  t('warehouse_subnav.category.categories') }}</span>
+                                            <span>{{ t('warehouse_subnav.category.categories') }}</span>
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/category/add">
-                                            <i  aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                                            <span>{{t('warehouse_subnav.category.create_category')}}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{ t('warehouse_subnav.category.create_category') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul><br />
-                                <h4 class="column-heading">{{t('warehouse_subnav.item.items')}}</h4>
+                                <h4 class="column-heading">{{ t('warehouse_subnav.item.items') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/item">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>{{t('warehouse_subnav.item.items')}}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{ t('warehouse_subnav.item.items') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                     <li>
                                         <RouterLink to="/item/add">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>{{t('warehouse_subnav.item.create_item')}}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{ t('warehouse_subnav.item.create_item') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
@@ -61,38 +61,61 @@ const {t,locale} = useI18n()
                                 <ul>
                                     <li>
                                         <RouterLink to="/add-quantity">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{ t('warehouse_subnav.quantity.add_quantity') }}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
                                 <ul>
                                     <li>
                                         <RouterLink to="/withdraw-quantity">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
                                             <span>{{ t('warehouse_subnav.quantity.withdraw_quantity') }}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                                        </RouterLink>
-                                    </li>
-                                </ul><br />
-                                <h4 class="column-heading">{{t('warehouse_subnav.inventory_item_history.inventory_item_history')}}</h4>
-                                <ul>
-                                    <li>
-                                        <RouterLink to="/list-internal-movement">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>{{t('warehouse_subnav.inventory_item_history.list_internal_movement')}}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>
-                                <h4 class="column-heading">{{t('warehouse_subnav.inventory.inventory')}}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/to-main-inventory">
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{ t('warehouse_subnav.quantity.to_main_inventory') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/from-main-inventory">
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{ t('warehouse_subnav.quantity.from_main_inventory') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column is-4">
+                                <h4 class="column-heading">{{ t('warehouse_subnav.inventory.inventory') }}</h4>
                                 <ul>
                                     <li>
                                         <RouterLink to="/inventory">
-                                            <i  aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
-                                            <span>{{t('warehouse_subnav.inventory.inventory_table')}}</span>
-                                            <i  aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{ t('warehouse_subnav.inventory.inventory_table') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul><br />
+                                <h4 class="column-heading">
+                                    {{ t('warehouse_subnav.inventory_item_history.inventory_item_history') }}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/list-inventory-movement">
+                                            <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                                            <span>{{
+                                                t('warehouse_subnav.inventory_item_history.list_inventory_movement')
+                                            }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
                                 </ul>

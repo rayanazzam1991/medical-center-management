@@ -170,11 +170,13 @@
     "quantity": {
       "quantity": "Quantity",
       "add_quantity": "Add Quantity",
-      "withdraw_quantity": "Withdray Quantity"
+      "withdraw_quantity": "Withdray Quantity",
+      "from_main_inventory": "Withdraw Quantity From Main Inventory To Contractor Custody",
+      "to_main_inventory": "Return Quantity From Contractor Custody To Main Inventory"
     },
     "inventory_item_history": {
-      "inventory_item_history": "inventory item history",
-      "list_internal_movement": "list internal movement"
+      "inventory_item_history": "Inventory Item History",
+      "list_inventory_movement": "List Inventory Movements"
     },
     "inventory": {
       "inventory": "inventory",
@@ -889,28 +891,43 @@
     },
     "header_button": "Add Item"
   },
-  "list_internal_movement": {
+  "list_inventory_movement": {
     "table": {
-      "title": " list internal movement",
+      "title": "List Inventory Movements",
       "columns": {
         "item": "item",
         "type": "type",
         "quantity": "quantity",
-        "from_inventory": "from inventory",
-        "to_inventory": "to inventory",
+        "from": "from",
+        "to": "to",
         "note": "note",
         "created_at": "created at",
-        "action_by": "action by"
+        "action_by": "action by",
+        "action": "Action Type",
+        "movement_type": "Movement Type"
+      },
+      "action_types": {
+        "add_quantity": "Add Quantity",
+        "withdraw_quantity": "Withdray Quantity",
+        "sell": "Sell"
+      },
+      "movement_types": {
+        "internal": "Internal",
+        "external": "External"
       }
     },
     "search_filter": {
-      "title": "Filter list internal movement",
-      "select_from_inventory": "select_from_inventory",
-      "select_to_inventory": "select_to_inventory",
-      "select_item": " select_item",
-      "create_date": " create_date: ",
-      "from": "from: ",
-      "to": "to: "
+      "title": "Filter Inventory Movements",
+      "select_from_inventory": "From Inventory",
+      "select_to_inventory": "To Inventory",
+      "select_movement_type": "Select Movement Type",
+      "select_action_by": "Action By",
+      "select_requester_name": "Requester Name",
+      "select_action": "Select Action",
+      "select_item": " Select Item",
+      "create_date": "Create Date: ",
+      "from": "From: ",
+      "to": "To: "
     }
   },
   "nationality": {
@@ -1594,6 +1611,33 @@
       "from": "from: ",
       "to": "to: "
     }
+  },
+  "inventoryItem": {
+    "fromMainInventoryForm": {
+      "title": "Withdraw Quantity From Main Inventory To Contractor Custody",
+      "from_inventory": "From Main Inventory",
+      "to_inventory": "To Contractor Custody",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "select_level_1": "Select Level 1",
+      "select_level_2": "Select Level 2",
+      "select_item": "Select Item",
+      "select_inventory": "Select Contractor Custody",
+      "item": "Item",
+      "note": "Note",
+      "quantity": "Quantity"
+    },
+    "toMainInventoryForm": {
+      "title": "Return Quantity From Contractor Custody To Main Inventory",
+      "to_inventory": " To Main Inventory",
+      "from_inventory": " From Contractor Custody",
+      "select_item": "Select Item",
+      "select_inventory": "Select Contractor Custody",
+      "item": "Item",
+      "note": "Note",
+      "quantity": "Quantity"
+    },
+    "back_button": "Back To Inventory Movements List"
   },
   "user_statuses": {
     "active": "Active",

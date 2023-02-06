@@ -11,7 +11,7 @@ import sleep from '/@src/utils/sleep';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
-import { defaultItem, defaultItemSearchFilter, Item, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
+import { defaultItem, defaultItemSearchFilter, Item, ItemConsts, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
 import { Contractor, ContractorSearchFilter, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
 import { defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee';
@@ -88,7 +88,8 @@ const getSubCategoryByCategroy =  () => {
 const getItemBySubCategroy = async () => {
     let itemSearchFilter = {} as ItemSearchFilter
     itemSearchFilter.status = BaseConsts.ACTIVE
-    itemSearchFilter.is_for_sale = false
+    itemSearchFilter.is_for_sale = ItemConsts.IS_NOT_FORE_SALE
+    console.log(itemSearchFilter)
     itemSearchFilter.per_page = 500
     const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items
@@ -139,7 +140,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         await sleep(500)
         notif.success(t('toast.success.withdraw'));
 
-        router.push({ path: `/item` });
+        router.push({ path: `/list-inventory-movement` });
     }
     else {
         await sleep(500);

@@ -20,7 +20,7 @@ import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('add_quantity.form.title'))
 const head = useHead({
     title: t('add_quantity.form.title'),
@@ -77,8 +77,8 @@ const getSubCategoryByCategroy = () => {
     const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
     subcategoeisList.value = SubCategory
     itemsList.value = []
-     selectedSubCategoryId.value= undefined
-    currentaddQuantity.value.item_id=0
+    selectedSubCategoryId.value = undefined
+    currentaddQuantity.value.item_id = 0
 }
 const getItemBySubCategroy = async () => {
     let itemSearchFilter = {} as ItemSearchFilter
@@ -99,7 +99,7 @@ const validationSchema = addQuantityvalidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        sub_category_id:undefined,
+        sub_category_id: undefined,
         item_id: undefined,
         item_quantity: "",
         add_item_cost: "",
@@ -135,24 +135,31 @@ const onSubmitAdd = handleSubmit(async (values) => {
     const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
     if (success) {
         let formData = new FormData();
-        if (filesToUpload.value != undefined)
-            formData.append('images[]', filesToUpload.value);
-        const { success, message, media } = await addItemHistoryFile(addQuantity.id, formData)
-        if (success) {
-            // @ts-ignore
-            await sleep(500);
-            media[0].file_name = media[0].relative_path
-            media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
-            itemHistoryFiles.value.push(media[0])
-            filesToUpload.value = undefined
-        }
-        // @ts-ignore
-        notif.dismissAll();
-        // @ts-ignore
-        await sleep(500)
-        notif.success(t('toast.success.add'));
+        if (filesToUpload.value != undefined) {
 
-        router.push({ path: `/item/` });
+            formData.append('images[]', filesToUpload.value);
+            const { success, message, media } = await addItemHistoryFile(addQuantity.id, formData)
+            if (success) {
+                await sleep(500);
+                media[0].file_name = media[0].relative_path
+                media[0].relative_path = import.meta.env.VITE_MEDIA_BASE_URL + media[0].relative_path
+                itemHistoryFiles.value.push(media[0])
+                filesToUpload.value = undefined
+                notif.dismissAll();
+                await sleep(500)
+                notif.success(t('toast.success.add'));
+                router.push({ path: `/item` });
+
+            } else {
+                notif.error(message)
+
+            }
+        } else {
+            await sleep(500)
+            notif.success(t('toast.success.add'));
+            router.push({ path: `/list-inventory-movement` });
+
+        }
     }
     else {
         await sleep(500);
@@ -175,13 +182,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <VField >
-                                    <VLabel class="required">{{ t('add_quantity.form.level_1')}}</VLabel>
+                                <VField>
+                                    <VLabel class="required">{{ t('add_quantity.form.level_1') }}</VLabel>
                                     <VControl>
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentaddQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption value="">{{ t('add_quantity.form.select_level_1')}}</VOption>
+                                                <VOption value="">{{ t('add_quantity.form.select_level_1') }}</VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>
@@ -193,12 +200,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="sub_category_id">
                                     <VLabel class="required">
-                                        {{ t('add_quantity.form.level_2')}}
+                                        {{ t('add_quantity.form.level_2') }}
                                     </VLabel>
                                     <VControl>
                                         <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
                                             v-if="currentaddQuantity" v-model="selectedSubCategoryId">
-                                            <VOption>{{ t('add_quantity.form.select_level_2')}}</VOption>
+                                            <VOption>{{ t('add_quantity.form.select_level_2') }}</VOption>
                                             <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
                                                 :value="subCategory.id">
                                                 {{ subCategory.name }}
@@ -215,21 +222,21 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="item_id">
                                     <VLabel class="required" style="position:relative">
-                                       {{t('add_quantity.form.item')}}
+                                        {{ t('add_quantity.form.item') }}
                                         <div v-if="itemStore.loading"
                                             class="loader is-loading m-r-15 m-b-05-rem w35-h35 custom-loader">
                                         </div>
                                     </VLabel>
                                     <VControl>
                                         <!-- <div class="select"> -->
-                                            <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
-                                                v-model="currentaddQuantity.item_id">
-                                                <VOption value="">  {{t('add_quantity.form.select_item')}}</VOption>
-                                                <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
-                                                    {{ item.name }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="item_id" />
+                                        <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
+                                            v-model="currentaddQuantity.item_id">
+                                            <VOption value=""> {{ t('add_quantity.form.select_item') }}</VOption>
+                                            <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
+                                                {{ item.name }}
+                                            </VOption>
+                                        </VSelect>
+                                        <ErrorMessage class="help is-danger" name="item_id" />
 
                                         <!-- </div> -->
                                     </VControl>
@@ -237,7 +244,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="item_quantity">
-                                    <VLabel class="required"> {{t('add_quantity.form.item_quantity')}}</VLabel>
+                                    <VLabel class="required"> {{ t('add_quantity.form.item_quantity') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.item_quantity" type="number" placeholder=""
                                             autocomplete="given-item_quantity" />
@@ -250,7 +257,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="add_item_cost">
-                                    <VLabel class="required">{{t('add_quantity.form.item_cost')}}</VLabel>
+                                    <VLabel class="required">{{ t('add_quantity.form.item_cost') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.add_item_cost" type="number" placeholder=""
                                             autocomplete="given-add_item_cost" />
@@ -260,14 +267,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="status" v-slot="{ field }">
-                                    <VLabel class="required">{{t('add_quantity.form.status')}}</VLabel>
+                                    <VLabel class="required">{{ t('add_quantity.form.status') }}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(1)" name="status"
                                             color="success" />
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
-                                            :label="ItemHsitoryConsts.showStatusName(0)" name="status"
-                                            color="danger" />
+                                            :label="ItemHsitoryConsts.showStatusName(0)" name="status" color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />
                                     </VControl>
                                 </VField>
@@ -278,7 +284,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="note">
-                                    <VLabel class="optinal">{{t('add_quantity.form.item_note')}}</VLabel>
+                                    <VLabel class="optinal">{{ t('add_quantity.form.item_note') }}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentaddQuantity.note" />
                                         <ErrorMessage class="help is-danger" name="note" />
@@ -290,7 +296,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="invoice_number">
-                                    <VLabel class="optinal">{{t('add_quantity.form.invoice_number')}}</VLabel>
+                                    <VLabel class="optinal">{{ t('add_quantity.form.invoice_number') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.invoice_number" type="text" placeholder=""
                                             autocomplete="given-invoice_number" />
@@ -300,7 +306,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField>
-                                    <VLabel class="optinal">{{t('add_quantity.form.invoice_image')}}</VLabel>
+                                    <VLabel class="optinal">{{ t('add_quantity.form.invoice_image') }}</VLabel>
                                     <VControl>
                                         <div class="file has-name">
                                             <label class="file-label">
@@ -309,7 +315,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                                     <span class="file-icon">
                                                         <i class="fas fa-cloud-upload-alt"></i>
                                                     </span>
-                                                    <span class="file-label"> {{ t('images.image_name_placeholder')}} </span>
+                                                    <span class="file-label"> {{ t('images.image_name_placeholder') }}
+                                                    </span>
                                                 </span>
                                                 <span class="file-name light-text">
                                                     {{ filesToUpload?.name ?? t('images.image_select_file') }}
@@ -318,7 +325,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </div>
                                     </VControl>
                                 </VField>
-                                <h6 class="font ml-2 mt-2 help">{{t('images.accepted_file')}}
+                                <h6 class="font ml-2 mt-2 help">{{ t('images.accepted_file') }}
                                 </h6>
                             </div>
                         </div>

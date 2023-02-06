@@ -24,7 +24,7 @@ const itemvalidationSchema = toFormValidator(zod
                 zod.string({})
                     .optional()),
         is_for_sale: zod
-            .boolean({ required_error: i18n.global.t('validation.redio.required') }).optional(),
+            .any().optional(),
         price:
             zod.preprocess(
                 (input) => {

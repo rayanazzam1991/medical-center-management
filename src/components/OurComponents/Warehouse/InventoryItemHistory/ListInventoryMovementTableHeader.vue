@@ -3,6 +3,8 @@ import { useI18n } from "vue-i18n"
 import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
 import { defaultInventoryItemHistorySearchFilter, InventoryItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
+import ListInventoryMovementSearchFilterModel from "./ListInventoryMovementSearchFilterModel.vue"
+import { boolean } from "zod"
 
 
 
@@ -10,7 +12,7 @@ export default defineComponent({
     props: {
         title: {
             type: String,
-            default: '',
+            default: "",
         },
         pagination: {
             default: defaultPagination,
@@ -18,79 +20,83 @@ export default defineComponent({
         default_per_page: {
             type: Number,
             default: 1,
+        },
+        has_item_filter : {
+            type: Boolean,
+            default: true,
+
         }
-
     },
-
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n();
         const onOpen = () => {
-            searchFilterPop.value = !searchFilterPop.value
-            quickSearchField.value = ''
-            context.emit('onOpen', searchFilterPop.value)
-        }
+            searchFilterPop.value = !searchFilterPop.value;
+            quickSearchField.value = "";
+            context.emit("onOpen", searchFilterPop.value);
+        };
         const popUpTrigger = (value: boolean) => {
-            searchFilterPop.value = value
-        }
-        const default_per_page = props.default_per_page
-        const pagination = props.pagination
-        const searchFilterPop = ref(false)
-        const searchType = ref('')
-        const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
-        const is_reseted = ref(false)
-        const keyIncrement = ref(0)
-        const quickSearchField = ref('')
+            searchFilterPop.value = value;
+        };
+        const default_per_page = props.default_per_page;
+        const pagination = props.pagination;
+        const searchFilterPop = ref(false);
+        const searchType = ref("");
+        const perPage = ref(pagination.per_page);
+        const searchFilter = ref(defaultInventoryItemHistorySearchFilter);
+        const is_reseted = ref(false);
+        const keyIncrement = ref(0);
+        const quickSearchField = ref("");
+        const hasItemFilter = props.has_item_filter
         const quickSearch = () => {
-            if (quickSearchField.value != '') {
-
-                searchFilter.value.type = quickSearchField.value
-            } else {
-                searchFilter.value.type = undefined
+            if (quickSearchField.value != "") {
+                searchFilter.value.type = quickSearchField.value;
             }
-            searchFilter.value.per_page = perPage.value
-
-            search()
-        }
+            else {
+                searchFilter.value.type = undefined;
+            }
+            searchFilter.value.per_page = perPage.value;
+            search();
+        };
         const search = () => {
-            searchFilter.value.page = 1
-            searchFilter.value.per_page = perPage.value
-            context.emit('search', searchFilter.value)
-        }
+            searchFilter.value.page = 1;
+            searchFilter.value.per_page = perPage.value;
+            context.emit("search", searchFilter.value);
+        };
         const search_filter = (value: InventoryItemHistorySearchFilter) => {
-            searchFilter.value = value
-            searchFilter.value.per_page = perPage.value
-
-            context.emit('search', searchFilter.value)
-        }
+            searchFilter.value = value;
+            searchFilter.value.per_page = perPage.value;
+            context.emit("search", searchFilter.value);
+        };
         const resetFilter = () => {
-            searchFilter.value.type = undefined
-            searchFilter.value.status = undefined
-            searchFilter.value.from_inventory = undefined
-            searchFilter.value.to_inventory = undefined
-            searchFilter.value.item_id = undefined
-            searchFilter.value.from = undefined
-            searchFilter.value.to = undefined
-            quickSearchField.value = ''
-            is_reseted.value = true
-            keyIncrement.value++
-            context.emit('resetFilter', searchFilter.value)
-        }
+            searchFilter.value.type = undefined;
+            searchFilter.value.status = undefined;
+            searchFilter.value.from_inventory = undefined;
+            searchFilter.value.to_inventory = undefined;
+            searchFilter.value.item_id = undefined;
+            searchFilter.value.from = undefined;
+            searchFilter.value.to = undefined;
+            searchFilter.value.action = undefined
+            searchFilter.value.action_by = undefined
+            searchFilter.value.requester_name = undefined
+            searchFilter.value.movement_type = undefined
+            quickSearchField.value = "";
+            is_reseted.value = true;
+            keyIncrement.value++;
+            context.emit("resetFilter", searchFilter.value);
+        };
         const resetFilter_popup = (value: InventoryItemHistorySearchFilter) => {
-            searchFilter.value.type = undefined
-            searchFilter.value.status = undefined
-            searchFilter.value.from_inventory = undefined
-            searchFilter.value.to_inventory = undefined
-            searchFilter.value.item_id = undefined
-            searchFilter.value.from = undefined
-            searchFilter.value.to = undefined
-            context.emit('resetFilter', searchFilter.value)
-        }
-
-        return {t , searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
+            searchFilter.value.type = undefined;
+            searchFilter.value.status = undefined;
+            searchFilter.value.from_inventory = undefined;
+            searchFilter.value.to_inventory = undefined;
+            searchFilter.value.item_id = undefined;
+            searchFilter.value.from = undefined;
+            searchFilter.value.to = undefined;
+            context.emit("resetFilter", searchFilter.value);
+        };
+        return { t, searchFilterPop, default_per_page, keyIncrement,hasItemFilter, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField };
     },
-
-
+    components: { ListInventoryMovementSearchFilterModel }
 })
 </script>
 <template>
@@ -124,11 +130,11 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl class="ml-2">
+                            <VControl v-if="hasItemFilter" class="ml-2">
                                 <VButton class="" to="/from-main-inventory" color="primary">{{ t('inventory.table.buttons_name.from_main_inventory') }}
                                 </VButton>
                             </VControl>
-                            <VControl >
+                            <VControl v-if="hasItemFilter" >
                                 <VButton class="" to="/to-main-inventory" color="primary">{{ t('inventory.table.buttons_name.to_main_inventory') }}
                                 </VButton>
                             </VControl>
@@ -137,7 +143,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ListInternalMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+        <ListInventoryMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop" :has_item_filter="hasItemFilter"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

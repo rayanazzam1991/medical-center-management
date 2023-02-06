@@ -43,7 +43,7 @@ export interface ItemSearchFilter {
     sub_category_id?: number
     category_id?: number
     status?: number
-    is_for_sale?: boolean
+    is_for_sale?: number
     page?: number
     per_page?: number
     order_by?: string

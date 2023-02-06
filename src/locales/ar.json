@@ -176,11 +176,13 @@
     "quantity": {
       "quantity": "الكميّات",
       "add_quantity": "إضافة كميًة",
-      "withdraw_quantity": " سحب كميًة"
+      "withdraw_quantity": " سحب كميًة",
+      "from_main_inventory": "سحب كمية من المستودع الرئيسي",
+      "to_main_inventory": "اعادة كمية للمستودع الرئيسي"
     },
     "inventory_item_history": {
       "inventory_item_history": "سجل المستودعات",
-      "list_internal_movement": "الحركة الداخلية للمستودعات"
+      "list_inventory_movement": "حركات المخزون"
     },
     "inventory": {
       "inventory": "المستودعات",
@@ -822,29 +824,29 @@
         "actions": "الاجراءات"
       },
       "modal_title": {
-        "item": "تغير حالة مادة",
-        "item_history": "تغيير حالة تاريخ مادة"
+        "item": "تغير حالة المادة",
+        "item_history": "تغيير حالة تاريخ المادة"
       }
     },
     "details": {
       "title": "مادة",
       "tabs": {
         "details": "تفاصيل",
-        "item_history": "تاريخ مادة"
+        "item_history": "تاريخ المادة"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "{title} الاسم",
       "leve_1": " المستوى 1",
       "leve_2": " المستوى 2",
       "quantity": "كميًة المادة",
-      "min_quantity": "الحد الادنى لكميًة مادة",
+      "min_quantity": "الحد الادنى لكميًة المادة",
       "price": "السعر",
       "cost": "التكلفة",
       "description": "التوصيف",
-      "status": "حالة مادة",
-      "history_status": "حالة تاريخ مادة",
-      "employee_status": "حالة مادة",
-      "select_employee_status": "تحديد حالة مادة",
+      "status": "حالة المادة",
+      "history_status": "حالة تاريخ المادة",
+      "employee_status": "حالة المادة",
+      "select_employee_status": "تحديد حالة المادة",
       "item_history_table": {
         "columns": {
           "requester_name": " الشخص الطالب",
@@ -896,24 +898,39 @@
     },
     "header_button": "اضافة مادة"
   },
-  "list_internal_movement": {
+  "list_inventory_movement": {
     "table": {
-      "title": " حركة المخزون الداخلية",
+      "title": " حركات المخزون",
       "columns": {
         "item": "المادة",
         "type": "النوع",
         "quantity": "الكميًة",
-        "from_inventory": "  من مستودع",
-        "to_inventory": " إلى مستودع",
+        "from": "من",
+        "to": "إلى",
         "note": "ملاحظة",
         "created_at": "تاريخ الإنشاء",
-        "action_by": "  بواسطة"
+        "action_by": "  بواسطة",
+        "action": "النشاط",
+        "movement_type": "نوع الحركة"
+      },
+      "action_types": {
+        "add_quantity": "إضافة كميًة",
+        "withdraw_quantity": " سحب كميًة",
+        "sell": "مبيع"
+      },
+      "movement_types": {
+        "internal": "داخلية",
+        "external": "خارجية"
       }
     },
     "search_filter": {
       "title": "تصفية معلومات حركة المخزون",
       "select_from_inventory": "تحديد من أي مستودع",
       "select_to_inventory": "تحديد إلى أي مستودع",
+      "select_movement_type": "تحديد نوع الحركة",
+      "select_action_by": "بواسطة",
+      "select_requester_name": "اسم الموظف الطالب",
+      "select_action": "تحديد النشاط",
       "select_item": "تحديد مادة",
       "select_type": "تحديد النوع",
       "in": "الداخل",
@@ -1639,7 +1656,7 @@
       "note": "ملاحظة",
       "quantity": "الكميًة"
     },
-    "back_button": "الرجوع إلى قائمة الحركة الداخلية للمستودعات"
+    "back_button": "الرجوع إلى قائمة حركات المخزون"
   },
   "user_statuses": {
     "active": "فعال",

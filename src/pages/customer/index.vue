@@ -288,7 +288,7 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="customerChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-        status.name
+        UserStatusConsts.getStatusName(status.id)
 }}
                                         </VOption>
                                     </VSelect>

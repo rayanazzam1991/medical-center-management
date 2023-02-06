@@ -23,6 +23,10 @@ export interface InventoryItemHistorySearchFilter {
     from_inventory?: number
     to_inventory?: number
     date_between?: string
+    action?: string
+    movement_type?: string
+    requester_name?: string
+    action_by?: number
     from?: string
     to?: string
     status?: number
@@ -92,6 +96,10 @@ export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearch
     per_page: undefined,
     order_by: 'created_at',
     order: 'desc',
+    action: undefined,
+    action_by: undefined,
+    movement_type: undefined,
+    requester_name: undefined
 }
 export const defaultAddQuantityItem: addQuantity = {
     id: 0,

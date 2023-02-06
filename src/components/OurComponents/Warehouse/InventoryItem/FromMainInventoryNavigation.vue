@@ -20,7 +20,7 @@ const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
 
         <div class="">
             <span class="title-wrap">
-                <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/list-internal-movement" darkOutlined
+                <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/list-inventory-movement" darkOutlined
                     color="white">
                     {{t('inventoryItem.back_button')}}
                 </VButton>
