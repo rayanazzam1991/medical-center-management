@@ -7,13 +7,11 @@ import sleep from "/@src/utils/sleep";
 import { useI18n } from 'vue-i18n';
 import { Notyf } from 'notyf';
 import { useSupplier } from "/@src/stores/Others/Supplier/supplierStore";
-import { CreateUpdateSupplier, defaultCreateUpdateSupplier, defaultSupplier, Supplier, SupplierConsts } from '/@src/models/Others/Supplier/supplier';
+import { CreateSupplier, defaultCreateSupplier, defaultSupplier, defaultUpdateSupplier, Supplier, SupplierConsts, UpdateSupplier } from '/@src/models/Others/Supplier/supplier';
 import { getSupplier, addSupplier, editSupplier } from '/@src/services/Others/Supplier/supplierService';
 import { suppliervalidationSchema } from '/@src/rules/Others/Supplier/supplierValidation';
 import { City, CitySearchFilter, defaultCity } from '/@src/models/Others/City/city';
-import { BaseConsts } from '/@src/utils/consts/base';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
-
 
 
 export default defineComponent({
@@ -37,10 +35,8 @@ export default defineComponent({
         formType.value = props.formType;
         const route = useRoute();
         const router = useRouter();
-
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
         const pageTitle = t('supplier.form.form_header' , {type : formTypeName});
-
         const backRoute = "/supplier";
         const currentSupplier = ref(defaultSupplier);
         const supplierId = ref(0);
@@ -95,7 +91,7 @@ export default defineComponent({
                 return;
         };
         const onSubmitAdd = handleSubmit(async (values) => {
-          let supplierData: CreateUpdateSupplier = defaultCreateUpdateSupplier;
+          let supplierData: CreateSupplier = defaultCreateSupplier;
           supplierData.address = currentSupplier.value.address
           supplierData.notes = currentSupplier.value.notes
           supplierData.name = currentSupplier.value.name
@@ -119,7 +115,7 @@ export default defineComponent({
             }
         });
         const onSubmitEdit = async () => {
-          let supplierData: CreateUpdateSupplier = defaultCreateUpdateSupplier;
+          let supplierData: UpdateSupplier = defaultUpdateSupplier;
 
           supplierData.address = currentSupplier.value.address
           supplierData.id = currentSupplier.value.id
@@ -127,8 +123,7 @@ export default defineComponent({
           supplierData.name = currentSupplier.value.name
           supplierData.phone_number = currentSupplier.value.phone_number
           supplierData.status = currentSupplier.value.status
-            supplierData.city_id = currentSupplier.value.city?.id
-            //console.log(supplierData.city?.name)
+          supplierData.city_id = currentSupplier.value.city?.id
             const { message, success } = await editSupplier(supplierData);
             if (success) {
                 // @ts-ignore
@@ -227,7 +222,7 @@ export default defineComponent({
                                   <VLabel >{{t('supplier.form.city')}}</VLabel>
                                   <VControl>
                                       <VSelect v-model="currentSupplier.city" >
-                                          <VOption :value="undefined">{{t('supplier.form.city')}}</VOption>
+                                          <VOption :value="undefined"> {{t('supplier.form.city')}}</VOption>
                                           <VOption v-for="city in citiesList"
                                               :value="city">{{ city.name }}
                                           </VOption>
@@ -243,7 +238,7 @@ export default defineComponent({
                       <div class="columns is-multiline">
                           <div class="column is-12">
                               <VField id="status">
-                                  <VLabel class="required">{{t('supplier.form.status')}}</VLabel>
+                                  <VLabel >{{t('supplier.form.status')}}</VLabel>
                                   <VControl>
                                       <VRadio v-model="currentSupplier.status" :value="SupplierConsts.INACTIVE"
                                           :label="SupplierConsts.getSupplierStatusName(0)" name="status" color="danger" />

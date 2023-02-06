@@ -1563,49 +1563,6 @@
             "basic_salary": "الراتب الأساسي",
             "total_variable_payments_earnings": "الأرباح الإضافية",
             "total_earnings": "مجموع المكتسبات"
-          },
-          "supplier": {
-            "table": {
-              "title": " الموردين  ",
-              "columns": {
-                "id": "رقم المعرّف",
-                "name": "الاسم",
-                "phone": "رقم الهاتف",
-                "address": "العنوان ",
-                "notes": "ملاحظات ",
-                "city": "المدينة",
-                "created_by": " بواسطة",
-                "created_at": "تاريخ الإنشاء",
-                "status": "الحالة",
-                "actions": "الإجراءات"
-              }
-            },
-            "search_filter": {
-              "name": " الاسم ",
-              "status": "الحالة"
-            },
-            "form": {
-              "page_title": "المورد",
-              "form_header": "إضافة المورد",
-              "name": " الاسم ",
-              "phone_number": "رقم الهاتف",
-              "address": "العنوان",
-              "notes": "ملاحظات ",
-              "city": "المدينة",
-              "status": "الحالة"
-            },
-            "details": {
-              "title": " المورد  ",
-              "name": "الاسم",
-              "phone_number": "رقم الهاتف",
-              "address": "العنوان ",
-              "city": "المدينة",
-              "notes": "ملاحظات ",
-              "status": "الحالة",
-              "created_by": " بواسطة",
-              "created_at": "تاريخ الإنشاء"
-            },
-            "header_button": "إضافة مورد  "
           }
         },
         "deductions": {
@@ -1623,6 +1580,58 @@
           }
         }
       }
+    }
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "name": " الاسم ",
+      "status": "الحالة",
+      "phone_number": "رقم الهاتف"
+    },
+    "form": {
+      "page_title": "المورد",
+      "form_header": "إضافة المورد",
+      "name": " الاسم ",
+      "phone_number": "رقم الهاتف",
+      "address": "العنوان",
+      "notes": "ملاحظات ",
+      "city": "المدينة",
+      "status": "الحالة"
+    },
+    "details": {
+      "title": " المورد  ",
+      "name": "الاسم",
+      "phone_number": "رقم الهاتف",
+      "address": "العنوان ",
+      "city": "المدينة",
+      "notes": "ملاحظات ",
+      "status": "الحالة",
+      "created_by": " بواسطة",
+      "created_at": "تاريخ الإنشاء"
+    },
+    "model": {
+      "title": "تغيير حالة المورد",
+      "status": " حالة المورد "
+    },
+    "header_button": "إضافة مورد  ",
+    "supplier_subnav": {
+      "suppliers": "الموردين",
+      "create_supplier": "إنشاء مورد"
     }
   },
   "unjustified_hours_rounding_options": {

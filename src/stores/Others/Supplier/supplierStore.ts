@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
-import { CreateUpdateSupplier, Supplier, SupplierSearchFilter } from "/@src/models/Others/Supplier/supplier";
+import { CreateSupplier, Supplier, SupplierSearchFilter, UpdateSupplier } from "/@src/models/Others/Supplier/supplier";
 import { addSupplierApi, editSupplierApi, getSupplierApi, getSuppliersApi } from "/@src/utils/api/Others/Supplier"
 
 
@@ -19,7 +19,7 @@ export const useSupplier = defineStore('supplier', () => {
   const message = ref<string>()
 
 
-  async function addSupplierStore(supplier: CreateUpdateSupplier) {
+  async function addSupplierStore(supplier: CreateSupplier) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
@@ -44,7 +44,7 @@ export const useSupplier = defineStore('supplier', () => {
       loading.value = false
     }
   }
-  async function editSupplierStore(supplier: CreateUpdateSupplier) {
+  async function editSupplierStore(supplier: UpdateSupplier) {
     if (loading.value) return
     loading.value = true
     sleep(2000)

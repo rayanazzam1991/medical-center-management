@@ -1529,10 +1529,10 @@
       "name": "ُEmployee Name...",
       "department": "Department"
     },
+    "header_button": "View Salaries",
     "drop_down": {
       "view_payslip": "View Payslip"
     },
-    "header_button": "View Salaries",
     "payslip": {
       "title": "Salary Payslip",
       "header": "Employee Salary Payslip",
@@ -1555,76 +1555,45 @@
             "basic_salary": "Basic Salary",
             "total_variable_payments_earnings": "Total variable payments earnings",
             "total_earnings": "Total earnings"
-          },
-          "supplier": {
-            "table": {
-              "title": " الموردين  ",
-              "columns": {
-                "id": "رقم المعرّف",
-                "name": "الاسم",
-                "phone": "رقم الهاتف",
-                "address": "العنوان ",
-                "notes": "ملاحظات ",
-                "city": "المدينة",
-                "created_by": " بواسطة",
-                "created_at": "تاريخ الإنشاء",
-                "status": "الحالة",
-                "actions": "الإجراءات"
-              }
-            },
-            "deductions": {
-              "columns": {
-                "name": "Variable Payment",
-                "amount": "Amount",
-                "attendance_deduction": "Attendance Deduction",
-                "total_variable_payments_deductions": "Total variable payments deductions",
-                "total_deductions": "Total deductions"
-              }
-            },
-            "total": {
-              "columns": {
-                "total": "Net Salary"
-              }
-            }
-          }
-        }
-      },
-      "unjustified_hours_rounding_options": {
-        "no_round": "No Rounding",
-        "nearest_15": "To Nearest 15 Min",
-        "nearest_30": "To Nearest 30 Min",
-        "nearest_60": "To Nearest 60 Min"
-      },
-      "inventory": {
-        "table": {
-          "title": "list sub inventories",
-          "columns": {
-            "name": "inventory name ",
-            "items_count": "items count",
-            "created_at": "created at",
-            "updated_at": "updated at",
-            "action_by": "action by",
-            "status": "status"
           }
         },
-        "search_filter": {
-          "title": "filter sub inventories",
-          "name": " inventory name",
-          "status": "status",
-          "action_by": "action by",
-          "date": "date:",
-          "from": "from: ",
-          "to": "to: "
+        "deductions": {
+          "columns": {
+            "name": "Variable Payment",
+            "amount": "Amount",
+            "attendance_deduction": "Attendance Deduction",
+            "total_variable_payments_deductions": "Total variable payments deductions",
+            "total_deductions": "Total deductions"
+          }
+        },
+        "total": {
+          "columns": {
+            "total": "Net Salary"
+          }
         }
-      },
-      "user_statuses": {
-        "active": "Active",
-        "inactive": "Inactive"
+      }
+    }
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات"
       }
     },
     "search_filter": {
       "name": " الاسم ",
-      "status": "الحالة"
+      "status": "الحالة",
+      "phone_number": "Phone Number"
     },
     "form": {
       "page_title": "Supplier",
@@ -1647,6 +1616,46 @@
       "created_by": "Created By",
       "created_at": "Created At"
     },
-    "header_button": "Add Supplier   "
+    "model": {
+      "title": " Change Supplier Status ",
+      "status": " Supplier Status"
+    },
+    "header_button": "Add Supplier",
+    "supplier_subnav": {
+      "suppliers": "suppliers",
+      "create_supplier": "create_supplier"
+    }
+  },
+  "unjustified_hours_rounding_options": {
+    "no_round": "No Rounding",
+    "nearest_15": "To Nearest 15 Min",
+    "nearest_30": "To Nearest 30 Min",
+    "nearest_60": "To Nearest 60 Min"
+  },
+  "inventory": {
+    "table": {
+      "title": "list sub inventories",
+      "columns": {
+        "name": "inventory name ",
+        "items_count": "items count",
+        "created_at": "created at",
+        "updated_at": "updated at",
+        "action_by": "action by",
+        "status": "status"
+      }
+    },
+    "search_filter": {
+      "title": "filter sub inventories",
+      "name": " inventory name",
+      "status": "status",
+      "action_by": "action by",
+      "date": "date:",
+      "from": "from: ",
+      "to": "to: "
+    }
+  },
+  "user_statuses": {
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

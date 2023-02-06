@@ -1,9 +1,9 @@
 import { useSupplier } from "/@src/stores/Others/Supplier/supplierStore";
 import { Pagination } from '/@src/utils/response'
-import { Supplier, SupplierSearchFilter, CreateUpdateSupplier, defaultSupplier } from '/@src/models/Others/Supplier/supplier'
+import { Supplier, SupplierSearchFilter, CreateSupplier, defaultSupplier, UpdateSupplier } from '/@src/models/Others/Supplier/supplier'
 
 
-export async function addSupplier(supplierData: CreateUpdateSupplier) {
+export async function addSupplier(supplierData: CreateSupplier) {
   const supplierResponse = useSupplier()
   var supplier: Supplier = await supplierResponse.addSupplierStore(supplierData) ?? defaultSupplier
   var success: boolean = supplierResponse.success ?? false
@@ -12,7 +12,7 @@ export async function addSupplier(supplierData: CreateUpdateSupplier) {
   return { success, error_code, message, supplier }
 
 }
-export async function editSupplier(supplierData: CreateUpdateSupplier) {
+export async function editSupplier(supplierData: UpdateSupplier) {
   const supplierResponse = useSupplier()
   await supplierResponse.editSupplierStore(supplierData)
   var success: boolean = supplierResponse.success ?? false

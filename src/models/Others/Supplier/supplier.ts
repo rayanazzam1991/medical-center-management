@@ -25,16 +25,45 @@ export interface Supplier {
 
 }
 
-export interface CreateUpdateSupplier {
+export interface CreateSupplier {
   id?: number
   name: string
   phone_number: string
   status: number
   city_id?: number
-  created_by?: User
-  address: string
-  notes: string
+
+  address?: string
+  notes?: string
 }
+export interface UpdateSupplier {
+  id?: number
+  name?: string
+  phone_number?: string
+  status?: number
+  city_id?: number
+  created_by?: User
+  address?: string
+  notes?: string
+}
+export const defaultCreateSupplier: CreateSupplier = {
+  id: undefined,
+  name: '',
+  phone_number: '',
+  status: 0,
+  city_id: undefined,
+  address: '',
+  notes: ''
+}
+export const defaultUpdateSupplier: UpdateSupplier = {
+  id: undefined,
+  name: '',
+  phone_number: '',
+  status: 0,
+  city_id: undefined,
+  address: '',
+  notes: ''
+}
+
 
 export interface SupplierSearchFilter {
   name?: string
@@ -57,18 +86,16 @@ export const defaultSupplier: Supplier = {
   notes: '',
   created_at: ''
 }
+// export interface ChangeSupplierStatus {
+//   id?: number
+//   status?: number
+// }
+// export const defaultChangeStatusSupplier: ChangeSupplierStatus = {
+//   id: undefined,
+//   status: 1,
+// }
 
-export const defaultCreateUpdateSupplier: CreateUpdateSupplier = {
-  id: undefined,
-  name: '',
-  phone_number: '',
-  status: 0,
-  city_id: undefined,
-  created_by: undefined,
-  address: '',
-  notes: ''
-}
-//export const defaultSupplierSearchFilter = <Partial<CreateUpdateSupplier>>{}
+
 export const defaultSupplierSearchFilter: SupplierSearchFilter = {
   name: undefined,
   phone_number: undefined,
@@ -85,7 +112,7 @@ class SupplierConsts {
   static readonly ACTIVE = 1
   static readonly NOT_RECOMMENDED = 2
 
-
+  static readonly SUPPLIER_STATUSES = [this.ACTIVE, this.INACTIVE, this.NOT_RECOMMENDED]
   public static getSupplierStatusColor(status: number) {
     if (status == this.ACTIVE) return 'success'
     if (status == this.INACTIVE) return 'danger'

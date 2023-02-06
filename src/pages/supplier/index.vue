@@ -2,15 +2,16 @@
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
-import { getSuppliersList } from '/@src/services/Others/Supplier/supplierService'
+import { editSupplier, getSuppliersList } from '/@src/services/Others/Supplier/supplierService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultSupplierSearchFilter, SupplierSearchFilter, SupplierConsts, Supplier } from '/@src/models/Others/Supplier/supplier'
+import { defaultSupplierSearchFilter, SupplierSearchFilter, SupplierConsts, Supplier, defaultSupplier,defaultUpdateSupplier } from '/@src/models/Others/Supplier/supplier'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useSupplier } from '/@src/stores/Others/Supplier/supplierStore'
 import sleep from '/@src/utils/sleep'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
 viewWrapper.setPageTitle(t('supplier.table.title'))
@@ -20,7 +21,9 @@ useHead({
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultSupplierSearchFilter)
 const suppliersList = ref<Array<Supplier>>([])
-const deleteSupplierPopup = ref(false)
+const changeStatusPopup = ref(false)
+const supplierChangeStatus = ref<Supplier>(defaultSupplier)
+const currentChangeStatusSupplier = ref(defaultUpdateSupplier)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const supplierStore = useSupplier()
@@ -58,7 +61,6 @@ const resetFilter = async (searchFilter2: SupplierSearchFilter) => {
   searchFilter.value = searchFilter2
   await search(searchFilter.value)
 }
-
 const getSuppliersPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
   await search(searchFilter.value)
@@ -76,6 +78,29 @@ const supplierSort = async (value: string) => {
   }
   await search(searchFilter.value)
 }
+
+const changestatusSupplier = async () => {
+    currentChangeStatusSupplier.value.status = supplierChangeStatus.value.status
+    currentChangeStatusSupplier.value.id = supplierChangeStatus.value.id
+    const { message, success } = await editSupplier(currentChangeStatusSupplier.value)
+    if (success) {
+
+        search(searchFilter.value)
+        // @ts-ignore
+        notif.dismissAll()
+        await sleep(200);
+        // @ts-ignore
+
+        notif.success(t('toast.success.edit'))
+    } else {
+        await sleep(200);
+        // @ts-ignore
+
+        notif.error(message)
+    }
+    changeStatusPopup.value = false
+}
+
 const columns = {
   id: {
     searchable: true,
@@ -88,6 +113,12 @@ const columns = {
     sortable: true,
     align: 'center',
     label : t('supplier.table.columns.name')
+  },
+  phone_number: {
+    searchable: true,
+    sortable: true,
+    align: 'center',
+    label : t('supplier.table.columns.phone')
   },
   address: {
     searchable: true,
@@ -159,13 +190,15 @@ const columns = {
     align: 'center',
     label : t('supplier.table.columns.actions'),
     renderRow: (row: any) =>
-      h(MyDropDown, {
-        onRemove: () => {
-          deleteSupplierPopup.value = true
-        },
+      h(NoDeleteDropDown, {
+        onChangeStatus: () => {
+                    supplierChangeStatus.value = row
+                    changeStatusPopup.value = true
+                },
         onEdit: () => {
           router.push({ path: `/supplier/${row.id}/edit` })
         },
+
         onView: () => {
           router.push({ path: `/supplier/${row.id}` })
         },
@@ -213,12 +246,31 @@ const columns = {
 
     <VPlaceloadText v-if="supplierStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('supplier.table.modal_title')" :open="deleteSupplierPopup" actions="center" @close="deleteSupplierPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title : viewWrapper.pageTitle})" />
-    </template>
-  </VModal>
+  <VModal :title="t('supplier.model.title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+        <template #content>
+            <form class="form-layout" @submit.prevent="">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <VField class="column ">
+                                <VLabel>{{ t('supplier.model.status') }}</VLabel>
+                                <VControl>
+                                    <VSelect v-model="supplierChangeStatus.status">
+                                        <VOption v-for="status in SupplierConsts.SUPPLIER_STATUSES" :key="status" :value="status">{{SupplierConsts.getSupplierStatusName(status)}}
+                                        </VOption>
+                                    </VSelect>
+                                </VControl>
+                            </VField>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </template>
+        <template #action="{ close }">
+            <VButton color="primary" raised @click="changestatusSupplier()">{{ t('modal.buttons.confirm')}}</VButton>
+        </template>
+    </VModal>
 
 </template>
 <style lang="scss">

@@ -1,11 +1,11 @@
 import { AxiosInstance } from "axios"
-import { CreateUpdateSupplier, SupplierSearchFilter } from '/@src/models/Others/Supplier/supplier'
+import { CreateSupplier, SupplierSearchFilter, UpdateSupplier } from '/@src/models/Others/Supplier/supplier'
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 
 export async function addSupplierApi(
   api: AxiosInstance,
-  supplier: CreateUpdateSupplier
+  supplier: CreateSupplier
 ): Promise<{ response: CustomResponseSingle }> {
   console.log(typeof (supplier.city_id))
 
@@ -14,7 +14,7 @@ export async function addSupplierApi(
 }
 export async function editSupplierApi(
   api: AxiosInstance,
-  supplier: CreateUpdateSupplier
+  supplier: UpdateSupplier
 ): Promise<{ response: CustomResponseSingle }> {
 
   const { data: response, headers } = await api.put(`supplier/${supplier.id}`, supplier)
