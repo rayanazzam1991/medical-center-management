@@ -53,6 +53,23 @@ const emits = defineEmits<{
                                             <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                                         </RouterLink>
                                     </li>
+                                </ul><br />
+                                <h4 class="column-heading">{{t('supplier.supplier_subnav.suppliers')}}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/supplier">
+                                          <i class="lnil lnil-previous" aria-hidden="true"></i>
+                                            <span>{{t('supplier.supplier_subnav.suppliers')}}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                    <li>
+                                        <RouterLink to="/supplier/add">
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{t('supplier.supplier_subnav.create_supplier')}}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="column is-4">

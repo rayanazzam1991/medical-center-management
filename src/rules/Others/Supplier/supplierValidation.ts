@@ -11,7 +11,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   messages: messages
 })
 
-const specialityvalidationSchema = toFormValidator(zod
+const suppliervalidationSchema = toFormValidator(zod
   .object({
     name: zod
       .string({
@@ -20,7 +20,19 @@ const specialityvalidationSchema = toFormValidator(zod
       .min(1, i18n.global.t('validation.required')),
     status: zod
       .number({ required_error: i18n.global.t('validation.redio.required') }),
+    city_id: zod.number({ invalid_type_error: "sdgfsv" }).optional(),
+    phone_number:
+      zod
+        .preprocess(
+          (input) => {
+            const processed = zod.string({}).regex(/^\d{9}$/).transform(Number).safeParse(input);
+            return processed.success ? processed.data : input;
+          },
+          zod
+            .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+          ,
+        ),
   }));
 export {
-  specialityvalidationSchema
+  suppliervalidationSchema
 }

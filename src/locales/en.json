@@ -1521,10 +1521,10 @@
       "name": "ُEmployee Name...",
       "department": "Department"
     },
+    "header_button": "View Salaries",
     "drop_down": {
       "view_payslip": "View Payslip"
     },
-    "header_button": "View Salaries",
     "payslip": {
       "title": "Salary Payslip",
       "header": "Employee Salary Payslip",
@@ -1564,6 +1564,58 @@
           }
         }
       }
+    }
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "name": " الاسم ",
+      "status": "الحالة",
+      "phone_number": "Phone Number"
+    },
+    "form": {
+      "page_title": "Supplier",
+      "form_header": "Add Supplier ",
+      "name": " Name ",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "notes": "Notes ",
+      "city": "City",
+      "status": "Status"
+    },
+    "details": {
+      "title": " Supplier  ",
+      "name": "Name",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "city": "City",
+      "notes": "Notes ",
+      "status": "Status",
+      "created_by": "Created By",
+      "created_at": "Created At"
+    },
+    "model": {
+      "title": " Change Supplier Status ",
+      "status": " Supplier Status"
+    },
+    "header_button": "Add Supplier",
+    "supplier_subnav": {
+      "suppliers": "suppliers",
+      "create_supplier": "create_supplier"
     }
   },
   "unjustified_hours_rounding_options": {
