@@ -112,13 +112,17 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
-    label : t('supplier.table.columns.name')
+    label: t('supplier.table.columns.name'),
+    renderRow: (row: any) =>
+      h('span', row.name )
   },
   phone_number: {
     searchable: true,
     sortable: true,
     align: 'center',
-    label : t('supplier.table.columns.phone')
+    label: t('supplier.table.columns.phone'),
+    renderRow: (row: any) =>
+      h('span', row.phone_number )
   },
   address: {
     searchable: true,
@@ -184,7 +188,9 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
-    label : t('supplier.table.columns.created_at')
+    label: t('supplier.table.columns.created_at'),
+    renderRow: (row: any) =>
+      h('span', row.created_at )
   },
   actions: {
     align: 'center',
