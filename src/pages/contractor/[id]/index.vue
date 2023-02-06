@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
-import { Contractor, defaultContractorProfilePic, defaultContractor } from "/@src/models/Contractor/contractor"
+import { Contractor, defaultContractorProfilePic, defaultContractor, ChangeContractorStatus, defaultChangeContractorStatus } from "/@src/models/Contractor/contractor"
 import { defaultChangeStatusUser } from "/@src/models/Others/User/user"
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusConsts } from "/@src/models/Others/UserStatus/userStatus"
-import { getContractor, getContractorFiles, getProfilePicture, addContractorFile, deleteFile, addProfilePicture } from "/@src/services/Contractor/contractorService"
+import { getContractor, getContractorFiles, getProfilePicture, addContractorFile, deleteFile, addProfilePicture, changeContractorStatus } from "/@src/services/Contractor/contractorService"
 import { changeUserStatus } from "/@src/services/Others/User/userService"
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { useViewWrapper } from "/@src/stores/viewWrapper"
@@ -21,8 +21,8 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
-const changeStatus = ref()
-const currentChangeStatusUser = ref(defaultChangeStatusUser)
+const changeStatus = ref<number>(0)
+const currentChangeStatusUser = ref(defaultChangeContractorStatus)
 const changeStatusPopup = ref(false)
 const currentContractor = ref<Contractor>(defaultContractor)
 const contractorId = ref(0)
@@ -82,6 +82,7 @@ onMounted(async () => {
 const getCurrentContractor = async () => {
     const { contractor } = await getContractor(contractorId.value)
     currentContractor.value = contractor
+    changeStatus.value = contractor.user.status.id ?? 0
 
 }
 const onOpen = () => {
@@ -89,15 +90,21 @@ const onOpen = () => {
 }
 const changestatusUser = async () => {
     const userData = currentContractor.value
-    var userForm = currentChangeStatusUser.value
-    userForm.id = userData.user.id
-    userForm.user_status_id = userData.user.status?.id
-    await changeUserStatus(userForm)
-    getCurrentContractor()
-    // @ts-ignore
-    notif.dismissAll()
-    await sleep(200);
-    notif.success(t('toast.success.edit'))
+    let newContractorForm : ChangeContractorStatus = currentChangeStatusUser.value
+    newContractorForm.id = userData.id
+    newContractorForm.user_status_id = changeStatus.value
+    const {message , success} = await changeContractorStatus(newContractorForm)
+    if(success) {
+
+        getCurrentContractor()
+        // @ts-ignore
+        notif.dismissAll()
+        await sleep(200);
+        notif.success(t('toast.success.edit'))
+    } else {
+        notif.error(message)
+        changeStatus.value = currentContractor.value.user.status.id ?? 0
+    }
     changeStatusPopup.value = false
 }
 const fetchContractor = async () => {
@@ -769,7 +776,7 @@ const RemoveProfilePicture = async () => {
                                 <VLabel>{{t('contractor.details.status',{title :viewWrapper.pageTitle })}}</VLabel>
                                 <VControl>
                                     <VSelect v-if="currentContractor.user.status"
-                                        v-model="currentContractor.user.status.id">
+                                        v-model="changeStatus">
                                         <VOption value="">{{t('contractor.details.user_status')}}</VOption>
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
                                         status.name

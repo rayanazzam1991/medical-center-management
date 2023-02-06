@@ -45,10 +45,8 @@ export interface withdrawQuantity {
     id?: number
     item_id: number
     item_quantity: number
-    withdraw_item_price: number
     user_id: number
     requester_name: string
-    requester_type: string
     note: string
     status: number
 }
@@ -110,10 +108,8 @@ export const defaultWithdrawQuantityItem: withdrawQuantity = {
     id: 0,
     item_id: 0,
     item_quantity: 0,
-    withdraw_item_price: 0,
     user_id: 0,
     requester_name: '',
-    requester_type: '',
     note: '',
     status: 1
 

@@ -152,7 +152,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         await sleep(500)
         notif.success(t('toast.success.add'));
 
-        router.push({ path: `/item/${addQuantity.item.id}` });
+        router.push({ path: `/item/` });
     }
     else {
         await sleep(500);

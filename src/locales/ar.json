@@ -1245,13 +1245,14 @@
       "select_item": "تحديد مادة",
       "item_quantity": "كميًة المادة",
       "item_price": "سعر المادة",
+      "item_cost": "تكلفة المادة",
       "status": "الحالة",
       "requester_type": "نوع الشخص الطالب ",
-      "employee": "موظف",
+      "employee": "الموظف",
       "contractor": "أخصائي",
       "requester_name": "اسم الشخص الطالب",
       "item_note": "ملاحظات ",
-      "submit": "تاكيد"
+      "submit": "سحب"
     }
   },
   "dates": {
@@ -1640,8 +1641,8 @@
     },
     "back_button": "الرجوع إلى قائمة الحركة الداخلية للمستودعات"
   },
-  "user_statuses" : {
-    "active" : "فعال",
-    "inactive" :"غير فعال"
+  "user_statuses": {
+    "active": "فعال",
+    "inactive": "غير فعال"
   }
 }

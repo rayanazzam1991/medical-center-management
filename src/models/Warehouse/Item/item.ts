@@ -19,6 +19,7 @@ export interface Item {
     description?: string
     status: number
     is_for_sale?: number
+    quantity_in_main_inventory: number
 }
 
 export interface CreateUpdateItem {
@@ -57,6 +58,7 @@ export const defaultItem: Item = {
     category: defaultCategory,
     is_for_sale: undefined,
     status: 1,
+    quantity_in_main_inventory: 0
 }
 
 export const defaultCreateUpdateItem: CreateUpdateItem = {

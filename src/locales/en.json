@@ -1231,6 +1231,7 @@
       "select_item": "Select Item",
       "item_quantity": "Item Quantity",
       "item_price": "Item Price",
+      "item_cost": "Item Cost",
       "status": "Status",
       "requester_type": "Requester Type",
       "employee": "Employee",

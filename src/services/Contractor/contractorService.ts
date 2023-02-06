@@ -1,4 +1,4 @@
-import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles, ContractorWalletSearchFilter, ContractorWallet, ContractorWithWallet, defaultContractorWithWallet } from "/@src/models/Contractor/contractor"
+import { CreateContractor, Contractor, defaultContractor, CreateUpdateServicesHelper, ContractorSearchFilter, UpdateContractor, defaultContractorProfilePic, defaultContractorFiles, ChangeContractorStatus } from "/@src/models/Contractor/contractor"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
 import { CreateUpdateUser } from "/@src/models/Others/User/user"
 import { useContractor } from "/@src/stores/Contractor/contractorStore"
@@ -132,4 +132,14 @@ export async function addProfilePicture(contractor_id: unknown, fd: FormData) {
     let error_code: string = contractorResponse.error_code ?? ''
     let message: string = contractorResponse.message ?? ''
     return { success, error_code, message, media }
+}
+
+export async function changeContractorStatus(contractor: ChangeContractorStatus) {
+    const contractorResponse = useContractor()
+    await contractorResponse.changeContractorStatusStore(contractor)
+    var success: boolean = contractorResponse.success ?? false
+    var error_code: string = contractorResponse.error_code ?? ''
+    var message: string = contractorResponse.message ?? ''
+    return { success, error_code, message }
+
 }
