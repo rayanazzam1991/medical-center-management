@@ -13,7 +13,7 @@ import { changeItemHistoryStatus,  getItemHistory } from "../../../services/Ware
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useinventoryItemHistory } from "/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
-import IconButton from "/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue"
+import IconButton from "/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
 
