@@ -9,9 +9,10 @@
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useItemHistoryForm } from '../stores/Warehouse/ItemHistory/itemHistoryFormSteps';
-import { useitemHistory } from '../stores/Warehouse/ItemHistory/itemHistoryStore';
 
-const itemHistoryStore = useitemHistory()
+import { useinventoryItemHistory } from '../stores/Warehouse/ItemHistory/inventoryItemHistoryStore';
+
+const itemHistoryStore = useinventoryItemHistory()
 const itemHistoryForm = useItemHistoryForm()
 const {t} = useI18n()
 useHead({

@@ -15,8 +15,8 @@ import { getContractorsList } from '/@src/services/Contractor/contractorService'
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
-import { defaultCreateInventoryItem } from '/@src/models/Warehouse/InventoryItem/inventoryItem';
-import { useInventoryItemForm } from '/@src/stores/Warehouse/InventoryItem/inventoryItemFormSteps';
+import { defaultCreateInventoryItem, InventoryItem } from '/@src/models/Warehouse/InventoryItem/inventoryItem';
+import { useInventoryItemForm, useToInventoryItemForm } from '/@src/stores/Warehouse/InventoryItem/inventoryItemFormSteps';
 import { fromMainInventory } from '/@src/services/Warehouse/InventoryItem/inventoryItemService';
 import { Inventory, InventorySearchFilter } from '/@src/models/Warehouse/Inventory/inventory';
 import { getInventoriesList } from '/@src/services/Warehouse/Inventory/inventoryService';
@@ -24,11 +24,11 @@ import { getInventoriesList } from '/@src/services/Warehouse/Inventory/inventory
 const itemStore = useItem()
 const {t} = useI18n()
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle(t('inventoryItem.fromMainInventoryForm.title'))
+viewWrapper.setPageTitle(t('inventoryItem.toMainInventoryForm.title'))
 const head = useHead({
-    title: t('inventoryItem.fromMainInventoryForm.title'),
+    title: t('inventoryItem.toMainInventoryForm.title'),
 })
-const inventoryItemForm = useInventoryItemForm()
+const inventoryItemForm = useToInventoryItemForm()
 inventoryItemForm.setStep({
     number: 1,
     canNavigate: true,
@@ -41,20 +41,16 @@ inventoryItemForm.setStep({
 const route = useRoute()
 const router = useRouter()
 const notif = useNotyf() as Notyf
-const pageTitle = t('inventoryItem.fromMainInventoryForm.title')
+const pageTitle = t('inventoryItem.toMainInventoryForm.title')
 const currentsubInventoryMovement = ref(defaultCreateInventoryItem)
-const selectedCategoryId = ref()
-const selectedSubCategoryId = ref()
-const subcategoeisList = ref<Category[]>([])
-const allCategoriesList = ref<Category[]>([])
 const selectedItem = ref()
 const allItemsList = ref<Item[]>([])
-const itemsList = ref<Item[]>([])
 const mainInventory = ref ()
 const subInventoriesList = ref <Inventory[]>([])
 const inventoriesList = ref <Inventory[]>([])
-const mainCategoriesList = ref<Category[]>([])
+const inventoryItemsList = ref<InventoryItem[]>([])
 const selectrdInventoryId = ref()
+const Quantity = ref()
 onMounted(async () => {
     let subInventorySearchFilter = {} as InventorySearchFilter
     subInventorySearchFilter.status = BaseConsts.ACTIVE
@@ -69,25 +65,20 @@ onMounted(async () => {
     subInventoriesList.value = SubInventory
 
 
-    let categorySearchFilter = {} as CategorySearchFilter
-    categorySearchFilter.status = BaseConsts.ACTIVE
-    categorySearchFilter.per_page = 500
-    const allCategories = await getFilterCategoriesList(categorySearchFilter)
-    allCategoriesList.value = allCategories.categories
-    mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
+    
 
 
 })
-const getSubCategoryByCategroy =  () => {
-    let categoriesFilter = {} as CategorySearchFilter
-    categoriesFilter.parent_id = selectedCategoryId.value
-    const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
-    subcategoeisList.value = SubCategory
-    itemsList.value=[]
-    selectedSubCategoryId.value= undefined
-    selectedItem.value= undefined
-    currentsubInventoryMovement.value.item_id = 0
-}
+
+watch(selectrdInventoryId,(value)=>{
+    inventoryItemsList.value = inventoriesList.value.find((inventory) => inventory.id == value )?.inventory_items ?? []
+})
+watch(selectedItem,(value)=>{
+
+    const Item = inventoryItemsList.value.find((quantity) => quantity.item_id == selectedItem.value)
+    Quantity.value = Item?.quantity
+})
+
 const getItemBySubCategroy = async () => {
     let itemSearchFilter = {} as ItemSearchFilter
     itemSearchFilter.status = BaseConsts.ACTIVE
@@ -95,15 +86,8 @@ const getItemBySubCategroy = async () => {
     itemSearchFilter.per_page = 500
     const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items
-    let ItemFilter = {} as ItemSearchFilter
-    ItemFilter.category_id = selectedSubCategoryId.value
-    const Item = allItemsList.value.filter((item) => item.category.id == ItemFilter.category_id)
-    itemsList.value = Item
+   
 }
-
-watch(selectedItem,(value)=>{
-    const Item = allItemsList.value.find((item) => item.id == value)
-})
 
 const validationSchema = subInventoryMovementSchema
 const { handleSubmit } = useForm({
@@ -120,10 +104,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
     let subInventoryMovementForm = currentsubInventoryMovement.value
     subInventoryMovementForm.item_id = selectedItem.value 
     subInventoryMovementForm.inventory_id = selectrdInventoryId.value
-    subInventoryMovementForm.quantity = subInventoryMovementForm.quantity
+    subInventoryMovementForm.quantity = Quantity.value
     subInventoryMovementForm.inventoryItemHistories.note = subInventoryMovementForm.inventoryItemHistories.note
-    subInventoryMovementForm.inventoryItemHistories.from_inventory = mainInventory.value.id
-    subInventoryMovementForm.inventoryItemHistories.to_inventory = selectrdInventoryId.value
+    subInventoryMovementForm.inventoryItemHistories.to_inventory = mainInventory.value.id
+    subInventoryMovementForm.inventoryItemHistories.from_inventory = selectrdInventoryId.value
     const { inventoryItem, success, message } = await fromMainInventory(subInventoryMovementForm)
     if (success) {
         let formData = new FormData();
@@ -156,58 +140,23 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                    <label class="lable required">{{t('inventoryItem.fromMainInventoryForm.from_inventory')}}</label>
-                                    <input class="input" disabled  type="text"  :placeholder="mainInventory?.name"/>
-                            </div>
-                            <div class="column is-6">
                                 <VField id="inventory_id">
-                                    <VLabel class="required">{{t('inventoryItem.fromMainInventoryForm.to_inventory')}}</VLabel>
+                                    <VLabel class="required">{{t('inventoryItem.toMainInventoryForm.from_inventory')}}</VLabel>
                                     <VControl>
-                                        <VSelect v-model="selectrdInventoryId">
-                                            <VOption>{{t('inventoryItem.fromMainInventoryForm.select_inventory')}}</VOption>
+                                        <VSelect  v-model="selectrdInventoryId">
+                                            <VOption>{{t('inventoryItem.toMainInventoryForm.select_inventory')}}</VOption>
                                             <VOption v-for="subInventory in subInventoriesList" :key="subInventory.id"
                                                 :value="subInventory.id">
                                                 {{ subInventory.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="inventory_id" />
-
-                                    </VControl>
-                                </VField>
-                            </div>
-                        </div>
-                        <div class="columns is-multiline">
-                            
-                            <div class="column is-6">
-                                <VField >
-                                    <VLabel class="required">{{t('inventoryItem.fromMainInventoryForm.level_1')}}</VLabel>
-                                    <VControl>
-                                        <div class="select">
-                                            <select @change="getSubCategoryByCategroy" v-if="currentsubInventoryMovement"
-                                                v-model="selectedCategoryId">
-                                                <VOption :value="0">{{t('inventoryItem.fromMainInventoryForm.select_level_1')}}</VOption>
-                                                <VOption v-for="category in mainCategoriesList" :key="category.id"
-                                                    :value="category.id">{{ category.name }}
-                                                </VOption>
-                                            </select>
-                                        </div>
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <VField>
-                                    <VLabel class="required">{{t('inventoryItem.fromMainInventoryForm.level_2')}}</VLabel>
-                                    <VControl>
-                                        <VSelect :disabled="subcategoeisList.length <= 0" @change="getItemBySubCategroy"
-                                            v-if="currentsubInventoryMovement" v-model="selectedSubCategoryId">
-                                            <VOption>{{t('inventoryItem.fromMainInventoryForm.select_level_1')}}</VOption>
-                                            <VOption v-for="subCategory in subcategoeisList" :key="subCategory.id"
-                                                :value="subCategory.id">
-                                                {{ subCategory.name }}
-                                            </VOption>
-                                        </VSelect>
-                                    </VControl>
-                                </VField>
+                                    <label class="lable required">{{t('inventoryItem.toMainInventoryForm.to_inventory')}}</label>
+                                    <input class="input" disabled  type="text"  :placeholder="mainInventory?.name"/>
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -215,17 +164,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="column is-6">
                                 <VField id="item_id">
                                     <VLabel class="required" style="position:relative">
-                                        {{t('inventoryItem.fromMainInventoryForm.item')}}
+                                        {{t('inventoryItem.toMainInventoryForm.item')}}
                                         <div v-if="itemStore.loading"
                                             class="loader is-loading m-r-15 m-b-05-rem w35-h35 custom-loader">
                                         </div>
                                     </VLabel>
                                     <VControl>
-                                            <VSelect :disabled="itemsList.length <= 0" v-if="currentsubInventoryMovement"
+                                            <VSelect :disabled="!selectrdInventoryId" v-if="currentsubInventoryMovement"
                                                 v-model="selectedItem">
-                                                <VOption >{{t('inventoryItem.fromMainInventoryForm.select_item')}}</VOption>
-                                                <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
-                                                    {{ item.name }}
+                                                <VOption >{{t('inventoryItem.toMainInventoryForm.select_item')}}</VOption>
+                                                <VOption v-for="inventoryItem in inventoryItemsList" :key="inventoryItem.id" :value="inventoryItem.item_id">
+                                                    {{ inventoryItem.item }}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="item_id" />
@@ -234,9 +183,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="quantity">
-                                    <VLabel class="required"> {{t('inventoryItem.fromMainInventoryForm.quantity')}}</VLabel>
+                                    <VLabel class="required"> {{t('inventoryItem.toMainInventoryForm.quantity')}}</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentsubInventoryMovement.quantity" type="number"
+                                        <VInput v-model="Quantity" type="number"
                                             placeholder="" autocomplete="given-quantity" />
                                         <ErrorMessage class="help is-danger" name="quantity" />
                                     </VControl>
@@ -247,7 +196,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="note">
-                                    <VLabel class="optinal">{{t('inventoryItem.fromMainInventoryForm.note')}}</VLabel>
+                                    <VLabel class="optinal">{{t('inventoryItem.toMainInventoryForm.note')}}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentsubInventoryMovement.inventoryItemHistories.note" />
                                         <ErrorMessage class="help is-danger" name="note" />

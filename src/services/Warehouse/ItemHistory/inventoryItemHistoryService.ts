@@ -1,13 +1,13 @@
-import { addQuantity, ChangeItemHistoryStatus, defaultItemHistory, itemHistory, ItemHistorySearchFilter, withdrawQuantity } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
-import { useitemHistory } from "/@src/stores/Warehouse/ItemHistory/itemHistoryStore"
+import { addQuantity, ChangeItemHistoryStatus, defaultInventoryItemHistory, inventoryItemHistory, InventoryItemHistorySearchFilter, withdrawQuantity } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { useinventoryItemHistory } from "../../../stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
 import { Pagination } from "/@src/utils/response"
 import { MediaConsts, Media } from "/@src/models/Others/Media/media"
 
 
 
 export async function addQuantityService(addQuantityData: addQuantity) {
-    const addQuantityResponse = useitemHistory()
-    let addQuantity: itemHistory = await addQuantityResponse.addQuantityStore(addQuantityData) ?? defaultItemHistory
+    const addQuantityResponse = useinventoryItemHistory()
+    let addQuantity: inventoryItemHistory = await addQuantityResponse.addQuantityStore(addQuantityData) ?? defaultInventoryItemHistory
     let success: boolean = addQuantityResponse.success ?? false
     let error_code: string = addQuantityResponse.error_code ?? ''
     let message: string = addQuantityResponse.message ?? ''
@@ -15,7 +15,7 @@ export async function addQuantityService(addQuantityData: addQuantity) {
 
 }
 export async function addItemHistoryFile(itemHistory_id: unknown, fd: FormData) {
-    const contractorResponse = useitemHistory()
+    const contractorResponse = useinventoryItemHistory()
     const is_featured: unknown = false
     fd.append('model_id', itemHistory_id as string)
     fd.append('model_type', MediaConsts.ItemHistory_MODEL_ROUTE)
@@ -27,30 +27,30 @@ export async function addItemHistoryFile(itemHistory_id: unknown, fd: FormData) 
     return { success, error_code, message, media }
 }
 export async function withdrawQuantityService(withdrawQuantityData: withdrawQuantity) {
-    const withdrawQuantityResponse = useitemHistory()
-    let withdrawQuantity: itemHistory = await withdrawQuantityResponse.withdrawQuantityStore(withdrawQuantityData) ?? defaultItemHistory
+    const withdrawQuantityResponse = useinventoryItemHistory()
+    let withdrawQuantity: inventoryItemHistory = await withdrawQuantityResponse.withdrawQuantityStore(withdrawQuantityData) ?? defaultInventoryItemHistory
     let success: boolean = withdrawQuantityResponse.success ?? false
     let error_code: string = withdrawQuantityResponse.error_code ?? ''
     let message: string = withdrawQuantityResponse.message ?? ''
     return { success, error_code, message, withdrawQuantity }
 
 }
-export async function getItemHistoriesList(searchFilter: ItemHistorySearchFilter) {
-    const itemHistory = useitemHistory()
-    await itemHistory.getItemHistoriesStore(searchFilter)
-    let itemHistories: itemHistory[] = itemHistory.itemHistories
+export async function getInternalInventoryMovementsList(searchFilter: InventoryItemHistorySearchFilter) {
+    const itemHistory = useinventoryItemHistory()
+    await itemHistory.getInternalInventoryMovementsListStore(searchFilter)
+    let itemHistories: inventoryItemHistory[] = itemHistory.inventoryItemHistories
     let pagination: Pagination = itemHistory.pagination
     return { itemHistories, pagination }
 }
-export async function getItemHistory(itemId: number, searchFilter: ItemHistorySearchFilter) {
-    const itemHistory = useitemHistory()
+export async function getItemHistory(itemId: number, searchFilter: InventoryItemHistorySearchFilter) {
+    const itemHistory = useinventoryItemHistory()
     await itemHistory.getItemHistoryStore(itemId, searchFilter)
-    let itemHistories: itemHistory[] = itemHistory.itemHistories
+    let itemHistories: inventoryItemHistory[] = itemHistory.inventoryItemHistories
     let pagination: Pagination = itemHistory.pagination
     return { itemHistories, pagination }
 }
 export async function changeItemHistoryStatus(itemHistoryData: ChangeItemHistoryStatus) {
-    const itemResponse = useitemHistory()
+    const itemResponse = useinventoryItemHistory()
     await itemResponse.changeItemHistoryStatusStore(itemHistoryData)
     let success: boolean = itemResponse.success ?? false
     let error_code: string = itemResponse.error_code ?? ''

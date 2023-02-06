@@ -178,9 +178,9 @@
       "add_quantity": "إضافة كميًة",
       "withdraw_quantity": " سحب كميًة"
     },
-    "item_history": {
-      "item_history": "سجل المادة",
-      "list_stock_movement": "حركة المخزون"
+    "inventory_item_history": {
+      "inventory_item_history": "سجل المستودعات",
+      "list_internal_movement": "الحركة الداخلية للمستودعات"
     },
     "inventory": {
       "inventory": "المستودعات",
@@ -896,25 +896,24 @@
     },
     "header_button": "اضافة مادة"
   },
-  "list_stock_movement": {
+  "list_internal_movement": {
     "table": {
-      "title": " حركة المخزون",
+      "title": " حركة المخزون الداخلية",
       "columns": {
         "item": "المادة",
         "type": "النوع",
         "quantity": "الكميًة",
-        "price": "السعر",
-        "cost": "التكلفة",
-        "requester": " الشخص الطالب",
+        "from_inventory": "  من مستودع",
+        "to_inventory": " إلى مستودع",
         "note": "ملاحظة",
         "created_at": "تاريخ الإنشاء",
-        "created_by": "  بواسطة"
+        "action_by": "  بواسطة"
       }
     },
     "search_filter": {
-      "title": "تصفية معلومات المادة",
-      "select_level_1": "تحديد المستوى 1",
-      "select_level_2": "تحديد المستوى 2",
+      "title": "تصفية معلومات حركة المخزون",
+      "select_from_inventory": "تحديد من أي مستودع",
+      "select_to_inventory": "تحديد إلى أي مستودع",
       "select_item": "تحديد مادة",
       "select_type": "تحديد النوع",
       "in": "الداخل",
@@ -1682,7 +1681,17 @@
       "note": "ملاحظة",
       "quantity": "الكميًة"
     },
-    "back_button": "الرجوع إلى واجهة المستودعات"
+    "toMainInventoryForm": {
+      "title": "إعادة كميًة إلى المستودع الرئيسي",
+      "to_inventory": " إلى المستودع الرئيسي ",
+      "from_inventory": " من عهدة الأخصائي",
+      "select_item": "اختيار مادة",
+      "select_inventory": "اختيار عهدة أخصائي",
+      "item": "المادة",
+      "note": "ملاحظة",
+      "quantity": "الكميًة"
+    },
+    "back_button": "الرجوع إلى قائمة الحركة الداخلية للمستودعات"
   },
   "user_statuses": {
     "active": "فعال",

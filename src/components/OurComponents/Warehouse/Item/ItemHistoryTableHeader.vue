@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defaultItemHistorySearchFilter, ItemHistorySearchFilter, ItemHsitoryConsts } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { defaultInventoryItemHistorySearchFilter, InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -37,14 +37,14 @@ export default defineComponent({
         const searchFilterPop = ref(false)
         const searchName = ref('')
         const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultItemHistorySearchFilter)
+        const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
         const is_reseted = ref(false)
         const keyIncrement = ref(0)
         const search = () => {
             searchFilter.value.per_page = perPage.value
             context.emit('search', searchFilter.value)
         }
-        const search_filter = (value: ItemHistorySearchFilter) => {
+        const search_filter = (value: InventoryItemHistorySearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
 
@@ -58,7 +58,7 @@ export default defineComponent({
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
         }
-        const resetFilter_popup = (value: ItemHistorySearchFilter) => {
+        const resetFilter_popup = (value: InventoryItemHistorySearchFilter) => {
             searchFilter.value.type = undefined
             searchFilter.value.from = undefined
             searchFilter.value.to = undefined
@@ -111,7 +111,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ItemHistorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+        <InventoryItemHistorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>

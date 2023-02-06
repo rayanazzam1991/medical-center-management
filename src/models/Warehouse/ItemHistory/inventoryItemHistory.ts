@@ -1,11 +1,12 @@
 import { defaultUser, User } from "../../Others/User/user"
 import { defaultInventory, Inventory } from "../Inventory/inventory"
+import { defaultInventoryItem, InventoryItem } from "../InventoryItem/inventoryItem"
 import { defaultItem, Item } from "../Item/item"
 import { BaseConsts } from "/@src/utils/consts/base"
 
-export interface itemHistory {
+export interface inventoryItemHistory {
     id?: number
-    item: Item
+    item: string
     user?: User
     item_quantity: number
     add_item_cost: number
@@ -17,10 +18,10 @@ export interface itemHistory {
     withdraw_item_price: number
 }
 
-export interface ItemHistorySearchFilter {
+export interface InventoryItemHistorySearchFilter {
     item_id?: number
-    category_id?: number
-    sub_category_id?: number
+    from_inventory?: number
+    to_inventory?: number
     date_between?: string
     from?: string
     to?: string
@@ -67,9 +68,9 @@ export const defaultCreateInventoryItemHistoryMovement: CreateInventoryItemHisto
     note: ''
 }
 
-export const defaultItemHistory: itemHistory = {
+export const defaultInventoryItemHistory: inventoryItemHistory = {
     id: 0,
-    item: defaultItem,
+    item: '',
     user: defaultUser,
     item_quantity: 0,
     add_item_cost: 0,
@@ -80,10 +81,10 @@ export const defaultItemHistory: itemHistory = {
     withdraw_item_price: 0,
     status: 1
 }
-export const defaultItemHistorySearchFilter: ItemHistorySearchFilter = {
+export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearchFilter = {
     item_id: undefined,
-    category_id: undefined,
-    sub_category_id: undefined,
+    from_inventory: undefined,
+    to_inventory: undefined,
     date_between: undefined,
     from: undefined,
     to: undefined,
