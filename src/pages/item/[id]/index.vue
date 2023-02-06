@@ -69,11 +69,11 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
-    // const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
-    // searchFilter.value = {} as InventoryItemHistorySearchFilter
-    // inventoryItemHistoryList.value = itemHistories
-    // paginationVar.value = pagination
-    // keyIncrement.value = keyIncrement.value + 1
+    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
+    searchFilter.value = {} as InventoryItemHistorySearchFilter
+    inventoryItemHistoryList.value = itemHistories
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
     // default_per_page.value = pagination.per_page
 })
 

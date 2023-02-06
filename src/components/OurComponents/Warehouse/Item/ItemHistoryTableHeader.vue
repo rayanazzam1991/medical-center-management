@@ -111,7 +111,7 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ItemHistorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+        <InventoryItemHistorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
             @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
