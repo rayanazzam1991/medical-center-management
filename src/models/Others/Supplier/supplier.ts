@@ -86,14 +86,6 @@ export const defaultSupplier: Supplier = {
   notes: '',
   created_at: ''
 }
-// export interface ChangeSupplierStatus {
-//   id?: number
-//   status?: number
-// }
-// export const defaultChangeStatusSupplier: ChangeSupplierStatus = {
-//   id: undefined,
-//   status: 1,
-// }
 
 
 export const defaultSupplierSearchFilter: SupplierSearchFilter = {

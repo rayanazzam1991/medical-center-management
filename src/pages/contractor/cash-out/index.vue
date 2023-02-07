@@ -16,6 +16,7 @@ import { useWalletMovement } from '/@src/stores/Contractor/WalletMovement/wallet
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 
 const {t} = useI18n()
 const viewWrapper = useViewWrapper()
@@ -76,16 +77,6 @@ const walletMovementSort = async (value: string) => {
 
 }
 
-const noteTrim = (value: string) => {
-    if (value == undefined) {
-        return ''
-    }
-    else {
-        let trimmedString = value?.substring(0, 10);
-        return trimmedString + '...'
-    }
-}
-
 const columns = {
     "wallet.contractor.user.name": {
         align: 'center',
@@ -99,7 +90,7 @@ const columns = {
                 clickable: true,
                 title: row?.wallet?.contractor_name,
                 onClick: () => {
-                    router.push({ path: `/contractor/${row?.wallet?.contractor_id}` ,  
+                    router.push({ path: `/contractor/${row?.wallet?.contractor_id}` ,
                        query: { tab: 'Wallet' }});
                 },
             } ),
@@ -117,7 +108,7 @@ const columns = {
         renderRow: (row: any) =>
             h('span', {
                 innerHTML: row?.note ?
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
+                    `<div class="tooltip">${stringTrim(row?.note,10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
             }),
     },
     created_by: {

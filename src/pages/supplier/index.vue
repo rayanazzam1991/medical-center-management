@@ -12,6 +12,7 @@ import sleep from '/@src/utils/sleep'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
+import { stringTrim } from '/@src/composable/helpers/stringHelpers'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
 viewWrapper.setPageTitle(t('supplier.table.title'))
@@ -37,28 +38,19 @@ onMounted(async () => {
   default_per_page.value = pagination.per_page
 });
 
-const noteTrim = (value: string) => {
-  if (value == undefined) {
-    return ''
-  }
-  else {
-    let trimmedString = value?.substring(0, 10);
-    return trimmedString + '...'
-  }
-}
 
-const search = async (searchFilter2: SupplierSearchFilter) => {
-  paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
+const search = async (newSearchFilter: SupplierSearchFilter) => {
+  paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
 
-  const { suppliers, pagination } = await getSuppliersList(searchFilter2)
+  const { suppliers, pagination } = await getSuppliersList(newSearchFilter)
 
   suppliersList.value = suppliers
   paginationVar.value = pagination
-  searchFilter.value = searchFilter2
+  searchFilter.value = newSearchFilter
 }
 
-const resetFilter = async (searchFilter2: SupplierSearchFilter) => {
-  searchFilter.value = searchFilter2
+const resetFilter = async (newSearchFilter: SupplierSearchFilter) => {
+  searchFilter.value = newSearchFilter
   await search(searchFilter.value)
 }
 const getSuppliersPerPage = async (pageNum: number) => {
@@ -140,7 +132,7 @@ const columns = {
     renderRow: (row: any) =>
       h('span', {
         innerHTML: row?.notes ?
-          `<div class="tooltip">${noteTrim(row?.notes)}<div class="tooltiptext"><p class="text-white">${row?.notes}</p></div></div>` : '-',
+          `<div class="tooltip">${stringTrim(row?.notes,10)}<div class="tooltiptext"><p class="text-white">${row?.notes}</p></div></div>` : '-',
 
       }),
 

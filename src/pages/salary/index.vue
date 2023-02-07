@@ -12,6 +12,7 @@ import { getSalariesList } from '/@src/services/HR/Payroll/Salary/salaryService'
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
 
 
 const viewWrapper = useViewWrapper()
@@ -66,10 +67,7 @@ const salarySort = async (value: string) => {
   }
   await getSalaries(selectedMonth.value,searchFilter.value)
 }
-const numberFormat = (number : number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-}
 
 const columns = {
   "salaries.employees.users.name": {

@@ -73,7 +73,7 @@ export default defineComponent({
             initialValues: formType.value == "Edit" ? {
               name: currentSupplier?.value?.name ?? "",
               phone_number: currentSupplier?.value?.phone_number ?? "",
-              status: currentSupplier?.value?.status ?? 1,
+              status: currentSupplier?.value?.status ?? SupplierConsts.ACTIVE,
               city_id: currentSupplier.value?.city?.id ?? undefined,
             } : {
                 name: "",

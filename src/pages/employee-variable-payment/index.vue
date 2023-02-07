@@ -15,6 +15,7 @@ import { useEmployeeVariablePayment } from '/@src/stores/HR/Payoll/EmployeeVaria
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 
 
 const viewWrapper = useViewWrapper()
@@ -74,15 +75,6 @@ const employeeVariablePaymentSort = async (value: string) => {
     searchFilter.value.order_by = undefined
   }
   await search(searchFilter.value)
-}
-const noteTrim = (value: string) => {
-  if (value == undefined) {
-    return ''
-  }
-  else {
-    let trimmedString = value?.substring(0, 10);
-    return trimmedString + '...'
-  }
 }
 const changeStatus = async () => {
   if (newStatus.value == EmployeeVariablePaymentConsts.WAITING && newDueDate.value == undefined) {
@@ -209,7 +201,7 @@ const columns = {
     renderRow: (row: any) =>
       h('span', {
         innerHTML: row?.note ?
-          `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
+          `<div class="tooltip">${stringTrim(row?.note,10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
 
       }),
 

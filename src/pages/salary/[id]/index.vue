@@ -8,6 +8,7 @@ import { CityConsts } from '/@src/models/Others/City/city';
 import { getSalaryPayslip } from '/@src/services/HR/Payroll/Salary/salaryService';
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -48,10 +49,6 @@ onMounted(async () => {
   moreVariablePayments.value.number = Math.abs(earningsVariablePayments.value.length - deductionsVariablePayments.value.length)
 })
 
-const numberFormat = (number: number) => {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-}
 const marginButton = () => {
   return {
     "margin-button": `120px !important;`
@@ -340,7 +337,7 @@ const totalTotalColumns = {
           <div class="invoice-section py-4 net-salary ">
             <div class="columns">
               <div class="column is-6">
-                
+
               </div>
               <div class="column is-6">
                 <VFlexTable subtable :data="totalData" :columns="totalTotalColumns" class="mid-table">
@@ -374,7 +371,7 @@ const totalTotalColumns = {
   .flex-table-item{
 
     min-height: 48px !important;
-    
+
   }
 }
 

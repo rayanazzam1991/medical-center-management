@@ -31,7 +31,6 @@ export default defineComponent({
         const searchPhoneNumber = ref()
         const searchStatus = ref()
         const searchFilter = ref(defaultSupplierSearchFilter)
-        const test = ref()
         let search_filter_popup = computed({
             get: () => props.search_filter_popup as boolean,
             set(value) {
@@ -57,14 +56,14 @@ export default defineComponent({
             searchFilter.value.status = undefined
             context.emit('resetFilter', searchFilter.value)
         }
-        const city2 = ref<City[]>([])
+        const newCity = ref<City[]>([])
         onMounted(async () => {
             let citiesSearchFilter = {} as CitySearchFilter
             citiesSearchFilter.per_page = 500
             const  { cities }  = await getCitiesList(citiesSearchFilter)
-            city2.value = cities
+            newCity.value = cities
         })
-        return {t ,SupplierConsts, search, resetFilter, city2, search_filter_popup, searchName, searchPhoneNumber, searchStatus }
+        return {t ,SupplierConsts, search, resetFilter, newCity, search_filter_popup, searchName, searchPhoneNumber, searchStatus }
     },
 })
 </script>

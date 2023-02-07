@@ -9,6 +9,7 @@ import { DateConsts, DaysPerMonth } from '/@src/models/HR/Attendance/Date/date'
 import { getDaysPerMonth } from '/@src/services/HR/Attendance/Date/dateService'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
+import { isNumber } from '/@src/composable/helpers/isNumberCheck'
 
 
 
@@ -106,17 +107,7 @@ export default defineComponent({
             searchFilter.value.attendance_to = `${selectedYear.value}-${selectedMonth.value}-${selectedMonthDays.value}`
             await search()
         }
-        function isNumber(str: string): boolean {
-            if (typeof str !== 'string') {
-                return false;
-            }
 
-            if (str.trim() === '') {
-                return false;
-            }
-
-            return !Number.isNaN(Number(str));
-        }
 
         const search = async () => {
             searchFilter.value.per_page = perPage.value
@@ -183,7 +174,7 @@ export default defineComponent({
                                     <VOption :key="index" v-for="(month, index) in months"
                                         :value="index + 1 < 10 ? '0' + (index + 1).toString() : (index + 1).toString()">
                                         {{
-                                           t(`dates.months.${month.toLowerCase()}`) 
+                                           t(`dates.months.${month.toLowerCase()}`)
                                         }}</VOption>
                                 </VSelect>
                             </VControl>
@@ -224,10 +215,10 @@ export default defineComponent({
                 </div>
                 <h6 class="is-size-7 mt-2"><span class="has-text-info">{{t('employee_attendance.search_filter.note')}} </span>
                     <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.ATTEND) }}</span> ➡
-                    {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND).replace(' ', '_').toLowerCase()}`)  }}  | 
+                    {{ t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.ATTEND).replace(' ', '_').toLowerCase()}`)  }}  |
                     <Tippy placement="bottom">
                         {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
-                        {{t('attendance_status.absence')}}  | 
+                        {{t('attendance_status.absence')}}  |
                         <template #content>
                             <p>
                                 {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_ABSENCE) }} ➡
@@ -250,7 +241,7 @@ export default defineComponent({
                     </Tippy>
                     <Tippy placement="bottom">
                         {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }} ➡
-                        {{t('attendance_status.partial_absence')}}  | 
+                        {{t('attendance_status.partial_absence')}}  |
                         <template #content>
                             <p>
                                 {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.PENDING_PARTIAL_ABSENCE) }}
@@ -279,7 +270,7 @@ export default defineComponent({
                     <span class="blue"> {{ AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.VACATION) }}</span>
                     ➡
                     {{                                     t(`attendance_status.${AttendanceConsts.getAttendanceStatusName(AttendanceConsts.VACATION).replace(' ', '_').toLowerCase()}`)
- }}  | 
+ }}  |
                     <span class="yellow">{{
                         AttendanceConsts.getAttendanceStatusIcon(AttendanceConsts.MISSING_CHECK)
                     }}</span> ➡
