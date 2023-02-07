@@ -35,9 +35,9 @@ export async function withdrawQuantityService(withdrawQuantityData: withdrawQuan
     return { success, error_code, message, withdrawQuantity }
 
 }
-export async function getInternalInventoryMovementsList(searchFilter: InventoryItemHistorySearchFilter) {
+export async function getInventoryMovementsList(searchFilter: InventoryItemHistorySearchFilter) {
     const itemHistory = useinventoryItemHistory()
-    await itemHistory.getInternalInventoryMovementsListStore(searchFilter)
+    await itemHistory.getInventoryMovementsListStore(searchFilter)
     let itemHistories: inventoryItemHistory[] = itemHistory.inventoryItemHistories
     let pagination: Pagination = itemHistory.pagination
     return { itemHistories, pagination }

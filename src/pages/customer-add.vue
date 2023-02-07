@@ -36,9 +36,9 @@ useHead({
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(customerForm.canNavigate && 'is-active')]">
                 <div class="columns buttons-width">
-                    <div class="wizard-buttons-inner-padding">
+                    <div class="wizard-buttons-inner-padding is-flex is-justify-content-start">
                         <VLoader size="small" :active="customerStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
+                            <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="customerForm.validateStepFn === null"
                                 :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
                                 {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') : t('customer.form.submit_and_next_button')

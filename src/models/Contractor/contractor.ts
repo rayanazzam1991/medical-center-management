@@ -35,6 +35,10 @@ export interface CreateContractor {
     services: Array<CreateUpdateServicesHelper>
     is_completed?: boolean
 }
+export interface ChangeContractorStatus {
+    id?: number
+    user_status_id: number
+}
 export interface UpdateContractor {
     id?: number
     starting_date: string
@@ -108,6 +112,10 @@ export const defaultContractor: Contractor = {
     end_date: '',
     wallet: defaultWallet,
     speciality: defaultSpeciality,
+}
+export const defaultChangeContractorStatus: ChangeContractorStatus = {
+    id: 0,
+    user_status_id: 0,
 }
 
 

@@ -19,11 +19,11 @@ export async function withdrawQuantityApi(
 
     return { response }
 }
-export async function getInternalInventoryMovementsListApi(
+export async function getInventoryMovementsListApi(
     api: AxiosInstance,
     searchFilter: InventoryItemHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('inventoryItemHistory/getInternalInventoryMovementsList', {
+    const { data: response, headers } = await api.get('inventoryItemHistory/getInventoryMovementsList', {
         params: searchFilter,
     })
     return { response }

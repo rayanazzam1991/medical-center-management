@@ -118,10 +118,12 @@ export default defineComponent({
             },
         });
         const onSubmit = async (method: String) => {
+
             if (method == "Add") {
                 await onSubmitAdd();
             }
             else if (method == "Edit") {
+
                 await onSubmitEdit();
             }
             else
@@ -157,6 +159,7 @@ export default defineComponent({
             }
         });
         const onSubmitEdit = handleSubmit(async () => {
+
             let itemData = currentItem.value
             let itemForm = currentCreateUpdateItem.value
             itemForm.id = itemData.id

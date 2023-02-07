@@ -1,9 +1,9 @@
 import { AxiosError } from "axios"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper, ContractorWithWallet } from "/@src/models/Contractor/contractor"
+import { Contractor, CreateContractor, UpdateContractor, ContractorSearchFilter, CreateUpdateServicesHelper, ChangeContractorStatus } from "/@src/models/Contractor/contractor"
 import { Media } from "/@src/models/Others/Media/media"
-import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi } from "/@src/utils/api/Contractor"
+import { addContractorApi, updateContractorApi, getContractorsApi, addServicesApi, getContractorApi, changeContractorStatusApi } from "/@src/utils/api/Contractor"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -254,6 +254,26 @@ export const useContractor = defineStore('contractor', () => {
       loading.value = false
     }
   }
+  async function changeContractorStatusStore(contractor: ChangeContractorStatus) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const response = await changeContractorStatusApi(api, contractor)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
 
   return {
@@ -271,7 +291,8 @@ export const useContractor = defineStore('contractor', () => {
     getContractorProfilePicture,
     getContractorFilesStore,
     addContractorFileStore,
-    deleteContractorFile
+    deleteContractorFile,
+    changeContractorStatusStore
   } as const
 })
 

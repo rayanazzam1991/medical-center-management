@@ -8,7 +8,7 @@
     "editor.rulers": [80]
   },
   "[vue]": {
-    "editor.defaultFormatter": "stylelint.vscode-stylelint",
+    "editor.defaultFormatter": "Vue.volar",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
     }

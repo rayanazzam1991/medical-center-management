@@ -1,28 +1,19 @@
-<script setup lang="ts">
-import { useHead } from '@vueuse/head'
-import VTag from '/@src/components/base/tags/VTag.vue'
-import { changeItemHistoryStatus, getInternalInventoryMovementsList } from '../../services/Warehouse/ItemHistory/inventoryItemHistoryService'
-import { useNotyf } from '/@src/composable/useNotyf'
-import { useViewWrapper } from '/@src/stores/viewWrapper'
-import { defaultPagination } from '/@src/utils/response'
-import { useinventoryItemHistory } from '../../stores/Warehouse/ItemHistory/inventoryItemHistoryStore'
-import sleep from '/@src/utils/sleep'
-import {
-    defaultChangeItemHistoryStatus,
-    defaultInventoryItemHistory,
-    defaultInventoryItemHistorySearchFilter,
-    InventoryItemHistorySearchFilter,
-    ItemHsitoryConsts,
-    inventoryItemHistory
-} from '../../models/Warehouse/ItemHistory/inventoryItemHistory'
-import { Notyf } from 'notyf'
-import { BaseConsts } from '/@src/utils/consts/base'
-import { useI18n } from 'vue-i18n'
+<script setup lang="ts">import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultInventoryItemHistorySearchFilter, inventoryItemHistory, defaultInventoryItemHistory, defaultChangeItemHistoryStatus, InventoryItemHistorySearchFilter } from '/@src/models/Warehouse/ItemHistory/inventoryItemHistory';
+import { getInventoryMovementsList } from '/@src/services/Warehouse/ItemHistory/inventoryItemHistoryService';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { useinventoryItemHistory } from '/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore';
+import { BaseConsts } from '/@src/utils/consts/base';
+import { defaultPagination } from '/@src/utils/response';
+
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
-viewWrapper.setPageTitle(t('list_internal_movement.table.title'))
+viewWrapper.setPageTitle(t('list_inventory_movement.table.title'))
 useHead({
-    title: t('list_internal_movement.table.title'),
+    title: t('list_inventory_movement.table.title'),
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
@@ -39,7 +30,7 @@ const default_per_page = ref(1)
 onMounted(async () => {
     searchFilter.value = {} as InventoryItemHistorySearchFilter
     searchFilter.value.status = BaseConsts.ACTIVE
-    const { itemHistories, pagination } = await getInternalInventoryMovementsList(searchFilter.value)
+    const { itemHistories, pagination } = await getInventoryMovementsList(searchFilter.value)
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
@@ -48,9 +39,8 @@ onMounted(async () => {
 
 const search = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     searchFilter2.status = BaseConsts.ACTIVE
-
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
-    const { itemHistories, pagination } = await getInternalInventoryMovementsList(searchFilter2)
+    const { itemHistories, pagination } = await getInventoryMovementsList(searchFilter2)
     itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
@@ -94,7 +84,7 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_internal_movement.table.columns.from_inventory'),
+        label: t('list_inventory_movement.table.columns.from'),
         renderRow: (row: any) =>
             h('span', row?.from_inventory ? row?.from_inventory : '-'),
     },
@@ -102,16 +92,39 @@ const columns = {
         sortable: true,
         align: 'center',
         searchable: true,
-        label: t('list_internal_movement.table.columns.to_inventory'),
+        label: t('list_inventory_movement.table.columns.to'),
         grow: true,
         renderRow: (row: any) =>
-            h('span', row?.to_inventory ? row?.to_inventory : '-'),
+            h('span', row?.to_inventory ? row?.to_inventory : !row?.to_inventory && row?.from_inventory ? row?.requester_name : '-'),
+    },
+    action : {
+        align: 'center',
+        searchable: true,
+        label: t('list_inventory_movement.table.columns.action'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory && !row?.from_inventory ? t('list_inventory_movement.table.action_types.add_quantity')
+                     : !row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.action_types.withdraw_quantity')
+                    : '-'
+                     ),
+
+    },
+    movement_type : {
+        align: 'center',
+        searchable: true,
+        label: t('list_inventory_movement.table.columns.movement_type'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.movement_types.internal')
+                     : t('list_inventory_movement.table.movement_types.external')
+                     ),
+
     },
     item: {
         searchable: true,
         grow: true,
         align: 'center',
-        label: t('list_internal_movement.table.columns.item'),
+        label: t('list_inventory_movement.table.columns.item'),
         renderRow: (row: any) =>
             h('span', row?.item)
     },
@@ -119,13 +132,13 @@ const columns = {
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_internal_movement.table.columns.quantity'),
+        label: t('list_inventory_movement.table.columns.quantity'),
     },
     note: {
         align: 'center',
         searchable: true,
         grow: true,
-        label: t('list_internal_movement.table.columns.note'),
+        label: t('list_inventory_movement.table.columns.note'),
 
         renderRow: (row: any) =>
             h('span', {
@@ -137,7 +150,7 @@ const columns = {
     },
     created_at: {
         align: 'center',
-        label: t('list_internal_movement.table.columns.created_at'),
+        label: t('list_inventory_movement.table.columns.created_at'),
         grow: true,
         renderRow: (row: any) =>
             h('span', row?.created_at),
@@ -148,7 +161,7 @@ const columns = {
         searchable: true,
         grow: true,
         align: 'center',
-        label: t('list_internal_movement.table.columns.action_by'),
+        label: t('list_inventory_movement.table.columns.action_by'),
         renderRow: (row: any) =>
             h('span', row?.action_by?.first_name)
     },
@@ -156,7 +169,7 @@ const columns = {
 </script>
 
 <template>
-    <ListInternalMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+    <ListInventoryMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
         @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="itemHistoriesList" @update:sort="itemSort">
