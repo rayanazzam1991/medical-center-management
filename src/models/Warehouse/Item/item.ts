@@ -19,6 +19,7 @@ export interface Item {
     description?: string
     status: number
     is_for_sale?: number
+    quantity_in_main_inventory: number
 }
 
 export interface CreateUpdateItem {
@@ -42,7 +43,7 @@ export interface ItemSearchFilter {
     sub_category_id?: number
     category_id?: number
     status?: number
-    is_for_sale?: boolean
+    is_for_sale?: number
     page?: number
     per_page?: number
     order_by?: string
@@ -57,6 +58,7 @@ export const defaultItem: Item = {
     category: defaultCategory,
     is_for_sale: undefined,
     status: 1,
+    quantity_in_main_inventory: 0
 }
 
 export const defaultCreateUpdateItem: CreateUpdateItem = {

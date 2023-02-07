@@ -4,7 +4,7 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import NoDeleteDropDownVue from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { changeItemStatus, getItemsList } from '/@src/services/Warehouse/Item/itemService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts, Item } from '/@src/models/Warehouse/Item/item'
+import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts, Item, ChangeItemStatus } from '/@src/models/Warehouse/Item/item'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore'
@@ -41,15 +41,15 @@ onMounted(async () => {
 });
 
 const changestatusItem = async () => {
-    currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
-    currentChangeStatusItem.value.status = selectedStatus.value
-    const { message, success } = await changeItemStatus(currentChangeStatusItem.value)
+    const changeItemStatusData : ChangeItemStatus = {
+     id : currentChangeStatusItem.value.id,
+     status : selectedStatus.value
+     }
+    const { message, success } = await changeItemStatus(changeItemStatusData)
     if (success) {
-        await search(searchFilter.value)
-        // @ts-ignore
+        currentChangeStatusItem.value.status = selectedStatus.value
         notif.dismissAll()
         await sleep(200);
-        // @ts-ignore
         notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);

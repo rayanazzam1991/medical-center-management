@@ -3,7 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Media } from "/@src/models/Others/Media/media"
 import { inventoryItemHistory, addQuantity, withdrawQuantity, InventoryItemHistorySearchFilter, ChangeItemHistoryStatus } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { uploadMediaApi } from "/@src/utils/api/Others/Media"
-import { addQuantityApi, getInternalInventoryMovementsListApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi } from "../../../utils/api/Warehouse/InventoryItemHistory"
+import { addQuantityApi, withdrawQuantityApi, changeItemHistoryStatusApi, getItemHistoryApi, getInventoryMovementsListApi } from "../../../utils/api/Warehouse/InventoryItemHistory"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -93,13 +93,13 @@ export const useinventoryItemHistory = defineStore('inventoryItemHistory', () =>
             loading.value = false
         }
     }
-    async function getInternalInventoryMovementsListStore(searchFilter: InventoryItemHistorySearchFilter) {
+    async function getInventoryMovementsListStore(searchFilter: InventoryItemHistorySearchFilter) {
         if (loading.value) return
 
         loading.value = true
 
         try {
-            const returnedResponse = await getInternalInventoryMovementsListApi(api, searchFilter)
+            const returnedResponse = await getInventoryMovementsListApi(api, searchFilter)
             inventoryItemHistories.value = returnedResponse.response.data
             pagination.value = returnedResponse.response.pagination
             success.value = returnedResponse.response.success
@@ -180,7 +180,7 @@ export const useinventoryItemHistory = defineStore('inventoryItemHistory', () =>
         addQuantityStore,
         withdrawQuantityStore,
         addItemHistoryFileStore,
-        getInternalInventoryMovementsListStore,
+        getInventoryMovementsListStore,
         changeItemHistoryStatusStore,
         getItemHistoryStore
     } as const

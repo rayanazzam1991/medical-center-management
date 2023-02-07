@@ -8,14 +8,15 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus,  defaultInventoryItemHistory,  defaultInventoryItemHistorySearchFilter,inventoryItemHistory,InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
-import { changeItemHistoryStatus,  getItemHistory } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
+import { defaultChangeItemHistoryStatus, defaultInventoryItemHistory, defaultInventoryItemHistorySearchFilter, inventoryItemHistory, InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { changeItemHistoryStatus, getInventoryMovementsList, getItemHistory } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useinventoryItemHistory } from "/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
-import IconButton from "/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
+import IconButton from "/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue"
+import { BaseConsts } from "/@src/utils/consts/base"
 
 
 
@@ -29,14 +30,11 @@ const currentItemModel = ref<Item>(defaultItem)
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
 const changeHistoryStatusPopup = ref(false)
-const itemChangeStatus = ref<Item>(defaultItem)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
 const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
-const itemHistoryChangeStatus = ref<inventoryItemHistory>(defaultInventoryItemHistory)
 const keyIncrement = ref(1)
 const loading = ref(false)
-const allItemHistoriesList = ref<inventoryItemHistory[]>([])
-const ItemHistoriesList = ref<inventoryItemHistory[]>([])
+const itemHistoriesList = ref<inventoryItemHistory[]>([])
 const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
 const inventoryItemHistoryList = ref<Array<inventoryItemHistory>>([])
 const paginationVar = ref(defaultPagination)
@@ -69,24 +67,31 @@ onMounted(async () => {
     await getCurrentItem()
     loading.value = false
 
-    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter.value)
     searchFilter.value = {} as InventoryItemHistorySearchFilter
-    inventoryItemHistoryList.value = itemHistories
+    searchFilter.value.status = BaseConsts.ACTIVE
+    searchFilter.value.item_id = itemId.value
+    const { itemHistories, pagination } = await getInventoryMovementsList(searchFilter.value)
+    itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
-    // default_per_page.value = pagination.per_page
+    default_per_page.value = pagination.per_page
+
 })
 
 const search = async (searchFilter2: InventoryItemHistorySearchFilter) => {
+    searchFilter2.status = BaseConsts.ACTIVE
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
-    const { itemHistories, pagination } = await getItemHistory(itemId.value, searchFilter2)
-    inventoryItemHistoryList.value = itemHistories
+    searchFilter2.item_id = itemId.value
+    const { itemHistories, pagination } = await getInventoryMovementsList(searchFilter2)
+    itemHistoriesList.value = itemHistories
     paginationVar.value = pagination
     searchFilter.value = searchFilter2
 }
 
 const resetFilter = async (searchFilter2: InventoryItemHistorySearchFilter) => {
     searchFilter.value = searchFilter2
+    searchFilter.value.status = BaseConsts.ACTIVE
+
     await search(searchFilter.value)
 }
 
@@ -106,6 +111,104 @@ const itemSort = async (value: string) => {
     }
     await search(searchFilter.value)
 }
+const noteTrim = (value: string) => {
+    if (value == undefined) {
+        return ''
+    }
+    else {
+        let trimmedString = value?.substring(0, 10);
+        return trimmedString + '...'
+    }
+}
+const columns = {
+    from_inventory: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        grow: true,
+        label: t('list_inventory_movement.table.columns.from'),
+        renderRow: (row: any) =>
+            h('span', row?.from_inventory ? row?.from_inventory : '-'),
+    },
+    to_inventory: {
+        sortable: true,
+        align: 'center',
+        searchable: true,
+        label: t('list_inventory_movement.table.columns.to'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory ? row?.to_inventory : !row?.to_inventory && row?.from_inventory ? row?.requester_name : '-'),
+    },
+    action: {
+        align: 'center',
+        searchable: true,
+        label: t('list_inventory_movement.table.columns.action'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory && !row?.from_inventory ? t('list_inventory_movement.table.action_types.add_quantity')
+                : !row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.action_types.withdraw_quantity')
+                    : '-'
+            ),
+
+    },
+    movement_type: {
+        align: 'center',
+        searchable: true,
+        label: t('list_inventory_movement.table.columns.movement_type'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.movement_types.internal')
+                : t('list_inventory_movement.table.movement_types.external')
+            ),
+
+    },
+    item: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: t('list_inventory_movement.table.columns.item'),
+        renderRow: (row: any) =>
+            h('span', row?.item)
+    },
+    item_quantity: {
+        align: 'center',
+        searchable: true,
+        grow: true,
+        label: t('list_inventory_movement.table.columns.quantity'),
+    },
+    note: {
+        align: 'center',
+        searchable: true,
+        grow: true,
+        label: t('list_inventory_movement.table.columns.note'),
+
+        renderRow: (row: any) =>
+            h('span', {
+                innerHTML: row?.note ?
+                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
+
+            }),
+
+    },
+    created_at: {
+        align: 'center',
+        label: t('list_inventory_movement.table.columns.created_at'),
+        grow: true,
+        renderRow: (row: any) =>
+            h('span', row?.created_at),
+        searchable: true,
+        sortable: true,
+    },
+    action_by: {
+        searchable: true,
+        grow: true,
+        align: 'center',
+        label: t('list_inventory_movement.table.columns.action_by'),
+        renderRow: (row: any) =>
+            h('span', row?.action_by?.first_name)
+    },
+} as const
+
 const getCurrentItem = async () => {
     const { item } = await getItem(itemId.value)
     currentItem.value = item
@@ -117,10 +220,15 @@ const changestatusItem = async () => {
     itemForm.id = currentItem.value.id
     itemForm.status = itemData.status
     const { message, success } = await changeItemStatus(itemForm)
-    getCurrentItem()
-    notif.dismissAll()
-    await sleep(200);
-    changeStatusPopup.value = false
+    if (success) {
+        getCurrentItem()
+        notif.dismissAll()
+        await sleep(200);
+        changeStatusPopup.value = false
+
+    } else {
+        notif.error(message)
+    }
 }
 const onClickEditMainInfo = () => {
     router.push({
@@ -148,142 +256,6 @@ const changestatusItemHistory = async () => {
     }
 }
 
-const columns = {
-    type: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label: t('item.details.item_history_table.columns.type'),
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row.type === 'in'
-                            ? 'success'
-                            : row.type === 'out'
-                                ? 'danger'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return row.type
-                    },
-                }
-            ),
-    },
-    item_quantity: {
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label: t('item.details.item_history_table.columns.item_quantity'),
-
-    },
-    add_item_cost: {
-        align: 'center',
-        searchable: true,
-        label: t('item.details.item_history_table.columns.add_item_cost'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.add_item_cost ? row?.add_item_cost : '-')
-
-    },
-    withdraw_item_price: {
-        align: 'center',
-        searchable: true,
-        label: t('item.details.item_history_table.columns.withdraw_item_price'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.withdraw_item_price ? row?.withdraw_item_price : '-')
-
-    },
-    requester_name: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: t('item.details.item_history_table.columns.requester_name'),
-        renderRow: (row: any) =>
-            h('span', row?.requester_name ? row?.requester_name : '-'),
-
-    },
-    created_at: {
-        align: 'center',
-        label: t('item.details.item_history_table.columns.created_at'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.created_at),
-        searchable: true,
-        sortable: true,
-    },
-    invoice_number: {
-        align: 'center',
-        searchable: true,
-        label: t('item.details.item_history_table.columns.invoice_number'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.invoice_number ? row?.invoice_number : '-')
-
-    },
-    Image: {
-        align: 'center',
-        grow: true,
-        label: t('item.details.item_history_table.columns.Image'),
-        renderRow: (row: any) => {
-            if (row?.file?.length > 0) {
-                return h(IconButton, {
-                    icon: 'fas fa-eye',
-                    image_path: import.meta.env.VITE_MEDIA_BASE_URL + row?.file[0]?.relative_path,
-                });
-            } else {
-                return h('span', '-');
-
-            }
-        },
-    },
-    status: {
-        align: 'center',
-        grow: true,
-        label: t('item.details.item_history_table.columns.status'),
-        renderRow: (row: any) =>
-            h(
-                VTag,
-                {
-                    rounded: true,
-                    color:
-                        row?.status === ItemHsitoryConsts.INACTIVE
-                            ? 'danger'
-                            : row?.status === ItemHsitoryConsts.ACTIVE
-                                ? 'success'
-                                : undefined,
-                },
-                {
-                    default() {
-                        return ItemHsitoryConsts.showStatusName(row?.status)
-                    },
-                }
-            ),
-
-    },
-    action: {
-        align: 'center',
-        grow: true,
-        label: t('item.details.item_history_table.columns.action'),
-        renderRow: (row: any) =>
-            h(IconButton, {
-                icon: 'fas fa-edit',
-                onClick: () => {
-                    keyIncrement.value++
-                    currentChangeStatusItemHistory.value = row
-                    changeHistoryStatusPopup.value = true
-                    selectedStatus.value = row?.status
-
-                },
-            }),
-
-    },
-} as const
 
 </script>
 <template>
@@ -294,17 +266,19 @@ const columns = {
                 <div class="profile-stats">
                     <div class="profile-stat">
                         <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
-                        <span>{{t('item.details.status')}}: <span>
-                                <VTag :color="currentItem.status === ItemConsts.INACTIVE ? 'danger' : 'success'">
-                                    {{ ItemConsts.showStatusName(currentItem.status) }}</VTag>
-                            </span></span>
-                    </div>
+                        <span>{{ t('item.details.status') }} :
+                            <span
+                                :class="currentItem.status === ItemConsts.INACTIVE ? 'has-text-danger' : 'has-text-success'">
+                                {{ ItemConsts.showStatusName(currentItem.status) }} </span>
+                        </span>
+                    </div>&nbsp;|
                     <div class="profile-stat">
                         <i aria-hidden="true" class="lnil "></i>
-                        <span>{{t('item.table.columns.for_sale')}}: <span>
-                                <VTag :color="currentItem.is_for_sale === ItemConsts.IS_NOT_FORE_SALE ? 'warning' : 'success'">
-                                    {{ ItemConsts.showForSale(currentItem.is_for_sale) }}</VTag>
-                            </span></span>
+                        <span>{{ t('item.table.columns.for_sale') }} :
+                            <span
+                                :class="currentItem.is_for_sale === ItemConsts.IS_FORE_SALE ? 'has-text-success' : 'has-text-warning'">
+                                {{ ItemConsts.showForSale(currentItem.is_for_sale) }} </span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -332,10 +306,11 @@ const columns = {
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>{{t('item.details.main_details')}}</h3>
+                                        <h3>{{ t('item.details.main_details') }}</h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton @click.prevent="onOpen" color="dark">{{t('item.table.modal_title.item')}}
+                                        <VButton @click.prevent="onOpen" color="dark">
+                                            {{ t('item.table.modal_title.item') }}
                                         </VButton>
                                         <VIconButton size="small" icon="feather:edit-3" tabindex="0"
                                             @click="onClickEditMainInfo" />
@@ -347,7 +322,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('item.details.leve_1')}}</span>
+                                                    <span>{{ t('item.details.leve_1') }}</span>
                                                     <span>
                                                         {{ currentItem.category.parent?.name }}
                                                     </span>
@@ -358,7 +333,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('item.details.leve_2')}}</span>
+                                                    <span>{{ t('item.details.leve_2') }}</span>
                                                     <span>
                                                         {{ currentItem.category.name }}
                                                     </span>
@@ -369,7 +344,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('item.details.price')}}</span>
+                                                    <span>{{ t('item.details.price') }}</span>
                                                     <span>
                                                         {{ currentItem.price }}
                                                     </span>
@@ -380,7 +355,7 @@ const columns = {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('item.details.cost')}}</span>
+                                                    <span>{{ t('item.details.cost') }}</span>
                                                     <span>
                                                         {{ currentItem.cost }}
                                                     </span>
@@ -391,7 +366,7 @@ const columns = {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('item.details.description')}}</span>
+                                                    <span>{{ t('item.details.description') }}</span>
                                                     <span>
                                                         {{ currentItem.description }}
                                                     </span>
@@ -411,11 +386,10 @@ const columns = {
                     <div class="columns project-details-inner">
                         <div class="column is-12">
                             <div class="project-details-card">
-                                <ItemHistoryTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-                                    :button_name="`Add ${viewWrapper.pageTitle}`" @search="search"
-                                    :pagination="paginationVar" :default_per_page="default_per_page"
-                                    @resetFilter="resetFilter" />
-                                <VFlexTableWrapper :columns="columns" :data="inventoryItemHistoryList" @update:sort="itemSort">
+                                <ListInventoryMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+                                    class="mb-2" :has_item_filter="false" @search="search" :pagination="paginationVar"
+                                    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+                                <VFlexTableWrapper :columns="columns" :data="itemHistoriesList" @update:sort="itemSort">
                                     <VFlexTable separators clickable>
                                         <template #body>
                                             <div v-if="itemHistoryStore?.loading" class="flex-list-inner">
@@ -426,30 +400,34 @@ const columns = {
                                                     </VFlexTableCell>
                                                 </div>
                                             </div>
-                                            <div v-else-if="inventoryItemHistoryList.length === 0" class="flex-list-inner">
-                                                <VPlaceholderSection title="No matches"
-                                                    subtitle="There is no data that match your search." class="my-6">
+                                            <div v-else-if="itemHistoriesList.length === 0" class="flex-list-inner">
+                                                <VPlaceholderSection :title="t('tables.placeholder.title')"
+                                                    :subtitle="t('tables.placeholder.subtitle')" class="my-6">
                                                 </VPlaceholderSection>
                                             </div>
                                         </template>
                                     </VFlexTable>
-                                    <VFlexPagination v-if="(inventoryItemHistoryList.length != 0 && paginationVar.max_page != 1)"
+                                    <VFlexPagination
+                                        v-if="(itemHistoriesList.length != 0 && paginationVar.max_page != 1)"
                                         :current-page="paginationVar.page" class="mt-6"
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
                                         :max-links-displayed="3" no-router
                                         @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 class="pt-2 is-size-7" v-if="inventoryItemHistoryList.length != 0 && !itemHistoryStore?.loading">{{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
-
+                                    <h6 class="pt-2 is-size-7"
+                                        v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading">
+                                        {{
+                                            t('tables.pagination_footer', { from_number: paginationVar.page !=
+                                                paginationVar.max_page
+                                                ?
+                                                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page ==
+                                                    paginationVar.max_page ? (1 +
+                                                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ?
+                                                    1 : paginationVar.total
+                                            , to_number: paginationVar.page !=
+                                                paginationVar.max_page ?
+                                                paginationVar.page *
+                                                paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                                        })}}</h6>
                                     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
                                         class="mx-2" />
                                 </VFlexTableWrapper>
@@ -462,7 +440,8 @@ const columns = {
             </div>
         </div>
     </div>
-    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center"
+        @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -470,7 +449,7 @@ const columns = {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="status">
-                                <VLabel class="required">{{t('item.details.status')}}</VLabel>
+                                <VLabel class="required">{{ t('item.details.status') }}</VLabel>
                                 <VControl>
                                     <VRadio v-model="currentItemModel.status" :value="ItemConsts.INACTIVE"
                                         :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
@@ -485,11 +464,11 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItem()">{{t('modal.buttons.confirm') }}</VButton>
+            <VButton color="primary" raised @click="changestatusItem()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" :title="t('item.table.modal_title.item_history')" :open="changeHistoryStatusPopup" actions="center"
-        @close="changeHistoryStatusPopup = false">
+    <VModal :key="keyIncrement" :title="t('item.table.modal_title.item_history')" :open="changeHistoryStatusPopup"
+        actions="center" @close="changeHistoryStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -500,12 +479,10 @@ const columns = {
 
                                 <VLabel class="required">{{ t('item.details.history_status') }}</VLabel>
                                 <VControl>
-                                    <VRadio v-model="selectedStatus"
-                                        :value="ItemHsitoryConsts.INACTIVE" :label="ItemConsts.showStatusName(0)"
-                                        name="status" color="danger" />
-                                    <VRadio v-model="selectedStatus"
-                                        :value="ItemHsitoryConsts.ACTIVE" :label="ItemConsts.showStatusName(1)"
-                                        name="status" color="success" />
+                                    <VRadio v-model="selectedStatus" :value="ItemHsitoryConsts.INACTIVE"
+                                        :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
+                                    <VRadio v-model="selectedStatus" :value="ItemHsitoryConsts.ACTIVE"
+                                        :label="ItemConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
                                 </VControl>
                             </VField>
@@ -515,7 +492,8 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItemHistory()">{{t('modal.buttons.confirm') }}</VButton>
+            <VButton color="primary" raised @click="changestatusItemHistory()">{{ t('modal.buttons.confirm') }}
+            </VButton>
         </template>
     </VModal>
 </template>
@@ -545,6 +523,4 @@ const columns = {
     width: 100%;
     margin-right: 12px;
 }
-
-
 </style>

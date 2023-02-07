@@ -23,6 +23,10 @@ export interface InventoryItemHistorySearchFilter {
     from_inventory?: number
     to_inventory?: number
     date_between?: string
+    action?: string
+    movement_type?: string
+    requester_name?: string
+    action_by?: number
     from?: string
     to?: string
     status?: number
@@ -45,10 +49,8 @@ export interface withdrawQuantity {
     id?: number
     item_id: number
     item_quantity: number
-    withdraw_item_price: number
     user_id: number
     requester_name: string
-    requester_type: string
     note: string
     status: number
 }
@@ -94,6 +96,10 @@ export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearch
     per_page: undefined,
     order_by: 'created_at',
     order: 'desc',
+    action: undefined,
+    action_by: undefined,
+    movement_type: undefined,
+    requester_name: undefined
 }
 export const defaultAddQuantityItem: addQuantity = {
     id: 0,
@@ -110,10 +116,8 @@ export const defaultWithdrawQuantityItem: withdrawQuantity = {
     id: 0,
     item_id: 0,
     item_quantity: 0,
-    withdraw_item_price: 0,
     user_id: 0,
     requester_name: '',
-    requester_type: '',
     note: '',
     status: 1
 

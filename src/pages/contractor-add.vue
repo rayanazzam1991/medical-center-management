@@ -35,9 +35,9 @@ useHead({
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(contractorForm.canNavigate && 'is-active')]">
                 <div class="columns buttons-width">
-                    <div class="wizard-buttons-inner-padding">
+                    <div class="wizard-buttons-inner-padding is-flex is-justify-content-start">
                         <VLoader size="small" :active="contractorStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
+                            <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="contractorForm.validateStepFn === null"
                                 :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
                                 {{ contractorForm.getStep() == 2 ? t('contractor.form.submit_and_finish_button') : t('contractor.form.submit_and_next_button')

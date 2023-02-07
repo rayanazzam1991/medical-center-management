@@ -133,7 +133,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
         await sleep(500)
         notif.success(t('toast.success.withdraw'));
 
-        router.push({ path: `/list-internal-movement` });
+        router.push({ path: `/list-inventory-movement` });
     }
     else {
         await sleep(500);
