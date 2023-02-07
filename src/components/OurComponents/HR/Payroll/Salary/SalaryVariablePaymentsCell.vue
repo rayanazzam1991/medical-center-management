@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { EmployeeVariablePayment, EmployeeVariablePaymentConsts } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment';
 import { VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
 import { useDarkmode } from '/@src/stores/darkmode';
+import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
 
 export interface SalaryVariablePaymentsCellProps {
     employeeVariablePayments: EmployeeVariablePayment[]
@@ -27,10 +28,6 @@ const employeeVariablePayments = computed(() => {
 
 const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
     emits('approveClick', employeeVariablePayment)
-}
-const numberFormat = (number: number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
 }
 
 </script>

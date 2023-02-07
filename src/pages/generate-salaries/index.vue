@@ -13,6 +13,7 @@ import { getGenerateSalary, getReviewSalary } from '/@src/services/HR/Payroll/Sa
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
+import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
 
 
 const viewWrapper = useViewWrapper()
@@ -100,10 +101,7 @@ const approveVariablePayment = async () => {
 
 
 }
-const numberFormat = (number: number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-}
 
 const columns = {
     employee_name: {

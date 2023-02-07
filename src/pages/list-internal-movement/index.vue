@@ -18,6 +18,7 @@ import {
 import { Notyf } from 'notyf'
 import { BaseConsts } from '/@src/utils/consts/base'
 import { useI18n } from 'vue-i18n'
+import { stringTrim } from '/@src/composable/helpers/stringHelpers'
 const viewWrapper = useViewWrapper()
 const {t} = useI18n()
 viewWrapper.setPageTitle(t('list_internal_movement.table.title'))
@@ -79,15 +80,6 @@ const itemSort = async (value: string) => {
     }
     await search(searchFilter.value)
 }
-const noteTrim = (value: string) => {
-    if (value == undefined) {
-        return ''
-    }
-    else {
-        let trimmedString = value?.substring(0, 10);
-        return trimmedString + '...'
-    }
-}
 const columns = {
     from_inventory: {
         sortable: true,
@@ -130,7 +122,7 @@ const columns = {
         renderRow: (row: any) =>
             h('span', {
                 innerHTML: row?.note ?
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
+                    `<div class="tooltip">${stringTrim(row?.note,10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
 
             }),
 
