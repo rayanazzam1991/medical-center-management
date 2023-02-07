@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
+    AddEditDropDown: typeof import('./src/components/OurComponents/AddEditDropDown.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']
@@ -82,8 +83,6 @@ declare module '@vue/runtime-core' {
     LandingLayout: typeof import('./src/layouts/LandingLayout.vue')['default']
     LanguagesPanel: typeof import('./src/components/partials/panels/LanguagesPanel.vue')['default']
     LayoutsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/LayoutsMobileSubsidebar.vue')['default']
-    ListInternalMovementSearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/ListInternalMovementSearchFilterModel.vue')['default']
-    ListInternalMovementTableHeader: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/ListInternalMovementTableHeader.vue')['default']
     ListInventoryMovementSearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/ListInventoryMovementSearchFilterModel.vue')['default']
     ListInventoryMovementTableHeader: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/ListInventoryMovementTableHeader.vue')['default']
     MarketingAbout: typeof import('./src/components/partials/marketing/MarketingAbout.vue')['default']

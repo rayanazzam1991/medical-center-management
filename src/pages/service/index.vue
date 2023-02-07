@@ -3,6 +3,7 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
+import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts, Service } from '/@src/models/Others/Service/service';
@@ -12,7 +13,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('service.table.title'))
 useHead({
   title: t('service.table.title'),
@@ -20,8 +21,6 @@ useHead({
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultServiceSearchFilter)
 const servicesList = ref<Array<Service>>([])
-const deleteServicePopup = ref(false)
-const deleteServiceId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const serviceStore = useService()
@@ -36,25 +35,6 @@ onMounted(async () => {
 
 });
 
-const removeService = async (serviceId: number) => {
-
-  const { message, success } = await deleteService(serviceId)
-  await search(searchFilter.value)
-
-  deleteServicePopup.value = false
-  if (success) {
-
-    // @ts-ignore
-    await sleep(200);
-
-    notif.success(t('toast.success.remove'))
-
-  } else {
-    await sleep(200);
-
-    notif.error(message)
-  }
-}
 
 const search = async (searchFilter2: ServiceSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -95,20 +75,20 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
-    label : t('service.table.columns.id')
+    label: t('service.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
-    label : t('service.table.columns.name')
+    label: t('service.table.columns.name')
 
 
   },
   duration_minutes: {
     align: 'center',
     sortable: true,
-    label : t('service.table.columns.duration')
+    label: t('service.table.columns.duration')
 
   },
   service_price: {
@@ -120,7 +100,7 @@ const columns = {
   },
   status: {
     align: 'center',
-    label : t('service.table.columns.status'),
+    label: t('service.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -144,15 +124,11 @@ const columns = {
   },
   actions: {
     align: 'center',
-    label : t('service.table.columns.actions'),
+    label: t('service.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(MyDropDown, {
+      h(AddEditDropDown, {
 
-        onRemove: () => {
-          deleteServicePopup.value = true
-          deleteServiceId.value = row?.id
-        },
         onEdit: () => {
           router.push({ path: `/service/${row?.id}/edit` })
         },
@@ -180,8 +156,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="servicesList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')" 
-          :subtitle="t('tables.placeholder.subtitle')"  class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
@@ -204,15 +180,6 @@ const columns = {
 
     <VPlaceloadText v-if="serviceStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('service.table.modal_title')" :open="deleteServicePopup" actions="center" @close="deleteServicePopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="removeService(deleteServiceId)">{{t('modal.buttons.confirm')}}</VButton>
-    </template>
-  </VModal>
 
 </template>
 
