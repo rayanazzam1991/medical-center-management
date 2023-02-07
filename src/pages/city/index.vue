@@ -3,10 +3,11 @@ import { useHead } from '@vueuse/head'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import VTag from '/@src/components/base/tags/VTag.vue'
+import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultCitySearchFilter, CitySearchFilter, CityConsts, City } from '/@src/models/Others/City/city'
-import { getCitiesList, deleteCity } from '/@src/services/Others/City/cityService'
+import { getCitiesList } from '/@src/services/Others/City/cityService'
 import { useCity } from '/@src/stores/Others/City/cityStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
@@ -22,8 +23,6 @@ const notif = useNotyf() as Notyf
 const cityStore = useCity()
 const searchFilter = ref(defaultCitySearchFilter)
 const citiesList = ref<Array<City>>([])
-const deleteCityPopup = ref(false)
-const deleteCityId = ref()
 const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
 const router = useRouter()
@@ -38,20 +37,6 @@ onMounted(async () => {
 
 });
 
-const removeCity = async (cityId: number) => {
-
-  const { message, success } = await deleteCity(cityId)
-  deleteCityPopup.value = false
-  await search(searchFilter.value)
-  if (success) {
-
-    await sleep(200);
-
-    // @ts-ignore
-    notif.success(t('toast.success.remove'))
-
-  } else notif.error(message)
-}
 
 const search = async (searchFilter2: CitySearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -129,12 +114,7 @@ const columns = {
     align: 'center',
     label: t("city.table.columns.actions"),
     renderRow: (row: any) =>
-      h(MyDropDown, {
-
-        onRemove: () => {
-          deleteCityPopup.value = true
-          deleteCityId.value = row?.id
-        },
+      h(AddEditDropDown, {
         onEdit: () => {
           router.push({ path: `/city/${row?.id}/edit` })
         },
@@ -200,19 +180,5 @@ const columns = {
     <VPlaceloadText v-if="cityStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
-
-
-
-
-  <VModal :title="t('city.table.modal_title')" :open="deleteCityPopup" actions="center" @close="deleteCityPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="removeCity(deleteCityId)">{{ t('modal.buttons.confirm')}}</VButton>
-    </template>
-  </VModal>
-
 </template>
 

@@ -35,11 +35,12 @@ contractorForm.setStep({
         var isValid = await onSubmitEdit()
 
         if (isValid) {
-            contractorForm.reset()
             router.push({
                 path: `/contractor/${contractorId.value}`,
                 query: { tab: 'Services' }
             })
+            contractorForm.reset()
+
         }
 
     },

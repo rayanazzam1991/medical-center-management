@@ -2,16 +2,17 @@
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
+import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCustomerGroupSearchFilter, CustomerGroupSearchFilter, CustomerGroupConsts, CustomerGroup } from '/@src/models/Others/CustomerGroup/customerGroup';
-import { getCustomerGroupsList, deleteCustomerGroup } from '/@src/services/Others/CustomerGroup/customerGroupService';
+import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('customer_group.table.title'))
 useHead({
@@ -20,8 +21,6 @@ useHead({
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCustomerGroupSearchFilter)
 const customerGroupsList = ref<Array<CustomerGroup>>([])
-const deleteCustomerGroupPopup = ref(false)
-const deleteCustomerGroupId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 
@@ -38,26 +37,6 @@ onMounted(async () => {
 });
 
 
-const removeCustomerGroup = async (customerGroupId: number) => {
-
-  const { success, message } = await deleteCustomerGroup(customerGroupId)
-  await search(searchFilter.value)
-
-  deleteCustomerGroupPopup.value = false
-  if (success) {
-
-    // @ts-ignore
-    await sleep(200);
-
-    notif.success(t('toast.success.remove'))
-
-  } else {
-
-    await sleep(200);
-
-    notif.error(message)
-  }
-}
 
 const search = async (searchFilter2: CustomerGroupSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -98,19 +77,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
-    label : t('customer_group.table.columns.id')
+    label: t('customer_group.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
-    label : t('customer_group.table.columns.name')
+    label: t('customer_group.table.columns.name')
 
 
   },
   status: {
     align: 'center',
-    label : t('customer_group.table.columns.status'),
+    label: t('customer_group.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -134,15 +113,10 @@ const columns = {
   },
   actions: {
     align: 'center',
-    label : t('customer_group.table.columns.actions'),
+    label: t('customer_group.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(MyDropDown, {
-
-        onRemove: () => {
-          deleteCustomerGroupPopup.value = true
-          deleteCustomerGroupId.value = row?.id
-        },
+      h(AddEditDropDown, {
         onEdit: () => {
           router.push({ path: `/customer-group/${row?.id}/edit` })
         },
@@ -173,8 +147,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="customerGroupsList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')" 
-          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
 
@@ -185,7 +159,7 @@ const columns = {
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getcustomerGroupsPerPage" />
     <h6 class="pt-2 is-size-7" v-if="customerGroupsList.length != 0 && !customerGroupStore?.loading">
-    
+
       {{
         t('tables.pagination_footer', { from_number: paginationVar.page !=
           paginationVar.max_page
@@ -199,16 +173,6 @@ const columns = {
       })}}</h6>
     <VPlaceloadText v-if="customerGroupStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('customer_group.table.modal_title')" :open="deleteCustomerGroupPopup" actions="center"
-    @close="deleteCustomerGroupPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="removeCustomerGroup(deleteCustomerGroupId)">{{t('modal.buttons.confirm')}}</VButton>
-    </template>
-  </VModal>
 
 </template>
 

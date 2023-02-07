@@ -31,11 +31,12 @@ customerForm.setStep({
   validateStepFn: async () => {
     var isValid = await onSubmitEdit()
     if (isValid) {
-      customerForm.reset()
       router.push({
         path: `/customer/${customerId.value}`,
         query: { tab: 'Social Media' }
       })
+      customerForm.reset()
+
     }
   },
 

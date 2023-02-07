@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
+    AddEditDropDown: typeof import('./src/components/OurComponents/AddEditDropDown.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']

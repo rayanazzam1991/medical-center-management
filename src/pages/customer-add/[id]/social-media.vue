@@ -11,7 +11,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { BaseConsts } from '/@src/utils/consts/base';
 import sleep from "/@src/utils/sleep"
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -32,19 +32,20 @@ customerForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
-            customerForm.reset()
             router.push({
                 path: `/customer/${customerId.value}`,
             })
+            customerForm.reset()
         }
 
     },
     skipStepFn: async () => {
-        customerForm.reset()
 
         router.push({
             path: `/customer/${customerId.value}`,
         })
+        customerForm.reset()
+
     }
 
 })
@@ -62,7 +63,7 @@ onMounted(async () => {
     socialMediaSearchFilter.status = BaseConsts.ACTIVE
     const { socialMedias } = await getSocialMediasList(socialMediaSearchFilter)
     socialMediasList.value = socialMedias
-    
+
     for (let index = 0; index < socialMediasList.value.length; index++) {
         socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
@@ -142,7 +143,10 @@ const onSubmitAdd = async () => {
                                 <VField v-for="socialMedia in socialMediaChecked" :id="socialMedia.socialMedia.name">
 
                                     <VLabel class="required" v-if="socialMedia.checked">
-                                    {{t('customer.form.social_media_url', {social_media : socialMedia.socialMedia.name })}}
+                                        {{
+                                            t('customer.form.social_media_url', { social_media:
+                                                socialMedia.socialMedia.name
+                                        })}}
                                     </VLabel>
                                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                                         <VInput type="text" placeholder="" autocomplete="" v-model="socialMedia.url"

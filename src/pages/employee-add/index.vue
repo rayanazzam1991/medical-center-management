@@ -26,7 +26,7 @@ import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('employee.form.step_1_title'))
 const head = useHead({
@@ -40,11 +40,10 @@ employeeForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
-            employeeForm.reset()
             router.push({
                 path: `/employee/${employeeForm.data.id}`,
             })
-
+            employeeForm.reset()
         }
     },
 })
@@ -88,13 +87,13 @@ onMounted(async () => {
     const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
     nationalitiesList.value = nationalities
 
-    let positionSearchFilter = {} as PositionSearchFilter 
+    let positionSearchFilter = {} as PositionSearchFilter
     positionSearchFilter.per_page = 500
     positionSearchFilter.status = BaseConsts.ACTIVE
     const { positions } = await getPositionsList(positionSearchFilter)
     positionsList.value = positions
 
-    let departmentSearchFilter = {} as DepartmentSearchFilter 
+    let departmentSearchFilter = {} as DepartmentSearchFilter
     departmentSearchFilter.status = BaseConsts.ACTIVE
     departmentSearchFilter.per_page = 500
     const { departments } = await getDepartmentsList(departmentSearchFilter)
@@ -202,7 +201,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">
-                                        <VLabel class="required">{{t('employee.form.first_name')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.first_name') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -212,7 +211,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6 ">
                                     <VField id="last_name">
-                                        <VLabel class="required">{{t('employee.form.last_name')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.last_name') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -227,7 +226,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="phone_number">
-                                        <VLabel class="required">{{t('employee.form.phone_number')}} <span>(+964)</span></VLabel>
+                                        <VLabel class="required">{{ t('employee.form.phone_number') }}
+                                            <span>(+964)</span>
+                                        </VLabel>
                                         <VControl icon="feather:chevrons-right"
                                             :class="phoneCheck != 'false' ? 'has-validation has-error' : ''">
                                             <VInput v-model="currentUser.phone_number" type="number" placeholder=""
@@ -240,7 +241,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="birth_date">
-                                        <VLabel class="required">{{t('employee.form.birth_date')}} </VLabel>
+                                        <VLabel class="required">{{ t('employee.form.birth_date') }} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -255,26 +256,26 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline ">
                                 <div class="column is-half">
                                     <VField id="gender">
-                                        <VLabel class="required ml-3">{{t('employee.form.gender')}}</VLabel>
+                                        <VLabel class="required ml-3">{{ t('employee.form.gender') }}</VLabel>
                                         <VControl>
-                                            <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')" name="gender"
-                                                color="success" />
-
-                                            <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')"
+                                            <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')"
                                                 name="gender" color="success" />
+
+                                            <VRadio v-model="currentUser.gender" value="Female"
+                                                :label="t('gender.female')" name="gender" color="success" />
                                             <ErrorMessage class="help is-danger" name="gender" />
                                         </VControl>
                                     </VField>
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
-                                        <VLabel class="required">{{t('employee.form.city')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.city') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                                <VOption value="">{{t('employee.form.city')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.city') }}</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-        city.name
-}}
+                                                    city.name
+                                                }}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -288,7 +289,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel class="required">{{t('employee.form.address')}} </VLabel>
+                                        <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
                                         <VControl>
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -302,13 +303,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField>
-                                        <VLabel class="required">{{t('employee.form.department')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.department') }}</VLabel>
                                         <VControl>
                                             <div class="select">
 
                                                 <select @change="getRoomsByDepartment" v-if="currentUser"
                                                     v-model="selectedDepartmentId">
-                                                    <VOption :value="0">{{t('employee.form.department')}}</VOption>
+                                                    <VOption :value="0">{{ t('employee.form.department') }}</VOption>
                                                     <VOption v-for="department in departmentsList" :key="department.id"
                                                         :value="department.id">{{ department.name }}
                                                     </VOption>
@@ -319,14 +320,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="room_id">
-                                        <VLabel class="required">{{t('employee.form.room')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.room') }}</VLabel>
                                         <VControl>
                                             <VSelect :disabled="roomsList.length <= 0" v-if="currentUser"
                                                 v-model="currentUser.room_id">
-                                                <VOption>{{t('employee.form.room')}}</VOption>
+                                                <VOption>{{ t('employee.form.room') }}</VOption>
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-        room.number
-}}
+                                                    room.number
+                                                }}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="room_id" />
@@ -340,7 +341,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="starting_date">
-                                        <VLabel class="required">{{t('employee.form.starting_date')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.starting_date') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
                                                 autocomplete="given-starting_date" />
@@ -350,7 +351,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="end_date">
-                                        <VLabel class="optional">{{t('employee.form.end_date')}}</VLabel>
+                                        <VLabel class="optional">{{ t('employee.form.end_date') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
                                                 autocomplete="given-end_date" />
@@ -366,7 +367,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="basic_salary">
-                                        <VLabel class="required">{{t('employee.form.basic_salary')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
                                                 autocomplete="given-basic_salary" />
@@ -376,10 +377,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="nationality_id">
-                                        <VLabel class="required">{{t('employee.form.nationality')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                                <VOption value="">{{t('employee.form.nationality')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
                                                 <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
                                                     :value="nationality.id">{{ nationality.name }}
                                                 </VOption>
@@ -391,10 +392,10 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
                                 <div class="column is-6">
                                     <VField id="position_id">
-                                        <VLabel class="required">{{t('employee.form.position')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentEmployee" v-model="currentEmployee.position_id">
-                                                <VOption value="">{{t('employee.form.position')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.position') }}</VOption>
                                                 <VOption v-for="position in positionsList" :key="position.id"
                                                     :value="position.id">{{ position.name }}
                                                 </VOption>
@@ -405,14 +406,14 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="user_status_id">
-                                        <VLabel class="required">{{t('employee.form.status')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">{{t('employee.form.status')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
                                                 <VOption v-for="status in statusesList" :key="status.id"
                                                     :value="status.id">
                                                     {{
-        status.name
+    status.name
                                                     }}
                                                 </VOption>
                                             </VSelect>
