@@ -1694,5 +1694,9 @@
   "user_statuses": {
     "active": "Active",
     "inactive": "Inactive"
+  },
+  "date_picker": {
+    "select": "Select",
+    "cancel": "Cancel"
   }
 }

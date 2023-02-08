@@ -1714,5 +1714,9 @@
   "user_statuses": {
     "active": "فعال",
     "inactive": "غير فعال"
+  },
+  "date_picker":{
+    "select":"اختيار",
+    "cancel":"إلغاء"
   }
 }
