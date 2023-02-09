@@ -271,10 +271,13 @@
     "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج."
   },
   "images": {
-    "image_name_placeholder": "اختيار صورة",
+    "image_name_placeholder": "اختيار صورة/ملف",
     "image_select_file": "تحديد ملف",
-    "accepted_file": "الحجم الأقصى: 2ميغا الانواع المقبولة  : png, jpg, webp",
-    "by": ":بواسطة"
+    "accepted_image_file": "الحجم الأقصى: 2 ميغابايت الانواع المقبولة  : png, jpg, webp",
+    "accepted_file": "الحجم الأقصى: 2 ميغابايت الانواع المقبولة  : png, jpg, webp, pdf",
+    "by": "بواسطة: ",
+    "file": "الملف ",
+    "megabyte": "ميغابايت"
   },
   "drop_down": {
     "view": "معاينة",
