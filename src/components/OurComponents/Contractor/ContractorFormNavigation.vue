@@ -9,10 +9,9 @@ const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-const {t} = useI18n()
+const { t, locale } = useI18n()
 const contractorForm = useContractorForm()
-const locale = useStorage('locale','ar')
-const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
+const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
 </script>
 
 <template>
@@ -22,7 +21,7 @@ const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
       <span class="title-wrap">
         <VButton class="navbar-item is-wizard-title" :icon="`lnir ${iconArrow} rem-100`" to="/contractor" darkOutlined
           color="white">
-          {{t('contractor.form.back_button')}}
+          {{ t('contractor.form.back_button') }}
         </VButton>
       </span>
     </div>

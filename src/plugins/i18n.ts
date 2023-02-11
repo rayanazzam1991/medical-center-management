@@ -11,16 +11,16 @@ import ar from '../locales/ar.json'
 import en from '../locales/en.json'
 
 export default definePlugin(({ app }) => {
-	const defaultLocale = useStorage('locale', 'ar')
-	const i18n = createI18n({
-		locale: defaultLocale.value,
-		fallbackLocale: 'en',
-		legacy: false,
-		globalInjection: true,
+  const defaultLocale = useStorage('locale', 'ar')
+  const i18n = createI18n({
+    locale: defaultLocale.value,
+    fallbackLocale: 'en',
+    legacy: false,
+    globalInjection: true,
 
-		messages: { ar, en },
-	})
+    messages: { ar, en },
+  })
 
-	app.use(i18n)
+  app.use(i18n)
 })
 

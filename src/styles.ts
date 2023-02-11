@@ -23,7 +23,7 @@ const locale = useStorage('locale', 'ar')
 let direction = ""
 
 if (locale.value == "ar") {
-    direction = "_rtl"
+  direction = "_rtl"
 }
 
 import(`./scss/main${direction}.scss`)
