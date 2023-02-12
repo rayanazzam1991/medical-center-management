@@ -1811,7 +1811,7 @@ Object.assign(columns29, columns28, columns29Sub)
               class="has-text-primary is-size-6">{{
               t(`attendance_status.${
   AttendanceConsts.getAttendanceStatusName(selectedCell.status).replaceAll(' ', '_').toLowerCase()
-}`)
+} `)
               }}</span></h2>
         </div>
         <div>
@@ -1889,7 +1889,7 @@ Object.assign(columns29, columns28, columns29Sub)
               t(`dates.days_abbr.${
   daysNamePerMonth.find((day) =>
     day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()
-} `)
+}`)
               }} {{
               selectedCell.date
               }}</span></h2>
