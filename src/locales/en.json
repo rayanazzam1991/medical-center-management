@@ -911,7 +911,9 @@
       "action_types": {
         "add_quantity": "Add Quantity",
         "withdraw_quantity": "Withdray Quantity",
-        "sell": "Sell"
+        "sell": "Sell",
+        "return_to_main_inventory": "Return To Main Inventory",
+        "withdraw_from_main_inventory": "Withdraw From FaMin Inventory"
       },
       "movement_types": {
         "internal": "Internal",

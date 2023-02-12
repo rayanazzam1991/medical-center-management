@@ -29,7 +29,8 @@
   border-radius: var(--radius-large);
 
   &.is-active {
-    height: 320px;
+    height:fit-content;
+    padding-bottom: 2rem;
     opacity: 1;
     pointer-events: all;
     transform: translateY(0);

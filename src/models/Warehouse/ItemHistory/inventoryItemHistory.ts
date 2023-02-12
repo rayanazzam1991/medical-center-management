@@ -16,6 +16,8 @@ export interface inventoryItemHistory {
     requester_name: string
     created_by?: User
     withdraw_item_price: number
+    movement_type?:string
+    action_type?:string
 }
 
 export interface InventoryItemHistorySearchFilter {
@@ -81,7 +83,9 @@ export const defaultInventoryItemHistory: inventoryItemHistory = {
     requester_name: '',
     created_by: defaultUser,
     withdraw_item_price: 0,
-    status: 1
+    status: 1,
+    movement_type:undefined,
+    action_type:undefined
 }
 export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearchFilter = {
     item_id: undefined,
@@ -99,7 +103,7 @@ export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearch
     action: undefined,
     action_by: undefined,
     movement_type: undefined,
-    requester_name: undefined
+    requester_name: undefined,
 }
 export const defaultAddQuantityItem: addQuantity = {
     id: 0,
