@@ -256,10 +256,12 @@
     "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
   },
   "images": {
-    "image_name_placeholder": "Choose an image",
+    "image_name_placeholder": "Choose an image/file",
     "image_select_file": "Select File",
-    "accepted_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp",
-    "by": "By:"
+    "accepted_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp, pdf",
+    "accepted_image_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp",
+    "by": "By:",
+    "megabyte": "MB"
   },
   "gender": {
     "male": "Male",

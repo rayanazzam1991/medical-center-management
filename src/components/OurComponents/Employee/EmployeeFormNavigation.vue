@@ -9,8 +9,10 @@ const darkmode = useDarkmode()
 
 const dropdownElement = ref<HTMLElement>()
 const dropdown = useDropdown(dropdownElement)
-const {t} = useI18n()
+const { t, locale } = useI18n()
 const employeeForm = useEmployeeForm()
+const iconArrow = locale.value == "ar" ? "lnir lnir-arrow-right" : "lnir lnir-arrow-left"
+
 </script>
 
 <template>
@@ -22,9 +24,9 @@ const employeeForm = useEmployeeForm()
 
     <div class="">
       <span class="title-wrap">
-        <VButton class="navbar-item is-wizard-title" icon="lnir lnir-arrow-left rem-100" to="/employee" darkOutlined
+        <VButton class="navbar-item is-wizard-title" :icon="`${iconArrow} rem-100`" to="/employee" darkOutlined
           color="white">
-          {{t('employee.form.back_button')}}
+          {{ t('employee.form.back_button') }}
         </VButton>
       </span>
     </div>
