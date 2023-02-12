@@ -916,7 +916,9 @@
       "action_types": {
         "add_quantity": "إضافة كميًة",
         "withdraw_quantity": " سحب كميًة",
-        "sell": "مبيع"
+        "sell": "مبيع",
+        "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي",
+        "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي"
       },
       "movement_types": {
         "internal": "داخلية",
@@ -1715,8 +1717,8 @@
     "active": "فعال",
     "inactive": "غير فعال"
   },
-  "date_picker":{
-    "select":"اختيار",
-    "cancel":"إلغاء"
+  "date_picker": {
+    "select": "اختيار",
+    "cancel": "إلغاء"
   }
 }
