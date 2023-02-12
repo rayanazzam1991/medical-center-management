@@ -887,4 +887,6 @@ const RemoveProfilePicture = async () => {
     color: var(--primary) !important;
 
 }
+
+
 </style>
