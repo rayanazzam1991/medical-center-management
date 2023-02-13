@@ -58,6 +58,7 @@ const getCurrentContractor = () => {
     currentUser.value = contractorForm.userForm
     currentContractor.value = contractorForm.data
     currentUser.value.gender = 'Male'
+    currentUser.value.user_status_id = UserStatusConsts.ACTIVE
 
 
 }
@@ -91,7 +92,6 @@ onMounted(async () => {
     departmentSearchFilter.status = BaseConsts.ACTIVE
     const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments
-
     currentUser.value.user_status_id = UserStatusConsts.ACTIVE
 
 
@@ -122,7 +122,7 @@ const { handleSubmit } = useForm({
         address: "",
         room_id: undefined,
         city_id: "",
-        user_status_id: "",
+        user_status_id: UserStatusConsts.ACTIVE,
         starting_date: "",
         payment_percentage: "",
         end_date: undefined,

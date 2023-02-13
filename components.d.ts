@@ -236,6 +236,7 @@ declare module '@vue/runtime-core' {
     VRadio: typeof import('./src/components/base/form/VRadio.vue')['default']
     VReloadPrompt: typeof import('./src/components/base/modal/VReloadPrompt.vue')['default']
     VSelect: typeof import('./src/components/base/form/VSelect.vue')['default']
+    VSelectWithSearch: typeof import('./src/components/OurComponents/VSelectWithSearch.vue')['default']
     VSimpleDatatables: typeof import('./src/components/base/plugins/VSimpleDatatables.vue')['default']
     VSnack: typeof import('./src/components/base/snack/V-Snack.vue')['default']
     VSwitchBlock: typeof import('./src/components/base/form/VSwitchBlock.vue')['default']

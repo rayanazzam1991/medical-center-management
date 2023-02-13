@@ -4,6 +4,19 @@
 1. Wizard V1 Navigation
 ========================================================================== */
 
+.buttons-width {
+
+    max-width: 40%;
+    margin: 0 auto !important;
+    
+    }
+
+.wizard-buttons-inner-padding {
+    
+    padding : 1rem !important;
+    
+}
+    
 .wizard-progress {
     position: fixed;
     top: 60px;

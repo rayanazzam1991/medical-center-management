@@ -11,7 +11,7 @@ import { customerEditSocialMediaValidationSchema } from '/@src/rules/CRM/Custome
 import sleep from "/@src/utils/sleep"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -53,9 +53,9 @@ const fetchCustomer = async () => {
 
   const { customer } = await getCustomer(customerId.value)
   for (let i = 0; i < customer.social_medias.length; i++) {
-    // @ts-ignore
 
     customerForm.customerSocialMediaForm.push({
+      // @ts-ignore
       social_media_id: customer.social_medias[i].id,
       url: customer.social_medias[i].url
     })
@@ -90,10 +90,6 @@ const fetchCustomer = async () => {
 
 
 const socialMediaChecked = ref<SocialMediaChecked[]>([])
-let validationObject = ref({})
-var validationObjectSchema = ref({})
-
-const initialValuesObject: Record<string, any> = {};
 
 onMounted(async () => {
   const { socialMedias } = await getSocialMediasList(defaultSocialMediaSearchFilter)
@@ -113,13 +109,25 @@ onMounted(async () => {
       socialMediaChecked.value.push({ socialMedia: socialMediasList.value[index], checked: false, url: '' })
 
     }
-
   }
+  for (let index = 0; index < socialMediasList.value.length; index++) {
+    let socialMedia = customerForm.customerSocialMediaForm.find((element) => element.social_media_id == socialMediasList.value[index].id)
+    if (socialMedia) {
+      setFieldValue(`social_media_url_${socialMedia.social_media_id}`, socialMedia.url);
+    } else {
+      socialMediaChecked.value.push({
+        socialMedia: socialMediasList.value[index],
+        checked: false,
+        url: '',
+      })
+    }
+  }
+
 })
 
 const validationSchema = customerEditSocialMediaValidationSchema
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
   validationSchema
 });
 
@@ -214,8 +222,8 @@ const onSubmitEdit = handleSubmit(async () => {
                     :id="`social_media_url_${socialMedia.socialMedia.id}`">
 
                     <VLabel class="required" v-if="socialMedia.checked">
-                    {{ t('customer.form.social_media_url', {social_media:socialMedia.socialMedia.name }) }}
-                                    </VLabel>
+                      {{ t('customer.form.social_media_url', { social_media: socialMedia.socialMedia.name }) }}
+                    </VLabel>
                     <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
                       <VInput :placeholder="socialMedia.url" class="input" type="text" v-model="socialMedia.url"
                         :key="socialMedia.socialMedia.id" />
