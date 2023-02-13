@@ -52,12 +52,6 @@ useHead({
 .buttons-width {
 
 max-width: 45%;
-margin: 0 auto !important;
-
-}
-.wizard-buttons-inner-padding {
-
-padding : 1rem !important;
 }
 
 </style>
