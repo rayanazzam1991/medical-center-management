@@ -21,8 +21,6 @@ export interface Supplier {
   address: string
   notes: string
   created_at: string
-
-
 }
 
 export interface CreateSupplier {
