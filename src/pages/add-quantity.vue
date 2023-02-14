@@ -14,7 +14,7 @@ import { useinventoryItemHistory } from '../stores/Warehouse/ItemHistory/invento
 
 const itemHistoryStore = useinventoryItemHistory()
 const itemHistoryForm = useItemHistoryForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => t('add_quantity.form.title')),
 })
@@ -36,7 +36,7 @@ useHead({
                     <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="itemHistoryStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{t('add_quantity.form.submit')}}
+                                {{ t('add_quantity.form.submit') }}
                             </VButton>
                         </VLoader>
                     </div>
@@ -50,15 +50,6 @@ useHead({
 @import '/@src/scss/Styles/wizardForm.scss';
 
 .buttons-width {
-
-max-width: 45%;
-margin: 0 auto !important;
-
+    max-width: 45%;
 }
-.wizard-buttons-inner-padding {
-
-padding : 1rem !important;
-}
-
-
 </style>

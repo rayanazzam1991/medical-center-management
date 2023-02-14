@@ -13,7 +13,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 const customerEditSocialMediaValidationSchema = toFormValidator(
     zod.record(
-        zod.string().startsWith('social_media_url'),
+        zod.string().startsWith('social_media_url_'),
 
         zod
             .string({ required_error: i18n.global.t('validation.required') })

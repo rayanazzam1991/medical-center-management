@@ -48,15 +48,4 @@ useHead({
 <style lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
 
-.buttons-width {
-
-max-width: 40%;
-margin: 0 auto !important;
-
-}
-.wizard-buttons-inner-padding {
-
-padding : 1rem !important;
-}
-
 </style>

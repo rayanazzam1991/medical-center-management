@@ -1809,10 +1809,10 @@ Object.assign(columns29, columns28, columns29Sub)
               }}</span></h2>
           <h2 class="is-size-7 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span
               class="has-text-primary is-size-6">{{
-              t(`attendance_status.${
-  AttendanceConsts.getAttendanceStatusName(selectedCell.status).replaceAll(' ', '_').toLowerCase()
-} `)
-              }}</span></h2>
+                            t(`attendance_status.${
+                AttendanceConsts.getAttendanceStatusName(selectedCell.status).replaceAll(' ',
+                  '_').toLowerCase()
+              }`) }}</span></h2>
         </div>
         <div>
           <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised class="is-size-7"
@@ -1916,26 +1916,8 @@ Object.assign(columns29, columns28, columns29Sub)
                       <Datepicker v-model="selectedCheckInTime" :locale="locale" time-picker
                         :cancel-text="t('date_picker.cancel')" :select-text="t('date_picker.select')"
                         :dark="dark.isDark" class="date-picker-dircetion" />
-
-                      <!-- <VSelect v-model="selectedCheckInTime.hours">
-                        <VOption :key="'00'" :value="'00'">00 </VOption>
-
-                        <VOption v-for="index in 23" :key="index" :value="index">{{
-                        index< 10? '0' + index : index }} </VOption>
-                      </VSelect> -->
                     </VControl>
                   </VField>
-                  <!-- <VField class="column is-6 pr-0">
-                    <VControl>
-                      <VSelect v-model="selectedCheckInTime.minutes">
-                        <VOption :key="'00'" :value="'00'">00 </VOption>
-
-                        <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
-                        index
-                        < 10? '0' + index : index }} </VOption>
-                      </VSelect>
-                    </VControl>
-                  </VField> -->
                 </div>
 
               </div>
@@ -1951,26 +1933,8 @@ Object.assign(columns29, columns28, columns29Sub)
                       <Datepicker v-model="selectedCheckOutTime" :locale="locale" time-picker
                         :cancel-text="t('date_picker.cancel')" :select-text="t('date_picker.select')"
                         :dark="dark.isDark" class="date-picker-dircetion" />
-
-                      <!-- <VSelect v-model="selectedCheckOutTime.hours">
-                        <VOption :key="'00'" :value="'00'">00 </VOption>
-
-                        <VOption v-for="index in 23" :key="index" :value="index">{{
-                        index< 10? '0' + index : index }} </VOption>
-                      </VSelect> -->
                     </VControl>
                   </VField>
-                  <!-- <VField class="column is-6 pr-0">
-                    <VControl>
-                      <VSelect v-model="selectedCheckOutTime.minutes">
-                        <VOption :key="'00'" :value="'00'">00 </VOption>
-
-                        <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
-                        index
-                        < 10? '0' + index : index }} </VOption>
-                      </VSelect>
-                    </VControl>
-                  </VField> -->
                 </div>
 
               </div>
