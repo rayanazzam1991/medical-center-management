@@ -3,6 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { TrialBalance } from "/@src/models/Accounting/Account/account"
 import { generateTrailBalanceReportApi } from "/@src/utils/api/Accounting/Account"
 import { Pagination, defaultPagination } from "/@src/utils/response"
+import sleep from "/@src/utils/sleep"
 
 
 export const useAccount = defineStore('account', () => {
@@ -15,9 +16,8 @@ export const useAccount = defineStore('account', () => {
 
     async function generateTrailBalanceReportStore() {
         if (loading.value) return
-
         loading.value = true
-
+        await sleep(3000);
         try {
             const returnedResponse = await generateTrailBalanceReportApi(api)
             success.value = returnedResponse.response.success
