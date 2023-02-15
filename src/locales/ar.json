@@ -1723,5 +1723,21 @@
   "date_picker": {
     "select": "اختيار",
     "cancel": "إلغاء"
+  },
+  "trial_balance_report": {
+    "title": "تقرير ميزان المراجعة",
+    "expand_collapse_button": "توسيع/تجميع الكل",
+    "place_holder": {
+      "title": "جاري توليد التقرير..",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+    },
+    "credit": "مدين",
+    "debit": "دائن",
+    "final_total": "المجموع النهائي",
+    "total": "المجموع",
+    "lvl1_total": "مجموع {chart_name}",
+    "account_code": "رمز الحساب",
+    "account_name": "اسم الحساب",
+    "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
   }
 }

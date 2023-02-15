@@ -1,1 +1,1 @@
-import * from './chartOfAccounts'
+import * from './chartOfAccount'
