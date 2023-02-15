@@ -195,6 +195,10 @@
       "salaries_history": "سجل الراوتب",
       "deliver_salaries": "تسليم الراوتب",
       "onhold_salaries": "صندوق الأمانات"
+    },
+    "reports": {
+      "reports": "التقارير المالية",
+      "trial_balance_report": "تقرير ميزان المراجعة"
     }
   },
   "user_profile_dropdown": {

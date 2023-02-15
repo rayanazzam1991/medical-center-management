@@ -36,7 +36,7 @@ const filter = ref('')
 const isMobileSidebarOpen = ref(false)
 const activeMobileSubsidebar = ref('dashboard')
 const activeSubnav = ref<SubnavId>('closed')
-const { t ,locale} = useI18n()
+const { t, locale } = useI18n()
 const LR = locale.value == "ar" ? "left" : "right"
 const filteredUsers = computed(() => {
   if (!filter.value) {
@@ -161,8 +161,8 @@ watch(
       <!-- Custom navbar title -->
       <template #title>
         <RouterLink to="/" class="brand">
-          <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
-             <img v-else src ="/images/logos/logo/logo.png"/>
+          <img v-if="darkmode.isDark" src="/images/logos/logo/logo_light.png" />
+          <img v-else src="/images/logos/logo/logo.png" />
         </RouterLink>
 
         <div class="separator"></div>
@@ -196,7 +196,10 @@ watch(
               route.path.startsWith('/city') ||
               route.path.startsWith('/userStatus') ||
               route.path.startsWith('/service') ||
-              route.path.startsWith('/room')) &&
+              route.path.startsWith('/room') ||
+              route.path.startsWith('/settings') ||
+              route.path.startsWith('/supplier')
+            ) &&
             'is-active',
           ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
@@ -221,9 +224,9 @@ watch(
             route.path.startsWith('/contractor-add') ||
             route.path.startsWith('/contractor-edit') ||
             route.path.startsWith('/speciality') ||
-            route.path.startsWith('/speciality-add')
-
-
+            route.path.startsWith('/bulk-cash-out')
+          
+          
           ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
             <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
@@ -237,17 +240,16 @@ watch(
             route.path.startsWith('/variable-payment') ||
             route.path.startsWith('/employee-variable-payment') ||
             route.path.startsWith('/generate-salaries')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('HR')"
-            @click="toggleSubnav('HR')">
+          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
             <span>{{ t('navbar.human_resources') }}</span>
           </a>
           <a :class="[(activeSubnav === 'warehouse' ||
             route.path.startsWith('/category') ||
-            route.path.startsWith('/category-add') ||
-            route.path.startsWith('/category-edit') ||
-            route.path.startsWith('/item-edit') ||
-            route.path.startsWith('/item-add')
+            route.path.startsWith('/item') ||
+            route.path.startsWith('/inventory') ||
+            route.path.startsWith('/list-inventory-movement')
           ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
             <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
@@ -257,10 +259,12 @@ watch(
             (activeSubnav === 'accounting' ||
               route.path.startsWith('/deliver-salaries') ||
               route.path.startsWith('/onhold-salaries') ||
-              route.path.startsWith('/salary')) &&
+              route.path.startsWith('/salary') ||
+              route.path.startsWith('/trial-balance-report')
+            ) &&
             'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('accounting')"
-            @click="toggleSubnav('accounting')">
+          ]" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('accounting')" @click="toggleSubnav('accounting')">
             <i class="iconify" data-icon="feather:dollar-sign" aria-hidden="true"></i>
             <span>{{ t("navbar.accounting") }}</span>
           </a>

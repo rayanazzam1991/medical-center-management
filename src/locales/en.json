@@ -189,6 +189,10 @@
       "salaries_history": "Salaries History",
       "deliver_salaries": "Deliver Salaries",
       "onhold_salaries": "On-Hold Salaries"
+    },
+    "reports": {
+      "reports": "Accounting Reports",
+      "trial_balance_report": "Trial Balance Report"
     }
   },
   "user_profile_dropdown": {

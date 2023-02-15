@@ -55,49 +55,43 @@ const toggle = () => {
             </div>
         </div>
         <div v-else>
-            <div class="account-details columns is-flex-direction-row-reverse is-justify-content-space-between account-details-padding"
-                v-if="trialBalance.main_charts.length != 0">
-                <div class="meta is-flex column is-3 columns ml-5">
-                    <div class="accounts-header column is-6 account-header-padding ">
-                        <h1 class="accounts-cell">
+            <div v-if="trialBalance.main_charts.length != 0"
+                class="account-details table-header columns is-flex-direction-row-reverse is-justify-content-end account-details-padding my-0">
+                <div class="is-flex">
+                    <div class="chart-row">
+                        <div class="accounts-cell has-bold">
                             {{ t('trial_balance_report.credit') }}
-                        </h1>
-
+                        </div>
                     </div>
-
-                    <div class="accounts-header column is-6">
-                        <h1 class="accounts-cell">
+                    <div class="chart-row mr-5">
+                        <div class="accounts-cell has-bold">
                             {{ t('trial_balance_report.debit') }}
-                        </h1>
-
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="column is-12 pb-0">
                 <TrailBalanceCollapse :items="trialBalance.main_charts" with-chevron :key="keyIncrement"
                     :is_expanded="isExpanded" />
             </div>
 
             <div v-if="trialBalance.main_charts.length != 0"
-                class="account-details accounts-footer columns is-flex-direction-row-reverse is-justify-content-end account-details-padding mb-2">
-                <div class="meta is-flex column is-3 columns ml-5 my-0 ">
-                    <div class="account-code column is-6 is-align-self-center account-header-padding">
-                        <div class="accounts-cell">
+                class="account-details accounts-footer columns is-flex-direction-row-reverse is-justify-content-end account-details-padding mt-4 mb-0">
+                <div class="is-flex">
+                    <div class="chart-row">
+                        <div class="accounts-cell has-bold">
                             {{ trialBalance.total_credits }}
                         </div>
 
                     </div>
-
-                    <div class="account-name column is-6 is-align-self-center">
-                        <div class="accounts-cell">
+                    <div class="chart-row mr-5">
+                        <div class="accounts-cell has-bold">
                             {{ trialBalance.total_debits }}
                         </div>
 
                     </div>
                 </div>
-                <div class="mt-1 total"> {{ t('trial_balance_report.final_total') }} </div>
-
+                <div class="chart-row total"> {{ t('trial_balance_report.final_total') }} </div>
             </div>
 
         </div>
@@ -135,6 +129,19 @@ const toggle = () => {
 
 }
 
+.header-level {
+    &.is-flex {
+        background-color: blue;
+        margin-left: 44px;
+
+        .chart-row {
+            background-color: red;
+            width: 200px;
+        }
+
+    }
+}
+
 .report-footer {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
@@ -146,9 +153,13 @@ const toggle = () => {
     height: 2rem;
     border-bottom: 1px solid var(--fade-grey-dark-3);
 
+    &.table-header {
+        border-width: 2px !important;
+    }
+
     &.account-details-padding {
-        padding-left: 1.5rem;
-        padding-bottom: 2.5rem;
+        padding-left: 2.5rem;
+        padding-bottom: 0;
     }
 
     &.accounts-footer {
@@ -180,8 +191,19 @@ const toggle = () => {
 
     }
 
+
+    .is-flex {
+        margin-left: 44px;
+    }
+
+    .chart-row {
+        width: 200px;
+    }
+
+    .has-bold,
     .total {
-        margin-left: 2.25rem;
+        font-weight: 800;
+        font-family: var(--font-alt);
     }
 }
 

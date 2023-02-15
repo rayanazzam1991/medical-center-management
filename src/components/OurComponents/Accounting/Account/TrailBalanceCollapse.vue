@@ -52,7 +52,7 @@ const toggle = (key: number) => {
 
 <template>
     <details v-for="(item, key) in items" :key="key + 1"
-        :class="[withChevron && 'has-chevron', !withChevron && 'has-plus']"
+        :class="[withChevron && 'has-chevron', !withChevron && 'has-plus', (internalItemsOpen?.find((item) => item == key + 1)) && 'opened-tree']"
         :open="(internalItemsOpen?.find((item) => item == key + 1) ? true : false)" class="collapse">
         <slot name="collapse-item" :item="item" :index="key + 1" :toggle="toggle">
             <summary class="collapse-header" tabindex="0" @keydown.space.prevent="() => toggle(key)"
@@ -73,6 +73,18 @@ const toggle = (key: number) => {
                     </slot>
                 </div>
                 <div class="collapse-head-info">
+                    <div class="is-flex">
+                        <div class="chart-row">
+                            <div class="accounts-cell open-has-bold">
+                                {{ item.total_credits }}
+                            </div>
+                        </div>
+                        <div class="chart-row mr-5">
+                            <div class="accounts-cell open-has-bold">
+                                {{ item.total_debits }}
+                            </div>
+                        </div>
+                    </div>
                     <slot name="collapse-item-head" :item="item" :index="key + 1"></slot>
                     <div class="collapse-icon">
                         <VIcon v-if="withChevron" icon="feather:chevron-down" />
@@ -85,46 +97,6 @@ const toggle = (key: number) => {
                     <TrailBalanceLvl1Collapse :items="item.children" with-chevron :is_expanded="isExpanded"
                         :close="(internalItemsOpen?.find((item) => item == key + 1) ? false : true)" />
                 </slot>
-                <div class="account-details columns is-flex-direction-row-reverse is-justify-content-space-between"
-                    v-if="item.children.length != 0">
-                    <div class="meta is-flex column is-3 columns ml-5">
-                        <div class="accounts-header column is-6">
-                            <h1 class="accounts-cell">
-                                {{ t('trial_balance_report.credit') }}
-                            </h1>
-
-                        </div>
-
-                        <div class="accounts-header column is-6">
-                            <h1 class="accounts-cell">
-
-                                {{ t('trial_balance_report.debit') }}
-                            </h1>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div v-if="item.children.length != 0"
-                    class="account-details accounts-footer columns is-flex-direction-row-reverse is-justify-content-end">
-                    <div class="meta is-flex column is-3 columns ml-5 my-0 ">
-                        <div class="account-code column is-6 is-align-self-center">
-                            <div class="accounts-cell">
-                                {{ item.total_credits }}
-                            </div>
-
-                        </div>
-
-                        <div class="account-name column is-6 is-align-self-center">
-                            <div class="accounts-cell">
-                                {{ item.total_debits }}
-                            </div>
-
-                        </div>
-                    </div>
-                    <!-- <h1 class="mt-1"> {{ t('trial_balance_report.lvl1_total' , { chart_name: item.name }) }} </h1> -->
-
-                </div>
 
             </div>
         </slot>
@@ -135,14 +107,19 @@ const toggle = (key: number) => {
 @import '/@src/scss/abstracts/all';
 
 .collapse {
-    @include vuero-s-card;
-
+    border-bottom: 1px solid var(--fade-grey-dark-3) !important;
     padding: 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 10px;
+
+    &[open] {
+        background-color: var(--background-grey) !important;
+    }
 
     &.has-plus {
         &[open] {
             .collapse-header {
+                border-right: 3px solid var(--primary);
+
                 .collapse-icon {
                     transform: rotate(45deg);
                 }
@@ -157,6 +134,10 @@ const toggle = (key: number) => {
     &.has-chevron {
         &[open] {
             .collapse-header {
+                border-right: 4px solid var(--primary);
+                background-color: var(--white);
+                border-bottom: 1px solid var(--fade-grey-dark-3) !important;
+
                 .collapse-icon {
                     transform: rotate(180deg);
                 }
@@ -172,6 +153,12 @@ const toggle = (key: number) => {
         .collapse-icon {
             border-color: var(--fade-grey-dark-3) !important;
             box-shadow: var(--light-box-shadow);
+        }
+
+        .open-has-bold {
+            font-weight: 800;
+            font-family: var(--font-alt);
+
         }
     }
 
@@ -195,6 +182,11 @@ const toggle = (key: number) => {
             display: flex;
             align-items: center;
             justify-content: flex-end;
+
+            .is-flex {
+                margin-left: 20px;
+            }
+
         }
 
         .collapse-icon {
@@ -224,7 +216,7 @@ const toggle = (key: number) => {
 
     .collapse-content {
         display: none;
-        padding: 0 20px 20px;
+        padding: 0 20px 0;
         color: var(--light-text);
         font-family: var(--font);
 
@@ -263,14 +255,23 @@ const toggle = (key: number) => {
 
     }
 
+    .chart-row {
+        width: 200px;
+    }
 }
 
 .is-dark {
     .collapse {
-        @include vuero-card--dark;
+        border-color: var(--dark-sidebar-light-12) !important;
 
         &[open] {
+            background-color: var(--dark-sidebar-light-4) !important;
+
             .collapse-header {
+                background-color: var(--dark-sidebar-light-6) !important;
+
+                border-bottom: 1px solid var(--dark-sidebar-light-12) !important;
+
                 .collapse-icon {
                     background: var(--dark-sidebar-light-2);
                     border-color: var(--dark-sidebar-light-4) !important;
@@ -279,6 +280,7 @@ const toggle = (key: number) => {
         }
 
         .collapse-header {
+
             h3 {
                 color: var(--dark-dark-text);
             }
@@ -290,7 +292,7 @@ const toggle = (key: number) => {
         }
 
         .account-details {
-            border-color: var(--dark-sidebar-light-12);
+            border-color: var(--dark-sidebar-light-12) !important;
 
         }
 
