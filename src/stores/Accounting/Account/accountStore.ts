@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { TrialBalance } from "/@src/models/Accounting/Account/account"
-import { generateTrailBalanceReportApi } from "/@src/utils/api/Accounting/Account"
+import { BalanceSheet, TrialBalance } from "/@src/models/Accounting/Account/account"
+import { generateBalanceSheetReportApi, generateTrailBalanceReportApi } from "/@src/utils/api/Accounting/Account"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -34,6 +34,26 @@ export const useAccount = defineStore('account', () => {
         }
     }
 
+    async function generateBalanceSheetReportStore() {
+        if (loading.value) return
+        loading.value = true
+        await sleep(3000);
+        try {
+            const returnedResponse = await generateBalanceSheetReportApi(api)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as BalanceSheet
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
 
     return {
         success,
@@ -42,6 +62,7 @@ export const useAccount = defineStore('account', () => {
         loading,
         pagination,
         generateTrailBalanceReportStore,
+        generateBalanceSheetReportStore
     } as const
 })
 

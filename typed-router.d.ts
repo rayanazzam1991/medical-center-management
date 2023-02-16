@@ -40,6 +40,8 @@ declare module 'vue-router/auto/routes' {
     '/auth': RouteRecordInfo<'/auth', '/auth', Record<never, never>, Record<never, never>>,
     '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
+    '/balance-sheet-report': RouteRecordInfo<'/balance-sheet-report', '/balance-sheet-report', Record<never, never>, Record<never, never>>,
+    '/balance-sheet-report/': RouteRecordInfo<'/balance-sheet-report/', '/balance-sheet-report/', Record<never, never>, Record<never, never>>,
     '/bulk-cash-out': RouteRecordInfo<'/bulk-cash-out', '/bulk-cash-out', Record<never, never>, Record<never, never>>,
     '/bulk-cash-out/': RouteRecordInfo<'/bulk-cash-out/', '/bulk-cash-out/', Record<never, never>, Record<never, never>>,
     '/category': RouteRecordInfo<'/category', '/category', Record<never, never>, Record<never, never>>,

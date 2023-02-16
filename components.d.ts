@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AttendanceTableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
+    BalanceSheetAssetsLiabilitesCollapse: typeof import('./src/components/OurComponents/Accounting/Account/BalanceSheetAssetsLiabilitesCollapse.vue')['default']
     BulkCashOutTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/BulkCashOutTableHeader.vue')['default']
     CashOutForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/CashOutForm.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']

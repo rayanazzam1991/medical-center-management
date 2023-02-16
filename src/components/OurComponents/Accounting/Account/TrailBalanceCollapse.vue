@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { TrialBalanceLvl1Chart } from '/@src/models/Accounting/Account/account';
-import sleep from '/@src/utils/sleep';
 
 export interface TrailBalanceCollapseProps {
-    items: TrialBalanceLvl1Chart[]
-    withChevron?: boolean,
-    is_expanded: boolean
+  items: TrialBalanceLvl1Chart[]
+  withChevron?: boolean,
+  is_expanded: boolean
 }
+
 
 const props = withDefaults(defineProps<TrailBalanceCollapseProps>(), {
     items: () => [],
@@ -100,202 +100,10 @@ const toggle = (key: number) => {
 
             </div>
         </slot>
-    </details>
+</details>
 </template>
 
 <style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
-
-.collapse {
-    border-bottom: 1px solid var(--fade-grey-dark-3) !important;
-    padding: 0;
-    margin-bottom: 10px;
-
-    &[open] {
-        background-color: var(--background-grey) !important;
-    }
-
-    &.has-plus {
-        &[open] {
-            .collapse-header {
-                border-right: 3px solid var(--primary);
-
-                .collapse-icon {
-                    transform: rotate(45deg);
-                }
-            }
-
-            .collapse-content {
-                display: block;
-            }
-        }
-    }
-
-    &.has-chevron {
-        &[open] {
-            .collapse-header {
-                border-right: 4px solid var(--primary);
-                background-color: var(--white);
-                border-bottom: 1px solid var(--fade-grey-dark-3) !important;
-
-                .collapse-icon {
-                    transform: rotate(180deg);
-                }
-            }
-
-            .collapse-content {
-                display: block;
-            }
-        }
-    }
-
-    &[open] {
-        .collapse-icon {
-            border-color: var(--fade-grey-dark-3) !important;
-            box-shadow: var(--light-box-shadow);
-        }
-
-        .open-has-bold {
-            font-weight: 800;
-            font-family: var(--font-alt);
-
-        }
-    }
-
-    .collapse-header {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 60px;
-        padding: 0 20px;
-        cursor: pointer;
-
-        h3 {
-            font-family: var(--font-alt);
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-
-        .collapse-head-info {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-
-            .is-flex {
-                margin-left: 20px;
-            }
-
-        }
-
-        .collapse-icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 30px;
-            width: 30px;
-            background: var(--white);
-            border-radius: var(--radius-rounded);
-            border: 1px solid transparent;
-            transition: all 0.3s; // transition-all test
-
-            >span {
-                display: block;
-                height: 16px;
-                width: 16px;
-            }
-
-            svg {
-                height: 16px;
-                width: 16px;
-                color: var(--light-text);
-            }
-        }
-    }
-
-    .collapse-content {
-        display: none;
-        padding: 0 20px 0;
-        color: var(--light-text);
-        font-family: var(--font);
-
-        p:not(:last-child) {
-            margin-bottom: 12px;
-        }
-    }
-
-    .account-details {
-        padding: 0.5rem 1.75rem;
-        margin-right: 0;
-        margin-left: 0;
-        height: 2rem;
-        border-bottom: 1px solid var(--fade-grey-dark-3);
-
-        &.accounts-footer {
-            border: none;
-        }
-
-        .meta {
-
-            .account-name,
-            .account-code,
-            .accounts-header {
-                font-size: 1rem;
-                font-weight: 800;
-
-
-                .accounts-cell {
-                    text-align: center;
-
-                }
-            }
-
-        }
-
-    }
-
-    .chart-row {
-        width: 200px;
-    }
-}
-
-.is-dark {
-    .collapse {
-        border-color: var(--dark-sidebar-light-12) !important;
-
-        &[open] {
-            background-color: var(--dark-sidebar-light-4) !important;
-
-            .collapse-header {
-                background-color: var(--dark-sidebar-light-6) !important;
-
-                border-bottom: 1px solid var(--dark-sidebar-light-12) !important;
-
-                .collapse-icon {
-                    background: var(--dark-sidebar-light-2);
-                    border-color: var(--dark-sidebar-light-4) !important;
-                }
-            }
-        }
-
-        .collapse-header {
-
-            h3 {
-                color: var(--dark-dark-text);
-            }
-
-            .collapse-icon {
-                background: var(--dark-sidebar-light-6);
-                border-color: var(--dark-sidebar-light-6);
-            }
-        }
-
-        .account-details {
-            border-color: var(--dark-sidebar-light-12) !important;
-
-        }
-
-    }
-}
+@import '/@src/scss/Styles/TrialBalanceReport/trialBalanceCollapse.scss';
 </style>
