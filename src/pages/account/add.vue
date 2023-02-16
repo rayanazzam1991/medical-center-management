@@ -14,6 +14,4 @@ const head = useHead({
 
 </script>
 
-<template>
-  <AccountForm :formType="'Add'" />
-</template>
+<template><AccountForm :formType="'Add'" /></template>

@@ -1,9 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { ChartOfAccount, ChartOfAccountSearchFilter } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount";
-import { getChartOfAccountsApi } from "/@src/utils/api/Accounting/ChartOfAccount/chartOfAccounts";
+import { ChartOfAccount, ChartOfAccountSearchFilter } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount"
+import { getChartOfAccountsApi } from "/@src/utils/api/Accounting/ChartOfAccount"
 import { Pagination, defaultPagination } from "/@src/utils/response"
-import sleep from "/@src/utils/sleep";
 
 
 export const useChartOfAccount = defineStore('chartOfAccount', () => {

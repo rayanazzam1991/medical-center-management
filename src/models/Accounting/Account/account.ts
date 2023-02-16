@@ -9,7 +9,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   messages: messages
 })
 
-export interface Account{
+export interface Account {
   id?: number
   code:string
   name:string
@@ -75,6 +75,88 @@ export const defaultAccountSearchFilter: AccountSearchFilter = {
 }
 
 
+// Trial Balance Interfaces And Defaults
+export interface TrialBalance {
+  main_charts: TrialBalanceLvl1Chart[]
+  total_credits: string
+  total_debits: string
+}
+export interface TrialBalanceLvl1Chart {
+  id: number
+  name: string
+  code: string
+  account_type: number
+  children: TrialBalanceLvl2Chart[]
+  total_credits: string
+  total_debits: string
+}
+export interface TrialBalanceLvl2Chart {
+  id: number
+  name: string
+  code: string
+  account_type: number
+  accounts: TrialBalanceAccount[]
+  total_credits: string
+  total_debits: string
+}
+export interface TrialBalanceAccount {
+  id: number
+  name: string
+  code: string
+  absolute_type: number
+  absolute_balance: string
+}
+export const defaultTrialBalance: TrialBalance = {
+  main_charts: [],
+  total_credits: "",
+  total_debits: ""
+}
+
+
+export interface BalanceSheet {
+  assets: BalanceSheetAssetsLiabilites
+  liabilities: BalanceSheetAssetsLiabilites
+  total_assets_balances: string
+  total_liabilities_balances: string
+}
+export interface BalanceSheetAssetsLiabilites {
+  id: number
+  name: string
+  code: string
+  account_type: number
+  children: BalanceSheetLvl2Chart[]
+  total_balances: string
+}
+export interface BalanceSheetLvl2Chart {
+  id: number
+  name: string
+  code: string
+  account_type: number
+  accounts: BalanceSheetAccount[]
+  total_balances: string
+}
+export interface BalanceSheetAccount {
+  id: number
+  name: string
+  code: string
+  type: number
+  balance: string
+}
+export const defaultBalanceSheetAssetsLiabilites: BalanceSheetAssetsLiabilites = {
+  id: 0,
+  name: '',
+  code: '',
+  account_type: 1,
+  children: [],
+  total_balances: '',
+}
+
+export const defaultBalanceSheet: BalanceSheet = {
+  assets: defaultBalanceSheetAssetsLiabilites,
+  liabilities: defaultBalanceSheetAssetsLiabilites,
+  total_assets_balances: '',
+  total_liabilities_balances: '',
+}
 
 class AccountConsts {
   static readonly INACTIVE = 0

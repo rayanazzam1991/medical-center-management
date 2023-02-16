@@ -189,6 +189,10 @@
       "salaries_history": "Salaries History",
       "deliver_salaries": "Deliver Salaries",
       "onhold_salaries": "On-Hold Salaries"
+    },
+    "reports": {
+      "reports": "Accounting Reports",
+      "trial_balance_report": "Trial Balance Report"
     }
   },
   "user_profile_dropdown": {
@@ -1702,5 +1706,33 @@
   "date_picker": {
     "select": "Select",
     "cancel": "Cancel"
+  },
+  "trial_balance_report": {
+    "title": "Trial Balance Report",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "credit": "Credit",
+    "debit": "Debit",
+    "final_total": "Final Total",
+    "total": "Total",
+    "lvl1_total": "{chart_name} Total",
+    "account_code": "Account Code",
+    "account_name": "Account Name",
+    "no_accounts_place_holder": "There is no accounts under this level."
+  },
+  "balance_sheet_report": {
+    "title": "Balance Sheet Report",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "total_balances": "Balance",
+    "total_assets_balances": "Total Assets",
+    "total_liabilites_balances": "Total Liabilites",
+    "no_accounts_place_holder": "There is no accounts under this level."
   }
 }

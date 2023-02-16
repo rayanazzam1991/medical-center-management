@@ -1,8 +1,7 @@
-
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Account, CreateAccount } from "/@src/models/Accounting/Account/account"
-import { addAccountApi } from "/@src/utils/api/Accounting/Account"
+import { Account, CreateAccount, TrialBalance, BalanceSheet } from "/@src/models/Accounting/Account/account"
+import { addAccountApi, generateTrailBalanceReportApi, generateBalanceSheetReportApi } from "/@src/utils/api/Accounting/Account"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -44,6 +43,46 @@ export const useAccount = defineStore('account', () => {
     }
   }
 
+  async function generateTrailBalanceReportStore() {
+    if (loading.value) return
+    loading.value = true
+    await sleep(3000);
+    try {
+        const returnedResponse = await generateTrailBalanceReportApi(api)
+        success.value = returnedResponse.response.success
+        error_code.value = returnedResponse.response.error_code
+        message.value = returnedResponse.response.message
+        return returnedResponse.response.data as TrialBalance
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+    }
+    finally {
+        loading.value = false
+    }
+}
+
+async function generateBalanceSheetReportStore() {
+    if (loading.value) return
+    loading.value = true
+    await sleep(3000);
+    try {
+        const returnedResponse = await generateBalanceSheetReportApi(api)
+        success.value = returnedResponse.response.success
+        error_code.value = returnedResponse.response.error_code
+        message.value = returnedResponse.response.message
+        return returnedResponse.response.data as BalanceSheet
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+    }
+    finally {
+        loading.value = false
+    }
+}
+
   return {
     success,
     error_code,
@@ -52,6 +91,9 @@ export const useAccount = defineStore('account', () => {
     pagination,
     loading,
     addAccountStore,
+    generateTrailBalanceReportStore,
+    generateBalanceSheetReportStore
+
   } as const
 })
 

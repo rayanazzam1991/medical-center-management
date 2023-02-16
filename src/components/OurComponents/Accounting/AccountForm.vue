@@ -1,21 +1,20 @@
 <script  lang="ts">
-import { useHead } from '@vueuse/head'
-import { useNotyf } from '/@src/composable/useNotyf';
-import { ErrorMessage, useForm } from 'vee-validate';
-import { useViewWrapper } from '/@src/stores/viewWrapper';
-import sleep from "/@src/utils/sleep";
-import { useI18n } from 'vue-i18n';
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
-import { useAccount } from '/@src/stores/Accounting/Account/accountStore'
-import { AccountConsts, defaultAccount, defaultCreateAccount, CreateAccount } from '/@src/models/Accounting/Account/account'
-import { addAccount } from '/@src/services/Accounting/Account/accountService'
+import { useForm, ErrorMessage } from 'vee-validate';
+import { useI18n } from 'vue-i18n';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultCreateAccount, AccountConsts } from '/@src/models/Accounting/Account/account';
+import { ChartOfAccount, defaultChartOfAccount, ChartOfAccountSearchFilter } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
+import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { accountvalidationSchema } from '/@src/rules/Accounting/Account/accountValidation';
-import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
-import { ChartOfAccount, defaultChartOfAccount } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount'
-import { ChartOfAccountSearchFilter } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount"
-import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
-import { getChartOfAccountsList } from '/@src/services/Accounting/ChartOfAccount/chartOfAccountService'
-import { toFieldValidator } from '@vee-validate/zod';
+import { addAccount } from '/@src/services/Accounting/Account/accountService';
+import { getChartOfAccountsList } from '/@src/services/Accounting/ChartOfAccount/chartOfAccountService';
+import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
+import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+import sleep from '/@src/utils/sleep';
+
 
 
 export default defineComponent({
@@ -150,8 +149,7 @@ export default defineComponent({
                 <VField id="balance" v-slot="{ field }">
                   <VLabel class="required">{{ t('account.form.balance') }}</VLabel>
                   <VControl icon="feather:dollar-sign">
-                    <VInput v-model="currentAccount.balance" placeholder="" type="number"
-                      autocomplete="given-balance" />
+                    <VInput v-model="currentAccount.balance" placeholder="" type="number" autocomplete="given-balance" />
                     <ErrorMessage class="help is-danger" name="balance" />
                   </VControl>
                 </VField>
@@ -239,10 +237,8 @@ export default defineComponent({
         </div>
       </div>
     </form>
-  </div>
+</div>
 </template>
 
 
-<style  scoped lang="scss">
-@import '/@src/scss/styles/formPage.scss';
-</style>
+<style  scoped lang="scss">@import '/@src/scss/styles/formPage.scss';</style>
