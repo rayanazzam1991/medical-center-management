@@ -195,6 +195,10 @@
       "salaries_history": "سجل الراوتب",
       "deliver_salaries": "تسليم الراوتب",
       "onhold_salaries": "صندوق الأمانات"
+    },
+    "reports": {
+      "reports": "التقارير المالية",
+      "trial_balance_report": "تقرير ميزان المراجعة"
     }
   },
   "user_profile_dropdown": {
@@ -271,10 +275,13 @@
     "pagination_footer": "إظهار {from_number} الى {to_number} من أصل {all_number} نتائج."
   },
   "images": {
-    "image_name_placeholder": "اختيار صورة",
+    "image_name_placeholder": "اختيار صورة/ملف",
     "image_select_file": "تحديد ملف",
-    "accepted_file": "الحجم الأقصى: 2ميغا الانواع المقبولة  : png, jpg, webp",
-    "by": ":بواسطة"
+    "accepted_image_file": "الحجم الأقصى: 2 ميغابايت الانواع المقبولة  : png, jpg, webp",
+    "accepted_file": "الحجم الأقصى: 2 ميغابايت الانواع المقبولة  : png, jpg, webp, pdf",
+    "by": "بواسطة: ",
+    "file": "الملف ",
+    "megabyte": "ميغابايت"
   },
   "drop_down": {
     "view": "معاينة",
@@ -916,7 +923,9 @@
       "action_types": {
         "add_quantity": "إضافة كميًة",
         "withdraw_quantity": " سحب كميًة",
-        "sell": "مبيع"
+        "sell": "مبيع",
+        "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي",
+        "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي"
       },
       "movement_types": {
         "internal": "داخلية",
@@ -1715,8 +1724,37 @@
     "active": "فعال",
     "inactive": "غير فعال"
   },
-  "date_picker":{
-    "select":"اختيار",
-    "cancel":"إلغاء"
+  "date_picker": {
+    "select": "اختيار",
+    "cancel": "إلغاء"
+  },
+  "trial_balance_report": {
+    "title": "تقرير ميزان المراجعة",
+    "expand_collapse_button": "توسيع/تجميع الكل",
+    "place_holder": {
+      "title": "جاري توليد التقرير..",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+    },
+    "credit": "مدين",
+    "debit": "دائن",
+    "final_total": "المجموع النهائي",
+    "total": "المجموع",
+    "lvl1_total": "مجموع {chart_name}",
+    "account_code": "رمز الحساب",
+    "account_name": "اسم الحساب",
+    "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
+  },
+  "balance_sheet_report": {
+    "title": "تقرير الميزانية العمومية",
+    "expand_collapse_button": "توسيع/تجميع الكل",
+    "place_holder": {
+      "title": "جاري توليد التقرير..",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+    },
+    "total_balances": "الرصيد",
+    "total_assets_balances": "مجموع الأصول",
+    "total_liabilites_balances": "مجموع الخصوم",
+    "lvl1_total": "مجموع {chart_name}",
+    "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
   }
 }

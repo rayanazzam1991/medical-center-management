@@ -161,23 +161,24 @@ const fetchEmployeeFiles = async () => {
 }
 
 const onAddFile = async (event: any) => {
-  const _file = event.target.files[0] as File
+  const file = event.target.files[0] as File
   let _message = ''
-  if (_file) {
+  if (file) {
     if (
-      _file.type != 'image/jpeg' &&
-      _file.type != 'image/png' &&
-      _file.type != 'image/webp'
+      file.type != 'image/jpeg' &&
+      file.type != 'image/png' &&
+      file.type != 'image/webp' &&
+      file.type != 'application/pdf'
     ) {
       _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
-    } else if (_file.size > 2 * 1024 * 1024) {
+    } else if (file.size > 2 * 1024 * 1024) {
       _message = t("toast.file.size")
       await sleep(200)
       notif.error(_message)
     } else {
-      filesToUpload.value = _file
+      filesToUpload.value = file
     }
   }
 }
@@ -680,27 +681,30 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                   <div>
                     <h4>{{t('employee.details.tabs.files')}}</h4>
                     <div class="columns is-multiline">
-                      <div v-for="file in employeeFiles" class="column is-6">
-                        <div class="file-box">
-                          <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
-                          <div class="meta">
-                            <span class="file-link">
-                              <a target="_blank" class="file-link" :href="file.relative_path">
-                                {{ file.file_name }}</a>
-                            </span>
-                            <span>
-                              {{
-                              file.size != undefined
-                              ? (file.size / (1024 * 1024)).toFixed(2)
-                              : 'Unknown'
-                              }}
-                              {{ file.size != undefined ? 'MB' : '' }}
-                              <i aria-hidden="true" class="fas fa-circle"></i>
-                              {{ file.created_at }}
-                              <i aria-hidden="true" class="fas fa-circle"></i>
-                              By: {{ file.uploaded_by?.first_name
-                              }}{{ file.uploaded_by?.last_name }}
-                            </span>
+                      <div v-for="(file , index) in employeeFiles" class="column is-6">
+                        <div class="file-box is-flex is-justify-content-space-between">
+                          <div class="file-box">
+
+                            <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
+                            <div class="meta">
+                              <span class="file-link">
+                                <a target="_blank" class="file-link" :href="file.relative_path">
+                                  {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                              </span>
+                              <span>
+                                {{
+                                file.size != undefined
+                                ? (file.size / (1024 * 1024)).toFixed(2)
+                                : 'Unknown'
+                                }}
+                                {{ file.size != undefined ? t('images.megabyte') : '' }}
+                                <i aria-hidden="true" class="fas fa-circle"></i>
+                                {{ file.created_at }}
+                                <i aria-hidden="true" class="fas fa-circle"></i>
+                                {{t('images.by')}} {{ file.uploaded_by?.first_name
+                                }}{{ file.uploaded_by?.last_name }}
+                              </span>
+                            </div>
                           </div>
                           <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
                             size="small" icon="feather:trash" tabindex="0" color="danger"
@@ -764,7 +768,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
         <VControl>
           <VFilePond size="large" class="profile-filepond" name="profile_filepond"
             :chunk-retry-delays="[500, 1000, 3000]" label-idle="<i class='lnil lnil-cloud-upload'></i>"
-            :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']" :image-preview-height="140"
+            :accepted-file-types="['image/png', 'image/jpeg', 'image/webp']" :image-preview-height="140"
             :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
             style-panel-layout="compact circle" style-load-indicator-position="center bottom"
             style-progress-indicator-position="right bottom" style-button-remove-item-position="left bottom"
@@ -772,7 +776,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
         </VControl>
       </VField>
       <h6 class="is-flex is-justify-content-center help">
-        {{ t('images.accepted_file') }}
+        {{ t('images.accepted_image_file') }}
       </h6>
     </template>
 

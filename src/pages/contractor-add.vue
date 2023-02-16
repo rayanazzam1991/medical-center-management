@@ -5,12 +5,13 @@
     }
 }
 </route>
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useContractorForm } from '../stores/Contractor/contractorFormSteps';
 import { useContractor } from '/@src/stores/Contractor/contractorStore';
-const {t} = useI18n()
+const { t } = useI18n()
 const contractorStore = useContractor()
 const contractorForm = useContractorForm()
 
@@ -40,14 +41,16 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="contractorForm.validateStepFn === null"
                                 :color="contractorForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ contractorForm.getStep() == 2 ? t('contractor.form.submit_and_finish_button') : t('contractor.form.submit_and_next_button')
-}}
+                                {{ contractorForm.getStep() == 2 ? t('contractor.form.submit_and_finish_button') :
+                                    t('contractor.form.submit_and_next_button')
+                                }}
                             </VButton>
                         </VLoader>
                         <VButton v-if="contractorForm.skipable === true" class="wizard-button-previous"
                             :color="contractorForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => contractorForm?.skipStepFn?.()">
-                            {{ contractorForm.getStep() == 2 ? t('contractor.form.skip_and_finish_button') : t('contractor.form.skip_button')
+                            {{ contractorForm.getStep() == 2 ? t('contractor.form.skip_and_finish_button') :
+                                t('contractor.form.skip_button')
                             }}
                         </VButton>
 
@@ -55,21 +58,8 @@ useHead({
                 </div>
             </div>
         </form>
-    </MinimalLayout>
+</MinimalLayout>
 </template>
 
-<style scoped lang="scss">
-@import '/@src/scss/styles_rtl/wizardForm.scss';
-
-.buttons-width {
-
-max-width: 40%;
-margin: 0 auto !important;
-
-}
-.wizard-buttons-inner-padding {
-
-padding : 1rem !important;
-}
-
+<style scoped lang="scss">@import '/@src/scss/Styles/wizardForm.scss';
 </style>

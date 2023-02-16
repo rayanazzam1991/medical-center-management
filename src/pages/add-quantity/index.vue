@@ -325,7 +325,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </div>
                                     </VControl>
                                 </VField>
-                                <h6 class="font ml-2 mt-2 help">{{ t('images.accepted_file') }}
+                                <h6 class="font ml-2 mt-2 help">{{ t('images.accepted_image_file') }}
                                 </h6>
                             </div>
                         </div>

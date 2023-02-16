@@ -47,6 +47,20 @@ const { t } = useI18n()
                                     </li>
                                 </ul>
                             </div>
+                            <div class="column is-4">
+                                <h4 class="column-heading">{{ t('accounting_subnav.reports.reports') }}</h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/trial-balance-report">
+                                            <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                                            <span>{{
+                                                t('accounting_subnav.reports.trial_balance_report')
+                                            }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

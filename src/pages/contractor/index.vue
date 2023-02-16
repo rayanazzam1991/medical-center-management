@@ -17,7 +17,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('contractor.table.title'))
 useHead({
@@ -53,20 +53,18 @@ onMounted(async () => {
 });
 
 const changestatusUser = async () => {
-    
-    const changeContractorStatusData : ChangeContractorStatus = {
-        id : contractorChangeStatus.value.id,
-        user_status_id : newStatus.value
+
+    const changeContractorStatusData: ChangeContractorStatus = {
+        id: contractorChangeStatus.value.id,
+        user_status_id: newStatus.value
     }
     const { message, success } = await changeContractorStatus(changeContractorStatusData)
     if (success) {
 
         search(searchFilter.value)
-        // @ts-ignore
         notif.dismissAll()
         await sleep(200);
 
-        // @ts-ignore
         notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
@@ -129,7 +127,7 @@ const columns = {
     "users.phone_number": {
         align: 'center',
         grow: false,
-        label:  t('contractor.table.columns.phone'),
+        label: t('contractor.table.columns.phone'),
         renderRow: (row: any) =>
             h('span', row?.user?.phone_number),
 
@@ -140,7 +138,7 @@ const columns = {
     },
     speciality: {
         align: 'center',
-        label:  t('contractor.table.columns.speciality'),
+        label: t('contractor.table.columns.speciality'),
         renderRow: (row: any) =>
             h('span', row?.speciality?.name),
 
@@ -175,7 +173,7 @@ const columns = {
                 VTag,
                 {
                     rounded: true,
-                    color:UserStatusConsts.getStatusColor(row?.user?.status?.id)
+                    color: UserStatusConsts.getStatusColor(row?.user?.status?.id)
                 },
                 {
                     default() {
@@ -235,8 +233,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="contractorsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
-                        class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')"
+                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
                     </VPlaceholderSection>
                 </div>
 
@@ -248,22 +246,23 @@ const columns = {
             @update:current-page="getContractorsPerPage" />
         <h6 class="pt-2 is-size-7" v-if="contractorsList.length != 0 && !contractorStore?.loading && !isLoading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', { from_number: paginationVar.page !=
+                    paginationVar.max_page
+                    ?
+                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                , to_number: paginationVar.page !=
+                    paginationVar.max_page ?
+                    paginationVar.page *
+                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+            })}}</h6>
 
         <VPlaceloadText v-if="contractorStore?.loading || isLoading" :lines="1" last-line-width="20%" class="mx-2" />
 
 
     </VFlexTableWrapper>
-    <VModal  :key="keyIncrement" :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup"
+        actions="center" @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -275,8 +274,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="newStatus">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-        UserStatusConsts.getStatusName(status.id)
-}}
+                                            UserStatusConsts.getStatusName(status.id)
+                                        }}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />
@@ -288,7 +287,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
 
