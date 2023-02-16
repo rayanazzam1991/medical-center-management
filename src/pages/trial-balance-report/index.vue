@@ -1,4 +1,5 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
@@ -37,7 +38,8 @@ const toggle = () => {
 <template>
     <div class="header is-flex is-justify-content-space-between is-align-items-center">
         <h1>{{ t('trial_balance_report.title') }}</h1>
-        <VButton color="primary" @click="toggle">{{ t('trial_balance_report.expand_collapse_button') }} </VButton>
+        <VButton :loading="accountStore.loading" color="primary" @click="toggle">{{
+            t('trial_balance_report.expand_collapse_button') }} </VButton>
     </div>
 
     <div class="trial-balance-report-layout">
@@ -48,8 +50,7 @@ const toggle = () => {
                     :subtitle="t('trial_balance_report.place_holder.subtitle')" larger>
                     <template #image>
                         <img class="light-image" src="/@src/assets/illustrations/placeholders/search-1.svg" alt="" />
-                        <img class="dark-image" src="/@src/assets/illustrations/placeholders/search-1-dark.svg"
-                            alt="" />
+                        <img class="dark-image" src="/@src/assets/illustrations/placeholders/search-1-dark.svg" alt="" />
                     </template>
                 </VPlaceholderPage>
             </div>
@@ -95,148 +96,7 @@ const toggle = () => {
             </div>
 
         </div>
-    </div>
-
-
+</div>
 </template>
 
-<style   lang="scss">
-.header {
-    background-color: var(--white);
-    min-height: 50px;
-    border-radius: var(--radius-large);
-    border: 1px solid var(--fade-grey-dark-3);
-    padding: 20px;
-
-    h1 {
-        font-family: var(--font-alt);
-        font-size: 1.2rem;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-
-}
-
-.trial-balance-report-layout {
-    flex: 1;
-    display: inline-block;
-    width: 100%;
-    padding: 20px;
-    background-color: var(--white);
-    border-radius: var(--radius-large);
-    border: 1px solid var(--fade-grey-dark-3);
-    transition: all .3s;
-
-}
-
-.header-level {
-    &.is-flex {
-        background-color: blue;
-        margin-left: 44px;
-
-        .chart-row {
-            background-color: red;
-            width: 200px;
-        }
-
-    }
-}
-
-.report-footer {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
-}
-
-.account-details {
-    padding: 0;
-    margin: 0;
-    height: 2rem;
-    border-bottom: 1px solid var(--fade-grey-dark-3);
-
-    &.table-header {
-        border-width: 2px !important;
-    }
-
-    &.account-details-padding {
-        padding-left: 2.5rem;
-        padding-bottom: 0;
-    }
-
-    &.accounts-footer {
-        border: none;
-    }
-
-    .meta {
-
-        .account-name,
-        .account-code,
-        .accounts-header {
-            font-size: 1rem;
-            font-weight: 700;
-            font-family: var(--font);
-
-            .accounts-cell {
-                text-align: center;
-
-            }
-        }
-
-        .account-code,
-        .accounts-header {
-
-            &.account-header-padding {
-                padding-left: 4rem;
-            }
-        }
-
-    }
-
-
-    .is-flex {
-        margin-left: 44px;
-    }
-
-    .chart-row {
-        width: 200px;
-    }
-
-    .has-bold,
-    .total {
-        font-weight: 800;
-        font-family: var(--font-alt);
-    }
-}
-
-
-.is-dark {
-
-    .header {
-        background: var(--dark-sidebar-light-6);
-        min-height: 50px;
-        border-radius: var(--radius-large);
-        border-style: solid;
-        border-color: var(--dark-sidebar-light-12);
-        padding: 20px;
-
-        h1 {
-            font-family: var(--font-alt);
-            font-size: 1.2rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-    }
-
-
-    .trial-balance-report-layout {
-        background: var(--dark-sidebar-light-6);
-        border-color: var(--dark-sidebar-light-12);
-    }
-
-    .account-details {
-        border-color: var(--dark-sidebar-light-12);
-
-    }
-
-}
-</style>
+<style   lang="scss">@import '/@src/scss/Styles/TrialBalanceReport/trialBalance.scss';</style>

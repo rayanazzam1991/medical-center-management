@@ -1743,5 +1743,18 @@
     "account_code": "رمز الحساب",
     "account_name": "اسم الحساب",
     "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
+  },
+  "balance_sheet_report": {
+    "title": "تقرير الميزانية العمومية",
+    "expand_collapse_button": "توسيع/تجميع الكل",
+    "place_holder": {
+      "title": "جاري توليد التقرير..",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+    },
+    "total_balances": "الرصيد",
+    "total_assets_balances": "مجموع الأصول",
+    "total_liabilites_balances": "مجموع الخصوم",
+    "lvl1_total": "مجموع {chart_name}",
+    "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
   }
 }
