@@ -36,6 +36,8 @@ declare module 'vue-router/auto/routes' {
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
     '/add-quantity': RouteRecordInfo<'/add-quantity', '/add-quantity', Record<never, never>, Record<never, never>>,
     '/add-quantity/': RouteRecordInfo<'/add-quantity/', '/add-quantity/', Record<never, never>, Record<never, never>>,
+    '/add-record': RouteRecordInfo<'/add-record', '/add-record', Record<never, never>, Record<never, never>>,
+    '/add-record/': RouteRecordInfo<'/add-record/', '/add-record/', Record<never, never>, Record<never, never>>,
     '/auth': RouteRecordInfo<'/auth', '/auth', Record<never, never>, Record<never, never>>,
     '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
