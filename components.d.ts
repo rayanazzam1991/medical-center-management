@@ -7,7 +7,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
+    AccountTableHeader: typeof import('./src/components/OurComponents/Accounting/AccountTableHeader.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
     AddEditDropDown: typeof import('./src/components/OurComponents/AddEditDropDown.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
@@ -236,7 +238,6 @@ declare module '@vue/runtime-core' {
     VRadio: typeof import('./src/components/base/form/VRadio.vue')['default']
     VReloadPrompt: typeof import('./src/components/base/modal/VReloadPrompt.vue')['default']
     VSelect: typeof import('./src/components/base/form/VSelect.vue')['default']
-    VSelectWithSearch: typeof import('./src/components/OurComponents/VSelectWithSearch.vue')['default']
     VSimpleDatatables: typeof import('./src/components/base/plugins/VSimpleDatatables.vue')['default']
     VSnack: typeof import('./src/components/base/snack/V-Snack.vue')['default']
     VSwitchBlock: typeof import('./src/components/base/form/VSwitchBlock.vue')['default']
