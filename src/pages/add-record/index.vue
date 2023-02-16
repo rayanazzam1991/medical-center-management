@@ -40,6 +40,11 @@ interface AccountingRecord {
     id?: number
     value?: number
 }
+interface Account {
+    id: number,
+    code: string,
+    name: string
+}
 const records = ref<AccountingRecord[]>([])
 
 
@@ -52,6 +57,19 @@ const removeRecord = (record: AccountingRecord) => {
     if (index !== -1) {
         records.value.splice(index, 1);
     }
+}
+
+const accountsList = ref<Account[]>([]);
+
+accountsList.value?.push({ id: 1, code: "123", name: "Cash" })
+accountsList.value?.push({ id: 2, code: "456", name: "Inventory" })
+
+const clearAccountValue = () => {
+
+}
+
+const setAccountValue = () => {
+
 }
 
 
@@ -99,7 +117,40 @@ const onSubmitAdd = handleSubmit(async () => {
                                         <VLabel class="required">
                                             test</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput type="number" placeholder="" autocomplete="" />
+                                            <VSelect>
+                                                <VOption v-for="account in accountsList" :key="account.id"
+                                                    :value="account.id">
+                                                    {{ account.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <!-- <Multiselect mode="single"
+                                             :placeholder="t('customer.form.city')"
+                                                :close-on-select="false" 
+                                                :filter-results="false" 
+                                                :min-chars="0"
+                                                :resolve-on-load="false"
+                                                :infinite="true" 
+                                                :limit="10"
+                                                :rtl="true"
+                                                :max="1" 
+                                                :clear-on-search="true"
+                                                :delay="0"
+                                                :searchable="true"
+                                                @clear="clearAccountValue()"
+                                                @select="setAccountValue()"
+                                                  :options="(query: any) => {
+                                                    // let citySearchFilter = {} as CitySearchFilter
+                                                    // citySearchFilter.name = query
+                                                    // const data = await getAccountsList()
+                                                    return accountsList
+                                                    // return data.cities.map((item: any) => {
+                                                    //     return { value: item.id, label: item.name }
+                                                    // })
+                                                }" @open="(select$: any) => {
+                                                if (select$.noOptions) {
+                                                    select$.resolveOptions()
+                                                }
+                                            }" /> -->
 
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
