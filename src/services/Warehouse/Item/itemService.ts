@@ -1,4 +1,4 @@
-import { Item, ItemSearchFilter, defaultItem, ChangeItemStatus, CreateUpdateItem } from "/@src/models/Warehouse/Item/item"
+import { Item, ItemSearchFilter, defaultItem, ChangeItemStatus, CreateUpdateItem, ItemsInInventorySearchFilter, ItemsInInventory, defaultItemsInInventory } from "/@src/models/Warehouse/Item/item"
 import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -50,5 +50,16 @@ export async function getItem(itemId: number) {
     var error_code: string = itemResponse.error_code ?? ''
     var message: string = itemResponse.message ?? ''
     return { success, error_code, message, item }
+
+}
+export async function getItemsInInventory(inventory_id: number, searchFilter: ItemsInInventorySearchFilter) {
+    const item = useItem()
+    const items_in_inventory: ItemsInInventory = await item.getItemsListByInventoryStore(inventory_id, searchFilter) ?? defaultItemsInInventory
+    var pagination: Pagination = item.pagination
+    var success: boolean = item.success ?? false
+    var error_code: string = item.error_code ?? ''
+    var message: string = item.message ?? ''
+
+    return { items_in_inventory, pagination, success, error_code, message }
 
 }

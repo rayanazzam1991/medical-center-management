@@ -36,27 +36,5 @@ export const defaultCreateInventoryItem: CreateInventoryItem = {
     inventoryItemHistories: defaultCreateInventoryItemHistoryMovement
 }
 
-export interface InventoryItemByInventorySearchFilter {
-    category_id?: number
-    parent_category_id?: number
-    item_name?: string
-    page?: number
-    per_page?: number
-    order_by?: string
-    order?: string
-}
-export interface InventoryItemByInventorySearchFilter {
-    category_id?: number
-    parent_category_id?: number
-    item_name?: string
-    page?: number
-    per_page?: number
-    order_by?: string
-    order?: string
-}
-
-export const defaultInventoryItemByInventorySearchFilter: Partial<InventoryItemByInventorySearchFilter> = {}
-
-
 const InventoryItemConsts = BaseConsts
 export { InventoryItemConsts }

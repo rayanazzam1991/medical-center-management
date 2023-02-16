@@ -108,6 +108,7 @@ declare module 'vue-router/auto/routes' {
     '/generate-salaries/': RouteRecordInfo<'/generate-salaries/', '/generate-salaries/', Record<never, never>, Record<never, never>>,
     '/inventory': RouteRecordInfo<'/inventory', '/inventory', Record<never, never>, Record<never, never>>,
     '/inventory/': RouteRecordInfo<'/inventory/', '/inventory/', Record<never, never>, Record<never, never>>,
+    '/inventory/[id]/': RouteRecordInfo<'/inventory/[id]/', '/inventory/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/item': RouteRecordInfo<'/item', '/item', Record<never, never>, Record<never, never>>,
     '/item/': RouteRecordInfo<'/item/', '/item/', Record<never, never>, Record<never, never>>,
     '/item/[id]/': RouteRecordInfo<'/item/[id]/', '/item/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

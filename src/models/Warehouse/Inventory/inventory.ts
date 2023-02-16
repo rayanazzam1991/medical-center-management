@@ -36,6 +36,21 @@ export const defaultInventory: Inventory = {
     last_updated_at: '',
     last_action_by: defaultUser
 }
+
+
+export interface ItemsHasInventory {
+    id?: number
+    name: string
+    status: number
+    contractor_name?: string
+    contractor_id?: number
+    items_count: number
+    items_quantity_count: number
+    last_updated_at: string
+}
+
+
+
 export const defaultInventorySearchFilter: InventorySearchFilter = {
     name: undefined,
     status: undefined,
@@ -44,6 +59,16 @@ export const defaultInventorySearchFilter: InventorySearchFilter = {
     order: undefined,
     order_by: undefined,
     per_page: undefined,
+}
+export const defaultItemsHasInventory: ItemsHasInventory = {
+    name: '',
+    status: 1,
+    items_count: 0,
+    items_quantity_count: 0,
+    last_updated_at: '',
+    contractor_id: 0,
+    contractor_name: '',
+    id: 0
 }
 
 const InventoryConsts = BaseConsts
