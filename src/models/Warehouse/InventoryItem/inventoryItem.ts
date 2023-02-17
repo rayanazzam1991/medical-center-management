@@ -35,5 +35,6 @@ export const defaultCreateInventoryItem: CreateInventoryItem = {
     item_id: 0,
     inventoryItemHistories: defaultCreateInventoryItemHistoryMovement
 }
+
 const InventoryItemConsts = BaseConsts
 export { InventoryItemConsts }

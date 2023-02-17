@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n'
 import { defaultInventorySearchFilter, Inventory, InventoryConsts, InventorySearchFilter } from '/@src/models/Warehouse/Inventory/inventory'
 import { useInventory } from '/@src/stores/Warehouse/Inventory/inventoryStore'
 import { getInventoriesList } from '/@src/services/Warehouse/Inventory/inventoryService'
+import ViewDropDown from '/@src/components/OurComponents/ViewDropDown.vue'
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -122,6 +123,19 @@ const columns = {
         }
       ),
   },
+  actions: {
+    align: 'center',
+    label: t('inventory.table.columns.actions'),
+
+    renderRow: (row: any) =>
+      h(ViewDropDown, {
+        onView: () => {
+          router.push({ path: `/inventory/${row?.id}` })
+        },
+      }),
+
+  },
+
 } as const
 </script>
 
@@ -151,17 +165,18 @@ const columns = {
       @update:current-page="getInventoriesPerPage" />
     <h6 v-if="inventoriesList.length != 0 && !inventoryStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
 
     <VPlaceloadText v-if="inventoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
-  </VFlexTableWrapper>
+</VFlexTableWrapper>
 </template>

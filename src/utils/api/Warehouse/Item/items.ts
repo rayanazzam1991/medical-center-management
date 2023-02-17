@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { Item, ItemSearchFilter, ChangeItemStatus, CreateUpdateItem } from "/@src/models/Warehouse/Item/item"
+import { Item, ItemSearchFilter, ChangeItemStatus, CreateUpdateItem, ItemsInInventorySearchFilter } from "/@src/models/Warehouse/Item/item"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function changeItemStatusApi(
@@ -40,6 +40,17 @@ export async function getItemsApi(
     searchFilter: ItemSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
     const { data: response, headers } = await api.get('item/getItemsList', {
+        params: searchFilter,
+    })
+    return { response }
+}
+
+export async function getItemsListByInventoryApi(
+    api: AxiosInstance,
+    inventory_id: number,
+    searchFilter: ItemsInInventorySearchFilter
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`item/getItemsListByInventory/${inventory_id}`, {
         params: searchFilter,
     })
     return { response }

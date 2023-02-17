@@ -1659,7 +1659,8 @@
         "created_at": "created at",
         "updated_at": "updated at",
         "action_by": "action by",
-        "status": "status"
+        "status": "status",
+        "actions": "Actions"
       }
     },
     "search_filter": {
@@ -1670,6 +1671,23 @@
       "date": "date:",
       "from": "from: ",
       "to": "to: "
+    },
+    "details": {
+      "title": "Inventories",
+      "table": {
+        "name": "Item",
+        "level_1": "Level 1",
+        "level_2": "Level 2",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost"
+      },
+      "search_filter": {
+        "title": "Filter Items",
+        "item": "Item...",
+        "level_1": "Level 1",
+        "level_2": "Level 2"
+      }
     }
   },
   "inventoryItem": {
