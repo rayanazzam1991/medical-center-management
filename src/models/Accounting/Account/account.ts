@@ -1,7 +1,7 @@
-import { Currency } from '../Currency/currency'
-import { ChartOfAccount } from '../ChartOfAccount/chartOfAccount'
-import messages from '@intlify/vite-plugin-vue-i18n/messages'
-import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n'
+import { ChartOfAccount } from "../ChartOfAccount/chartOfAccount"
+import { Currency } from "../Currency/currency"
+import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
+import messages from "@intlify/vite-plugin-vue-i18n/messages";
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   locale: 'ar',
@@ -11,24 +11,69 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 export interface Account {
   id?: number
-  code: string
-  name: string
-  balance: number
-  status: number
-  chart_of_account: ChartOfAccount
-  currency: Currency
-  description?: string
+  code:string
+  name:string
+  balance:number
+  status:number
+  chart_of_account?: ChartOfAccount
+  currency?: Currency
+  currency_rate:number
+  description?:string
 }
 
-export interface CreateAccount {
-  code: string
-  name: string
-  balance: number
-  status: number
+export interface CreateAccount{
+  name:string
+  level2_code: string
+  balance:number
+  status:number
   currency_id: number
-  chart_of_account_id: number
-  description?: string
+  currency_rate:number
+  chart_of_account_id:number
+  description?:string
 }
+
+
+export const defaultAccount: Account = {
+  id: 0,
+  code:'',
+  name:'',
+  balance: 0,
+  status:0,
+  chart_of_account: undefined,
+  currency: undefined,
+  currency_rate:1,
+  description:''
+
+}
+
+export const defaultCreateAccount: CreateAccount = {
+  level2_code:'',
+  name:'',
+  balance:0,
+  status:1,
+  currency_id:0,
+  chart_of_account_id: 0,
+  currency_rate:1,
+  description:''
+
+}
+
+export interface AccountSearchFilter {
+  status?: number
+  page?: number
+  per_page?: number
+  order_by?: string
+  order?: string
+}
+
+export const defaultAccountSearchFilter: AccountSearchFilter = {
+  status: undefined,
+  page: undefined,
+  order: undefined,
+  order_by: undefined,
+  per_page: undefined,
+}
+
 
 // Trial Balance Interfaces And Defaults
 export interface TrialBalance {
@@ -67,8 +112,6 @@ export const defaultTrialBalance: TrialBalance = {
   total_debits: ""
 }
 
-
-// Balance Sheet Interfaces And Defaults
 
 export interface BalanceSheet {
   assets: BalanceSheetAssetsLiabilites
@@ -115,19 +158,18 @@ export const defaultBalanceSheet: BalanceSheet = {
   total_liabilities_balances: '',
 }
 
-
-
 class AccountConsts {
+  static readonly INACTIVE = 0
+  static readonly ACTIVE = 1
 
-  static readonly CREDIT_TYPE = 1;
-  static readonly DEBIT_TYPE = 2;
-
-  public static getAccountTypeName(type: number) {
-    if (type == this.CREDIT_TYPE)
-      return i18n.global.t('account_types.credit')
-    if (type == this.DEBIT_TYPE)
-      return i18n.global.t('account_types.debit')
-    else return '';
+  public static getAccountStatusName(status: number) {
+    if (status == this.ACTIVE)
+      return i18n.global.t('status.active')
+    if (status == this.INACTIVE)
+      return i18n.global.t('status.inactive')
+    return ''
   }
 }
 export { AccountConsts }
+
+

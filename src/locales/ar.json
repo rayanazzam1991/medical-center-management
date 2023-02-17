@@ -196,6 +196,9 @@
       "deliver_salaries": "تسليم الراوتب",
       "onhold_salaries": "صندوق الأمانات"
     },
+    "account": {
+      "add_account": "انشاء حساب"
+    },
     "reports": {
       "reports": "التقارير المالية",
       "trial_balance_report": "تقرير ميزان المراجعة"
@@ -1727,6 +1730,19 @@
   "date_picker": {
     "select": "اختيار",
     "cancel": "إلغاء"
+  },
+  "account": {
+    "form": {
+      "name": " الاسم ",
+      "balance": "الرصيد",
+      "currency": "العملة",
+      "parent_code": "نوع الحساب",
+      "description": "التوصيف",
+      "status": "الحالة",
+      "form_header": "إضافة الحساب",
+      "page_title": "إضافة حساب",
+      "currency_rate": "نسبة التحويل"
+    }
   },
   "trial_balance_report": {
     "title": "تقرير ميزان المراجعة",
