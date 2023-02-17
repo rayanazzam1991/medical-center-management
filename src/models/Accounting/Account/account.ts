@@ -166,6 +166,9 @@ export interface RecordAccountDetail {
   type?: number
 }
 
+class RecordAccountDetailImpl implements RecordAccountDetail {
+}
+
 export interface RecordAccountAmountDetail {
   account_id?: number,
   credit_amount?: number,
