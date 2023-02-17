@@ -33,6 +33,7 @@ export interface CreateAccount{
 }
 
 
+
 export const defaultAccount: Account = {
   id: 0,
   code:'',
@@ -60,6 +61,8 @@ export const defaultCreateAccount: CreateAccount = {
 
 export interface AccountSearchFilter {
   status?: number
+  name?:string
+  code?:string
   page?: number
   per_page?: number
   order_by?: string

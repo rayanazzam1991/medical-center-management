@@ -12,7 +12,8 @@ import { Notyf } from 'notyf';
 import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
 import { createRecords, getRecordsData } from '/@src/services/Accounting/Transaction/transactionService';
 import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record'
-import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail } from '/@src/models/Accounting/Account/account';
+import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
+import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -45,9 +46,12 @@ interface Account {
 }
 
 
+const accountsListDropDown = ref<Account[]>([]);
+
+const accountSearchFilter = ref(defaultAccountSearchFilter)
 onMounted(async () => {
-
-
+    const { success, error_code, message, accountsList } = await getAccountsList(accountSearchFilter.value)
+    accountsListDropDown.value = accountsList
 })
 
 const validationSchema = null
@@ -69,11 +73,7 @@ const removeRecord = (record: RecordAccountDetail) => {
     }
 }
 
-const accountsList = ref<Account[]>([]);
 
-
-accountsList.value?.push({ id: 1, code: "123", name: "Cash" })
-accountsList.value?.push({ id: 2, code: "456", name: "Inventory" })
 
 const clearAccountValue = () => {
 
@@ -122,8 +122,8 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                        <h4>{{ pageTitle }}</h4>
-                                                                                                    </div> -->
+                                                                                                                            <h4>{{ pageTitle }}</h4>
+                                                                                                                        </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
@@ -143,23 +143,23 @@ const onSubmitAdd = handleSubmit(async () => {
                                             {{ t('financial_record.select_account') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <!-- <VSelect v-model="tempAccountRecords[mainIndex].account_id">
-                                                    <VOption v-for="(account, index) in accountsList" :key="index"
-                                                        :value="account.id">
-                                                        {{ account.name }}
-                                                    </VOption>
-                                                </VSelect> -->
+                                                                        <VOption v-for="(account, index) in accountsList" :key="index"
+                                                                            :value="account.id">
+                                                                            {{ account.name }}
+                                                                        </VOption>
+                                                                    </VSelect> -->
                                             <Multiselect mode="single" :placeholder="t('financial_record.select_account')"
                                                 :close-on-select="false" :filter-results="false" :min-chars="0"
                                                 :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1"
                                                 :clear-on-search="true" :delay="0" :searchable="true"
-                                                @clear="clearAccountValue()" @select="setAccountValue()" :options="(query: any) => {
-                                                    // let citySearchFilter = {} as CitySearchFilter
-                                                    // citySearchFilter.name = query
-                                                    // const data = await getAccountsList()
-                                                    return accountsList
-                                                    // return data.cities.map((item: any) => {
-                                                    //     return { value: item.id, label: item.name }
-                                                    // })
+                                                @clear="clearAccountValue()" @select="setAccountValue()" :options="async (query: any) => {
+                                                    let accountSearchFilter = {} as AccountSearchFilter
+                                                    accountSearchFilter.name = query
+                                                    const data = await getAccountsList(accountSearchFilter)
+
+                                                    return data.accountsList.map((item: any) => {
+                                                        return { value: item.id, label: item.name }
+                                                    })
                                                 }" @open="(select$: any) => {
     if (select$.noOptions) {
         select$.resolveOptions()
@@ -168,7 +168,7 @@ const onSubmitAdd = handleSubmit(async () => {
 
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -184,7 +184,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -200,7 +200,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
