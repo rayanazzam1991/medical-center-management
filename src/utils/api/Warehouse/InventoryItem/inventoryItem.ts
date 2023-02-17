@@ -7,7 +7,6 @@ export async function fromMainInventoryApi(
     inventoryItem: CreateInventoryItem
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.post(`inventoryItem/fromMainInventory`, inventoryItem)
-
     return { response }
 }
 export async function toMainInventoryApi(
@@ -18,6 +17,5 @@ export async function toMainInventoryApi(
         `inventoryItem/toMainInventory`,
         inventoryItem
     )
-
     return { response }
 }

@@ -34,6 +34,7 @@ declare module 'vue-router/auto/routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/[...all]': RouteRecordInfo<'/[...all]', '/:all(.*)', { all: ParamValue<true> }, { all: ParamValue<false> }>,
+    '/account': RouteRecordInfo<'/account', '/account', Record<never, never>, Record<never, never>>,
     '/account/add': RouteRecordInfo<'/account/add', '/account/add', Record<never, never>, Record<never, never>>,
     '/add-quantity': RouteRecordInfo<'/add-quantity', '/add-quantity', Record<never, never>, Record<never, never>>,
     '/add-quantity/': RouteRecordInfo<'/add-quantity/', '/add-quantity/', Record<never, never>, Record<never, never>>,
@@ -112,6 +113,7 @@ declare module 'vue-router/auto/routes' {
     '/generate-salaries/': RouteRecordInfo<'/generate-salaries/', '/generate-salaries/', Record<never, never>, Record<never, never>>,
     '/inventory': RouteRecordInfo<'/inventory', '/inventory', Record<never, never>, Record<never, never>>,
     '/inventory/': RouteRecordInfo<'/inventory/', '/inventory/', Record<never, never>, Record<never, never>>,
+    '/inventory/[id]/': RouteRecordInfo<'/inventory/[id]/', '/inventory/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/item': RouteRecordInfo<'/item', '/item', Record<never, never>, Record<never, never>>,
     '/item/': RouteRecordInfo<'/item/', '/item/', Record<never, never>, Record<never, never>>,
     '/item/[id]/': RouteRecordInfo<'/item/[id]/', '/item/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

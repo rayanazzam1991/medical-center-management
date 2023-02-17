@@ -1,1 +1,1 @@
-import * from './currencies'
+export * from './currencies'

@@ -2,6 +2,7 @@ import messages from "@intlify/vite-plugin-vue-i18n/messages"
 import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { User } from "../../Others/User/user"
 import { Category, defaultCategory } from "../Category/category"
+import { defaultItemsHasInventory, ItemsHasInventory } from "../Inventory/inventory"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -20,6 +21,19 @@ export interface Item {
     status: number
     is_for_sale?: number
     quantity_in_main_inventory: number
+}
+export interface ItemInInventory {
+    id: number
+    name: string
+    price: number
+    cost: number
+    category: Category
+    quantity: number
+    created_at : string
+}
+export interface ItemsInInventory {
+    inventory: ItemsHasInventory
+    items: ItemInInventory[]
 }
 
 export interface CreateUpdateItem {
@@ -49,6 +63,18 @@ export interface ItemSearchFilter {
     order_by?: string
     order?: string
 }
+export interface ItemsInInventorySearchFilter {
+    category_id?: number
+    parent_category_id?: number
+    item_name?: string
+    page?: number
+    per_page?: number
+    order_by?: string
+    order?: string
+}
+
+
+
 export const defaultItem: Item = {
     id: 0,
     name: '',
@@ -59,6 +85,10 @@ export const defaultItem: Item = {
     is_for_sale: undefined,
     status: 1,
     quantity_in_main_inventory: 0
+}
+export const defaultItemsInInventory: ItemsInInventory = {
+    inventory: defaultItemsHasInventory,
+    items: [],
 }
 
 export const defaultCreateUpdateItem: CreateUpdateItem = {
@@ -87,6 +117,10 @@ export const defaultChangeItemStatus: ChangeItemStatus = {
     id: undefined,
     status: undefined
 }
+export const defaultItemsInInventorySearchFilter: Partial<ItemsInInventorySearchFilter> = {}
+
+
+
 
 class ItemConsts extends BaseConsts {
     static readonly IS_FORE_SALE = 1

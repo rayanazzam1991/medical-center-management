@@ -7,7 +7,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
+    AccountTableHeader: typeof import('./src/components/OurComponents/Accounting/AccountTableHeader.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
     AddEditDropDown: typeof import('./src/components/OurComponents/AddEditDropDown.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
@@ -78,6 +80,8 @@ declare module '@vue/runtime-core' {
     ItemHistorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Item/ItemHistorySearchFilterModel.vue')['default']
     ItemHistoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Item/ItemHistoryTableHeader.vue')['default']
     ItemSearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Item/ItemSearchFilterModel.vue')['default']
+    ItemsInInentorySearchFilterModal: typeof import('./src/components/OurComponents/Warehouse/Item/ItemsInInentorySearchFilterModal.vue')['default']
+    ItemsInInventoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Item/ItemsInInventoryTableHeader.vue')['default']
     ItemTableHeader: typeof import('./src/components/OurComponents/Warehouse/Item/ItemTableHeader.vue')['default']
     LandingEmptyNavigation: typeof import('./src/components/partials/landing/LandingEmptyNavigation.vue')['default']
     LandingFooter: typeof import('./src/components/partials/landing/LandingFooter.vue')['default']
@@ -216,6 +220,7 @@ declare module '@vue/runtime-core' {
     VIconBox: typeof import('./src/components/base/icon/VIconBox.vue')['default']
     VIconButton: typeof import('./src/components/base/button/VIconButton.vue')['default']
     VIconWrap: typeof import('./src/components/base/icon/VIconWrap.vue')['default']
+    ViewDropDown: typeof import('./src/components/OurComponents/ViewDropDown.vue')['default']
     VIMaskInput: typeof import('./src/components/base/plugins/VIMaskInput.vue')['default']
     VInput: typeof import('./src/components/base/form/VInput.vue')['default']
     VLabel: typeof import('./src/components/base/form/VLabel.vue')['default']

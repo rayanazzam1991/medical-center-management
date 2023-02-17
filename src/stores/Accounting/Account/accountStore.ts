@@ -1,69 +1,100 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { BalanceSheet, TrialBalance } from "/@src/models/Accounting/Account/account"
-import { generateBalanceSheetReportApi, generateTrailBalanceReportApi } from "/@src/utils/api/Accounting/Account"
+import { Account, CreateAccount, TrialBalance, BalanceSheet } from "/@src/models/Accounting/Account/account"
+import { addAccountApi, generateTrailBalanceReportApi, generateBalanceSheetReportApi } from "/@src/utils/api/Accounting/Account"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
 
 export const useAccount = defineStore('account', () => {
-    const api = useApi()
-    const loading = ref(false)
-    const success = ref<boolean>()
-    const error_code = ref<string>()
-    const message = ref<string>()
-    const pagination = ref<Pagination>(defaultPagination)
 
-    async function generateTrailBalanceReportStore() {
-        if (loading.value) return
-        loading.value = true
-        await sleep(3000);
-        try {
-            const returnedResponse = await generateTrailBalanceReportApi(api)
-            success.value = returnedResponse.response.success
-            error_code.value = returnedResponse.response.error_code
-            message.value = returnedResponse.response.message
-            return returnedResponse.response.data as TrialBalance
-        } catch (error: any) {
-            success.value = error?.response.data.success
-            error_code.value = error?.response.data.error_code
-            message.value = error?.response.data.message
-        }
-        finally {
-            loading.value = false
-        }
+  const api = useApi()
+  const accounts = ref<Account[]>([])
+  const pagination = ref<Pagination>(defaultPagination)
+  const loading = ref(false)
+  const success = ref<boolean>()
+  const error_code = ref<string>()
+  const message = ref<string>()
+
+
+  async function addAccountStore(account: CreateAccount) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await addAccountApi(api, account)
+      var returnedAccount: Account
+      returnedAccount = response.response.data
+      accounts.value.push(returnedAccount)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedAccount
     }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
 
-    async function generateBalanceSheetReportStore() {
-        if (loading.value) return
-        loading.value = true
-        await sleep(3000);
-        try {
-            const returnedResponse = await generateBalanceSheetReportApi(api)
-            success.value = returnedResponse.response.success
-            error_code.value = returnedResponse.response.error_code
-            message.value = returnedResponse.response.message
-            return returnedResponse.response.data as BalanceSheet
-        } catch (error: any) {
-            success.value = error?.response.data.success
-            error_code.value = error?.response.data.error_code
-            message.value = error?.response.data.message
-        }
-        finally {
-            loading.value = false
-        }
     }
+    finally {
+      loading.value = false
+    }
+  }
 
+  async function generateTrailBalanceReportStore() {
+    if (loading.value) return
+    loading.value = true
+    await sleep(3000);
+    try {
+        const returnedResponse = await generateTrailBalanceReportApi(api)
+        success.value = returnedResponse.response.success
+        error_code.value = returnedResponse.response.error_code
+        message.value = returnedResponse.response.message
+        return returnedResponse.response.data as TrialBalance
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+    }
+    finally {
+        loading.value = false
+    }
+}
 
-    return {
-        success,
-        error_code,
-        message,
-        loading,
-        pagination,
-        generateTrailBalanceReportStore,
-        generateBalanceSheetReportStore
-    } as const
+async function generateBalanceSheetReportStore() {
+    if (loading.value) return
+    loading.value = true
+    await sleep(3000);
+    try {
+        const returnedResponse = await generateBalanceSheetReportApi(api)
+        success.value = returnedResponse.response.success
+        error_code.value = returnedResponse.response.error_code
+        message.value = returnedResponse.response.message
+        return returnedResponse.response.data as BalanceSheet
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+    }
+    finally {
+        loading.value = false
+    }
+}
+
+  return {
+    success,
+    error_code,
+    message,
+    accounts,
+    pagination,
+    loading,
+    addAccountStore,
+    generateTrailBalanceReportStore,
+    generateBalanceSheetReportStore
+
+  } as const
 })
 
 /**
@@ -74,5 +105,6 @@ export const useAccount = defineStore('account', () => {
  * @see https://vitejs.dev/guide/api-hmr.html
  */
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useAccount, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useAccount, import.meta.hot))
 }
+
