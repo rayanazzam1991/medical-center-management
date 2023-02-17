@@ -9,20 +9,40 @@ import sleep from "/@src/utils/sleep"
 import { z as zod } from 'zod';
 import { useI18n } from 'vue-i18n';
 import { Notyf } from 'notyf';
+import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
+import { createRecords, getRecordsData } from '/@src/services/Accounting/Transaction/transactionService';
+import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record'
+import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail } from '/@src/models/Accounting/Account/account';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
+const transactionStore = useTransaction()
 
-viewWrapper.setPageTitle(t('contractor.form.step_2_title'))
-const head = useHead({
-    title: "Add Record",
-})
+viewWrapper.setPageTitle(t('financial_record.title'))
+
 const notif = useNotyf() as Notyf
 
-const pageTitle = "add Record"
+const pageTitle = t('financial_record.add_new')
+const formType = ref("");
+formType.value = "Add";
+const formTypeName = "Add"
+const backRoute = "";
 
+const accountRecords = ref<RecordAccountDetail[]>([])
+
+
+
+const tempAccountRecords = ref<RecordAccountAmountDetail[]>([]);
+const initialRecordAccountAmountDetail: RecordAccountAmountDetail = {} satisfies RecordAccountAmountDetail
+tempAccountRecords.value.push(initialRecordAccountAmountDetail)
+
+interface Account {
+    id?: number,
+    code?: string,
+    name?: string
+}
 
 
 onMounted(async () => {
@@ -36,30 +56,21 @@ const { handleSubmit } = useForm({
     validationSchema
 });
 
-interface AccountingRecord {
-    id?: number
-    value?: number
-}
-interface Account {
-    id: number,
-    code: string,
-    name: string
-}
-const records = ref<AccountingRecord[]>([])
 
 
-const addRecord = (record: AccountingRecord) => {
-    records.value?.push(record)
+const addRecord = (record: RecordAccountAmountDetail) => {
+    tempAccountRecords.value?.push(record)
 }
 
-const removeRecord = (record: AccountingRecord) => {
-    const index = records.value.indexOf(record);
+const removeRecord = (record: RecordAccountDetail) => {
+    const index = tempAccountRecords.value.indexOf(record);
     if (index !== -1) {
-        records.value.splice(index, 1);
+        tempAccountRecords.value.splice(index, 1);
     }
 }
 
 const accountsList = ref<Account[]>([]);
+
 
 accountsList.value?.push({ id: 1, code: "123", name: "Cash" })
 accountsList.value?.push({ id: 2, code: "456", name: "Inventory" })
@@ -76,6 +87,10 @@ const setAccountValue = () => {
 const onSubmitAdd = handleSubmit(async () => {
 
 
+    const data = getRecordsData(tempAccountRecords.value)
+    console.log("values", data)
+
+    const { success, message, response } = await createRecords(data)
     // if (success) {
     //     // @ts-ignore
     //     await sleep(200);
@@ -99,46 +114,45 @@ const onSubmitAdd = handleSubmit(async () => {
 
 <template>
     <div class="page-content-inner">
+        <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
+            @onSubmit="onSubmitAdd()" :isLoading="transactionStore?.loading" />
         <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
                     <!--Fieldset-->
                     <div class="form-fieldset">
-                        <div class="fieldset-heading">
-                            <h4>{{ pageTitle }}</h4>
+                        <!-- <div class="fieldset-heading">
+                                                                                                        <h4>{{ pageTitle }}</h4>
+                                                                                                    </div> -->
+                        <div class="columns mb-5">
+                            <VButton class="mt-5" @click.prevent="addRecord({
+                                account_id: undefined,
+                                credit_amount: undefined,
+                                debit_amount: undefined,
+                                type: 1
+                            })" color="primary">
+                                {{ t('financial_record.add_new_row') }}
+                            </VButton>
                         </div>
-                        <button @click="addRecord({ id: 1, value: 20 })">Add Record</button>
-
                         <!--Fieldset-->
-                        <div class="columns" v-for="(record, index) in records" :key="index">
+                        <div class="columns" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
                             <div class="column is-5">
                                 <div class="mb-3">
-                                    <VField id="test">
+                                    <VField :id="`account_id_${mainIndex}`">
                                         <VLabel class="required">
-                                            test</VLabel>
+                                            {{ t('financial_record.select_account') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VSelect>
-                                                <VOption v-for="account in accountsList" :key="account.id"
-                                                    :value="account.id">
-                                                    {{ account.name }}
-                                                </VOption>
-                                            </VSelect>
-                                            <!-- <Multiselect mode="single"
-                                             :placeholder="t('customer.form.city')"
-                                                :close-on-select="false" 
-                                                :filter-results="false" 
-                                                :min-chars="0"
-                                                :resolve-on-load="false"
-                                                :infinite="true" 
-                                                :limit="10"
-                                                :rtl="true"
-                                                :max="1" 
-                                                :clear-on-search="true"
-                                                :delay="0"
-                                                :searchable="true"
-                                                @clear="clearAccountValue()"
-                                                @select="setAccountValue()"
-                                                  :options="(query: any) => {
+                                            <!-- <VSelect v-model="tempAccountRecords[mainIndex].account_id">
+                                                    <VOption v-for="(account, index) in accountsList" :key="index"
+                                                        :value="account.id">
+                                                        {{ account.name }}
+                                                    </VOption>
+                                                </VSelect> -->
+                                            <Multiselect mode="single" :placeholder="t('financial_record.select_account')"
+                                                :close-on-select="false" :filter-results="false" :min-chars="0"
+                                                :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1"
+                                                :clear-on-search="true" :delay="0" :searchable="true"
+                                                @clear="clearAccountValue()" @select="setAccountValue()" :options="(query: any) => {
                                                     // let citySearchFilter = {} as CitySearchFilter
                                                     // citySearchFilter.name = query
                                                     // const data = await getAccountsList()
@@ -147,77 +161,64 @@ const onSubmitAdd = handleSubmit(async () => {
                                                     //     return { value: item.id, label: item.name }
                                                     // })
                                                 }" @open="(select$: any) => {
-                                                if (select$.noOptions) {
-                                                    select$.resolveOptions()
-                                                }
-                                            }" /> -->
+    if (select$.noOptions) {
+        select$.resolveOptions()
+    }
+}" />
 
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                            :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-4">
                                 <div class="mb-3">
-                                    <VField id="test">
+                                    <VField :id="`credit_amount_${mainIndex}`">
                                         <VLabel class="required">
-                                            test</VLabel>
+                                            {{ t('financial_record.credit') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput type="number" placeholder="" autocomplete="" />
-
+                                            <VInput :disabled="tempAccountRecords[mainIndex].debit_amount > 0" type="number"
+                                                placeholder="" autocomplete=""
+                                                v-model="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                            :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-4">
                                 <div class="mb-3">
-                                    <VField id="test">
-
+                                    <VField :id="`debit_amount_${mainIndex}`">
                                         <VLabel class="required">
-                                            test</VLabel>
+                                            {{ t('financial_record.debit') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput type="number" placeholder="" autocomplete="" />
-
+                                            <VInput :disabled="tempAccountRecords[mainIndex].credit_amount > 0"
+                                                type="number" placeholder="" autocomplete=""
+                                                v-model="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                            :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-1">
-                                <button @click="removeRecord(record)">Remove</button>
+                                <div class="mb-3">
+                                    <VField>
+                                        <VControl>
+                                            <VButton class="remove_btn" @click="removeRecord(record)" color="danger">
+                                                {{ t('financial_record.remove_row') }}
+                                            </VButton>
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
 
-
-                        <!-- <div class="column is-6">
-                                <VField :key="service.service.id" v-for="service in servicesChecked"
-                                    :id="`service_amount_${service.service.id}`">
-
-                                    <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
-                                        Contractor's {{
-        service.service.name
-}}
-                                        Service amount:
-                                    </VLabel>
-                                    <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                        <VInput disabled type="number"
-                                            :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
-                                            v-bind="service.price" v-model="service.contractor_service_amount"
-                                            :key="service.service.id" />
-
-                                    </VControl>
-                                    <ErrorMessage class="help is-danger"
-                                        :name="`service_amount_${service.service.id}`" />
-
-                                </VField>
-                            </div> -->
                     </div>
 
                 </div>
@@ -258,7 +259,13 @@ const onSubmitAdd = handleSubmit(async () => {
     }
 }
 
-.input {
-    height: 38px;
+.remove_btn {
+    margin-top: 1.8rem;
+}
+
+.control.has-icon {
+    .input {
+        height: 2.6em;
+    }
 }
 </style>

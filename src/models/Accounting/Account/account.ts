@@ -115,7 +115,36 @@ export const defaultBalanceSheet: BalanceSheet = {
   total_liabilities_balances: '',
 }
 
+export interface RecordAccountDetail {
+  account_id?: number,
+  amount?: number,
+  type?: number
+}
 
+export interface RecordAccountAmountDetail {
+  account_id?: number,
+  credit_amount?: number,
+  debit_amount?: number,
+  type?: number
+}
+
+// export interface AccountingRecord  {
+//   account_id: 1,
+//   amount: 500,
+//   type: 1
+// }
+
+export const defaultCreditAccountDetail = {
+  account_id: 1,
+  amount: 500,
+  type: 1
+} satisfies RecordAccountDetail
+
+export const defaultDebitAccountDetail = {
+  account_id: 1,
+  amount: 500,
+  type: 2
+} satisfies RecordAccountDetail
 
 class AccountConsts {
 
