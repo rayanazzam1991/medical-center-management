@@ -33,6 +33,7 @@ export interface CreateAccount{
 }
 
 
+
 export const defaultAccount: Account = {
   id: 0,
   code:'',
@@ -60,6 +61,8 @@ export const defaultCreateAccount: CreateAccount = {
 
 export interface AccountSearchFilter {
   status?: number
+  name?:string
+  code?:string
   page?: number
   per_page?: number
   order_by?: string
@@ -113,6 +116,8 @@ export const defaultTrialBalance: TrialBalance = {
 }
 
 
+// Balance Sheet Interfaces And Defaults
+
 export interface BalanceSheet {
   assets: BalanceSheetAssetsLiabilites
   liabilities: BalanceSheetAssetsLiabilites
@@ -157,6 +162,40 @@ export const defaultBalanceSheet: BalanceSheet = {
   total_assets_balances: '',
   total_liabilities_balances: '',
 }
+
+export interface RecordAccountDetail {
+  account_id?: number,
+  amount?: number,
+  type?: number
+}
+
+class RecordAccountDetailImpl implements RecordAccountDetail {
+}
+
+export interface RecordAccountAmountDetail {
+  account_id?: number,
+  credit_amount?: number,
+  debit_amount?: number,
+  type?: number
+}
+
+// export interface AccountingRecord  {
+//   account_id: 1,
+//   amount: 500,
+//   type: 1
+// }
+
+export const defaultCreditAccountDetail = {
+  account_id: 1,
+  amount: 500,
+  type: 1
+} satisfies RecordAccountDetail
+
+export const defaultDebitAccountDetail = {
+  account_id: 1,
+  amount: 500,
+  type: 2
+} satisfies RecordAccountDetail
 
 class AccountConsts {
   static readonly INACTIVE = 0

@@ -1769,8 +1769,8 @@
       "title": "جاري توليد التقرير..",
       "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
     },
-    "credit": "مدين",
-    "debit": "دائن",
+    "credit": "دائن",
+    "debit": "مدين",
     "final_total": "المجموع النهائي",
     "total": "المجموع",
     "lvl1_total": "مجموع {chart_name}",
@@ -1790,5 +1790,14 @@
     "total_liabilites_balances": "مجموع الخصوم",
     "lvl1_total": "مجموع {chart_name}",
     "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
+  },
+  "financial_record": {
+    "title": "السجل المالي",
+    "add_new": "اضافة سجل مالي",
+    "add_new_row": "اضافة سطر جديد",
+    "credit": "دائن",
+    "debit": "مدين",
+    "select_account": "اختر حساب",
+    "remove_row": "حذف سطر"
   }
 }
