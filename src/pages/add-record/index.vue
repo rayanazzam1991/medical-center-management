@@ -80,13 +80,14 @@ const clearAccountValue = () => {
 }
 
 const setAccountValue = () => {
-    console.log()
+
 }
 
 
 const onSubmitAdd = handleSubmit(async () => {
 
 
+    console.log("tempAccountRecords.value", tempAccountRecords.value)
     const data = getRecordsData(tempAccountRecords.value)
     console.log("values", data)
 
@@ -122,8 +123,8 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                                                <h4>{{ pageTitle }}</h4>
-                                                                                                                            </div> -->
+                                                                                                                                        <h4>{{ pageTitle }}</h4>
+                                                                                                                                    </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
@@ -143,16 +144,17 @@ const onSubmitAdd = handleSubmit(async () => {
                                             {{ t('financial_record.select_account') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <!-- <VSelect v-model="tempAccountRecords[mainIndex].account_id">
-                                                                            <VOption v-for="(account, index) in accountsList" :key="index"
-                                                                                :value="account.id">
-                                                                                {{ account.name }}
-                                                                            </VOption>
-                                                                        </VSelect> -->
-                                            <Multiselect mode="single" :placeholder="t('financial_record.select_account')"
-                                                :close-on-select="false" :filter-results="false" :min-chars="0"
-                                                :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1"
-                                                :clear-on-search="true" :delay="0" :searchable="true"
-                                                @clear="clearAccountValue()" @select="setAccountValue()" :options="async (query: any) => {
+                                                                                    <VOption v-for="(account, index) in accountsList" :key="index"
+                                                                                        :value="account.id">
+                                                                                        {{ account.name }}
+                                                                                    </VOption>
+                                                                                </VSelect> -->
+                                            <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
+                                                :placeholder="t('financial_record.select_account')" :close-on-select="false"
+                                                :filter-results="false" :min-chars="0" :resolve-on-load="false"
+                                                :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true"
+                                                :delay="0" :searchable="true" @clear="clearAccountValue()"
+                                                @select="setAccountValue()" :options="async (query: any) => {
                                                     let accountSearchFilter = {} as AccountSearchFilter
                                                     accountSearchFilter.name = query
                                                     const data = await getAccountsList(accountSearchFilter)
@@ -168,7 +170,7 @@ const onSubmitAdd = handleSubmit(async () => {
 
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                        :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -184,7 +186,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                        :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -200,7 +202,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                        :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 

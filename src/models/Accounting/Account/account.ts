@@ -11,58 +11,58 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 export interface Account {
   id?: number
-  code:string
-  name:string
-  balance:number
-  status:number
+  code: string
+  name: string
+  balance: number
+  status: number
   chart_of_account?: ChartOfAccount
   currency?: Currency
-  currency_rate:number
-  description?:string
+  currency_rate: number
+  description?: string
 }
 
-export interface CreateAccount{
-  name:string
+export interface CreateAccount {
+  name: string
   level2_code: string
-  balance:number
-  status:number
+  balance: number
+  status: number
   currency_id: number
-  currency_rate:number
-  chart_of_account_id:number
-  description?:string
+  currency_rate: number
+  chart_of_account_id: number
+  description?: string
 }
 
 
 
 export const defaultAccount: Account = {
   id: 0,
-  code:'',
-  name:'',
+  code: '',
+  name: '',
   balance: 0,
-  status:0,
+  status: 0,
   chart_of_account: undefined,
   currency: undefined,
-  currency_rate:1,
-  description:''
+  currency_rate: 1,
+  description: ''
 
 }
 
 export const defaultCreateAccount: CreateAccount = {
-  level2_code:'',
-  name:'',
-  balance:0,
-  status:1,
-  currency_id:0,
+  level2_code: '',
+  name: '',
+  balance: 0,
+  status: 1,
+  currency_id: 0,
   chart_of_account_id: 0,
-  currency_rate:1,
-  description:''
+  currency_rate: 1,
+  description: ''
 
 }
 
 export interface AccountSearchFilter {
   status?: number
-  name?:string
-  code?:string
+  name?: string
+  code?: string
   page?: number
   per_page?: number
   order_by?: string
@@ -200,6 +200,9 @@ export const defaultDebitAccountDetail = {
 class AccountConsts {
   static readonly INACTIVE = 0
   static readonly ACTIVE = 1
+
+  static readonly CREDIT_TYPE = 1
+  static readonly DEBIT_TYPE = 2
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)
