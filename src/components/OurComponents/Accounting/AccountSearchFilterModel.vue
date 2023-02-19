@@ -1,9 +1,7 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
-import { SupplierConsts, SupplierSearchFilter, defaultSupplierSearchFilter } from "/@src/models/Others/Supplier/supplier"
-import { City, CitySearchFilter } from "/@src/models/Others/City/city"
-import { getSuppliersList } from "/@src/services/Others/Supplier/supplierService"
-import { getCitiesList } from "/@src/services/Others/City/cityService"
+import { Account, AccountSearchFilter, defaultAccountSearchFilter, AccountConsts } from "/@src/models/Accounting/Account/account"
+import { getAccountsList } from "/@src/services/Accounting/Account/accountService"
 
 
 export default defineComponent({
@@ -28,9 +26,9 @@ export default defineComponent({
   setup(props, context) {
     const { t } = useI18n()
     const searchName = ref()
-    const searchPhoneNumber = ref()
+    const searchCode = ref()
     const searchStatus = ref()
-    const searchFilter = ref(defaultSupplierSearchFilter)
+    const searchFilter = ref(defaultAccountSearchFilter)
     let search_filter_popup = computed({
       get: () => props.search_filter_popup as boolean,
       set(value) {
@@ -41,7 +39,7 @@ export default defineComponent({
     const search = () => {
       searchFilter.value = {
         name: searchName.value,
-        phone_number: searchPhoneNumber.value,
+        code: searchCode.value,
         status: searchStatus.value,
       }
       context.emit('search', searchFilter.value)
@@ -49,48 +47,39 @@ export default defineComponent({
     }
     const resetFilter = () => {
       searchName.value = undefined
-      searchPhoneNumber.value = undefined
+      searchCode.value = undefined
       searchStatus.value = undefined
       searchFilter.value.name = undefined
-      searchFilter.value.phone_number = undefined
+      searchFilter.value.code = undefined
       searchFilter.value.status = undefined
       context.emit('resetFilter', searchFilter.value)
     }
-    const newCity = ref<City[]>([])
-    onMounted(async () => {
-      let citiesSearchFilter = {} as CitySearchFilter
-      citiesSearchFilter.per_page = 500
-      const { cities } = await getCitiesList(citiesSearchFilter)
-      newCity.value = cities
-    })
-    return { t, SupplierConsts, search, resetFilter, newCity, search_filter_popup, searchName, searchPhoneNumber, searchStatus }
+    return { t, AccountConsts, search, resetFilter, search_filter_popup, searchName, searchCode, searchStatus }
   },
 })
 </script>
 
 <template>
-  <VModal :title="t('supplier.search_filter.title')" :open="search_filter_popup" actions="center"
+  <VModal :title="t('account.search_filter.title')" :open="search_filter_popup" actions="center"
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
         <VField class="column filter">
           <VControl icon="feather:search">
-            <input v-model="searchName" type="text" class="input " :placeholder="t('supplier.search_filter.name')" />
+            <input v-model="searchName" type="text" class="input " :placeholder="t('account.search_filter.name')" />
           </VControl>
         </VField>
         <VField class="column filter">
           <VControl icon="feather:search">
-            <input v-model="searchPhoneNumber" type="text" class="input "
-              :placeholder="t('supplier.search_filter.phone_number')" />
+            <input v-model="searchCode" type="text" class="input " :placeholder="t('account.search_filter.code')" />
           </VControl>
         </VField>
         <VField class="column filter">
           <VControl>
             <VSelect v-model="searchStatus" class="">
-              <VOption value="">{{ t('supplier.search_filter.status') }}</VOption>
-              <VOption value="0">{{ SupplierConsts.getSupplierStatusName(0) }}</VOption>
-              <VOption value="1">{{ SupplierConsts.getSupplierStatusName(1) }}</VOption>
-              <VOption value="2">{{ SupplierConsts.getSupplierStatusName(2) }}</VOption>
+              <VOption value="">{{ t('account.search_filter.status') }}</VOption>
+              <VOption value="0">{{ AccountConsts.getAccountStatusName(0) }}</VOption>
+              <VOption value="1">{{ AccountConsts.getAccountStatusName(1) }}</VOption>
             </VSelect>
           </VControl>
         </VField>
