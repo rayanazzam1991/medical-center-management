@@ -1828,13 +1828,12 @@
     "record_title": "عنوان السجل المالي",
     "record_note": "ملاحظة",
     "accounts_must_be_not_empty": "يجب أن يتم اختيار حسابات",
-    "must_add_record": "يجب اضافة سجلات مالية",
     "total_credit": "مجموع الدائن",
     "total_debit": "مجموع المدين",
     "total": "المجموع",
     "records_are_balanced": "الدائن والمدين متوازنين",
     "records_are_not_balanced": "الأسطر غير متوازنة",
-    "records_are_note_balanced_error_msg": "الدائن والمدين غير متساويين لا يمكن اضافة السجل المالي"
+    "records_are_note_balanced_error_msg": "الدائن والمدين غير متساويين لا يمكن اضافة السجل المالي",
     "must_add_record": "يجب اضافة سجلات مالية"
   },
   "account_types": {
