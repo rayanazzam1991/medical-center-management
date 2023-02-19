@@ -197,6 +197,7 @@
       "onhold_salaries": "صندوق الأمانات"
     },
     "account": {
+      "accounts": "الحسابات",
       "add_account": "انشاء حساب"
     },
     "reports": {
@@ -1634,6 +1635,7 @@
       }
     },
     "search_filter": {
+      "title": "تصفية معلومات المورد",
       "name": " الاسم ",
       "status": "الحالة",
       "phone_number": "رقم الهاتف"
@@ -1756,6 +1758,7 @@
     "cancel": "إلغاء"
   },
   "account": {
+    "header_button": "إضافة حساب",
     "form": {
       "name": " الاسم ",
       "balance": "الرصيد",
@@ -1766,6 +1769,29 @@
       "form_header": "إضافة الحساب",
       "page_title": "إضافة حساب",
       "currency_rate": "نسبة التحويل"
+    },
+    "table": {
+      "title": " الحسابات  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "description": "ملاحظات ",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "code": "الرمز",
+        "currency_rate": "النسبة",
+        "balance": "الرصيد",
+        "chart_account_type_level1": "المستوى الأول",
+        "chart_account_type_level2": "المستوى الثاني",
+        "chart_account_type": "دائن/مدين",
+        "currency_type": "العملة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية معلومات الحساب",
+      "name": " الاسم ",
+      "status": "الحالة",
+      "code": "الرمز"
     }
   },
   "trial_balance_report": {
@@ -1809,5 +1835,9 @@
     "record_note": "ملاحظة",
     "accounts_must_be_not_empty": "يجب أن يتم اختيار حسابات",
     "must_add_record": "يجب اضافة سجلات مالية"
+  },
+  "account_types": {
+    "credit": "دائن",
+    "debit": "مدين"
   }
 }

@@ -1758,5 +1758,46 @@
     "total_assets_balances": "Total Assets",
     "total_liabilites_balances": "Total Liabilites",
     "no_accounts_place_holder": "There is no accounts under this level."
+  },
+  "account_types": {
+    "credit": "Credit",
+    "debit": "Debit"
+  },
+  "account": {
+    "header_button": "إضافة حساب",
+    "form": {
+      "name": " الاسم ",
+      "balance": "الرصيد",
+      "currency": "العملة",
+      "parent_code": "نوع الحساب",
+      "description": "التوصيف",
+      "status": "الحالة",
+      "form_header": "إضافة الحساب",
+      "page_title": "إضافة حساب",
+      "currency_rate": "نسبة التحويل"
+    },
+    "table": {
+      "title": " Accounts  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "Name",
+        "description": "Description ",
+        "created_at": "Created At",
+        "status": "Status",
+        "code": "Code",
+        "currency_rate": "Currency Rate",
+        "balance": "Balance",
+        "chart_account_type_level1": "Account Type Level 1",
+        "chart_account_type_level2": "Account Type Level 2",
+        "chart_account_type": "Credit/Debit",
+        "currency_type": "currency "
+      }
+    },
+    "search_filter": {
+      "title": " Filter Account",
+      "name": " Name ",
+      "status": "Status",
+      "code": "Code"
+    }
   }
 }

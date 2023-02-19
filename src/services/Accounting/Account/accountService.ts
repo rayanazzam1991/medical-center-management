@@ -1,7 +1,7 @@
 
 import { Account, AccountSearchFilter, BalanceSheet, CreateAccount, defaultAccount, defaultBalanceSheet, defaultTrialBalance, TrialBalance } from "/@src/models/Accounting/Account/account"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
-import { Pagination } from "/@src/utils/response"
+import { defaultPagination, Pagination } from "/@src/utils/response"
 
 
 export async function addAccount(accountData: CreateAccount) {
@@ -17,11 +17,12 @@ export async function addAccount(accountData: CreateAccount) {
 export async function getAccountsList(searchFilter: AccountSearchFilter) {
     const accountResponse = useAccount()
     await accountResponse.getAccountsListStore(searchFilter)
-    let accountsList : Account[] = accountResponse.accounts
+    let accounts : Account[] = accountResponse.accounts
     let success: boolean = accountResponse.success ?? false
     let error_code: string = accountResponse.error_code ?? ''
+    let pagination: Pagination = accountResponse.pagination ?? defaultPagination
     let message: string = accountResponse.message ?? ''
-    return { success, error_code, message, accountsList }
+    return { success, error_code, message, accounts , pagination }
 
 }
 

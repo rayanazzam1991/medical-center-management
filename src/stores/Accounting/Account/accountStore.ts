@@ -50,6 +50,7 @@ export const useAccount = defineStore('account', () => {
     try {
       const response = await getAccountsListApi(api, searchFilter)
       accounts.value = response.response.data
+      pagination.value = response.response.pagination
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
