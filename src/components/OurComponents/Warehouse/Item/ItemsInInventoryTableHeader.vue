@@ -39,8 +39,10 @@ export default defineComponent({
             searchFilterPop.value = value
         }
         const itemStore = useItem()
-        const inventoryStatus = props.status
-        const inventoryName = props.title
+        const inventoryStatus = ref(InventoryConsts.ACTIVE)
+        const inventoryName = ref('')
+        inventoryStatus.value = props.status
+        inventoryName.value = props.title
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchFilterPop = ref(false)
@@ -91,7 +93,7 @@ export default defineComponent({
     <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div class="form-header stuck-header">
-                <h1 v-if="!itemStore.loading" class="title">
+                <h1 class="title">
                     {{ inventoryName }} | <span
                         :class="inventoryStatus == InventoryConsts.ACTIVE ? 'has-text-success' : 'has-text-danger'">{{
                             InventoryConsts.showStatusName(inventoryStatus) }}</span>
