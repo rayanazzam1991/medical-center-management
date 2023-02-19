@@ -228,6 +228,9 @@
       "generate_salaries": "There are some negative net salaries. Please fix this issue and try again.",
       "employee_variable_payment": {
         "cant_edit": "Released and Inactive variable payments can't be edited"
+      },
+      "accounting": {
+        "new_usd_currency_rate": "USD Currency rate must be a number greater or equal 1"
       }
     },
     "file": {
@@ -1087,6 +1090,7 @@
       "hr_section": "Edit HR/Attendance Settings",
       "payroll_section": "Edit HR/Payroll Settings",
       "contractor_section": "Edit Contractor Settings",
+      "accounting_section": "Edit Accounting Serttings",
       "start_day": "Start Day",
       "end_day": "End Day",
       "start_time": "Starting Time",
@@ -1096,7 +1100,9 @@
       "deduction_factor": "Deduction Factor",
       "hr_cycle_start_day": "HR Cycle Starting Day",
       "unjustified_hours_round": "Unjustified Hours Rounding",
-      "min_wallet_value": "Minimum Wallet Value"
+      "min_wallet_value": "Minimum Wallet Value",
+      "usd_currency_rate": "USD Currency Rate",
+      "usd_currency_rate_helper": "ُEvery 1 USD = X IQD"
     }
   },
   "social_media": {
