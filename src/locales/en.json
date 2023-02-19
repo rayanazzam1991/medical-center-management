@@ -192,7 +192,8 @@
     },
     "reports": {
       "reports": "Accounting Reports",
-      "trial_balance_report": "Trial Balance Report"
+      "trial_balance_report": "Trial Balance Report",
+      "balance_sheet_report": "Balance Sheet Report"
     }
   },
   "user_profile_dropdown": {

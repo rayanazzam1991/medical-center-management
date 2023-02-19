@@ -202,7 +202,8 @@
     },
     "reports": {
       "reports": "التقارير المالية",
-      "trial_balance_report": "تقرير ميزان المراجعة"
+      "trial_balance_report": "تقرير ميزان المراجعة",
+      "balance_sheet_report": "تقرير الميزانية العمومية"
     }
   },
   "user_profile_dropdown": {
