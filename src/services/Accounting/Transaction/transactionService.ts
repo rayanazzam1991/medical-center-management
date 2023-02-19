@@ -16,7 +16,7 @@ export async function createRecords(
 
 }
 
-export function getRecordsData(values: RecordAccountAmountDetail[]) {
+export function getRecordsData(values: RecordAccountAmountDetail[], title: string, note: string) {
     let recordsData: CreateRecords = <CreateRecords>({})
     let accounts: RecordAccountDetail[] = []
     values.forEach((element) => {
@@ -31,9 +31,9 @@ export function getRecordsData(values: RecordAccountAmountDetail[]) {
     recordsData.currency_id = 1
     recordsData.currency_rate = 1500
     recordsData.date = "2023-02-14 18:22:24"
-    recordsData.note = "note"
+    recordsData.note = note
     recordsData.recordType = 1
     recordsData.transaction_type_id = 1
-    recordsData.title
+    recordsData.title = title
     return recordsData
 }
