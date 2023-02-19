@@ -16,21 +16,25 @@ export async function createRecords(
 
 }
 
-export function getRecordsData(values: RecordAccountAmountDetail[], title: string, note: string) {
+export function getRecordsData(values: RecordAccountAmountDetail[], title: string, note: string, amount: number) {
     let recordsData: CreateRecords = <CreateRecords>({})
     let accounts: RecordAccountDetail[] = []
     values.forEach((element) => {
-        let accountDetails: RecordAccountDetail = {}
-        accountDetails.account_id = element.account_id
-        accountDetails.amount = element.credit_amount ?? element.debit_amount
-        accountDetails.type = element.credit_amount === undefined ? AccountConsts.DEBIT_TYPE : AccountConsts.CREDIT_TYPE
-        accounts.push(accountDetails)
+        // let dbAmount = Number(element.debit_amount)
+        // let crAmount = Number(element.credit_amount)
+        if (element.debit_amount !== undefined || element.credit_amount !== undefined) {
+            let accountDetails: RecordAccountDetail = {}
+            accountDetails.account_id = element.account_id
+            accountDetails.amount = element.credit_amount ?? (element.debit_amount ?? 0)
+            accountDetails.type = element.credit_amount === undefined ? AccountConsts.DEBIT_TYPE : AccountConsts.CREDIT_TYPE
+            accounts.push(accountDetails)
+        }
     });
     recordsData.accounts = accounts
-    recordsData.amount = 500
+    recordsData.amount = amount
     recordsData.currency_id = 1
     recordsData.currency_rate = 1500
-    recordsData.date = "2023-02-14 18:22:24"
+    // recordsData.date = "2023-02-14 18:22:24"
     recordsData.note = note
     recordsData.recordType = 1
     recordsData.transaction_type_id = 1
