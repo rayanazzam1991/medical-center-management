@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { AccountConsts, TrialBalanceLvl2Chart } from '/@src/models/Accounting/Account/account';
+import { BalanceSheetLvl2Chart } from '/@src/models/Accounting/Account/account';
 
-export interface TrailBalanceLvl1CollapseProps {
-  items: TrialBalanceLvl2Chart[]
-  withChevron?: boolean,
-  is_expanded: boolean
+export interface BalanceSheetAssetsLiabilitesCollapseProps {
+    items: BalanceSheetLvl2Chart[]
+    withChevron?: boolean,
+    is_expanded: boolean
 }
 
-const props = withDefaults(defineProps<TrailBalanceLvl1CollapseProps>(), {
+const props = withDefaults(defineProps<BalanceSheetAssetsLiabilitesCollapseProps>(), {
     items: () => [],
     itemsOpen: undefined,
     is_expanded: false
@@ -69,12 +69,7 @@ const toggle = (key: number) => {
                     <div class="is-flex">
                         <div class="chart-row">
                             <div class="accounts-cell open-has-bold">
-                                {{ item.total_credits }}
-                            </div>
-                        </div>
-                        <div class="chart-row mr-5">
-                            <div class="accounts-cell open-has-bold">
-                                {{ item.total_debits }}
+                                {{ item.total_balances }}
                             </div>
                         </div>
                     </div>
@@ -105,16 +100,7 @@ const toggle = (key: number) => {
                         <div class="is-flex is-align-items-center ">
                             <div class="chart-row">
                                 <div class=" accounts-cell">
-                                    {{
-                                        account.absolute_type == AccountConsts.CREDIT_TYPE ? account.absolute_balance : '-'
-                                    }}
-                                </div>
-                            </div>
-                            <div class="chart-row mr-5">
-                                <div class="accounts-cell">
-                                    {{
-                                        account.absolute_type == AccountConsts.DEBIT_TYPE ? account.absolute_balance : '-'
-                                    }}
+                                    {{ account.balance }}
                                 </div>
                             </div>
                         </div>
@@ -122,7 +108,7 @@ const toggle = (key: number) => {
                     <div v-if="item.accounts.length == 0" class="account-details accounts-footer my-2">
                         <div class="meta is-flex">
                             <div class="account-code mr-2">
-                                {{ t('trial_balance_report.no_accounts_place_holder') }}
+                                {{ t('balance_sheet_report.no_accounts_place_holder') }}
                             </div>
                         </div>
                     </div>
@@ -134,5 +120,5 @@ const toggle = (key: number) => {
 
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
-@import '/@src/scss/Styles/TrialBalanceReport/trialBalanceLvl1Collapse.scss';
+@import '/@src/scss/Styles/BalanceSheetReport/balanceSheetAssetsLiabilitesCollapse.scss';
 </style>

@@ -21,7 +21,7 @@ export default defineComponent({
   },
   emits: ["onSubmit"],
   setup(props, context) {
-    const {t} = useI18n()
+    const { t } = useI18n()
     const viewWrapper = useViewWrapper();
     viewWrapper.setPageTitle(t('city.form.page_title'));
     const head = useHead({
@@ -34,7 +34,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
-    const pageTitle = t('city.form.form_header' , {type : formTypeName});
+    const pageTitle = t('city.form.form_header', { type: formTypeName });
     const backRoute = "/city";
     const currentCity = ref(defaultCity);
     const cityId = ref(0);

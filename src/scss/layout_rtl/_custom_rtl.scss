@@ -166,7 +166,7 @@
 
 .file-name {
   border-radius: 0 !important;
-  border-left-width: 1px ;
+  border-left-width: 1px;
   margin-right: 0.5em;
 }
 
@@ -191,4 +191,22 @@
       }
     }
   }
+}
+
+.multiselect-option {
+  text-align: right !important;
+}
+.multiselect {
+  .multiselect-options {
+    .multiselect-option.is-selected {
+      &::after {
+        left: 15px !important;
+        right: auto !important;
+      }
+    }
+  }
+}
+.multiselect .multiselect-placeholder {
+  padding-right: 2rem;
+  padding-left: auto !important;
 }

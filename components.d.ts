@@ -7,7 +7,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
+    AccountTableHeader: typeof import('./src/components/OurComponents/Accounting/AccountTableHeader.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
     AddEditDropDown: typeof import('./src/components/OurComponents/AddEditDropDown.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
@@ -16,6 +18,7 @@ declare module '@vue/runtime-core' {
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AttendanceTableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
+    BalanceSheetAssetsLiabilitesCollapse: typeof import('./src/components/OurComponents/Accounting/Account/BalanceSheetAssetsLiabilitesCollapse.vue')['default']
     BulkCashOutTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/BulkCashOutTableHeader.vue')['default']
     CashOutForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/CashOutForm.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
