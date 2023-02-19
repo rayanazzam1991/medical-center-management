@@ -1798,6 +1798,10 @@
     "credit": "دائن",
     "debit": "مدين",
     "select_account": "اختر حساب",
-    "remove_row": "حذف سطر"
+    "remove_row": "حذف سطر",
+    "record_title": "عنوان السجل المالي",
+    "record_note": "ملاحظة",
+    "accounts_must_be_not_empty": "يجب أن يتم اختيار حسابات",
+    "must_add_record": "يجب اضافة سجلات مالية"
   }
 }

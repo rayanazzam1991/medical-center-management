@@ -14,6 +14,7 @@ import { createRecords, getRecordsData } from '/@src/services/Accounting/Transac
 import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record'
 import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
 import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { createFinancialRecordsValidation } from '/@src/rules/Accounting/Transaction/createFinancialRecordsValidation';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -36,8 +37,10 @@ const accountRecords = ref<RecordAccountDetail[]>([])
 
 
 const tempAccountRecords = ref<RecordAccountAmountDetail[]>([]);
-const initialRecordAccountAmountDetail: RecordAccountAmountDetail = {} satisfies RecordAccountAmountDetail
-tempAccountRecords.value.push(initialRecordAccountAmountDetail)
+const initialRecordAccountAmountDetail: RecordAccountAmountDetail = {} as RecordAccountAmountDetail
+
+const record_title = ref('')
+const record_note = ref('')
 
 interface Account {
     id?: number,
@@ -54,9 +57,10 @@ onMounted(async () => {
     accountsListDropDown.value = accountsList
 })
 
-const validationSchema = null
+const validationSchema = createFinancialRecordsValidation
+// const validationSchema = null
 
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
     validationSchema
 });
 
@@ -80,32 +84,37 @@ const clearAccountValue = () => {
 }
 
 const setAccountValue = () => {
-
+    tempAccountRecords.value.forEach((element, index) => {
+        setFieldValue(`account_id_${index}`, element.account_id)
+    });
 }
 
 
 const onSubmitAdd = handleSubmit(async () => {
 
 
-    const data = getRecordsData(tempAccountRecords.value)
-    console.log("values", data)
+    if (tempAccountRecords.value.length === 0) {
+        notif.error(t('financial_record.must_add_record'))
+        return;
+    }
 
+    const data = getRecordsData(tempAccountRecords.value, record_title.value, record_note.value)
     const { success, message, response } = await createRecords(data)
-    // if (success) {
-    //     // @ts-ignore
-    //     await sleep(200);
+    if (success) {
+        // @ts-ignore
+        await sleep(200);
 
-    //     notif.success(t('toast.success.add'))
+        notif.success(t('toast.success.add'))
 
-    //     return true
-    // }
-    // else {
-    //     // @ts-ignore
-    //     await sleep(200);
+        return true
+    }
+    else {
+        // @ts-ignore
+        await sleep(200);
 
-    //     notif.error(message)
+        notif.error(message)
 
-    // }
+    }
 
 
 
@@ -122,8 +131,8 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                                            <h4>{{ pageTitle }}</h4>
-                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                        <h4>{{ pageTitle }}</h4>
+                                                                                                                                                                                                                                                                    </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
@@ -135,24 +144,35 @@ const onSubmitAdd = handleSubmit(async () => {
                             </VButton>
                         </div>
                         <!--Fieldset-->
+                        <div class="columns">
+                            <div class="column is-6">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel>
+                                            {{ t('financial_record.record_title') }}</VLabel>
+                                        <VControl icon="feather:chevron-right">
+                                            <VInput type="text" placeholder="" autocomplete="" v-model="record_title" />
+                                        </VControl>
+                                        <!-- <ErrorMessage class="help is-danger"
+                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                    </VField>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="columns" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
                             <div class="column is-5">
                                 <div class="mb-3">
                                     <VField :id="`account_id_${mainIndex}`">
                                         <VLabel class="required">
                                             {{ t('financial_record.select_account') }}</VLabel>
-                                        <VControl icon="feather:chevrons-right">
-                                            <!-- <VSelect v-model="tempAccountRecords[mainIndex].account_id">
-                                                                        <VOption v-for="(account, index) in accountsList" :key="index"
-                                                                            :value="account.id">
-                                                                            {{ account.name }}
-                                                                        </VOption>
-                                                                    </VSelect> -->
-                                            <Multiselect mode="single" :placeholder="t('financial_record.select_account')"
-                                                :close-on-select="false" :filter-results="false" :min-chars="0"
-                                                :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1"
-                                                :clear-on-search="true" :delay="0" :searchable="true"
-                                                @clear="clearAccountValue()" @select="setAccountValue()" :options="async (query: any) => {
+                                        <VControl>
+                                            <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
+                                                :placeholder="t('financial_record.select_account')" :close-on-select="false"
+                                                :filter-results="false" :min-chars="0" :resolve-on-load="false"
+                                                :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true"
+                                                :delay="0" :searchable="true" :canClear="false" @select="setAccountValue()"
+                                                :options="async (query: any) => {
                                                     let accountSearchFilter = {} as AccountSearchFilter
                                                     accountSearchFilter.name = query
                                                     const data = await getAccountsList(accountSearchFilter)
@@ -167,40 +187,41 @@ const onSubmitAdd = handleSubmit(async () => {
 }" />
 
                                         </VControl>
-                                        <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                        <ErrorMessage class="help is-danger" :name="`account_id_${mainIndex}`" />
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-4">
                                 <div class="mb-3">
-                                    <VField :id="`credit_amount_${mainIndex}`">
-                                        <VLabel class="required">
+                                    <VField>
+                                        <!-- <VField :id="`credit_amount_${mainIndex}`"> -->
+                                        <VLabel>
                                             {{ t('financial_record.credit') }}</VLabel>
-                                        <VControl icon="feather:chevrons-right">
+                                        <VControl icon="feather:dollar-sign">
                                             <VInput :disabled="tempAccountRecords[mainIndex].debit_amount > 0" type="number"
                                                 placeholder="" autocomplete=""
                                                 v-model="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-4">
                                 <div class="mb-3">
-                                    <VField :id="`debit_amount_${mainIndex}`">
-                                        <VLabel class="required">
+                                    <VField>
+                                        <!-- <VField :id="`debit_amount_${mainIndex}`"> -->
+                                        <VLabel>
                                             {{ t('financial_record.debit') }}</VLabel>
-                                        <VControl icon="feather:chevrons-right">
+                                        <VControl icon="feather:dollar-sign">
                                             <VInput :disabled="tempAccountRecords[mainIndex].credit_amount > 0"
                                                 type="number" placeholder="" autocomplete=""
                                                 v-model="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -218,7 +239,22 @@ const onSubmitAdd = handleSubmit(async () => {
 
                             </div>
                         </div>
+                        <div class="columns">
+                            <div class="column is-12">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel>
+                                            {{ t('financial_record.record_note') }}</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VTextarea rows=3 placeholder="" autocomplete="" v-model="record_note" />
+                                        </VControl>
+                                        <!-- <ErrorMessage class="help is-danger"
+                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                    </VField>
+                                </div>
 
+                            </div>
+                        </div>
                     </div>
 
                 </div>
