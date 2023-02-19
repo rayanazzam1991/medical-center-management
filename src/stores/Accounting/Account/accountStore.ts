@@ -4,12 +4,14 @@ import { Account, CreateAccount, TrialBalance, BalanceSheet, AccountSearchFilter
 import { addAccountApi, generateTrailBalanceReportApi, generateBalanceSheetReportApi, getAccountsListApi } from "/@src/utils/api/Accounting/Account"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
+import { useStorage } from "@vueuse/core"
 
 
 export const useAccount = defineStore('account', () => {
 
   const api = useApi()
   const accounts = ref<Account[]>([])
+  const accountStorage = useStorage('accounts', <Account[]>([]))
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
   const success = ref<boolean>()
@@ -48,12 +50,16 @@ export const useAccount = defineStore('account', () => {
     loading.value = true
     sleep(1000)
     try {
-      const response = await getAccountsListApi(api, searchFilter)
-      accounts.value = response.response.data
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-
+      if (accountStorage.value.length > 0) {
+        accounts.value = accountStorage.value
+      } else {
+        const response = await getAccountsListApi(api, searchFilter)
+        accounts.value = response.response.data
+        accountStorage.value = accounts.value
+        success.value = response.response.success
+        error_code.value = response.response.error_code
+        message.value = response.response.message
+      }
       return accounts
     }
     catch (error: any) {
