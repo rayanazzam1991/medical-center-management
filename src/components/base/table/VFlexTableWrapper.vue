@@ -151,7 +151,7 @@ export default defineComponent({
       },
     })
 
-    const defaultLimit = ref(10)
+    const defaultLimit = ref(100)
     const limit = computed({
       get: () => Math.max(1, props.limit ?? defaultLimit.value),
       set(value) {

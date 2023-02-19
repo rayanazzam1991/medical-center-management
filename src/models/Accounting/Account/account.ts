@@ -15,7 +15,7 @@ export interface Account {
   name: string
   balance: number
   status: number
-  chart_of_account?: ChartOfAccount
+  chart_account?: ChartOfAccount
   currency?: Currency
   currency_rate: number
   description?: string
@@ -40,7 +40,7 @@ export const defaultAccount: Account = {
   name: '',
   balance: 0,
   status: 0,
-  chart_of_account: undefined,
+  chart_account: undefined,
   currency: undefined,
   currency_rate: 1,
   description: ''
@@ -209,6 +209,13 @@ class AccountConsts {
       return i18n.global.t('status.active')
     if (status == this.INACTIVE)
       return i18n.global.t('status.inactive')
+    return ''
+  }
+  public static getAccountTypeName(type: number | undefined) {
+    if (type == this.CREDIT_TYPE)
+      return i18n.global.t('account_types.credit')
+    if (type == this.DEBIT_TYPE)
+      return i18n.global.t('account_types.debit')
     return ''
   }
 }

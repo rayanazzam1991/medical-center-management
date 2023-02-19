@@ -4,7 +4,7 @@ import { Notyf } from 'notyf';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultCreateAccount, AccountConsts } from '/@src/models/Accounting/Account/account';
+import { defaultCreateAccount, AccountConsts, CreateAccount } from '/@src/models/Accounting/Account/account';
 import { ChartOfAccount, defaultChartOfAccount, ChartOfAccountSearchFilter } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { accountvalidationSchema } from '/@src/rules/Accounting/Account/accountValidation';
@@ -64,7 +64,6 @@ export default defineComponent({
         }
 
       }
-      chartOfAccountsList.value = chartOfAccounts
     })
 
     const validationSchema = accountvalidationSchema
@@ -87,6 +86,10 @@ export default defineComponent({
       currentAccount.value.level2_code = selectedChart.value?.code
       currentAccount.value.currency_id = selectedCurrencyId.value
       let accountData = currentAccount.value;
+
+      // let accountData: CreateAccount = defaultCreateAccount;
+      // accountData.status = currentAccount.value.status
+
 
       const { success, message, account } = await addAccount(accountData);
       if (success) {
@@ -237,8 +240,10 @@ export default defineComponent({
         </div>
       </div>
     </form>
-</div>
+  </div>
 </template>
 
 
-<style  scoped lang="scss">@import '/@src/scss/styles/formPage.scss';</style>
+<style  scoped lang="scss">
+@import '/@src/scss/styles/formPage.scss';
+</style>
