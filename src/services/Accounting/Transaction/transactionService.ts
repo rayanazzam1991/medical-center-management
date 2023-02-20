@@ -20,8 +20,6 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
     let recordsData: CreateRecords = <CreateRecords>({})
     let accounts: RecordAccountDetail[] = []
     values.forEach((element) => {
-        // let dbAmount = Number(element.debit_amount)
-        // let crAmount = Number(element.credit_amount)
         if (element.debit_amount !== undefined || element.credit_amount !== undefined) {
             let accountDetails: RecordAccountDetail = {}
             accountDetails.account_id = element.account_id
@@ -34,7 +32,6 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
     recordsData.amount = amount
     recordsData.currency_id = 1
     recordsData.currency_rate = 1500
-    // recordsData.date = "2023-02-14 18:22:24"
     recordsData.note = note
     recordsData.recordType = 1
     recordsData.transaction_type_id = 1

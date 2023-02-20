@@ -69,11 +69,21 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul><br />
+                <h4 class="column-heading">{{ t('accounting_subnav.records.records') }}</h4>
 
 
               </div>
               <div class="column is-4">
                 <ul>
+                  <li>
+                    <RouterLink to="/transfer-cash-money">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.transfer_cash_money')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                   <h4 class="column-heading">
                     {{ t('account.sun_navbar_heading') }}</h4>
                   <li>
@@ -84,10 +94,21 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/account/add">
+                    <RouterLink to="/add-record">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.add_record')
+                      }}</span>
 
-                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                      <span>{{ t('accounting_subnav.account.add_account') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/add-custom-revenue">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.add_custom_revenue')
+                      }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
@@ -100,7 +121,6 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
-
               </div>
 
             </div>
