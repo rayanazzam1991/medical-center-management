@@ -178,6 +178,7 @@ export interface RecordAccountAmountDetail {
   credit_amount?: number,
   debit_amount?: number,
   type?: number
+  has_remove_btn?: boolean
 }
 
 export const defaultCreditAccountDetail = {
@@ -198,7 +199,7 @@ class AccountConsts {
 
   static readonly CREDIT_TYPE = 1
   static readonly DEBIT_TYPE = 2
-  static readonly CASH_CODE= '13'
+  static readonly CASH_CODE = '13'
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)

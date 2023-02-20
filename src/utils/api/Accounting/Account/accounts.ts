@@ -32,6 +32,18 @@ export async function getAccountsListApi(
     })
     return { response }
 }
+
+export async function getAllAccountsApi(
+    api: AxiosInstance,
+    searchFilter: AccountSearchFilter
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`account/getAllAccounts`, {
+        params: searchFilter
+    })
+    return { response }
+}
+
+
 export async function updateAccountCurrencyApi(
     api: AxiosInstance,
     account_id: number,
