@@ -173,21 +173,12 @@ export interface RecordAccountDetail {
   type?: number
 }
 
-class RecordAccountDetailImpl implements RecordAccountDetail {
-}
-
 export interface RecordAccountAmountDetail {
   account_id?: number,
   credit_amount?: number,
   debit_amount?: number,
   type?: number
 }
-
-// export interface AccountingRecord  {
-//   account_id: 1,
-//   amount: 500,
-//   type: 1
-// }
 
 export const defaultCreditAccountDetail = {
   account_id: 1,
@@ -197,7 +188,7 @@ export const defaultCreditAccountDetail = {
 
 export const defaultDebitAccountDetail = {
   account_id: 1,
-  amount: 500,
+  amount: 0,
   type: 2
 } satisfies RecordAccountDetail
 

@@ -204,6 +204,11 @@
       "reports": "التقارير المالية",
       "trial_balance_report": "تقرير ميزان المراجعة",
       "balance_sheet_report": "تقرير الميزانية العمومية"
+    },
+    "records": {
+      "records": "القيود والتحويلات المالية",
+      "transfer_cash_money": "تحويل مبلغ نقدي",
+      "add_record": "اضافة قيد جديد"
     }
   },
   "user_profile_dropdown": {
@@ -230,7 +235,8 @@
       "aprrove_variable_payment": "تمت الموافقة على المتغير المالي بنجاح",
       "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
-      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح"
+      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
+      "transfer": "تم التحويل بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -1857,5 +1863,18 @@
   "account_types": {
     "credit": "دائن",
     "debit": "مدين"
+  },
+  "transfer_cash_money": {
+    "form": {
+      "title": "تحويل مبلغ نقدي",
+      "button": "تحويل",
+      "from_account": "من حساب",
+      "select_from_account": "اختيار الحساب",
+      "to_account": "إلى حساب",
+      "select_to_account": "اختيار الحساب",
+      "amount": "المبلغ بالدينار العراقي",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ"
+    }
   }
 }

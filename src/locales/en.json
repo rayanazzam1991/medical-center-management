@@ -194,6 +194,11 @@
       "reports": "Accounting Reports",
       "trial_balance_report": "Trial Balance Report",
       "balance_sheet_report": "Balance Sheet Report"
+    },
+    "records": {
+      "records": "Financial Records & Transfers",
+      "transfer_cash_money": "Transfer Cash Money",
+      "add_record": "Add Financial Record"
     }
   },
   "user_profile_dropdown": {
@@ -211,7 +216,8 @@
       "generate_salaries": "Salaries was generated successfully",
       "salaries_to_onhold": "ٍSalaries was moved to On-Hold list successfully",
       "pay_salary": "Salary status changed to paid successfully",
-      "return_salary": "Salary status changed to returned successfully"
+      "return_salary": "Salary status changed to returned successfully",
+      "transfer": "Transfered successfully"
     },
     "error": {
       "steps_error": "Please add some data or skip this step",
@@ -1810,6 +1816,19 @@
     "drop_down": {
       "change_currency": "Change Account Currency",
       "change_status": "Change Status"
+    }
+  },
+  "transfer_cash_money": {
+    "form": {
+      "title": "Transfer Cash Money",
+      "button": "Transfer",
+      "from_account": "From account",
+      "select_from_account": "Choose account",
+      "to_account": "To account",
+      "select_to_account": "Choose account",
+      "amount": "Amount in IQD",
+      "currency_rate": "Currency Rate",
+      "date": "Date"
     }
   }
 }

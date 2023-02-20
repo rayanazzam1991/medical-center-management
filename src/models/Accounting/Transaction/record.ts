@@ -1,10 +1,9 @@
-import { defaultCreditAccountDetail, defaultDebitAccountDetail, recordAccountDetail } from "../Account/account"
-import { createRecords } from "/@src/services/Accounting/Transaction/transactionService"
+import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail } from "../Account/account"
 
 export interface CreateRecords {
     title: string,
     amount: number,
-    accounts: Array<recordAccountDetail>,
+    accounts: Array<RecordAccountDetail>,
     currency_id: number,
     currency_rate: number,
     transaction_type_id: number,
@@ -13,19 +12,25 @@ export interface CreateRecords {
     recordType: number
 }
 
-export const defaultAccounts = [
-    defaultCreditAccountDetail,
-    defaultDebitAccountDetail
-]
 
 export const createRecordsWithDefault = {
-    title: "title",
-    amount: 1300,
-    accounts: defaultAccounts,
+    title: "",
+    amount: 0,
+    accounts: [],
     currency_id: 1,
-    currency_rate: 1500,
+    currency_rate: 1,
     transaction_type_id: 1,
-    note: "note",
-    date: "2023-02-14 18:22:24",
+    note: "",
+    date: "",
     recordType: 1
 } satisfies CreateRecords
+
+class TransactionConsts {
+    static readonly ADD_QUANTITY = 1;
+    static readonly TRANSFER_CASH = 2;
+    static readonly PAY_EXPENSE = 3;
+    static readonly OTHER = 4;
+
+}
+export { TransactionConsts }
+
