@@ -31,6 +31,10 @@ export interface CreateAccount {
   chart_of_account_id: number
   description?: string
 }
+export interface UpdateAccountCurrency {
+  currency_id: number
+  currency_rate: number
+}
 
 
 

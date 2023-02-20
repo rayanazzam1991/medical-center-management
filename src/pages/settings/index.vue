@@ -16,6 +16,8 @@ import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { useDarkmode } from '/@src/stores/darkmode';
 import Datepicker from '@vuepic/vue-datepicker';
+import { getCurrencyByCode, updateCurrencyRate } from '/@src/services/Accounting/Currency/currencyService';
+import { CurrencyConsts, Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 
 
 
@@ -49,11 +51,13 @@ export default defineComponent({
     const hr_cycle_start_day = ref('')
     const unjustified_hours_round = ref('')
     const min_wallet_value = ref('')
-
+    const new_usd_currency_rate = ref<number>(1)
+    const usd_currency = ref<Currency>(defaultCurrency)
 
     onMounted(async () => {
       const { settings } = await getSettings()
       settingsList.value = settings
+      const { currency } = await getCurrencyByCode(CurrencyConsts.USD_CODE)
       daysName.value = await getWeekDays()
       start_day.value = settingsList.value.find((setting) => setting.key == 'start_day')?.value ?? ''
       end_day.value = settingsList.value.find((setting) => setting.key == 'end_day')?.value ?? ''
@@ -65,6 +69,10 @@ export default defineComponent({
       hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
       unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
       min_wallet_value.value = settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value ?? ''
+      usd_currency.value = currency
+      new_usd_currency_rate.value = currency.rate
+
+
 
       const [start_hour, start_minute, start_second] = settings_start_time.split(':')
       start_time.value = { hours: start_hour, minutes: start_minute }
@@ -124,6 +132,11 @@ export default defineComponent({
         notif.error(t('toast.error.contractor.min_wallet_value'))
         return
       }
+      if ((Number(new_usd_currency_rate.value) < 1) || !(Number(min_wallet_value.value))) {
+        await sleep(500);
+        notif.error(t('toast.error.accounting.new_usd_currency_rate'))
+        return
+      }
       const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
       const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
       if (updateStartTime != settingsList.value.find((setting) => setting.key == 'start_time')?.value || updateEndTime != settingsList.value.find((setting) => setting.key == 'end_time')?.value) {
@@ -157,24 +170,35 @@ export default defineComponent({
       if (min_wallet_value.value != settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value) {
         updateSettings.push({ key: 'min_wallet_value', value: min_wallet_value.value })
       }
+      if (new_usd_currency_rate.value !== usd_currency.value.rate) {
+        const { message, success } = await updateCurrencyRate(usd_currency.value.id, new_usd_currency_rate.value)
+        if (!success) {
+          notif.error(message)
+          return
+        }
+      }
+      if (updateSettings.length > 0) {
 
+        const { message, success } = await editSettings(updateSettings);
+        if (success) {
 
-      const { message, success } = await editSettings(updateSettings);
-      if (success) {
+          notif.dismissAll();
+          await sleep(200);
 
-        notif.dismissAll();
-        await sleep(200);
+          notif.success(t('toast.success.edit'));
+          router.push({ path: `/dashboard` });
+        } else {
+          await sleep(200);
 
-        notif.success(t('toast.success.edit'));
-        router.push({ path: `/dashboard` });
+          notif.error(message)
+
+        }
       } else {
-        await sleep(200);
-
-        notif.error(message)
+        router.push({ path: `/dashboard` });
 
       }
     };
-    return { t, locale, dark, daysName, roundingOptions, UnjustifiedHoursRoundConsts, settingStore, min_wallet_value, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+    return { t, locale, dark, daysName, roundingOptions, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, min_wallet_value, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
   },
   components: { ErrorMessage, Datepicker }
 })
@@ -201,7 +225,7 @@ export default defineComponent({
                 <VField id="start_day">
                   <VControl>
                     <VSelect v-model="start_day">
-                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase() }`)
+                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`)
                       }}
                       </VOption>
                     </VSelect>
@@ -215,7 +239,7 @@ export default defineComponent({
                 <VField id="end_day">
                   <VControl>
                     <VSelect v-model="end_day">
-                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${ day.toLowerCase() }`)
+                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`)
                       }}
                       </VOption>
                     </VSelect>
@@ -224,19 +248,18 @@ export default defineComponent({
                 </VField>
               </div>
               <div class="column is-6">
-                <h2 class="mb-3 required">{{t('settings.form.start_time')}}</h2>
+                <h2 class="mb-3 required">{{ t('settings.form.start_time') }}</h2>
                 <div class="columns">
                   <VField class="column is-12 ">
                     <VControl>
-                      <Datepicker v-model="start_time" :locale="locale" time-picker
-                        :cancel-text="t('date_picker.cancel')" :select-text="t('date_picker.select')"
-                        :dark="dark.isDark" class="date-picker-dircetion" />
+                      <Datepicker v-model="start_time" :locale="locale" time-picker :cancel-text="t('date_picker.cancel')"
+                        :select-text="t('date_picker.select')" :dark="dark.isDark" class="date-picker-dircetion" />
                     </VControl>
                   </VField>
                 </div>
               </div>
               <div class="column is-6">
-                <h2 class="mb-3 required">{{t('settings.form.end_time')}}</h2>
+                <h2 class="mb-3 required">{{ t('settings.form.end_time') }}</h2>
                 <div class="columns ">
                   <VField class="column is-12">
                     <VControl>
@@ -249,12 +272,12 @@ export default defineComponent({
 
               </div>
               <div class="column is-6">
-                <h2 class="mb-3 required">{{t('settings.form.start_of_week')}}</h2>
+                <h2 class="mb-3 required">{{ t('settings.form.start_of_week') }}</h2>
 
                 <VField id="start_of_week">
                   <VControl>
                     <VSelect v-model="start_of_week">
-                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${ day.toLowerCase() }`)
+                      <VOption v-for="day in daysName" :key="day" :value="day">{{ t(`dates.days.${day.toLowerCase()}`)
                       }}
                       </VOption>
                     </VSelect>
@@ -264,7 +287,7 @@ export default defineComponent({
               </div>
 
               <div class="column is-6">
-                <h2 class="mb-3 required">{{t('settings.form.late_tolerance')}}</h2>
+                <h2 class="mb-3 required">{{ t('settings.form.late_tolerance') }}</h2>
 
                 <VField>
                   <VControl>
@@ -272,8 +295,8 @@ export default defineComponent({
                       <VOption :key="0" :value="0">00 </VOption>
 
                       <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
-                      index
-                      < 10 ? '0' + index : index }} </VOption>
+                        index
+                        < 10 ? '0' + index : index }} </VOption>
                     </VSelect>
                   </VControl>
                 </VField>
@@ -315,7 +338,7 @@ export default defineComponent({
                   <VControl>
                     <VSelect v-model="unjustified_hours_round">
                       <VOption v-for="option in roundingOptions" :key="option" :value="option">{{
-                      UnjustifiedHoursRoundConsts.getRoundingOptionName(option) }}
+                        UnjustifiedHoursRoundConsts.getRoundingOptionName(option) }}
                       </VOption>
                     </VSelect>
                     <ErrorMessage class="help is-danger" name="unjustified_hours_round" />
@@ -336,6 +359,24 @@ export default defineComponent({
                   <VControl>
                     <VInput v-model="min_wallet_value" type="number" />
                     <ErrorMessage class="help is-danger" name="min_wallet_value" />
+                  </VControl>
+                </VField>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-fieldset">
+            <div class="fieldset-heading">
+              <h4>{{ t('settings.form.accounting_section') }}</h4>
+            </div>
+            <div class="columns is-multiline">
+              <div class="column is-6">
+                <h2 class="mb-3 required">{{ t('settings.form.usd_currency_rate') }}</h2>
+                <h2 class="mb-3 help ">{{ t('settings.form.usd_currency_rate_helper') }}</h2>
+                <VField id="new_usd_currency_rate">
+                  <VControl>
+                    <VInput v-model="new_usd_currency_rate" type="number" />
+                    <ErrorMessage class="help is-danger" name="new_usd_currency_rate" />
                   </VControl>
                 </VField>
               </div>

@@ -1,21 +1,23 @@
-import {acceptHMRUpdate, defineStore} from "pinia"
-import {useApi} from "/@src/composable/useApi"
+import { acceptHMRUpdate, defineStore } from "pinia"
+import { useApi } from "/@src/composable/useApi"
 import {
   Account,
   AccountSearchFilter,
   BalanceSheet,
   CreateAccount,
-  TrialBalance
+  TrialBalance,
+  UpdateAccountCurrency
 } from "/@src/models/Accounting/Account/account"
 import {
   addAccountApi,
   generateBalanceSheetReportApi,
   generateTrailBalanceReportApi,
-  getAccountsListApi
+  getAccountsListApi,
+  updateAccountCurrencyApi
 } from "/@src/utils/api/Accounting/Account"
-import {defaultPagination, Pagination} from "/@src/utils/response"
+import { defaultPagination, Pagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
-import {useStorage} from "@vueuse/core"
+import { useStorage } from "@vueuse/core"
 
 
 export const useAccount = defineStore('account', () => {
@@ -59,17 +61,13 @@ export const useAccount = defineStore('account', () => {
     loading.value = true
     sleep(1000)
     try {
-      if (accountStorage.value.length > 0) {
-        accounts.value = accountStorage.value
-      } else {
-        const response = await getAccountsListApi(api, searchFilter)
-        accounts.value = response.response.data
-        accountStorage.value = accounts.value
-        pagination.value = response.response.pagination
-        success.value = response.response.success
-        error_code.value = response.response.error_code
-        message.value = response.response.message
-      }
+      const response = await getAccountsListApi(api, searchFilter)
+      accounts.value = response.response.data
+      accountStorage.value = accounts.value
+      pagination.value = response.response.pagination
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
       return accounts
     } catch (error: any) {
       success.value = error?.response.data.success
@@ -118,6 +116,28 @@ export const useAccount = defineStore('account', () => {
       loading.value = false
     }
   }
+  async function updateAccountCurrencyStore(account_id: number, updateAccountCurrencyData: UpdateAccountCurrency) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await updateAccountCurrencyApi(api, account_id, updateAccountCurrencyData)
+      var returnedAccount: Account
+      returnedAccount = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedAccount
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -129,7 +149,8 @@ export const useAccount = defineStore('account', () => {
     getAccountsListStore,
     addAccountStore,
     generateTrailBalanceReportStore,
-    generateBalanceSheetReportStore
+    generateBalanceSheetReportStore,
+    updateAccountCurrencyStore
 
   } as const
 })

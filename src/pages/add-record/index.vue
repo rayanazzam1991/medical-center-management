@@ -61,8 +61,8 @@ onMounted(async () => {
     addRecord({} as RecordAccountAmountDetail)
     addRecord({} as RecordAccountAmountDetail)
 
-    const { success, error_code, message, accountsList } = await getAccountsList(accountSearchFilter.value)
-    accountsListDropDown.value = accountsList
+    const { success, error_code, message, accounts } = await getAccountsList(accountSearchFilter.value)
+    accountsListDropDown.value = accounts
 })
 
 const validationSchema = createFinancialRecordsValidation
@@ -223,7 +223,7 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
@@ -245,7 +245,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                             <VInput type="text" placeholder="" autocomplete="" v-model="recordTitle" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -268,7 +268,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                     accountSearchFilter.name = query
                                                     const data = await getAccountsList(accountSearchFilter)
                                                     //@ts-ignore
-                                                    return data.accountsList.map((item: any) => {
+                                                    return data.accounts.map((item: any) => {
                                                         return { value: item.id, label: item.name }
                                                     })
                                                 }" @open="(select$: any) => {
@@ -296,7 +296,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model.number="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -314,7 +314,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 v-model.number="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -380,7 +380,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                             <VTextarea rows=3 placeholder="" autocomplete="" v-model="recordNote" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
