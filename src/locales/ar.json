@@ -250,7 +250,8 @@
         "cant_edit": "لا يمكن تعديل المتغير المالي لموظف بعد تحريره او الغاءه"
       },
       "accounting": {
-        "new_usd_currency_rate": "سعر الدولار يجب أن يكون رقم أكبر أو يساوي الواحد"
+        "new_usd_currency_rate": "سعر الدولار يجب أن يكون رقم أكبر أو يساوي الواحد",
+        "change_account_currency": "يجب أن يكون سعر العملة أكبر أو يساوي الواحد عند اختيار عملة غير العملة الرئيسية"
       }
     },
     "file": {
@@ -1785,7 +1786,13 @@
         "chart_account_type_level1": "المستوى الأول",
         "chart_account_type_level2": "المستوى الثاني",
         "chart_account_type": "دائن/مدين",
-        "currency_type": "العملة"
+        "currency_type": "العملة",
+        "actions": "الاجراءات"
+      },
+      "change_currency": {
+        "title": "تغيير عملة الحساب",
+        "currency": "العملة",
+        "currency_rate": "سعر العملة"
       }
     },
     "search_filter": {
@@ -1793,6 +1800,10 @@
       "name": " الاسم ",
       "status": "الحالة",
       "code": "الرمز"
+    },
+    "drop_down": {
+      "change_currency": "تغيير عملة الحساب",
+      "change_status": "تغيير الحالة"
     }
   },
   "trial_balance_report": {

@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { AccountSearchFilter, CreateAccount } from "/@src/models/Accounting/Account/account"
+import { AccountSearchFilter, CreateAccount, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function generateTrailBalanceReportApi(
@@ -30,5 +30,13 @@ export async function getAccountsListApi(
     const { data: response, headers } = await api.get(`account/getAccountsList`, {
         params: searchFilter
     })
+    return { response }
+}
+export async function updateAccountCurrencyApi(
+    api: AxiosInstance,
+    account_id: number,
+    updateAccountCurrencyData: UpdateAccountCurrency
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.put(`account/${account_id}/updateAccountCurrency`, updateAccountCurrencyData)
     return { response }
 }

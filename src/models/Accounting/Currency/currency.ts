@@ -23,7 +23,7 @@ export interface CurrencySearchFilter {
 }
 
 export const defaultCurrencySearchFilter: CurrencySearchFilter = {
-  name: ''
+  name: undefined
 }
 
 

@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AccountDropDown: typeof import('./src/components/OurComponents/Accounting/Account/AccountDropDown.vue')['default']
     AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     AccountSearchFilterModel: typeof import('./src/components/OurComponents/Accounting/AccountSearchFilterModel.vue')['default']
