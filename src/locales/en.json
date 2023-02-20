@@ -190,6 +190,11 @@
       "deliver_salaries": "Deliver Salaries",
       "onhold_salaries": "On-Hold Salaries"
     },
+    "account": {
+      "accounts": "Accounts",
+      "add_account": "Add Account ",
+      "add_cash_account": "Add Cash Account "
+    },
     "reports": {
       "reports": "Accounting Reports",
       "trial_balance_report": "Trial Balance Report",
@@ -1766,7 +1771,10 @@
     "debit": "Debit"
   },
   "account": {
-    "header_button": "ِAdd Account",
+    "header_button": "Add Account",
+    "header_button2": "Add Cash Account  ",
+    "accounts": "Accounts",
+    "sun_navbar_heading": "قائمة الحسابات",
     "form": {
       "name": "Name",
       "balance": "Balance",
@@ -1810,6 +1818,12 @@
     "drop_down": {
       "change_currency": "Change Account Currency",
       "change_status": "Change Status"
+    },
+    "cash": {
+      "form": {
+        "form_header": "Add Cash Account",
+        "page_title": "Add Cash Account  "
+      }
     }
   }
 }

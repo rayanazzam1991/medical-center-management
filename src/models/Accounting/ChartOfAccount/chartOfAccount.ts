@@ -27,3 +27,8 @@ export const defaultChartOfAccountSearchFilter: ChartOfAccountSearchFilter= {
   name:''
 }
 
+class ChartConsts {
+  static readonly CASH_CODE= '13'
+}
+export { ChartConsts }
+

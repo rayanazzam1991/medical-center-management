@@ -124,7 +124,11 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton class="" to="/account/add" color="primary">{{ button_name }}
+                <VButton class="ml-2" to="/account/add" color="primary">{{ button_name }}
+                </VButton>
+              </VControl>
+              <VControl>
+                <VButton class="" to="/account/add-cash-account" color="primary">{{ t('account.header_button2') }}
                 </VButton>
               </VControl>
             </div>
