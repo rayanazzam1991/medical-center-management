@@ -198,7 +198,8 @@
     "records": {
       "records": "Financial Records & Transfers",
       "transfer_cash_money": "Transfer Cash Money",
-      "add_record": "Add Financial Record"
+      "add_record": "Add Financial Record",
+      "add_custom_revenue": "Add Custom Revenue"
     }
   },
   "user_profile_dropdown": {
@@ -1829,6 +1830,24 @@
       "amount": "Amount in IQD",
       "currency_rate": "Currency Rate",
       "date": "Date"
+    }
+  },
+  "add_custom_revenue": {
+    "form": {
+      "title": "Add Custom Revenue",
+      "button": "Add",
+      "client_account": "Client account",
+      "revenue_account": "Revenue account",
+      "cash_account": "Cash account",
+      "select_account": "Select account",
+      "revenue_amount": "Revenue amount in IQD",
+      "cash_amount": "Cash amount in IQD",
+      "remain_amount": "Remaining amount in IQD",
+      "currency": "Currency",
+      "select_currency": "Select currency",
+      "currency_rate": "Currency Rate",
+      "date": "Date",
+      "note": "Note"
     }
   }
 }

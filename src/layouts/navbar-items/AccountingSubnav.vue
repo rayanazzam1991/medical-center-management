@@ -89,6 +89,15 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/add-custom-revenue">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.add_custom_revenue')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul>
               </div>
 

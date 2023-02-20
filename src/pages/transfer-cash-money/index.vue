@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
-import { create } from 'domain';
 import { Notyf } from 'notyf';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
@@ -8,7 +7,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { Account, AccountSearchFilter, AccountConsts, defaultAccount } from '/@src/models/Accounting/Account/account';
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
-import { transferCashMoneyValidationSchema } from '/@src/rules/Accounting/Account/transferCashMoneyValidation';
+import { transferCashMoneyValidationSchema } from '../../rules/Accounting/Transaction/transferCashMoneyValidation';
 import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
@@ -171,8 +170,7 @@ const onSubmit = handleSubmit(async () => {
                                 <VField id="amount">
                                     <VLabel class="required">{{ t('transfer_cash_money.form.amount') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="createRecord.amount" placeholder="" type="number"
-                                            autocomplete="given-balance" />
+                                        <VInput v-model="createRecord.amount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="amount" />
                                     </VControl>
                                 </VField>
@@ -181,8 +179,7 @@ const onSubmit = handleSubmit(async () => {
                                 <VField id="currency_rate">
                                     <VLabel class="required">{{ t('transfer_cash_money.form.currency_rate') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="createRecord.currency_rate" placeholder="" type="number"
-                                            autocomplete="given-balance" />
+                                        <VInput v-model="createRecord.currency_rate" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="currency_rate" />
                                     </VControl>
                                 </VField>
@@ -195,9 +192,8 @@ const onSubmit = handleSubmit(async () => {
                             <div class="column is-12">
                                 <VField id="date">
                                     <VLabel class="required">{{ t('transfer_cash_money.form.date') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="createRecord.date" placeholder="" type="date"
-                                            autocomplete="given-balance" />
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="createRecord.date" placeholder="" type="date" />
                                         <ErrorMessage class="help is-danger" name="date" />
                                     </VControl>
                                 </VField>

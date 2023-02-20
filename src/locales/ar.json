@@ -208,7 +208,8 @@
     "records": {
       "records": "القيود والتحويلات المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
-      "add_record": "اضافة قيد جديد"
+      "add_record": "إضافة قيد جديد",
+      "add_custom_revenue": "إضافة عوائد"
     }
   },
   "user_profile_dropdown": {
@@ -1875,6 +1876,24 @@
       "amount": "المبلغ بالدينار العراقي",
       "currency_rate": "سعر الصرف",
       "date": "التاريخ"
+    }
+  },
+  "add_custom_revenue": {
+    "form": {
+      "title": "إضافة عوائد",
+      "button": "إضافة",
+      "client_account": "حساب الزبون",
+      "revenue_account": "حساب العوائد",
+      "cash_account": "حساب النقد",
+      "select_account": "اختيار الحساب",
+      "revenue_amount": "المبلغ العائد بالدينار العراقي",
+      "cash_amount": "المبلغ النقدي بالدينار العراقي",
+      "remain_amount": "المبلغ المتبقي بالدينار العراقي",
+      "currency": "العملة",
+      "select_currency": "اختيار العملة",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ",
+      "note": "ملاحظات"
     }
   }
 }

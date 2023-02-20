@@ -37,6 +37,8 @@ declare module 'vue-router/auto/routes' {
     '/account': RouteRecordInfo<'/account', '/account', Record<never, never>, Record<never, never>>,
     '/account/': RouteRecordInfo<'/account/', '/account/', Record<never, never>, Record<never, never>>,
     '/account/add': RouteRecordInfo<'/account/add', '/account/add', Record<never, never>, Record<never, never>>,
+    '/add-custom-revenue': RouteRecordInfo<'/add-custom-revenue', '/add-custom-revenue', Record<never, never>, Record<never, never>>,
+    '/add-custom-revenue/': RouteRecordInfo<'/add-custom-revenue/', '/add-custom-revenue/', Record<never, never>, Record<never, never>>,
     '/add-quantity': RouteRecordInfo<'/add-quantity', '/add-quantity', Record<never, never>, Record<never, never>>,
     '/add-quantity/': RouteRecordInfo<'/add-quantity/', '/add-quantity/', Record<never, never>, Record<never, never>>,
     '/add-record': RouteRecordInfo<'/add-record', '/add-record', Record<never, never>, Record<never, never>>,

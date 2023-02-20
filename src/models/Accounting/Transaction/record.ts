@@ -29,7 +29,7 @@ class TransactionConsts {
     static readonly ADD_QUANTITY = 1;
     static readonly TRANSFER_CASH = 2;
     static readonly PAY_EXPENSE = 3;
-    static readonly OTHER = 4;
+    static readonly CUSTOM_REVENUE = 4;
 
 }
 export { TransactionConsts }
