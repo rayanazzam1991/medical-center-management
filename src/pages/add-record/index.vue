@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getCurrentInstance } from 'vue'
 import { toFormValidator } from '@vee-validate/zod';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
@@ -15,11 +16,10 @@ import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/re
 import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
 import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
 import { createFinancialRecordsValidation } from '/@src/rules/Accounting/Transaction/createFinancialRecordsValidation';
+import debounce from 'lodash.debounce';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
-const route = useRoute()
-const router = useRouter()
 const transactionStore = useTransaction()
 
 viewWrapper.setPageTitle(t('financial_record.title'))
@@ -32,15 +32,19 @@ formType.value = "Add";
 const formTypeName = "Add"
 const backRoute = "";
 
-const accountRecords = ref<RecordAccountDetail[]>([])
-
-
-
 const tempAccountRecords = ref<RecordAccountAmountDetail[]>([]);
-const initialRecordAccountAmountDetail: RecordAccountAmountDetail = {} as RecordAccountAmountDetail
-
-const record_title = ref('')
-const record_note = ref('')
+const recordTitle = ref('')
+const recordNote = ref('')
+const totalCredit = ref(0)
+const totalDebit = ref(0)
+const totalCreditText = ref('')
+const totalDebitText = ref('')
+const totalCreditColor = ref('')
+const totalDebitColor = ref('')
+const totalColor = ref('')
+const totalDifference = ref(0)
+// const accountMultiselect = ref(null)
+// const accountMultiselect = ref<InstanceType<typeof MultiSelect>>(null);
 
 interface Account {
     id?: number,
@@ -53,6 +57,10 @@ const accountsListDropDown = ref<Account[]>([]);
 
 const accountSearchFilter = ref(defaultAccountSearchFilter)
 onMounted(async () => {
+
+    addRecord({} as RecordAccountAmountDetail)
+    addRecord({} as RecordAccountAmountDetail)
+
     const { success, error_code, message, accountsList } = await getAccountsList(accountSearchFilter.value)
     accountsListDropDown.value = accountsList
 })
@@ -70,12 +78,86 @@ const addRecord = (record: RecordAccountAmountDetail) => {
     tempAccountRecords.value?.push(record)
 }
 
-const removeRecord = (record: RecordAccountDetail) => {
-    const index = tempAccountRecords.value.indexOf(record);
+const removeRecord = (record: RecordAccountDetail, index: number) => {
     if (index !== -1) {
         tempAccountRecords.value.splice(index, 1);
+        // if (tempAccountRecords.value[index].credit_amount === undefined)
+        updateCredit()
+        // if (tempAccountRecords.value[index].debit_amount === undefined)
+        updateDebit()
     }
 }
+
+const initAccountRecord = () => {
+
+
+    // Call the update method to force the component to re-render
+
+
+    totalCredit.value = 0
+    totalDebit.value = 0
+    tempAccountRecords.value = [] as RecordAccountAmountDetail[]
+    // accountMultiselect.value.clear()
+    addRecord({} as RecordAccountAmountDetail)
+    addRecord({} as RecordAccountAmountDetail)
+}
+
+watch([totalCredit, totalDebit], () => {
+
+    totalDifference.value = totalCredit.value - totalDebit.value
+    if (totalDifference.value != 0) {
+        totalColor.value = 'red-number'
+    } else {
+        totalColor.value = ''
+    }
+    if (totalCredit.value > totalDebit.value) {
+        totalDebitColor.value = 'red-number'
+        totalCreditText.value = ''
+        totalDebitText.value = `+ ${Math.abs(totalDifference.value)}`
+    } else if (totalCredit.value == totalDebit.value) {
+        totalCreditColor.value = ''
+        totalDebitColor.value = ''
+        totalCreditText.value = ''
+        totalDebitText.value = ''
+    } else {
+        totalCreditColor.value = 'red-number';
+        totalDebitText.value = ''
+        totalCreditText.value = `+ ${Math.abs(totalDifference.value)}`
+    }
+})
+
+
+const emit = defineEmits(['input-finished']);
+
+const debouncedCredit = debounce(() => {
+    // Do something with the input value here, like emit an event
+    totalCredit.value = 0
+    tempAccountRecords.value.forEach((element, index) => {
+        if (typeof element.credit_amount === 'string') element.credit_amount = undefined
+        if (typeof element.credit_amount === 'number')
+            totalCredit.value += element.credit_amount ?? 0
+    })
+    emit('input-finished', totalCredit);
+}, 500);
+
+const debouncedDebit = debounce(() => {
+    // Do something with the input value here, like emit an event
+    totalDebit.value = 0
+    tempAccountRecords.value.forEach((element) => {
+        if (typeof element.debit_amount === 'string') element.debit_amount = undefined
+        if (typeof element.debit_amount === 'number')
+            totalDebit.value += element.debit_amount ?? 0
+    })
+    emit('input-finished', totalDebit);
+}, 500);
+
+const updateCredit = () => {
+    debouncedCredit();
+};
+
+const updateDebit = () => {
+    debouncedDebit();
+};
 
 
 
@@ -97,14 +179,23 @@ const onSubmitAdd = handleSubmit(async () => {
         notif.error(t('financial_record.must_add_record'))
         return;
     }
+    if (totalDifference.value != 0 ||
+        (totalDifference.value === 0 && (totalCredit.value == 0 || totalDebit.value == 0))) {
+        notif.error(t('financial_record.records_are_note_balanced_error_msg'))
+        return;
+    }
 
-    const data = getRecordsData(tempAccountRecords.value, record_title.value, record_note.value)
+    const data = getRecordsData(tempAccountRecords.value, recordTitle.value, recordNote.value, totalCredit.value)
     const { success, message, response } = await createRecords(data)
     if (success) {
         // @ts-ignore
         await sleep(200);
 
         notif.success(t('toast.success.add'))
+
+        initAccountRecord()
+
+        window.location.reload()
 
         return true
     }
@@ -119,6 +210,7 @@ const onSubmitAdd = handleSubmit(async () => {
 
 
 })
+
 </script>
 
 <template>
@@ -131,14 +223,13 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                                                                                                                                                                                        <h4>{{ pageTitle }}</h4>
-                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
                                 credit_amount: undefined,
                                 debit_amount: undefined,
-                                type: 1
+                                type: undefined
                             })" color="primary">
                                 {{ t('financial_record.add_new_row') }}
                             </VButton>
@@ -151,10 +242,10 @@ const onSubmitAdd = handleSubmit(async () => {
                                         <VLabel>
                                             {{ t('financial_record.record_title') }}</VLabel>
                                         <VControl icon="feather:chevron-right">
-                                            <VInput type="text" placeholder="" autocomplete="" v-model="record_title" />
+                                            <VInput type="text" placeholder="" autocomplete="" v-model="recordTitle" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -168,15 +259,15 @@ const onSubmitAdd = handleSubmit(async () => {
                                             {{ t('financial_record.select_account') }}</VLabel>
                                         <VControl>
                                             <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
-                                                :placeholder="t('financial_record.select_account')" :close-on-select="false"
-                                                :filter-results="false" :min-chars="0" :resolve-on-load="false"
-                                                :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true"
-                                                :delay="0" :searchable="true" :canClear="false" @select="setAccountValue()"
-                                                :options="async (query: any) => {
+                                                :placeholder="t('financial_record.select_account')" :close-on-select="true"
+                                                ref="accountMultiselect" :filter-results="false" :min-chars="0"
+                                                :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1"
+                                                :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
+                                                @select="setAccountValue()" :options="async (query: any) => {
                                                     let accountSearchFilter = {} as AccountSearchFilter
                                                     accountSearchFilter.name = query
                                                     const data = await getAccountsList(accountSearchFilter)
-
+                                                    //@ts-ignore
                                                     return data.accountsList.map((item: any) => {
                                                         return { value: item.id, label: item.name }
                                                     })
@@ -199,12 +290,13 @@ const onSubmitAdd = handleSubmit(async () => {
                                         <VLabel>
                                             {{ t('financial_record.credit') }}</VLabel>
                                         <VControl icon="feather:dollar-sign">
-                                            <VInput :disabled="tempAccountRecords[mainIndex].debit_amount > 0" type="number"
-                                                placeholder="" autocomplete=""
-                                                v-model="tempAccountRecords[mainIndex].credit_amount" />
+                                            <VInput @input="() => updateCredit()"
+                                                :class="[tempAccountRecords[mainIndex].debit_amount > 0 && 'disabled-input']"
+                                                :disabled="tempAccountRecords[mainIndex].debit_amount > 0" type="number"
+                                                v-model.number="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -216,12 +308,13 @@ const onSubmitAdd = handleSubmit(async () => {
                                         <VLabel>
                                             {{ t('financial_record.debit') }}</VLabel>
                                         <VControl icon="feather:dollar-sign">
-                                            <VInput :disabled="tempAccountRecords[mainIndex].credit_amount > 0"
-                                                type="number" placeholder="" autocomplete=""
-                                                v-model="tempAccountRecords[mainIndex].debit_amount" />
+                                            <VInput @input="() => updateDebit()"
+                                                :class="[tempAccountRecords[mainIndex].credit_amount > 0 && 'disabled-input']"
+                                                :disabled="tempAccountRecords[mainIndex].credit_amount > 0" type="number"
+                                                v-model.number="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -230,7 +323,8 @@ const onSubmitAdd = handleSubmit(async () => {
                                 <div class="mb-3">
                                     <VField>
                                         <VControl>
-                                            <VButton class="remove_btn" @click="removeRecord(record)" color="danger">
+                                            <VButton class="remove_btn" @click="removeRecord(record, mainIndex)"
+                                                color="danger">
                                                 {{ t('financial_record.remove_row') }}
                                             </VButton>
                                         </VControl>
@@ -240,16 +334,53 @@ const onSubmitAdd = handleSubmit(async () => {
                             </div>
                         </div>
                         <div class="columns">
+                            <div class="column is-5">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel>
+                                            {{ t('financial_record.total') }}</VLabel>
+                                    </VField>
+                                </div>
+                            </div>
+                            <div class="column is-4">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel :class="totalCreditColor">
+                                            {{ totalCreditText }}</VLabel>
+                                    </VField>
+                                </div>
+                            </div>
+                            <div class="column is-4">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel :class="totalDebitColor">
+                                            {{ totalDebitText }}</VLabel>
+                                    </VField>
+                                </div>
+                            </div>
+                            <div class="column is-5">
+                                <div class="mb-3">
+                                    <VField>
+                                        <VLabel :class="totalColor">
+                                            {{ (totalDifference != 0) ?
+                                                t('financial_record.records_are_not_balanced')
+                                                : (totalCredit > 0 ? t('financial_record.records_are_balanced') : '') }}
+                                        </VLabel>
+                                    </VField>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
                             <div class="column is-12">
                                 <div class="mb-3">
                                     <VField>
                                         <VLabel>
                                             {{ t('financial_record.record_note') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VTextarea rows=3 placeholder="" autocomplete="" v-model="record_note" />
+                                            <VTextarea rows=3 placeholder="" autocomplete="" v-model="recordNote" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -265,6 +396,30 @@ const onSubmitAdd = handleSubmit(async () => {
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
+
+.disabled-input {
+    background-color: #f5f5f5;
+}
+
+.red-number {
+    color: red !important;
+}
+
+.orange-number {
+    color: orangered !important
+}
+
+.blue-number {
+    color: blue !important;
+}
+
+.green-number {
+    color: green !important;
+}
+
+.is-dark .disabled-input {
+    background-color: #444444;
+}
 
 .required::after {
     content: " *";

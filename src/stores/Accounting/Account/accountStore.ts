@@ -1,15 +1,28 @@
-import { defineStore, acceptHMRUpdate } from "pinia"
-import { useApi } from "/@src/composable/useApi"
-import { Account, CreateAccount, TrialBalance, BalanceSheet, AccountSearchFilter } from "/@src/models/Accounting/Account/account"
-import { addAccountApi, generateTrailBalanceReportApi, generateBalanceSheetReportApi, getAccountsListApi } from "/@src/utils/api/Accounting/Account"
-import { Pagination, defaultPagination } from "/@src/utils/response"
+import {acceptHMRUpdate, defineStore} from "pinia"
+import {useApi} from "/@src/composable/useApi"
+import {
+  Account,
+  AccountSearchFilter,
+  BalanceSheet,
+  CreateAccount,
+  TrialBalance
+} from "/@src/models/Accounting/Account/account"
+import {
+  addAccountApi,
+  generateBalanceSheetReportApi,
+  generateTrailBalanceReportApi,
+  getAccountsListApi
+} from "/@src/utils/api/Accounting/Account"
+import {defaultPagination, Pagination} from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
+import {useStorage} from "@vueuse/core"
 
 
 export const useAccount = defineStore('account', () => {
 
   const api = useApi()
   const accounts = ref<Account[]>([])
+  const accountStorage = useStorage('accounts', <Account[]>([]))
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
   const success = ref<boolean>()
@@ -31,14 +44,12 @@ export const useAccount = defineStore('account', () => {
       message.value = response.response.message
 
       return returnedAccount
-    }
-    catch (error: any) {
+    } catch (error: any) {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
 
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   }
@@ -48,22 +59,24 @@ export const useAccount = defineStore('account', () => {
     loading.value = true
     sleep(1000)
     try {
-      const response = await getAccountsListApi(api, searchFilter)
-      accounts.value = response.response.data
-      pagination.value = response.response.pagination
-      success.value = response.response.success
-      error_code.value = response.response.error_code
-      message.value = response.response.message
-
+      if (accountStorage.value.length > 0) {
+        accounts.value = accountStorage.value
+      } else {
+        const response = await getAccountsListApi(api, searchFilter)
+        accounts.value = response.response.data
+        accountStorage.value = accounts.value
+        pagination.value = response.response.pagination
+        success.value = response.response.success
+        error_code.value = response.response.error_code
+        message.value = response.response.message
+      }
       return accounts
-    }
-    catch (error: any) {
+    } catch (error: any) {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
 
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   }
@@ -82,8 +95,7 @@ export const useAccount = defineStore('account', () => {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   }
@@ -102,8 +114,7 @@ export const useAccount = defineStore('account', () => {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
       message.value = error?.response.data.message
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   }

@@ -78,7 +78,6 @@ const columns = {
             h('span', row?.name)
     },
     "categories.categories.name": {
-        sortable: true,
         grow: true,
         align: 'center',
         label: t('inventory.details.table.level_1'),
@@ -86,18 +85,16 @@ const columns = {
             h('span', row?.category.parent?.name)
     },
     "categories.name": {
-        sortable: true,
         align: 'center',
         label: t('inventory.details.table.level_2'),
         renderRow: (row: ItemInInventory) =>
             h('span', row?.category.name)
     },
-    quantity: {
+    "inventory_items.quantity": {
         align: 'center',
         label: t('inventory.details.table.quantity'),
         renderRow: (row: ItemInInventory) =>
             h('span', row?.quantity),
-        sortable: true,
     },
     price: {
         align: 'center',
