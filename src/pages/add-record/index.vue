@@ -14,7 +14,7 @@ import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionS
 import { createRecords, getRecordsData } from '/@src/services/Accounting/Transaction/transactionService';
 import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record'
 import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { getAllAccounts } from '/@src/services/Accounting/Account/accountService';
 import { createFinancialRecordsValidation } from '/@src/rules/Accounting/Transaction/createFinancialRecordsValidation';
 import debounce from 'lodash.debounce';
 
@@ -58,10 +58,10 @@ const accountsListDropDown = ref<Account[]>([]);
 const accountSearchFilter = ref(defaultAccountSearchFilter)
 onMounted(async () => {
 
-    addRecord({} as RecordAccountAmountDetail)
-    addRecord({} as RecordAccountAmountDetail)
+    addRecord({ has_remove_btn: false } as RecordAccountAmountDetail)
+    addRecord({ has_remove_btn: false } as RecordAccountAmountDetail)
 
-    const { success, error_code, message, accounts } = await getAccountsList(accountSearchFilter.value)
+    const { success, error_code, message, accounts } = await getAllAccounts(accountSearchFilter.value)
     accountsListDropDown.value = accounts
 })
 
@@ -126,6 +126,12 @@ watch([totalCredit, totalDebit], () => {
     }
 })
 
+// watch(tempAccountRecords, () => {
+//     console.log("sdf")
+//     tempAccountRecords.value.forEach((element) => {
+//         element.credit_amount = element?.credit_amount?.replace(/[^0-9]/g, '')
+//     })
+// }, { deep: true })
 
 const emit = defineEmits(['input-finished']);
 
@@ -151,7 +157,7 @@ const debouncedDebit = debounce(() => {
     emit('input-finished', totalDebit);
 }, 500);
 
-const updateCredit = () => {
+const updateCredit = (value?: number) => {
     debouncedCredit();
 };
 
@@ -223,13 +229,14 @@ const onSubmitAdd = handleSubmit(async () => {
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <!-- <div class="fieldset-heading">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </div> -->
                         <div class="columns mb-5">
                             <VButton class="mt-5" @click.prevent="addRecord({
                                 account_id: undefined,
                                 credit_amount: undefined,
                                 debit_amount: undefined,
-                                type: undefined
+                                type: undefined,
+                                has_remove_btn: true
                             })" color="primary">
                                 {{ t('financial_record.add_new_row') }}
                             </VButton>
@@ -245,7 +252,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                             <VInput type="text" placeholder="" autocomplete="" v-model="recordTitle" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -266,10 +273,10 @@ const onSubmitAdd = handleSubmit(async () => {
                                                 @select="setAccountValue()" :options="async (query: any) => {
                                                     let accountSearchFilter = {} as AccountSearchFilter
                                                     accountSearchFilter.name = query
-                                                    const data = await getAccountsList(accountSearchFilter)
+                                                    const data = await getAllAccounts(accountSearchFilter)
                                                     //@ts-ignore
                                                     return data.accounts.map((item: any) => {
-                                                        return { value: item.id, label: item.name }
+                                                        return { value: item.id, label: `${item.code} - ${item.name}` }
                                                     })
                                                 }" @open="(select$: any) => {
     if (select$.noOptions) {
@@ -291,12 +298,12 @@ const onSubmitAdd = handleSubmit(async () => {
                                             {{ t('financial_record.credit') }}</VLabel>
                                         <VControl icon="feather:dollar-sign">
                                             <VInput @input="() => updateCredit()"
-                                                :class="[tempAccountRecords[mainIndex].debit_amount > 0 && 'disabled-input']"
-                                                :disabled="tempAccountRecords[mainIndex].debit_amount > 0" type="number"
+                                                :class="[tempAccountRecords[mainIndex].debit_amount! > 0 && 'disabled-input']"
+                                                :disabled="tempAccountRecords[mainIndex].debit_amount! > 0" type="number"
                                                 v-model.number="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -309,19 +316,19 @@ const onSubmitAdd = handleSubmit(async () => {
                                             {{ t('financial_record.debit') }}</VLabel>
                                         <VControl icon="feather:dollar-sign">
                                             <VInput @input="() => updateDebit()"
-                                                :class="[tempAccountRecords[mainIndex].credit_amount > 0 && 'disabled-input']"
-                                                :disabled="tempAccountRecords[mainIndex].credit_amount > 0" type="number"
+                                                :class="[tempAccountRecords[mainIndex].credit_amount! > 0 && 'disabled-input']"
+                                                :disabled="tempAccountRecords[mainIndex].credit_amount! > 0" type="number"
                                                 v-model.number="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
                             </div>
                             <div class="column is-1">
                                 <div class="mb-3">
-                                    <VField>
+                                    <VField v-if="tempAccountRecords[mainIndex].has_remove_btn">
                                         <VControl>
                                             <VButton class="remove_btn" @click="removeRecord(record, mainIndex)"
                                                 color="danger">
@@ -380,7 +387,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                             <VTextarea rows=3 placeholder="" autocomplete="" v-model="recordNote" />
                                         </VControl>
                                         <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    :name="`service_price_${service.service.id}`" /> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 

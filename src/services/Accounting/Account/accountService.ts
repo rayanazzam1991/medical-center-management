@@ -26,6 +26,16 @@ export async function getAccountsList(searchFilter: AccountSearchFilter) {
 
 }
 
+export async function getAllAccounts(searchFilter: AccountSearchFilter) {
+    const accountResponse = useAccount()
+    await accountResponse.getAllAccountsStore(searchFilter)
+    let accounts: Account[] = accountResponse.accounts
+    let success: boolean = accountResponse.success ?? false
+    let error_code: string = accountResponse.error_code ?? ''
+    let message: string = accountResponse.message ?? ''
+    return { success, error_code, message, accounts }
+
+}
 export async function generateTrailBalanceReport() {
     const accountResponse = useAccount()
     let trial_balance: TrialBalance = await accountResponse.generateTrailBalanceReportStore() ?? defaultTrialBalance
