@@ -56,14 +56,11 @@ export default defineComponent({
 
       let chartOfAccountSearchFilter = {} as ChartOfAccountSearchFilter
       const { chartOfAccounts } = await getChartOfAccountsList(chartOfAccountSearchFilter)
-      for (let i = 0; i <= chartOfAccounts.length; i++) {
-        if (chartOfAccounts[i] == undefined)
-          break
-        if (chartOfAccounts[i].has_dynamic_account == true) {
-          chartsList.value.push(chartOfAccounts[i])
+      chartOfAccounts.forEach(element => {
+        if (element.has_dynamic_account == true && element.code != AccountConsts.CASH_CODE) {
+          chartsList.value.push(element)
         }
-
-      }
+      });
     })
 
     const validationSchema = accountvalidationSchema
@@ -86,9 +83,6 @@ export default defineComponent({
       currentAccount.value.level2_code = selectedChart.value?.code
       currentAccount.value.currency_id = selectedCurrencyId.value
       let accountData = currentAccount.value;
-
-      // let accountData: CreateAccount = defaultCreateAccount;
-      // accountData.status = currentAccount.value.status
 
 
       const { success, message, account } = await addAccount(accountData);

@@ -74,14 +74,21 @@ export default defineComponent({
 
     };
     const onSubmitAdd = handleSubmit(async (values) => {
-      for (let i = 0; i < chartOfAccountsList.value.length; i++) {
-        if (chartOfAccountsList.value[i].has_dynamic_account == true) {
-          if (chartOfAccountsList.value[i].code == AccountConsts.CASH_CODE) {
-            selectedChart.value = chartOfAccountsList.value[i]
+      chartOfAccountsList.value.forEach(element => {
+        if (element.has_dynamic_account == true) {
+          if (element.code == AccountConsts.CASH_CODE) {
+            selectedChart.value = element
           }
         }
+      });
+      // for (let i = 0; i < chartOfAccountsList.value.length; i++) {
+      //   if (chartOfAccountsList.value[i].has_dynamic_account == true) {
+      //     if (chartOfAccountsList.value[i].code == AccountConsts.CASH_CODE) {
+      //       selectedChart.value = chartOfAccountsList.value[i]
+      //     }
+      //   }
 
-      }
+      // }
 
       currentAccount.value.chart_of_account_id = selectedChart.value?.id
       currentAccount.value.currency_id = selectedCurrencyId.value
@@ -163,18 +170,18 @@ export default defineComponent({
           <div class="form-fieldset">
             <div class="columns is-multiline">
               <!-- <div class="column is-6">
-                                                                        <VField>
-                                                                          <VLabel>{{ t('account.form.parent_code') }}</VLabel>
-                                                                          <VControl>
-                                                                            <VSelect v-model="selectedChart">
-                                                                              <VOption :value="undefined"> {{ t('account.form.parent_code') }}</VOption>
-                                                                              <VOption v-for="chart in chartsList" :value="chart">{{ chart.name }}
-                                                                              </VOption>
-                                                                            </VSelect>
+                                                                            <VField>
+                                                                              <VLabel>{{ t('account.form.parent_code') }}</VLabel>
+                                                                              <VControl>
+                                                                                <VSelect v-model="selectedChart">
+                                                                                  <VOption :value="undefined"> {{ t('account.form.parent_code') }}</VOption>
+                                                                                  <VOption v-for="chart in chartsList" :value="chart">{{ chart.name }}
+                                                                                  </VOption>
+                                                                                </VSelect>
 
-                                                                          </VControl>
-                                                                        </VField>
-                                                                      </div> -->
+                                                                              </VControl>
+                                                                            </VField>
+                                                                          </div> -->
               <div class="column is-12">
                 <VField>
                   <VLabel>{{ t('account.form.currency') }}</VLabel>
