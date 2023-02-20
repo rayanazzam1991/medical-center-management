@@ -190,6 +190,11 @@
       "deliver_salaries": "Deliver Salaries",
       "onhold_salaries": "On-Hold Salaries"
     },
+    "account": {
+      "accounts": "Accounts",
+      "add_account": "Add Account ",
+      "add_cash_account": "Add Cash Account "
+    },
     "reports": {
       "reports": "Accounting Reports",
       "trial_balance_report": "Trial Balance Report"
@@ -1758,22 +1763,25 @@
     "debit": "Debit"
   },
   "account": {
-    "header_button": "إضافة حساب",
+    "header_button": "Add Account",
+    "header_button2": "Add Cash Account  ",
+    "accounts": "Accounts",
+    "sun_navbar_heading": "قائمة الحسابات",
     "form": {
-      "name": " الاسم ",
-      "balance": "الرصيد",
-      "currency": "العملة",
-      "parent_code": "نوع الحساب",
-      "description": "التوصيف",
-      "status": "الحالة",
-      "form_header": "إضافة الحساب",
-      "page_title": "إضافة حساب",
-      "currency_rate": "نسبة التحويل"
+      "name": " Name ",
+      "balance": "Balance",
+      "currency": "currency",
+      "parent_code": "Account Type ",
+      "description": "Description ",
+      "status": "Status",
+      "form_header": "Add Account ",
+      "page_title": "Add Account ",
+      "currency_rate": "Currency Rate"
     },
     "table": {
       "title": " Accounts  ",
       "columns": {
-        "id": "رقم المعرّف",
+        "id": "Id",
         "name": "Name",
         "description": "Description ",
         "created_at": "Created At",
@@ -1792,6 +1800,12 @@
       "name": " Name ",
       "status": "Status",
       "code": "Code"
+    },
+    "cash": {
+      "form": {
+        "form_header": "Add Cash Account",
+        "page_title": "Add Cash Account  "
+      }
     }
   }
 }

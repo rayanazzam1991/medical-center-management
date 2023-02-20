@@ -198,7 +198,8 @@
     },
     "account": {
       "accounts": "الحسابات",
-      "add_account": "انشاء حساب"
+      "add_account": "انشاء حساب",
+      "add_cash_account": "انشاء حساب نقد"
     },
     "reports": {
       "reports": "التقارير المالية",
@@ -1752,7 +1753,10 @@
     "cancel": "إلغاء"
   },
   "account": {
+    "accounts": "الحسابات",
     "header_button": "إضافة حساب",
+    "header_button2": "إضافة حساب نقد",
+    "sun_navbar_heading": " الحسابات",
     "form": {
       "name": " الاسم ",
       "balance": "الرصيد",
@@ -1786,6 +1790,12 @@
       "name": " الاسم ",
       "status": "الحالة",
       "code": "الرمز"
+    },
+    "cash": {
+      "form": {
+        "form_header": "إضافة حساب النقد",
+        "page_title": "إضافة حساب نقد"
+      }
     }
   },
   "trial_balance_report": {

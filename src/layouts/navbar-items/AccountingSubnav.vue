@@ -60,12 +60,33 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul><br />
-                <ul>
 
+
+              </div>
+              <div class="column is-4">
+                <ul>
+                  <h4 class="column-heading">
+                    {{ t('account.sun_navbar_heading') }}</h4>
+                  <li>
+                    <RouterLink to="/account">
+                      <i class="lnir lnir-money-protection" aria-hidden="true"></i>
+                      <span>{{ t('account.accounts') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                   <li>
                     <RouterLink to="/account/add">
+
                       <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>{{ t('accounting_subnav.account.add_account') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/account/add-cash-account">
+
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                      <span>{{ t('accounting_subnav.account.add_cash_account') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
