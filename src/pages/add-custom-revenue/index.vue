@@ -177,12 +177,11 @@ watch(cashAccountId, (value) => {
                                         <VSelect v-model="clientAccountId">
                                             <VOption :value="0"> {{
                                                 t('add_custom_revenue.form.select_account') }}</VOption>
-                                            <VOption v-for="account in clientsAccountsList" :value="account.id">{{
-                                                account.name }}
+                                            <VOption v-for="account in clientsAccountsList" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="client_account" />
-
                                     </VControl>
                                 </VField>
                             </div>
@@ -193,9 +192,8 @@ watch(cashAccountId, (value) => {
                                         <VSelect v-model="revenueAccountId">
                                             <VOption :value="0"> {{ t('add_custom_revenue.form.select_account')
                                             }}</VOption>
-                                            <VOption v-for="account in revenuesAccountsList" :value="account.id">{{
-                                                account.name
-                                            }}
+                                            <VOption v-for="account in revenuesAccountsList" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="revenue_account" />
@@ -218,9 +216,8 @@ watch(cashAccountId, (value) => {
                                         <VSelect v-model="cashAccountId">
                                             <VOption :value="0"> {{ t('add_custom_revenue.form.select_account')
                                             }}</VOption>
-                                            <VOption v-for="account in cashAccountsList" :value="account.id">{{
-                                                account.name
-                                            }}
+                                            <VOption v-for="account in cashAccountsList" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="cash_account" />
@@ -243,9 +240,8 @@ watch(cashAccountId, (value) => {
                                         <VSelect v-model="currencyId">
                                             <VOption :value="0"> {{ t('add_custom_revenue.form.select_currency')
                                             }}</VOption>
-                                            <VOption v-for="currency in availableCurrenciesList" :value="currency.id">{{
-                                                currency.name
-                                            }}
+                                            <VOption v-for="currency in availableCurrenciesList" :value="currency.id">
+                                                {{ currency.code }} - {{ currency.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="currency_id" />

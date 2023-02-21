@@ -208,8 +208,9 @@
     },
     "records": {
       "records": "القيود والتحويلات المالية",
+      "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
-      "add_record": "إضافة قيد جديد",
+      "add_record": "إضافة سجل مالي",
       "add_custom_revenue": "إضافة عوائد"
     }
   },
@@ -1908,6 +1909,35 @@
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
       "note": "ملاحظات"
+    }
+  },
+  "transaction": {
+    "add_record_button": "إضافة قيد مالي",
+    "table": {
+      "title": "القيود المالية",
+      "columns": {
+        "title": "العنوان",
+        "amount": "المبلغ الإجمالي",
+        "currency": "العملة",
+        "currency_rate": "سعر الصرف",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": "بواسطة"
+      },
+      "entries": {
+        "columns": {
+          "account": "الحساب",
+          "credit": "دائن",
+          "debit": "مدين"
+        },
+        "place_holder_title": "تفاصيل القيد المالي",
+        "cancel_label": "إغلاق"
+      }
+    },
+    "search_filter": {
+      "title": "العنوان...",
+      "note": "ملاحظات..."
     }
   }
 }

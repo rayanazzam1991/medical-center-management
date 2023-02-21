@@ -160,6 +160,7 @@ declare module '@vue/runtime-core' {
     ToolbarNotification: typeof import('./src/components/partials/toolbars/ToolbarNotification.vue')['default']
     TrailBalanceCollapse: typeof import('./src/components/OurComponents/Accounting/Account/TrailBalanceCollapse.vue')['default']
     TrailBalanceLvl1Collapse: typeof import('./src/components/OurComponents/Accounting/Account/TrailBalanceLvl1Collapse.vue')['default']
+    TransactionTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/TransactionTableHeader.vue')['default']
     UIWidget: typeof import('./src/components/partials/widgets/ui-creative/UIWidget.vue')['default']
     UIWidgetCreativeList: typeof import('./src/components/partials/widgets/ui-creative/content/UIWidgetCreativeList.vue')['default']
     UIWidgetDays: typeof import('./src/components/partials/widgets/ui-creative/content/UIWidgetDays.vue')['default']
