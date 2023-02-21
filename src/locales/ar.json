@@ -205,6 +205,12 @@
       "reports": "التقارير المالية",
       "trial_balance_report": "تقرير ميزان المراجعة",
       "balance_sheet_report": "تقرير الميزانية العمومية"
+    },
+    "records": {
+      "records": "القيود والتحويلات المالية",
+      "transfer_cash_money": "تحويل مبلغ نقدي",
+      "add_record": "إضافة قيد جديد",
+      "add_custom_revenue": "إضافة عوائد"
     }
   },
   "user_profile_dropdown": {
@@ -231,7 +237,8 @@
       "aprrove_variable_payment": "تمت الموافقة على المتغير المالي بنجاح",
       "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
-      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح"
+      "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
+      "transfer": "تم التحويل بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -1867,5 +1874,36 @@
   "account_types": {
     "credit": "دائن",
     "debit": "مدين"
+  },
+  "transfer_cash_money": {
+    "form": {
+      "title": "تحويل مبلغ نقدي",
+      "button": "تحويل",
+      "from_account": "من حساب",
+      "select_from_account": "اختيار الحساب",
+      "to_account": "إلى حساب",
+      "select_to_account": "اختيار الحساب",
+      "amount": "المبلغ بالدينار العراقي",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ"
+    }
+  },
+  "add_custom_revenue": {
+    "form": {
+      "title": "إضافة عوائد",
+      "button": "إضافة",
+      "client_account": "حساب الزبون",
+      "revenue_account": "حساب العوائد",
+      "cash_account": "حساب النقد",
+      "select_account": "اختيار الحساب",
+      "revenue_amount": "المبلغ العائد بالدينار العراقي",
+      "cash_amount": "المبلغ النقدي بالدينار العراقي",
+      "remain_amount": "المبلغ المتبقي بالدينار العراقي",
+      "currency": "العملة",
+      "select_currency": "اختيار العملة",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ",
+      "note": "ملاحظات"
+    }
   }
 }

@@ -173,26 +173,20 @@ export interface RecordAccountDetail {
   type?: number
 }
 
-class RecordAccountDetailImpl implements RecordAccountDetail {
-}
-
 export interface RecordAccountAmountDetail {
   account_id?: number,
   credit_amount?: number,
   debit_amount?: number,
   type?: number
+  has_remove_btn?: boolean
 }
-
-// export interface AccountingRecord  {
-//   account_id: 1,
-//   amount: 500,
-//   type: 1
-// }
 export interface ChangeAccountStatus {
+  id:number
   status:number
 }
 
 export const defaultChangeAccountStatus: ChangeAccountStatus = {
+  id:0,
   status:0
 }
 
@@ -204,17 +198,17 @@ export const defaultCreditAccountDetail = {
 
 export const defaultDebitAccountDetail = {
   account_id: 1,
-  amount: 500,
+  amount: 0,
   type: 2
 } satisfies RecordAccountDetail
 
 class AccountConsts {
   static readonly INACTIVE = 0
   static readonly ACTIVE = 1
-
+  static readonly ACCOUNT_STATUSES = [this.ACTIVE, this.INACTIVE]
   static readonly CREDIT_TYPE = 1
   static readonly DEBIT_TYPE = 2
-  static readonly CASH_CODE= '13'
+  static readonly CASH_CODE = '13'
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)

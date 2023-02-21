@@ -93,9 +93,9 @@ watch(
           <AnimatedLogo width="38px" height="38px" />
         </RouterLink>
 
-        <div class="brand-end">
-          <NotificationsMobileDropdown />
-          <UserProfileDropdown />
+      <div class="brand-end">
+        <NotificationsMobileDropdown />
+        <UserProfileDropdown />
         </div>
       </template>
     </MobileNavbar>
@@ -177,9 +177,9 @@ watch(
           <!-- <ToolbarNotification /> -->
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-              @click="panels.setActive('activity')">
-              <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-            </a> -->
+                  @click="panels.setActive('activity')">
+                  <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -228,19 +228,19 @@ watch(
 
 
           ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-            <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-            <span>{{ t("navbar.contractor") }}</span>
-          </a>
-          <a :class="[(activeSubnav === 'HR' ||
-            route.path.startsWith('/employee') ||
-            route.path.startsWith('/employee-add') ||
-            route.path.startsWith('/employee-edit') ||
-            route.path.startsWith('/position') ||
-            route.path.startsWith('/variable-payment') ||
-            route.path.startsWith('/employee-variable-payment') ||
-            route.path.startsWith('/generate-salaries')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+          @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+          <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
+          <span>{{ t("navbar.contractor") }}</span>
+        </a>
+        <a :class="[(activeSubnav === 'HR' ||
+          route.path.startsWith('/employee') ||
+          route.path.startsWith('/employee-add') ||
+          route.path.startsWith('/employee-edit') ||
+          route.path.startsWith('/position') ||
+          route.path.startsWith('/variable-payment') ||
+          route.path.startsWith('/employee-variable-payment') ||
+          route.path.startsWith('/generate-salaries')
+        ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
             <span>{{ t('navbar.human_resources') }}</span>
@@ -261,7 +261,10 @@ watch(
               route.path.startsWith('/onhold-salaries') ||
               route.path.startsWith('/salary') ||
               route.path.startsWith('/trial-balance-report') ||
-              route.path.startsWith('/balance-sheet-report')
+              route.path.startsWith('/balance-sheet-report') ||
+              route.path.startsWith('/transfer-cash-money') ||
+              route.path.startsWith('/add-record') ||
+              route.path.startsWith('/add-custom-revenue')
             ) &&
             'is-active',
           ]" class="centered-link centered-link-toggle" tabindex="0"
@@ -307,13 +310,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                  <ToolbarNotification />
+                      <ToolbarNotification />
 
-                  <a class="toolbar-link right-panel-trigger" tabindex="0"
-                    @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                  </a>
-                </Toolbar> -->
+                      <a class="toolbar-link right-panel-trigger" tabindex="0"
+                        @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                        <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                      </a>
+                    </Toolbar> -->
             </div>
 
             <slot></slot>

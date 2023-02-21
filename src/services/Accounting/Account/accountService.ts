@@ -1,5 +1,5 @@
 
-import { Account, AccountSearchFilter, BalanceSheet, CreateAccount, defaultAccount, defaultBalanceSheet, defaultTrialBalance, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultTrialBalance, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
 import { defaultPagination, Pagination } from "/@src/utils/response"
 
@@ -26,6 +26,16 @@ export async function getAccountsList(searchFilter: AccountSearchFilter) {
 
 }
 
+export async function getAllAccounts(searchFilter: AccountSearchFilter) {
+    const accountResponse = useAccount()
+    await accountResponse.getAllAccountsStore(searchFilter)
+    let accounts: Account[] = accountResponse.accounts
+    let success: boolean = accountResponse.success ?? false
+    let error_code: string = accountResponse.error_code ?? ''
+    let message: string = accountResponse.message ?? ''
+    return { success, error_code, message, accounts }
+
+}
 export async function generateTrailBalanceReport() {
     const accountResponse = useAccount()
     let trial_balance: TrialBalance = await accountResponse.generateTrailBalanceReportStore() ?? defaultTrialBalance
@@ -53,6 +63,15 @@ export async function updateAccountCurrency(account_id: number, updateAccountCur
     let message: string = accountResponse.message ?? ''
     return { success, error_code, message, account }
 
+}
+
+export async function changeAccountStatus(accountData: ChangeAccountStatus) {
+  const accountResponse = useAccount()
+  await accountResponse.changeAccountStatusStore(accountData)
+  var success: boolean = accountResponse.success ?? false
+  var error_code: string = accountResponse.error_code ?? ''
+  var message: string = accountResponse.message ?? ''
+  return { success, error_code, message }
 }
 
 

@@ -1,9 +1,11 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { useApi } from "/@src/composable/useApi"
+import { changeAccountStatusApi } from "/@src/utils/api/Accounting/Account/accounts"
 import {
   Account,
   AccountSearchFilter,
   BalanceSheet,
+  ChangeAccountStatus,
   CreateAccount,
   TrialBalance,
   UpdateAccountCurrency
@@ -13,6 +15,7 @@ import {
   generateBalanceSheetReportApi,
   generateTrailBalanceReportApi,
   getAccountsListApi,
+  getAllAccountsApi,
   updateAccountCurrencyApi
 } from "/@src/utils/api/Accounting/Account"
 import { defaultPagination, Pagination } from "/@src/utils/response"
@@ -63,11 +66,36 @@ export const useAccount = defineStore('account', () => {
     try {
       const response = await getAccountsListApi(api, searchFilter)
       accounts.value = response.response.data
-      accountStorage.value = accounts.value
       pagination.value = response.response.pagination
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
+      return accounts
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function getAllAccountsStore(searchFilter: AccountSearchFilter) {
+    if (loading.value) return
+    loading.value = true
+    sleep(1000)
+    try {
+      if (accountStorage.value.length > 0) {
+        accounts.value = accountStorage.value
+      } else {
+        const response = await getAllAccountsApi(api, searchFilter)
+        accounts.value = response.response.data
+        accountStorage.value = accounts.value
+        success.value = response.response.success
+        error_code.value = response.response.error_code
+        message.value = response.response.message
+      }
       return accounts
     } catch (error: any) {
       success.value = error?.response.data.success
@@ -138,6 +166,31 @@ export const useAccount = defineStore('account', () => {
       loading.value = false
     }
   }
+  async function changeAccountStatusStore(account: ChangeAccountStatus) {
+    if (loading.value) return
+    loading.value = true
+    try {
+        const response = await changeAccountStatusApi(api, account)
+        var returnedAccount: Account
+        returnedAccount = response.response.data
+        accounts.value.splice(
+          accounts.value.findIndex((accountElement) => (accountElement.id = account.id)),
+            1
+        )
+        success.value = response.response.success
+        error_code.value = response.response.error_code
+        message.value = response.response.message
+
+        accounts.value.push(returnedAccount)
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+    }
+    finally {
+        loading.value = false
+    }
+}
 
   return {
     success,
@@ -147,10 +200,12 @@ export const useAccount = defineStore('account', () => {
     pagination,
     loading,
     getAccountsListStore,
+    getAllAccountsStore,
     addAccountStore,
     generateTrailBalanceReportStore,
     generateBalanceSheetReportStore,
-    updateAccountCurrencyStore
+    updateAccountCurrencyStore,
+    changeAccountStatusStore
 
   } as const
 })

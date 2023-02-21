@@ -6,9 +6,9 @@ import { useI18n } from 'vue-i18n'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import AccountDropDown from '/@src/components/OurComponents/Accounting/Account/AccountDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { Account, AccountConsts, AccountSearchFilter, defaultAccount, defaultAccountSearchFilter, UpdateAccountCurrency, defaultChangeAccountStatus } from '/@src/models/Accounting/Account/account'
+import { Account, AccountConsts, AccountSearchFilter, defaultAccount, defaultAccountSearchFilter, UpdateAccountCurrency, ChangeAccountStatus } from '/@src/models/Accounting/Account/account'
 import { Currency, defaultCurrency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
-import { getAccountsList, updateAccountCurrency } from '/@src/services/Accounting/Account/accountService'
+import { changeAccountStatus, getAccountsList, updateAccountCurrency } from '/@src/services/Accounting/Account/accountService'
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -24,7 +24,7 @@ useHead({
 const notif = useNotyf() as Notyf
 const changeStatusPopup = ref(false)
 const accountChangeStatus = ref<Account>(defaultAccount)
-const currentChangeStatusAccount = ref(defaultChangeAccountStatus)
+const newStatus = ref<number>(0)
 const accountStore = useAccount()
 const searchFilter = ref(defaultAccountSearchFilter)
 const accountsList = ref<Array<Account>>([])
@@ -119,27 +119,26 @@ const changeAccountCurrency = async () => {
   }
 }
 
-// const changestatusAccount = async () => {
-//   currentChangeStatusAccount.value.status = accountChangeStatus.value.status
-//   currentChangeStatusAccount.value.id = accountChangeStatus.value.id
-//   const { message, success } = await editSupplier(currentChangeStatusAccount.value)
-//   if (success) {
+const updateAccountStatus = async () => {
+  const changeStatusData: ChangeAccountStatus = {
+    id: accountChangeStatus.value.id ?? 0,
+    status: newStatus.value
+  }
+  const { message, success } = await changeAccountStatus(changeStatusData)
+  if (success) {
 
-//     search(searchFilter.value)
-//     // @ts-ignore
-//     notif.dismissAll()
-//     await sleep(200);
-//     // @ts-ignore
+    notif.dismissAll()
+    await sleep(200);
+    notif.success(t('toast.success.edit'))
+    accountChangeStatus.value.status = newStatus.value
+  } else {
+    await sleep(200);
+    // @ts-ignore
 
-//     notif.success(t('toast.success.edit'))
-//   } else {
-//     await sleep(200);
-//     // @ts-ignore
-
-//     notif.error(message)
-//   }
-//   changeStatusPopup.value = false
-// }
+    notif.error(message)
+  }
+  changeStatusPopup.value = false
+}
 
 const columns = {
 
@@ -250,6 +249,8 @@ const columns = {
           changeCurrencyKeyIncrement.value++
         },
         onChangeStatus: () => {
+          accountChangeStatus.value = row
+          newStatus.value = row.status
           changeStatusPopup.value = true
         }
 
@@ -341,6 +342,33 @@ const columns = {
     </template>
     <template #action="{ close }">
       <VButton color="primary" raised @click="changeAccountCurrency">{{ t('modal.buttons.confirm') }}</VButton>
+    </template>
+  </VModal>
+
+  <VModal :title="t('account.model.title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <template #content>
+      <form class="form-layout" @submit.prevent="">
+        <!--Fieldset-->
+        <div class="form-fieldset">
+          <div class="columns is-multiline">
+            <div class="column is-12">
+              <VField class="column ">
+                <VLabel>{{ t('supplier.model.status') }}</VLabel>
+                <VControl>
+                  <VSelect v-model="newStatus">
+                    <VOption v-for="status in AccountConsts.ACCOUNT_STATUSES" :key="status" :value="status">
+                      {{ AccountConsts.getAccountStatusName(status) }}
+                    </VOption>
+                  </VSelect>
+                </VControl>
+              </VField>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #action="{ close }">
+      <VButton color="primary" raised @click="updateAccountStatus()">{{ t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
 </template>
