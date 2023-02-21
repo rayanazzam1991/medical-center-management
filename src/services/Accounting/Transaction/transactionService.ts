@@ -1,8 +1,12 @@
-import { CreateRecords, Transaction, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
-import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
-import { RecordAccountDetail, RecordAccountAmountDetail } from '/@src/models/Accounting/Account/account';
-import { AccountConsts } from '/@src/models/Accounting/Account/account';
-import { defaultPagination, Pagination } from "/@src/utils/response";
+import {
+  CreateRecords,
+  Transaction,
+  TransactionConsts,
+  TransactionSearchFilter
+} from "/@src/models/Accounting/Transaction/record"
+import {useTransaction} from "/@src/stores/Accounting/Transaction/transactionStore"
+import {AccountConsts, RecordAccountAmountDetail, RecordAccountDetail} from '/@src/models/Accounting/Account/account';
+import {defaultPagination, Pagination} from "/@src/utils/response";
 
 
 export async function createRecords(
@@ -41,13 +45,13 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
 }
 
 export async function getTransactionsList(searchFilter: TransactionSearchFilter) {
-    const transactionResponse = useTransaction()
-    let transactions: Transaction[] = await transactionResponse.getTransactionsListStore(searchFilter)
+  const transactionResponse = useTransaction()
+  let transactions: Transaction[] = await transactionResponse.getTransactionsListStore(searchFilter)
 
-    let success: boolean = transactionResponse.success ?? false
-    let error_code: string = transactionResponse.error_code ?? ''
-    let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
-    let message: string = transactionResponse.message ?? ''
-    return { success, error_code, message, transactions, pagination }
+  let success: boolean = transactionResponse.success ?? false
+  let error_code: string = transactionResponse.error_code ?? ''
+  let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  let message: string = transactionResponse.message ?? ''
+  return {success, error_code, message, transactions, pagination}
 
 }
