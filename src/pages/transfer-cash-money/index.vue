@@ -141,8 +141,9 @@ const onSubmit = handleSubmit(async () => {
                                         <VSelect v-model="fromAccountId">
                                             <VOption :value="0"> {{
                                                 t('transfer_cash_money.form.select_from_account') }}</VOption>
-                                            <VOption v-for="account in fromCashAccountsList" :value="account.id">{{
-                                                account.name }}
+                                            <VOption v-for="account in fromCashAccountsList" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
+
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="from_account" />
@@ -157,9 +158,8 @@ const onSubmit = handleSubmit(async () => {
                                         <VSelect v-model="toAccountId">
                                             <VOption :value="0"> {{ t('transfer_cash_money.form.select_to_account')
                                             }}</VOption>
-                                            <VOption v-for="account in toCashAccountsList" :value="account.id">{{
-                                                account.name
-                                            }}
+                                            <VOption v-for="account in toCashAccountsList" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="to_account" />

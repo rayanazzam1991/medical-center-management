@@ -169,6 +169,8 @@ declare module 'vue-router/auto/routes' {
     '/supplier/add': RouteRecordInfo<'/supplier/add', '/supplier/add', Record<never, never>, Record<never, never>>,
     '/to-main-inventory': RouteRecordInfo<'/to-main-inventory', '/to-main-inventory', Record<never, never>, Record<never, never>>,
     '/to-main-inventory/': RouteRecordInfo<'/to-main-inventory/', '/to-main-inventory/', Record<never, never>, Record<never, never>>,
+    '/transaction': RouteRecordInfo<'/transaction', '/transaction', Record<never, never>, Record<never, never>>,
+    '/transaction/': RouteRecordInfo<'/transaction/', '/transaction/', Record<never, never>, Record<never, never>>,
     '/transfer-cash-money': RouteRecordInfo<'/transfer-cash-money', '/transfer-cash-money', Record<never, never>, Record<never, never>>,
     '/transfer-cash-money/': RouteRecordInfo<'/transfer-cash-money/', '/transfer-cash-money/', Record<never, never>, Record<never, never>>,
     '/trial-balance-report': RouteRecordInfo<'/trial-balance-report', '/trial-balance-report', Record<never, never>, Record<never, never>>,

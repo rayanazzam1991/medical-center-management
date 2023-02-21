@@ -284,7 +284,7 @@ const onSubmitAdd = handleSubmit(async () => {
     }
 }" />
 
-                                        </VControl>
+                                        </VControl>zz
                                         <ErrorMessage class="help is-danger" :name="`account_id_${mainIndex}`" />
                                     </VField>
                                 </div>

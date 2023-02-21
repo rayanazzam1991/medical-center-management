@@ -1,7 +1,8 @@
-import { CreateRecords } from "/@src/models/Accounting/Transaction/record"
+import { CreateRecords, Transaction, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
 import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
 import { RecordAccountDetail, RecordAccountAmountDetail } from '/@src/models/Accounting/Account/account';
 import { AccountConsts } from '/@src/models/Accounting/Account/account';
+import { defaultPagination, Pagination } from "/@src/utils/response";
 
 
 export async function createRecords(
@@ -33,8 +34,20 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
     recordsData.currency_id = 1
     recordsData.currency_rate = 1500
     recordsData.note = note
-    recordsData.recordType = 1
+    recordsData.recordType = 5
     recordsData.transaction_type_id = 1
     recordsData.title = title
     return recordsData
+}
+
+export async function getTransactionsList(searchFilter: TransactionSearchFilter) {
+    const transactionResponse = useTransaction()
+    let transactions: Transaction[] = await transactionResponse.getTransactionsListStore(searchFilter)
+
+    let success: boolean = transactionResponse.success ?? false
+    let error_code: string = transactionResponse.error_code ?? ''
+    let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+    let message: string = transactionResponse.message ?? ''
+    return { success, error_code, message, transactions, pagination }
+
 }

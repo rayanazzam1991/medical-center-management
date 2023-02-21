@@ -201,6 +201,7 @@
       "balance_sheet_report": "Balance Sheet Report"
     },
     "records": {
+      "transactions": "Financial Records",
       "records": "Financial Records & Transfers",
       "transfer_cash_money": "Transfer Cash Money",
       "add_record": "Add Financial Record",
@@ -1862,6 +1863,35 @@
       "currency_rate": "Currency Rate",
       "date": "Date",
       "note": "Note"
+    }
+  },
+  "transaction": {
+    "add_record_button": "Add Financial Record",
+    "table": {
+      "title": "Financial Records",
+      "columns": {
+        "title": "Title",
+        "amount": "Amount",
+        "currency": "Currency",
+        "currency_rate": "Currency Rate",
+        "note": "Notes",
+        "action_date": "Action Date",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      },
+      "entries": {
+        "columns": {
+          "account": "Account",
+          "credit": "Credit",
+          "debit": "Debit"
+        },
+        "place_holder_title": "Financial Record Details",
+        "cancel_label": "Close"
+      }
+    },
+    "search_filter": {
+      "title": "Title...",
+      "note": "Notes..."
     }
   }
 }

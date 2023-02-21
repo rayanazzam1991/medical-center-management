@@ -1,7 +1,8 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { useApi } from "/@src/composable/useApi";
-import { CreateRecords } from "/@src/models/Accounting/Transaction/record";
-import { createRecordsApi } from "/@src/utils/api/Accounting/Transaction/transaction";
+import { CreateRecords, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record";
+import { createRecordsApi, getTransactionsListApi } from "/@src/utils/api/Accounting/Transaction/transaction";
+import { defaultPagination, Pagination } from "/@src/utils/response";
 import sleep from "/@src/utils/sleep";
 
 export const useTransaction = defineStore('transaction', () => {
@@ -11,7 +12,7 @@ export const useTransaction = defineStore('transaction', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
-
+    const pagination = ref<Pagination>(defaultPagination)
     async function createRecords(records: CreateRecords) {
         if (loading.value) return
         loading.value = true
@@ -32,12 +33,35 @@ export const useTransaction = defineStore('transaction', () => {
         }
     }
 
+    async function getTransactionsListStore(searchFilter: TransactionSearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        sleep(1000)
+        try {
+            const response = await getTransactionsListApi(api, searchFilter)
+            pagination.value = response.response.pagination
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+            return response.response.data
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        } finally {
+            loading.value = false
+        }
+    }
+
     return {
         loading,
         success,
         error_code,
         message,
-        createRecords
+        pagination,
+        createRecords,
+        getTransactionsListStore
     } as const
 })
 
