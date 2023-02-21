@@ -353,7 +353,7 @@ const columns = {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column ">
-                <VLabel>{{ t('supplier.model.status') }}</VLabel>
+                <VLabel>{{ t('account.model.status') }}</VLabel>
                 <VControl>
                   <VSelect v-model="newStatus">
                     <VOption v-for="status in AccountConsts.ACCOUNT_STATUSES" :key="status" :value="status">

@@ -1831,6 +1831,10 @@
         "form_header": "Add Cash Account",
         "page_title": "Add Cash Account  "
       }
+    },
+    "model": {
+      "title": "Account Status",
+      "status": "Change Account Status"
     }
   },
   "transfer_cash_money": {
