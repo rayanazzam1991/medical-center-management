@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Currency, CurrencySearchFilter } from "/@src/models/Accounting/Currency/currency"
-import { getCurrenciesApi } from "/@src/utils/api/Accounting/Currency";
+import { getCurrenciesApi, getCurrencyByCodeApi, updateCurrencyRateApi } from "/@src/utils/api/Accounting/Currency";
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -37,6 +37,49 @@ export const useCurrency = defineStore('currency', () => {
     }
   }
 
+  async function getCurrencyByCodeStore(code: string) {
+    if (loading.value) return
+    loading.value = true
+
+    try {
+      const returnedResponse = await getCurrencyByCodeApi(api, code)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data as Currency
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function updateCurrencyRateStore(id: number, rate: number) {
+    if (loading.value) return
+    loading.value = true
+
+    try {
+      const returnedResponse = await updateCurrencyRateApi(api, id, rate)
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data as Currency
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
 
   return {
@@ -46,7 +89,9 @@ export const useCurrency = defineStore('currency', () => {
     currencies,
     pagination,
     loading,
-    getCurrenciesStore
+    getCurrenciesStore,
+    getCurrencyByCodeStore,
+    updateCurrencyRateStore
   } as const
 })
 

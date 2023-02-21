@@ -197,7 +197,8 @@
     },
     "reports": {
       "reports": "Accounting Reports",
-      "trial_balance_report": "Trial Balance Report"
+      "trial_balance_report": "Trial Balance Report",
+      "balance_sheet_report": "Balance Sheet Report"
     }
   },
   "user_profile_dropdown": {
@@ -233,6 +234,10 @@
       "generate_salaries": "There are some negative net salaries. Please fix this issue and try again.",
       "employee_variable_payment": {
         "cant_edit": "Released and Inactive variable payments can't be edited"
+      },
+      "accounting": {
+        "new_usd_currency_rate": "USD Currency rate must be a number greater than or equal 1",
+        "change_account_currency": "Currency rate must be greater than or equal 1 when selecting non main currency"
       }
     },
     "file": {
@@ -1092,6 +1097,7 @@
       "hr_section": "Edit HR/Attendance Settings",
       "payroll_section": "Edit HR/Payroll Settings",
       "contractor_section": "Edit Contractor Settings",
+      "accounting_section": "Edit Accounting Serttings",
       "start_day": "Start Day",
       "end_day": "End Day",
       "start_time": "Starting Time",
@@ -1101,7 +1107,9 @@
       "deduction_factor": "Deduction Factor",
       "hr_cycle_start_day": "HR Cycle Starting Day",
       "unjustified_hours_round": "Unjustified Hours Rounding",
-      "min_wallet_value": "Minimum Wallet Value"
+      "min_wallet_value": "Minimum Wallet Value",
+      "usd_currency_rate": "USD Currency Rate",
+      "usd_currency_rate_helper": "ُEvery 1 USD = X IQD"
     }
   },
   "social_media": {
@@ -1768,20 +1776,20 @@
     "accounts": "Accounts",
     "sun_navbar_heading": "قائمة الحسابات",
     "form": {
-      "name": " Name ",
+      "name": "Name",
       "balance": "Balance",
-      "currency": "currency",
-      "parent_code": "Account Type ",
+      "currency": "Currency",
+      "parent_code": "Account Type",
       "description": "Description ",
       "status": "Status",
-      "form_header": "Add Account ",
-      "page_title": "Add Account ",
+      "form_header": "Add Account",
+      "page_title": "Add Account",
       "currency_rate": "Currency Rate"
     },
     "table": {
       "title": " Accounts  ",
       "columns": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "description": "Description ",
         "created_at": "Created At",
@@ -1792,7 +1800,13 @@
         "chart_account_type_level1": "Account Type Level 1",
         "chart_account_type_level2": "Account Type Level 2",
         "chart_account_type": "Credit/Debit",
-        "currency_type": "currency "
+        "currency_type": "currency ",
+        "actions": "Actions"
+      },
+      "change_currency": {
+        "title": "Change Account Currency",
+        "currency": "Currency",
+        "currency_rate": "Currency Rate"
       }
     },
     "search_filter": {
@@ -1800,6 +1814,10 @@
       "name": " Name ",
       "status": "Status",
       "code": "Code"
+    },
+    "drop_down": {
+      "change_currency": "Change Account Currency",
+      "change_status": "Change Status"
     },
     "cash": {
       "form": {

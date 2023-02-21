@@ -31,6 +31,10 @@ export interface CreateAccount {
   chart_of_account_id: number
   description?: string
 }
+export interface UpdateAccountCurrency {
+  currency_id: number
+  currency_rate: number
+}
 
 
 
@@ -184,6 +188,13 @@ export interface RecordAccountAmountDetail {
 //   amount: 500,
 //   type: 1
 // }
+export interface ChangeAccountStatus {
+  status:number
+}
+
+export const defaultChangeAccountStatus: ChangeAccountStatus = {
+  status:0
+}
 
 export const defaultCreditAccountDetail = {
   account_id: 1,

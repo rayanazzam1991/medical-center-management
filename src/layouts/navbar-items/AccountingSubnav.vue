@@ -59,6 +59,15 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/balance-sheet-report">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.reports.balance_sheet_report')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul><br />
 
 
