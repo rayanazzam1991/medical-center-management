@@ -86,16 +86,16 @@ export const useAccount = defineStore('account', () => {
     loading.value = true
     sleep(1000)
     try {
-      if (accountStorage.value.length > 0) {
-        accounts.value = accountStorage.value
-      } else {
+      // if (accountStorage.value.length > 0) {
+      //   accounts.value = accountStorage.value
+      // } else {
         const response = await getAllAccountsApi(api, searchFilter)
         accounts.value = response.response.data
         accountStorage.value = accounts.value
         success.value = response.response.success
         error_code.value = response.response.error_code
         message.value = response.response.message
-      }
+      // }
       return accounts
     } catch (error: any) {
       success.value = error?.response.data.success
