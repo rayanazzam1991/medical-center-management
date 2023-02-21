@@ -180,6 +180,15 @@ export interface RecordAccountAmountDetail {
   type?: number
   has_remove_btn?: boolean
 }
+export interface ChangeAccountStatus {
+  id:number
+  status:number
+}
+
+export const defaultChangeAccountStatus: ChangeAccountStatus = {
+  id:0,
+  status:0
+}
 
 export const defaultCreditAccountDetail = {
   account_id: 1,
@@ -196,7 +205,7 @@ export const defaultDebitAccountDetail = {
 class AccountConsts {
   static readonly INACTIVE = 0
   static readonly ACTIVE = 1
-
+  static readonly ACCOUNT_STATUSES = [this.ACTIVE, this.INACTIVE]
   static readonly CREDIT_TYPE = 1
   static readonly DEBIT_TYPE = 2
   static readonly CASH_CODE = '13'

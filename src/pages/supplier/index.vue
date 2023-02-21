@@ -4,7 +4,7 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { editSupplier, getSuppliersList } from '/@src/services/Others/Supplier/supplierService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultSupplierSearchFilter, SupplierSearchFilter, SupplierConsts, Supplier, defaultSupplier,defaultUpdateSupplier } from '/@src/models/Others/Supplier/supplier'
+import { defaultSupplierSearchFilter, SupplierSearchFilter, SupplierConsts, Supplier, defaultSupplier, defaultUpdateSupplier, UpdateSupplier } from '/@src/models/Others/Supplier/supplier'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useSupplier } from '/@src/stores/Others/Supplier/supplierStore'
@@ -14,7 +14,7 @@ import { useI18n } from 'vue-i18n'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { stringTrim } from '/@src/composable/helpers/stringHelpers'
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('supplier.table.title'))
 useHead({
   title: t('supplier.table.title'),
@@ -24,7 +24,9 @@ const searchFilter = ref(defaultSupplierSearchFilter)
 const suppliersList = ref<Array<Supplier>>([])
 const changeStatusPopup = ref(false)
 const supplierChangeStatus = ref<Supplier>(defaultSupplier)
-const currentChangeStatusSupplier = ref(defaultUpdateSupplier)
+//const currentChangeStatusSupplier = ref(defaultUpdateSupplier)
+
+const newStatus = ref<number>(0)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const supplierStore = useSupplier()
@@ -72,25 +74,29 @@ const supplierSort = async (value: string) => {
 }
 
 const changestatusSupplier = async () => {
-    currentChangeStatusSupplier.value.status = supplierChangeStatus.value.status
-    currentChangeStatusSupplier.value.id = supplierChangeStatus.value.id
-    const { message, success } = await editSupplier(currentChangeStatusSupplier.value)
-    if (success) {
 
-        search(searchFilter.value)
-        // @ts-ignore
-        notif.dismissAll()
-        await sleep(200);
-        // @ts-ignore
+  const changeStatusData: UpdateSupplier = {
+    id: supplierChangeStatus.value.id ?? 0,
+    status: newStatus.value
+  }
+  const { message, success } = await editSupplier(changeStatusData)
+  if (success) {
 
-        notif.success(t('toast.success.edit'))
-    } else {
-        await sleep(200);
-        // @ts-ignore
 
-        notif.error(message)
-    }
-    changeStatusPopup.value = false
+    // @ts-ignore
+    notif.dismissAll()
+    await sleep(200);
+    // @ts-ignore
+
+    notif.success(t('toast.success.edit'))
+    supplierChangeStatus.value.status = newStatus.value
+  } else {
+    await sleep(200);
+    // @ts-ignore
+
+    notif.error(message)
+  }
+  changeStatusPopup.value = false
 }
 
 const columns = {
@@ -98,7 +104,7 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
-    label : t('supplier.table.columns.id')
+    label: t('supplier.table.columns.id')
   },
   name: {
     searchable: true,
@@ -106,7 +112,7 @@ const columns = {
     align: 'center',
     label: t('supplier.table.columns.name'),
     renderRow: (row: any) =>
-      h('span', row.name )
+      h('span', row.name)
   },
   phone_number: {
     searchable: true,
@@ -114,7 +120,7 @@ const columns = {
     align: 'center',
     label: t('supplier.table.columns.phone'),
     renderRow: (row: any) =>
-      h('span', row.phone_number )
+      h('span', row.phone_number)
   },
   address: {
     searchable: true,
@@ -122,7 +128,7 @@ const columns = {
     align: 'center',
     label: t('supplier.table.columns.address'),
     renderRow: (row: any) =>
-      h('span', row?.address ?? '-' )
+      h('span', row?.address ?? '-')
   },
   notes: {
     searchable: true,
@@ -132,7 +138,7 @@ const columns = {
     renderRow: (row: any) =>
       h('span', {
         innerHTML: row?.notes ?
-          `<div class="tooltip">${stringTrim(row?.notes,10)}<div class="tooltiptext"><p class="text-white">${row?.notes}</p></div></div>` : '-',
+          `<div class="tooltip">${stringTrim(row?.notes, 10)}<div class="tooltiptext"><p class="text-white">${row?.notes}</p></div></div>` : '-',
 
       }),
 
@@ -141,13 +147,13 @@ const columns = {
     sortable: true,
     searchable: true,
     align: 'center',
-    label : t('supplier.table.columns.city'),
+    label: t('supplier.table.columns.city'),
     renderRow: (row: any) =>
-      h('span', row?.city?.name ?? '-' )
+      h('span', row?.city?.name ?? '-')
   },
   status: {
     align: 'center',
-    label : t('supplier.table.columns.status'),
+    label: t('supplier.table.columns.status'),
     renderRow: (row: any) =>
       h(
         VTag,
@@ -172,7 +178,7 @@ const columns = {
     sortable: true,
     searchable: true,
     align: 'center',
-    label : t('supplier.table.columns.created_by'),
+    label: t('supplier.table.columns.created_by'),
     renderRow: (row: any) =>
       h('span', row?.created_by?.first_name)
   },
@@ -182,17 +188,17 @@ const columns = {
     align: 'center',
     label: t('supplier.table.columns.created_at'),
     renderRow: (row: any) =>
-      h('span', row.created_at )
+      h('span', row.created_at)
   },
   actions: {
     align: 'center',
-    label : t('supplier.table.columns.actions'),
+    label: t('supplier.table.columns.actions'),
     renderRow: (row: any) =>
       h(NoDeleteDropDown, {
         onChangeStatus: () => {
-                    supplierChangeStatus.value = row
-                    changeStatusPopup.value = true
-                },
+          supplierChangeStatus.value = row
+          changeStatusPopup.value = true
+        },
         onEdit: () => {
           router.push({ path: `/supplier/${row.id}/edit` })
         },
@@ -220,8 +226,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="suppliersList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')"
-          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
@@ -231,45 +237,47 @@ const columns = {
       no-router @update:current-page="getSuppliersPerPage" />
     <h6 v-if="suppliersList.length != 0 && !supplierStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
 
     <VPlaceloadText v-if="supplierStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('supplier.model.title')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
-        <template #content>
-            <form class="form-layout" @submit.prevent="">
-                <!--Fieldset-->
-                <div class="form-fieldset">
-                    <div class="columns is-multiline">
-                        <div class="column is-12">
-                            <VField class="column ">
-                                <VLabel>{{ t('supplier.model.status') }}</VLabel>
-                                <VControl>
-                                    <VSelect v-model="supplierChangeStatus.status">
-                                        <VOption v-for="status in SupplierConsts.SUPPLIER_STATUSES" :key="status" :value="status">{{SupplierConsts.getSupplierStatusName(status)}}
-                                        </VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </template>
-        <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusSupplier()">{{ t('modal.buttons.confirm')}}</VButton>
-        </template>
-    </VModal>
-
+  <VModal :title="t('supplier.model.title')" :open="changeStatusPopup" actions="center"
+    @close="changeStatusPopup = false">
+    <template #content>
+      <form class="form-layout" @submit.prevent="">
+        <!--Fieldset-->
+        <div class="form-fieldset">
+          <div class="columns is-multiline">
+            <div class="column is-12">
+              <VField class="column ">
+                <VLabel>{{ t('supplier.model.status') }}</VLabel>
+                <VControl>
+                  <VSelect v-model="newStatus">
+                    <VOption v-for="status in SupplierConsts.SUPPLIER_STATUSES" :key="status" :value="status">
+                      {{ SupplierConsts.getSupplierStatusName(status) }}
+                    </VOption>
+                  </VSelect>
+                </VControl>
+              </VField>
+            </div>
+          </div>
+        </div>
+      </form>
+    </template>
+    <template #action="{ close }">
+      <VButton color="primary" raised @click="changestatusSupplier()">{{ t('modal.buttons.confirm') }}</VButton>
+    </template>
+  </VModal>
 </template>
 <style lang="scss">
 .tooltip {

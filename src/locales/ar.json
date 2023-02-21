@@ -1821,6 +1821,10 @@
         "form_header": "إضافة حساب النقد",
         "page_title": "إضافة حساب نقد"
       }
+    },
+    "model": {
+      "title": " حالة الحساب",
+      "status": "تغيير حالة الحساب"
     }
   },
   "trial_balance_report": {

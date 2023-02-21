@@ -113,6 +113,14 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
+                    <RouterLink to="/account/add">
+
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                      <span>{{ t('accounting_subnav.account.add_account') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
                     <RouterLink to="/account/add-cash-account">
 
                       <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
