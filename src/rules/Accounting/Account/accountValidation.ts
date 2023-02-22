@@ -21,17 +21,6 @@ const accountvalidationSchema = toFormValidator(zod
         status: zod
         .number({ required_error: i18n.global.t('validation.redio.required') }),
 
-        balance:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                .min(0, i18n.global.t('validation.number.invalid_type_error')),
-
-        ),
       currency_rate:
       zod.preprocess(
         (input) => {

@@ -70,7 +70,6 @@ export default defineComponent({
         name: "",
         currency_rate: 1,
         status: AccountConsts.ACTIVE,
-        balance: 0
       }
     });
     const onSubmit = async (method: String) => {
@@ -134,20 +133,6 @@ export default defineComponent({
                   <VControl icon="feather:chevrons-right">
                     <VInput v-model="currentAccount.name" type="text" placeholder="" autocomplete="given-name" />
                     <ErrorMessage class="help is-danger" name="name" />
-                  </VControl>
-                </VField>
-              </div>
-            </div>
-          </div>
-          <!--Fieldset-->
-          <div class="form-fieldset">
-            <div class="columns is-multiline">
-              <div class="column is-12">
-                <VField id="balance" v-slot="{ field }">
-                  <VLabel class="required">{{ t('account.form.balance') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
-                    <VInput v-model="currentAccount.balance" placeholder="" type="number" autocomplete="given-balance" />
-                    <ErrorMessage class="help is-danger" name="balance" />
                   </VControl>
                 </VField>
               </div>
