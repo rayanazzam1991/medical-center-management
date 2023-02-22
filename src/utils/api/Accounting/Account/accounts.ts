@@ -43,14 +43,14 @@ export async function getAllAccountsApi(
     return { response }
 }
 export async function changeAccountStatusApi(
-  api: AxiosInstance,
-  account: ChangeAccountStatus
+    api: AxiosInstance,
+    account: ChangeAccountStatus
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.put(
-      `account/changeAccountStatus/${account.id}`,
-      account
-  )
-  return { response }
+    const { data: response, headers } = await api.put(
+        `account/changeAccountStatus/${account.id}`,
+        account
+    )
+    return { response }
 }
 
 
@@ -59,6 +59,6 @@ export async function updateAccountCurrencyApi(
     account_id: number,
     updateAccountCurrencyData: UpdateAccountCurrency
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.put(`account/${account_id}/updateAccountCurrency`, updateAccountCurrencyData)
+    const { data: response, headers } = await api.put(`account/updateAccountCurrency/${account_id}`, updateAccountCurrencyData)
     return { response }
 }
