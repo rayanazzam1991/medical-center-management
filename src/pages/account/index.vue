@@ -167,8 +167,7 @@ const columns = {
 
 
   "chart_of_accounts.name_view": {
-    sortable: true,
-    searchable: true,
+
     align: 'center',
     label: t('account.table.columns.chart_account_type_level2'),
     renderRow: (row: any) =>
