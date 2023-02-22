@@ -151,20 +151,6 @@ export default defineComponent({
               </div>
             </div>
           </div>
-          <!--Fieldset-->
-          <div class="form-fieldset">
-            <div class="columns is-multiline">
-              <div class="column is-12">
-                <VField id="balance" v-slot="{ field }">
-                  <VLabel class="required">{{ t('account.form.balance') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
-                    <VInput v-model="currentAccount.balance" placeholder="" type="number" autocomplete="given-balance" />
-                    <ErrorMessage class="help is-danger" name="balance" />
-                  </VControl>
-                </VField>
-              </div>
-            </div>
-          </div>
 
           <!--Fieldset-->
           <div class="form-fieldset">

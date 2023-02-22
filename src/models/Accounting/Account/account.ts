@@ -24,7 +24,6 @@ export interface Account {
 export interface CreateAccount {
   name: string
   level2_code: string
-  balance: number
   status: number
   currency_id: number
   currency_rate: number
@@ -54,7 +53,6 @@ export const defaultAccount: Account = {
 export const defaultCreateAccount: CreateAccount = {
   level2_code: '',
   name: '',
-  balance: 0,
   status: 1,
   currency_id: 0,
   chart_of_account_id: 0,
