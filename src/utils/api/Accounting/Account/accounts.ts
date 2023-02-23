@@ -15,6 +15,13 @@ export async function generateBalanceSheetReportApi(
     const { data: response, headers } = await api.get('account/generateBalanceSheetReport')
     return { response }
 }
+
+export async function generateIncomeStatmentReportApi(
+  api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get('account/generateIncomeStatementReport')
+  return { response }
+}
 export async function addAccountApi(
     api: AxiosInstance,
     account: CreateAccount

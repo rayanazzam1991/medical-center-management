@@ -1,6 +1,7 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { changeAccountStatusApi } from "/@src/utils/api/Accounting/Account/accounts"
+import { changeAccountStatusApi, generateIncomeStatmentReportApi } from "/@src/utils/api/Accounting/Account/accounts"
+
 import {
   Account,
   AccountSearchFilter,
@@ -8,7 +9,8 @@ import {
   ChangeAccountStatus,
   CreateAccount,
   TrialBalance,
-  UpdateAccountCurrency
+  UpdateAccountCurrency,
+  IncomeStatment
 } from "/@src/models/Accounting/Account/account"
 import {
   addAccountApi,
@@ -144,6 +146,24 @@ export const useAccount = defineStore('account', () => {
       loading.value = false
     }
   }
+  async function generateIncomeStatmentReportStore() {
+    if (loading.value) return
+    loading.value = true
+    await sleep(3000);
+    try {
+      const returnedResponse = await generateIncomeStatmentReportApi(api)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data as IncomeStatment
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    } finally {
+      loading.value = false
+    }
+  }
   async function updateAccountCurrencyStore(account_id: number, updateAccountCurrencyData: UpdateAccountCurrency) {
     if (loading.value) return
     loading.value = true
@@ -204,6 +224,7 @@ export const useAccount = defineStore('account', () => {
     addAccountStore,
     generateTrailBalanceReportStore,
     generateBalanceSheetReportStore,
+    generateIncomeStatmentReportStore,
     updateAccountCurrencyStore,
     changeAccountStatusStore
 

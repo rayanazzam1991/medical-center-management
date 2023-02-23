@@ -13,7 +13,7 @@ export interface Account {
   id?: number
   code: string
   name: string
-  balance: number
+  balance: string
   status: number
   chart_account?: ChartOfAccount
   currency?: Currency
@@ -41,7 +41,7 @@ export const defaultAccount: Account = {
   id: 0,
   code: '',
   name: '',
-  balance: 0,
+  balance: '',
   status: 0,
   chart_account: undefined,
   currency: undefined,
@@ -149,6 +149,70 @@ export interface BalanceSheetAccount {
   type: number
   balance: string
 }
+
+
+//Income Statment Interfaces And Defaults
+
+export interface IncomeStatment{
+  revenues: IncomeStatmentLvl1Chart
+  other_expenses: IncomeStatmentLvl1Chart
+  costs: IncomeStatmentLvl2Chart
+  gross_profit: string
+  net_income:string
+}
+export interface IncomeStatmentLvl1Chart{
+  id: number
+  name: string
+  code: string
+  account_type: number
+  children: IncomeStatmentLvl2Chart[]
+  total_balances: string
+}
+export interface IncomeStatmentLvl2Chart{
+  id: number
+  name: string
+  code: string
+  account_type: number
+  accounts: IncomeStatmentAccount[]
+  total_balances: string
+}
+export interface IncomeStatmentAccount {
+  id: number
+  name: string
+  code: string
+  type: number
+  balance: string
+}
+
+
+export const defaultIncomeStatmentLvl1Chart: IncomeStatmentLvl1Chart = {
+  id: 0,
+  name: '',
+  code: '',
+  account_type: 1,
+  children: [],
+  total_balances: ''
+}
+export const defaultIncomeStatmentLvl2Chart: IncomeStatmentLvl2Chart = {
+  id: 0,
+  name: '',
+  code: '',
+  account_type: 1,
+  accounts: [],
+  total_balances: ''
+}
+export const defaultIncomeStatment: IncomeStatment = {
+  revenues: defaultIncomeStatmentLvl1Chart,
+  other_expenses: defaultIncomeStatmentLvl1Chart,
+  costs: defaultIncomeStatmentLvl2Chart,
+  gross_profit: '',
+  net_income:''
+}
+
+
+
+
+
 export const defaultBalanceSheetAssetsLiabilites: BalanceSheetAssetsLiabilites = {
   id: 0,
   name: '',

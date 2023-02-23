@@ -1,5 +1,5 @@
 
-import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultTrialBalance, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultIncomeStatment, defaultTrialBalance, IncomeStatment, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
 import { defaultPagination, Pagination } from "/@src/utils/response"
 
@@ -53,6 +53,16 @@ export async function generateBalanceSheetReport() {
     let error_code: string = accountResponse.error_code ?? ''
     let message: string = accountResponse.message ?? ''
     return { success, error_code, message, balance_sheet }
+
+}
+
+export async function generateIncomeStatmentReport() {
+  const accountResponse = useAccount()
+  let income_statment: IncomeStatment = await accountResponse.generateIncomeStatmentReportStore() ?? defaultIncomeStatment
+  let success: boolean = accountResponse.success ?? false
+  let error_code: string = accountResponse.error_code ?? ''
+  let message: string = accountResponse.message ?? ''
+  return { success, error_code, message, income_statment }
 
 }
 export async function updateAccountCurrency(account_id: number, updateAccountCurrencyData: UpdateAccountCurrency) {
