@@ -11,11 +11,13 @@ import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import { getDaysNamePerMonth, getDaysPerMonth, getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 import { Notyf } from 'notyf';
-import { Attendance, defaultAttendance, defaultEmployeeAttendance, defaultEmployeeAttendanceSearchFilter, EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
+import { Attendance, defaultAttendance, defaultEmployeeAttendance, defaultEmployeeAttendanceSearchFilter, EmployeeAttendance, EmployeeAttendanceSearchFilter, JustificationRequestData } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
 import { DateConsts, DaysNamePerMonth, DaysPerMonth } from '/@src/models/HR/Attendance/Date/date';
 import { AttendanceConsts, UpdateAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
+import { updateAttendance, justifyAttendance, unjustifyAttendance, addJustificationProofFile } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
 import { updateAttendance, justifyAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
 import { useI18n } from 'vue-i18n';
+import { ErrorMessage } from 'vee-validate';
 import { GeneratedSalariesMonth } from '/@src/models/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonth';
 import { getGeneratedMonths } from '/@src/services/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonthService';
 import { useDarkmode } from '/@src/stores/darkmode';
@@ -38,9 +40,13 @@ const default_per_page = ref(1)
 const keyIncrement = ref(0)
 const tableCellPopup = ref(false)
 const markAttendancePopup = ref(false)
+const justifyAttendancePopup = ref(false)
+const unjustifyAttendancePopup = ref(false)
 const canMarkAttendanceSelectedCell = ref(false)
 const selectedCell = ref<Attendance>(defaultAttendance)
 const selectedEmployee = ref<EmployeeAttendance>(defaultEmployeeAttendance)
+const selectedReason = ref('')
+const justificationProofFile = ref<File>()
 const daysPerMonth = ref<DaysPerMonth[]>([])
 const daysNamePerMonth = ref<DaysNamePerMonth[]>([])
 const selectedCheckInTime = ref({ hours: '00', minutes: '00' })
@@ -264,12 +270,36 @@ const updateEmployeeAttendance = async () => {
 
 
 }
+const unjustifyEmployeeAttendance = async () => {
 const justifyEmployeeAttendance = async (isJustify: boolean) => {
   if (isJustify)
     loading.value.update = true
   else
     loading.value.delete = true
 
+    const { message, success, attendance } = await unjustifyAttendance(selectedCell.value.id)
+    if (success) {
+        await search(searchFilter.value, selectedMonthDays.value)
+        notif.dismissAll()
+        await sleep(200);
+        notif.success(t('toast.success.unjustified'))
+    } else {
+        await sleep(200);
+        notif.error(message)
+    }
+
+    keyIncement.value++
+    loading.value.delete = false
+    tableCellPopup.value = false
+    unjustifyAttendancePopup.value = false
+}
+const justifyEmployeeAttendance = async () => {
+    if (selectedReason.value == '') {
+        notif.error(t('toast.error.Attendance.required_reason'))
+        return
+    } else if (selectedReason.value.length > 255) {
+        notif.error(t('toast.error.Attendance.out_of_length_reason'))
+        return
   const { message, success, attendance } = await justifyAttendance(selectedCell.value.id, isJustify)
   if (success) {
     await search(searchFilter.value, selectedMonthDays.value)
@@ -293,15 +323,101 @@ const justifyEmployeeAttendance = async (isJustify: boolean) => {
 
   tableCellPopup.value = false
 
+    }
+    loading.value.update = true
+    const justificationRequestData: JustificationRequestData = {
+        reason: selectedReason.value
+    }
+    const { message, success, justificationResponseData } = await justifyAttendance(selectedCell.value.id, justificationRequestData)
+    if (success) {
+        if (justificationProofFile.value != undefined) {
 
+            let formData = new FormData()
+            if (justificationProofFile.value != undefined) formData.append('images[]', justificationProofFile.value)
 
+            const { success, message } = await addJustificationProofFile(justificationResponseData.id, formData)
 
+            if (success) {
+                justificationProofFile.value = undefined
+                loading.value.update = false
+                await search(searchFilter.value, selectedMonthDays.value)
+                notif.dismissAll()
+                await sleep(200);
+                notif.success(t('toast.success.justified'))
 
+            } else {
+                await sleep(200)
+                justificationProofFile.value = undefined
+                loading.value.update = false
+                notif.error(message)
+            }
+        } else {
+            loading.value.update = false
+            await search(searchFilter.value, selectedMonthDays.value)
+            notif.dismissAll()
+            await sleep(200);
+            notif.success(t('toast.success.justified'))
 
+        }
 
+    } else {
+        await sleep(200);
+        notif.error(message)
+    }
 
+    keyIncement.value++
+    selectedReason.value = ''
+    loading.value.update = false
+    tableCellPopup.value = false
+    justifyAttendancePopup.value = false
+}
+const onAddFile = async (event: any) => {
+    const _file = event.target.files[0] as File
+    let _message = ''
+    if (_file) {
+        if (
+            _file.type != 'image/jpeg' &&
+            _file.type != 'image/png' &&
+            _file.type != 'image/webp'
+        ) {
+            _message = t('toast.file.type')
+            await sleep(200)
+            notif.error(_message)
+        } else if (_file.size > 2 * 1024 * 1024) {
+            _message = t("toast.file.size")
+            await sleep(200)
+            notif.error(_message)
+        } else {
+            justificationProofFile.value = _file
+        }
+    }
 }
 
+
+
+const canMarkAttendance = async () => {
+    return true
+    const selectedCellDateSplitter = selectedCell.value.date.split("-")
+    const selectedCellMonth = selectedCellDateSplitter[1]
+    if (selectedCellMonth == currentMonth) {
+
+        return true
+    } else {
+        const selectedCellDay = selectedCellDateSplitter[2]
+        const previousMonthName = DateConsts.MONTHS[Number(selectedCellMonth) - 1]
+        const previousMonthNumber = DateConsts.getMonthNumber(previousMonthName)
+        let previousMonthDaysNumber
+        if (previousMonthNumber > Number(currentMonth)) {
+
+            const { daysPerMonth } = await getDaysPerMonth(currentYear - 1)
+
+
+            previousMonthDaysNumber = daysPerMonth.find((month) => month.month == previousMonthNumber)?.number_of_days
+
+        } else {
+            previousMonthDaysNumber = daysPerMonth.value.find((month) => month.month == previousMonthNumber)?.number_of_days
+        }
+        if (previousMonthDaysNumber != undefined) {
 const canMarkAttendance = () => {
   let canMark = true
   const [sellectedYear, selectedMonth, selectedDay] = selectedCell.value.date.split("-")
@@ -929,6 +1045,14 @@ const columns28 = {
   "d15": {
     align: 'center',
 
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[15 - 1].day_name.toLowerCase()}`)}`,
+            }
     grow: false,
     renderHeader: () =>
       h(
@@ -1166,6 +1290,17 @@ const columns28 = {
 
       ),
 
+    },
+    "d21": {
+        align: 'center',
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[21 - 1].day_name.toLowerCase()}`)}`,
+            }
   },
   "d21": {
     align: 'center',
@@ -1206,6 +1341,17 @@ const columns28 = {
 
       ),
 
+    },
+    "d22": {
+        align: 'center',
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[22 - 1].day_name.toLowerCase()}`)}`,
+            }
   },
   "d22": {
     align: 'center',
@@ -1286,6 +1432,17 @@ const columns28 = {
 
       ),
 
+    },
+    "d24": {
+        align: 'center',
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[24 - 1].day_name.toLowerCase()}`)}`,
+            }
   },
   "d24": {
     align: 'center',
@@ -1326,6 +1483,17 @@ const columns28 = {
 
       ),
 
+    },
+    "d25": {
+        align: 'center',
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[25 - 1].day_name.toLowerCase()}`)}`,
+            }
   },
   "d25": {
     align: 'center',
@@ -1570,6 +1738,17 @@ const columns30Sub = {
 
       ),
 
+    },
+    "d30": {
+        align: 'center',
+        grow: false,
+        renderHeader: () =>
+            h(
+                AttendanceTableCellCard, {
+                isHeader: true,
+                radius: 'none',
+                headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1].day_name.toLowerCase()}`)}` : '',
+            }
   },
   "d30": {
     align: 'center',
@@ -1761,6 +1940,13 @@ Object.assign(columns29, columns28, columns29Sub)
               <VPlaceload />
             </VFlexTableCell>
 
+                    </div>
+                </div>
+                <div v-else-if="employeesAttendanceList.length === 0" class="flex-list-inner">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')"
+                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+                    </VPlaceholderSection>
+                </div>
           </div>
         </div>
         <div v-else-if="employeesAttendanceList.length === 0" class="flex-list-inner">
@@ -1769,6 +1955,24 @@ Object.assign(columns29, columns28, columns29Sub)
           </VPlaceholderSection>
         </div>
 
+            </template>
+        </VFlexTable>
+        <VFlexPagination v-if="(employeesAttendanceList.length != 0 && paginationVar.max_page != 1)"
+            :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
+            :total-items="paginationVar.total" :max-links-displayed="3" no-router
+            @update:current-page="getEmployeesAttendancePerPage" />
+        <h6 v-if="employeesAttendanceList.length != 0 && !employeeStore?.loading && !loading.fetch">
+            {{
+                t('tables.pagination_footer', { from_number: paginationVar.page !=
+                    paginationVar.max_page
+                    ?
+                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                , to_number: paginationVar.page !=
+                    paginationVar.max_page ?
+                    paginationVar.page *
+                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+            })}}</h6>
       </template>
     </VFlexTable>
     <VFlexPagination v-if="(employeesAttendanceList.length != 0 && paginationVar.max_page != 1)"
@@ -1788,6 +1992,40 @@ Object.assign(columns29, columns28, columns29Sub)
           paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
       })}}</h6>
 
+        <VPlaceloadText v-if="employeeStore?.loading || loading.fetch" :lines="1" last-line-width="20%" class="mx-2" />
+    </VFlexTableWrapper>
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.attendance_details_modal.title')"
+        :open="tableCellPopup" actions="right" @close="tableCellPopup = false">
+        <template #content>
+            <div class="is-flex is-justify-content-space-between">
+                <div>
+                    <h2 class="is-size-5 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+                        selectedEmployee.user.last_name
+                    }}</h2>
+                    <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+                    <h2 class="is-size-5 mb-3">{{ t('employee_attendance.table.attendance_details_modal.date') }} <span
+                            class="has-text-primary"> {{
+    t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+        day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()
+}`)
+                            }} {{
+                            selectedCell.date
+                            }}</span></h2>
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.attendance_details_modal.status')}} <span
+                            class="has-text-primary">{{
+                            t(`attendance_status.${
+    AttendanceConsts.getAttendanceStatusName(selectedCell.status)
+        .replaceAll(' ', '_').toLowerCase()
+}`)
+                            }}</span></h2>
+                </div>
+                <div>
+                    <VButton color="primary" v-if="canMarkAttendanceSelectedCell" raised
+                        @click="markAttendancePopup = true">{{
+                        t('employee_attendance.table.attendance_details_modal.mark_attendance')
+                        }}</VButton>
+                </div>
+            </div>
     <VPlaceloadText v-if="employeeStore?.loading || loading.fetch" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
   <VModal :key="keyIncement" :title="t('employee_attendance.table.attendance_details_modal.title')"
@@ -1822,6 +2060,30 @@ Object.assign(columns29, columns28, columns29Sub)
         </div>
       </div>
 
+            <div class="form-fieldset">
+                <div class="columns is-multiline">
+                    <div class="column is-12">
+                        <VCard elevated>
+                            <h3 class="title is-6 mb-2">{{
+                            t('employee_attendance.table.attendance_details_modal.check_in')
+                            }}</h3>
+                            <p> {{
+                            selectedCell.check_in != undefined ? selectedCell.check_in :
+                            t('employee_attendance.table.attendance_details_modal.no_data')
+                            }} </p>
+                        </VCard>
+                        <VCard elevated class="mt-2">
+                            <h3 class="title is-6 mb-2"> {{
+                            t('employee_attendance.table.attendance_details_modal.check_out')
+                            }} </h3>
+                            <p> {{
+                            selectedCell.check_out != undefined ? selectedCell.check_out :
+                            t('employee_attendance.table.attendance_details_modal.no_data')
+                            }} </p>
+                        </VCard>
+                    </div>
+                </div>
+            </div>
       <div class="form-fieldset">
         <div class="columns is-multiline">
           <div class="column is-12">
@@ -1847,6 +2109,50 @@ Object.assign(columns29, columns28, columns29Sub)
         </div>
       </div>
 
+        </template>
+        <template #action="{ close }">
+            <VButton :disabled="loading.update" v-if="(selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
+            selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE) && canMarkAttendanceSelectedCell"
+                class="mr-2" color="danger" outlined @click="() => {unjustifyAttendancePopup = true 
+                tableCellPopup = false}">
+                {{ t('employee_attendance.table.attendance_details_modal.unjustify_attendance') }}</VButton>
+            <VButton :disabled="loading.delete" v-if="(
+                selectedCell.status == AttendanceConsts.PENDING_ABSENCE ||
+                selectedCell.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE ||
+                selectedCell.status == AttendanceConsts.UNJUTIFIED_ABSENCE ||
+                selectedCell.status == AttendanceConsts.UNJUSTIFIED_PARTIAL_ABSENCE
+            ) && canMarkAttendanceSelectedCell" class="mr-2" color="primary" outlined @click="() => {justifyAttendancePopup = true
+                tableCellPopup = false}">
+                {{ t('employee_attendance.table.attendance_details_modal.justify_attendance') }}</VButton>
+        </template>
+    </VModal>
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.mark_attendance_modal.title')"
+        :open="markAttendancePopup" actions="right" @close="markAttendancePopup = false">
+        <template #content>
+            <div class="is-flex is-justify-content-space-between">
+                <div>
+                    <h2 class="is-size-5 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+                    selectedEmployee.user.last_name
+                    }}</h2>
+                    <h4 class="mb-3 is-size-6"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+                    <h2 class="is-size-5 mb-3">{{ t('employee_attendance.table.mark_attendance_modal.date') }}<span
+                            class="has-text-primary"> {{
+                            t(`dates.days_abbr.${
+    daysNamePerMonth.find((day) =>
+        day.day == Number(selectedCell.date.split('-')[2]))?.day_name.toLowerCase()
+} `)
+                            }} {{
+                            selectedCell.date
+                            }}</span></h2>
+                    <h2 class="is-size-5 mb-3">{{t('employee_attendance.table.mark_attendance_modal.status')}} <span
+                            class="has-text-primary">{{
+                            t(`attendance_status.${
+    AttendanceConsts.getAttendanceStatusName(selectedCell.status).replace(" ",
+        "_").toLowerCase()
+}`)
+                            }}</span></h2>
+                </div>
+            </div>
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="loading.delete">
@@ -1902,6 +2208,14 @@ Object.assign(columns29, columns28, columns29Sub)
         </div>
       </div>
 
+            <div class="form-fieldset">
+                <div class="columns is-multiline">
+                    <div class="column is-12">
+                        <VCard elevated>
+                            <h3 class="title is-6 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_in') }}</h3>
+                            <div class="column is-12">
+                                <div class="columns">
       <div class="form-fieldset">
         <div class="columns is-multiline">
           <div class="column is-12">
@@ -1911,6 +2225,28 @@ Object.assign(columns29, columns28, columns29Sub)
               <div class="column is-12">
                 <div class="columns">
 
+                                    <VField class="column is-6 pl-0">
+                                        <VControl>
+                                            <VSelect v-model="selectedCheckInTime.hour">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 23" :key="index" :value="index">{{
+                                                index< 10? '0' + index : index }} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                    <VField class="column is-6 pr-0">
+                                        <VControl>
+                                            <VSelect v-model="selectedCheckInTime.minute">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
+                                                index
+                                                < 10? '0' + index : index }} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                </div>
                   <VField class="column is-12 pl-0">
                     <VControl>
                       <Datepicker v-model="selectedCheckInTime" :locale="locale" time-picker
@@ -1920,6 +2256,13 @@ Object.assign(columns29, columns28, columns29Sub)
                   </VField>
                 </div>
 
+                            </div>
+                        </VCard>
+                        <VCard elevated class="mt-2">
+                            <h3 class="title is-6 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_out') }}</h3>
+                            <div class="column is-12">
+                                <div class="columns">
               </div>
             </VCard>
             <VCard elevated class="mt-2">
@@ -1928,6 +2271,28 @@ Object.assign(columns29, columns28, columns29Sub)
               <div class="column is-12">
                 <div class="columns">
 
+                                    <VField class="column is-6 pl-0">
+                                        <VControl>
+                                            <VSelect v-model="selectedCheckOutTime.hour">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 23" :key="index" :value="index">{{
+                                                index< 10? '0' + index : index }} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                    <VField class="column is-6 pr-0">
+                                        <VControl>
+                                            <VSelect v-model="selectedCheckOutTime.minute">
+                                                <VOption :key="'00'" :value="'00'">00 </VOption>
+
+                                                <VOption v-for="index in 59" :key="index" :value="index.toString()">{{
+                                                index
+                                                < 10? '0' + index : index }} </VOption>
+                                            </VSelect>
+                                        </VControl>
+                                    </VField>
+                                </div>
                   <VField class="column is-12 pl-0">
                     <VControl>
                       <Datepicker v-model="selectedCheckOutTime" :locale="locale" time-picker
@@ -1952,9 +2317,36 @@ Object.assign(columns29, columns28, columns29Sub)
     </template>
   </VModal>
 
+                    </div>
+
+                </div>
+            </div>
+        </template>
+        <template #action="{ close }">
+            <VLoader size="small" :active="loading.update">
+
+                <VButton color="primary" raised @click="justifyEmployeeAttendance">{{ t('modal.buttons.confirm')}}
+                </VButton>
+            </VLoader>
+        </template>
+    </VModal>
+
+
 </template>
 <style scoped lang="scss">
 .is-clickable {
   cursor: default !important;
 }
+
+.required::after {
+    content: " *";
+    color: var(--danger);
+}
+
+.file-name {
+
+    border-radius: 0 !important;
+    border-left-width: 1px ;
+}
+
 </style>

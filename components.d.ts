@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
     AnimatedLogo: typeof import('./src/components/svg/AnimatedLogo.vue')['default']
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
+    AttendanceJustificationTableHeader: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceJustificationTableHeader.vue')['default']
     AttendanceTableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
     BalanceSheetAssetsLiabilitesCollapse: typeof import('./src/components/OurComponents/Accounting/Account/BalanceSheetAssetsLiabilitesCollapse.vue')['default']

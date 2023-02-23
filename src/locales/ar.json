@@ -160,6 +160,7 @@
       "employee_variable_payments": "المتغيرات المالية للموظفين",
       "create_employee_variable_payment": "اضافة متغير مالي لموظف"
     },
+    "attendance_justifications": "تبريرات الغياب",
     "employees_schedule": "جدول الدوام",
     "employees_attendance": "جدول الحضور",
     "generate_salaries": "توليد الراوتب"
@@ -246,7 +247,9 @@
       "Attendance": {
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
-        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي"
+        "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
+        "required_reason": "حقل السبب مطلوب",
+        "out_of_length_reason": "السبب لا يمكن أن يكون أكبر من 255 محرف"
       },
       "payroll": {
         "deduction_factor": "معامل خصم التأخير يجب أن يكون رقم صحيح أكبر أو يساوي الواحد"
@@ -795,6 +798,16 @@
         "status": "الحالة:",
         "check_in": "تسجيل دخول الموظفين",
         "check_out": "تسجيل خروج الموظفين"
+      },
+      "unjustify_attendance": {
+        "title": "عدم تبرير الحضور",
+        "confirmation": "هل أنت متأكد؟",
+        "caution": "سيتم تعديل حضور الموظف إلى غير مبرر"
+      },
+      "justify_attendance": {
+        "title": "تبرير الحضور",
+        "reason": "السبب",
+        "proof": "الإثبات"
       }
     },
     "search_filter": {
@@ -1938,6 +1951,24 @@
     "search_filter": {
       "title": "العنوان...",
       "note": "ملاحظات..."
+    }
+  },
+  "attendance_justification": {
+    "table": {
+      "title": "تبريرات الغياب",
+      "columns": {
+        "employee_name": "اسم الموظف",
+        "date": "التاريخ",
+        "absence_hours": "ساعات الغياب",
+        "reason": "السبب",
+        "proof": "الإثبات",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": " بواسطة"
+      }
+    },
+    "search_filter": {
+      "name": "اسم الموظف...",
+      "creator_name": "بواسطة..."
     }
   }
 }

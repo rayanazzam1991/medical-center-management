@@ -231,7 +231,9 @@
       "Attendance": {
         "time": "Start time cant be after end time",
         "check_in": "New check in can't be after original check in",
-        "check_out": "New check out can't be before original check out"
+        "check_out": "New check out can't be before original check out",
+        "required_reason": "Reason field is required",
+        "out_of_length_reason": "Reason cannot be longer than 255 characters"
       },
       "payroll": {
         "deduction_factor": "Deduction Factor must be a valid positive number and greater than or equal 1"
@@ -1896,6 +1898,24 @@
     "search_filter": {
       "title": "Title...",
       "note": "Notes..."
+    }
+  },
+  "attendance_justification": {
+    "table": {
+      "title": "Attendance Justifications",
+      "columns": {
+        "employee_name": "Employee Name",
+        "date": "Date",
+        "absence_hours": "Absence Hours",
+        "reason": "Reason",
+        "proof": "Proof",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      }
+    },
+    "search_filter": {
+      "name": "Employee Name...",
+      "creator_name": "Created By..."
     }
   }
 }

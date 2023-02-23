@@ -1,3 +1,4 @@
+import { Employee } from "/@src/models/Employee/employee"
 import { defaultPosition, Position } from "/@src/models/Others/Position/position"
 import { User, defaultUser } from "/@src/models/Others/User/user"
 import { BaseConsts } from "/@src/utils/consts/base"
@@ -14,11 +15,20 @@ export interface Attendance {
     check_in?: string
     check_out?: string
     status: number
+    employee?: Employee
 }
 export interface UpdateAttendance {
     check_in: string
     check_out: string
 }
+export interface JustificationRequestData {
+    reason: string
+}
+export interface JustificationResponseData {
+    id: number
+}
+
+
 export const defaultEmployeeAttendance: EmployeeAttendance = {
     id: undefined,
     user: defaultUser,
@@ -31,10 +41,17 @@ export const defaultAttendance: Attendance = {
     check_in: undefined,
     check_out: undefined,
     status: 0,
+    employee: undefined
 }
 export const defaultUpdateAttendance: UpdateAttendance = {
     check_in: "00:00:00",
     check_out: "00:00:00"
+}
+export const defaultJustificationRequestData: JustificationRequestData = {
+    reason: "",
+}
+export const defaultJustificationResponseData: JustificationResponseData = {
+    id: 0,
 }
 export interface EmployeeAttendanceSearchFilter {
     phone_number?: number
