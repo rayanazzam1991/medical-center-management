@@ -3,8 +3,11 @@ import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import OnholdSalariesDropDown from '/@src/components/OurComponents/HR/Payroll/Salary/OnholdSalariesDropDown.vue';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { DeliveringSalary, defaultOnholdSalariesSearchFilter, SalaryConsts, OnholdSalariesSearchFilter } from '/@src/models/HR/Payroll/Salary/salary';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import {  getOnholdSalariesList, paySalaryService, returnSalaryService } from '/@src/services/HR/Payroll/Salary/salaryService';
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -25,8 +28,10 @@ const keyIncrement = ref(0)
 const router = useRouter()
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
-
 const searchFilter = ref(defaultOnholdSalariesSearchFilter)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 onMounted(async () => {
     const { onholdSalaries, pagination } = await getOnholdSalariesList(searchFilter.value)
     salariesList.value = onholdSalaries
@@ -83,7 +88,7 @@ const columns = {
     },
     net_salary: {
         align: 'center',
-        label: t("onhold_salaries.table.columns.net_salary"),
+        label: t("onhold_salaries.table.columns.net_salary") + addParenthesisToString(mainCurrency.name),
     },
     status: {
         align: 'center',

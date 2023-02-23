@@ -1,4 +1,5 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import GenerateSalariesHeader from '/@src/components/OurComponents/HR/Payroll/Salary/GenerateSalariesHeader.vue';
@@ -14,6 +15,9 @@ import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
 import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 
 const viewWrapper = useViewWrapper()
@@ -33,6 +37,9 @@ const approveVariablePaymentPopUp = ref(false)
 const selectedVariablePayment = ref()
 const isLoading = ref(false)
 const selectedMonth = ref<GeneratableMonth>(defaultGeneratableMonth)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 onMounted(async () => {
     const { generatableMonths } = await getGeneratableMonths()
     generatableMonthsList.value = generatableMonths
@@ -112,7 +119,7 @@ const columns = {
     },
     basic_salary: {
         align: 'center',
-        label: t("generate_salaries.table.columns.basic_salary"),
+        label: t("generate_salaries.table.columns.basic_salary") + addParenthesisToString(mainCurrency.name),
         renderRow: (row: any) =>
             h('span', numberFormat(row?.basic_salary)),
 
@@ -124,7 +131,7 @@ const columns = {
     },
     attendance_deduction: {
         align: 'center',
-        label: t("generate_salaries.table.columns.attendance_deduction"),
+        label: t("generate_salaries.table.columns.attendance_deduction") + addParenthesisToString(mainCurrency.name),
         renderRow: (row: any) =>
             h('span', numberFormat(row?.attendance_deduction)),
 
@@ -132,7 +139,7 @@ const columns = {
     variable_payments: {
         align: 'center',
         grow: true,
-        label: t("generate_salaries.table.columns.variable_payments"),
+        label: t("generate_salaries.table.columns.variable_payments") + addParenthesisToString(mainCurrency.name),
         renderRow: (row: any) => {
             if (row?.variable_payments.length != 0) {
 
@@ -154,7 +161,7 @@ const columns = {
     },
     net_salary: {
         align: 'center',
-        label: t("generate_salaries.table.columns.net_salary"),
+        label: t("generate_salaries.table.columns.net_salary") + addParenthesisToString(mainCurrency.name),
         renderRow: (row: any) =>
             h('span', { class: row?.net_salary < 0 ? 'has-text-warning' : '' }, numberFormat(row?.net_salary)),
 
@@ -164,9 +171,8 @@ const columns = {
 </script>
 
 <template>
-    <GenerateSalariesHeader :generatableMonths="generatableMonthsList" :key="keyIncrement"
-        :title="viewWrapper.pageTitle" :button_name="t('generate_salaries.header_button')"
-        @getSalariesReview="getSalariesReview" />
+    <GenerateSalariesHeader :generatableMonths="generatableMonthsList" :key="keyIncrement" :title="viewWrapper.pageTitle"
+        :button_name="t('generate_salaries.header_button')" @getSalariesReview="getSalariesReview" />
 
 
     <VFlexTableWrapper :columns="columns" :data="salariesList">
@@ -201,7 +207,7 @@ const columns = {
                                     {{ t('generate_salaries.table.footer.salaries_sum') }} <span
                                         class="has-text-weight-semibold has-text-primary"> {{
                                             numberFormat(salaries.salaries_sum)
-                                        }}</span>
+                                        }} {{ addParenthesisToString(mainCurrency.name) }}</span>
 
                                 </h3>
                             </div>
@@ -233,8 +239,8 @@ const columns = {
     </form>
 
 
-    <VModal :title="t('generate_salaries.table.approve_modal.title')" :open="approveVariablePaymentPopUp"
-        actions="center" @close="approveVariablePaymentPopUp = false">
+    <VModal :title="t('generate_salaries.table.approve_modal.title')" :open="approveVariablePaymentPopUp" actions="center"
+        @close="approveVariablePaymentPopUp = false">
         <template #content>
             <VPlaceholderSection :title="t('generate_salaries.table.approve_modal.caution')"
                 :subtitle="t('generate_salaries.table.approve_modal.subtitle')" />
@@ -245,9 +251,6 @@ const columns = {
             }}</VButton>
         </template>
     </VModal>
-
-
-
 </template>
 
 <style lang="scss">
@@ -260,12 +263,13 @@ const columns = {
 
         p {
 
-            max-width: 90% ;
+            max-width: 90%;
 
         }
 
     }
 }
+
 .left {
     text-align: center;
 }

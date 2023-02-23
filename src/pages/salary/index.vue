@@ -1,4 +1,5 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
@@ -13,6 +14,9 @@ import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 
 const viewWrapper = useViewWrapper()
@@ -29,25 +33,27 @@ const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
 const router = useRouter()
 const default_per_page = ref(10)
-const selectedMonth = ref<ReviewGenerateSalariesRequestBody>({month : 0 , year : 0})
+const selectedMonth = ref<ReviewGenerateSalariesRequestBody>({ month: 0, year: 0 })
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
 
-const getSalaries = async (newSelectedMonth: ReviewGenerateSalariesRequestBody , newSearchFilter : SalarySearchFilter) => {
-    paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
+const getSalaries = async (newSelectedMonth: ReviewGenerateSalariesRequestBody, newSearchFilter: SalarySearchFilter) => {
+  paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
 
-      const { salaries, pagination } = await getSalariesList(newSelectedMonth,newSearchFilter)
+  const { salaries, pagination } = await getSalariesList(newSelectedMonth, newSearchFilter)
   salariesList.value = salaries
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
-    selectedMonth.value = newSelectedMonth
-    searchFilter.value = newSearchFilter
+  selectedMonth.value = newSelectedMonth
+  searchFilter.value = newSearchFilter
 
 }
 
 const resetFilter = async (newSearchFilter: SalarySearchFilter) => {
   searchFilter.value = newSearchFilter
- await getSalaries(selectedMonth.value, searchFilter.value)
+  await getSalaries(selectedMonth.value, searchFilter.value)
 }
 
 const getSalariesPerPage = async (pageNum: number) => {
@@ -65,7 +71,7 @@ const salarySort = async (value: string) => {
     searchFilter.value.order = undefined
     searchFilter.value.order_by = undefined
   }
-  await getSalaries(selectedMonth.value,searchFilter.value)
+  await getSalaries(selectedMonth.value, searchFilter.value)
 }
 
 
@@ -79,37 +85,34 @@ const columns = {
   },
   basic_salary: {
     align: 'center',
-    sortable: true,
-    label: t("salary.table.columns.basic_salary"),
+    label: t("salary.table.columns.basic_salary") + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) =>
       h('span', numberFormat(row?.basic_salary)),
   },
   earnings: {
     align: 'center',
-    label: t("salary.table.columns.earnings"),
+    label: t("salary.table.columns.earnings") + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) => {
-       return h('span',{class: 'has-text-primary'}, numberFormat(row?.total_variable_payment_earnings) );
+      return h('span', { class: 'has-text-primary' }, numberFormat(row?.total_variable_payment_earnings));
     }
   },
   variable_deductions: {
     align: 'center',
-    label: t("salary.table.columns.variable_deductions"),
+    label: t("salary.table.columns.variable_deductions") + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) => {
-       return h('span',{class: 'has-text-danger'}, numberFormat(row?.total_variable_payment_deductions) );
+      return h('span', { class: 'has-text-danger' }, numberFormat(row?.total_variable_payment_deductions));
     }
   },
   attendance_deduction: {
     align: 'center',
-    sortable: true,
-    label: t("salary.table.columns.attendance_deduction"),
+    label: t("salary.table.columns.attendance_deduction") + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) =>
-      h('span',{class: 'has-text-danger'},numberFormat(row?.attendance_deduction)),
+      h('span', { class: 'has-text-danger' }, numberFormat(row?.attendance_deduction)),
 
   },
   net_salary: {
     align: 'center',
-    sortable: true,
-    label: t("salary.table.columns.net_salary"),
+    label: t("salary.table.columns.net_salary") + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) =>
       h('span', numberFormat(row?.net_salary)),
 
@@ -123,7 +126,7 @@ const columns = {
         VTag,
         {
           rounded: true,
-          color: SalaryConsts.getStatusColor(row?.status) ,
+          color: SalaryConsts.getStatusColor(row?.status),
         },
         {
           default() {
@@ -148,7 +151,7 @@ const columns = {
     renderRow: (row: any) =>
       h(SalaryHistoryDropDown, {
         onView: () => {
-          router.push({path : `/salary/${row?.id}`})
+          router.push({ path: `/salary/${row?.id}` })
         },
       }),
 
@@ -157,9 +160,8 @@ const columns = {
 </script>
 
 <template>
-  <SalaryTableHeader  :title="viewWrapper.pageTitle"
-    :button_name="t('salary.header_button')" @search="getSalaries" :pagination="paginationVar"
-    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <SalaryTableHeader :title="viewWrapper.pageTitle" :button_name="t('salary.header_button')" @search="getSalaries"
+    :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
   <VFlexTableWrapper :columns="columns" :data="salariesList" @update:sort="salarySort">
@@ -174,33 +176,32 @@ const columns = {
           </div>
         </div>
         <div v-else-if="salariesList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="(selectedMonth.month == 0 && selectedMonth.year == 0 ) ? t('salary.table.placeholder.title') : t('tables.placeholder.title')"
-           :subtitle="(selectedMonth.month == 0 && selectedMonth.year == 0 ) ? t('salary.table.placeholder.subtitle') : t('tables.placeholder.subtitle')"
+          <VPlaceholderSection
+            :title="(selectedMonth.month == 0 && selectedMonth.year == 0) ? t('salary.table.placeholder.title') : t('tables.placeholder.title')"
+            :subtitle="(selectedMonth.month == 0 && selectedMonth.year == 0) ? t('salary.table.placeholder.subtitle') : t('tables.placeholder.subtitle')"
             class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
     </VFlexTable>
-    <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)"
-      :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
-      :total-items="paginationVar.total" :max-links-displayed="3" no-router
-      @update:current-page="getSalariesPerPage" />
+    <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
+      class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+      no-router @update:current-page="getSalariesPerPage" />
     <h6 class="pt-2 is-size-7" v-if="salariesList.length != 0 && !salaryStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="salaryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

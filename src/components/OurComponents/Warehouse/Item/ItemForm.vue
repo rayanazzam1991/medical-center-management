@@ -11,8 +11,11 @@ import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchFilter } from '/@src/models/Warehouse/Category/category';
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { BaseConsts } from '/@src/utils/consts/base';
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { Notyf } from 'notyf';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 
 
 export default defineComponent({
@@ -25,7 +28,7 @@ export default defineComponent({
     components: { ErrorMessage },
     emits: ["onSubmit"],
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const viewWrapper = useViewWrapper();
         viewWrapper.setPageTitle(t('item.form.page_title'));
         const head = useHead({
@@ -38,7 +41,7 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
-        const pageTitle = t('item.form.form_header' , {type : formTypeName});
+        const pageTitle = t('item.form.form_header', { type: formTypeName });
         const backRoute = "/item";
         const currentItem = ref(defaultItem);
         const currentCreateUpdateItem = ref(defaultCreateUpdateItem)
@@ -46,6 +49,9 @@ export default defineComponent({
         const selectedCategoryId = ref()
         const subcategoeisList = ref<Category[]>([])
         const allCategoriesList = ref<Category[]>([])
+        const currencies = getCurrenciesFromStorage()
+        const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
         // @ts-ignore
         itemId.value = route.params?.id as number ?? 0;
         const getCurrentItem = async () => {
@@ -78,7 +84,7 @@ export default defineComponent({
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subcategoeisList.value = SubCategory
 
-  
+
         })
         const getSubCategoryByCategroy = () => {
             let categoriesFilter = {} as CategorySearchFilter
@@ -87,16 +93,16 @@ export default defineComponent({
             subcategoeisList.value = SubCategory
 
         }
-        onMounted(()=>{ // set is_for_sale true to trigger price validation by refresh the schema
+        onMounted(() => { // set is_for_sale true to trigger price validation by refresh the schema
             currentItem.value.is_for_sale = 1;
         })
 
-        watch(currentItem.value,()=>{ // this to set value of is_for_sale in schema
-            setFieldValue("is_for_sale",currentItem.value.is_for_sale!)
+        watch(currentItem.value, () => { // this to set value of is_for_sale in schema
+            setFieldValue("is_for_sale", currentItem.value.is_for_sale!)
         })
-        
+
         const validationSchema = itemvalidationSchema
-        const { handleSubmit,setFieldValue } = useForm({
+        const { handleSubmit, setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 name: currentItem.value.name ?? "",
@@ -113,7 +119,7 @@ export default defineComponent({
                 description: '',
                 category_id: undefined,
                 status: 1,
-                is_for_sale:false
+                is_for_sale: false
 
             },
         });
@@ -129,8 +135,8 @@ export default defineComponent({
             else
                 return;
         };
-        
-    
+
+
         const onSubmitAdd = handleSubmit(async (values) => {
             let itemData = currentItem.value
             let itemForm = currentCreateUpdateItem.value
@@ -184,8 +190,8 @@ export default defineComponent({
                 notif.error(message)
             }
         });
-       
-        return { t, selectedCategoryId, getSubCategoryByCategroy, subcategoeisList, mainCategoriesList, pageTitle, onSubmit, currentItem, viewWrapper, backRoute, ItemConsts, itemStore };
+
+        return { t, selectedCategoryId, getSubCategoryByCategroy, subcategoeisList, mainCategoriesList, pageTitle, onSubmit, currentItem, viewWrapper, backRoute, ItemConsts, itemStore, mainCurrency, addParenthesisToString };
     },
 })
 
@@ -236,7 +242,7 @@ export default defineComponent({
                             </div>
                             <div class="column is-6">
                                 <VField id="category_id">
-                                    <VLabel class="required">{{t('item.form.level_2')}}</VLabel>
+                                    <VLabel class="required">{{ t('item.form.level_2') }}</VLabel>
                                     <VControl>
                                         <VSelect :disabled="selectedCategoryId == undefined" v-if="currentItem.category"
                                             v-model="currentItem.category.id">
@@ -254,15 +260,15 @@ export default defineComponent({
                         </div>
                     </div>
                     <!--Fieldset-->
-                    <div class="form-fieldset" >
+                    <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="is-flex is-justify-content-center">
                                 <VField id="is_for_sale">
-                                <VLabel class="required">{{ t('item.form.for_sale')  }} </VLabel>
-                                <VControl class="ml-3">
-                                    <VSwitchSegment v-model="currentItem.is_for_sale"
-                                        :label-true="t('item.form.yes')" :label-false="t('item.form.no')" color="success" />
-                                </VControl>
+                                    <VLabel class="required">{{ t('item.form.for_sale') }} </VLabel>
+                                    <VControl class="ml-3">
+                                        <VSwitchSegment v-model="currentItem.is_for_sale" :label-true="t('item.form.yes')"
+                                            :label-false="t('item.form.no')" color="success" />
+                                    </VControl>
                                 </VField>
                             </div>
                         </div>
@@ -272,7 +278,8 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="cost">
-                                    <VLabel class="required">{{ t('item.form.cost')  }} </VLabel>
+                                    <VLabel class="required">{{ t('item.form.cost') }} {{
+                                        addParenthesisToString(mainCurrency.name) }} </VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="currentItem.cost" type="number" />
                                         <ErrorMessage name="cost" class="help is-danger" />
@@ -288,7 +295,7 @@ export default defineComponent({
                                     </VControl>
                                 </VField>
                             </div>
-                            
+
                         </div>
                     </div>
                     <!--Fieldset-->
@@ -296,7 +303,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="description">
-                                    <VLabel class="optional">{{t('item.form.description') }} </VLabel>
+                                    <VLabel class="optional">{{ t('item.form.description') }} </VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentItem.description" />
                                         <ErrorMessage class="help is-danger" name="description" />
@@ -309,7 +316,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{t('item.form.status') }} </VLabel>
+                                    <VLabel class="required">{{ t('item.form.status') }} </VLabel>
                                     <VControl>
                                         <VRadio v-model="currentItem.status" :value="ItemConsts.ACTIVE"
                                             :label="ItemConsts.showStatusName(1)" name="status" color="success" />

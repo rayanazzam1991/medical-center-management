@@ -1,13 +1,17 @@
-<script lang="ts">import { useHead } from '@vueuse/head';
+<script lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { defaultEmployee, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee';
 import { defaultCreateEmployeeVariablePayment, defaultEmployeeVariablePayment, defaultUpdateEmployeeVariablePayment, EmployeeVariablePaymentConsts } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment';
 import { defaultCreateVariablePayment, defaultUpdateVariablePayment, defaultVariablePayment, VariablePayment, VariablePaymentConsts, VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
 import { User } from '/@src/models/Others/User/user';
 import { employeeVariablePaymentValidationSchema } from '/@src/rules/HR/Payroll/EmployeeVariablePayment/employeeVariablePaymentValidation';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { getEmployeesList } from '/@src/services/Employee/employeeService';
 import { addEmployeeVariablePayment, editEmployeeVariablePayment, getEmployeeVariablePayment } from '/@src/services/HR/Payroll/EmployeeVariablePayment/employeeVariablePaymentService';
 import { addVariablePayment, editVariablePayment, getVariablePaymentsList } from '/@src/services/HR/Payroll/VariablePayment/variablePaymentService';
@@ -47,6 +51,8 @@ export default defineComponent({
         const employeesList = ref<Employee[]>([])
         const variablePaymentsList = ref<VariablePayment[]>([])
         const originalEmployeeVariablePaymentStatus = ref<number>();
+        const currencies = getCurrenciesFromStorage()
+        const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
         //@ts-ignore
         employeeVariablePaymentId.value = route.params?.id as number ?? 0;
@@ -190,7 +196,7 @@ export default defineComponent({
             }
         };
 
-        return { t, pageTitle, onSubmit, currentEmployeeVariablePayment, requiredDueDate, viewWrapper, backRoute, employeesList, variablePaymentsList, EmployeeVariablePaymentConsts, employeeVariablePaymentStore };
+        return { t, pageTitle, onSubmit, currentEmployeeVariablePayment, requiredDueDate, viewWrapper, backRoute, employeesList, variablePaymentsList, EmployeeVariablePaymentConsts, employeeVariablePaymentStore, mainCurrency, addParenthesisToString };
     },
     components: { ErrorMessage }
 })
@@ -260,7 +266,8 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="amount" v-slot="{ field }">
-                                    <VLabel class="required">{{ t('employee_variable_payment.form.amount') }}</VLabel>
+                                    <VLabel class="required">{{ t('employee_variable_payment.form.amount') }} {{
+                                        addParenthesisToString(mainCurrency.name) }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentEmployeeVariablePayment.amount" type="number"
                                             placeholder="" />
@@ -276,8 +283,8 @@ export default defineComponent({
                                 <VField id="note" v-slot="{ field }">
                                     <VLabel class="optional">{{ t('employee_variable_payment.form.note') }}</VLabel>
                                     <VControl>
-                                        <VTextarea v-model="currentEmployeeVariablePayment.note"
-                                            class="is-primary-focus" rows="2"></VTextarea>
+                                        <VTextarea v-model="currentEmployeeVariablePayment.note" class="is-primary-focus"
+                                            rows="2"></VTextarea>
 
                                         <ErrorMessage class="help is-danger" name="note" />
                                     </VControl>

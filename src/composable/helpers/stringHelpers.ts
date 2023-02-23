@@ -8,3 +8,14 @@ export function stringTrim(value: string, length: number) {
   }
 
 }
+
+export function addParenthesisToString(value: string | undefined) {
+  if (value == undefined) {
+    return '()'
+  }
+  else {
+    const stringBetweenParanties = ' (' + value + ') '
+    return stringBetweenParanties
+  }
+
+}
