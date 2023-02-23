@@ -12,8 +12,6 @@ const { t } = useI18n()
 
 <template>
   <div class="navbar-subnavbar-inner tabs-wrapper" @mouseleave="() => emits('close')">
-
-
     <div class="container">
       <div class="tab-content" :class="[activeTab === 'accounting' && 'is-active']">
         <div class="tab-content-inner">
@@ -68,6 +66,15 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/income-statment-report">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.reports.income_statment_report')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul><br />
                 <ul>
                   <h4 class="column-heading">
@@ -95,6 +102,7 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+
               </div>
               <div class="column is-4">
                 <h4 class="column-heading">{{ t('accounting_subnav.records.records') }}</h4>
@@ -136,25 +144,8 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li>
-                    <RouterLink to="/account/add">
-
-                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                      <span>{{ t('accounting_subnav.account.add_account') }}</span>
-                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                    </RouterLink>
-                  </li>
-                  <li>
-                    <RouterLink to="/account/add-cash-account">
-
-                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                      <span>{{ t('accounting_subnav.account.add_cash_account') }}</span>
-                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                    </RouterLink>
-                  </li>
                 </ul>
               </div>
-
             </div>
           </div>
         </div>

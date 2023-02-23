@@ -1897,5 +1897,17 @@
       "title": "Title...",
       "note": "Notes..."
     }
+  },
+  "income_statment_report": {
+    "title": "Income Statment Report",
+    "total_balances": "Balance",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "no_accounts_place_holder": "There is no accounts under this level.",
+    "gross_profit": "Gross Profit ",
+    "net_income": "Net Income "
   }
 }

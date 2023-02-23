@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { AccountConsts, TrialBalanceLvl2Chart } from '/@src/models/Accounting/Account/account';
+import { AccountConsts, IncomeStatmentLvl2Chart, TrialBalanceLvl2Chart } from '/@src/models/Accounting/Account/account';
 
 export interface TrailBalanceLvl1CollapseProps {
-  items: TrialBalanceLvl2Chart[]
+  items: IncomeStatmentLvl2Chart[]
   withChevron?: boolean,
   is_expanded: boolean
 }
@@ -66,15 +66,10 @@ const toggle = (key: number) => {
           </slot>
         </div>
         <div class="collapse-head-info">
-          <div class="is-flex">
+          <div class="">
             <div class="chart-row">
               <div class="accounts-cell open-has-bold">
-                {{ item.total_credits }}
-              </div>
-            </div>
-            <div class="chart-row mr-5">
-              <div class="accounts-cell open-has-bold">
-                {{ item.total_debits }}
+                {{ item.total_balances }}
               </div>
             </div>
           </div>
@@ -101,18 +96,11 @@ const toggle = (key: number) => {
                 </div>
               </div>
             </div>
-            <div class="is-flex is-align-items-center ">
+            <div class="marginLvl2Collapse">
               <div class="chart-row">
                 <div class=" accounts-cell">
                   {{
-                    account.absolute_type == AccountConsts.CREDIT_TYPE ? account.absolute_balance : '-'
-                  }}
-                </div>
-              </div>
-              <div class="chart-row mr-5">
-                <div class="accounts-cell">
-                  {{
-                    account.absolute_type == AccountConsts.DEBIT_TYPE ? account.absolute_balance : '-'
+                    account.balance
                   }}
                 </div>
               </div>

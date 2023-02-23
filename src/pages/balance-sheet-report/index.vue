@@ -129,13 +129,14 @@ const toggle = () => {
             <div class="accounts-cell has-bold">
               {{ balanceSheet.total_liabilities_balances }}
             </div>
-
           </div>
         </div>
         <div class="chart-row total"> {{ t('balance_sheet_report.total_liabilites_balances') }} </div>
       </div>
     </div>
-</div>
+  </div>
 </template>
 
-<style lang="scss">@import '/@src/scss/Styles/BalanceSheetReport/balanceSheet.scss';</style>
+<style lang="scss">
+@import '/@src/scss/Styles/BalanceSheetReport/balanceSheet.scss';
+</style>

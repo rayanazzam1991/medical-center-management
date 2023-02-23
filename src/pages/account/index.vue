@@ -90,6 +90,11 @@ watch(selectedAccountCurrency, (value) => {
     enableCurrencyRate.value = false
     selectedCurrencyRate.value = 1
   } else {
+    if (selectedAccount.value.currency?.is_main) {
+      selectedCurrencyRate.value = value.rate
+    } else {
+      selectedCurrencyRate.value = selectedAccount.value.currency_rate
+    }
     enableCurrencyRate.value = true
   }
 })
@@ -104,11 +109,10 @@ const changeAccountCurrency = async () => {
     currency_rate: selectedCurrencyRate.value
   }
   if (selectedAccount.value.id) {
-    const { success, message } = await updateAccountCurrency(selectedAccount.value.id, updateAccountCurrencyData)
+    const { success, message, account } = await updateAccountCurrency(selectedAccount.value.id, updateAccountCurrencyData)
     if (success) {
       notif.success(t('toast.success.edit'));
-      selectedAccount.value.currency = selectedAccountCurrency.value
-      selectedAccount.value.currency_rate = selectedCurrencyRate.value
+      await search(searchFilter.value)
       changeAccountCurrencyPopup.value = false
     } else {
       await sleep(200);
