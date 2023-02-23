@@ -1,4 +1,5 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
@@ -15,7 +16,9 @@ import { useEmployeeVariablePayment } from '/@src/stores/HR/Payoll/EmployeeVaria
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
-import { stringTrim } from '/@src/composable/helpers/stringHelpers';
+import { addParenthesisToString, stringTrim } from '/@src/composable/helpers/stringHelpers';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 
 
 const viewWrapper = useViewWrapper()
@@ -37,6 +40,9 @@ const selectedEmployeeVariablePayment = ref(defaultEmployeeVariablePayment)
 const newStatus = ref<number>()
 const requiredDueDate = ref('');
 const newDueDate = ref()
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 onMounted(async () => {
   const { employeeVariablePayments, pagination } = await getEmployeeVariablePaymentsList(searchFilter.value)
   employeeVariablePaymentsList.value = employeeVariablePayments
@@ -132,8 +138,7 @@ const columns = {
   },
   "amount": {
     align: 'center',
-    sortable: true,
-    label: t("employee_variable_payment.table.columns.amount")
+    label: t("employee_variable_payment.table.columns.amount") + addParenthesisToString(mainCurrency.name)
   },
   "variable_payment.type": {
     align: 'center',
@@ -201,7 +206,7 @@ const columns = {
     renderRow: (row: any) =>
       h('span', {
         innerHTML: row?.note ?
-          `<div class="tooltip">${stringTrim(row?.note,10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
+          `<div class="tooltip">${stringTrim(row?.note, 10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
 
       }),
 
@@ -291,19 +296,19 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getEmployeeVariablePaymentsPerPage" />
-    <h6 class="pt-2 is-size-7"
-      v-if="employeeVariablePaymentsList.length != 0 && !employeeVariablePaymentStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="employeeVariablePaymentsList.length != 0 && !employeeVariablePaymentStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="employeeVariablePaymentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
 
@@ -314,7 +319,7 @@ const columns = {
         <div class="columns is-multiline">
           <div class="column is-12">
             <VField class="column " id="user_status_id">
-              <VLabel>{{ t('contractor.details.status', { title: viewWrapper.pageTitle })}}</VLabel>
+              <VLabel>{{ t('contractor.details.status', { title: viewWrapper.pageTitle }) }}</VLabel>
               <VControl>
                 <VSelect v-model="newStatus">
                   <VOption :value="EmployeeVariablePaymentConsts.PENDING">{{
@@ -361,7 +366,6 @@ const columns = {
       <VButton color="primary" raised @click="changeStatus()">{{ t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
-
 </template>
 
 <style lang="scss">

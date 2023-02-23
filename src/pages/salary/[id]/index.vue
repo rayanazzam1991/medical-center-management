@@ -9,6 +9,9 @@ import { getSalaryPayslip } from '/@src/services/HR/Payroll/Salary/salaryService
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -29,6 +32,8 @@ const currentSalary = ref(defaultSalary)
 const earningsVariablePayments = ref<EmployeeVariablePayment[]>([])
 const deductionsVariablePayments = ref<EmployeeVariablePayment[]>([])
 const moreVariablePayments = ref<{ key: 'Deducations' | 'Earnings', number: number }>({ key: 'Deducations', number: 0 })
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const getCurrentSalary = async () => {
   const { salary } = await getSalaryPayslip(salaryId.value)
   if (salary != undefined)
@@ -143,7 +148,7 @@ const earningsColumns = {
 const totalEarningsData = computed(() => {
   return [
     {
-      label: t('salary.payslip.table.earnings.columns.total_earnings'),
+      label: t('salary.payslip.table.earnings.columns.total_earnings') + addParenthesisToString(mainCurrency.name),
       value: currentSalary.value.total_earnings,
     },
   ]
@@ -182,7 +187,7 @@ const deductionsColumns = {
 const totalDeductionsData = computed(() => {
   return [
     {
-      label: t('salary.payslip.table.deductions.columns.total_deductions'),
+      label: t('salary.payslip.table.deductions.columns.total_deductions') + addParenthesisToString(mainCurrency.name),
       value: currentSalary.value.total_deductions,
     },
   ]
@@ -199,20 +204,10 @@ const totalDeductionsColumns = {
     format: (value: any) => numberFormat(value),
   },
 } as const
-const totalColumns = {
-  name: {
-    label: t('salary.payslip.table.total.columns.net_salary'),
-    grow: 'xl',
-    inverted: true,
-    renderRow: (row: any) =>
-      h('span', row?.variable_payment?.net_salary),
-
-  }
-} as const
 const totalData = computed(() => {
   return [
     {
-      label: t('salary.payslip.table.total.columns.total'),
+      label: t('salary.payslip.table.total.columns.total') + addParenthesisToString(mainCurrency.name),
       value: currentSalary.value.net_salary,
     },
   ]
@@ -234,11 +229,10 @@ const totalTotalColumns = {
 </script>
 
 <template>
-
   <div class="invoice-wrapper">
     <div class="invoice-header">
       <div class="left is-flex is-align-items-center">
-        <VIconButton class="ml-3" color="white" darkOutlined icon="feather:arrow-right" :to="{path : '/salary'}"/>
+        <VIconButton class="ml-3" color="white" darkOutlined icon="feather:arrow-right" :to="{ path: '/salary' }" />
         <h3>{{ t('salary.payslip.header') }}</h3>
       </div>
     </div>
@@ -281,7 +275,7 @@ const totalTotalColumns = {
 
               <div class="invoice-section is-flex mb-0 pb-0">
                 <div class="meta">
-                  <h3 class="mb-3">{{ t('salary.payslip.earnings') }}</h3>
+                  <h3 class="mb-3">{{ t('salary.payslip.earnings') }} {{ addParenthesisToString(mainCurrency.name) }}</h3>
                 </div>
               </div>
 
@@ -310,7 +304,8 @@ const totalTotalColumns = {
             <div class="column is-6 pr-0 pb-0">
               <div class="invoice-section is-flex mb-0 pb-0">
                 <div class="meta">
-                  <h3 class="mb-3">{{ t('salary.payslip.deductions') }}</h3>
+                  <h3 class="mb-3">{{ t('salary.payslip.deductions') }} {{ addParenthesisToString(mainCurrency.name) }}
+                  </h3>
                 </div>
               </div>
               <div class="invoice-section mt-0 pt-0 pb-2">
@@ -341,34 +336,31 @@ const totalTotalColumns = {
               </div>
               <div class="column is-6">
                 <VFlexTable subtable :data="totalData" :columns="totalTotalColumns" class="mid-table">
-                <template #body-cell="{ column, value, row }">
-                <template v-if="column.key === 'value' && row.label === 'Total'">
-                  <span class="table-total is-bigger">{{ value }}</span>
-                </template>
-                <template v-else>
-                  <span class="table-total is-bigger">{{ value }}</span>
-                </template>
-              </template>
-            </VFlexTable>
+                  <template #body-cell="{ column, value, row }">
+                    <template v-if="column.key === 'value' && row.label === 'Total'">
+                      <span class="table-total is-bigger">{{ value }}</span>
+                    </template>
+                    <template v-else>
+                      <span class="table-total is-bigger">{{ value }}</span>
+                    </template>
+                  </template>
+                </VFlexTable>
 
               </div>
-          </div>
+            </div>
           </div>
         </div>
       </div>
     </VLoader>
 
   </div>
-
-
-
 </template>
 
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
 
-.flex-table{
-  .flex-table-item{
+.flex-table {
+  .flex-table-item {
 
     min-height: 48px !important;
 

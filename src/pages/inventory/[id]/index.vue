@@ -2,8 +2,11 @@
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { defaultItemsInInventorySearchFilter, ItemsInInventory, defaultItemsInInventory, ItemsInInventorySearchFilter, ItemInInventory } from '/@src/models/Warehouse/Item/item';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { getItemsInInventory } from '/@src/services/Warehouse/Item/itemService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
@@ -28,6 +31,8 @@ const router = useRouter()
 const itemStore = useItem()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
 onMounted(async () => {
     const { items_in_inventory, pagination } = await getItemsInInventory(inventoryId.value, searchFilter.value)
@@ -98,14 +103,14 @@ const columns = {
     },
     price: {
         align: 'center',
-        label: t('inventory.details.table.price'),
+        label: t('inventory.details.table.price') + addParenthesisToString(mainCurrency.name),
         renderRow: (row: ItemInInventory) =>
             h('span', row?.price),
         sortable: true,
     },
     cost: {
         align: 'center',
-        label: t('inventory.details.table.cost'),
+        label: t('inventory.details.table.cost') + addParenthesisToString(mainCurrency.name),
         renderRow: (row: ItemInInventory) =>
             h('span', row?.cost),
         sortable: true,

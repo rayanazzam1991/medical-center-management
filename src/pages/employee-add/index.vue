@@ -25,6 +25,9 @@ import { getDepartmentsList } from '/@src/services/Others/Department/departmentS
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -47,6 +50,8 @@ employeeForm.setStep({
         }
     },
 })
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
 const route = useRoute()
 const router = useRouter()
@@ -55,7 +60,6 @@ const selectedDepartmentId = ref(0)
 
 const pageTitle = t('employee.form.step_1_subtitle')
 const phoneCheck = ref<string>('false')
-// const selectDepartment = ref<string>('false')
 const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
 const getCurrentEmployee = () => {
@@ -367,7 +371,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="basic_salary">
-                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}{{ addParenthesisToString(mainCurrency.name) }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
                                                 autocomplete="given-basic_salary" />

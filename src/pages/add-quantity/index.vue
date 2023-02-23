@@ -18,6 +18,9 @@ import { error } from 'node:console';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -55,6 +58,8 @@ const filesToUpload = ref<File>()
 const itemHistoryId = ref(0)
 const allItemsList = ref<Item[]>([])
 const itemsList = ref<Item[]>([])
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
 const getCurrentAddQuantity = async () => {
     currentaddQuantity.value = itemHistoryForm.data
@@ -257,7 +262,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-6">
                                 <VField id="add_item_cost">
-                                    <VLabel class="required">{{ t('add_quantity.form.item_cost') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_quantity.form.item_cost') }}{{
+                                        addParenthesisToString(mainCurrency.name) }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentaddQuantity.add_item_cost" type="number" placeholder=""
                                             autocomplete="given-add_item_cost" />
@@ -270,8 +276,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VLabel class="required">{{ t('add_quantity.form.status') }}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
-                                            :label="ItemHsitoryConsts.showStatusName(1)" name="status"
-                                            color="success" />
+                                            :label="ItemHsitoryConsts.showStatusName(1)" name="status" color="success" />
                                         <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
                                             :label="ItemHsitoryConsts.showStatusName(0)" name="status" color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />

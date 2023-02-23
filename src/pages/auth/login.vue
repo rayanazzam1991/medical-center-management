@@ -8,8 +8,10 @@ import { signIn } from "/@src/composable/Others/User/Auth/signIn";
 import { defaultSignInRequest } from '/@src/models/Others/User/auth'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { getSettings } from '/@src/services/Others/Setting/settingService'
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { Notyf } from 'notyf'
+import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
+import { defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -39,6 +41,7 @@ const handleLogin = async () => {
 
       const loggedUser = await signIn(signRequest.value);
       const { settings } = await getSettings();
+      const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter);
 
       if (userAuth.isLoggedIn) {
 
@@ -99,8 +102,8 @@ useHead({
           </label>
           <div class="auth-logo">
             <RouterLink to="/">
-             <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
-             <img v-else src ="/images/logos/logo/logo.png"/>
+              <img v-if="darkmode.isDark" src="/images/logos/logo/logo_light.png" />
+              <img v-else src="/images/logos/logo/logo.png" />
             </RouterLink>
           </div>
         </div>
@@ -110,7 +113,7 @@ useHead({
               <div class="column is-12">
                 <div class="auth-content">
                   <h2>{{ t('auth.form.welcome_back') }}</h2>
-                  <p>{{ t('auth.form.sign_in')}}</p>
+                  <p>{{ t('auth.form.sign_in') }}</p>
                   <!--                  <RouterLink to="/auth/signup-2">-->
                   <!--                    I do not have an account yet-->
                   <!--                  </RouterLink>-->
@@ -122,16 +125,16 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput v-model="signRequest.phone_number" type="text" :placeholder="t('auth.form.placeholders.phone')"
-                            autocomplete="username" />
+                          <VInput v-model="signRequest.phone_number" type="text"
+                            :placeholder="t('auth.form.placeholders.phone')" autocomplete="username" />
                         </VControl>
                       </VField>
 
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput v-model="signRequest.password" type="password" :placeholder="t('auth.form.placeholders.password')"
-                            autocomplete="current-password" />
+                          <VInput v-model="signRequest.password" type="password"
+                            :placeholder="t('auth.form.placeholders.password')" autocomplete="current-password" />
                         </VControl>
                       </VField>
 
@@ -145,7 +148,7 @@ useHead({
                       <!-- Submit -->
                       <div class="login">
                         <VButton :loading="isLoading" color="primary" type="submit" bold fullwidth raised>
-                          {{t('auth.form.sign_in_button')}}
+                          {{ t('auth.form.sign_in_button') }}
                         </VButton>
                       </div>
 
@@ -164,7 +167,7 @@ useHead({
   </div>
 </template>
 <style lang="scss">
-.login-bg{
+.login-bg {
   background: url("/images/photo/banners/login_banner.jpg") !important;
   background-position: top !important;
   background-size: cover !important;

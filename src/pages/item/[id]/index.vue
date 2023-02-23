@@ -17,6 +17,9 @@ import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
 import IconButton from "/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue"
 import { BaseConsts } from "/@src/utils/consts/base"
+import { addParenthesisToString, stringTrim } from "/@src/composable/helpers/stringHelpers"
+import { Currency, defaultCurrency } from "/@src/models/Accounting/Currency/currency"
+import { getCurrenciesFromStorage } from "/@src/services/Accounting/Currency/currencyService"
 
 
 
@@ -40,6 +43,9 @@ const inventoryItemHistoryList = ref<Array<inventoryItemHistory>>([])
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
 viewWrapper.setPageTitle(t('item.details.title'))
@@ -111,15 +117,6 @@ const itemSort = async (value: string) => {
     }
     await search(searchFilter.value)
 }
-const noteTrim = (value: string) => {
-    if (value == undefined) {
-        return ''
-    }
-    else {
-        let trimmedString = value?.substring(0, 10);
-        return trimmedString + '...'
-    }
-}
 const columns = {
     from_inventory: {
         sortable: true,
@@ -185,7 +182,7 @@ const columns = {
         renderRow: (row: any) =>
             h('span', {
                 innerHTML: row?.note ?
-                    `<div class="tooltip">${noteTrim(row?.note)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
+                    `<div class="tooltip">${stringTrim(row?.note, 10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
 
             }),
 
@@ -289,8 +286,8 @@ const changestatusItemHistory = async () => {
                     <div class="tabs tabs-width">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
-                                    @click="tab = 'Details'"><span>{{ t('item.details.tabs.details') }}</span></a>
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
+                                    t('item.details.tabs.details') }}</span></a>
                             </li>
                             <li :class="[tab === 'History' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'History'" @click="tab = 'History'">
@@ -344,7 +341,8 @@ const changestatusItemHistory = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{ t('item.details.price') }}</span>
+                                                    <span>{{ t('item.details.price') }} {{
+                                                        addParenthesisToString(mainCurrency.name) }}</span>
                                                     <span>
                                                         {{ currentItem.price }}
                                                     </span>
@@ -355,7 +353,8 @@ const changestatusItemHistory = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{ t('item.details.cost') }}</span>
+                                                    <span>{{ t('item.details.cost') }}{{
+                                                        addParenthesisToString(mainCurrency.name) }}</span>
                                                     <span>
                                                         {{ currentItem.cost }}
                                                     </span>
@@ -407,27 +406,26 @@ const changestatusItemHistory = async () => {
                                             </div>
                                         </template>
                                     </VFlexTable>
-                                    <VFlexPagination
-                                        v-if="(itemHistoriesList.length != 0 && paginationVar.max_page != 1)"
+                                    <VFlexPagination v-if="(itemHistoriesList.length != 0 && paginationVar.max_page != 1)"
                                         :current-page="paginationVar.page" class="mt-6"
                                         :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
-                                        :max-links-displayed="3" no-router
-                                        @update:current-page="getItemHistoriesPerPage" />
+                                        :max-links-displayed="3" no-router @update:current-page="getItemHistoriesPerPage" />
                                     <h6 class="pt-2 is-size-7"
                                         v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading">
                                         {{
-                                            t('tables.pagination_footer', { from_number: paginationVar.page !=
-                                                paginationVar.max_page
-                                                ?
-                                                (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page ==
-                                                    paginationVar.max_page ? (1 +
-                                                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ?
-                                                    1 : paginationVar.total
-                                            , to_number: paginationVar.page !=
-                                                paginationVar.max_page ?
-                                                paginationVar.page *
-                                                paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-                                        })}}</h6>
+                                            t('tables.pagination_footer', {
+                                                from_number: paginationVar.page !=
+                                                    paginationVar.max_page
+                                                    ?
+                                                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page ==
+                                                        paginationVar.max_page ? (1 +
+                                                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ?
+                                                        1 : paginationVar.total
+                                                , to_number: paginationVar.page !=
+                                                    paginationVar.max_page ?
+                                                    paginationVar.page *
+                                                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                                            }) }}</h6>
                                     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
                                         class="mx-2" />
                                 </VFlexTableWrapper>

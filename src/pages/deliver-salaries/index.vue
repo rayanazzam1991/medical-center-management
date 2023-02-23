@@ -1,10 +1,14 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import DeliverSalariesDropDown from '/@src/components/OurComponents/HR/Payroll/Salary/DeliverSalariesDropDown.vue';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { DeliveringSalary, defaultDeliveringSalariesSearchFilter, SalaryConsts, DeliveringSalariesSearchFilter } from '/@src/models/HR/Payroll/Salary/salary';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { getDeliveringSalariesList, moveSalariesToOnholdList, paySalaryService } from '/@src/services/HR/Payroll/Salary/salaryService';
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -25,10 +29,12 @@ const keyIncrement = ref(0)
 const router = useRouter()
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
-
 const searchFilter = ref(defaultDeliveringSalariesSearchFilter)
 const moveSalariesToOnholdPopUp = ref(false)
 const isLoading = ref(false)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 onMounted(async () => {
     const { deliveringSalaries, pagination } = await getDeliveringSalariesList(searchFilter.value)
     salariesList.value = deliveringSalaries
@@ -86,7 +92,7 @@ const columns = {
     },
     net_salary: {
         align: 'center',
-        label: t("deliver_salaries.table.columns.net_salary"),
+        label: t("deliver_salaries.table.columns.net_salary") + addParenthesisToString(mainCurrency.name),
     },
     status: {
         align: 'center',
@@ -151,22 +157,22 @@ const columns = {
 
             </template>
         </VFlexTable>
-        <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)"
-            :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
-            :total-items="paginationVar.total" :max-links-displayed="3" no-router
-            @update:current-page="getSalariesPerPage" />
+        <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
+            class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+            no-router @update:current-page="getSalariesPerPage" />
         <h6 class="pt-2 is-size-7" v-if="salariesList.length != 0 && !salaryStore?.loading">
             {{
-                t('tables.pagination_footer', { from_number: paginationVar.page !=
-                    paginationVar.max_page
-                    ?
-                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-                , to_number: paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-            })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
         <VPlaceloadText v-if="salaryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
 
@@ -182,7 +188,4 @@ const columns = {
             }}</VButton>
         </template>
     </VModal>
-
-
-
 </template>
