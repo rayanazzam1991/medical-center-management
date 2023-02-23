@@ -134,6 +134,16 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/customer-cash-receipt">
+                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.create_customer_cash_receipt')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+
                 </ul>
               </div>
             </div>

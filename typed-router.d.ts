@@ -78,6 +78,8 @@ declare module 'vue-router/auto/routes' {
     '/customer-add/': RouteRecordInfo<'/customer-add/', '/customer-add/', Record<never, never>, Record<never, never>>,
     '/customer-add/[id]/medical-info': RouteRecordInfo<'/customer-add/[id]/medical-info', '/customer-add/:id/medical-info', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/customer-add/[id]/social-media': RouteRecordInfo<'/customer-add/[id]/social-media', '/customer-add/:id/social-media', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/customer-cash-receipt': RouteRecordInfo<'/customer-cash-receipt', '/customer-cash-receipt', Record<never, never>, Record<never, never>>,
+    '/customer-cash-receipt/': RouteRecordInfo<'/customer-cash-receipt/', '/customer-cash-receipt/', Record<never, never>, Record<never, never>>,
     '/customer-edit': RouteRecordInfo<'/customer-edit', '/customer-edit', Record<never, never>, Record<never, never>>,
     '/customer-edit/[id]/': RouteRecordInfo<'/customer-edit/[id]/', '/customer-edit/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/customer-edit/[id]/medical-info': RouteRecordInfo<'/customer-edit/[id]/medical-info', '/customer-edit/:id/medical-info', { id: ParamValue<true> }, { id: ParamValue<false> }>,

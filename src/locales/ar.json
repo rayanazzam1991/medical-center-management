@@ -211,7 +211,8 @@
       "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة سجل مالي",
-      "add_custom_revenue": "إضافة عوائد"
+      "add_custom_revenue": "إضافة عوائد",
+      "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون"
     }
   },
   "user_profile_dropdown": {
@@ -1938,6 +1939,21 @@
     "search_filter": {
       "title": "العنوان...",
       "note": "ملاحظات..."
+    }
+  },
+  "customer_cash_receipt": {
+    "form": {
+      "title": "إيصال نقدي لزبون",
+      "button": "إضافة",
+      "client_account": "حساب الزبون",
+      "cash_account": "حساب النقد",
+      "select_account": "اختيار الحساب",
+      "amount": "المبلغ",
+      "currency": "العملة",
+      "select_currency": "اختيار العملة",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ",
+      "note": "ملاحظات"
     }
   }
 }

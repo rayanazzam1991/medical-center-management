@@ -11,19 +11,9 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
     messages: messages
 })
 
-const addCustomRevenueValidationSchema = toFormValidator(zod
+const cutomerCashReceiptValidationSchema = toFormValidator(zod
     .object({
         client_account: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
-            ),
-        revenue_account: zod
             .preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
@@ -43,7 +33,7 @@ const addCustomRevenueValidationSchema = toFormValidator(zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
                     .min(1, i18n.global.t('validation.required')),
             ),
-        revenue_amount:
+        amount:
             zod.preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
@@ -52,28 +42,6 @@ const addCustomRevenueValidationSchema = toFormValidator(zod
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
                     .min(1, i18n.global.t('validation.number.invalid_type_error')),
-
-            ),
-        cash_amount:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
-
-            ),
-        remain_amount:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
 
             ),
         currency_id: zod
@@ -118,5 +86,5 @@ const addCustomRevenueValidationSchema = toFormValidator(zod
 
     }));
 export {
-    addCustomRevenueValidationSchema
+    cutomerCashReceiptValidationSchema
 }
