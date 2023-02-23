@@ -32,4 +32,11 @@ export async function updateCurrencyRate(id: number, rate: number) {
   return { currency, success, error_code, message }
 }
 
+export function getCurrenciesFromStorage() {
+  const currencyResponse = useCurrency()
+  const currencies : Currency[] = currencyResponse.getCurrenciesFromStorage()
+  return currencies 
+
+}
+
 

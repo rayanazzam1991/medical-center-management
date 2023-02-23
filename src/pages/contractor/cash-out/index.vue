@@ -1,11 +1,12 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import WalletMovementClickName from '/@src/components/OurComponents/Contractor/WalletMovement/walletMovementClickName.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultWalletMovementSearchFilter, WalletMovementSearchFilter ,WalletMovement} from "/@src/models/Contractor/walletMovement"
+import { defaultWalletMovementSearchFilter, WalletMovementSearchFilter, WalletMovement } from "/@src/models/Contractor/walletMovement"
 import { defaultChangeStatusUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
@@ -16,9 +17,11 @@ import { useWalletMovement } from '/@src/stores/Contractor/WalletMovement/wallet
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
-import { stringTrim } from '/@src/composable/helpers/stringHelpers';
+import { addParenthesisToString, stringTrim } from '/@src/composable/helpers/stringHelpers';
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('walletMovement.table.title'))
 useHead({
@@ -33,6 +36,9 @@ const walletMovementStore = useWalletMovement()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const changeStatusPopup = ref(false)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+
 onMounted(async () => {
     searchFilter.value.action = 'cash_out'
     const { walletMovements, pagination } = await getWalletMovementsList(searchFilter.value)
@@ -85,19 +91,21 @@ const columns = {
         searchable: true,
         sortable: true,
         renderRow: (row: any) =>
-        h(
+            h(
                 WalletMovementClickName, {
                 clickable: true,
                 title: row?.wallet?.contractor_name,
                 onClick: () => {
-                    router.push({ path: `/contractor/${row?.wallet?.contractor_id}` ,
-                       query: { tab: 'Wallet' }});
+                    router.push({
+                        path: `/contractor/${row?.wallet?.contractor_id}`,
+                        query: { tab: 'Wallet' }
+                    });
                 },
-            } ),
+            }),
     },
     total: {
         align: 'center',
-        label:  t('walletMovement.table.columns.total'),
+        label: t('walletMovement.table.columns.total') + addParenthesisToString(mainCurrency.name),
         sortable: true,
         renderRow: (row: any) =>
             h('span', row?.total),
@@ -108,7 +116,7 @@ const columns = {
         renderRow: (row: any) =>
             h('span', {
                 innerHTML: row?.note ?
-                    `<div class="tooltip">${stringTrim(row?.note,10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>`: '-',
+                    `<div class="tooltip">${stringTrim(row?.note, 10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
             }),
     },
     created_by: {
@@ -159,22 +167,22 @@ const columns = {
             @update:current-page="getWalletMovementsPerPage" />
         <h6 class="pt-2 is-size-7" v-if="walletMovementList.length != 0 && !walletMovementStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
 
         <VPlaceloadText v-if="walletMovementStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
 
     </VFlexTableWrapper>
-
 </template>
 
 <style  lang="scss">

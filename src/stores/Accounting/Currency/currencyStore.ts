@@ -14,6 +14,7 @@ export const useCurrency = defineStore('currency', () => {
   const success = ref<boolean>()
   const error_code = ref<string>()
   const message = ref<string>()
+  const currenciesStorage = useStorage('currencies', <Array<Currency>>[])
 
   async function getCurrenciesStore(searchFilter: CurrencySearchFilter) {
     if (loading.value) return
@@ -22,6 +23,7 @@ export const useCurrency = defineStore('currency', () => {
     try {
       const returnedResponse = await getCurrenciesApi(api, searchFilter)
       currencies.value = returnedResponse.response.data
+      setCurrenciesToStorage(returnedResponse.response.data)
       pagination.value = returnedResponse.response.pagination
       success.value = returnedResponse.response.success
       error_code.value = returnedResponse.response.error_code
@@ -64,7 +66,7 @@ export const useCurrency = defineStore('currency', () => {
 
     try {
       const returnedResponse = await updateCurrencyRateApi(api, id, rate)
-      pagination.value = returnedResponse.response.pagination
+      updateCurrencyInStorage(returnedResponse.response.data)
       success.value = returnedResponse.response.success
       error_code.value = returnedResponse.response.error_code
       message.value = returnedResponse.response.message
@@ -80,6 +82,19 @@ export const useCurrency = defineStore('currency', () => {
     }
   }
 
+  function setCurrenciesToStorage(currencies: Currency[]) {
+    currenciesStorage.value = currencies as Currency[]
+  }
+  function getCurrenciesFromStorage(): Currency[] {
+    return currenciesStorage.value;
+  }
+
+  function updateCurrencyInStorage(currency: Currency) {
+    const oldCurrencyIndex = currenciesStorage.value.findIndex((currencyElement) => currencyElement.id == currency.id)
+    currenciesStorage.value.splice(oldCurrencyIndex, 1)
+    currenciesStorage.value.push(currency)
+  }
+
 
 
   return {
@@ -91,7 +106,10 @@ export const useCurrency = defineStore('currency', () => {
     loading,
     getCurrenciesStore,
     getCurrencyByCodeStore,
-    updateCurrencyRateStore
+    updateCurrencyRateStore,
+    getCurrenciesFromStorage,
+    updateCurrencyInStorage,
+    setCurrenciesToStorage
   } as const
 })
 

@@ -12,6 +12,9 @@ import { addBulkCashOutsList } from '/@src/services/Contractor/WalletMovement/wa
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import sleep from '/@src/utils/sleep'
 import { getWalletsList } from '/@src/services/Contractor/Wallet/walletService'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency'
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService'
 
 
 const notif = useNotyf() as Notyf
@@ -20,9 +23,11 @@ const router = useRouter()
 const { t } = useI18n()
 const keyIncrement = ref(0)
 const viewWrapper = useViewWrapper()
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 viewWrapper.setPageTitle(t('walletMovement.table.bulk_cash_out.title'))
 useHead({
-    title: t('walletMovement.table.bulk_cash_out.title'),
+  title: t('walletMovement.table.bulk_cash_out.title'),
 })
 const prop = defineProps(['enabled'])
 const emit = defineEmits(['onSubmit'])
@@ -31,45 +36,45 @@ const ValidwalletList = ref<Wallet[]>([])
 const selectedRowsId = ref<number[]>([])
 const editCompanyIndex = ref<number>()
 onMounted(async () => {
-    const { wallets } = await getWalletsList(defaultWalletSearchFilter)
-    walletList.value = wallets
-    const Wallet = walletList.value.filter((wallet) => wallet.amount > 0)
-    ValidwalletList.value = Wallet
+  const { wallets } = await getWalletsList(defaultWalletSearchFilter)
+  walletList.value = wallets
+  const Wallet = walletList.value.filter((wallet) => wallet.amount > 0)
+  ValidwalletList.value = Wallet
 
 });
 let walletId = ref()
 let amount = ref()
 let contractorId = ref()
 const createBulkCashOut = ref<CreateBulkCashOut>(defaultCreateBulkCashOut)
-const getSelectedWallets = (()=>{
-    for (let i  of selectedRowsId.value) {
-        const SelectedWallet = walletList.value.find((wallet) => wallet.id == i)
-        walletId.value = SelectedWallet?.id
-        amount.value = SelectedWallet?.amount
-        contractorId.value = SelectedWallet?.contractor_id
-        createBulkCashOut.value.bulkCashOuts.push({wallet_id: walletId.value,total:amount.value ,contractor_id:contractorId.value})
-    }
+const getSelectedWallets = (() => {
+  for (let i of selectedRowsId.value) {
+    const SelectedWallet = walletList.value.find((wallet) => wallet.id == i)
+    walletId.value = SelectedWallet?.id
+    amount.value = SelectedWallet?.amount
+    contractorId.value = SelectedWallet?.contractor_id
+    createBulkCashOut.value.bulkCashOuts.push({ wallet_id: walletId.value, total: amount.value, contractor_id: contractorId.value })
+  }
 });
 const onSubmit = async () => {
-        await bulkCashOut();
-        return;
+  await bulkCashOut();
+  return;
 };
-watch(selectedRowsId,(value)=>{
+watch(selectedRowsId, (value) => {
   keyIncrement.value = keyIncrement.value + 1
 })
 const bulkCashOut = (async () => {
   getSelectedWallets()
-    let bulkCashOut = createBulkCashOut.value
-    const {success,message} = await addBulkCashOutsList(bulkCashOut)
-    if (success) {
-        notif.dismissAll();
-        await sleep(200);
-        notif.success(t('toast.success.withdraw'));
-        router.push({ path: `/contractor/cash-out` });
-    } else {
-        await sleep(200);
-        notif.error(message)
-    }
+  let bulkCashOut = createBulkCashOut.value
+  const { success, message } = await addBulkCashOutsList(bulkCashOut)
+  if (success) {
+    notif.dismissAll();
+    await sleep(200);
+    notif.success(t('toast.success.withdraw'));
+    router.push({ path: `/contractor/cash-out` });
+  } else {
+    await sleep(200);
+    notif.error(message)
+  }
 });
 
 const isAllSelected = computed(
@@ -80,32 +85,32 @@ const columns = {
   select: {
     label: '',
     cellClass: 'is-flex-grow-0',
-    align : 'center'
+    align: 'center'
   },
   contractor_name: {
-        align: 'center',
-        label: t('walletMovement.cash_out_form.contarctor'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.contractor_name),
-    },
+    align: 'center',
+    label: t('walletMovement.cash_out_form.contarctor'),
+    grow: true,
+    renderRow: (row: any) =>
+      h('span', row?.contractor_name),
+  },
   amount: {
     grow: true,
     align: 'center',
-    label: t('contractor.details.amount'),
+    label: t('contractor.details.amount') + addParenthesisToString(mainCurrency.name),
     renderRow: (row: any) =>
-        h('span', row?.amount)
+      h('span', row?.amount)
   },
-}
+} as const
 function toggleSelection() {
 
   if (isAllSelected.value) {
     selectedRowsId.value = []
     keyIncrement.value = keyIncrement.value + 1
 
-  } 
+  }
   else {
-    selectedRowsId.value = ValidwalletList.value.map((_,index)=><number>_.id)
+    selectedRowsId.value = ValidwalletList.value.map((_, index) => <number>_.id)
     keyIncrement.value = keyIncrement.value + 1
 
   }
@@ -122,38 +127,23 @@ function clickOnRow(row: any) {
 </script>
 
 <template>
-    <BulkCashOutTableHeader  :title="viewWrapper.pageTitle" :key="keyIncrement"
-        :button_name="t('walletMovement.table.bulk_cash_out.header_button')"
-        @onSubmit="onSubmit"  :enable_button="selectedRowsId.length == 0 ? false : true"
-        />
-    <VFlexTableWrapper :columns="columns"  :data="walletList" >
-        <VFlexTable separators  >
-            <!-- header-column slot -->
-            <template #header-column="{ column }">
-            <VCheckbox
-                v-if="column.key === 'select'"
-                class="ml-3 mr-3"
-                :checked="isAllSelected"
-                name="all_selected"
-                color="primary"
-                square
-                @click.prevent="toggleSelection"
-            />
-            </template>
-            <!-- body-cell slot -->
-            <template #body-cell="{ row, column ,value}" >
-            <!--This is the slot for row.select cells-->
-            <VCheckbox
-                v-if="column.key === 'select'"
-                :checked="clickOnRow"
-                :class=" row.amount <= 0 ? 'is-disabled' : ''"
-                v-model="selectedRowsId"
-                :value="row.id"
-                name="selection"
-                square
-            />
-            <!--The default slot is used then-->
-            </template>
-        </VFlexTable>
+  <BulkCashOutTableHeader :title="viewWrapper.pageTitle" :key="keyIncrement"
+    :button_name="t('walletMovement.table.bulk_cash_out.header_button')" @onSubmit="onSubmit"
+    :enable_button="selectedRowsId.length == 0 ? false : true" />
+  <VFlexTableWrapper :columns="columns" :data="walletList">
+    <VFlexTable separators>
+      <!-- header-column slot -->
+      <template #header-column="{ column }">
+        <VCheckbox v-if="column.key === 'select'" class="ml-3 mr-3" :checked="isAllSelected" name="all_selected"
+          color="primary" square @click.prevent="toggleSelection" />
+      </template>
+      <!-- body-cell slot -->
+      <template #body-cell="{ row, column, value }">
+        <!--This is the slot for row.select cells-->
+        <VCheckbox v-if="column.key === 'select'" :checked="clickOnRow" :class="row.amount <= 0 ? 'is-disabled' : ''"
+          v-model="selectedRowsId" :value="row.id" name="selection" square />
+        <!--The default slot is used then-->
+      </template>
+    </VFlexTable>
   </VFlexTableWrapper>
 </template>

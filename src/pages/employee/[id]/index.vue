@@ -33,7 +33,12 @@ import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { employeeNumberEditValidationSchema } from '/@src/rules/Employee/employeeNumberEditValidation'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency'
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
@@ -467,7 +472,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>{{ t('employee.details.name', { title: viewWrapper.pageTitle })}}</h4>
+                    <h4>{{ t('employee.details.name', { title: viewWrapper.pageTitle }) }}</h4>
                     <p>
                       {{ currentEmployee.user.first_name }}
                       {{ currentEmployee.user.last_name }}.
@@ -480,16 +485,16 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                         : 'lnir lnir-female'
                     "></i>
                     <h4>{{ t('employee.details.gender') }}</h4>
-                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase() }`) }}.</p>
+                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
-                    <h4>{{t('employee.details.birth_date')}}</h4>
+                    <h4>{{ t('employee.details.birth_date') }}</h4>
                     <p>{{ currentEmployee.user.birth_date }}.</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
-                    <h4>{{t('employee.details.phone_number')}}</h4>
+                    <h4>{{ t('employee.details.phone_number') }}</h4>
                     <p>{{ currentEmployee.user.phone_number }}.</p>
                   </div>
                 </div>
@@ -500,7 +505,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.starting_date')}}</span>
+                          <span>{{ t('employee.details.starting_date') }}</span>
                           <span>
                             {{ currentEmployee.starting_date }}
                           </span>
@@ -510,7 +515,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.end_date')}}</span>
+                          <span>{{ t('employee.details.end_date') }}</span>
                           <span>
                             {{ currentEmployee.end_date }}
                           </span>
@@ -520,7 +525,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.department')}}</span>
+                          <span>{{ t('employee.details.department') }}</span>
                           <span>
                             {{ currentEmployee?.user?.room?.department?.name }}
                           </span>
@@ -530,7 +535,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.room_number')}}</span>
+                          <span>{{ t('employee.details.room_number') }}</span>
                           <span>
                             {{ currentEmployee?.user?.room?.number }}
                           </span>
@@ -540,7 +545,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.position')}}</span>
+                          <span>{{ t('employee.details.position') }}</span>
                           <span>
                             {{ currentEmployee.position?.name }}
                           </span>
@@ -550,7 +555,8 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.basic_salary')}}</span>
+                          <span>{{ t('employee.details.basic_salary') }}{{ addParenthesisToString(mainCurrency.name)
+                          }}</span>
                           <span>
                             {{ currentEmployee.basic_salary }}
                           </span>
@@ -560,7 +566,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.nationality')}}</span>
+                          <span>{{ t('employee.details.nationality') }}</span>
                           <span>
                             {{ currentEmployee.nationality?.name }}
                           </span>
@@ -570,7 +576,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{t('employee.details.address')}}</span>
+                          <span>{{ t('employee.details.address') }}</span>
                           <span>
                             {{ currentEmployee.user.address }}
                           </span>
@@ -581,14 +587,14 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                       <div class="file-box">
                         <div class="meta full-width">
                           <div class="
-                            is-justify-content-space-between
-                            is-align-items-flex-start
-                            is-flex
-                            mt-2
-                          ">
+                                is-justify-content-space-between
+                                is-align-items-flex-start
+                                is-flex
+                                mt-2
+                              ">
                             <div class="columns is-multiline">
-                              <span class="column is-12 pb-0"
-                                :class="editEmployeeNumberTrigger ? 'required' : ''">{{t('employee.details.employee_number')}}</span>
+                              <span class="column is-12 pb-0" :class="editEmployeeNumberTrigger ? 'required' : ''">{{
+                                t('employee.details.employee_number') }}</span>
                               <span v-if="!editEmployeeNumberTrigger" class="column py-0">
                                 {{ currentEmployee.employee_number ?? 'None' }}
                               </span>
@@ -607,7 +613,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
 
                               <div v-if="editEmployeeNumberTrigger"
                                 class="column is-12 has-text-info is-size-7 mt-0 pt-2">
-                                {{t('employee.details.last_employee_number')}}: {{ maxEmployeeNumber ?? 0 }}
+                                {{ t('employee.details.last_employee_number') }}: {{ maxEmployeeNumber ?? 0 }}
                               </div>
                             </div>
                             <div>
@@ -636,17 +642,17 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>{{t('employee.details.employee_files')}}</h3>
+                    <h3>{{ t('employee.details.employee_files') }}</h3>
                   </div>
                 </div>
                 <div v-if="employeeFiles.length == 0" class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{t('employee.details.tabs_content_placeholder.files')}}</h4>
+                    <h4>{{ t('employee.details.tabs_content_placeholder.files') }}</h4>
                   </div>
                 </div>
                 <div class="project-files project-section">
-                  <h4>{{t('employee.details.upload_file')}}</h4>
+                  <h4>{{ t('employee.details.upload_file') }}</h4>
                   <div class="is-flex is-justify-content-space-between">
                     <VField class="mr-6" grouped>
                       <VControl>
@@ -657,7 +663,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                               <span class="file-icon">
                                 <i class="fas fa-cloud-upload-alt"></i>
                               </span>
-                              <span class="file-label"> {{t('images.image_name_placeholder')}} </span>
+                              <span class="file-label"> {{ t('images.image_name_placeholder') }} </span>
                             </span>
                             <span class="file-name light-text">
                               {{ filesToUpload?.name ?? t('images.image_select_file') }}
@@ -669,19 +675,19 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <VLoader size="small" :active="uploadLoading">
                       <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
                         icon="lnir lnir-add-files rem-100" light dark-outlined>
-                        {{t('employee.details.upload')}}
+                        {{ t('employee.details.upload') }}
                       </VButton>
                     </VLoader>
                   </div>
                   <h6 class="ml-2 mt-2 help">
-                    {{t('images.accepted_file')}}
+                    {{ t('images.accepted_file') }}
                   </h6>
                 </div>
                 <div v-if="employeeFiles.length != 0" class="project-files project-section">
                   <div>
-                    <h4>{{t('employee.details.tabs.files')}}</h4>
+                    <h4>{{ t('employee.details.tabs.files') }}</h4>
                     <div class="columns is-multiline">
-                      <div v-for="(file , index) in employeeFiles" class="column is-6">
+                      <div v-for="(file, index) in employeeFiles" class="column is-6">
                         <div class="file-box is-flex is-justify-content-space-between">
                           <div class="file-box">
 
@@ -693,15 +699,15 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                               </span>
                               <span>
                                 {{
-                                file.size != undefined
-                                ? (file.size / (1024 * 1024)).toFixed(2)
-                                : 'Unknown'
+                                  file.size != undefined
+                                  ? (file.size / (1024 * 1024)).toFixed(2)
+                                  : 'Unknown'
                                 }}
                                 {{ file.size != undefined ? t('images.megabyte') : '' }}
                                 <i aria-hidden="true" class="fas fa-circle"></i>
                                 {{ file.created_at }}
                                 <i aria-hidden="true" class="fas fa-circle"></i>
-                                {{t('images.by')}} {{ file.uploaded_by?.first_name
+                                {{ t('images.by') }} {{ file.uploaded_by?.first_name
                                 }}{{ file.uploaded_by?.last_name }}
                               </span>
                             </div>
@@ -730,10 +736,10 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column" id="user_status_id">
-                <VLabel>{{t('employee.details.employee_status')}}</VLabel>
+                <VLabel>{{ t('employee.details.employee_status') }}</VLabel>
                 <VControl>
                   <VSelect v-if="currentEmployee.user.status" v-model="currentEmployee.user.status.id">
-                    <VOption value="">{{t('employee.details.select_employee_status')}}</VOption>
+                    <VOption value="">{{ t('employee.details.select_employee_status') }}</VOption>
                     <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{ status.name }}
                     </VOption>
                   </VSelect>
@@ -746,7 +752,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
       </form>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
+      <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
   <VModal :title="t('employee.table.modal_title.delete_file')" :open="deleteFilePopup" actions="center"
@@ -757,7 +763,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton color="primary" raised @click="removefile()">{{t('modal.buttons.confirm')}}</VButton>
+        <VButton color="primary" raised @click="removefile()">{{ t('modal.buttons.confirm') }}</VButton>
       </VLoader>
     </template>
   </VModal>
@@ -766,8 +772,8 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     <template #content>
       <VField class="is-flex is-justify-content-center">
         <VControl>
-          <VFilePond size="large" class="profile-filepond" name="profile_filepond"
-            :chunk-retry-delays="[500, 1000, 3000]" label-idle="<i class='lnil lnil-cloud-upload'></i>"
+          <VFilePond size="large" class="profile-filepond" name="profile_filepond" :chunk-retry-delays="[500, 1000, 3000]"
+            label-idle="<i class='lnil lnil-cloud-upload'></i>"
             :accepted-file-types="['image/png', 'image/jpeg', 'image/webp']" :image-preview-height="140"
             :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
             style-panel-layout="compact circle" style-load-indicator-position="center bottom"
@@ -784,10 +790,10 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
       <VLoader size="small" :active="deleteLoading">
         <VButton v-if="employeeProfilePicture.id != undefined" color="danger" outlined class="mr-2"
           @click="RemoveProfilePicture">
-          {{t('modal.buttons.delete')}}</VButton>
+          {{ t('modal.buttons.delete') }}</VButton>
       </VLoader>
       <VLoader size="small" :active="uploadLoading">
-        <VButton color="primary" raised @click="UploadProfilePicture">{{t('modal.buttons.update')}}</VButton>
+        <VButton color="primary" raised @click="UploadProfilePicture">{{ t('modal.buttons.update') }}</VButton>
       </VLoader>
     </template>
   </VModal>
