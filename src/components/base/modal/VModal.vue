@@ -85,8 +85,96 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss">
+@keyframes modalOpen {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(0.3);
+  }
+
+  60% {
+    transform: scale(0.6);
+  }
+
+  70% {
+    transform: scale(0.8);
+  }
+
+  80% {
+    transform: scale(1);
+  }
+
+  90% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+
+  }
+}
+
+@keyframes modalOpenBackgroud {
+  0% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 1%);
+  }
+
+  50% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 30%);
+  }
+
+  60% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 40%);
+  }
+
+  70% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 60%);
+  }
+
+  80% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 70%);
+  }
+
+  100% {
+    background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 80%);
+
+  }
+}
+
+@keyframes modalOpenBackgroudDark {
+  0% {
+    background-color: rgb(101 101 104 / 1%);
+  }
+
+  50% {
+    background-color: rgb(101 101 104 / 30%);
+    ;
+  }
+
+  60% {
+    background-color: rgb(101 101 104 / 40%);
+  }
+
+  70% {
+    background-color: rgb(101 101 104 / 60%);
+  }
+
+  80% {
+    background-color: rgb(101 101 104 / 70%);
+  }
+
+  100% {
+    background-color: rgb(101 101 104 / 80%);
+
+  }
+}
+
 .modal {
-  transition: all 0.5s;
+  transition: all 5s;
 
   &.is-big {
     .modal-content {
@@ -155,15 +243,15 @@ onUnmounted(() => {
   }
 
   .modal-background {
+    animation: modalOpenBackgroud 0.3s ease-in-out;
     background-color: hsl(var(--dark-sidebar-h) var(--dark-sidebar-s) var(--dark-sidebar-l) / 80%);
   }
 
+
   .modal-content {
-    transform: scale(1) !important;
-    opacity: 1 !important;
     max-width: 540px;
     overflow-x: hidden;
-    animation: fadeInDown 0.5s;
+    animation: modalOpen 0.2s ease-in-out;
     margin: 0;
     padding: 0 10px;
 
@@ -286,7 +374,10 @@ onUnmounted(() => {
 .is-dark {
   .v-modal {
     .modal-background {
-      background: rgb(101 101 104 / 80%) !important;
+      animation: modalOpenBackgroudDark 0.3s ease-in-out !important;
+      background: rgb(101 101 104 / 80%);
+
+
     }
 
     .modal-content {
