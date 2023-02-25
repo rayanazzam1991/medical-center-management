@@ -1,28 +1,21 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { AccountConsts, TrialBalanceLvl2Chart } from '/@src/models/Accounting/Account/account';
+import { IncomeStatmentLvl2Chart } from '/@src/models/Accounting/Account/account';
 
-export interface TrailBalanceLvl1CollapseProps {
-  items: TrialBalanceLvl2Chart[]
+export interface IncomeStatmentRevenuesExpensesCollapseProps {
+  items: IncomeStatmentLvl2Chart
   withChevron?: boolean,
   is_expanded: boolean
 }
 
-const props = withDefaults(defineProps<TrailBalanceLvl1CollapseProps>(), {
-  items: () => [],
+const props = withDefaults(defineProps<IncomeStatmentRevenuesExpensesCollapseProps>(), {
   itemsOpen: undefined,
   is_expanded: false
 })
 onMounted(() => {
   if (isExpanded.value) {
     let index = 1
-    internalItemsOpen.value = []
-    props.items.forEach((element) => {
-      if (internalItemsOpen.value) {
-        internalItemsOpen.value.push(index)
-        index++
-      }
-    });
+    internalItemsOpen.value = [1]
   }
 })
 
@@ -48,20 +41,20 @@ const toggle = (key: number) => {
 </script>
 
 <template>
-  <details v-for="(item, key) in items" :key="key" :class="[withChevron && 'has-chevron', !withChevron && 'has-plus']"
-    :open="((internalItemsOpen?.find((item) => item == key + 1) ? true : false))" class="collapse-lvl1">
-    <slot name="collapse-item1" :item="item" :index="key" :toggle="toggle">
-      <summary class="collapse-header" tabindex="0" @keydown.space.prevent="() => toggle(key)"
-        @click.prevent="() => toggle(key)">
+  <details :key="0" :class="[withChevron && 'has-chevron', !withChevron && 'has-plus']"
+    :open="((internalItemsOpen?.find((item) => item == 1) ? true : false))" class="collapse-lvl1">
+    <slot name="collapse-item1" :item="items" :index="0" :toggle="toggle">
+      <summary class="collapse-header" tabindex="0" @keydown.space.prevent="() => toggle(0)"
+        @click.prevent="() => toggle(0)">
         <div class="is-flex">
-          <slot clas name="collapse-item-summary1" :item="item" :index="key" :toggle="toggle">
+          <slot clas name="collapse-item-summary1" :item="items" :index="0" :toggle="toggle">
             <h3 class="mr-2 is-size-6">
-              {{ item.code }}
+              {{ items.code }}
             </h3>
           </slot>
-          <slot name="collapse-item-summary1" :item="item" :index="key" :toggle="toggle">
+          <slot name="collapse-item-summary1" :item="items" :index="0" :toggle="toggle">
             <h3 class="is-size-6">
-              {{ item.name }}
+              {{ items.name }}
             </h3>
           </slot>
         </div>
@@ -69,16 +62,11 @@ const toggle = (key: number) => {
           <div class="is-flex">
             <div class="chart-row">
               <div class="accounts-cell open-has-bold">
-                {{ item.total_credits }}
-              </div>
-            </div>
-            <div class="chart-row mr-5">
-              <div class="accounts-cell open-has-bold">
-                {{ item.total_debits }}
+                {{ items.total_balances }}
               </div>
             </div>
           </div>
-          <slot name="collapse-item-head" :item="item" :index="key + 1"></slot>
+          <slot name="collapse-item-head" :item="items" :index="1"></slot>
           <div class="collapse-icon">
             <VIcon v-if="withChevron" icon="feather:chevron-down" />
             <VIcon v-else-if="!withChevron" icon="feather:plus" />
@@ -86,8 +74,8 @@ const toggle = (key: number) => {
         </div>
       </summary>
       <div class="collapse-content">
-        <slot name="trail-balance-lvl1-collapse-item-content1" :item="item" :index="key" :toggle="toggle">
-          <div class="account-details columns is-flex is-justify-content-space-between" v-for="account in item.accounts">
+        <slot name="trail-balance-lvl1-collapse-item-content1" :item="items" :index="0" :toggle="toggle">
+          <div class="account-details columns is-flex is-justify-content-space-between" v-for="account in items.accounts">
             <div class="meta is-flex column is-3 columns my-0 is-align-items-center">
               <div class="account-code mr-2">
                 <div class="accounts-cell">
@@ -104,24 +92,15 @@ const toggle = (key: number) => {
             <div class="is-flex is-align-items-center ">
               <div class="chart-row">
                 <div class=" accounts-cell">
-                  {{
-                    account.absolute_type == AccountConsts.CREDIT_TYPE ? account.absolute_balance : '-'
-                  }}
-                </div>
-              </div>
-              <div class="chart-row mr-5">
-                <div class="accounts-cell">
-                  {{
-                    account.absolute_type == AccountConsts.DEBIT_TYPE ? account.absolute_balance : '-'
-                  }}
+                  {{ account.balance }}
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="item.accounts.length == 0" class="account-details accounts-footer my-2">
+          <div v-if="items.accounts.length == 0" class="account-details accounts-footer my-2">
             <div class="meta is-flex">
               <div class="account-code mr-2">
-                {{ t('trial_balance_report.no_accounts_place_holder') }}
+                {{ t('income_statment_report.no_accounts_place_holder') }}
               </div>
             </div>
           </div>
@@ -133,5 +112,5 @@ const toggle = (key: number) => {
 
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
-@import '/@src/scss/Styles/TrialBalanceReport/trialBalanceLvl1Collapse.scss';
+@import '/@src/scss/Styles/BalanceSheetReport/balanceSheetAssetsLiabilitesCollapse.scss';
 </style>

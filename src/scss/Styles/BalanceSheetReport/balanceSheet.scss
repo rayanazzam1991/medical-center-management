@@ -71,6 +71,11 @@
         border: none;
     }
 
+    &.test {
+      border-bottom: 2px solid var(--fade-grey-dark-3);
+
+    }
+
     .meta {
 
         .account-name,
@@ -147,6 +152,10 @@
         background: var(--dark-sidebar-light-2);
 
     }
-    
+    &.test {
+      border-bottom: 2px solid var(--fade-grey-dark-3);
+
+    }
+
 
 }

@@ -205,7 +205,8 @@
     "reports": {
       "reports": "التقارير المالية",
       "trial_balance_report": "تقرير ميزان المراجعة",
-      "balance_sheet_report": "تقرير الميزانية العمومية"
+      "balance_sheet_report": "تقرير الميزانية العمومية",
+      "income_statment_report": "تقرير قوائم الدخل "
     },
     "records": {
       "records": "القيود والتحويلات المالية",
@@ -1969,6 +1970,18 @@
     "search_filter": {
       "name": "اسم الموظف...",
       "creator_name": "بواسطة..."
+    }
+  },
+  "income_statment_report": {
+    "title": "تقرير قوائم الدخل",
+    "total_balances": "الرصيد",
+    "expand_collapse_button": "توسيع/تجميع الكل",
+    "gross_profit": "إجمالي الربح",
+    "net_income": "صافي الدخل",
+    "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع.",
+    "place_holder": {
+      "title": "جاري توليد التقرير..",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
     }
   }
 }
