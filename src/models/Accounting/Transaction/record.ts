@@ -1,5 +1,5 @@
 import { User } from "../../Others/User/user"
-import {RecordAccountDetail} from "../Account/account"
+import { RecordAccountDetail } from "../Account/account"
 import { Currency, defaultCurrency } from "../Currency/currency"
 import { JournalEntry } from "../JournalEntry/journalEntry"
 
@@ -15,42 +15,42 @@ export interface CreateRecords {
   recordType: number
 }
 export interface Transaction {
-    id: number
-    title?: string
-    amount: string
-    currency: Currency
-    currency_rate: number
-    note?: string
-    date?: string
-    created_at: string
-    created_by?: User
-    entries: JournalEntry[]
+  id: number
+  title?: string
+  amount: string
+  currency: Currency
+  currency_rate: number
+  note?: string
+  date?: string
+  created_at: string
+  created_by?: User
+  entries: JournalEntry[]
 
 }
 
 
 export interface TransactionSearchFilter {
-    title?: string
-    note?: string
-    page?: number
-    per_page?: number
-    order_by?: string
-    order?: string
+  title?: string
+  note?: string
+  page?: number
+  per_page?: number
+  order_by?: string
+  order?: string
 }
 
 export const defaultTransactionSearchFilter: Partial<TransactionSearchFilter> = {}
 
 export const defaultTransaction: Transaction = {
-    id: 0,
-    title: undefined,
-    amount: "0.00",
-    currency: defaultCurrency,
-    currency_rate: 1,
-    note: undefined,
-    date: undefined,
-    created_at: "",
-    created_by: undefined,
-    entries: []
+  id: 0,
+  title: undefined,
+  amount: "0.00",
+  currency: defaultCurrency,
+  currency_rate: 1,
+  note: undefined,
+  date: undefined,
+  created_at: "",
+  created_by: undefined,
+  entries: []
 }
 export const createRecordsWithDefault = {
   title: "",
@@ -69,9 +69,10 @@ class TransactionConsts {
   static readonly TRANSFER_CASH = 2;
   static readonly PAY_EXPENSE = 3;
   static readonly CUSTOM_REVENUE = 4;
-  static readonly OTHER_RECORD = 5;
+  static readonly CLIENT_CASH_RECEIPT = 5;
+  static readonly OTHER_RECORD = 50;
 
 }
 
-export {TransactionConsts}
+export { TransactionConsts }
 

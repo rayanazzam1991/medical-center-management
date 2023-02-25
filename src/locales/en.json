@@ -205,7 +205,8 @@
       "records": "Financial Records & Transfers",
       "transfer_cash_money": "Transfer Cash Money",
       "add_record": "Add Financial Record",
-      "add_custom_revenue": "Add Custom Revenue"
+      "add_custom_revenue": "Add Custom Revenue",
+      "create_customer_cash_receipt": "Create Cash Reciept For A Customer"
     }
   },
   "user_profile_dropdown": {
@@ -1929,5 +1930,20 @@
     "no_accounts_place_holder": "There is no accounts under this level.",
     "gross_profit": "Gross Profit ",
     "net_income": "Net Income "
+  },
+  "customer_cash_receipt": {
+    "form": {
+      "title": "Customer Cash Reciept",
+      "button": "Add",
+      "client_account": "Client account",
+      "cash_account": "Cash account",
+      "select_account": "Select account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "select_currency": "Select currency",
+      "currency_rate": "Currency Rate",
+      "date": "Date",
+      "note": "Note"
+    }
   }
 }
