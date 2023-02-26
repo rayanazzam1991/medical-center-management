@@ -177,9 +177,9 @@ watch(
           <!-- <ToolbarNotification /> -->
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                @click="panels.setActive('activity')">
-                                <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                              </a> -->
+                                  @click="panels.setActive('activity')">
+                                  <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -266,7 +266,7 @@ watch(
               route.path.startsWith('/transfer-cash-money') ||
               route.path.startsWith('/add-record') ||
               route.path.startsWith('/add-custom-revenue') ||
-              route.path.startsWith('/customer-cash-receipt')
+              route.path.startsWith('/transaction')
             ) &&
             'is-active',
           ]" class="centered-link centered-link-toggle" tabindex="0"
@@ -312,13 +312,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                    <ToolbarNotification />
+                                      <ToolbarNotification />
 
-                                    <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                      @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                      <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                    </a>
-                                  </Toolbar> -->
+                                      <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                        @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                        <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                      </a>
+                                    </Toolbar> -->
             </div>
 
             <slot></slot>

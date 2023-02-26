@@ -210,6 +210,7 @@
     },
     "records": {
       "records": "القيود والتحويلات المالية",
+      "customer_cash_receipts": "الإيصالات النقدية للزبائن",
       "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة سجل مالي",
@@ -1999,6 +2000,28 @@
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
       "note": "ملاحظات"
+    },
+    "table": {
+      "title": "الإيصالات النقدية للزبائن",
+      "columns": {
+        "client_name": "اسم الزبون",
+        "amount": "المبلغ الإجمالي",
+        "currency": "العملة",
+        "currency_rate": "سعر الصرف",
+        "cash_account": "حساب النقد",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": "بواسطة"
+      }
+    },
+    "add_customer_cash_receipts_button": "انشاء إيصال نقدي لزبون",
+    "search_filter": {
+      "title": "تصفية الايصالات النقدية للزبائن",
+      "note": "ملاحظات...",
+      "client_name": "اسم الزبون...",
+      "cash_account_id": "حساب النقد",
+      "currency_id": "العملة"
     }
   },
   "supplier_cash_receipt": {

@@ -32,6 +32,8 @@ declare module '@vue/runtime-core' {
     CityForm: typeof import('./src/components/OurComponents/Others/City/CityForm.vue')['default']
     CityTableHeader: typeof import('./src/components/OurComponents/Others/City/CityTableHeader.vue')['default']
     ClientOnly: typeof import('./src/components/ClientOnly.vue')['default']
+    ClientsCashReceiptsSearchFilterModal: typeof import('./src/components/OurComponents/Accounting/Transaction/ClientsCashReceiptsSearchFilterModal.vue')['default']
+    ClientsCashReceiptsTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/ClientsCashReceiptsTableHeader.vue')['default']
     ComponentsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ComponentsMobileSubsidebar.vue')['default']
     ComponentsSubnav: typeof import('./src/layouts/navbar-items/ComponentsSubnav.vue')['default']
     ContactWidget: typeof import('./src/components/partials/widgets/ui-creative/ContactWidget.vue')['default']
