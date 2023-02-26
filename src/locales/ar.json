@@ -215,7 +215,8 @@
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة سجل مالي",
       "add_custom_revenue": "إضافة عوائد",
-      "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون"
+      "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون",
+      "create_supplier_cash_receipt": "انشاء إيصال نقدي لمورد"
     }
   },
   "user_profile_dropdown": {
@@ -2021,6 +2022,21 @@
       "client_name": "اسم الزبون...",
       "cash_account_id": "حساب النقد",
       "currency_id": "العملة"
+    }
+  },
+  "supplier_cash_receipt": {
+    "form": {
+      "title": "إيصال نقدي لمورد",
+      "button": "إضافة",
+      "supplier_account": "حساب المورد",
+      "select_account": "اختيار الحساب",
+      "amount": "المبلغ",
+      "cash_account": "حساب النقد",
+      "currency": "العملة",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ",
+      "note": "ملاحظات",
+      "select_currency": "اختيار العملة"
     }
   }
 }

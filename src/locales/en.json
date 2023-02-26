@@ -207,7 +207,8 @@
       "transfer_cash_money": "Transfer Cash Money",
       "add_record": "Add Financial Record",
       "add_custom_revenue": "Add Custom Revenue",
-      "create_customer_cash_receipt": "Create Cash Receipt For A Customer"
+      "create_customer_cash_receipt": "Create Cash Receipt For A Customer",
+      "create_supplier_cash_receipt": "Create Cash Reciept For A Supplier"
     }
   },
   "user_profile_dropdown": {
@@ -1945,20 +1946,6 @@
       "currency_rate": "Currency Rate",
       "date": "Date",
       "note": "Note"
-    },
-    "table": {
-      "title": "Customer Cash Receipts",
-      "columns": {
-        "client_name": "Customer Name",
-        "amount": "Amount",
-        "currency": "Currency",
-        "currency_rate": "Currency Rate",
-        "cash_account": "Cash Account",
-        "note": "Note",
-        "action_date": "Action Date",
-        "created_at": "Created At",
-        "created_by": "Created By"
-      }
     }
   }
 }

@@ -81,6 +81,7 @@ class TransactionConsts {
   static readonly PAY_EXPENSE = 3;
   static readonly CUSTOM_REVENUE = 4;
   static readonly CLIENT_CASH_RECEIPT = 5;
+  static readonly SUPPLIER_CASH_RECEIPT = 6;
   static readonly OTHER_RECORD = 50;
 
 }

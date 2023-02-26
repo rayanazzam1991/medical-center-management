@@ -30,6 +30,7 @@ export const defaultChartOfAccountSearchFilter: ChartOfAccountSearchFilter = {
 class ChartOfAccountConsts {
   static readonly CASH_CODE = '13'
   static readonly CLIENTS_CODE = '11'
+  static readonly SUPPLIER_CODE = '23'
   static readonly REVENUE = '4'
 
 }
