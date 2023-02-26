@@ -206,7 +206,8 @@
       "transfer_cash_money": "Transfer Cash Money",
       "add_record": "Add Financial Record",
       "add_custom_revenue": "Add Custom Revenue",
-      "create_customer_cash_receipt": "Create Cash Reciept For A Customer"
+      "create_customer_cash_receipt": "Create Cash Reciept For A Customer",
+      "create_supplier_cash_receipt": "Create Cash Reciept For A Supplier"
     }
   },
   "user_profile_dropdown": {
@@ -1936,6 +1937,21 @@
       "title": "Customer Cash Reciept",
       "button": "Add",
       "client_account": "Client account",
+      "cash_account": "Cash account",
+      "select_account": "Select account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "select_currency": "Select currency",
+      "currency_rate": "Currency Rate",
+      "date": "Date",
+      "note": "Note"
+    }
+  },
+  "supplier_cash_receipt": {
+    "form": {
+      "title": "Supplier Cash Reciept",
+      "button": "Add",
+      "client_account": "Supplier account",
       "cash_account": "Cash account",
       "select_account": "Select account",
       "amount": "Amount",
