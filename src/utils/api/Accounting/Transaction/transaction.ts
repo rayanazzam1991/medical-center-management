@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
-import { CreateRecords, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
-import { CustomResponseSingle } from "/@src/utils/response"
+import { ClientsCashReceiptsSearchFilter, CreateRecords, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
+import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 
 export async function createRecordsApi(
@@ -14,8 +14,17 @@ export async function createRecordsApi(
 export async function getTransactionsListApi(
     api: AxiosInstance,
     searchFilter: TransactionSearchFilter
-): Promise<{ response: CustomResponseSingle }> {
+): Promise<{ response: CustomResponseCollection }> {
     const { data: response, headers } = await api.get(`transaction/getTransactionsList`, {
+        params: searchFilter
+    })
+    return { response }
+}
+export async function getClientsCashReceiptsListApi(
+    api: AxiosInstance,
+    searchFilter: ClientsCashReceiptsSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+    const { data: response, headers } = await api.get(`transaction/getClientsCashReceiptsList`, {
         params: searchFilter
     })
     return { response }

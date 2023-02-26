@@ -1,12 +1,13 @@
 import {
+  ClientsCashReceiptsSearchFilter,
   CreateRecords,
   Transaction,
   TransactionConsts,
   TransactionSearchFilter
 } from "/@src/models/Accounting/Transaction/record"
-import {useTransaction} from "/@src/stores/Accounting/Transaction/transactionStore"
-import {AccountConsts, RecordAccountAmountDetail, RecordAccountDetail} from '/@src/models/Accounting/Account/account';
-import {defaultPagination, Pagination} from "/@src/utils/response";
+import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
+import { AccountConsts, RecordAccountAmountDetail, RecordAccountDetail } from '/@src/models/Accounting/Account/account';
+import { defaultPagination, Pagination } from "/@src/utils/response";
 
 
 export async function createRecords(
@@ -17,7 +18,7 @@ export async function createRecords(
   let success: boolean = transactionResponce.success ?? false
   let error_code: string = transactionResponce.error_code ?? ''
   let message: string = transactionResponce.message ?? ''
-  return {success, error_code, message, response}
+  return { success, error_code, message, response }
 
 }
 
@@ -46,12 +47,23 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
 
 export async function getTransactionsList(searchFilter: TransactionSearchFilter) {
   const transactionResponse = useTransaction()
-  let transactions: Transaction[] = await transactionResponse.getTransactionsListStore(searchFilter)
+  let transactions: Transaction[] = await transactionResponse.getTransactionsListStore(searchFilter) ?? []
 
   let success: boolean = transactionResponse.success ?? false
   let error_code: string = transactionResponse.error_code ?? ''
   let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
   let message: string = transactionResponse.message ?? ''
-  return {success, error_code, message, transactions, pagination}
+  return { success, error_code, message, transactions, pagination }
+
+}
+export async function getClientsCashReceiptsList(searchFilter: ClientsCashReceiptsSearchFilter) {
+  const transactionResponse = useTransaction()
+
+  let clients_cash_receipts: Transaction[] = await transactionResponse.getClientsCashReceiptsListStore(searchFilter) ?? []
+  let success: boolean = transactionResponse.success ?? false
+  let error_code: string = transactionResponse.error_code ?? ''
+  let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  let message: string = transactionResponse.message ?? ''
+  return { success, error_code, message, clients_cash_receipts, pagination }
 
 }

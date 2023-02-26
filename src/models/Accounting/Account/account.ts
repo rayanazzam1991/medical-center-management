@@ -153,14 +153,14 @@ export interface BalanceSheetAccount {
 
 //Income Statment Interfaces And Defaults
 
-export interface IncomeStatment{
+export interface IncomeStatment {
   revenues: IncomeStatmentLvl1Chart
   other_expenses: IncomeStatmentLvl1Chart
   costs: IncomeStatmentLvl2Chart
   gross_profit: string
-  net_income:string
+  net_income: string
 }
-export interface IncomeStatmentLvl1Chart{
+export interface IncomeStatmentLvl1Chart {
   id: number
   name: string
   code: string
@@ -168,7 +168,7 @@ export interface IncomeStatmentLvl1Chart{
   children: IncomeStatmentLvl2Chart[]
   total_balances: string
 }
-export interface IncomeStatmentLvl2Chart{
+export interface IncomeStatmentLvl2Chart {
   id: number
   name: string
   code: string
@@ -206,7 +206,7 @@ export const defaultIncomeStatment: IncomeStatment = {
   other_expenses: defaultIncomeStatmentLvl1Chart,
   costs: defaultIncomeStatmentLvl2Chart,
   gross_profit: '',
-  net_income:''
+  net_income: ''
 }
 
 
@@ -243,13 +243,13 @@ export interface RecordAccountAmountDetail {
   has_remove_btn?: boolean
 }
 export interface ChangeAccountStatus {
-  id:number
-  status:number
+  id: number
+  status: number
 }
 
 export const defaultChangeAccountStatus: ChangeAccountStatus = {
-  id:0,
-  status:0
+  id: 0,
+  status: 0
 }
 
 export const defaultCreditAccountDetail = {
@@ -271,6 +271,7 @@ class AccountConsts {
   static readonly CREDIT_TYPE = 1
   static readonly DEBIT_TYPE = 2
   static readonly CASH_CODE = '13'
+  static readonly CLIENTS_CODE = '11'
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)
