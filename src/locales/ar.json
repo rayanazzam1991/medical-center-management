@@ -211,6 +211,7 @@
     "records": {
       "records": "القيود والتحويلات المالية",
       "customer_cash_receipts": "الإيصالات النقدية للزبائن",
+      "supplier_cash_receipts": "الإيصالات النقدية للموردين",
       "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة سجل مالي",

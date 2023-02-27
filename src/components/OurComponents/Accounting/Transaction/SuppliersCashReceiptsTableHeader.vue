@@ -59,6 +59,10 @@ export default defineComponent({
       searchFilter.value.cash_account_id = undefined
       searchFilter.value.note = undefined
       searchFilter.value.supplier_name = undefined
+      searchFilter.value.currency_id = undefined
+      searchFilter.value.cash_account_id = undefined
+      is_reseted.value = true
+      searchFilter.value.supplier_name = undefined
       context.emit('resetFilter', searchFilter.value)
     }
 
