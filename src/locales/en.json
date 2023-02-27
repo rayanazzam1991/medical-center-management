@@ -207,6 +207,7 @@
       "transfer_cash_money": "Transfer Cash Money",
       "add_record": "Add Financial Record",
       "add_custom_revenue": "Add Custom Revenue",
+      "add_custom_expense": "Add Custom Expense",
       "create_customer_cash_receipt": "Create Cash Receipt For A Customer",
       "create_supplier_cash_receipt": "Create Cash Reciept For A Supplier"
     }
@@ -1631,7 +1632,8 @@
         "created_by": " بواسطة",
         "created_at": "تاريخ الإنشاء",
         "status": "الحالة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "expense_related_account": "Related Expense"
       }
     },
     "search_filter": {
@@ -1647,7 +1649,8 @@
       "address": "Address",
       "notes": "Notes ",
       "city": "City",
-      "status": "Status"
+      "status": "Status",
+      "expense_related_account": "Related Expense"
     },
     "details": {
       "title": " Supplier  ",

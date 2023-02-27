@@ -3,7 +3,7 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Account, AccountSearchFilter, AccountConsts } from '/@src/models/Accounting/Account/account';
+import { Account, AccountSearchFilter, AccountConsts, defaultAccount } from '/@src/models/Accounting/Account/account';
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { Currency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
@@ -13,35 +13,36 @@ import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencySe
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { addCustomRevenueValidationSchema } from '/@src/rules/Accounting/Transaction/addCustomRevenueValidation';
+import { addCustomExpenseValidationSchema } from '/@src/rules/Accounting/Transaction/addCustomExpenseValidation';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
+import { getSuppliersList } from '/@src/services/Others/Supplier/supplierService';
+import { Supplier, SupplierSearchFilter } from '/@src/models/Others/Supplier/supplier';
 
 
 
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper();
-viewWrapper.setPageTitle(t('add_custom_revenue.form.title'));
+viewWrapper.setPageTitle(t('add_custom_expense.form.title'));
 const head = useHead({
-    title: t('add_custom_revenue.form.title'),
+    title: t('add_custom_expense.form.title'),
 });
 const notif = useNotyf() as Notyf
 const router = useRouter()
 const transactionStore = useTransaction()
-const pageTitle = t('add_custom_revenue.form.title');
+const pageTitle = t('add_custom_expense.form.title');
 const cashAccountsList = ref<Account[]>([])
-const revenuesAccountsList = ref<Account[]>([])
-const clientsAccountsList = ref<Account[]>([])
+const suppliersList = ref<Supplier[]>([])
 const currenciesList = ref<Currency[]>([])
 const availableCurrenciesList = ref<Currency[]>([])
-const clientAccountId = ref<number>(0)
+const supplierAccountId = ref<number>(0)
 const cashAccountId = ref<number>(0)
-const revenueAccountId = ref<number>(0)
+const selectedExpenseAccount = ref<Account>(defaultAccount)
 const currencyId = ref<number>(0)
 const currencyRate = ref<number>(1)
 const enableCurrencyRate = ref(false)
 const cashAmount = ref(0)
-const revenueAmount = ref(0)
+const expenseAmount = ref(0)
 const remainAmount = ref(0)
 const createRecord = ref<CreateRecords>(createRecordsWithDefault)
 onMounted(async () => {
@@ -52,28 +53,26 @@ onMounted(async () => {
     accounts.forEach((account) => {
         if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
             cashAccountsList.value.push(account)
-        } else
-            if (account.chart_account?.code == ChartOfAccountConsts.CLIENTS_CODE) {
-                clientsAccountsList.value.push(account)
-            } else
-                if (account.chart_account?.parent?.code == ChartOfAccountConsts.REVENUE) {
-                    revenuesAccountsList.value.push(account)
-                }
+        }
     });
+
     const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter)
     currenciesList.value = currencies
     availableCurrenciesList.value = currencies
 
+    let supplierSearchFilter = { per_page: 500 } as SupplierSearchFilter
+    const { suppliers } = await getSuppliersList(supplierSearchFilter)
+    suppliersList.value = suppliers
+
 })
 
-const validationSchema = addCustomRevenueValidationSchema
+const validationSchema = addCustomExpenseValidationSchema
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
-        client_account: 0,
-        revenue_account: 0,
+        supplier_account: 0,
         cash_account: 0,
-        revenue_amount: 0,
+        expense_amount: 0,
         cash_amount: 0,
         remain_amount: 0,
         currency_id: 0,
@@ -86,18 +85,18 @@ const onSubmit = handleSubmit(async () => {
     console.log('valid')
     createRecord.value.accounts = []
     createRecord.value.accounts.push(
-        { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.DEBIT_TYPE },
-        { account_id: revenueAccountId.value, amount: revenueAmount.value, type: AccountConsts.CREDIT_TYPE })
+        { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.CREDIT_TYPE },
+        { account_id: selectedExpenseAccount.value.id, amount: expenseAmount.value, type: AccountConsts.DEBIT_TYPE })
     if (remainAmount.value > 0) {
         createRecord.value.accounts.push(
-            { account_id: clientAccountId.value, amount: remainAmount.value, type: AccountConsts.DEBIT_TYPE },
+            { account_id: supplierAccountId.value, amount: remainAmount.value, type: AccountConsts.CREDIT_TYPE },
         )
     }
     createRecord.value.currency_id = currencyId.value
     createRecord.value.currency_rate = currencyRate.value
     createRecord.value.transaction_type_id = 1
-    createRecord.value.recordType = TransactionConsts.CUSTOM_REVENUE
-    createRecord.value.amount = revenueAmount.value
+    createRecord.value.recordType = TransactionConsts.CUSTOM_EXPENSE
+    createRecord.value.amount = expenseAmount.value
     const { success, message } = await createRecords(createRecord.value)
     if (success) {
         notif.success(t('toast.success.add'));
@@ -118,11 +117,11 @@ watch(currencyId, (value) => {
         enableCurrencyRate.value = true
     }
 })
-watch(revenueAmount, (value) => {
+watch(expenseAmount, (value) => {
     remainAmount.value = value - cashAmount.value
 })
 watch(cashAmount, (value) => {
-    remainAmount.value = revenueAmount.value - value
+    remainAmount.value = expenseAmount.value - value
 })
 watch(cashAccountId, (value) => {
     if (value) {
@@ -139,6 +138,14 @@ watch(cashAccountId, (value) => {
         availableCurrenciesList.value = currenciesList.value
     }
 })
+watch(supplierAccountId, (value) => {
+    if (value) {
+        const selectedSupplier = suppliersList.value.find((supplier) => supplier.account_contacts.find((accountContact) => accountContact.account.id == supplierAccountId.value))
+        const expenseAccount = selectedSupplier?.account_contacts.find((accountContact) => accountContact.is_expense_account)?.account
+        selectedExpenseAccount.value = expenseAccount ?? defaultAccount
+    }
+})
+
 
 
 </script>
@@ -155,7 +162,7 @@ watch(cashAccountId, (value) => {
                         <div class="right">
                             <div class="buttons">
                                 <VButton :loading="transactionStore.loading" @click="onSubmit" color="primary" raised> {{
-                                    t('add_custom_revenue.form.button') }} </VButton>
+                                    t('add_custom_expense.form.button') }} </VButton>
                             </div>
                         </div>
                     </div>
@@ -171,50 +178,48 @@ watch(cashAccountId, (value) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="client_account">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.client_account') }}</VLabel>
+                                <VField id="supplier_account">
+                                    <VLabel class="required">{{ t('add_custom_expense.form.supplier_account') }}</VLabel>
                                     <VControl>
-                                        <VSelect v-model="clientAccountId">
+                                        <VSelect v-model="supplierAccountId">
                                             <VOption :value="0"> {{
-                                                t('add_custom_revenue.form.select_account') }}</VOption>
-                                            <VOption v-for="account in clientsAccountsList" :value="account.id">
-                                                {{ account.code }} - {{ account.name }}
+                                                t('add_custom_expense.form.select_account') }}</VOption>
+                                            <VOption v-for="supplier in suppliersList"
+                                                :value="supplier.account_contacts.find((account) => !account.is_expense_account)?.account.id">
+                                                {{ supplier.account_contacts.find((account) =>
+                                                    !account.is_expense_account)?.account.code }} - {{
+        supplier.account_contacts.find((account) =>
+            !account.is_expense_account)?.account.name }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage class="help is-danger" name="client_account" />
+                                        <ErrorMessage class="help is-danger" name="supplier_account" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-12">
-                                <VField id="revenue_account">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.revenue_account') }}</VLabel>
+                                <VField id="expense_account">
+                                    <VLabel class="required">{{ t('add_custom_expense.form.expense_account') }}</VLabel>
                                     <VControl>
-                                        <VSelect v-model="revenueAccountId">
-                                            <VOption :value="0"> {{ t('add_custom_revenue.form.select_account')
-                                            }}</VOption>
-                                            <VOption v-for="account in revenuesAccountsList" :value="account.id">
-                                                {{ account.code }} - {{ account.name }}
-                                            </VOption>
-                                        </VSelect>
-                                        <ErrorMessage class="help is-danger" name="revenue_account" />
+                                        <VInput disabled v-model="selectedExpenseAccount.name" placeholder="" type="text" />
+                                        <ErrorMessage class="help is-danger" name="expense_account" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-12">
-                                <VField id="revenue_amount">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.revenue_amount') }}</VLabel>
+                                <VField id="expense_amount">
+                                    <VLabel class="required">{{ t('add_custom_expense.form.expense_amount') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
-                                        <VInput v-model="revenueAmount" placeholder="" type="number" />
-                                        <ErrorMessage class="help is-danger" name="revenue_amount" />
+                                        <VInput v-model="expenseAmount" placeholder="" type="number" />
+                                        <ErrorMessage class="help is-danger" name="expense_amount" />
                                     </VControl>
                                 </VField>
                             </div>
                             <div class="column is-12">
                                 <VField id="cash_account">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.cash_account') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.cash_account') }}</VLabel>
                                     <VControl>
                                         <VSelect v-model="cashAccountId">
-                                            <VOption :value="0"> {{ t('add_custom_revenue.form.select_account')
+                                            <VOption :value="0"> {{ t('add_custom_expense.form.select_account')
                                             }}</VOption>
                                             <VOption v-for="account in cashAccountsList" :value="account.id">
                                                 {{ account.code }} - {{ account.name }}
@@ -226,7 +231,7 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="cash_amount">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.cash_amount') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.cash_amount') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="cashAmount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="cash_amount" />
@@ -235,10 +240,10 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="currency_id">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.currency') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.currency') }}</VLabel>
                                     <VControl>
                                         <VSelect v-model="currencyId">
-                                            <VOption :value="0"> {{ t('add_custom_revenue.form.select_currency')
+                                            <VOption :value="0"> {{ t('add_custom_expense.form.select_currency')
                                             }}</VOption>
                                             <VOption v-for="currency in availableCurrenciesList" :value="currency.id">
                                                 {{ currency.code }} - {{ currency.name }}
@@ -250,7 +255,7 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="currency_rate">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.currency_rate') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.currency_rate') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput :disabled="!enableCurrencyRate" v-model="currencyRate" placeholder=""
                                             type="number" />
@@ -260,7 +265,7 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="remain_amount">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.remain_amount') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.remain_amount') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput disabled v-model="remainAmount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="remain_amount" />
@@ -269,7 +274,7 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="date">
-                                    <VLabel class="required">{{ t('add_custom_revenue.form.date') }}</VLabel>
+                                    <VLabel class="required">{{ t('add_custom_expense.form.date') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="createRecord.date" placeholder="" type="date" />
                                         <ErrorMessage class="help is-danger" name="date" />
@@ -278,7 +283,7 @@ watch(cashAccountId, (value) => {
                             </div>
                             <div class="column is-12">
                                 <VField id="note">
-                                    <VLabel>{{ t('add_custom_revenue.form.note') }}</VLabel>
+                                    <VLabel>{{ t('add_custom_expense.form.note') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VTextarea v-model="createRecord.note" />
                                         <ErrorMessage class="help is-danger" name="note" />
