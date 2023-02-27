@@ -4,6 +4,7 @@ import { BaseConsts } from "/@src/utils/consts/base"
 import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
 import ar from '/@src/locales/ar.json';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
+import { AccountContact } from "../../Accounting/AccountContact/accountContact";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -21,6 +22,7 @@ export interface Supplier {
   address: string
   notes: string
   created_at: string
+  account_contacts: AccountContact[]
 }
 
 export interface CreateSupplier {
@@ -29,9 +31,9 @@ export interface CreateSupplier {
   phone_number: string
   status: number
   city_id?: number
-
   address?: string
   notes?: string
+  related_expense_account_id: number
 }
 export interface UpdateSupplier {
   id?: number
@@ -50,7 +52,8 @@ export const defaultCreateSupplier: CreateSupplier = {
   status: 0,
   city_id: undefined,
   address: '',
-  notes: ''
+  notes: '',
+  related_expense_account_id: 0
 }
 export const defaultUpdateSupplier: UpdateSupplier = {
   id: undefined,
@@ -82,7 +85,8 @@ export const defaultSupplier: Supplier = {
   created_by: undefined,
   address: '',
   notes: '',
-  created_at: ''
+  created_at: '',
+  account_contacts: []
 }
 
 
