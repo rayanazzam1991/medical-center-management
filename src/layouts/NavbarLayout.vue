@@ -177,9 +177,9 @@ watch(
           <!-- <ToolbarNotification /> -->
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                  @click="panels.setActive('activity')">
-                                  <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                </a> -->
+                                    @click="panels.setActive('activity')">
+                                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                  </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -240,7 +240,8 @@ watch(
           route.path.startsWith('/position') ||
           route.path.startsWith('/variable-payment') ||
           route.path.startsWith('/employee-variable-payment') ||
-          route.path.startsWith('/generate-salaries')
+          route.path.startsWith('/generate-salaries') ||
+          route.path.startsWith('/attendance-justification')
         ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
@@ -312,13 +313,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                      <ToolbarNotification />
+                                        <ToolbarNotification />
 
-                                      <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                        @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                        <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                      </a>
-                                    </Toolbar> -->
+                                        <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                          @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                          <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                        </a>
+                                      </Toolbar> -->
             </div>
 
             <slot></slot>
