@@ -1,6 +1,7 @@
 import {
   ClientsCashReceiptsSearchFilter,
   CreateRecords,
+  SuppliersCashReceiptsSearchFilter,
   Transaction,
   TransactionConsts,
   TransactionSearchFilter
@@ -67,3 +68,14 @@ export async function getClientsCashReceiptsList(searchFilter: ClientsCashReceip
   return { success, error_code, message, clients_cash_receipts, pagination }
 
 }
+
+export async function getSuppliersCashReceiptsList(searchFilter: SuppliersCashReceiptsSearchFilter) {
+  const transactionResponse = useTransaction()
+  let suppliers_cash_receipts: Transaction[] = await transactionResponse.getSuppliersCashReceiptsListStore(searchFilter) ?? []
+  let success: boolean = transactionResponse.success ?? false
+  let error_code: string = transactionResponse.error_code ?? ''
+  let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  let message: string = transactionResponse.message ?? ''
+  return { success, error_code, message, suppliers_cash_receipts, pagination }
+}
+

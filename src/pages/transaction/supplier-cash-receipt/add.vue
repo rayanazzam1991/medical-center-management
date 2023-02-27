@@ -13,8 +13,7 @@ import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionS
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
-import { supplierCashReceiptValidationSchema } from '../../rules/Accounting/Transaction/supplierCashReceiptValidation';
-
+import { supplierCashReceiptValidationSchema } from '/@src/rules/Accounting/Transaction/supplierCashReceiptValidation';
 
 
 
@@ -84,7 +83,7 @@ const onSubmit = handleSubmit(async () => {
   const { success, message } = await createRecords(createRecord.value)
   if (success) {
     notif.success(t('toast.success.add'));
-    router.push({ path: `/account` });
+    router.push({ path: `/transaction/supplier-cash-receipt` });
 
   } else {
     notif.error({ message: message, duration: 3000 })
