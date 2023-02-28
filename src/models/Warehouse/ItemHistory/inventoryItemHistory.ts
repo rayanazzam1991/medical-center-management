@@ -1,3 +1,4 @@
+import { CreateRecords, createRecordsWithDefault } from "../../Accounting/Transaction/record"
 import { defaultUser, User } from "../../Others/User/user"
 import { defaultInventory, Inventory } from "../Inventory/inventory"
 import { defaultInventoryItem, InventoryItem } from "../InventoryItem/inventoryItem"
@@ -45,7 +46,8 @@ export interface addQuantity {
     add_item_cost: number
     note: string
     invoice_number: string
-    status: number
+  status: number
+  record : CreateRecords
 }
 export interface withdrawQuantity {
     id?: number
@@ -112,7 +114,8 @@ export const defaultAddQuantityItem: addQuantity = {
     add_item_cost: 0,
     note: '',
     invoice_number: '',
-    status: 1
+  status: 1,
+    record : createRecordsWithDefault
 
 }
 

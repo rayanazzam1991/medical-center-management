@@ -2032,12 +2032,15 @@
       "supplier_account": "حساب المورد",
       "select_account": "اختيار الحساب",
       "amount": "المبلغ",
+      "cash_amount": "مبلغ النقد",
       "cash_account": "حساب النقد",
       "currency": "العملة",
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
       "note": "ملاحظات",
-      "select_currency": "اختيار العملة"
+      "select_currency": "اختيار العملة",
+      "total_amount": "المبلغ الإجمالي",
+      "remaining_amount": "المبلغ المتبقي"
     },
     "table": {
       "title": "الإيصالات النقدية للموردين",
