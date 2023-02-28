@@ -100,6 +100,8 @@ watch(selectedAccountCurrency, (value) => {
 })
 
 const changeAccountCurrency = async () => {
+  if (accountStore.loading)
+    return
   if ((Number(selectedCurrencyRate.value) < 1) || !(Number(selectedCurrencyRate.value))) {
     notif.error({ message: t('toast.error.accounting.change_account_currency'), duration: 2000 })
     return
@@ -124,6 +126,8 @@ const changeAccountCurrency = async () => {
 }
 
 const updateAccountStatus = async () => {
+  if (accountStore.loading)
+    return
   const changeStatusData: ChangeAccountStatus = {
     id: accountChangeStatus.value.id ?? 0,
     status: newStatus.value
@@ -343,7 +347,8 @@ const columns = {
       </div>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="changeAccountCurrency">{{ t('modal.buttons.confirm') }}</VButton>
+      <VButton :loading="accountStore.loading" color="primary" raised @click="changeAccountCurrency">{{
+        t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
 
@@ -370,7 +375,8 @@ const columns = {
       </form>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="updateAccountStatus()">{{ t('modal.buttons.confirm') }}</VButton>
+      <VButton :loading="accountStore.loading" color="primary" raised @click="updateAccountStatus()">{{
+        t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
 </template>
