@@ -47,9 +47,20 @@ export interface ClientsCashReceiptsSearchFilter {
   order_by?: string
   order?: string
 }
+export interface SuppliersCashReceiptsSearchFilter {
+  supplier_name?: string
+  note?: string
+  currency_id?: number
+  cash_account_id?: number
+  page?: number
+  per_page?: number
+  order_by?: string
+  order?: string
+}
 
 export const defaultTransactionSearchFilter: Partial<TransactionSearchFilter> = {}
 export const defaultClientsCashReceiptsSearchFilter: Partial<ClientsCashReceiptsSearchFilter> = {}
+export const defaultSuppliersCashReceiptsSearchFilter: Partial<SuppliersCashReceiptsSearchFilter> = {}
 
 export const defaultTransaction: Transaction = {
   id: 0,

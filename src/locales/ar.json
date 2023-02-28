@@ -2040,6 +2040,28 @@
       "date": "التاريخ",
       "note": "ملاحظات",
       "select_currency": "اختيار العملة"
+    },
+    "table": {
+      "title": "الإيصالات النقدية للموردين",
+      "columns": {
+        "supplier_name": "اسم المورد",
+        "amount": "المبلغ الإجمالي",
+        "currency": "العملة",
+        "currency_rate": "سعر الصرف",
+        "cash_account": "حساب النقد",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": "بواسطة"
+      }
+    },
+    "add_supplier_cash_receipts_button": "انشاء إيصال نقدي لمورد",
+    "search_filter": {
+      "title": "تصفية الايصالات النقدية للموردين",
+      "note": "ملاحظات...",
+      "supplier_name": "اسم المورد...",
+      "cash_account_id": "حساب النقد",
+      "currency_id": "العملة"
     }
   },
   "add_custom_expense": {

@@ -172,7 +172,7 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/supplier-cash-receipt">
+                    <RouterLink to="/transaction/supplier-cash-receipt/add">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.create_supplier_cash_receipt')
