@@ -1910,7 +1910,8 @@
       "select_to_account": "اختيار الحساب",
       "amount": "المبلغ بالدينار العراقي",
       "currency_rate": "سعر الصرف",
-      "date": "التاريخ"
+      "date": "التاريخ",
+      "currency_differences_helper": "{difference_amount} دينار عراقي إلى حساب فروقات العملة"
     }
   },
   "add_custom_revenue": {

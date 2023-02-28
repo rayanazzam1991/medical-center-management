@@ -45,6 +45,9 @@ const cashAmount = ref(0)
 const expenseAmount = ref(0)
 const remainAmount = ref(0)
 const createRecord = ref<CreateRecords>(createRecordsWithDefault)
+const currencyDifferencesAccountId = ref<number>(0)
+const currencyDifferencesAmount = ref<number>(0)
+
 onMounted(async () => {
     let accountSearchFilter = {} as AccountSearchFilter
     accountSearchFilter.status = AccountConsts.ACTIVE
@@ -53,6 +56,8 @@ onMounted(async () => {
     accounts.forEach((account) => {
         if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
             cashAccountsList.value.push(account)
+        } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
+            currencyDifferencesAccountId.value = account.id ?? 0
         }
     });
 
@@ -82,14 +87,26 @@ const { handleSubmit } = useForm({
     }
 });
 const onSubmit = handleSubmit(async () => {
-    console.log('valid')
+    const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
+
+    if (!cashAccount.currency?.is_main) {
+        currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / currencyRate.value)
+    } else {
+        currencyDifferencesAmount.value = 0
+    }
+
     createRecord.value.accounts = []
     createRecord.value.accounts.push(
-        { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.CREDIT_TYPE },
+        { account_id: cashAccountId.value, amount: cashAmount.value - currencyDifferencesAmount.value, type: AccountConsts.CREDIT_TYPE },
         { account_id: selectedExpenseAccount.value.id, amount: expenseAmount.value, type: AccountConsts.DEBIT_TYPE })
     if (remainAmount.value > 0) {
         createRecord.value.accounts.push(
             { account_id: supplierAccountId.value, amount: remainAmount.value, type: AccountConsts.CREDIT_TYPE },
+        )
+    }
+    if (currencyDifferencesAmount.value != 0) {
+        createRecord.value.accounts.push(
+            { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
         )
     }
     createRecord.value.currency_id = currencyId.value
@@ -122,11 +139,16 @@ watch(expenseAmount, (value) => {
 })
 watch(cashAmount, (value) => {
     remainAmount.value = expenseAmount.value - value
+    let selectedCashAccount = cashAccountsList.value.find((account) => account.id === cashAccountId.value) ?? defaultAccount
+    if (!selectedCashAccount.currency?.is_main) {
+        currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * selectedCashAccount.currency_rate / currencyRate.value)
+    } else {
+        currencyDifferencesAmount.value = 0
+    }
 })
 watch(cashAccountId, (value) => {
     if (value) {
-
-        let selectedCashAccount = cashAccountsList.value.find((account) => account.id === value);
+        let selectedCashAccount = cashAccountsList.value.find((account) => account.id === value) ?? defaultAccount
         availableCurrenciesList.value = []
         currenciesList.value.forEach((currency) => {
             if (currency.is_main == selectedCashAccount?.currency?.is_main) {
@@ -134,6 +156,11 @@ watch(cashAccountId, (value) => {
             }
         });
         currencyId.value = 0
+        if (!selectedCashAccount.currency?.is_main) {
+            currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * selectedCashAccount.currency_rate / currencyRate.value)
+        } else {
+            currencyDifferencesAmount.value = 0
+        }
     } else {
         availableCurrenciesList.value = currenciesList.value
     }
@@ -143,6 +170,15 @@ watch(supplierAccountId, (value) => {
         const selectedSupplier = suppliersList.value.find((supplier) => supplier.account_contacts.find((accountContact) => accountContact.account.id == supplierAccountId.value))
         const expenseAccount = selectedSupplier?.account_contacts.find((accountContact) => accountContact.is_expense_account)?.account
         selectedExpenseAccount.value = expenseAccount ?? defaultAccount
+    }
+})
+watch(currencyRate, (value) => {
+    const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
+
+    if (!cashAccount.currency?.is_main) {
+        currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / value)
+    } else {
+        currencyDifferencesAmount.value = 0
     }
 })
 
@@ -176,6 +212,13 @@ watch(supplierAccountId, (value) => {
                         <div class="fieldset-heading">
                             <h4>{{ pageTitle }}</h4>
                         </div>
+                        <p class="help is-danger is-size-6 mb-2" v-if="currencyDifferencesAmount != 0 && cashAmount != 0">{{
+                            t('transfer_cash_money.form.currency_differences_helper', {
+                                difference_amount:
+                                    currencyDifferencesAmount
+                            }) }}
+                        </p>
+
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="supplier_account">
