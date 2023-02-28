@@ -215,6 +215,7 @@
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة سجل مالي",
       "add_custom_revenue": "إضافة عوائد",
+      "add_custom_expense": "إضافة نفقات",
       "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون",
       "create_supplier_cash_receipt": "انشاء إيصال نقدي لمورد"
     }
@@ -1659,7 +1660,8 @@
         "created_by": " بواسطة",
         "created_at": "تاريخ الإنشاء",
         "status": "الحالة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "expense_related_account": "النفقات المرتبطة"
       }
     },
     "search_filter": {
@@ -1676,7 +1678,8 @@
       "address": "العنوان",
       "notes": "ملاحظات ",
       "city": "المدينة",
-      "status": "الحالة"
+      "status": "الحالة",
+      "expense_related_account": "النفقات المرتبطة"
     },
     "details": {
       "title": " المورد  ",
@@ -2037,6 +2040,24 @@
       "date": "التاريخ",
       "note": "ملاحظات",
       "select_currency": "اختيار العملة"
+    }
+  },
+  "add_custom_expense": {
+    "form": {
+      "title": "إضافة نفقات",
+      "button": "إضافة",
+      "supplier_account": "حساب المورد",
+      "expense_account": "حساب النفقات",
+      "cash_account": "حساب النقد",
+      "select_account": "اختيار الحساب",
+      "expense_amount": "المبلغ المدفوع بالدينار العراقي",
+      "cash_amount": "المبلغ النقدي بالدينار العراقي",
+      "remain_amount": "المبلغ المتبقي بالدينار العراقي",
+      "currency": "العملة",
+      "select_currency": "اختيار العملة",
+      "currency_rate": "سعر الصرف",
+      "date": "التاريخ",
+      "note": "ملاحظات"
     }
   }
 }
