@@ -172,8 +172,14 @@ const columns = {
           },
         }
       ),
-
   },
+  related_expense_account: {
+    align: 'center',
+    label: t('supplier.table.columns.expense_related_account'),
+    renderRow: (row: Supplier) =>
+      h('span', row?.account_contacts.find((account) => account.is_expense_account)?.account.name ?? '-')
+  },
+
   created_by: {
     sortable: true,
     searchable: true,

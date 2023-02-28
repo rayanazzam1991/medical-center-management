@@ -88,15 +88,12 @@ export const useAccount = defineStore('account', () => {
     loading.value = true
     sleep(1000)
     try {
-      // if (accountStorage.value.length > 0) {
-      //   accounts.value = accountStorage.value
-      // } else {
-        const response = await getAllAccountsApi(api, searchFilter)
-        accounts.value = response.response.data
-        accountStorage.value = accounts.value
-        success.value = response.response.success
-        error_code.value = response.response.error_code
-        message.value = response.response.message
+      const response = await getAllAccountsApi(api, searchFilter)
+      accounts.value = response.response.data
+      accountStorage.value = accounts.value
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
       // }
       return accounts
     } catch (error: any) {
@@ -112,7 +109,7 @@ export const useAccount = defineStore('account', () => {
   async function generateTrailBalanceReportStore() {
     if (loading.value) return
     loading.value = true
-    await sleep(3000);
+    await sleep(1000);
     try {
       const returnedResponse = await generateTrailBalanceReportApi(api)
       success.value = returnedResponse.response.success
@@ -131,7 +128,7 @@ export const useAccount = defineStore('account', () => {
   async function generateBalanceSheetReportStore() {
     if (loading.value) return
     loading.value = true
-    await sleep(3000);
+    await sleep(1000);
     try {
       const returnedResponse = await generateBalanceSheetReportApi(api)
       success.value = returnedResponse.response.success
@@ -149,7 +146,7 @@ export const useAccount = defineStore('account', () => {
   async function generateIncomeStatmentReportStore() {
     if (loading.value) return
     loading.value = true
-    await sleep(3000);
+    await sleep(1000);
     try {
       const returnedResponse = await generateIncomeStatmentReportApi(api)
       success.value = returnedResponse.response.success
@@ -167,7 +164,7 @@ export const useAccount = defineStore('account', () => {
   async function updateAccountCurrencyStore(account_id: number, updateAccountCurrencyData: UpdateAccountCurrency) {
     if (loading.value) return
     loading.value = true
-    sleep(2000)
+    sleep(1000)
     try {
       const response = await updateAccountCurrencyApi(api, account_id, updateAccountCurrencyData)
       var returnedAccount: Account
@@ -190,27 +187,27 @@ export const useAccount = defineStore('account', () => {
     if (loading.value) return
     loading.value = true
     try {
-        const response = await changeAccountStatusApi(api, account)
-        var returnedAccount: Account
-        returnedAccount = response.response.data
-        accounts.value.splice(
-          accounts.value.findIndex((accountElement) => (accountElement.id = account.id)),
-            1
-        )
-        success.value = response.response.success
-        error_code.value = response.response.error_code
-        message.value = response.response.message
+      const response = await changeAccountStatusApi(api, account)
+      var returnedAccount: Account
+      returnedAccount = response.response.data
+      accounts.value.splice(
+        accounts.value.findIndex((accountElement) => (accountElement.id = account.id)),
+        1
+      )
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
 
-        accounts.value.push(returnedAccount)
+      accounts.value.push(returnedAccount)
     } catch (error: any) {
-        success.value = error?.response.data.success
-        error_code.value = error?.response.data.error_code
-        message.value = error?.response.data.message
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
     }
     finally {
-        loading.value = false
+      loading.value = false
     }
-}
+  }
 
   return {
     success,

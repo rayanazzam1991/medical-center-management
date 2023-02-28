@@ -9,9 +9,12 @@ import { Notyf } from 'notyf';
 import { useSupplier } from "/@src/stores/Others/Supplier/supplierStore";
 import { CreateSupplier, defaultCreateSupplier, defaultSupplier, defaultUpdateSupplier, Supplier, SupplierConsts, UpdateSupplier } from '/@src/models/Others/Supplier/supplier';
 import { getSupplier, addSupplier, editSupplier } from '/@src/services/Others/Supplier/supplierService';
-import { suppliervalidationSchema } from '/@src/rules/Others/Supplier/supplierValidation';
+import { editSuppliervalidationSchema } from '../../../../rules/Others/Supplier/editSupplierValidation';
+import { addSuppliervalidationSchema } from '../../../../rules/Others/Supplier/addSupplierValidation';
 import { City, CitySearchFilter, defaultCity } from '/@src/models/Others/City/city';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
+import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { Account, AccountConsts, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
 
 
 export default defineComponent({
@@ -40,6 +43,9 @@ export default defineComponent({
     const backRoute = "/supplier";
     const currentSupplier = ref(defaultSupplier);
     const supplierId = ref(0);
+    const expensesAccountsList = ref<Account[]>([]);
+    const selectedExpenseAccountId = ref(0);
+
 
     // @ts-ignore
     supplierId.value = route.params?.id as number ?? 0;
@@ -66,8 +72,16 @@ export default defineComponent({
       citySearchFilter.status = SupplierConsts.ACTIVE
       const { cities } = await getCitiesList(citySearchFilter)
       citiesList.value = cities
+      let accountSearchFilter = { per_page: 500 } as AccountSearchFilter
+
+      const { accounts } = await getAccountsList(accountSearchFilter)
+      accounts.forEach((account) => {
+        if (account.chart_account?.parent?.code == AccountConsts.EXPENSES_CODE) {
+          expensesAccountsList.value.push(account)
+        }
+      });
     })
-    const validationSchema = suppliervalidationSchema
+    const validationSchema = formType.value == 'Add' ? addSuppliervalidationSchema : editSuppliervalidationSchema
     const { handleSubmit } = useForm({
       validationSchema,
       initialValues: formType.value == "Edit" ? {
@@ -79,7 +93,8 @@ export default defineComponent({
         name: "",
         phone_number: "",
         status: 1,
-        city_id: undefined
+        city_id: undefined,
+        related_expense_account_id: 0
       },
     });
     const onSubmit = async (method: String) => {
@@ -98,6 +113,7 @@ export default defineComponent({
       supplierData.phone_number = currentSupplier.value.phone_number
       supplierData.status = currentSupplier.value.status
       supplierData.city_id = currentSupplier.value.city?.id
+      supplierData.related_expense_account_id = selectedExpenseAccountId.value
       const { success, message, supplier } = await addSupplier(supplierData);
       if (success) {
 
@@ -138,7 +154,7 @@ export default defineComponent({
         notif.error(message)
       }
     };
-    return { t, pageTitle, onSubmit, currentSupplier, viewWrapper, backRoute, citiesList, SupplierConsts, supplierStore };
+    return { t, pageTitle, onSubmit, currentSupplier, viewWrapper, backRoute, citiesList, SupplierConsts, supplierStore, selectedExpenseAccountId, expensesAccountsList };
   },
   components: { ErrorMessage }
 })
@@ -224,6 +240,23 @@ export default defineComponent({
                       </VOption>
                     </VSelect>
 
+                  </VControl>
+                </VField>
+              </div>
+            </div>
+          </div>
+          <div v-if="formType == 'Add'" class="form-fieldset">
+            <div class="columns is-multiline">
+              <div class="column is-12">
+                <VField id="related_expense_account_id">
+                  <VLabel class="required">{{ t('supplier.form.expense_related_account') }}</VLabel>
+                  <VControl>
+                    <VSelect v-model="selectedExpenseAccountId">
+                      <VOption v-for="account in expensesAccountsList" :value="account.id">{{ account.code }} - {{
+                        account.name }}
+                      </VOption>
+                    </VSelect>
+                    <ErrorMessage class="help is-danger" name="related_expense_account_id" />
                   </VControl>
                 </VField>
               </div>

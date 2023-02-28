@@ -117,7 +117,7 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/transaction/customer-cash-receipt/">
+                    <RouterLink to="/transaction/customer-cash-receipt">
                       <i class="lnir lnir-sales-report" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.customer_cash_receipts')
@@ -136,7 +136,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/transfer-cash-money">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.transfer_cash_money')
                       }}</span>
@@ -145,7 +145,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/add-record">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.add_record')
                       }}</span>
@@ -155,7 +155,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/add-custom-revenue">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.add_custom_revenue')
                       }}</span>
@@ -163,8 +163,17 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
+                    <RouterLink to="/add-custom-expense">
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
+                      <span>{{
+                        t('accounting_subnav.records.add_custom_expense')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
                     <RouterLink to="/transaction/customer-cash-receipt/add">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.create_customer_cash_receipt')
                       }}</span>
@@ -173,7 +182,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/transaction/supplier-cash-receipt/add">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.create_supplier_cash_receipt')
                       }}</span>

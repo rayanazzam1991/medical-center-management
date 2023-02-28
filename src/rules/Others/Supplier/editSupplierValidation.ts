@@ -11,7 +11,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   messages: messages
 })
 
-const suppliervalidationSchema = toFormValidator(zod
+const editSuppliervalidationSchema = toFormValidator(zod
   .object({
     name: zod
       .string({
@@ -34,5 +34,5 @@ const suppliervalidationSchema = toFormValidator(zod
         ),
   }));
 export {
-  suppliervalidationSchema
+  editSuppliervalidationSchema
 }

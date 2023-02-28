@@ -89,7 +89,7 @@ export const createRecordsWithDefault = {
 class TransactionConsts {
   static readonly ADD_QUANTITY = 1;
   static readonly TRANSFER_CASH = 2;
-  static readonly PAY_EXPENSE = 3;
+  static readonly CUSTOM_EXPENSE = 3;
   static readonly CUSTOM_REVENUE = 4;
   static readonly CLIENT_CASH_RECEIPT = 5;
   static readonly SUPPLIER_CASH_RECEIPT = 6;
