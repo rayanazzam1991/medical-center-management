@@ -117,7 +117,7 @@ const toggle = (key: number) => {
   </details>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/Styles/BalanceSheetReport/balanceSheetAssetsLiabilitesCollapse.scss';
 </style>
