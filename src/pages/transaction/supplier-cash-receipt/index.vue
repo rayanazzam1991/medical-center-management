@@ -5,8 +5,8 @@ import { useI18n } from 'vue-i18n';
 import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { AccountConsts } from '/@src/models/Accounting/Account/account';
-import { defaultClientsCashReceiptsSearchFilter, Transaction, ClientsCashReceiptsSearchFilter } from '/@src/models/Accounting/Transaction/record';
-import { getClientsCashReceiptsList } from '/@src/services/Accounting/Transaction/transactionService';
+import { Transaction, defaultSuppliersCashReceiptsSearchFilter, SuppliersCashReceiptsSearchFilter } from '/@src/models/Accounting/Transaction/record';
+import { getSuppliersCashReceiptsList } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
@@ -19,8 +19,8 @@ useHead({
   title: t('supplier_cash_receipt.table.title'),
 })
 const notif = useNotyf() as Notyf
-const searchFilter = ref(defaultClientsCashReceiptsSearchFilter)
-const clientsCashReceiptsList = ref<Array<Transaction>>([])
+const searchFilter = ref(defaultSuppliersCashReceiptsSearchFilter)
+const suppliersCashReceiptsList = ref<Array<Transaction>>([])
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const transactionStore = useTransaction()
@@ -29,8 +29,8 @@ const default_per_page = ref(1)
 
 onMounted(async () => {
 
-  const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(searchFilter.value)
-  clientsCashReceiptsList.value = clients_cash_receipts
+  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(searchFilter.value)
+  suppliersCashReceiptsList.value = suppliers_cash_receipts
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
@@ -39,25 +39,25 @@ onMounted(async () => {
 });
 
 
-const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
+const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
   paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
-  const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(newSearchFilter)
-  clientsCashReceiptsList.value = clients_cash_receipts
+  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(newSearchFilter)
+  suppliersCashReceiptsList.value = suppliers_cash_receipts
   paginationVar.value = pagination
   searchFilter.value = newSearchFilter
 }
 
-const resetFilter = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
+const resetFilter = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
   searchFilter.value = newSearchFilter
   await search(searchFilter.value)
 }
 
-const getClientsReceiptsPerPage = async (pageNum: number) => {
+const getSuppliersReceiptsPerPage = async (pageNum: number) => {
   searchFilter.value.page = pageNum
   await search(searchFilter.value)
 }
 
-const clientReceiptSort = async (value: string) => {
+const suppliersReceiptSort = async (value: string) => {
   if (value != undefined) {
     const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
     searchFilter.value.order_by = sortField
@@ -72,11 +72,11 @@ const clientReceiptSort = async (value: string) => {
 }
 
 const columns = {
-  client_name: {
+  supplier_name: {
     align: 'center',
     label: t('supplier_cash_receipt.table.columns.supplier_name'),
     renderRow: (row: Transaction) =>
-      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.CLIENTS_CODE)?.account.name),
+      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE)?.account.name),
     grow: true,
   },
   amount: {
@@ -138,10 +138,10 @@ const columns = {
 </script>
 
 <template>
-  <ClientsCashReceiptsTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search"
+  <SuppliersCashReceiptsTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search"
     :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
-  <VFlexTableWrapper :columns="columns" :data="clientsCashReceiptsList" :limit="searchFilter.per_page"
-    @update:sort="clientReceiptSort">
+  <VFlexTableWrapper :columns="columns" :data="suppliersCashReceiptsList" :limit="searchFilter.per_page"
+    @update:sort="suppliersReceiptSort">
     <VFlexTable separators clickable>
       <template #body>
         <div v-if="transactionStore?.loading" class="flex-list-inner">
@@ -151,18 +151,18 @@ const columns = {
             </VFlexTableCell>
           </div>
         </div>
-        <div v-else-if="clientsCashReceiptsList.length === 0" class="flex-list-inner">
+        <div v-else-if="suppliersCashReceiptsList.length === 0" class="flex-list-inner">
           <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
             class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
     </VFlexTable>
-    <VFlexPagination v-if="(clientsCashReceiptsList.length != 0 && paginationVar.max_page != 1)"
+    <VFlexPagination v-if="(suppliersCashReceiptsList.length != 0 && paginationVar.max_page != 1)"
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
-      @update:current-page="getClientsReceiptsPerPage" />
-    <h6 class="pt-2 is-size-7" v-if="clientsCashReceiptsList.length != 0 && !transactionStore?.loading">
+      @update:current-page="getSuppliersReceiptsPerPage" />
+    <h6 class="pt-2 is-size-7" v-if="suppliersCashReceiptsList.length != 0 && !transactionStore?.loading">
       {{
         t('tables.pagination_footer', {
           from_number: paginationVar.page !=

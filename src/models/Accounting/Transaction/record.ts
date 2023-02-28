@@ -12,7 +12,7 @@ export interface CreateRecords {
   transaction_type_id: number,
   note: string,
   date: string,
-  recordType: number
+  recordType?: number
 }
 export interface Transaction {
   id: number

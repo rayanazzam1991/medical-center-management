@@ -273,6 +273,7 @@ class AccountConsts {
   static readonly CASH_CODE = '13'
   static readonly CLIENTS_CODE = '11'
   static readonly EXPENSES_CODE = '3'
+  static readonly SUPPLIER_CODE = '23'
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)
