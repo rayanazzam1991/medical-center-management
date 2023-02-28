@@ -31,6 +31,7 @@ class ChartOfAccountConsts {
   static readonly CASH_CODE = '13'
   static readonly CLIENTS_CODE = '11'
   static readonly SUPPLIER_CODE = '23'
+  static readonly CURRENCY_DIFFERENCES_CODE = '33'
   static readonly INVENTORY_CODE = '12'
   static readonly REVENUE = '4'
 
@@ -39,7 +40,7 @@ export { ChartOfAccountConsts }
 
 
 class ChartConsts {
-  static readonly CASH_CODE= '13'
+  static readonly CASH_CODE = '13'
 }
 export { ChartConsts }
 

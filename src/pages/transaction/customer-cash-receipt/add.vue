@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
-import { useForm } from 'vee-validate';
+import { ErrorMessage, useForm } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Account, AccountSearchFilter, AccountConsts } from '/@src/models/Accounting/Account/account';
+import { Account, AccountSearchFilter, AccountConsts, defaultAccount } from '/@src/models/Accounting/Account/account';
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { Currency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
@@ -40,6 +40,9 @@ const currencyRate = ref<number>(1)
 const enableCurrencyRate = ref(false)
 const cashAmount = ref(0)
 const createRecord = ref<CreateRecords>(createRecordsWithDefault)
+const currencyDifferencesAccountId = ref<number>(0)
+const currencyDifferencesAmount = ref<number>(0)
+
 const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
 
 onMounted(async () => {
@@ -53,6 +56,8 @@ onMounted(async () => {
         } else
             if (account.chart_account?.code == ChartOfAccountConsts.CLIENTS_CODE) {
                 clientsAccountsList.value.push(account)
+            } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
+                currencyDifferencesAccountId.value = account.id ?? 0
             }
     });
     const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter)
@@ -75,10 +80,23 @@ const { handleSubmit } = useForm({
     }
 });
 const onSubmit = handleSubmit(async () => {
+    const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
+    if (!clientAccount.currency?.is_main) {
+
+        currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * clientAccount.currency_rate / currencyRate.value)
+    } else {
+        currencyDifferencesAmount.value = 0
+    }
+
     createRecord.value.accounts = []
     createRecord.value.accounts.push(
         { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.DEBIT_TYPE },
-        { account_id: clientAccountId.value, amount: cashAmount.value, type: AccountConsts.CREDIT_TYPE })
+        { account_id: clientAccountId.value, amount: cashAmount.value - currencyDifferencesAmount.value, type: AccountConsts.CREDIT_TYPE })
+    if (currencyDifferencesAmount.value != 0) {
+        createRecord.value.accounts.push(
+            { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
+        )
+    }
     createRecord.value.currency_id = currencyId.value
     createRecord.value.currency_rate = currencyRate.value
     createRecord.value.transaction_type_id = 1
@@ -96,8 +114,8 @@ const onSubmit = handleSubmit(async () => {
 })
 
 watch(currencyId, (value) => {
-    let selectedCurreny = currenciesList.value.find((currency) => currency.id === value);
-    if (selectedCurreny?.is_main) {
+    let selectedCurrency = currenciesList.value.find((currency) => currency.id === value);
+    if (selectedCurrency?.is_main) {
         enableCurrencyRate.value = false
         currencyRate.value = 1
     } else {
@@ -117,6 +135,35 @@ watch(cashAccountId, (value) => {
         currencyId.value = 0
     } else {
         availableCurrenciesList.value = currenciesList.value
+    }
+})
+watch(clientAccountId, (value) => {
+    if (value != 0) {
+        const clientAccountId = clientsAccountsList.value.find((account) => account.id == value) ?? defaultAccount
+        if (!clientAccountId.currency?.is_main) {
+            currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * clientAccountId.currency_rate / currencyRate.value)
+        } else {
+            currencyDifferencesAmount.value = 0
+        }
+    }
+})
+watch(currencyRate, (value) => {
+    const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
+
+    if (!clientAccount.currency?.is_main) {
+        console.log(clientAccount.currency_rate)
+        currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * clientAccount.currency_rate / value)
+    } else {
+        currencyDifferencesAmount.value = 0
+    }
+})
+watch(cashAmount, (value) => {
+    const clientAccount = cashAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
+
+    if (!clientAccount.currency?.is_main) {
+        currencyDifferencesAmount.value = value - (value * clientAccount.currency_rate / currencyRate.value)
+    } else {
+        currencyDifferencesAmount.value = 0
     }
 })
 
@@ -175,6 +222,13 @@ watch(cashAccountId, (value) => {
                                     <VLabel class="required">{{ t('customer_cash_receipt.form.amount') }}</VLabel>
                                     <VControl icon="feather:dollar-sign">
                                         <VInput v-model="cashAmount" placeholder="" type="number" />
+                                        <p class="help is-danger" v-if="currencyDifferencesAmount != 0 && cashAmount != 0">
+                                            {{
+                                                t('transfer_cash_money.form.currency_differences_helper', {
+                                                    difference_amount:
+                                                        currencyDifferencesAmount
+                                                }) }}
+                                        </p>
                                         <ErrorMessage class="help is-danger" name="amount" />
                                     </VControl>
                                 </VField>
