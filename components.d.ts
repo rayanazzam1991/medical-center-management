@@ -157,7 +157,6 @@ declare module '@vue/runtime-core' {
     StackPopoverContent: typeof import('./src/components/partials/popover/StackPopoverContent.vue')['default']
     SupplierDetails: typeof import('./src/components/OurComponents/Others/Supplier/SupplierDetails.vue')['default']
     SupplierForm: typeof import('./src/components/OurComponents/Others/Supplier/SupplierForm.vue')['default']
-    SuppliersCashReceiptsSearchFilter: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsSearchFilter.vue')['default']
     SuppliersCashReceiptsSearchFilterModel: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsSearchFilterModel.vue')['default']
     SuppliersCashReceiptsTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsTableHeader.vue')['default']
     SupplierSearchFilterModel: typeof import('./src/components/OurComponents/Others/Supplier/SupplierSearchFilterModel.vue')['default']
