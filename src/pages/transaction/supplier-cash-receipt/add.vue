@@ -28,7 +28,6 @@ const router = useRouter()
 const transactionStore = useTransaction()
 const pageTitle = t('supplier_cash_receipt.form.title');
 const cashAccountsList = ref<Account[]>([])
-const availableCashAccountsList = ref<Account[]>([])
 const suppliersAccountsList = ref<Account[]>([])
 const currenciesList = ref<Currency[]>([])
 const availableCurrenciesList = ref<Currency[]>([])
@@ -43,6 +42,7 @@ const currencyDifferencesAccountId = ref<number>(0)
 const currencyDifferencesAmount = ref<number>(0)
 const currencyDifferencesCashAmount = ref<number>(0)
 const currencyDifferencesSupplierAmount = ref<number>(0)
+const confirmPopup = ref<boolean>(false)
 
 onMounted(async () => {
   let accountSearchFilter = {} as AccountSearchFilter
@@ -52,7 +52,6 @@ onMounted(async () => {
   accounts.forEach((account) => {
     if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
       cashAccountsList.value.push(account)
-      availableCashAccountsList.value.push(account)
     } else
       if (account.chart_account?.code == ChartOfAccountConsts.SUPPLIER_CODE) {
         suppliersAccountsList.value.push(account)
@@ -79,35 +78,35 @@ const { handleSubmit } = useForm({
     note: undefined
   }
 });
-const onSubmit = handleSubmit(async () => {
+const onSubmitConfirmation = handleSubmit(() => {
   const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
   const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
-  if (!cashAccount.currency?.is_main) {
+  if (!cashAccount.currency?.is_main && Number(cashAccount.balance) != 0) {
     currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / currencyRate.value)
   } else {
     currencyDifferencesCashAmount.value = 0
   }
-  if (!supplierAccount.currency?.is_main) {
+  if (!supplierAccount.currency?.is_main && Number(supplierAccount.balance) != 0) {
     currencyDifferencesSupplierAmount.value = cashAmount.value - (cashAmount.value * supplierAccount.currency_rate / currencyRate.value)
   } else {
     currencyDifferencesSupplierAmount.value = 0
   }
-  currencyDifferencesSupplierAmount.value = currencyDifferencesCashAmount.value + currencyDifferencesSupplierAmount.value
+  currencyDifferencesAmount.value = currencyDifferencesCashAmount.value - currencyDifferencesSupplierAmount.value
+  confirmPopup.value = true
 
-  console.log(currencyDifferencesCashAmount.value)
-  console.log(currencyDifferencesSupplierAmount.value)
-  console.log(currencyDifferencesAmount.value)
-
+})
+const onSubmit = async () => {
+  const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
+  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
   createRecord.value.accounts = []
   createRecord.value.accounts.push(
     { account_id: cashAccountId.value, amount: !cashAccount.currency?.is_main ? cashAmount.value - currencyDifferencesCashAmount.value : cashAmount.value, type: AccountConsts.CREDIT_TYPE },
     { account_id: supplierAccountId.value, amount: !supplierAccount.currency?.is_main ? cashAmount.value - currencyDifferencesSupplierAmount.value : cashAmount.value, type: AccountConsts.DEBIT_TYPE })
   if (currencyDifferencesAmount.value != 0) {
     createRecord.value.accounts.push(
-      { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value < 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
+      { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
     )
   }
-
   createRecord.value.currency_id = currencyId.value
   createRecord.value.currency_rate = currencyRate.value
   createRecord.value.transaction_type_id = 1
@@ -120,9 +119,9 @@ const onSubmit = handleSubmit(async () => {
 
   } else {
     notif.error({ message: message, duration: 3000 })
-
   }
-})
+  confirmPopup.value = false
+}
 
 watch(currencyId, (value) => {
   let selectedCurreny = currenciesList.value.find((currency) => currency.id === value);
@@ -141,17 +140,23 @@ watch(cashAccountId, (value) => {
 
     availableCurrenciesList.value = []
     currenciesList.value.forEach((currency) => {
-      if (currency.is_main == selectedCashAccount?.currency?.is_main) {
-        availableCurrenciesList.value.push(currency)
+      if (!selectedCashAccount.currency?.is_main || !supplierAccount.currency?.is_main) {
+        if (!currency.is_main) {
+          availableCurrenciesList.value.push(currency)
+        }
+      } else {
+        if (currency.is_main) {
+          availableCurrenciesList.value.push(currency)
+        }
       }
     });
     currencyId.value = 0
-    if (!selectedCashAccount.currency?.is_main) {
+    if (!selectedCashAccount.currency?.is_main && Number(selectedCashAccount.balance) != 0) {
       currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * selectedCashAccount.currency_rate / value)
     } else {
       currencyDifferencesCashAmount.value = 0
     }
-    if (!supplierAccount.currency?.is_main) {
+    if (!supplierAccount.currency?.is_main && Number(supplierAccount.balance) != 0) {
       currencyDifferencesSupplierAmount.value = cashAmount.value - (cashAmount.value * supplierAccount.currency_rate / value)
     } else {
       currencyDifferencesSupplierAmount.value = 0
@@ -162,71 +167,6 @@ watch(cashAccountId, (value) => {
     availableCurrenciesList.value = currenciesList.value
   }
 })
-watch(supplierAccountId, (value) => {
-  const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
-  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == value) ?? defaultAccount
-  currencyDifferencesCashAmount.value = 0
-  currencyDifferencesSupplierAmount.value = 0
-
-  if (!cashAccount.currency?.is_main) {
-    availableCashAccountsList.value = []
-    cashAccountsList.value.forEach((account) => {
-      if (account.currency?.is_main == supplierAccount?.currency?.is_main) {
-        availableCashAccountsList.value.push(account)
-      }
-    });
-    currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / value)
-  } else {
-    currencyDifferencesCashAmount.value = 0
-  }
-  if (!supplierAccount.currency?.is_main) {
-
-    currencyDifferencesSupplierAmount.value = cashAmount.value - (cashAmount.value * supplierAccount.currency_rate / value)
-  } else {
-    currencyDifferencesSupplierAmount.value = 0
-  }
-  currencyDifferencesAmount.value = currencyDifferencesSupplierAmount.value + currencyDifferencesCashAmount.value
-})
-
-watch(cashAmount, (value) => {
-  const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
-  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
-  currencyDifferencesCashAmount.value = 0
-  currencyDifferencesSupplierAmount.value = 0
-
-  if (!cashAccount.currency?.is_main) {
-    currencyDifferencesCashAmount.value = value - (value * cashAccount.currency_rate / currencyRate.value)
-  } else {
-    currencyDifferencesCashAmount.value = 0
-  }
-  if (!supplierAccount.currency?.is_main) {
-    currencyDifferencesSupplierAmount.value = value - (value * supplierAccount.currency_rate / currencyRate.value)
-  } else {
-    currencyDifferencesSupplierAmount.value = 0
-  }
-
-  currencyDifferencesAmount.value = currencyDifferencesSupplierAmount.value + currencyDifferencesCashAmount.value
-})
-watch(currencyRate, (value) => {
-  const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
-  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
-  currencyDifferencesCashAmount.value = 0
-  currencyDifferencesSupplierAmount.value = 0
-
-  if (!cashAccount.currency?.is_main) {
-    currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / value)
-  } else {
-    currencyDifferencesCashAmount.value = 0
-  }
-  if (!supplierAccount.currency?.is_main) {
-    currencyDifferencesSupplierAmount.value = cashAmount.value - (cashAmount.value * supplierAccount.currency_rate / value)
-  } else {
-    currencyDifferencesSupplierAmount.value = 0
-  }
-  currencyDifferencesAmount.value = currencyDifferencesSupplierAmount.value + currencyDifferencesCashAmount.value
-})
-
-
 </script>
 <template>
   <div class="page-content-inner">
@@ -240,7 +180,7 @@ watch(currencyRate, (value) => {
             </div>
             <div class="right">
               <div class="buttons">
-                <VButton :loading="transactionStore.loading" @click="onSubmit" color="primary" raised> {{
+                <VButton :loading="transactionStore.loading" @click="onSubmitConfirmation" color="primary" raised> {{
                   t('supplier_cash_receipt.form.button') }} </VButton>
               </div>
             </div>
@@ -248,7 +188,7 @@ watch(currencyRate, (value) => {
         </div>
       </div>
     </div>
-    <form class="form-layout" @submit.prevent="onSubmit">
+    <form class="form-layout" @submit.prevent="onSubmitConfirmation">
       <div class="form-outer">
         <div class="form-body">
           <div class="form-fieldset">
@@ -274,14 +214,8 @@ watch(currencyRate, (value) => {
               <div class="column is-12">
                 <VField id="amount">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.amount') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl>
                     <VInput v-model="cashAmount" placeholder="" type="number" />
-                    <p class="help is-danger" v-if="currencyDifferencesAmount != 0 && cashAmount != 0">{{
-                      t('transfer_cash_money.form.currency_differences_helper', {
-                        difference_amount:
-                          currencyDifferencesAmount
-                      }) }}
-                    </p>
                     <ErrorMessage class="help is-danger" name="amount" />
                   </VControl>
                 </VField>
@@ -293,7 +227,7 @@ watch(currencyRate, (value) => {
                     <VSelect v-model="cashAccountId">
                       <VOption :value="0"> {{ t('supplier_cash_receipt.form.select_account')
                       }}</VOption>
-                      <VOption v-for="account in availableCashAccountsList" :value="account.id">
+                      <VOption v-for="account in cashAccountsList" :value="account.id">
                         {{ account.code }} - {{ account.name }}
                       </VOption>
                     </VSelect>
@@ -349,6 +283,19 @@ watch(currencyRate, (value) => {
       </div>
     </form>
   </div>
+  <VModal :title="t('supplier_cash_receipt.form.confirm_popup.title')" :open="confirmPopup" actions="center"
+    @close="confirmPopup = false">
+    <template #content>
+      <VPlaceholderSection :title="t('supplier_cash_receipt.form.confirm_popup.confirmation')"
+        :subtitle="t('supplier_cash_receipt.form.confirm_popup.currency_difference', { currency_difference: currencyDifferencesAmount })" />
+    </template>
+    <template #action="{ close }">
+      <VLoader size="small" :active="transactionStore.loading">
+        <VButton color="primary" raised @click="onSubmit">{{ t('modal.buttons.confirm') }}
+        </VButton>
+      </VLoader>
+    </template>
+  </VModal>
 </template>
 
 

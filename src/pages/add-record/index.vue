@@ -13,16 +13,21 @@ import { Notyf } from 'notyf';
 import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
 import { createRecords, getRecordsData } from '/@src/services/Accounting/Transaction/transactionService';
 import { createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record'
-import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
+import { defaultCreditAccountDetail, defaultDebitAccountDetail, RecordAccountDetail, RecordAccountAmountDetail, defaultAccountSearchFilter, AccountSearchFilter, Account, AccountConsts, defaultAccount } from '/@src/models/Accounting/Account/account';
 import { getAllAccounts } from '/@src/services/Accounting/Account/accountService';
 import { createFinancialRecordsValidation } from '/@src/rules/Accounting/Transaction/createFinancialRecordsValidation';
 import debounce from 'lodash.debounce';
+import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
+import { Currency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const transactionStore = useTransaction()
 
 viewWrapper.setPageTitle(t('financial_record.title'))
+const head = useHead({
+    title: t('financial_record.title'),
+});
 
 const notif = useNotyf() as Notyf
 
@@ -33,6 +38,9 @@ const formTypeName = "Add"
 const backRoute = "";
 
 const tempAccountRecords = ref<RecordAccountAmountDetail[]>([]);
+const currenciesList = ref<Currency[]>([])
+const currencyId = ref<number>(0);
+const currencyRate = ref<number>(1);
 const recordTitle = ref('')
 const recordNote = ref('')
 const totalCredit = ref(0)
@@ -43,26 +51,28 @@ const totalCreditColor = ref('')
 const totalDebitColor = ref('')
 const totalColor = ref('')
 const totalDifference = ref(0)
-// const accountMultiselect = ref(null)
-// const accountMultiselect = ref<InstanceType<typeof MultiSelect>>(null);
-
-interface Account {
-    id?: number,
-    code?: string,
-    name?: string
-}
-
+const enableCurrencyRate = ref(false)
+const totalCreditCurrenciesDifferenceAmount = ref(0)
+const totalDebitCurrenciesDifferenceAmount = ref(0)
+const totalCurrenciesDifferenceAmount = ref(0)
+const confirmationPopup = ref(false)
 
 const accountsListDropDown = ref<Account[]>([]);
 
-const accountSearchFilter = ref(defaultAccountSearchFilter)
 onMounted(async () => {
 
-    addRecord({ has_remove_btn: false } as RecordAccountAmountDetail)
-    addRecord({ has_remove_btn: false } as RecordAccountAmountDetail)
+    addRecord({ has_remove_btn: false, difference_amount: 0 } as RecordAccountAmountDetail)
+    addRecord({ has_remove_btn: false, difference_amount: 0 } as RecordAccountAmountDetail)
 
-    const { success, error_code, message, accounts } = await getAllAccounts(accountSearchFilter.value)
+    let accountSearchFilter = {
+        per_page: 500,
+        status: AccountConsts.ACTIVE
+    } as AccountSearchFilter
+    const { accounts } = await getAllAccounts(accountSearchFilter)
     accountsListDropDown.value = accounts
+    const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter)
+    currenciesList.value = currencies
+
 })
 
 const validationSchema = createFinancialRecordsValidation
@@ -81,9 +91,7 @@ const addRecord = (record: RecordAccountAmountDetail) => {
 const removeRecord = (record: RecordAccountDetail, index: number) => {
     if (index !== -1) {
         tempAccountRecords.value.splice(index, 1);
-        // if (tempAccountRecords.value[index].credit_amount === undefined)
         updateCredit()
-        // if (tempAccountRecords.value[index].debit_amount === undefined)
         updateDebit()
     }
 }
@@ -125,13 +133,19 @@ watch([totalCredit, totalDebit], () => {
         totalCreditText.value = `+ ${Math.abs(totalDifference.value)}`
     }
 })
+watch(currencyId, (value) => {
+    let selectedCurreny = currenciesList.value.find((currency) => currency.id === value);
+    if (selectedCurreny?.is_main) {
+        enableCurrencyRate.value = false
+        currencyRate.value = 1
+    } else {
+        enableCurrencyRate.value = true
+    }
+})
+watch(currencyRate, (value) => {
+    calcCurrencyDifferences()
+})
 
-// watch(tempAccountRecords, () => {
-//     console.log("sdf")
-//     tempAccountRecords.value.forEach((element) => {
-//         element.credit_amount = element?.credit_amount?.replace(/[^0-9]/g, '')
-//     })
-// }, { deep: true })
 
 const emit = defineEmits(['input-finished']);
 
@@ -159,17 +173,13 @@ const debouncedDebit = debounce(() => {
 
 const updateCredit = (value?: number) => {
     debouncedCredit();
+    calcCurrencyDifferences()
 };
 
 const updateDebit = () => {
     debouncedDebit();
+    calcCurrencyDifferences()
 };
-
-
-
-const clearAccountValue = () => {
-
-}
 
 const setAccountValue = () => {
     tempAccountRecords.value.forEach((element, index) => {
@@ -177,9 +187,23 @@ const setAccountValue = () => {
     });
 }
 
+const onSubmitConfirmation = handleSubmit(() => {
+    calcCurrencyDifferences()
+    confirmationPopup.value = true
+
+})
 
 const onSubmitAdd = handleSubmit(async () => {
+    if (currencyId.value == 0) {
+        notif.error(t('financial_record.currency_is_required'))
+        return;
 
+    }
+    if (currencyRate.value < 1) {
+        notif.error(t('financial_record.currency_rate_error'))
+        return;
+
+    }
 
     if (tempAccountRecords.value.length === 0) {
         notif.error(t('financial_record.must_add_record'))
@@ -190,8 +214,28 @@ const onSubmitAdd = handleSubmit(async () => {
         notif.error(t('financial_record.records_are_note_balanced_error_msg'))
         return;
     }
+    const selectedCurrency = currenciesList.value.find((currency) => currency.id == currencyId.value)
+    console.log(selectedCurrency?.name)
+    let index = 1;
+    tempAccountRecords.value.forEach(entry => {
+        console.log(11);
+        const account = accountsListDropDown.value.find((account) => account.id == entry.account_id) ?? defaultAccount
+        if (!account?.currency?.is_main && selectedCurrency?.is_main) {
+            console.log(account.id)
+            if (index == 1) {
+                index++
+            }
 
-    const data = getRecordsData(tempAccountRecords.value, recordTitle.value, recordNote.value, totalCredit.value)
+        }
+
+    });
+    console.log(index, 'index');
+
+    if (index > 1) {
+        notif.error(t('financial_record.currency_must_be_dollar'))
+        return;
+    }
+    const data = getRecordsData(tempAccountRecords.value, recordTitle.value, recordNote.value, totalCredit.value, currencyId.value, currencyRate.value, accountsListDropDown.value, currenciesList.value)
     const { success, message, response } = await createRecords(data)
     if (success) {
         // @ts-ignore
@@ -217,52 +261,93 @@ const onSubmitAdd = handleSubmit(async () => {
 
 })
 
+const calcCurrencyDifferences = debounce(() => {
+    totalCreditCurrenciesDifferenceAmount.value = 0
+    totalDebitCurrenciesDifferenceAmount.value = 0
+    totalCurrenciesDifferenceAmount.value = 0
+    tempAccountRecords.value.forEach((entry) => {
+        const account = accountsListDropDown.value.find((account) => account.id == entry.account_id) ?? defaultAccount
+        if (!account?.currency?.is_main) {
+            if (entry.credit_amount) {
+                if (account.chart_account?.account_type == AccountConsts.DEBIT_TYPE) {
+                    entry.difference_amount = entry.credit_amount - (entry.credit_amount * account.currency_rate / currencyRate.value)
+                    totalCreditCurrenciesDifferenceAmount.value += entry.difference_amount
+                } else {
+                    entry.difference_amount = 0
+                }
+
+
+            } else if (entry.debit_amount) {
+                if (account.chart_account?.account_type == AccountConsts.CREDIT_TYPE) {
+                    entry.difference_amount = entry.debit_amount - (entry.debit_amount * account.currency_rate / currencyRate.value)
+                    totalDebitCurrenciesDifferenceAmount.value += entry.difference_amount
+                } else {
+                    entry.difference_amount = 0
+                }
+
+            }
+        } else {
+            entry.difference_amount = 0
+        }
+    });
+    totalCurrenciesDifferenceAmount.value = totalCreditCurrenciesDifferenceAmount.value - totalDebitCurrenciesDifferenceAmount.value
+}, 1000)
 </script>
 
 <template>
     <div class="page-content-inner">
         <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-            @onSubmit="onSubmitAdd()" :isLoading="transactionStore?.loading" />
-        <form class="form-layout" @submit.prevent="onSubmitAdd()">
+            @onSubmit="onSubmitConfirmation" :isLoading="transactionStore?.loading" />
+        <form class="form-layout" @submit.prevent="onSubmitConfirmation">
             <div class="form-outer">
                 <div class="form-body">
-                    <!--Fieldset-->
                     <div class="form-fieldset">
-                        <!-- <div class="fieldset-heading">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </div> -->
-                        <div class="columns mb-5">
-                            <VButton class="mt-5" @click.prevent="addRecord({
-                                account_id: undefined,
-                                credit_amount: undefined,
-                                debit_amount: undefined,
-                                type: undefined,
-                                has_remove_btn: true
-                            })" color="primary">
-                                {{ t('financial_record.add_new_row') }}
-                            </VButton>
-                        </div>
                         <!--Fieldset-->
                         <div class="columns">
                             <div class="column is-6">
-                                <div class="mb-3">
+                                <div>
                                     <VField>
                                         <VLabel>
                                             {{ t('financial_record.record_title') }}</VLabel>
                                         <VControl icon="feather:chevron-right">
                                             <VInput type="text" placeholder="" autocomplete="" v-model="recordTitle" />
                                         </VControl>
-                                        <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
-                        <div class="columns" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
-                            <div class="column is-5">
+                        <div class="columns">
+                            <div class="column is-3">
+                                <div>
+                                    <VField>
+                                        <VLabel class="required">
+                                            {{ t('financial_record.currency') }}</VLabel>
+                                        <VSelect v-model="currencyId">
+                                            <VOption :value="0"> {{ t('financial_record.select_currency')
+                                            }}</VOption>
+                                            <VOption v-for="currency in currenciesList" :value="currency.id">
+                                                {{ currency.code }} - {{ currency.name }}
+                                            </VOption>
+                                        </VSelect>
+                                    </VField>
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <VField>
+                                    <VLabel class="required">{{ t('financial_record.currency_rate') }}</VLabel>
+                                    <VControl icon="feather:dollar-sign">
+                                        <VInput :disabled="!enableCurrencyRate" v-model="currencyRate" placeholder=""
+                                            type="number" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                        </div>
+                        <div class="columns mb-0" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
+                            <div class="column is-3">
                                 <div class="mb-3">
                                     <VField :id="`account_id_${mainIndex}`">
-                                        <VLabel class="required">
+                                        <VLabel v-if="mainIndex == 0" class="required">
                                             {{ t('financial_record.select_account') }}</VLabel>
                                         <VControl>
                                             <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
@@ -290,83 +375,79 @@ const onSubmitAdd = handleSubmit(async () => {
                                 </div>
 
                             </div>
-                            <div class="column is-4">
+                            <div class="column is-3">
                                 <div class="mb-3">
                                     <VField>
-                                        <!-- <VField :id="`credit_amount_${mainIndex}`"> -->
-                                        <VLabel>
-                                            {{ t('financial_record.credit') }}</VLabel>
-                                        <VControl icon="feather:dollar-sign">
-                                            <VInput @input="() => updateCredit()"
-                                                :class="[tempAccountRecords[mainIndex].debit_amount! > 0 && 'disabled-input']"
-                                                :disabled="tempAccountRecords[mainIndex].debit_amount! > 0" type="number"
-                                                v-model.number="tempAccountRecords[mainIndex].credit_amount" />
-                                        </VControl>
-                                        <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
-                                    </VField>
-                                </div>
-
-                            </div>
-                            <div class="column is-4">
-                                <div class="mb-3">
-                                    <VField>
-                                        <!-- <VField :id="`debit_amount_${mainIndex}`"> -->
-                                        <VLabel>
+                                        <VLabel v-if="mainIndex == 0">
                                             {{ t('financial_record.debit') }}</VLabel>
-                                        <VControl icon="feather:dollar-sign">
+                                        <VControl>
                                             <VInput @input="() => updateDebit()"
                                                 :class="[tempAccountRecords[mainIndex].credit_amount! > 0 && 'disabled-input']"
                                                 :disabled="tempAccountRecords[mainIndex].credit_amount! > 0" type="number"
                                                 v-model.number="tempAccountRecords[mainIndex].debit_amount" />
                                         </VControl>
-                                        <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
-
                             </div>
-                            <div class="column is-1">
+                            <div class="column is-3">
                                 <div class="mb-3">
-                                    <VField v-if="tempAccountRecords[mainIndex].has_remove_btn">
+                                    <VField>
+                                        <VLabel v-if="mainIndex == 0">
+                                            {{ t('financial_record.credit') }}</VLabel>
                                         <VControl>
-                                            <VButton class="remove_btn" @click="removeRecord(record, mainIndex)"
-                                                color="danger">
-                                                {{ t('financial_record.remove_row') }}
-                                            </VButton>
+                                            <VInput @input="() => updateCredit()"
+                                                :class="[tempAccountRecords[mainIndex].debit_amount! > 0 && 'disabled-input']"
+                                                :disabled="tempAccountRecords[mainIndex].debit_amount! > 0" type="number"
+                                                v-model.number="tempAccountRecords[mainIndex].credit_amount" />
                                         </VControl>
                                     </VField>
                                 </div>
-
+                            </div>
+                            <div class="column is-3 columns is-flex is-align-items-center">
+                                <div class="mb-3 column is-6">
+                                    <VField v-if="tempAccountRecords[mainIndex].has_remove_btn">
+                                        <VControl>
+                                            <VIconButton icon="feather:trash-2" class="remove_btn"
+                                                @click="removeRecord(record, mainIndex)" color="danger">
+                                                {{ t('financial_record.remove_row') }}
+                                            </VIconButton>
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <p v-if="tempAccountRecords[mainIndex].difference_amount != 0"
+                                    class="mb-3 column is-6 help is-danger">
+                                    {{ t('financial_record.currency_difference') }} {{
+                                        tempAccountRecords[mainIndex].difference_amount }}
+                                </p>
                             </div>
                         </div>
                         <div class="columns">
-                            <div class="column is-5">
-                                <div class="mb-3">
+                            <div class="column is-3">
+                                <div>
                                     <VField>
                                         <VLabel>
                                             {{ t('financial_record.total') }}</VLabel>
                                     </VField>
                                 </div>
                             </div>
-                            <div class="column is-4">
-                                <div class="mb-3">
+                            <div class="column is-3">
+                                <div>
                                     <VField>
                                         <VLabel :class="totalCreditColor">
                                             {{ totalCreditText }}</VLabel>
                                     </VField>
                                 </div>
                             </div>
-                            <div class="column is-4">
-                                <div class="mb-3">
+                            <div class="column is-3">
+                                <div>
                                     <VField>
                                         <VLabel :class="totalDebitColor">
                                             {{ totalDebitText }}</VLabel>
                                     </VField>
                                 </div>
                             </div>
-                            <div class="column is-5">
-                                <div class="mb-3">
+                            <div class="column is-3">
+                                <div>
                                     <VField>
                                         <VLabel :class="totalColor">
                                             {{ (totalDifference != 0) ?
@@ -377,6 +458,20 @@ const onSubmitAdd = handleSubmit(async () => {
                                 </div>
                             </div>
                         </div>
+                        <div class="columns px-3 py-2">
+
+                            <VButton @click.prevent="addRecord({
+                                account_id: undefined,
+                                credit_amount: undefined,
+                                debit_amount: undefined,
+                                type: undefined,
+                                has_remove_btn: true,
+                                difference_amount: 0
+                            })" color="primary">
+                                {{ t('financial_record.add_new_row') }}
+                            </VButton>
+                        </div>
+
                         <div class="columns">
                             <div class="column is-12">
                                 <div class="mb-3">
@@ -386,8 +481,6 @@ const onSubmitAdd = handleSubmit(async () => {
                                         <VControl icon="feather:chevrons-right">
                                             <VTextarea rows=3 placeholder="" autocomplete="" v-model="recordNote" />
                                         </VControl>
-                                        <!-- <ErrorMessage class="help is-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :name="`service_price_${service.service.id}`" /> -->
                                     </VField>
                                 </div>
 
@@ -399,6 +492,19 @@ const onSubmitAdd = handleSubmit(async () => {
             </div>
         </form>
     </div>
+    <VModal :title="t('financial_record.confirm_popup.title')" :open="confirmationPopup" actions="center"
+        @close="confirmationPopup = false">
+        <template #content>
+            <VPlaceholderSection :title="t('financial_record.confirm_popup.confirmation')"
+                :subtitle="t('financial_record.confirm_popup.currency_difference', { currency_difference: totalCurrenciesDifferenceAmount })" />
+        </template>
+        <template #action="{ close }">
+            <VLoader size="small" :active="transactionStore.loading">
+                <VButton color="primary" raised @click="onSubmitAdd">{{ t('modal.buttons.confirm') }}
+                </VButton>
+            </VLoader>
+        </template>
+    </VModal>
 </template>
 <style  scoped lang="scss">
 @import '/@src/scss/abstracts/all';
@@ -409,7 +515,7 @@ const onSubmitAdd = handleSubmit(async () => {
 }
 
 .red-number {
-    color: red !important;
+    color: rgba(255, 0, 0, 0.836) !important;
 }
 
 .orange-number {
@@ -443,7 +549,7 @@ const onSubmitAdd = handleSubmit(async () => {
 }
 
 .form-fieldset {
-    max-width: 40%;
+    max-width: 60%;
 }
 
 
@@ -458,7 +564,7 @@ const onSubmitAdd = handleSubmit(async () => {
 }
 
 .remove_btn {
-    margin-top: 1.8rem;
+    margin-top: 0;
 }
 
 .control.has-icon {

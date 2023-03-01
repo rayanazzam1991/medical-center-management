@@ -7,8 +7,10 @@ import {
   TransactionSearchFilter
 } from "/@src/models/Accounting/Transaction/record"
 import { useTransaction } from "/@src/stores/Accounting/Transaction/transactionStore"
-import { AccountConsts, RecordAccountAmountDetail, RecordAccountDetail } from '/@src/models/Accounting/Account/account';
+import { Account, AccountConsts, defaultAccount, RecordAccountAmountDetail, RecordAccountDetail } from '/@src/models/Accounting/Account/account';
 import { defaultPagination, Pagination } from "/@src/utils/response";
+import { Currency } from "/@src/models/Accounting/Currency/currency";
+import { ChartOfAccountConsts } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount";
 
 
 export async function createRecords(
@@ -23,22 +25,59 @@ export async function createRecords(
 
 }
 
-export function getRecordsData(values: RecordAccountAmountDetail[], title: string, note: string, amount: number) {
+export function getRecordsData(values: RecordAccountAmountDetail[], title: string, note: string, amount: number, currency_id: number, currency_rate: number, accountList: Account[], currenciesList: Currency[]) {
   let recordsData: CreateRecords = <CreateRecords>({})
   let accounts: RecordAccountDetail[] = []
+  let totalCreditCurrenciesDifferenceAmount = 0
+  let totalDebitCurrenciesDifferenceAmount = 0
+  let totalCurrenciesDifferenceAmount = 0
+  const currenciesDifferenceAccount = accountList.find((account) => account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE)
+  console.log(currenciesDifferenceAccount?.name)
+
+  values.forEach((entry) => {
+    const account = accountList.find((account) => account.id == entry.account_id) ?? defaultAccount
+    if (!account?.currency?.is_main) {
+      if (entry.credit_amount) {
+        if (account.chart_account?.account_type == AccountConsts.DEBIT_TYPE) {
+          entry.difference_amount = entry.credit_amount - (entry.credit_amount * account.currency_rate / currency_rate)
+          totalCreditCurrenciesDifferenceAmount += entry.difference_amount
+        } else {
+          entry.difference_amount = 0
+        }
+
+
+      } else if (entry.debit_amount) {
+        if (account.chart_account?.account_type == AccountConsts.CREDIT_TYPE) {
+          entry.difference_amount = entry.debit_amount - (entry.debit_amount * account.currency_rate / currency_rate)
+          totalDebitCurrenciesDifferenceAmount += entry.difference_amount
+        } else {
+          entry.difference_amount = 0
+        }
+      }
+    } else {
+      entry.difference_amount = 0
+    }
+  });
+  totalCurrenciesDifferenceAmount = totalCreditCurrenciesDifferenceAmount - totalDebitCurrenciesDifferenceAmount
+
   values.forEach((element) => {
     if (element.debit_amount !== undefined || element.credit_amount !== undefined) {
       let accountDetails: RecordAccountDetail = {}
       accountDetails.account_id = element.account_id
-      accountDetails.amount = element.credit_amount ?? (element.debit_amount ?? 0)
+      accountDetails.amount = element.credit_amount ? element.credit_amount - element.difference_amount : element.debit_amount ? element.debit_amount - element.difference_amount : 0
       accountDetails.type = element.credit_amount === undefined ? AccountConsts.DEBIT_TYPE : AccountConsts.CREDIT_TYPE
       accounts.push(accountDetails)
     }
   });
+  if (totalCurrenciesDifferenceAmount != 0) {
+    accounts.push(
+      { account_id: currenciesDifferenceAccount?.id, amount: Math.abs(totalCurrenciesDifferenceAmount), type: totalCurrenciesDifferenceAmount > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE }
+    )
+  }
   recordsData.accounts = accounts
   recordsData.amount = amount
-  recordsData.currency_id = 1
-  recordsData.currency_rate = 1500
+  recordsData.currency_id = currency_id
+  recordsData.currency_rate = currency_rate
   recordsData.note = note
   recordsData.recordType = TransactionConsts.OTHER_RECORD
   recordsData.transaction_type_id = 1

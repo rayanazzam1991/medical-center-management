@@ -241,6 +241,7 @@ export interface RecordAccountAmountDetail {
   debit_amount?: number,
   type?: number
   has_remove_btn?: boolean
+  difference_amount: number
 }
 export interface ChangeAccountStatus {
   id: number
