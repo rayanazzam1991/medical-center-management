@@ -220,7 +220,7 @@ watch(cashAmount, (value) => {
                             <div class="column is-12">
                                 <VField id="amount">
                                     <VLabel class="required">{{ t('customer_cash_receipt.form.amount') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="cashAmount" placeholder="" type="number" />
                                         <p class="help is-danger" v-if="currencyDifferencesAmount != 0 && cashAmount != 0">
                                             {{

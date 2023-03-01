@@ -233,7 +233,7 @@ const onSubmit = handleSubmit(async () => {
                             <div class="column is-12">
                                 <VField id="amount">
                                     <VLabel class="required">{{ t('transfer_cash_money.form.amount') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="amount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="amount" />
                                     </VControl>

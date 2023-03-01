@@ -172,7 +172,7 @@ export default defineComponent({
                 <VField v-slot="{ field }">
                   <VLabel> {{ t('walletMovement.cash_out_form.my_total') }} {{ addParenthesisToString(mainCurrency.name)
                   }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl >
                     <VInput disabled v-model="Amount" type="number" />
                   </VControl>
                 </VField>
@@ -187,7 +187,7 @@ export default defineComponent({
                   <VLabel class="required">{{ t('walletMovement.cash_out_form.cash_out_total') }}{{
                     addParenthesisToString(mainCurrency.name)
                   }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl>
                     <VInput v-model="currentWalletMovement.total" type="number" />
                     <ErrorMessage name="total" class="help is-danger" />
                   </VControl>

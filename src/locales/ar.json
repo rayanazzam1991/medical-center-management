@@ -214,7 +214,7 @@
       "supplier_cash_receipts": "الإيصالات النقدية للموردين",
       "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
-      "add_record": "إضافة سجل مالي",
+      "add_record": "إضافة قيد مالي",
       "add_custom_revenue": "إضافة عوائد",
       "add_custom_expense": "إضافة نفقات",
       "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون",
@@ -1879,14 +1879,14 @@
     "no_accounts_place_holder": "لا يوجد حسابات في هذا الفرع."
   },
   "financial_record": {
-    "title": "السجل المالي",
-    "add_new": "اضافة سجل مالي",
+    "title": "القيد المالي",
+    "add_new": "اضافة قيد مالي",
     "add_new_row": "اضافة سطر جديد",
     "credit": "دائن",
     "debit": "مدين",
     "select_account": "اختر حساب",
     "remove_row": "حذف سطر",
-    "record_title": "عنوان السجل المالي",
+    "record_title": "عنوان القيد المالي",
     "record_note": "ملاحظة",
     "accounts_must_be_not_empty": "يجب أن يتم اختيار حسابات",
     "total_credit": "مجموع الدائن",
@@ -1894,8 +1894,20 @@
     "total": "المجموع",
     "records_are_balanced": "الدائن والمدين متوازنين",
     "records_are_not_balanced": "الأسطر غير متوازنة",
-    "records_are_note_balanced_error_msg": "الدائن والمدين غير متساويين لا يمكن اضافة السجل المالي",
-    "must_add_record": "يجب اضافة سجلات مالية"
+    "records_are_note_balanced_error_msg": "الدائن والمدين غير متساويين لا يمكن اضافة القيد المالي",
+    "must_add_record": "يجب اضافة قيود مالية",
+    "currency_is_required": "حقل العملة مطلوب",
+    "currency_rate_error": "حقل سعر الصرف يجب أن يكون أكبر أو يساوي 1",
+    "currency": "العملة",
+    "select_currency": "اختيار العملة",
+    "currency_rate": "سعر الصرف",
+    "currency_difference": "فروقات العملة",
+    "currency_must_be_dollar": "العملة يجب أن تكون دولار أمريكي",
+    "confirm_popup": {
+      "title": "إضافة قيد مالي",
+      "confirmation": "هل أنت متأكد؟",
+      "currency_difference": "سيتم إضافة مبلغ {currency_difference} دينار عراقي إلى حساب فروقات العملة"
+    }
   },
   "account_types": {
     "credit": "دائن",
@@ -2044,7 +2056,12 @@
       "note": "ملاحظات",
       "select_currency": "اختيار العملة",
       "total_amount": "المبلغ الإجمالي",
-      "remaining_amount": "المبلغ المتبقي"
+      "remaining_amount": "المبلغ المتبقي",
+      "confirm_popup": {
+        "title": "انشاء إيصال نقدي لمورد",
+        "confirmation": "هل أنت متأكد؟",
+        "currency_difference": "سيتم إضافة مبلغ {currency_difference} دينار عراقي إلى حساب فروقات العملة"
+      }
     },
     "table": {
       "title": "الإيصالات النقدية للموردين",

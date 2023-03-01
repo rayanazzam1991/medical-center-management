@@ -251,7 +251,7 @@ watch(currencyRate, (value) => {
                             <div class="column is-12">
                                 <VField id="expense_amount">
                                     <VLabel class="required">{{ t('add_custom_expense.form.expense_amount') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="expenseAmount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="expense_amount" />
                                     </VControl>
@@ -275,7 +275,7 @@ watch(currencyRate, (value) => {
                             <div class="column is-12">
                                 <VField id="cash_amount">
                                     <VLabel class="required">{{ t('add_custom_expense.form.cash_amount') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="cashAmount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="cash_amount" />
                                     </VControl>
@@ -309,7 +309,7 @@ watch(currencyRate, (value) => {
                             <div class="column is-12">
                                 <VField id="remain_amount">
                                     <VLabel class="required">{{ t('add_custom_expense.form.remain_amount') }}</VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput disabled v-model="remainAmount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="remain_amount" />
                                     </VControl>

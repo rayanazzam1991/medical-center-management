@@ -371,7 +371,7 @@ watch(cashAccountId, (value) => {
               <div class="column is-6">
                 <VField id="total_amount">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.total_amount') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl >
                     <VInput disabled v-model="totalAmount" placeholder="" type="number" />
                     <ErrorMessage class="help is-danger" name="total_amount" />
                   </VControl>
@@ -436,7 +436,7 @@ watch(cashAccountId, (value) => {
               <div class="column is-6">
                 <VField id="cash_amount">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.cash_amount') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl>
                     <VInput v-model="cashAmount" placeholder="" type="number" />
                     <ErrorMessage class="help is-danger" name="cash_amount" />
                   </VControl>
@@ -445,7 +445,7 @@ watch(cashAccountId, (value) => {
               <div class="column is-6">
                 <VField id="remain_amount">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.remaining_amount') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
+                  <VControl>
                     <VInput disabled v-model="remainAmount" placeholder="" type="number" />
                     <ErrorMessage class="help is-danger" name="remain_amount" />
                   </VControl>

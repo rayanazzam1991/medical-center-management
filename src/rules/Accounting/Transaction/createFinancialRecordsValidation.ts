@@ -27,25 +27,8 @@ const createFinancialRecordsValidation = toFormValidator(
                     .number({ invalid_type_error: i18n.global.t('validation.number.invalid_type_error'), required_error: i18n.global.t('validation.required') })
                     .min(1, i18n.global.t('validation.number.price')),
 
-            ))
-
+            )),
 )
-
-// zod.record(
-//     zod.string().refine((value) => {
-//         if (value.startsWith('account_id_')) {
-//             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(value);
-//             return processed.success
-//         } if (value.startsWith('credit_amount_')) {
-//             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(value);
-//             console.log("processed", processed)
-//             return processed.success
-//         }
-//     }, {
-//         message: 'Invalid string'
-//     })
-// )
-// );
 export {
     createFinancialRecordsValidation
 }

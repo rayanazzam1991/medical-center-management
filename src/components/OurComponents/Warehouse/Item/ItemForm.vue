@@ -280,7 +280,7 @@ export default defineComponent({
                                 <VField id="cost">
                                     <VLabel class="required">{{ t('item.form.cost') }} {{
                                         addParenthesisToString(mainCurrency.name) }} </VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="currentItem.cost" type="number" />
                                         <ErrorMessage name="cost" class="help is-danger" />
                                     </VControl>
@@ -289,7 +289,7 @@ export default defineComponent({
                             <div class="column is-6">
                                 <VField id="price" v-if="currentItem.is_for_sale">
                                     <VLabel class="required">{{ t('item.form.price') }} </VLabel>
-                                    <VControl icon="feather:dollar-sign">
+                                    <VControl>
                                         <VInput v-model="currentItem.price" type="number" />
                                         <ErrorMessage name="price" class="help is-danger" />
                                     </VControl>
