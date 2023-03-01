@@ -64,6 +64,8 @@
     "cypress": "cypress"
   },
   "dependencies": {
+    "laravel-echo": "^1.6.1",
+    "socket.io-client": "^2.2.0",
     "@ckeditor/ckeditor5-build-classic": "35.1.0",
     "@ckeditor/ckeditor5-vue": "4.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
