@@ -23,7 +23,7 @@ import { getCurrenciesFromStorage, getCurrenciesList } from '/@src/services/Acco
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
-import { Account, AccountConsts, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
+import { Account, AccountConsts, AccountSearchFilter, defaultAccount } from '/@src/models/Accounting/Account/account';
 import { CreateRecords, createRecordsWithDefault } from '/@src/models/Accounting/Transaction/record';
 const itemStore = useItem()
 const viewWrapper = useViewWrapper()
@@ -80,6 +80,9 @@ const currencies = getCurrenciesFromStorage()
 const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const itemQuantity = ref<number>(0)
 const itemCost = ref<number>(0)
+const differencesAmount = ref(0)
+const differenceAccountId = ref(0)
+
 const getCurrentAddQuantity = async () => {
   currentaddQuantity.value = itemHistoryForm.data
 }
@@ -92,24 +95,28 @@ onMounted(async () => {
   allCategoriesList.value = allCategories.categories
   mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
   await getCurrentAddQuantity();
-  /////
-  let accountSearchFilter = {} as AccountSearchFilter
+  let accountSearchFilter = {
+    per_page: 500
+  } as AccountSearchFilter
   const { accounts } = await getAccountsList(accountSearchFilter)
   accounts.forEach((account) => {
     if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
+
       cashAccountsList.value.push(account)
+
     } else
       if (account.chart_account?.code == ChartOfAccountConsts.SUPPLIER_CODE) {
         suppliersAccountsList.value.push(account)
       } else if (account.chart_account?.code == ChartOfAccountConsts.INVENTORY_CODE) {
         inventoryAccountId.value = account.id ?? 0
+      } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
+        differenceAccountId.value = account.id ?? 0
       }
   });
   const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter)
   currenciesList.value = currencies
   availableCurrenciesList.value = currencies
 })
-
 const getSubCategoryByCategroy = () => {
   let categoriesFilter = {} as CategorySearchFilter
   categoriesFilter.status = BaseConsts.ACTIVE
@@ -179,6 +186,14 @@ const onAddFile = async (event: any) => {
 }
 
 const onSubmitAdd = handleSubmit(async (values) => {
+  const selectedCashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
+  if (!selectedCashAccount.currency?.is_main) {
+    differencesAmount.value = cashAmount.value - (cashAmount.value * selectedCashAccount.currency_rate / currencyRate.value)
+
+  } else {
+    differencesAmount.value = 0
+
+  }
   let addQuantityForm = currentaddQuantity.value
   addQuantityForm.item_quantity = itemQuantity.value
   addQuantityForm.add_item_cost = itemCost.value
@@ -192,13 +207,17 @@ const onSubmitAdd = handleSubmit(async (values) => {
   addQuantityForm.record.accounts = []
   addQuantityForm.record.accounts.push(
     { account_id: inventoryAccountId.value, amount: totalAmount.value, type: AccountConsts.DEBIT_TYPE },
-    { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.CREDIT_TYPE })
+    { account_id: cashAccountId.value, amount: cashAmount.value - differencesAmount.value, type: AccountConsts.CREDIT_TYPE })
   if (remainAmount.value > 0) {
     createRecord.value.accounts.push(
       { account_id: supplierAccountId.value, amount: remainAmount.value, type: AccountConsts.CREDIT_TYPE },
     )
   }
-
+  if (differencesAmount.value != 0) {
+    createRecord.value.accounts.push(
+      { account_id: differenceAccountId.value, amount: differencesAmount.value, type: differencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
+    )
+  }
 
   const { addQuantity, success, message } = await addQuantityService(addQuantityForm)
   if (success) {

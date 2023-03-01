@@ -4,6 +4,7 @@ import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 import { CreateSupplier, Supplier, SupplierSearchFilter, UpdateSupplier } from "/@src/models/Others/Supplier/supplier";
 import { addSupplierApi, editSupplierApi, getSupplierApi, getSuppliersApi } from "/@src/utils/api/Others/Supplier"
+import { defaultAccount } from "/@src/models/Accounting/Account/account";
 
 
 
@@ -50,13 +51,6 @@ export const useSupplier = defineStore('supplier', () => {
     sleep(2000)
     try {
       const response = await editSupplierApi(api, supplier)
-      var returnedSupplier: Supplier
-      returnedSupplier = response.response.data
-      suppliers.value.splice(
-        suppliers.value.findIndex((supplierElement) => (supplierElement.id = supplier.id)),
-        1
-      )
-      suppliers.value.push(returnedSupplier)
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
