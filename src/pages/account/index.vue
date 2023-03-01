@@ -198,7 +198,7 @@ const columns = {
   },
   "currencies.code": {
     align: 'center',
-    label: t('account.table.columns.currency_rate'),
+    label: t('account.table.columns.currency'),
     renderRow: (row: Account) =>
       h('span', row.currency?.name)
   },
