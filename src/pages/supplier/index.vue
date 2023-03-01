@@ -82,14 +82,12 @@ const changestatusSupplier = async () => {
   const { message, success } = await editSupplier(changeStatusData)
   if (success) {
 
-
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
     // @ts-ignore
-
-    notif.success(t('toast.success.edit'))
     supplierChangeStatus.value.status = newStatus.value
+    notif.success(t('toast.success.edit'))
   } else {
     await sleep(200);
     // @ts-ignore
@@ -177,7 +175,7 @@ const columns = {
     align: 'center',
     label: t('supplier.table.columns.expense_related_account'),
     renderRow: (row: Supplier) =>
-      h('span', row?.account_contacts.find((account) => account.is_expense_account)?.account.name ?? '-')
+      h('span', row?.account_contacts?.find((account) => account.is_expense_account)?.account?.name ?? '-')
   },
 
   created_by: {
@@ -203,6 +201,7 @@ const columns = {
       h(NoDeleteDropDown, {
         onChangeStatus: () => {
           supplierChangeStatus.value = row
+          newStatus.value = row.status
           changeStatusPopup.value = true
         },
         onEdit: () => {
