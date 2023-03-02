@@ -469,9 +469,7 @@
       "page_title": "الأخصّائي",
       "step_1_title": "معلومات الأخصّائي الأساسية",
       "step_1_abbr_title": "المعلومات الأساسية",
-      "step_2_abbr_title": "الخدمات",
       "step_1_subtitle": "الخطوة 1: معلومات الأخصّائي الأساسية",
-      "step_2_subtitle": "الخطوة 2: خدمات الأخصّائي",
       "back_button": "الرجوع إلى واجهة الأخصّائي",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
@@ -749,6 +747,8 @@
       "step_1_title": "المعلومات الرئيسية للموظف",
       "step_1_subtitle": "Step 1: المعلومات الرئيسية للموظف",
       "step_1_abbr_title": "المعلومات الرئيسية",
+      "step_2_abbr_title": "الخدمات",
+      "step_2_subtitle": "الخطوة 2: خدمات الموظف",
       "back_button": "الرجوع إلى واجهة الموظفين",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
@@ -768,7 +768,15 @@
       "edit_step_1_title": "تعديل المعلومات الرئيسية للموظف",
       "edit_submit": "تأكيد",
       "type": "نوع التوظيف",
-      "payment_percentage": "نسبة العمولة"
+      "payment_percentage": "نسبة العمولة",
+      "submit_and_next_button": "تأكيد والانتقال للتالي",
+      "no_services_placeholder": "لا يوجد خدمات...",
+      "service_price": "سعر {service}:",
+      "edit_step_2_title": "تعديل خدمات الموظف",
+      "choose_services": "اختيار الخدمات:",
+      "submit_and_finish_button": "تأكيد وإنهاء",
+      "skip_button": "تخطي",
+      "skip_and_finish_button": "تخطي وإنهاء"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
@@ -2106,5 +2114,10 @@
       "date": "التاريخ",
       "note": "ملاحظات"
     }
+  },
+  "employee_types": {
+    "salaried": "موظف براتب",
+    "commission_based": "موظف بعمولة",
+    "hybrid": "موظف براتب وعمولة"
   }
 }

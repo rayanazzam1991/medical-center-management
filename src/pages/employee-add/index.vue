@@ -147,7 +147,7 @@ watch(selectedType, (value) => {
     if (value == EmployeeConsts.TYPE_HYBRID_EMPLOYEE) {
         enableBasicSalary.value = true
         enablePaymentPercentage.value = true
-    } else if (value == EmployeeConsts.TYPE_COMMISSTION_BASED_EMPLOYEE) {
+    } else if (value == EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE) {
         enableBasicSalary.value = false
         currentEmployee.value.basic_salary = 0
         enablePaymentPercentage.value = true

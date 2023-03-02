@@ -759,7 +759,10 @@
       "position": "Position",
       "status": "Status",
       "edit_step_1_title": "Edit Employee Main Info",
-      "edit_submit": "Submit"
+      "edit_submit": "Submit",
+      "type": "Type",
+      "payment_percentage": "Payment Percentage",
+      "submit_and_next_button": "Submit & Next"
     },
     "search_filter": {
       "title": "Filter Employee",
@@ -1950,5 +1953,10 @@
       "date": "Date",
       "note": "Note"
     }
+  },
+  "employee_types": {
+    "salaried": "Salaried Employee",
+    "commission_based": "Commission Based Employee",
+    "hybrid": "Hybrid Employee"
   }
 }

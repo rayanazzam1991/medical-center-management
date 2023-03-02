@@ -124,16 +124,16 @@ export const defaultEmployeeFiles: Media = {
 }
 class EmployeeConsts {
     static readonly TYPE_SALARIED_EMPLOYEE = 1;
-    static readonly TYPE_COMMISSTION_BASED_EMPLOYEE = 2;
+    static readonly TYPE_COMMISSION_BASED_EMPLOYEE = 2;
     static readonly TYPE_HYBRID_EMPLOYEE = 3;
 
-    static readonly EMPLOYEE_TYPES = [this.TYPE_SALARIED_EMPLOYEE, this.TYPE_COMMISSTION_BASED_EMPLOYEE, this.TYPE_HYBRID_EMPLOYEE]
+    static readonly EMPLOYEE_TYPES = [this.TYPE_SALARIED_EMPLOYEE, this.TYPE_COMMISSION_BASED_EMPLOYEE, this.TYPE_HYBRID_EMPLOYEE]
 
     public static getTypeName(type: number) {
         if (type == this.TYPE_SALARIED_EMPLOYEE)
             return i18n.global.t('employee_types.salaried')
-        if (type == this.TYPE_COMMISSTION_BASED_EMPLOYEE)
-            return i18n.global.t('employee_types.commisstion_based')
+        if (type == this.TYPE_COMMISSION_BASED_EMPLOYEE)
+            return i18n.global.t('employee_types.commission_based')
         if (type == this.TYPE_HYBRID_EMPLOYEE)
             return i18n.global.t('employee_types.hybrid')
         else return '';

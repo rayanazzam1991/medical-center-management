@@ -99,19 +99,13 @@ const onSubmitAdd = handleSubmit(async () => {
     const { success, message } = await addServicesToEmployee(employeeId.value, employeeForm.employeeServicesForm)
 
     if (success) {
-        // @ts-ignore
         await sleep(200);
-
         notif.success(t('toast.success.add'))
-
         return true
     }
     else {
-        // @ts-ignore
         await sleep(200);
-
         notif.error(message)
-
     }
 
 
@@ -144,7 +138,7 @@ const onSubmitAdd = handleSubmit(async () => {
                             </div>
                         </div>
                         <div v-else class="fieldset-heading mt-6">
-                            <h4 class="has-text-centered ">{{ t('contractor.form.no_services_placeholder') }}</h4>
+                            <h4 class="has-text-centered ">{{ t('employee.form.no_services_placeholder') }}</h4>
                         </div>
                     </div>
                     <!--Fieldset-->
@@ -156,7 +150,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                         :id="`service_price_${service.service.id}`">
 
                                         <VLabel class="required" v-if="service.checked">
-                                            {{ t('contractor.form.service_price', { service: service.service.name }) }}
+                                            {{ t('employee.form.service_price', { service: service.service.name }) }}
                                         </VLabel>
                                         <VControl v-if="service.checked" icon="feather:chevrons-right">
                                             <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
@@ -171,49 +165,49 @@ const onSubmitAdd = handleSubmit(async () => {
                                 </div>
 
                             </div>
-                            <div class="column is-6">
+                            <!-- <div class="column is-6">
 
-                                <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
-                                    :id="service.service.name" :key="service.service.id">
-                                    <span class="label custom-label" v-if="service.checked">
-                                        {{ t('contractor.form.service_amount', { service: service.service.name }) }}
-                                    </span>
-                                    <div v-if="service.checked" class="control">
-                                        <div class="input">
-                                            {{
-                                                employeeForm.data.payment_percentage != undefined ? (service.price *
-                                                    (employeeForm.data.payment_percentage / 100)) : 0
-                                            }}
+                                                <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
+                                                    :id="service.service.name" :key="service.service.id">
+                                                    <span class="label custom-label" v-if="service.checked">
+                                                        {{ t('contractor.form.service_amount', { service: service.service.name }) }}
+                                                    </span>
+                                                    <div v-if="service.checked" class="control">
+                                                        <div class="input">
+                                                            {{
+                                                                employeeForm.data.payment_percentage != undefined ? (service.price *
+                                                                    (employeeForm.data.payment_percentage / 100)) : 0
+                                                            }}
 
-                                        </div>
-                                    </div>
+                                                        </div>
+                                                    </div>
 
-                                </div>
-                            </div>
+                                                </div>
+                                            </div> -->
 
 
                             <!-- <div class="column is-6">
-                                                                                            <VField :key="service.service.id" v-for="service in servicesChecked"
-                                                                                                :id="`service_amount_${service.service.id}`">
+                                                                                                            <VField :key="service.service.id" v-for="service in servicesChecked"
+                                                                                                                :id="`service_amount_${service.service.id}`">
 
-                                                                                                <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
-                                                                                                    Contractor's {{
-                                                                    service.service.name
-                                                            }}
-                                                                                                    Service amount:
-                                                                                                </VLabel>
-                                                                                                <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                                                                                    <VInput disabled type="number"
-                                                                                                        :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
-                                                                                                        v-bind="service.price" v-model="service.contractor_service_amount"
-                                                                                                        :key="service.service.id" />
+                                                                                                                <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
+                                                                                                                    Contractor's {{
+                                                                                    service.service.name
+                                                                            }}
+                                                                                                                    Service amount:
+                                                                                                                </VLabel>
+                                                                                                                <VControl v-if="service.checked" icon="feather:chevrons-right">
+                                                                                                                    <VInput disabled type="number"
+                                                                                                                        :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
+                                                                                                                        v-bind="service.price" v-model="service.contractor_service_amount"
+                                                                                                                        :key="service.service.id" />
 
-                                                                                                </VControl>
-                                                                                                <ErrorMessage class="help is-danger"
-                                                                                                    :name="`service_amount_${service.service.id}`" />
+                                                                                                                </VControl>
+                                                                                                                <ErrorMessage class="help is-danger"
+                                                                                                                    :name="`service_amount_${service.service.id}`" />
 
-                                                                                            </VField>
-                                                                                        </div> -->
+                                                                                                            </VField>
+                                                                                                        </div> -->
                         </div>
                     </div>
                 </div>
