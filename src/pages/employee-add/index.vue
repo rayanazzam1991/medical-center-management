@@ -28,7 +28,7 @@ import { useI18n } from 'vue-i18n';
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
-
+import { EmployeeConsts } from '/@src/models/Employee/employee';
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('employee.form.step_1_title'))
@@ -44,9 +44,8 @@ employeeForm.setStep({
         var isValid = await onSubmitAdd()
         if (isValid) {
             router.push({
-                path: `/employee/${employeeForm.data.id}`,
+                path: `/employee-add/${employeeForm.data.id}/services`,
             })
-            employeeForm.reset()
         }
     },
 })
@@ -72,7 +71,9 @@ const statusesList = ref<UserStatus[]>([])
 const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
-
+const selectedType = ref<number>(0)
+const enableBasicSalary = ref<boolean>(false)
+const enablePaymentPercentage = ref<boolean>(false)
 onMounted(async () => {
 
     let citySearchFilter = {} as CitySearchFilter
@@ -134,12 +135,29 @@ const { handleSubmit } = useForm({
         user_status_id: "",
         starting_date: "",
         end_date: "",
-        basic_salary: undefined,
+        basic_salary: 0,
         nationality_id: "",
-        position_id: ""
+        position_id: "",
+        type: 0,
+        payment_percentage: 0
     },
 })
 
+watch(selectedType, (value) => {
+    if (value == EmployeeConsts.TYPE_HYBRID_EMPLOYEE) {
+        enableBasicSalary.value = true
+        enablePaymentPercentage.value = true
+    } else if (value == EmployeeConsts.TYPE_COMMISSTION_BASED_EMPLOYEE) {
+        enableBasicSalary.value = false
+        currentEmployee.value.basic_salary = 0
+        enablePaymentPercentage.value = true
+    } else {
+        enablePaymentPercentage.value = false
+        currentEmployee.value.payment_percentage = 0
+        enableBasicSalary.value = true
+
+    }
+})
 
 const onSubmitAdd = handleSubmit(async (values) => {
 
@@ -152,6 +170,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
         employeeForm.data.end_date = employeeData.end_date
         employeeForm.data.nationality_id = employeeData.nationality_id
         employeeForm.data.position_id = employeeData.position_id
+        employeeForm.data.payment_percentage = employeeData.payment_percentage
+        employeeForm.data.type = selectedType.value
         employeeForm.userForm.first_name = userData.first_name
         employeeForm.userForm.last_name = userData.last_name
         employeeForm.userForm.password = userData.password
@@ -265,8 +285,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                             <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')"
                                                 name="gender" color="success" />
 
-                                            <VRadio v-model="currentUser.gender" value="Female"
-                                                :label="t('gender.female')" name="gender" color="success" />
+                                            <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')"
+                                                name="gender" color="success" />
                                             <ErrorMessage class="help is-danger" name="gender" />
                                         </VControl>
                                     </VField>
@@ -363,6 +383,38 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField id="type">
+                                        <VLabel class="required">{{ t('employee.form.type') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-model="selectedType">
+                                                <VOption>{{ t('employee.form.type') }}</VOption>
+                                                <VOption v-for="employeeType in EmployeeConsts.EMPLOYEE_TYPES"
+                                                    :key="employeeType" :value="employeeType">{{
+                                                        EmployeeConsts.getTypeName(employeeType)
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="type" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="user_status_id">
+                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                    {{
+                                                        status.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="user_status_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
 
                             </div>
                         </div>
@@ -371,11 +423,22 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="basic_salary">
-                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}{{ addParenthesisToString(mainCurrency.name) }}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}{{
+                                            addParenthesisToString(mainCurrency.name) }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
-                                                autocomplete="given-basic_salary" />
+                                            <VInput :disabled="!enableBasicSalary" v-model="currentEmployee.basic_salary"
+                                                type="number" placeholder="" autocomplete="given-basic_salary" />
                                             <ErrorMessage class="help is-danger" name="basic_salary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="payment_percentage">
+                                        <VLabel class="required">{{ t('employee.form.payment_percentage') }}</VLabel>
+                                        <VControl icon="feather:percent">
+                                            <VInput :disabled="!enablePaymentPercentage"
+                                                v-model="currentEmployee.payment_percentage" type="number" />
+                                            <ErrorMessage class="help is-danger" name="payment_percentage" />
                                         </VControl>
                                     </VField>
                                 </div>
@@ -393,7 +456,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                                 <div class="column is-6">
                                     <VField id="position_id">
                                         <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
@@ -408,24 +470,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                                <div class="column is-6">
-                                    <VField id="user_status_id">
-                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
-                                                <VOption v-for="status in statusesList" :key="status.id"
-                                                    :value="status.id">
-                                                    {{
-    status.name
-                                                    }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="user_status_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-
                             </div>
                         </div>
                         <!--Fieldset-->

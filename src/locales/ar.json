@@ -766,7 +766,9 @@
       "position": "المنصب",
       "status": "الحالة",
       "edit_step_1_title": "تعديل المعلومات الرئيسية للموظف",
-      "edit_submit": "تأكيد"
+      "edit_submit": "تأكيد",
+      "type": "نوع التوظيف",
+      "payment_percentage": "نسبة العمولة"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
