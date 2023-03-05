@@ -31,6 +31,7 @@ const head = useHead({
     title: t('employee.form.page_title'),
 })
 const notif = useNotyf() as Notyf
+const isLoading = ref(false)
 const employeeForm = useEmployeeForm()
 employeeForm.setStep({
     number: 2,
@@ -56,6 +57,7 @@ employeeForm.setStep({
 const pageTitle = t('employee.form.step_2_subtitle')
 const servicesList = ref<Service[]>([])
 onMounted(async () => {
+    isLoading.value = true
     const serviceSearchFilter = {
         status: BaseConsts.ACTIVE,
         per_page: 500
@@ -63,6 +65,8 @@ onMounted(async () => {
     } as ServiceSearchFilter
     const { services } = await getServicesList(serviceSearchFilter)
     servicesList.value = services
+    isLoading.value = false
+
 })
 
 const validationSchema = employeeAddServicesValidationSchema
@@ -123,7 +127,12 @@ const onSubmitAdd = handleSubmit(async () => {
         <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
-                    <div class="form-fieldset">
+                    <VLoader :hidden="!isLoading" size="xl" :active="isLoading">
+                        <div class="load">
+                        </div>
+                    </VLoader>
+
+                    <div :hidden="isLoading" class="form-fieldset">
                         <div class="fieldset-heading">
                             <h4>{{ pageTitle }}</h4>
                         </div>
@@ -258,5 +267,10 @@ const onSubmitAdd = handleSubmit(async () => {
 .service-label {
     font-family: var(--font);
     font-weight: 600;
+}
+
+.load {
+    height: 400px;
+    width: 500px;
 }
 </style>

@@ -22,6 +22,7 @@ const route = useRoute()
 const router = useRouter()
 const isLoading = ref(false)
 const employeeId = ref<number>(0)
+// @ts-ignore
 employeeId.value = route.params?.id
 
 
@@ -236,6 +237,7 @@ const onSubmitEdit = handleSubmit(async () => {
                                                     serviceSearchFilter.name = query
                                                     //@ts-ignore
                                                     const { services } = await getServicesList(serviceSearchFilter)
+                                                    //@ts-ignore
                                                     return services.map((service: Service) => {
                                                         return { value: service.id, label: `${service.name}` }
                                                     })

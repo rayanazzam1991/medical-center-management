@@ -1,4 +1,5 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
@@ -179,8 +180,8 @@ const onSubmitEdit = handleSubmit(async () => {
                                 <VField>
 
                                     <VControl v-for="service in servicesChecked" raw nogrow subcontrol>
-                                        <VCheckbox :label="service.service.name" :name="service.service.id"
-                                            color="primary" :key="service.service.id" v-model="service.checked" />
+                                        <VCheckbox :label="service.service.name" :name="service.service.id" color="primary"
+                                            :key="service.service.id" v-model="service.checked" />
                                     </VControl>
                                 </VField>
                             </div>
@@ -223,9 +224,9 @@ const onSubmitEdit = handleSubmit(async () => {
                                     <div v-if="service.checked" class="control">
                                         <div class="input">
                                             {{
-    contractorForm.dataUpdate.payment_percentage != undefined ?
-        (service.price *
-            (contractorForm.dataUpdate.payment_percentage / 100)) : 0
+                                                contractorForm.dataUpdate.payment_percentage != undefined ?
+                                                (service.price *
+                                                    (contractorForm.dataUpdate.payment_percentage / 100)) : 0
                                             }}
 
 
