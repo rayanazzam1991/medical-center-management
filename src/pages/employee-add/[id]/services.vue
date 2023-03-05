@@ -15,6 +15,8 @@ import { Notyf } from 'notyf';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { employeeAddServicesValidationSchema } from '/@src/rules/Employee/employeeAddServicesValidationSchema';
 import { addServicesToEmployee } from '/@src/services/Employee/employeeService';
+import { CreateUpdateServicesHelper } from '/@src/models/Employee/employee';
+import { isNumber } from '/@src/composable/helpers/isNumberCheck';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -23,7 +25,7 @@ const router = useRouter()
 const employeeId = ref<number>(0)
 // @ts-ignore
 employeeId.value = route.params?.id
-
+const employeeServices = ref<CreateUpdateServicesHelper[]>([]);
 viewWrapper.setPageTitle(t('employee.form.step_2_title'))
 const head = useHead({
     title: t('employee.form.page_title'),
@@ -41,7 +43,6 @@ employeeForm.setStep({
                 path: `/employee/${employeeId.value}`,
             })
             employeeForm.reset()
-
         }
 
     },
@@ -50,21 +51,11 @@ employeeForm.setStep({
             path: `/employee/${employeeId.value}`,
         })
         employeeForm.reset()
-
     }
-
 })
 const pageTitle = t('employee.form.step_2_subtitle')
 const servicesList = ref<Service[]>([])
-interface ServicesChecked {
-    service: Service
-    checked: boolean
-    price: number
-}
-const servicesChecked = ref<ServicesChecked[]>([])
-
 onMounted(async () => {
-
     const serviceSearchFilter = {
         status: BaseConsts.ACTIVE,
         per_page: 500
@@ -72,29 +63,46 @@ onMounted(async () => {
     } as ServiceSearchFilter
     const { services } = await getServicesList(serviceSearchFilter)
     servicesList.value = services
-
-    for (let index = 0; index < servicesList.value.length; index++) {
-        servicesChecked.value.push({ service: servicesList.value[index], checked: false, price: 0 })
-    }
 })
 
 const validationSchema = employeeAddServicesValidationSchema
-
-const { handleSubmit } = useForm({
+const { handleSubmit, setFieldValue } = useForm({
     validationSchema
 });
-
-
+const setServiceValue = () => {
+    employeeServices.value.forEach((service, index) => {
+        setFieldValue(`service_id_${index}`, service.service_id)
+    });
+}
+const addService = (service: CreateUpdateServicesHelper) => {
+    employeeServices.value?.push(service)
+}
+const removeService = (service: CreateUpdateServicesHelper, index: number) => {
+    if (index !== -1) {
+        employeeServices.value.splice(index, 1);
+    }
+}
 const onSubmitAdd = handleSubmit(async () => {
-
-    for (let i = 0; i < servicesChecked.value.length; i++) {
-        if (servicesChecked.value[i].checked == true) {
-            employeeForm.employeeServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price })
-
+    employeeForm.employeeServicesForm.splice(0, employeeForm.employeeServicesForm.length)
+    let priceError: boolean = false
+    employeeServices.value.forEach((service) => {
+        if (service.price <= 0 || (Number.isNaN(service.price))) {
+            const serviceName = servicesList.value.find((serviceEl) => serviceEl.id == service.service_id)?.name
+            notif.error(t('toast.error.employee.services_prices_error', { service_name: serviceName }))
+            priceError = true
+        } else {
+            employeeForm.employeeServicesForm.push(service)
         }
-        else {
-        }
-
+    });
+    if (priceError)
+        return
+    let employeeService = employeeForm.employeeServicesForm.map(function (item) { return item.service_id });
+    let isDuplicate = employeeService.some(function (item, idx) {
+        return employeeService.indexOf(item) != idx
+    });
+    if (isDuplicate) {
+        notif.error(t('toast.error.employee.services_is_duplicated'))
+        return
     }
     const { success, message } = await addServicesToEmployee(employeeId.value, employeeForm.employeeServicesForm)
 
@@ -107,9 +115,6 @@ const onSubmitAdd = handleSubmit(async () => {
         await sleep(200);
         notif.error(message)
     }
-
-
-
 })
 </script>
 
@@ -118,97 +123,95 @@ const onSubmitAdd = handleSubmit(async () => {
         <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
                 <div class="form-body">
-                    <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
                             <h4>{{ pageTitle }}</h4>
                         </div>
-                        <div v-if="servicesList.length != 0" class="columns is-multiline">
-                            <div class="column is-12">
+                        <div v-if="servicesList.length != 0" class="columns px-3 py-2">
 
-                                <VField>
-
-                                    <VControl :key="service.service.id" v-for="service in servicesChecked" raw nogrow
-                                        subcontrol>
-                                        <VCheckbox :label="service.service.name" :name="service.service.id" color="primary"
-                                            :key="service.service.id" v-model="service.checked" />
-
-                                    </VControl>
-                                </VField>
-                            </div>
+                            <VButton @click.prevent="addService({
+                                service_id: 0,
+                                price: 0,
+                            })" color="primary">
+                                {{ t('employee.form.add_new_service') }}
+                            </VButton>
                         </div>
-                        <div v-else class="fieldset-heading mt-6">
+                        <div v-if="servicesList.length == 0" class="fieldset-heading mt-6">
                             <h4 class="has-text-centered ">{{ t('employee.form.no_services_placeholder') }}</h4>
                         </div>
-                    </div>
-                    <!--Fieldset-->
-                    <div v-if="servicesList.length != 0" class="form-fieldset">
-                        <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <div :class="service.checked ? 'mb-3' : ''" v-for="service in servicesChecked">
-                                    <VField v-if="service.checked" :key="service.service.id"
-                                        :id="`service_price_${service.service.id}`">
+                        <div v-if="employeeServices.length != 0" class="mb-4 is-flex">
+                            <div class="column is-6 py-0">
+                                <h1 class="service-label required">
+                                    {{ t('employee.form.select_service') }}
+                                </h1>
 
-                                        <VLabel class="required" v-if="service.checked">
-                                            {{ t('employee.form.service_price', { service: service.service.name }) }}
-                                        </VLabel>
-                                        <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                            <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
-                                                :key="service.service.id" />
+                            </div>
+                            <div class="column is-4 py-0">
+                                <h1 class="service-label required">
+                                    {{ t('employee.form.service_price') }}
 
+                                </h1>
+                            </div>
+
+                        </div>
+                        <div v-else class="fieldset-heading mt-6">
+                            <h4 class="has-text-centered ">{{ t('employee.form.no_service_added_placeholder') }}</h4>
+                        </div>
+
+                        <div class="mb-4 is-flex" v-for="(service, mainIndex) in employeeServices" :key="mainIndex">
+                            <div class="column is-6 py-0">
+                                <div class="">
+                                    <VField :id="`service_id_${mainIndex}`">
+                                        <VControl>
+                                            <Multiselect v-model="employeeServices[mainIndex].service_id" mode="single"
+                                                :placeholder="t('employee.form.select_service')" :close-on-select="true"
+                                                ref="accountMultiselect" :filter-results="false" :min-chars="0"
+                                                :resolve-on-load="false" :infinite="true" :limit="50" :rtl="true" :max="1"
+                                                :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
+                                                @select="setServiceValue()" :options="async (query: any) => {
+                                                    let serviceSearchFilter = {} as ServiceSearchFilter
+                                                    //@ts-ignore
+                                                    serviceSearchFilter.name = query
+                                                    //@ts-ignore
+                                                    const data = await getServicesList(serviceSearchFilter)
+                                                    //@ts-ignore
+                                                    return data.services.map((service: any) => {
+                                                        return { value: service.id, label: `${service.name}` }
+                                                    })
+                                                }" @open="(select$: any) => {
+    if (select$.noOptions) {
+        select$.resolveOptions()
+    }
+}" />
                                         </VControl>
-                                        <ErrorMessage class="help is-danger"
-                                            :name="`service_price_${service.service.id}`" />
-
-
+                                        <ErrorMessage class="help is-danger" :name="`service_id_${mainIndex}`" />
                                     </VField>
                                 </div>
 
                             </div>
-                            <!-- <div class="column is-6">
+                            <div class="column is-4 py-0">
+                                <div class="">
+                                    <VField>
+                                        <VControl>
+                                            <VInput v-model.number="employeeServices[mainIndex].price" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                            <div class="column is-2 py-0">
+                                <div class="">
+                                    <VField>
+                                        <VControl>
+                                            <VIconButton icon="feather:trash-2" class="remove_btn"
+                                                @click="removeService(service, mainIndex)" color="danger">
+                                            </VIconButton>
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
 
-                                                <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
-                                                    :id="service.service.name" :key="service.service.id">
-                                                    <span class="label custom-label" v-if="service.checked">
-                                                        {{ t('contractor.form.service_amount', { service: service.service.name }) }}
-                                                    </span>
-                                                    <div v-if="service.checked" class="control">
-                                                        <div class="input">
-                                                            {{
-                                                                employeeForm.data.payment_percentage != undefined ? (service.price *
-                                                                    (employeeForm.data.payment_percentage / 100)) : 0
-                                                            }}
-
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div> -->
-
-
-                            <!-- <div class="column is-6">
-                                                                                                            <VField :key="service.service.id" v-for="service in servicesChecked"
-                                                                                                                :id="`service_amount_${service.service.id}`">
-
-                                                                                                                <VLabel class=" is-flex-wrap-nowrap" v-if="service.checked">
-                                                                                                                    Contractor's {{
-                                                                                    service.service.name
-                                                                            }}
-                                                                                                                    Service amount:
-                                                                                                                </VLabel>
-                                                                                                                <VControl v-if="service.checked" icon="feather:chevrons-right">
-                                                                                                                    <VInput disabled type="number"
-                                                                                                                        :value="(service.price * (contractorForm.data.payment_percentage / 100 ?? 0))"
-                                                                                                                        v-bind="service.price" v-model="service.contractor_service_amount"
-                                                                                                                        :key="service.service.id" />
-
-                                                                                                                </VControl>
-                                                                                                                <ErrorMessage class="help is-danger"
-                                                                                                                    :name="`service_amount_${service.service.id}`" />
-
-                                                                                                            </VField>
-                                                                                                        </div> -->
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -250,5 +253,10 @@ const onSubmitAdd = handleSubmit(async () => {
 
 .input {
     height: 38px;
+}
+
+.service-label {
+    font-family: var(--font);
+    font-weight: 600;
 }
 </style>

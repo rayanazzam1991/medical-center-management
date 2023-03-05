@@ -51,7 +51,7 @@
     "number": {
       "price": "Please enter a valid price",
       "invalid_type_error": "Please enter a valid number",
-      "payment_percentage": "Please enter a number from 1-100",
+      "payment_percentage": "Please enter a number from 0-100",
       "phone_number": "Please enter a valid phone number",
       "larger_thar_zero": "Must be greater than zero"
     },
@@ -252,6 +252,9 @@
       "accounting": {
         "new_usd_currency_rate": "USD Currency rate must be a number greater than or equal 1",
         "change_account_currency": "Currency rate must be greater than or equal 1 when selecting non main currency"
+      },
+      "employee": {
+        "basic_salary_payment_percentage_required": "Basic Salary or Payment Percentage is required"
       }
     },
     "file": {

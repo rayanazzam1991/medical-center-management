@@ -57,7 +57,7 @@
     "number": {
       "price": "يرجى ادخال سعر صالح",
       "invalid_type_error": "يرجى ادخال رقم صالح",
-      "payment_percentage": "يرجى ادخال رقم من 1-100",
+      "payment_percentage": "يرجى ادخال رقم من 0-100",
       "phone_number": "يرجى ادخال رقم هاتف صالح",
       "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
     },
@@ -270,6 +270,11 @@
       "accounting": {
         "new_usd_currency_rate": "سعر الصرف يجب أن يكون رقم أكبر أو يساوي الواحد",
         "change_account_currency": "يجب أن يكون سعر العملة أكبر أو يساوي الواحد عند اختيار عملة غير العملة الرئيسية"
+      },
+      "employee": {
+        "basic_salary_payment_percentage_required": "أحد الحقلين الراتب الأساسي أو نسبة العملة مطلوب",
+        "services_prices_error": "سعر خدمة الـ{service_name} يجب أن يكون أكبر من الصفر",
+        "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك."
       }
     },
     "file": {
@@ -714,9 +719,11 @@
       "title": "الموظف",
       "tabs": {
         "details": "التفاصيل",
-        "files": "الملفات"
+        "files": "الملفات",
+        "services": "الخدمات"
       },
       "main_details": "المعلومات الأساسية",
+      "services": "الخدمات",
       "more_info": "معلومات إضافية",
       "name": " اسم {title}",
       "starting_date": "تاريخ البدء",
@@ -728,6 +735,7 @@
       "position": "المنصب",
       "phone_number": "رقم الهاتف",
       "basic_salary": "الراتب الأساسي",
+      "payment_percentage": "نسبة العمولة",
       "address": "العنوان",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
@@ -738,8 +746,11 @@
       "upload": "تحميل",
       "employee_status": "حالة الموظف",
       "select_employee_status": "اختيار حالة الموظف",
+      "service_price": "سعر الخدمة",
+      "service_name": "اسم الخدمة",
       "tabs_content_placeholder": {
-        "files": "لا يمتلك الموظف أية ملفات..."
+        "files": "لا يمتلك الموظف أية ملفات...",
+        "services": "لا يمتلك الموظف أية خدمات..."
       }
     },
     "form": {
@@ -770,13 +781,16 @@
       "type": "نوع التوظيف",
       "payment_percentage": "نسبة العمولة",
       "submit_and_next_button": "تأكيد والانتقال للتالي",
-      "no_services_placeholder": "لا يوجد خدمات...",
-      "service_price": "سعر {service}:",
+      "no_services_placeholder": "لا يوجد خدمات في النظام...",
+      "service_price": "سعر الخدمة",
       "edit_step_2_title": "تعديل خدمات الموظف",
       "choose_services": "اختيار الخدمات:",
       "submit_and_finish_button": "تأكيد وإنهاء",
       "skip_button": "تخطي",
-      "skip_and_finish_button": "تخطي وإنهاء"
+      "skip_and_finish_button": "تخطي وإنهاء",
+      "add_new_service": "إضافة خدمة جديدة",
+      "select_service": "اختيار خدمة",
+      "no_service_added_placeholder": "لا يوجد خدمات مقدمة من قبل الموظف"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",

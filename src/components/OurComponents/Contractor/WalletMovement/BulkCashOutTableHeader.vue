@@ -23,7 +23,6 @@ export default defineComponent({
         const title = ref('')
         const disabled =ref(false)
         disabled.value = props.enable_button
-        console.log(disabled.value)
         title.value = props.title
         let submited = false
         const onSubmit = () => {

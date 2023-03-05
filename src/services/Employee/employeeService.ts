@@ -33,7 +33,10 @@ export async function addEmployee(
 export async function updateEmployee(
   employee_id: number,
   employeeData: UpdateEmployee,
-  userData: CreateUpdateUser
+  userData: CreateUpdateUser,
+  employeeServices: Array<CreateUpdateServicesHelper>
+
+
 ) {
   const newEmployeeData: UpdateEmployee = {
     starting_date: employeeData.starting_date,
@@ -43,7 +46,8 @@ export async function updateEmployee(
     position_id: employeeData.position_id,
     user: userData,
     payment_percentage: employeeData.payment_percentage,
-    type: employeeData.type
+    type: employeeData.type,
+    services: employeeServices
   }
   const employeeResponse = useEmployee()
   var employee: Employee =

@@ -75,13 +75,19 @@ useHead({
 const employeeStore = useEmployee()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Files'
+    activeTab?: 'Details' | 'Services' | 'Files'
   }>(),
   {
     activeTab: 'Details',
   }
 )
 const tab = ref(props.activeTab)
+if (route.query.tab === 'Details'
+  || route.query.tab === 'Services'
+  || route.query.tab === 'Files') {
+  tab.value = route.query.tab
+}
+
 
 const statusesList = ref<UserStatus[]>([])
 onMounted(async () => {
@@ -105,6 +111,7 @@ const getCurrentEmployee = async () => {
 const fetchMaxEmployeeNumber = async () => {
   const { result } = await getMaxEmployeeNumber()
   maxEmployeeNumber.value = result
+  newEmployeeNumber.value = currentEmployee.value.employee_number
 }
 const onOpen = () => {
   changeStatusPopup.value = !changeStatusPopup.value
@@ -116,7 +123,7 @@ const changestatusUser = async () => {
   userForm.user_status_id = userData.user.status?.id
   await changeUserStatus(userForm)
   getCurrentEmployee()
-  // @ts-ignore
+
   notif.dismissAll()
   await sleep(200)
   notif.success(t('toast.success.edit'))
@@ -124,6 +131,13 @@ const changestatusUser = async () => {
 }
 const fetchEmployee = async () => {
   const { employee } = await getEmployee(employeeId.value)
+  employeeForm.employeeServicesForm.splice(0, employeeForm.employeeServicesForm.length)
+  employeeForm.originalServices.splice(0, employeeForm.originalServices.length)
+
+  employee.services.forEach((service) => {
+    employeeForm.employeeServicesForm.push({ service_id: service.service?.id ?? 0, price: service.price })
+    employeeForm.originalServices.push({ service_id: service.service?.id ?? 0, price: service.price })
+  });
   employeeForm.userForm.id = employee.user.id
   employeeForm.userForm.first_name = employee.user.first_name
   employeeForm.userForm.last_name = employee.user.last_name
@@ -139,7 +153,15 @@ const fetchEmployee = async () => {
   employeeForm.dataUpdate.end_date = employee?.end_date
   employeeForm.dataUpdate.nationality_id = employee.nationality.id
   employeeForm.dataUpdate.position_id = employee.position.id
+  employeeForm.dataUpdate.type = employee.type
   employeeForm.dataUpdate.id = employeeId.value
+  employeeForm.dataUpdate.payment_percentage = employee.payment_percentage
+}
+const onClickEditServices = async () => {
+  await fetchEmployee()
+  router.push({
+    path: `/employee-edit/${employeeId.value}/services`
+  })
 }
 
 const onClickEditMainInfo = async () => {
@@ -195,7 +217,7 @@ const UploadFile = async () => {
   const { success, message, media } = await addEmployeeFile(employeeId.value, formData)
 
   if (success) {
-    // @ts-ignore
+
     await sleep(200)
 
     notif.success(t('toast.success.add'))
@@ -207,7 +229,7 @@ const UploadFile = async () => {
     uploadLoading.value = false
     return true
   } else {
-    // @ts-ignore
+
     await sleep(200)
     filesToUpload.value = undefined
     uploadLoading.value = false
@@ -224,7 +246,7 @@ const removefile = async () => {
   const { message, success } = await deleteFile(deleteFileId.value)
 
   if (success) {
-    // @ts-ignore
+
     await sleep(200)
 
     notif.success(t('toast.success.remove'))
@@ -240,7 +262,7 @@ const removefile = async () => {
   } else {
     deleteLoading.value = false
 
-    // @ts-ignore
+
     await sleep(200)
 
     notif.error(message)
@@ -252,7 +274,7 @@ const editProfilePicture = async () => {
 }
 const onEditProfilePicture = async (error: any, fileInfo: any) => {
   if (error) {
-    // @ts-ignore
+
     await sleep(200)
 
     notif.error(`${error.main}: ${error.sub}`)
@@ -311,7 +333,7 @@ const UploadProfilePicture = async () => {
     )
 
     if (success) {
-      // @ts-ignore
+
       await sleep(200)
 
       notif.success(t('toast.success.edit'))
@@ -324,7 +346,7 @@ const UploadProfilePicture = async () => {
       profilePictureToUpload.value = undefined
       uploadLoading.value = false
     } else {
-      // @ts-ignore
+
       await sleep(200)
 
       notif.error(message)
@@ -335,7 +357,7 @@ const UploadProfilePicture = async () => {
       updateProfilePicturePopup.value = false
     }
   } else {
-    // @ts-ignore
+
     await sleep(200)
     uploadLoading.value = false
 
@@ -370,6 +392,10 @@ const RemoveProfilePicture = async () => {
 const validationSchema = employeeNumberEditValidationSchema
 const { handleSubmit } = useForm({
   validationSchema,
+  initialValues: {
+    employee_number: newEmployeeNumber.value
+  }
+
 })
 const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
   if (
@@ -388,17 +414,17 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     currentEmployee.value.employee_number = newEmployeeNumber.value
     editEmployeeNumberTrigger.value = false
     await fetchMaxEmployeeNumber()
-    // @ts-ignore
+
     notif.dismissAll()
     await sleep(200)
 
-    // @ts-ignore
+
     notif.success(t('toast.success.edit'))
     await sleep(500)
   } else {
     await sleep(200)
 
-    // @ts-ignore
+
     notif.error(message)
   }
   updateLoading.value = false
@@ -435,7 +461,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-slider">
+      <div class="tabs-wrapper is-triple-slider">
         <div :hidden="loading" class="tabs-inner">
           <div class="tabs tabs-width">
             <ul>
@@ -444,6 +470,12 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                   t('employee.details.tabs.details')
                 }}</span></a>
               </li>
+              <li :class="[tab === 'Services' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
+                  t('employee.details.tabs.services')
+                }}</span></a>
+              </li>
+
               <li :class="[tab === 'Files' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
                   t('employee.details.tabs.files')
@@ -493,6 +525,11 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <p>{{ currentEmployee.user.birth_date }}.</p>
                   </div>
                   <div class="project-feature">
+                    <i class="fas fa-id-badge" aria-hidden="true"></i>
+                    <h4>{{ t('employee.details.position') }}</h4>
+                    <p>{{ currentEmployee.position.name }}.</p>
+                  </div>
+                  <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
                     <h4>{{ t('employee.details.phone_number') }}</h4>
                     <p>{{ currentEmployee.user.phone_number }}.</p>
@@ -500,7 +537,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                 </div>
 
                 <div class="project-files">
-                  <h4>More Info</h4>
+                  <h4>{{ t('employee.details.more_info') }}</h4>
                   <div class="columns is-multiline">
                     <div class="column is-6">
                       <div class="file-box">
@@ -545,9 +582,10 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{ t('employee.details.position') }}</span>
+                          <span>{{ t('employee.details.basic_salary') }}{{ addParenthesisToString(mainCurrency.name)
+                          }}</span>
                           <span>
-                            {{ currentEmployee.position?.name }}
+                            {{ currentEmployee.basic_salary }}
                           </span>
                         </div>
                       </div>
@@ -555,10 +593,9 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-6">
                       <div class="file-box">
                         <div class="meta">
-                          <span>{{ t('employee.details.basic_salary') }}{{ addParenthesisToString(mainCurrency.name)
-                          }}</span>
+                          <span>{{ t('employee.details.payment_percentage') }}</span>
                           <span>
-                            {{ currentEmployee.basic_salary }}
+                            {{ currentEmployee.payment_percentage }}%
                           </span>
                         </div>
                       </div>
@@ -586,16 +623,11 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <div class="column is-12">
                       <div class="file-box">
                         <div class="meta full-width">
-                          <div class="
-                                is-justify-content-space-between
-                                is-align-items-flex-start
-                                is-flex
-                                mt-2
-                              ">
+                          <div class="is-justify-content-space-between is-align-items-flex-start is-flex mt-2 ">
                             <div class="columns is-multiline">
                               <span class="column is-12 pb-0" :class="editEmployeeNumberTrigger ? 'required' : ''">{{
                                 t('employee.details.employee_number') }}</span>
-                              <span v-if="!editEmployeeNumberTrigger" class="column py-0">
+                              <span v-if="!editEmployeeNumberTrigger" class="column py-2">
                                 {{ currentEmployee.employee_number ?? 'None' }}
                               </span>
                               <div v-else class="column is-12 mb-0 pb-0">
@@ -617,12 +649,12 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                               </div>
                             </div>
                             <div>
-                              <VIconButton v-if="!editEmployeeNumberTrigger" class="mb-3" icon="feather:edit-3"
+                              <VIconButton v-if="!editEmployeeNumberTrigger" class="mb-3 mx-2" icon="feather:edit-3"
                                 tabindex="0" @click="editEmployeeNumberTrigger = true" />
-                              <VIconButton :loading="updateLoading" v-if="editEmployeeNumberTrigger" class="mr-2"
+                              <VIconButton :loading="updateLoading" v-if="editEmployeeNumberTrigger" class="mx-2"
                                 icon="feather:x" tabindex="0" @click="editEmployeeNumberTrigger = false" />
                               <VIconButton :loading="updateLoading" type="submit" v-if="editEmployeeNumberTrigger"
-                                class="mb-3" icon="feather:check-square" color="primary" tabindex="0"
+                                class="mx-2" icon="feather:check-square" color="primary" tabindex="0"
                                 @click="onSubmitEditEmployeeNumber" />
 
                             </div>
@@ -632,6 +664,54 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Services'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <div class="card-head pb-4 border-buttom">
+                  <div class="title-wrap">
+                    <h3>{{ t('employee.details.services') }}</h3>
+                  </div>
+                  <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditServices" />
+                </div>
+                <div v-if="currentEmployee.services.length == 0" class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('employee.details.tabs_content_placeholder.services') }}</h4>
+                  </div>
+                </div>
+
+                <div class="project-files">
+                  <div class="columns is-multiline border-buttom" v-for="service in currentEmployee.services"
+                    :key="service.service.id">
+
+                    <div class="column is-6">
+                      <div class="file-box">
+                        <div class="meta">
+                          <span>{{ t('employee.details.service_name') }}</span>
+                          <span>
+                            {{ service.service.name }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column is-6">
+                      <div class="file-box">
+                        <div class="meta">
+                          <span>{{ t('employee.details.service_price') }}</span>
+                          <span>
+                            {{ service.price }} {{ addParenthesisToString(mainCurrency.name) }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -803,22 +883,26 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-  min-width: 50px;
+  min-width: 350px;
   min-height: 40px;
 
   .is-active {
     min-height: 40px;
+
   }
 }
 
 .tabs-wrapper .tabs li a,
 .tabs-wrapper-alt .tabs li a {
   height: 40px;
+
 }
 
 .tabs li {
-  min-height: 40px !important;
+  min-height: 38px !important;
+
 }
+
 
 .file-link {
   color: var(--primary-grey) !important;

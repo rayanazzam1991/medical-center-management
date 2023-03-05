@@ -155,25 +155,7 @@ const getRoomsByDepartment = async () => {
 
 }
 
-watch(selectedType, (value) => {
-    if (value == EmployeeConsts.TYPE_HYBRID_EMPLOYEE) {
-        enableBasicSalary.value = true
-        enablePaymentPercentage.value = true
-    } else if (value == EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE) {
-        enableBasicSalary.value = false
-        currentEmployee.value.basic_salary = 0
-        enablePaymentPercentage.value = true
-    } else {
-        enablePaymentPercentage.value = false
-        currentEmployee.value.payment_percentage = 0
-        enableBasicSalary.value = true
-
-    }
-})
-
-
 const validationSchema = employeeEditvalidationSchema
-
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
@@ -190,7 +172,6 @@ const { handleSubmit } = useForm({
         end_date: currentEmployee.value.end_date,
         basic_salary: currentEmployee.value.basic_salary,
         nationality_id: currentEmployee.value.nationality_id,
-        type: currentEmployee.value.type,
         payment_percentage: currentEmployee.value.payment_percentage
     },
 })
@@ -200,12 +181,28 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     var employeeData = currentEmployee.value
+    let selectedType
+    if (employeeData.basic_salary == 0) {
+        if (employeeData.payment_percentage == 0) {
+            notif.error(t('toast.error.basic_salary_payment_percentage_required'))
+            return
+        } else {
+            selectedType = EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE
+        }
+    } else {
+        if (employeeData.payment_percentage == 0) {
+            selectedType = EmployeeConsts.TYPE_SALARIED_EMPLOYEE
+        } else {
+            selectedType = EmployeeConsts.TYPE_HYBRID_EMPLOYEE
+        }
+    }
+
     employeeForm.dataUpdate.starting_date = employeeData.starting_date
     employeeForm.dataUpdate.end_date = employeeData.end_date
     employeeForm.dataUpdate.basic_salary = employeeData.basic_salary
     employeeForm.dataUpdate.nationality_id = employeeData.nationality_id
     employeeForm.dataUpdate.payment_percentage = employeeData.payment_percentage
-    employeeForm.dataUpdate.type = selectedType.value
+    employeeForm.dataUpdate.type = selectedType
     employeeForm.userForm.first_name = userData.first_name
     employeeForm.userForm.last_name = userData.last_name
     employeeForm.userForm.password = userData.password
@@ -216,7 +213,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
-    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
+    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm, [])
     if (success) {
         employeeForm.dataUpdate.id = employee.id
         // @ts-ignore
@@ -426,38 +423,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-                                <div class="column is-6">
-                                    <VField id="type">
-                                        <VLabel class="required">{{ t('employee.form.type') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-model="selectedType">
-                                                <VOption>{{ t('employee.form.type') }}</VOption>
-                                                <VOption v-for="employeeType in EmployeeConsts.EMPLOYEE_TYPES"
-                                                    :key="employeeType" :value="employeeType">{{
-                                                        EmployeeConsts.getTypeName(employeeType)
-                                                    }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="type" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                                <div class="column is-6">
-                                    <VField id="user_status_id">
-                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
-                                                <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
-                                                    {{
-                                                        status.name
-                                                    }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="user_status_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -498,7 +463,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     </VField>
                                 </div>
                                 <div class="column is-6">
-                                    <VField id="nationality_id">
+                                    <VField id="position_id">
                                         <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentEmployee" v-model="currentEmployee.position_id">
@@ -511,6 +476,23 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField id="user_status_id">
+                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
+                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
+                                                    {{
+                                                        status.name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="user_status_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
                     </div>

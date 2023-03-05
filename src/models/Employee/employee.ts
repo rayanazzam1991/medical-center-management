@@ -3,6 +3,7 @@ import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { Media, MediaConsts } from "../Others/Media/media"
 import { Nationality, defaultNationality } from "../Others/Nationality/nationality"
 import { defaultPosition, Position } from "../Others/Position/position"
+import { Service } from "../Others/Service/service"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -21,7 +22,8 @@ export interface Employee {
     nationality: Nationality
     position: Position
     payment_percentage: number
-    type: number
+    type: number,
+    services: EmployeeService[]
 }
 export interface CreateEmployee {
     id?: number
@@ -43,7 +45,8 @@ export interface UpdateEmployee {
     nationality_id?: number
     position_id?: number
     type: number
-    payment_percentage: number
+    payment_percentage: number,
+    services: CreateUpdateServicesHelper[]
 }
 export interface EmployeeSearchFilter {
     name?: string
@@ -59,6 +62,10 @@ export interface EmployeeSearchFilter {
     order?: string
     quick_search?: boolean
     is_salaries_related?: boolean
+}
+export interface EmployeeService {
+    service: Service
+    price: number
 }
 export const defaultCreateEmployee: CreateEmployee = {
     id: 0,
@@ -85,7 +92,8 @@ export const defaultUpdateEmployee: UpdateEmployee = {
     position_id: 0,
     basic_salary: 0,
     type: 1,
-    payment_percentage: 1
+    payment_percentage: 1,
+    services: []
 }
 export const defaultEmployee: Employee = {
     id: 0,
@@ -97,7 +105,8 @@ export const defaultEmployee: Employee = {
     user: defaultUser,
     employee_number: undefined,
     payment_percentage: 0,
-    type: 1
+    type: 1,
+    services: []
 }
 export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
 

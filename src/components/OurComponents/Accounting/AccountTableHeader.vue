@@ -47,7 +47,6 @@ export default defineComponent({
         code: searchCode.value,
         per_page: perPage.value
       }
-      console.log(searchFilter.value)
       context.emit('search', searchFilter.value)
 
     }

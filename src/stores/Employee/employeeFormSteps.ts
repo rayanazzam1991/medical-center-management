@@ -32,6 +32,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   const dataUpdate = ref<UpdateEmployee>(defaultUpdateEmployee)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
   const employeeServicesForm = ref<Array<CreateUpdateServicesHelper>>([])
+  const originalServices = ref<Array<CreateUpdateServicesHelper>>([])
 
   const stepTitle = computed(() => {
     switch (step.value) {
@@ -87,6 +88,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     dataUpdate.value.user.room_id = 0
     dataUpdate.value.user.user_status_id = 0
     employeeServicesForm.value.splice(0, employeeServicesForm.value.length)
+    originalServices.value.splice(0, originalServices.value.length)
   }
 
 
@@ -103,6 +105,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     dataUpdate,
     userForm,
     employeeServicesForm,
+    originalServices,
     setLoading,
     setStep,
     getStep,

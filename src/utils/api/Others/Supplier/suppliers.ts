@@ -7,8 +7,6 @@ export async function addSupplierApi(
   api: AxiosInstance,
   supplier: CreateSupplier
 ): Promise<{ response: CustomResponseSingle }> {
-  console.log(typeof (supplier.city_id))
-
   const { data: response, headers } = await api.post(`supplier`, supplier)
   return { response }
 }

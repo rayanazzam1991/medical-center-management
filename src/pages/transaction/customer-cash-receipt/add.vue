@@ -151,7 +151,6 @@ watch(currencyRate, (value) => {
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
 
     if (!clientAccount.currency?.is_main) {
-        console.log(clientAccount.currency_rate)
         currencyDifferencesAmount.value = cashAmount.value - (cashAmount.value * clientAccount.currency_rate / value)
     } else {
         currencyDifferencesAmount.value = 0

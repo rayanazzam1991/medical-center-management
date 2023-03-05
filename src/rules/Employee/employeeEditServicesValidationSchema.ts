@@ -14,19 +14,17 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 const employeeEditServicesValidationSchema = toFormValidator(
     // @ts-ignore
     zod.record(
-        zod.string().startsWith('service_price_'),
-        zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ invalid_type_error: i18n.global.t('validation.number.invalid_type_error'), required_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.number.price')),
-
-            )))
-
+        zod.string().startsWith('service_id'),
+        zod.preprocess(
+            (input) => {
+                const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                return processed.success ? processed.data : input;
+            },
+            zod
+                .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+                .min(0, i18n.global.t('validation.number.invalid_type_error')),
+        ),
+    ))
 
 export {
     employeeEditServicesValidationSchema

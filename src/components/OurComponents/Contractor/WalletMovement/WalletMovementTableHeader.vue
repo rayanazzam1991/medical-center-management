@@ -33,8 +33,6 @@ export default defineComponent({
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
-            console.log(value)
-
         }
         const default_per_page = props.default_per_page
         const pagination = props.pagination
