@@ -1,4 +1,4 @@
-import { defaultService, Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
+import { defaultService, Service, ServiceSearchFilter, ServiceWithProvider } from "/@src/models/Others/Service/service"
 import { useService } from "/@src/stores/Others/Service/serviceStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -51,3 +51,13 @@ export async function getServicesList(searchFilter: ServiceSearchFilter) {
     return { success, error_code, message, services, pagination }
 
 }
+export async function getServicesWithProviders() {
+    const serviceResponse = useService()
+    const services: ServiceWithProvider[] = await serviceResponse.getServicesWithProvidersStore() ?? []
+    const pagination: Pagination = serviceResponse.pagination
+    const success: boolean = serviceResponse.success ?? false
+    const error_code: string = serviceResponse.error_code ?? ''
+    const message: string = serviceResponse.message ?? ''
+    return { success, error_code, message, services, pagination }
+
+} 

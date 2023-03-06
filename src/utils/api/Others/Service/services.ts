@@ -42,3 +42,9 @@ export async function getServicesApi(
   })
   return { response }
 }
+export async function getServicesWithProvidersApi(
+  api: AxiosInstance,
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('service/getServicesListWithProviders')
+  return { response }
+}

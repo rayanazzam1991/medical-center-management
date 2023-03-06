@@ -246,7 +246,8 @@
       "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
       "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
-      "transfer": "تم التحويل بنجاح"
+      "transfer": "تم التحويل بنجاح",
+      "add_ticket": "تمت إضافة المتابعة رقم {ticket_id} بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -275,6 +276,13 @@
         "basic_salary_payment_percentage_required": "أحد الحقلين الراتب الأساسي أو نسبة العملة مطلوب",
         "services_prices_error": "سعر خدمة الـ{service_name} يجب أن يكون أكبر من الصفر",
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك."
+      },
+      "ticket": {
+        "service_is_required": "يرجى تحديد الخدمات المطلوبة",
+        "no_services_error": "يرجى تحديد خدمة على الأقل",
+        "service_provider_is_required": "مخدم الخدمة {service_name} مطلوب",
+        "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
+        "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر"
       }
     },
     "file": {
@@ -2133,5 +2141,37 @@
     "salaried": "موظف براتب",
     "commission_based": "موظف بعمولة",
     "hybrid": "موظف براتب وعمولة"
+  },
+  "ticket_statuses": {
+    "waiting": "انتظار",
+    "serving": "قيد التخديم",
+    "services_are_done": "جميع الخدمات مخدمة",
+    "closed": "مغلق"
+  },
+  "ticket_service_statuses": {
+    "served": "تم التخديم",
+    "not_served": "لم يتم التخديم"
+  },
+  "ticket": {
+    "form": {
+      "page_title": "المتابعات",
+      "form_header": "{type} متابعة",
+      "add_ticket_title": "إضافة متابعة",
+      "customer": "اسم الزبون",
+      "select_customer": "تحديد الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "cash_account": "حساب النقد",
+      "select_cash_account": "تحديد حساب النقد",
+      "currency": "العملة",
+      "select_currency": "تحديد العملة",
+      "currency_rate": "سعر الصرف",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "services": "الخدمات المطلوبة",
+      "select_service": "تحديد الخدمة",
+      "select_provider": "تحديد المخدم",
+      "sell_price": "سعر المبيع",
+      "add_new_service": "إضافة خدمة جديدة"
+    }
   }
 }
