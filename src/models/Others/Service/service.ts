@@ -40,6 +40,11 @@ export interface CreateServiceItem {
   item_id?: number
   quantity: number
 }
+export interface CreateServiceItemHelper {
+  item_id?: number
+  quantity: number
+  isNew: boolean
+}
 export interface ServiceSearchFilter {
   name?: string
   status?: number
