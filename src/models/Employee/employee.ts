@@ -1,7 +1,16 @@
+import messages from "@intlify/vite-plugin-vue-i18n/messages"
+import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { Media, MediaConsts } from "../Others/Media/media"
 import { Nationality, defaultNationality } from "../Others/Nationality/nationality"
 import { defaultPosition, Position } from "../Others/Position/position"
+import { Service } from "../Others/Service/service"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 
 export interface Employee {
     id?: number
@@ -12,6 +21,9 @@ export interface Employee {
     user: User
     nationality: Nationality
     position: Position
+    payment_percentage: number
+    type: number,
+    services: EmployeeService[]
 }
 export interface CreateEmployee {
     id?: number
@@ -21,6 +33,8 @@ export interface CreateEmployee {
     basic_salary?: number
     nationality_id?: number
     position_id?: number
+    type: number
+    payment_percentage: number
 }
 export interface UpdateEmployee {
     id?: number
@@ -30,7 +44,9 @@ export interface UpdateEmployee {
     basic_salary?: number
     nationality_id?: number
     position_id?: number
-
+    type: number
+    payment_percentage: number,
+    services: CreateUpdateServicesHelper[]
 }
 export interface EmployeeSearchFilter {
     name?: string
@@ -45,6 +61,11 @@ export interface EmployeeSearchFilter {
     order_by?: string
     order?: string
     quick_search?: boolean
+    is_salaries_related?: boolean
+}
+export interface EmployeeService {
+    service: Service
+    price: number
 }
 export const defaultCreateEmployee: CreateEmployee = {
     id: 0,
@@ -54,7 +75,14 @@ export const defaultCreateEmployee: CreateEmployee = {
     nationality_id: 0,
     position_id: 0,
     basic_salary: 0,
+    type: 1,
+    payment_percentage: 0
 }
+export interface CreateUpdateServicesHelper {
+    service_id: number
+    price: number
+}
+
 export const defaultUpdateEmployee: UpdateEmployee = {
     id: 0,
     starting_date: '',
@@ -63,6 +91,9 @@ export const defaultUpdateEmployee: UpdateEmployee = {
     nationality_id: 0,
     position_id: 0,
     basic_salary: 0,
+    type: 1,
+    payment_percentage: 1,
+    services: []
 }
 export const defaultEmployee: Employee = {
     id: 0,
@@ -73,6 +104,9 @@ export const defaultEmployee: Employee = {
     basic_salary: 0,
     user: defaultUser,
     employee_number: undefined,
+    payment_percentage: 0,
+    type: 1,
+    services: []
 }
 export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
 
@@ -82,7 +116,7 @@ export const defaultEmployeeProfilePic: Media = {
     model_type: MediaConsts.EMPLOYEE_MODEL_ROUTE,
     relative_path: undefined,
     is_featured: '1',
-    uploaded_by:undefined
+    uploaded_by: undefined
 
 }
 export const defaultEmployeeFiles: Media = {
@@ -95,7 +129,23 @@ export const defaultEmployeeFiles: Media = {
     mime_type: undefined,
     size: undefined,
     created_at: undefined,
-    uploaded_by:undefined
-
-
+    uploaded_by: undefined
 }
+class EmployeeConsts {
+    static readonly TYPE_SALARIED_EMPLOYEE = 1;
+    static readonly TYPE_COMMISSION_BASED_EMPLOYEE = 2;
+    static readonly TYPE_HYBRID_EMPLOYEE = 3;
+
+    static readonly EMPLOYEE_TYPES = [this.TYPE_SALARIED_EMPLOYEE, this.TYPE_COMMISSION_BASED_EMPLOYEE, this.TYPE_HYBRID_EMPLOYEE]
+
+    public static getTypeName(type: number) {
+        if (type == this.TYPE_SALARIED_EMPLOYEE)
+            return i18n.global.t('employee_types.salaried')
+        if (type == this.TYPE_COMMISSION_BASED_EMPLOYEE)
+            return i18n.global.t('employee_types.commission_based')
+        if (type == this.TYPE_HYBRID_EMPLOYEE)
+            return i18n.global.t('employee_types.hybrid')
+        else return '';
+    }
+}
+export { EmployeeConsts }

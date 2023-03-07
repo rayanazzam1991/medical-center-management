@@ -95,7 +95,6 @@ const getItemBySubCategroy = async () => {
     let itemSearchFilter = {} as ItemSearchFilter
     itemSearchFilter.status = BaseConsts.ACTIVE
     itemSearchFilter.is_for_sale = ItemConsts.IS_NOT_FORE_SALE
-    console.log(itemSearchFilter)
     itemSearchFilter.per_page = 500
     const { items } = await getItemsList(itemSearchFilter)
     allItemsList.value = items

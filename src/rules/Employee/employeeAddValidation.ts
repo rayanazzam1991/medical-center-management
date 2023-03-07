@@ -114,7 +114,7 @@ const employeeAddvalidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
         nationality_id: zod
             .preprocess(
@@ -136,7 +136,17 @@ const employeeAddvalidationSchema = toFormValidator(zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
                     .min(1, i18n.global.t('validation.required')),
             ),
-
+        payment_percentage:
+            zod
+                .preprocess(
+                    (input) => {
+                        const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                        return processed.success ? processed.data : input;
+                    },
+                    zod
+                        .number({ invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+                        .min(0, i18n.global.t('validation.number.payment_percentage')).max(100, i18n.global.t('validation.number.payment_percentage')),
+                ),
     }));
 
 export {

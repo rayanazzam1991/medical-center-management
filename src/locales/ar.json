@@ -57,7 +57,7 @@
     "number": {
       "price": "يرجى ادخال سعر صالح",
       "invalid_type_error": "يرجى ادخال رقم صالح",
-      "payment_percentage": "يرجى ادخال رقم من 1-100",
+      "payment_percentage": "يرجى ادخال رقم من 0-100",
       "phone_number": "يرجى ادخال رقم هاتف صالح",
       "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
     },
@@ -246,7 +246,9 @@
       "salaries_to_onhold": "تم تحويل الراوتب إلى صندوق الأمانات بنجاح",
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
       "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
-      "transfer": "تم التحويل بنجاح"
+      "transfer": "تم التحويل بنجاح",
+      "add_ticket": "تمت إضافة المتابعة رقم {ticket_id} بنجاح",
+      "update_ticket": "تم تعديل المتابعة رقم {ticket_id} بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -270,6 +272,18 @@
       "accounting": {
         "new_usd_currency_rate": "سعر الصرف يجب أن يكون رقم أكبر أو يساوي الواحد",
         "change_account_currency": "يجب أن يكون سعر العملة أكبر أو يساوي الواحد عند اختيار عملة غير العملة الرئيسية"
+      },
+      "employee": {
+        "basic_salary_payment_percentage_required": "أحد الحقلين الراتب الأساسي أو نسبة العملة مطلوب",
+        "services_prices_error": "سعر خدمة الـ{service_name} يجب أن يكون أكبر من الصفر",
+        "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك."
+      },
+      "ticket": {
+        "service_is_required": "يرجى تحديد الخدمات المطلوبة",
+        "no_services_error": "يرجى تحديد خدمة على الأقل",
+        "service_provider_is_required": "مخدم الخدمة {service_name} مطلوب",
+        "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
+        "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر"
       }
     },
     "file": {
@@ -469,9 +483,7 @@
       "page_title": "الأخصّائي",
       "step_1_title": "معلومات الأخصّائي الأساسية",
       "step_1_abbr_title": "المعلومات الأساسية",
-      "step_2_abbr_title": "الخدمات",
       "step_1_subtitle": "الخطوة 1: معلومات الأخصّائي الأساسية",
-      "step_2_subtitle": "الخطوة 2: خدمات الأخصّائي",
       "back_button": "الرجوع إلى واجهة الأخصّائي",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
@@ -716,9 +728,11 @@
       "title": "الموظف",
       "tabs": {
         "details": "التفاصيل",
-        "files": "الملفات"
+        "files": "الملفات",
+        "services": "الخدمات"
       },
       "main_details": "المعلومات الأساسية",
+      "services": "الخدمات",
       "more_info": "معلومات إضافية",
       "name": " اسم {title}",
       "starting_date": "تاريخ البدء",
@@ -730,6 +744,7 @@
       "position": "المنصب",
       "phone_number": "رقم الهاتف",
       "basic_salary": "الراتب الأساسي",
+      "payment_percentage": "نسبة العمولة",
       "address": "العنوان",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
@@ -740,8 +755,11 @@
       "upload": "تحميل",
       "employee_status": "حالة الموظف",
       "select_employee_status": "اختيار حالة الموظف",
+      "service_price": "سعر الخدمة",
+      "service_name": "اسم الخدمة",
       "tabs_content_placeholder": {
-        "files": "لا يمتلك الموظف أية ملفات..."
+        "files": "لا يمتلك الموظف أية ملفات...",
+        "services": "لا يمتلك الموظف أية خدمات..."
       }
     },
     "form": {
@@ -749,6 +767,8 @@
       "step_1_title": "المعلومات الرئيسية للموظف",
       "step_1_subtitle": "Step 1: المعلومات الرئيسية للموظف",
       "step_1_abbr_title": "المعلومات الرئيسية",
+      "step_2_abbr_title": "الخدمات",
+      "step_2_subtitle": "الخطوة 2: خدمات الموظف",
       "back_button": "الرجوع إلى واجهة الموظفين",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
@@ -766,7 +786,20 @@
       "position": "المنصب",
       "status": "الحالة",
       "edit_step_1_title": "تعديل المعلومات الرئيسية للموظف",
-      "edit_submit": "تأكيد"
+      "edit_submit": "تأكيد",
+      "type": "نوع التوظيف",
+      "payment_percentage": "نسبة العمولة",
+      "submit_and_next_button": "تأكيد والانتقال للتالي",
+      "no_services_placeholder": "لا يوجد خدمات في النظام...",
+      "service_price": "سعر الخدمة",
+      "edit_step_2_title": "تعديل خدمات الموظف",
+      "choose_services": "اختيار الخدمات:",
+      "submit_and_finish_button": "تأكيد وإنهاء",
+      "skip_button": "تخطي",
+      "skip_and_finish_button": "تخطي وإنهاء",
+      "add_new_service": "إضافة خدمة جديدة",
+      "select_service": "اختيار خدمة",
+      "no_service_added_placeholder": "لا يوجد خدمات مقدمة من قبل الموظف"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
@@ -2103,6 +2136,44 @@
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
       "note": "ملاحظات"
+    }
+  },
+  "employee_types": {
+    "salaried": "موظف براتب",
+    "commission_based": "موظف بعمولة",
+    "hybrid": "موظف براتب وعمولة"
+  },
+  "ticket_statuses": {
+    "waiting": "انتظار",
+    "serving": "قيد التخديم",
+    "services_are_done": "جميع الخدمات مخدمة",
+    "closed": "مغلق"
+  },
+  "ticket_service_statuses": {
+    "served": "تم التخديم",
+    "not_served": "لم يتم التخديم"
+  },
+  "ticket": {
+    "form": {
+      "page_title": "المتابعات",
+      "add_form_header": "إضافة متابعة",
+      "edit_form_header": "تعديل المتابعة رقم #{ticket_id}",
+      "add_ticket_title": "إضافة متابعة",
+      "customer": "اسم الزبون",
+      "select_customer": "تحديد الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "cash_account": "حساب النقد",
+      "select_cash_account": "تحديد حساب النقد",
+      "currency": "العملة",
+      "select_currency": "تحديد العملة",
+      "currency_rate": "سعر الصرف",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "services": "الخدمات المطلوبة",
+      "select_service": "تحديد الخدمة",
+      "select_provider": "تحديد المخدم",
+      "sell_price": "سعر المبيع",
+      "add_new_service": "إضافة خدمة جديدة"
     }
   }
 }

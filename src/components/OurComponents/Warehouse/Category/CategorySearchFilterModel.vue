@@ -63,7 +63,6 @@ export default defineComponent({
             const allCategoriesList = ref<Category[]>([])
 
             allCategoriesList.value = props.data!
-            console.log("allCategoriesList",allCategoriesList.value)
             mainCategoriesList.value = allCategoriesList.value.filter((category) => category.parent === null)
         // onMounted(async () => {
         //     let mainCategorySearchFilter = {} as CategorySearchFilter

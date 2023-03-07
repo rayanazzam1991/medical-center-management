@@ -32,7 +32,6 @@ export function getRecordsData(values: RecordAccountAmountDetail[], title: strin
   let totalDebitCurrenciesDifferenceAmount = 0
   let totalCurrenciesDifferenceAmount = 0
   const currenciesDifferenceAccount = accountList.find((account) => account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE)
-  console.log(currenciesDifferenceAccount?.name)
 
   values.forEach((entry) => {
     const account = accountList.find((account) => account.id == entry.account_id) ?? defaultAccount
