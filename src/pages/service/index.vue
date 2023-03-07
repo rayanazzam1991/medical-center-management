@@ -26,9 +26,21 @@ const router = useRouter()
 const serviceStore = useService()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const quantityItem = ref(0)
+const totalAQuantityService = ref(0)
 onMounted(async () => {
   const { services, pagination } = await getServicesList(searchFilter.value)
   servicesList.value = services
+  servicesList.value.forEach(element => {
+    element.service_items.forEach(element2 => {
+      quantityItem.value += element2.quantity
+      //quantityCount[element.id] += element2.quantity
+      // element.quantity= quantityCount.value
+
+    });
+    totalAQuantityService.value = quantityItem.value
+    console.log(totalAQuantityService.value)
+  });
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
@@ -121,6 +133,36 @@ const columns = {
         }
       ),
 
+  },
+  has_item: {
+    align: 'center',
+    label: t('service.table.columns.hasItem'),
+    renderRow: (row: any) =>
+      h(
+        VTag,
+        {
+          rounded: true,
+          color:
+            row?.has_item === ServiceConsts.IS_HAS_ITEM
+              ? 'warning'
+              : row?.has_item === ServiceConsts.IS_NOT_HAS_ITEM
+                ? 'info'
+                : undefined,
+        },
+        {
+          default() {
+            return ServiceConsts.showHasItem(row?.has_item)
+          },
+        }
+      ),
+
+  },
+  quantity: {
+    align: 'center',
+    sortable: true,
+    label: t('service.table.columns.quantity'),
+    renderRow: (row: any) =>
+      h('span', row?.totalAQuantityService)
   },
   actions: {
     align: 'center',

@@ -18,7 +18,7 @@
   "i18n-ally.localesPaths": "src/locales",
   "stylelint.validate": ["scss", "vue"],
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "Vue.volar"
   },
   "i18n-ally.keystyle": "nested",
   "[json]": {

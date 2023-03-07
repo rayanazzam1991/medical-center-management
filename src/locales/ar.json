@@ -270,6 +270,9 @@
       "accounting": {
         "new_usd_currency_rate": "سعر الصرف يجب أن يكون رقم أكبر أو يساوي الواحد",
         "change_account_currency": "يجب أن يكون سعر العملة أكبر أو يساوي الواحد عند اختيار عملة غير العملة الرئيسية"
+      },
+      "item": {
+        "item_service_is_duplicated": "يوجد بعض المواد المكررة"
       }
     },
     "file": {
@@ -1101,7 +1104,9 @@
         "duration": "المدّة",
         "price": "السعر",
         "status": "الحالة",
-        "actions": "الاجراءات"
+        "actions": "الاجراءات",
+        "hasItem": "يحتوي مواد",
+        "quantity": "كميًة المادة"
       },
       "modal_title": "إزالة خدمة"
     },
@@ -1111,7 +1116,10 @@
       "price": "سعر الخدمة",
       "description": "توصيف الخدمة",
       "estimated": "المدّة المقدرة",
-      "status": "حالة الخدمة"
+      "status": "حالة الخدمة",
+      "hasItem": "يحتوي مواد",
+      "nothasItem": "لا يحتوي مواد",
+      "listItems": "قائمة المواد"
     },
     "form": {
       "page_title": "الخدمات",
@@ -1122,7 +1130,14 @@
       "desciption": "التوصيف",
       "price": "السعر",
       "duration": "المدّة",
-      "status": "الحالة"
+      "status": "الحالة",
+      "hasItem": "يحتوي مواد",
+      "donthasItem": "لا يحتوي مواد",
+      "choose_item": "اختر مادة",
+      "quantity": "الكميًة",
+      "select_item": "مادة",
+      "yes": "نعم",
+      "no": "لا"
     },
     "search_filter": {
       "title": "تصفية معلومات الخدمة",

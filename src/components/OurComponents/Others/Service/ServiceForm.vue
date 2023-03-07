@@ -10,10 +10,10 @@ import sleep from '/@src/utils/sleep';
 import { useService } from '/@src/stores/Others/Service/serviceStore';
 import { useI18n } from 'vue-i18n';
 import { Notyf } from 'notyf';
-import { Item, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
+import { defaultItem, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
+import { ServiceItem } from '/@src/models/Others/Service/service';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
-import { itemvalidationSchema } from '/@src/rules/Warehouse/Item/itemValidation';
-
+import { Item } from "/@src/models/Warehouse/Item/item"
 
 export default defineComponent({
   props: {
@@ -41,6 +41,7 @@ export default defineComponent({
     const backRoute = "/service";
     const currentService = ref(defaultService);
     const serviceId = ref(0);
+    const serviceItems = ref<ServiceItem[]>([])
     const itemsList = ref<Item[]>([])
     const itemId = ref<number>(0)
     const hasItem = ref(false)
@@ -54,6 +55,7 @@ export default defineComponent({
         currentService.value.description = undefined
         currentService.value.service_price = undefined
         currentService.value.duration_minutes = undefined
+        currentService.value.has_item = false
         return
       }
 
@@ -61,18 +63,23 @@ export default defineComponent({
       currentService.value = service != undefined ? service : defaultService;
     };
     onMounted(async () => {
+      serviceItems.value.push({ item_id: 0, quantity: 0 })
+      setAccountValue()
       let itemSearchFilter = {
         is_for_sale: 1
       } as ItemSearchFilter
       const { items } = await getItemsList(itemSearchFilter)
       itemsList.value = items
-      // itemvalidationSchema.value
     });
     onMounted(() => {
       getCurrentService();
     });
     const validationSchema = servicevalidationSchema
-    const { handleSubmit } = useForm({
+    const addItem = (item: ServiceItem) => {
+      serviceItems.value?.push(item)
+    }
+
+    const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
       initialValues: formType.value == "Edit" ? {
         name: currentService.value.name ?? "",
@@ -80,13 +87,15 @@ export default defineComponent({
         description: currentService.value.description ?? undefined,
         duration_minutes: currentService.value.duration_minutes ?? undefined,
         service_price: currentService.value.service_price ?? undefined,
+        hasItem: currentService.value.has_item ?? false
+
       } : {
         name: '',
         status: 1,
         description: '',
         duration_minutes: '',
         service_price: '',
-
+        hasItem: false
       },
     });
     const onSubmit = async (method: String) => {
@@ -99,11 +108,52 @@ export default defineComponent({
       else
         return;
     };
+    const removeItem = (index: number) => {
+      if (index !== -1) {
+        serviceItems.value.splice(index, 1);
+      }
+    }
+    const setAccountValue = () => {
+      serviceItems.value.forEach((element, index) => {
+        setFieldValue(`item_id_${index}`, element.item_id)
+      });
+    }
+    watch(hasItem, (value) => {
+      if (!value) {
+        serviceItems.value = []
+        serviceItems.value.push({ item_id: 0, quantity: 0 })
+
+      }
+    })
     const onSubmitAdd = handleSubmit(async (values) => {
-      var serviceData = currentService.value;
+      let serviceData = currentService.value;
+      currentService.value.has_item = hasItem.value
+      let quantityError = false
+      serviceData.service_items = []
+      if (currentService.value.has_item) {
+        serviceItems.value.forEach(element => {
+          serviceData.service_items.push({ item_id: element.item_id, quantity: element.quantity })
+          if (element.quantity <= 0) {
+            const item: Item = itemsList.value.find((itemElemnt) => itemElemnt.id === element.item_id) ?? defaultItem
+            notif.error(`item ${item.name} quantity < 0 `)
+            quantityError = true
+          }
+        });
+        if (quantityError) return
+      }
+
+      let itemService = serviceItems.value.map(function (item) { return item.item_id });
+      let isDuplicate = itemService.some(function (item, idx) {
+        return itemService.indexOf(item) != idx
+      });
+      if (isDuplicate) {
+        notif.error(t('toast.error.item.item_service_is_duplicated'))
+        return
+      }
+
+
       const { service, message, success } = await addService(serviceData);
       if (success) {
-
         // @ts-ignore
         notif.dismissAll();
         await sleep(200);
@@ -130,6 +180,7 @@ export default defineComponent({
         // @ts-ignore
         notif.success(t('toast.success.edit'));
         await sleep(500);
+        initItem()
         router.push({ path: `/service/${serviceData.id}` });
       } else {
         await sleep(200);
@@ -137,12 +188,15 @@ export default defineComponent({
         notif.error(message)
       }
     });
-    return { t, pageTitle, onSubmit, currentService, keyIncrement, viewWrapper, backRoute, ServiceConsts, serviceStore, itemsList, itemId, hasItem };
+    const initItem = () => {
+      serviceItems.value = [] as ServiceItem[]
+      addItem({} as ServiceItem)
+
+    }
+    return { t, pageTitle, onSubmit, removeItem, addItem, getItemsList, currentService, setAccountValue, keyIncrement, serviceItems, viewWrapper, backRoute, ServiceConsts, serviceStore, itemsList, itemId, hasItem };
   },
   components: { ErrorMessage }
 })
-
-
 
 </script>
 
@@ -199,32 +253,78 @@ export default defineComponent({
               </div>
               <!--Fieldset-->
               <div class="form-fieldset">
-                <div class="columns is-multiline">
+                <div class="columns">
                   <div class="is-flex is-justify-content-center">
                     <VControl class="ml-3">
-                      <VSwitchSegment :key="keyIncrement" v-model="hasItem" :label-true="t('category.form.level_2')"
-                        :label-false="t('category.form.level_1')" color="success" />
+                      <VSwitchSegment :key="keyIncrement" v-model="hasItem" :label-true="t('service.form.hasItem')"
+                        :label-false="t('service.form.donthasItem')" color="success" />
                     </VControl>
                   </div>
                 </div>
               </div>
-              <div class="column is-12">
-                <VField id="item_id">
-                  <VLabel class="required">{{ t('add_service.form.item') }}</VLabel>
+            </div>
+          </div>
+          <div class="form-fieldset" v-if="hasItem">
+            <div class="columns is-multiline" v-for="(item, mainIndex) in serviceItems" :key="mainIndex">
+              <div class="column is-4">
+                <VField :id="`item_id_${mainIndex}`">
+                  <VLabel v-if="mainIndex == 0" class="required">
+                    {{ t('service.form.choose_item') }}</VLabel>
                   <VControl>
-                    <VSelect v-model="itemId">
-                      <VOption :value="0"> {{ t('add_service.form.item')
-                      }}</VOption>
-                      <VOption v-for="item in itemsList" :value="item.id">
-                        {{ item.name }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="item_id" />
+                    <Multiselect v-model="serviceItems[mainIndex].item_id" mode="single"
+                      :placeholder="t('service.form.select_item')" :close-on-select="true" ref="accountMultiselect"
+                      :filter-results="false" :min-chars="0" :resolve-on-load="false" :infinite="true" :limit="10"
+                      :rtl="true" :max="1" :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
+                      @select="setAccountValue()" :options="async (query: any) => {
+                        let itemSearchFilter = {
+                          name: query
+                        } as ItemSearchFilter
+                        const data = await getItemsList(itemSearchFilter)
+                        //@ts-ignore
+                        return data.items.map((item: Item) => {
+                          return { value: item.id, label: `${item.name}` }
+                        })
+                      }" @open="(select$: any) => {
+  if (select$.noOptions) {
+    select$.resolveOptions()
+  }
+}" />
+                  </VControl>
+                  <ErrorMessage class="help is-danger" :name="`item_id_${mainIndex}`" />
+                </VField>
+              </div>
+              <div class="column is-4">
+                <VField>
+                  <VLabel v-if="mainIndex == 0">
+                    {{ t('service.form.quantity') }}</VLabel>
+                  <VControl>
+                    <VInput type="number" v-model.number="serviceItems[mainIndex].quantity" />
                   </VControl>
                 </VField>
               </div>
+              <div class="column is-3 columns is-flex is-align-items-center">
+                <div class=" column is-6">
+                  <VField v-if="mainIndex != 0">
+                    <VControl>
+                      <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeItem(mainIndex)"
+                        color="danger">
+                      </VIconButton>
+                    </VControl>
+                  </VField>
+                </div>
+              </div>
+
+            </div>
+            <div class="columns px-3 py-2">
+              <VButton @click.prevent="addItem({
+                item_id: 0,
+                quantity: 0
+              })" color="primary">
+                {{ t('financial_record.add_new_row') }}
+              </VButton>
             </div>
           </div>
+
           <div class="form-fieldset">
             <div class="columns is-multiline">
               <div class="column is-12">
@@ -263,9 +363,6 @@ export default defineComponent({
         </div>
       </div>
     </form>
-
-
-
   </div>
 </template>
 <style  scoped lang="scss">

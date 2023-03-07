@@ -252,6 +252,9 @@
       "accounting": {
         "new_usd_currency_rate": "USD Currency rate must be a number greater than or equal 1",
         "change_account_currency": "Currency rate must be greater than or equal 1 when selecting non main currency"
+      },
+      "item": {
+        "item_service_is_duplicated": "Some Items is duplicated"
       }
     },
     "file": {
@@ -1094,7 +1097,10 @@
       "desciption": "Desciption",
       "price": "Price",
       "duration": "Duration",
-      "status": "Status"
+      "status": "Status",
+      "select_item": "Select Item",
+      "yes": "Yes",
+      "no": "No"
     },
     "search_filter": {
       "title": "Filter Service",
