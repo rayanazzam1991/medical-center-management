@@ -18,6 +18,11 @@
 .margin-bottom {
     margin-bottom: 0.75rem;
 }
+.margin-top-bottom{
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
+  border-bottom: 1px solid var(--fade-grey-dark-3);
+}
 
 .project-details {
     .tabs-wrapper {

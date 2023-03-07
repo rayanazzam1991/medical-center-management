@@ -1086,7 +1086,11 @@
       "price": "Service Price",
       "description": "Service Description",
       "estimated": "Estimated Duration",
-      "status": "Service Status"
+      "status": "Service Status",
+      "item": {
+        "name": "Name",
+        "quantity": "Quantity"
+      }
     },
     "form": {
       "page_title": "Service",

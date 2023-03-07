@@ -27,27 +27,23 @@ const serviceStore = useService()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const quantityItem = ref(0)
-const totalAQuantityService = ref(0)
 onMounted(async () => {
   const { services, pagination } = await getServicesList(searchFilter.value)
   servicesList.value = services
-  servicesList.value.forEach(element => {
-    element.service_items.forEach(element2 => {
-      quantityItem.value += element2.quantity
-      //quantityCount[element.id] += element2.quantity
-      // element.quantity= quantityCount.value
-
-    });
-    totalAQuantityService.value = quantityItem.value
-    console.log(totalAQuantityService.value)
+  servicesList.value.forEach((service) => {
+    let itemQuantity = 0;
+    if (service.has_item) {
+      service.service_items.forEach((item) => {
+        itemQuantity += item.quantity
+      });
+      service.quantity_item = itemQuantity
+    }
   });
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
 
 });
-
-
 const search = async (searchFilter2: ServiceSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
@@ -162,7 +158,7 @@ const columns = {
     sortable: true,
     label: t('service.table.columns.quantity'),
     renderRow: (row: any) =>
-      h('span', row?.totalAQuantityService)
+      h('span', row?.quantity_item ?? '-')
   },
   actions: {
     align: 'center',

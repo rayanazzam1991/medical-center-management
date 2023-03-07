@@ -1119,7 +1119,11 @@
       "status": "حالة الخدمة",
       "hasItem": "يحتوي مواد",
       "nothasItem": "لا يحتوي مواد",
-      "listItems": "قائمة المواد"
+      "listItems": "قائمة المواد",
+      "item": {
+        "name": "اسم المادة",
+        "quantity": "كميًة المادة"
+      }
     },
     "form": {
       "page_title": "الخدمات",

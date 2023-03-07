@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
+import { CreateService, Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteServiceApi(
@@ -12,7 +12,7 @@ export async function deleteServiceApi(
 }
 export async function addServiceApi(
   api: AxiosInstance,
-  service: Service
+  service: CreateService
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`service`, service)
 
@@ -20,7 +20,7 @@ export async function addServiceApi(
 }
 export async function editServiceApi(
   api: AxiosInstance,
-  service: Service
+  service: CreateService
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`service/${service.id}`, service)
   return { response }

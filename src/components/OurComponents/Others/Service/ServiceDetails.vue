@@ -84,13 +84,14 @@ const toEdit = () => {
               </span>
             </div>
             <div class="column is-12" v-if="currentService.has_item == true">
-              <h4 class="margin-bottom">{{ t('service.details.listItems') }}:</h4>
-              <div v-for="(item, index) in currentService.service_items" :key="index">
-                {{ item.item_id }}
-                <span>Item Name : {{ item.item_id }}</span>
-                <span>Item Quantity : {{ item.quantity }}</span>
-              </div>
+              <h3 class="margin-bottom">{{ t('service.details.listItems') }}:</h3>
+              <div v-for="(item, index) in currentService.service_items" :key="index" class="margin-top-bottom">
+                <h4>{{ t('service.details.item.name') }}: <span> {{ item.item.name }}</span>
+                </h4>
+                <h4>{{ t('service.details.item.quantity') }}: <span>{{ item.quantity }}</span>
+                </h4>
 
+              </div>
             </div>
           </div>
         </div>

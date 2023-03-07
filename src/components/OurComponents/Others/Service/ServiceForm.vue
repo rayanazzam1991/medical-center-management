@@ -2,7 +2,7 @@
 import { useHead } from '@vueuse/head';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultService, Service, ServiceConsts } from '/@src/models/Others/Service/service';
+import { CreateServiceItem, defaultCreateService, defaultService, Service, ServiceConsts } from '/@src/models/Others/Service/service';
 import { servicevalidationSchema } from '/@src/rules/Others/Service/serviceValidation';
 import { getService, addService, editService } from '/@src/services/Others/Service/serviceService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -39,9 +39,9 @@ export default defineComponent({
     const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
     const pageTitle = t('service.form.form_header', { type: formTypeName });
     const backRoute = "/service";
-    const currentService = ref(defaultService);
+    const currentService = ref(defaultCreateService);
     const serviceId = ref(0);
-    const serviceItems = ref<ServiceItem[]>([])
+    const serviceItems = ref<CreateServiceItem[]>([])
     const itemsList = ref<Item[]>([])
     const itemId = ref<number>(0)
     const hasItem = ref(false)
@@ -75,7 +75,7 @@ export default defineComponent({
       getCurrentService();
     });
     const validationSchema = servicevalidationSchema
-    const addItem = (item: ServiceItem) => {
+    const addItem = (item: CreateServiceItem) => {
       serviceItems.value?.push(item)
     }
 

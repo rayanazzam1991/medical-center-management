@@ -1,5 +1,4 @@
-import { Item } from "photoswipe"
-import { defaultItem } from "../../Warehouse/Item/item"
+import { defaultItem, Item } from "../../Warehouse/Item/item"
 import { BaseConsts } from "/@src/utils/consts/base"
 import messages from "@intlify/vite-plugin-vue-i18n/messages"
 import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
@@ -19,9 +18,25 @@ export interface Service {
   service_price?: number
   duration_minutes?: number
   has_item: boolean
-  service_items: ServiceItem[]
+  service_items: ServiceItem[],
+  quantity_item: number
 }
 export interface ServiceItem {
+  item: Item
+  quantity: number
+}
+export interface CreateService {
+  id?: number
+  name: string
+  status: number
+  description?: string
+  service_price?: number
+  duration_minutes?: number
+  has_item: boolean
+  service_items: CreateServiceItem[],
+  quantity_item: number
+}
+export interface CreateServiceItem {
   item_id?: number
   quantity: number
 }
@@ -43,6 +58,18 @@ export const defaultService: Service = {
   duration_minutes: undefined,
   service_price: undefined,
   has_item: false,
+  quantity_item: 0,
+  service_items: []
+}
+export const defaultCreateService: CreateService = {
+  id: undefined,
+  name: '',
+  status: 1,
+  description: '',
+  duration_minutes: undefined,
+  service_price: undefined,
+  has_item: false,
+  quantity_item: 0,
   service_items: []
 }
 export const defaultServiceSearchFilter: ServiceSearchFilter = {
