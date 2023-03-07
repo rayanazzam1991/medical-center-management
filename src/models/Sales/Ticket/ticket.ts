@@ -6,7 +6,7 @@ import { Customer, defaultCustomer } from "../../CRM/Customer/customer";
 import { Currency, defaultCurrency } from "../../Accounting/Currency/currency";
 import { Account, defaultAccount } from "../../Accounting/Account/account";
 import { defaultUser, User } from "../../Others/User/user";
-import { CreateTicketService, TicketService } from "../TicketService/ticketService";
+import { CreateUpdateTicketService, TicketService } from "../TicketService/ticketService";
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -38,7 +38,15 @@ export interface CreateTicket {
     currency_rate: number
     paid_amount: number
     remaining_amount: number
-    requested_services: CreateTicketService[]
+    requested_services: CreateUpdateTicketService[]
+}
+export interface UpdateTicket {
+    total_amount: number
+    cash_account_id: number
+    currency_rate: number
+    paid_amount: number
+    remaining_amount: number
+    requested_services: CreateUpdateTicketService[]
 }
 
 export const defaultCreateTicket: CreateTicket = {

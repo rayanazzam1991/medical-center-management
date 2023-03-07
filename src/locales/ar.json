@@ -247,7 +247,8 @@
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
       "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
       "transfer": "تم التحويل بنجاح",
-      "add_ticket": "تمت إضافة المتابعة رقم {ticket_id} بنجاح"
+      "add_ticket": "تمت إضافة المتابعة رقم {ticket_id} بنجاح",
+      "update_ticket": "تم تعديل المتابعة رقم {ticket_id} بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -2155,7 +2156,8 @@
   "ticket": {
     "form": {
       "page_title": "المتابعات",
-      "form_header": "{type} متابعة",
+      "add_form_header": "إضافة متابعة",
+      "edit_form_header": "تعديل المتابعة رقم #{ticket_id}",
       "add_ticket_title": "إضافة متابعة",
       "customer": "اسم الزبون",
       "select_customer": "تحديد الزبون",

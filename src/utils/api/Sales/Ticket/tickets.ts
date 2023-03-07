@@ -10,6 +10,18 @@ export async function createTicketApi(
 
     return { response }
 }
+export async function updateTicketApi(
+    api: AxiosInstance,
+    ticketId: number,
+    ticket: CreateTicket
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
+
+    return { response }
+}
+
+
+
 export async function getTicketApi(
     api: AxiosInstance,
     ticketId: number

@@ -19,7 +19,7 @@ export interface TicketService {
     note: string
 }
 
-export interface CreateTicketService {
+export interface CreateUpdateTicketService {
     service_provider_id: number
     sell_price: number
 }
@@ -27,6 +27,7 @@ export interface CreateTicketServiceHelper {
     service_id: number
     service_provider_id: number
     sell_price: number
+    editable: boolean
 }
 
 class TicketServiceConsts {
