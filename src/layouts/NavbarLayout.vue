@@ -17,6 +17,7 @@ export type SubnavId =
   | 'contractor'
   | 'warehouse'
   | 'accounting'
+  | 'ticketing'
 
 const props = withDefaults(
   defineProps<{
@@ -95,7 +96,7 @@ watch(
 
       <div class="brand-end">
         <NotificationsMobileDropdown />
-        <UserProfileDropdown />
+          <UserProfileDropdown />
         </div>
       </template>
     </MobileNavbar>
@@ -136,17 +137,17 @@ watch(
 
       <template #bottom-links>
         <li>
-          <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
-            <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i aria-hidden="true" class="iconify" data-icon="feather:settings"></i>
-          </a>
-        </li>
-      </template>
-    </MobileSidebar>
+        <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
+          <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i aria-hidden="true" class="iconify" data-icon="feather:settings"></i>
+        </a>
+      </li>
+    </template>
+  </MobileSidebar>
 
     <!-- Mobile subsidebar links -->
     <Transition name="slide-x">
@@ -177,9 +178,9 @@ watch(
           <!-- <ToolbarNotification /> -->
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                    @click="panels.setActive('activity')">
-                                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                  </a> -->
+                                                    @click="panels.setActive('activity')">
+                                                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                  </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -220,18 +221,26 @@ watch(
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
             <span>{{ t("navbar.crm") }}</span>
           </a>
-          <a :class="[((activeSubnav === 'contractor') ||
-            route.path.startsWith('/contractor') ||
-            route.path.startsWith('/contractor-add') ||
-            route.path.startsWith('/contractor-edit') ||
-            route.path.startsWith('/speciality') ||
-            route.path.startsWith('/bulk-cash-out')
+          <!-- <a :class="[((activeSubnav === 'contractor') ||
+                          route.path.startsWith('/contractor') ||
+                          route.path.startsWith('/contractor-add') ||
+                          route.path.startsWith('/contractor-edit') ||
+                          route.path.startsWith('/speciality') ||
+                          route.path.startsWith('/bulk-cash-out')
 
 
+                        ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+                          @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+                          <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
+                          <span>{{ t("navbar.contractor") }}</span>
+                      </a> -->
+          <a :class="[((activeSubnav === 'ticketing') ||
+            route.path.startsWith('/ticket') ||
+            route.path.startsWith('/waiting-list')
           ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-            <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-            <span>{{ t("navbar.contractor") }}</span>
+            @keydown.space.prevent="toggleSubnav('ticketing')" @click="toggleSubnav('ticketing')">
+            <i class="iconify" data-icon="bi:ticket-perforated" aria-hidden="true"></i>
+            <span>{{ t("navbar.ticketing") }}</span>
           </a>
         <a :class="[(activeSubnav === 'HR' ||
           route.path.startsWith('/employee') ||
@@ -291,10 +300,11 @@ watch(
 
           <OthersSubnav :class="[activeSubnav === 'others' && 'is-active']" @close="deactivateSubnav" />
           <CRMSubnav :class="[activeSubnav === 'CRM' && 'is-active']" @close="deactivateSubnav" />
-          <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" />
+          <!-- <ContractorSubnav :class="[activeSubnav === 'contractor' && 'is-active']" @close="deactivateSubnav" /> -->
           <EmployeeSubnav :class="[activeSubnav === 'HR' && 'is-active']" @close="deactivateSubnav" />
           <WarehouseSubnav :class="[activeSubnav === 'warehouse' && 'is-active']" @close="deactivateSubnav" />
           <AccountingSubnav :class="[activeSubnav === 'accounting' && 'is-active']" @close="deactivateSubnav" />
+          <TicketingSubnav :class="[activeSubnav === 'ticketing' && 'is-active']" @close="deactivateSubnav" />
         </div>
       </template>
     </Navbar>
@@ -317,13 +327,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                        <ToolbarNotification />
+                                                        <ToolbarNotification />
 
-                                        <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                          @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                          <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                        </a>
-                                      </Toolbar> -->
+                                                        <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                                          @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                                          <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                        </a>
+                                                      </Toolbar> -->
             </div>
 
             <slot></slot>

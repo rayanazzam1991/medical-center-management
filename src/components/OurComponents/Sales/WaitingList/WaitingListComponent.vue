@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { defaultEmployee, Employee } from '/@src/models/Employee/employee';
+import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { defaultWaitingList, EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
 
 
@@ -45,15 +46,15 @@ provider.value = props.provider
                                 src="/@src/assets/illustrations/projects/board/new.svg" alt="" />
                             <img class="empty-state theme-image dark-image"
                                 src="/@src/assets/illustrations/projects/board/new-dark.svg" alt="" />
-                            <p class="empty-text">There are no tickets in this waiting list.</p>
+                            <p class="empty-text">{{ t('waiting_list.no_tickets_place_holder') }}</p>
                         </div>
-
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
-                            class="kanban-card is-new px-2">
+                            class="kanban-card is-new px-2"
+                            :class="[ticket.ticket.status == TicketConsts.WAITING && 'ticket-wrapper is-primary']">
                             <div class="card-body">
                                 <h4 class="card-title">
                                     {{ ticket.ticket.customer.user.first_name }} {{ ticket.ticket.customer.user.last_name
-                                    }}
+                                    }} | {{ t('waiting_list.ticket_id', { ticket_id: ticket.ticket.id }) }}
                                 </h4>
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
 
@@ -63,7 +64,6 @@ provider.value = props.provider
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -382,6 +382,78 @@ provider.value = props.provider
         }
     }
 
+    &.ticket-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--radius-large);
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: calc(50% - 12px);
+            left: calc(50% - 12px);
+            height: 24px;
+            width: 24px;
+            border-radius: var(--radius-rounded);
+            background: var(--white);
+            animation: wave 1.6s infinite;
+            animation-duration: 2s;
+            transform-origin: center center;
+            z-index: 0;
+        }
+
+        .task-owner {
+            position: relative;
+            display: block;
+            width: 62px;
+            height: 62px;
+            border-radius: var(--radius-rounded);
+            z-index: 2;
+        }
+
+        &.is-warning {
+            border: 2px solid var(--warning);
+
+            &::after {
+                background: var(--warning);
+            }
+        }
+
+        &.is-primary {
+            border: 2px solid var(--primary) !important;
+
+            &::after {
+                background: var(--primary);
+            }
+        }
+
+        &.is-success {
+            border: 2px solid var(--success);
+
+            &::after {
+                background: var(--success);
+            }
+        }
+
+        &.is-danger {
+            border: 2px solid var(--danger);
+
+            &::after {
+                background: var(--danger);
+            }
+        }
+
+        &.is-info {
+            border: 2px solid var(--info);
+
+            &::after {
+                background: var(--info);
+            }
+        }
+    }
+
     .card-body {
         padding: 10px;
 
@@ -404,6 +476,8 @@ provider.value = props.provider
                 }
             }
         }
+
+
     }
 
     .card-title {
@@ -580,7 +654,6 @@ provider.value = props.provider
         .kanban-card {
             .card-title {
                 max-width: 152px;
-                overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }

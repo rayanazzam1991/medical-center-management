@@ -43,11 +43,11 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     <WaitingListHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" @resetFilter="resetFilter" />
 
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
-        <div class="waiting-list-inner">
-            <div v-if="waitingListStore.loading" class="columns is-multiline">
+        <div v-if="waitingListStore.loading">
+            <div class="columns is-multiline">
                 <div ref="markdownContainer" class="column doc-column is-12">
-                    <VPlaceholderPage :title="t('trial_balance_report.place_holder.title')"
-                        :subtitle="t('trial_balance_report.place_holder.subtitle')" larger>
+                    <VPlaceholderPage :title="t('waiting_list.place_holder.title')"
+                        :subtitle="t('waiting_list.place_holder.subtitle')" larger>
                         <template #image>
                             <img class="light-image" src="/@src/assets/illustrations/placeholders/search-1.svg" alt="" />
                             <img class="dark-image" src="/@src/assets/illustrations/placeholders/search-1-dark.svg"
@@ -56,7 +56,10 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
                     </VPlaceholderPage>
                 </div>
             </div>
-            <div v-else class="waiting-lists-container is-flex has-slimscroll">
+
+        </div>
+        <div v-else class="waiting-list-inner">
+            <div class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent v-for="(waitingList, index) in waitingListLists" :key="index"
                     :waiting_list="waitingList.waiting_list" :provider="waitingList.provider" />
             </div>
@@ -64,8 +67,7 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     </div>
 </template>
 
-<style   lang="scss">
-// @import '/@src/scss/Styles/TrialBalanceReport/trialBalance.scss';
+<style scoped lang="scss">
 .waiting-list-outer-layout {
     flex: 1;
     display: inline-block;
@@ -82,7 +84,7 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
 
 .waiting-list-inner {
     height: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
 
 
 
