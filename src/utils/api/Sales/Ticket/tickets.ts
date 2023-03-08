@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateTicket } from "/@src/models/Sales/Ticket/ticket"
+import { CreateTicket, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createTicketApi(
@@ -13,7 +13,7 @@ export async function createTicketApi(
 export async function updateTicketApi(
     api: AxiosInstance,
     ticketId: number,
-    ticket: CreateTicket
+    ticket: UpdateTicket
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
 

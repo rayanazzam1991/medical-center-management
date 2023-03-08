@@ -269,6 +269,8 @@ declare module '@vue/runtime-core' {
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
+    WaitingListComponent: typeof import('./src/components/OurComponents/Sales/WaitingList/WaitingListComponent.vue')['default']
+    WaitingListHeader: typeof import('./src/components/OurComponents/Sales/WaitingList/WaitingListHeader.vue')['default']
     WalletMovementClickName: typeof import('./src/components/OurComponents/Contractor/WalletMovement/walletMovementClickName.vue')['default']
     WalletMovementSearchFilterModel: typeof import('./src/components/OurComponents/Contractor/WalletMovement/WalletMovementSearchFilterModel.vue')['default']
     WalletMovementTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/WalletMovementTableHeader.vue')['default']

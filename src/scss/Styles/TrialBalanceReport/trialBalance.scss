@@ -14,17 +14,17 @@
 
 }
 
-.trial-balance-report-layout {
-    flex: 1;
-    display: inline-block;
-    width: 100%;
-    padding: 20px;
-    background-color: var(--white);
-    border-radius: var(--radius-large);
-    border: 1px solid var(--fade-grey-dark-3);
-    transition: all .3s;
+    .trial-balance-report-layout {
+        flex: 1;
+        display: inline-block;
+        width: 100%;
+        padding: 20px;
+        background-color: var(--white);
+        border-radius: var(--radius-large);
+        border: 1px solid var(--fade-grey-dark-3);
+        transition: all .3s;
 
-}
+    }
 
 .header-level {
     &.is-flex {
