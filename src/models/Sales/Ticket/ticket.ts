@@ -82,8 +82,8 @@ class TicketConsts {
 
     static readonly WAITING = 1;
     static readonly SERVING = 2;
-    static readonly SERVICES_ARE_DONE = 2;
-    static readonly CLOSED = 2;
+    static readonly SERVICES_ARE_DONE = 3;
+    static readonly CLOSED = 4;
 
     public static getStatusName(status: number) {
         if (status == this.WAITING)

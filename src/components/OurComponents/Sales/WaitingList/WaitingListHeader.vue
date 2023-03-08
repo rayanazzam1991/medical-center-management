@@ -34,6 +34,12 @@ export default defineComponent({
         const roomsList = ref<Room[]>([])
         const departmentsList = ref<Department[]>([])
         const search = () => {
+            if (searchRoomId.value && searchDepartmentId.value) {
+                const room = roomsList.value.find((roomEl) => roomEl.id == searchRoomId.value)
+                if (searchDepartmentId.value != room?.department?.id) {
+                    searchDepartmentId.value = undefined
+                }
+            }
             searchFilter.value = {
                 department_id: searchDepartmentId.value,
                 provider_id: searchProviderId.value,
@@ -96,14 +102,14 @@ export default defineComponent({
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchProviderId">
-                                    <VOption :value="undefined">{{ t('waiting_list.search_filter.provider') }}</VOption>
+                                    <VOption value="">{{ t('waiting_list.search_filter.provider') }}</VOption>
                                     <VOption v-for="employee in employeesList" :key="employee.id" :value="employee.id">
                                         {{ employee.user.first_name }} {{ employee.user.last_name }}</VOption>
                                 </VSelect>
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchDepartmentId">
-                                    <VOption :value="undefined">{{ t('waiting_list.search_filter.department') }}</VOption>
+                                    <VOption value="">{{ t('waiting_list.search_filter.department') }}</VOption>
                                     <VOption v-for="department in departmentsList" :key="department.id"
                                         :value="department.id">
                                         {{ department.name }}</VOption>
@@ -111,7 +117,7 @@ export default defineComponent({
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchRoomId">
-                                    <VOption :value="undefined">{{ t('waiting_list.search_filter.room') }}</VOption>
+                                    <VOption value="">{{ t('waiting_list.search_filter.room') }}</VOption>
                                     <VOption v-for="room in roomsList" :key="room.id" :value="room.id">
                                         {{ room.department?.name }} #{{ room.number }}</VOption>
                                 </VSelect>
@@ -124,9 +130,9 @@ export default defineComponent({
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
                             <!-- <VControl>
-                                        <VButton class="" to="/city/add" color="primary">{{ button_name }}
-                                        </VButton>
-                                    </VControl> -->
+                                                    <VButton class="" to="/city/add" color="primary">{{ button_name }}
+                                                    </VButton>
+                                                </VControl> -->
                         </div>
                     </div>
                 </div>

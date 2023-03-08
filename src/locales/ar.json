@@ -2207,11 +2207,20 @@
   },
   "waiting_list": {
     "title": "غرف الانتظار",
-    "no_tickets_place_holder": "لا يوجد أية تذاكرة في غرفة الانتظار.",
+    "no_tickets_place_holder": "لا يوجد أية تذاكر في غرفة الانتظار.",
     "place_holder": {
       "title": "جاري تحميل غرف الانتظار...",
       "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
     },
-    "ticket_id": "التذكرة #{ticket_id}"
+    "ticket_id": "التذكرة #{ticket_id}",
+    "search_filter": {
+      "room": "رقم الغرفة",
+      "department": "القسم",
+      "provider": "المخدم"
+    },
+    "no_data": {
+      "title": "لا يوجد بيانات",
+      "subtitle": "يرجى التأكد من مدخلات البحث"
+    }
   }
 }

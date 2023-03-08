@@ -49,11 +49,13 @@ provider.value = props.provider
                             <p class="empty-text">{{ t('waiting_list.no_tickets_place_holder') }}</p>
                         </div>
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
-                            class="kanban-card is-new px-2"
-                            :class="[ticket.ticket.status == TicketConsts.WAITING && 'ticket-wrapper is-primary']">
-                            <div class="card-body">
+                            class="kanban-card is-new p-2"
+                            :class="[ticket.ticket.status == TicketConsts.SERVING && 'ticket-wrapper is-info']">
+                            <div class="card-inner ">
+
                                 <h4 class="card-title">
-                                    {{ ticket.ticket.customer.user.first_name }} {{ ticket.ticket.customer.user.last_name
+                                    {{ ticket.ticket.customer.user.first_name }} {{
+                                        ticket.ticket.customer.user.last_name
                                     }} | {{ t('waiting_list.ticket_id', { ticket_id: ticket.ticket.id }) }}
                                 </h4>
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
@@ -67,7 +69,7 @@ provider.value = props.provider
     </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 /* ==========================================================================
 1. Kanban Toolbar
 ========================================================================== */
@@ -98,6 +100,7 @@ provider.value = props.provider
     position: sticky;
     min-width: 350px;
     height: 100%;
+    z-index: 0;
 
     .column {
         padding: 0.35rem !important;
@@ -138,11 +141,11 @@ provider.value = props.provider
                 padding-left: 4px;
 
                 &::before {
-                    content: '(';
+                    content: ' (';
                 }
 
                 &::after {
-                    content: ')';
+                    content: ') ';
                 }
             }
 
@@ -286,101 +289,14 @@ provider.value = props.provider
     margin-top: 10px;
     border: 1px solid var(--medium-grey);
     transition: all 0.4s;
+    display: flex;
+    justify-content: center;
 
     &:hover,
     &:focus {
         box-shadow: 0 5px 43px rgb(0 0 0 / 18%) !important;
     }
 
-    &.is-new {
-        .new-avatar {
-            margin: 20px 0 10px;
-            width: 100%;
-
-            .avatar-wrapper {
-                position: relative;
-                width: 74px;
-                height: 74px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin: 0 auto;
-                border-radius: var(--radius-rounded);
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    top: calc(50% - 12px);
-                    left: calc(50% - 12px);
-                    height: 24px;
-                    width: 24px;
-                    border-radius: var(--radius-rounded);
-                    background: var(--white);
-                    animation: wave 1.6s infinite;
-                    animation-duration: 2s;
-                    transform-origin: center center;
-                    z-index: 0;
-                }
-
-                .task-owner {
-                    position: relative;
-                    display: block;
-                    width: 62px;
-                    height: 62px;
-                    border-radius: var(--radius-rounded);
-                    z-index: 2;
-                }
-
-                &.is-warning {
-                    border: 2px solid var(--warning);
-
-                    &::after {
-                        background: var(--warning);
-                    }
-                }
-
-                &.is-primary {
-                    border: 2px solid var(--primary);
-
-                    &::after {
-                        background: var(--primary);
-                    }
-                }
-
-                &.is-success {
-                    border: 2px solid var(--success);
-
-                    &::after {
-                        background: var(--success);
-                    }
-                }
-
-                &.is-danger {
-                    border: 2px solid var(--danger);
-
-                    &::after {
-                        background: var(--danger);
-                    }
-                }
-
-                &.is-info {
-                    border: 2px solid var(--info);
-
-                    &::after {
-                        background: var(--info);
-                    }
-                }
-            }
-        }
-
-        .card-footer {
-            a {
-                font-size: 0.85rem;
-                font-weight: 500;
-                color: var(--light-text);
-            }
-        }
-    }
 
     &.ticket-wrapper {
         position: relative;
@@ -392,26 +308,68 @@ provider.value = props.provider
         &::after {
             content: '';
             position: absolute;
-            top: calc(50% - 12px);
-            left: calc(50% - 12px);
-            height: 24px;
-            width: 24px;
-            border-radius: var(--radius-rounded);
+            top: calc(0);
+            left: calc(0);
+            height: 100%;
+            width: 100%;
+            border-radius: var(--radius-large);
             background: var(--white);
-            animation: wave 1.6s infinite;
+            animation: boxShadowWave 1.6s infinite;
             animation-duration: 2s;
             transform-origin: center center;
-            z-index: 0;
+            z-index: 1;
         }
 
-        .task-owner {
+        .card-body {
+            padding: 20px;
             position: relative;
             display: block;
             width: 62px;
             height: 62px;
             border-radius: var(--radius-rounded);
             z-index: 2;
+
+            .kanban-card-stats {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                padding-top: 16px;
+
+                >span {
+                    font-size: 0.9rem;
+                    color: var(--light-text);
+
+                    svg {
+                        position: relative;
+                        top: 2px;
+                        height: 14px;
+                        width: 14px;
+                        stroke-width: 1.6px;
+                    }
+                }
+            }
+
+
         }
+
+        .card-inner {
+            z-index: 5;
+        }
+
+
+        .card-title {
+            font-size: 0.9rem;
+            font-family: var(--font-alt);
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .spaced-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
 
         &.is-warning {
             border: 2px solid var(--warning);
@@ -449,13 +407,20 @@ provider.value = props.provider
             border: 2px solid var(--info);
 
             &::after {
-                background: var(--info);
+                box-shadow: 0 2px 20px var(--info) !important;
+                opacity: 1;
             }
         }
     }
 
     .card-body {
-        padding: 10px;
+        padding: 20px;
+        position: relative;
+        display: block;
+        width: 62px;
+        height: 62px;
+        border-radius: var(--radius-rounded);
+        z-index: 2;
 
         .kanban-card-stats {
             display: flex;
@@ -480,6 +445,11 @@ provider.value = props.provider
 
     }
 
+    .card-inner {
+        z-index: 5;
+    }
+
+
     .card-title {
         font-size: 0.9rem;
         font-family: var(--font-alt);
@@ -492,6 +462,7 @@ provider.value = props.provider
         justify-content: space-between;
         align-items: baseline;
     }
+
 }
 
 /* ==========================================================================
@@ -608,8 +579,55 @@ provider.value = props.provider
                 }
             }
 
-            .card-title {
-                color: var(--primary-grey-light-2);
+            &.ticket-wrapper {
+
+                &::after {
+                    background: var(--dark-sidebar-light-6) !important;
+                }
+
+                &.is-warning {
+                    border: 2px solid var(--warning) !important;
+
+                    &::after {
+                        background: var(--warning) !important;
+                    }
+                }
+
+                &.is-primary {
+                    border: 2px solid var(--primary) !important;
+
+                    &::after {
+                        background: var(--primary) !important;
+                    }
+                }
+
+                &.is-success {
+                    border: 2px solid var(--success) !important;
+
+                    &::after {
+                        background: var(--success) !important;
+                    }
+                }
+
+                &.is-danger {
+                    border: 2px solid var(--danger) !important;
+
+                    &::after {
+                        background: var(--danger) !important;
+                    }
+                }
+
+                &.is-info {
+                    border: 2px solid var(--info) !important;
+
+                    &::after {
+                        box-shadow: 0 2px 20px var(--info) !important;
+                        opacity: 1;
+                    }
+                }
+
+
+
             }
         }
     }

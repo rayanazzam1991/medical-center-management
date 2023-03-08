@@ -44,7 +44,7 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
 
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
         <div v-if="waitingListStore.loading">
-            <div class="columns is-multiline">
+            <div class="columns is-multiline placeholder">
                 <div ref="markdownContainer" class="column doc-column is-12">
                     <VPlaceholderPage :title="t('waiting_list.place_holder.title')"
                         :subtitle="t('waiting_list.place_holder.subtitle')" larger>
@@ -56,18 +56,31 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
                     </VPlaceholderPage>
                 </div>
             </div>
-
         </div>
-        <div v-else class="waiting-list-inner">
+        <div v-else-if="waitingListLists.length > 0" class="waiting-list-inner">
             <div class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent v-for="(waitingList, index) in waitingListLists" :key="index"
                     :waiting_list="waitingList.waiting_list" :provider="waitingList.provider" />
             </div>
         </div>
+        <div v-else>
+            <div class="columns is-multiline placeholder">
+                <div ref="markdownContainer" class="column doc-column is-12">
+                    <VPlaceholderPage class="placeholder" :title="t('waiting_list.no_data.title')"
+                        :subtitle="t('waiting_list.no_data.subtitle')" larger>
+                        <template #image>
+                            <img class="light-image" src="/@src/assets/illustrations/placeholders/error-5.svg" alt="" />
+                            <img class="dark-image" src="/@src/assets/illustrations/placeholders/error-5-dark.svg" alt="" />
+                        </template>
+                    </VPlaceholderPage>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .waiting-list-outer-layout {
     flex: 1;
     display: inline-block;
@@ -80,6 +93,17 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     transition: all .3s;
 
 
+}
+
+.page-placeholder {
+    .placeholder-content {
+
+        p {
+            &.is-larger {
+                width: 400px !important;
+            }
+        }
+    }
 }
 
 .waiting-list-inner {
