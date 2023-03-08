@@ -1,6 +1,6 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Service, ServiceSearchFilter, ServiceWithProvider } from "/@src/models/Others/Service/service"
+import { CreateService, Service, ServiceSearchFilter, ServiceWithProvider } from "/@src/models/Others/Service/service"
 import { deleteServiceApi, getServiceApi, addServiceApi, editServiceApi, getServicesApi, getServicesWithProvidersApi } from "/@src/utils/api/Others/Service"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -61,7 +61,7 @@ export const useService = defineStore('service', () => {
       loading.value = false
     }
   }
-  async function addServiceStore(service: Service) {
+  async function addServiceStore(service: CreateService) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
@@ -84,7 +84,7 @@ export const useService = defineStore('service', () => {
       loading.value = false
     }
   }
-  async function editServiceStore(service: Service) {
+  async function editServiceStore(service: CreateService) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
