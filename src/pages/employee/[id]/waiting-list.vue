@@ -1,0 +1,436 @@
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
+import { Notyf } from 'notyf';
+import { useI18n } from 'vue-i18n';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/ticket';
+import { TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
+import { WaitingList, defaultWaitingListSearchFilter, WaitingListSearchFilter, defaultWaitingList, TicketServicesNotesHelper } from '/@src/models/Sales/WaitingList/waitingList';
+import { getWaitingListByProvider, getWaitingLists } from '/@src/services/Sales/WaitingList/waitingListService';
+import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+
+
+
+const viewWrapper = useViewWrapper()
+const { t } = useI18n()
+viewWrapper.setPageTitle(t('employee.waiting_list.title'))
+
+useHead({ title: t('employee.waiting_list.title'), })
+const notif = useNotyf() as Notyf
+const waitingListStore = useWaitingList()
+const employeeWaitingList = ref<WaitingList>(defaultWaitingList)
+const keyIncrement = ref(0)
+const employeeId = ref(0)
+const route = useRoute();
+const servingTicket = ref(defaultTicket)
+const ticketServicesNotesHelper = ref<TicketServicesNotesHelper[]>([])
+const notesInput = ref('')
+const isThereServingTicket = ref(false)
+const selectedServeServiceId = ref(0)
+const serveServiceConfirmationPopup = ref(false)
+// @ts-ignore
+employeeId.value = route.params.id as number ?? 0
+onMounted(async () => {
+    const { waiting_list } = await getWaitingListByProvider(employeeId.value)
+    employeeWaitingList.value = waiting_list
+
+    serveingServiceSetup()
+});
+
+const serveingServiceSetup = () => {
+    ticketServicesNotesHelper.value = []
+    const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.SERVING)?.ticket
+    if (firstServingTicket) {
+        servingTicket.value = firstServingTicket
+        isThereServingTicket.value = true
+        servingTicket.value.requested_services.forEach((requestedService) => {
+            if (requestedService.provider.id == employeeId.value && requestedService.status == TicketServiceConsts.NOT_SERVED) {
+                ticketServicesNotesHelper.value.push({ requested_service_id: requestedService.id, note: requestedService.note })
+            }
+
+        });
+    } else {
+        isThereServingTicket.value = false
+    }
+
+}
+
+const updateTicketNotesHelper = (requestedServiceId: number) => {
+    let requestedServiceHelper = ticketServicesNotesHelper.value.find((element) => element.requested_service_id == requestedServiceId)
+    if (requestedServiceHelper)
+        requestedServiceHelper.note = notesInput.value
+
+}
+
+const serveConfirmation = (requestedServiceId: number) => {
+    selectedServeServiceId.value = requestedServiceId
+    serveServiceConfirmationPopup.value = true
+
+}
+
+</script>
+
+<template>
+    <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
+        <div v-if="waitingListStore.loading">
+            <div class="columns is-multiline placeholder">
+                <div ref="markdownContainer" class="column doc-column is-12">
+                    <VPlaceholderPage :title="t('waiting_list.place_holder.title')"
+                        :subtitle="t('waiting_list.place_holder.subtitle')" larger>
+                        <template #image>
+                            <img class="light-image" src="/@src/assets/illustrations/placeholders/search-1.svg" alt="" />
+                            <img class="dark-image" src="/@src/assets/illustrations/placeholders/search-1-dark.svg"
+                                alt="" />
+                        </template>
+                    </VPlaceholderPage>
+                </div>
+            </div>
+        </div>
+        <div v-else-if="employeeWaitingList.waiting_list.length > 0" class="waiting-list-inner">
+            <div class="waiting-lists-container is-flex">
+                <WaitingListComponent :waiting_list="employeeWaitingList.waiting_list"
+                    :provider="employeeWaitingList.provider" />
+            </div>
+        </div>
+        <div v-else>
+            <div class="columns is-multiline placeholder">
+                <div ref="markdownContainer" class="column doc-column is-12">
+                    <VPlaceholderPage class="placeholder" :title="t('employee.waiting_list.no_data.title')"
+                        :subtitle="t('employee.waiting_list.no_data.subtitle')" larger>
+                        <template #image>
+                            <img class="light-image" src="/@src/assets/illustrations/placeholders/error-5.svg" alt="" />
+                            <img class="dark-image" src="/@src/assets/illustrations/placeholders/error-5-dark.svg" alt="" />
+                        </template>
+                    </VPlaceholderPage>
+                </div>
+            </div>
+        </div>
+        <div class="ticket-details-layout has-slimscroll ">
+            <div class="ticket-details-inner is-flex-direction-column is-justify-content-space-between  ">
+                <div class="ticket-content is-flex-grow-1"
+                    v-if="employeeWaitingList.waiting_list.length != 0 || isThereServingTicket">
+                    <div class="ticket-content-inner">
+                        <div class="ticket-header">
+                            <h1 class="ticket-title">
+                                {{ t('employee.waiting_list.ticket_id') }} {{
+                                    servingTicket.id
+                                }}
+                            </h1>
+                            <h1 class="ticket-title">
+                                {{ t('employee.waiting_list.customer_name') }}
+                                {{ servingTicket.customer.user.first_name }}
+                                {{ servingTicket.customer.user.last_name }}
+                            </h1>
+
+                        </div>
+                        <div class="ticket-services">
+                            <h1 class="services-header">
+                                {{ t('employee.waiting_list.requested_services') }}
+                            </h1>
+                            <div class="columns is-multiline mb-0 pt-2 pr-2">
+                                <div class="service-details-header column is-2">
+                                    <p>{{ t('employee.waiting_list.service_name') }}</p>
+                                </div>
+                                <div class="service-details-header column is-2">
+                                    <p> {{ t('employee.waiting_list.service_provider') }}</p>
+                                </div>
+                                <div class="service-details-header column is-4">
+                                    <p>
+                                        {{ t('employee.waiting_list.notes') }}</p>
+                                </div>
+                                <div class="service-details-header column is-2">
+                                    <p> {{ t('employee.waiting_list.status') }}</p>
+                                </div>
+                                <div class="service-details-header column is-1">
+                                    <p> {{ t('employee.waiting_list.actions') }}</p>
+                                </div>
+
+                            </div>
+
+                            <div v-for="requested_service in servingTicket.requested_services" :key="requested_service.id"
+                                class="columns is-multiline pr-2 service-row">
+                                <div class="service-details column is-2">
+                                    <p>{{ requested_service.service.name }}</p>
+                                    <p v-if="requested_service.service.has_item">
+                                        {{ t('employee.waiting_list.service_items') }}
+                                        <span v-for="item in requested_service.service.service_items">
+                                            {{ item.item.name }} {{ t('employee.waiting_list.service_items_quantity') }} {{
+                                                item.quantity }} |
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="service-details column is-2">
+                                    <p :class="[requested_service.provider.id == employeeId && 'has-text-primary']">
+                                        {{ requested_service.provider.user.first_name }}
+                                        {{ requested_service.provider.user.last_name }}</p>
+                                </div>
+                                <div class="service-details column is-4">
+                                    <p
+                                        v-if="requested_service.provider.id != employeeId || requested_service.status == TicketServiceConsts.SERVED">
+                                        {{ requested_service.note ?? '-' }}</p>
+                                    <div v-else>
+                                        <VField>
+                                            <VControl>
+                                                <VInput :placeholder="t('employee.waiting_list.type_notes')"
+                                                    @input="() => updateTicketNotesHelper(requested_service.id)" type="text"
+                                                    v-model.number="notesInput" />
+                                            </VControl>
+                                        </VField>
+                                    </div>
+                                </div>
+                                <div class="service-details column is-2">
+                                    <p> {{ TicketServiceConsts.getStatusName(requested_service.status) }}</p>
+                                </div>
+                                <div class="service-details column is-1">
+                                    <VButton @click="serveConfirmation(requested_service.id)" color="primary" raised
+                                        v-if="requested_service.provider.id == employeeId">
+                                        {{ t('employee.waiting_list.make_served') }}
+                                    </VButton>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="placeholder is-flex is-justify-content-center ">
+                    <div ref="markdownContainer" class="column doc-column is-12">
+                        <VPlaceholderPage class="placeholder" :title="t('employee.waiting_list.no_serving_client.title')"
+                            :subtitle="t('employee.waiting_list.no_serving_client.subtitle')" larger>
+                            <template #image>
+                                <img class="light-image" src="/@src/assets/illustrations/placeholders/thinking-canvas.svg"
+                                    alt="" />
+                                <img class="dark-image"
+                                    src="/@src/assets/illustrations/placeholders/thinking-canvas-dark.svg" alt="" />
+                            </template>
+                        </VPlaceholderPage>
+                    </div>
+
+                </div>
+                <div class="ticket-footer">
+                    <div class="ticket-footer-inner">
+                        <VButton color="primary" raised v-if="isThereServingTicket"> {{
+                            t(`employee.waiting_list.submit`) }} </VButton>
+                        <VButton color="primary" raised v-else :disabled="employeeWaitingList.waiting_list.length == 0">
+                            {{ t('employee.waiting_list.serve_next') }}
+                        </VButton>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style lang="scss">
+.waiting-list-outer-layout {
+    flex: 1;
+    display: inline-block;
+    width: 100%;
+    height: 70vh;
+    padding: 20px;
+    background-color: var(--white);
+    border-radius: var(--radius-large);
+    border: 1px solid var(--fade-grey-dark-3);
+    transition: all .3s;
+
+    .ticket-details-layout {
+        flex-grow: 1;
+        height: 100%;
+        padding: 0.6rem;
+        padding-bottom: 1.1rem;
+
+        .ticket-details-inner {
+
+            width: 100%;
+            min-height: 100%;
+            background: #e3e4e5;
+            border-radius: var(--radius-large);
+            padding: 0.5rem;
+            display: flex;
+            overflow: auto;
+
+            .ticket-content {
+                max-width: 900px;
+                flex-grow: 1;
+
+                .ticket-content-inner {
+                    padding: 1rem;
+
+                    .ticket-header {
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid var(--fade-grey-dark-8);
+
+
+                        .ticket-title {
+                            width: 100%;
+                            font-family: var(--font-alt);
+                            font-size: large;
+                            font-weight: 600;
+                            text-align: start;
+                        }
+                    }
+
+                    .ticket-services {
+                        padding-top: 10px;
+
+                        .services-header {
+                            font-family: var(--font-alt);
+                            font-size: medium;
+                            font-weight: 600;
+                            text-align: start;
+
+                        }
+
+                        .columns {
+
+                            .service-details {
+
+                                p {
+                                    font-family: var(--font-alt);
+                                    font-size: medium;
+                                    text-align: start;
+                                }
+
+                            }
+
+                            .service-details-header {
+
+                                p {
+                                    font-family: var(--font-alt);
+                                    font-size: medium;
+                                    font-weight: 600;
+                                    text-align: start;
+                                }
+
+                            }
+
+                            &.service-row {
+                                border-bottom: 1px solid var(--fade-grey-dark-8);
+                            }
+
+                            &.service-row:last-child {
+                                border-bottom: none;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .ticket-footer {
+                min-height: 65px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                border-top: 1px solid var(--fade-grey-dark-8);
+
+                .ticket-footer-inner {
+                    padding: 1.25rem 1rem;
+
+                    .button {
+                        margin: 0 .5rem;
+                        height: 40px;
+                    }
+                }
+
+            }
+
+        }
+
+        .placeholder {
+            height: 100%;
+        }
+
+    }
+
+}
+
+.page-placeholder {
+    .placeholder-content {
+
+        p {
+            &.is-larger {
+                width: 320px !important;
+            }
+        }
+    }
+}
+
+.waiting-list-inner {
+    height: 100%;
+    overflow: hidden;
+
+
+
+}
+
+.waiting-lists-container {
+    padding: 1rem;
+    padding-bottom: 0;
+    gap: 20px;
+    height: 100%;
+    width: 100%;
+
+
+
+}
+
+.is-dark {
+
+
+    .waiting-list-outer-layout {
+        background: var(--dark-sidebar-light-6);
+        border-color: var(--dark-sidebar-light-12);
+
+        .ticket-details-layout {
+
+            .ticket-details-inner {
+
+                width: 100%;
+                min-height: 100%;
+                background: var(--dark-sidebar-light-15);
+
+                .ticket-content {
+
+                    .ticket-content-inner {
+
+                        .ticket-header {
+                            border-color: var(--dark-sidebar-light-12) !important;
+
+                        }
+
+                        .ticket-services {
+
+                            .columns {
+
+                                &.service-row {
+                                    border-color: var(--dark-sidebar-light-12) !important;
+                                }
+
+                                &.service-row:last-child {
+                                    border-bottom: none;
+                                }
+
+
+                            }
+                        }
+
+                    }
+                }
+
+                .ticket-footer {
+                    border-color: var(--dark-sidebar-light-12) !important;
+
+                }
+
+
+            }
+        }
+
+    }
+
+
+}
+</style>

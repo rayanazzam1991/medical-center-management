@@ -18,6 +18,10 @@ export interface EmployeeWaitingList {
     ticket: Ticket
 }
 
+export interface TicketServicesNotesHelper {
+    requested_service_id: number
+    note?: string
+}
 
 export interface WaitingListSearchFilter {
     provider_id?: number

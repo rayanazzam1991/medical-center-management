@@ -20,7 +20,6 @@ const waitingListStore = useWaitingList()
 const waitingListLists = ref<WaitingList[]>([])
 const searchFilter = ref(defaultWaitingListSearchFilter)
 const keyIncrement = ref(0)
-const isExpanded = ref(false)
 onMounted(async () => {
     const { waiting_lists } = await getWaitingLists(searchFilter.value)
     waitingListLists.value = waiting_lists
