@@ -1,3 +1,4 @@
+import { ServiceProvider } from "../../Sales/ServiceProvider/serviceProvider"
 import { defaultItem, Item } from "../../Warehouse/Item/item"
 import { BaseConsts } from "/@src/utils/consts/base"
 import messages from "@intlify/vite-plugin-vue-i18n/messages"
@@ -45,6 +46,15 @@ export interface CreateServiceItemHelper {
   quantity: number
   isNew: boolean
 }
+export interface ServiceWithProvider {
+  id: number
+  name: string
+  status: number
+  description?: string
+  service_price?: number
+  duration_minutes?: number
+  providers: ServiceProvider[]
+}
 export interface ServiceSearchFilter {
   name?: string
   status?: number
@@ -76,6 +86,15 @@ export const defaultCreateService: CreateService = {
   has_item: false,
   quantity_item: 0,
   service_items: []
+}
+export const defaultServiceWithProvider: ServiceWithProvider = {
+  id: 0,
+  name: '',
+  status: 1,
+  description: '',
+  duration_minutes: undefined,
+  service_price: undefined,
+  providers: []
 }
 export const defaultServiceSearchFilter: ServiceSearchFilter = {
   name: undefined,

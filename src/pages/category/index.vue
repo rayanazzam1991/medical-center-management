@@ -37,7 +37,6 @@ const default_per_page = ref(1)
 const selectedStatus = ref(0)
 const originalSelectedStatus = ref(0)
 
-console.log("setup");
 
 onMounted(async () => {
 

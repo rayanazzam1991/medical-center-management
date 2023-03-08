@@ -140,7 +140,6 @@ export default defineComponent({
         const onSubmitAdd = handleSubmit(async (values) => {
             let itemData = currentItem.value
             let itemForm = currentCreateUpdateItem.value
-            console.log(itemForm.is_for_sale)
             itemForm.name = itemData.name
             itemForm.price = itemData.price
             itemForm.cost = itemData.cost

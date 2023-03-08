@@ -23,9 +23,9 @@ import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } fro
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
+import { EmployeeConsts } from '/@src/models/Employee/employee';
 
-
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('employee.form.edit_step_1_title'))
 const head = useHead({
@@ -53,6 +53,9 @@ const currentUser = ref(defaultCreateUpdateUser)
 const currentEmployee = ref(defaultCreateEmployee)
 const employeeId = ref(0)
 const selectedDepartmentId = ref(0)
+const selectedType = ref<number>(0)
+const enableBasicSalary = ref<boolean>(false)
+const enablePaymentPercentage = ref<boolean>(false)
 
 // @ts-ignore
 employeeId.value = route.params.id
@@ -74,6 +77,8 @@ const fetchEmployee = async () => {
     currentEmployee.value.basic_salary = employee.basic_salary
     currentEmployee.value.id = employee.id
     currentEmployee.value.user = employee.user
+    currentEmployee.value.payment_percentage = employee.payment_percentage
+    currentEmployee.value.type = employee.payment_percentage
     employeeForm.userForm.id = employee.user.id
     employeeForm.userForm.first_name = currentUser.value.first_name
     employeeForm.userForm.last_name = currentUser.value.last_name
@@ -92,6 +97,7 @@ const fetchEmployee = async () => {
     employeeForm.dataUpdate.id = currentEmployee.value.id
 
     selectedDepartmentId.value = employee.user.room.department?.id ?? 0
+    selectedType.value = employee.type
 
 
 }
@@ -107,7 +113,7 @@ const departmentsList = ref<Department[]>([])
 onMounted(async () => {
     if (!isLoading.value) {
         isLoading.value = true
-        let citySearchFilter = {} as CitySearchFilter 
+        let citySearchFilter = {} as CitySearchFilter
         citySearchFilter.per_page = 500
         const { cities } = await getCitiesList(citySearchFilter)
         citiesList.value = cities
@@ -149,10 +155,7 @@ const getRoomsByDepartment = async () => {
 
 }
 
-
-
 const validationSchema = employeeEditvalidationSchema
-
 const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
@@ -168,7 +171,8 @@ const { handleSubmit } = useForm({
         starting_date: currentEmployee.value.starting_date,
         end_date: currentEmployee.value.end_date,
         basic_salary: currentEmployee.value.basic_salary,
-        nationality_id: currentEmployee.value.nationality_id
+        nationality_id: currentEmployee.value.nationality_id,
+        payment_percentage: currentEmployee.value.payment_percentage
     },
 })
 
@@ -177,10 +181,28 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     var userData = currentUser.value
     var employeeData = currentEmployee.value
+    let selectedType
+    if (employeeData.basic_salary == 0) {
+        if (employeeData.payment_percentage == 0) {
+            notif.error(t('toast.error.basic_salary_payment_percentage_required'))
+            return
+        } else {
+            selectedType = EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE
+        }
+    } else {
+        if (employeeData.payment_percentage == 0) {
+            selectedType = EmployeeConsts.TYPE_SALARIED_EMPLOYEE
+        } else {
+            selectedType = EmployeeConsts.TYPE_HYBRID_EMPLOYEE
+        }
+    }
+
     employeeForm.dataUpdate.starting_date = employeeData.starting_date
     employeeForm.dataUpdate.end_date = employeeData.end_date
     employeeForm.dataUpdate.basic_salary = employeeData.basic_salary
     employeeForm.dataUpdate.nationality_id = employeeData.nationality_id
+    employeeForm.dataUpdate.payment_percentage = employeeData.payment_percentage
+    employeeForm.dataUpdate.type = selectedType
     employeeForm.userForm.first_name = userData.first_name
     employeeForm.userForm.last_name = userData.last_name
     employeeForm.userForm.password = userData.password
@@ -191,7 +213,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
-    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm)
+    const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm, [])
     if (success) {
         employeeForm.dataUpdate.id = employee.id
         // @ts-ignore
@@ -235,7 +257,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="first_name">
-                                        <VLabel class="required">{{t('employee.form.first_name')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.first_name') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.first_name" type="text" placeholder=""
                                                 autocomplete="given-first_name" />
@@ -245,7 +267,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6 ">
                                     <VField id="last_name">
-                                        <VLabel class="required">{{t('employee.form.last_name')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.last_name') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.last_name" type="text" placeholder=""
                                                 autocomplete="given-last_name" />
@@ -260,11 +282,12 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="phone_number">
-                                        <VLabel class="required">{{t('employee.form.phone_number')}} <span>(+964)</span></VLabel>
+                                        <VLabel class="required">{{ t('employee.form.phone_number') }} <span>(+964)</span>
+                                        </VLabel>
                                         <VControl icon="feather:chevrons-right">
 
-                                            <VInput disabled v-model="currentUser.phone_number" type="number"
-                                                placeholder="" autocomplete="given-first_name" />
+                                            <VInput disabled v-model="currentUser.phone_number" type="number" placeholder=""
+                                                autocomplete="given-first_name" />
                                             <ErrorMessage class="help is-danger" name="phone_number" />
                                         </VControl>
                                     </VField>
@@ -272,7 +295,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
                                 <div class="column is-6">
                                     <VField id="birth_date">
-                                        <VLabel class="required">{{t('employee.form.birth_date')}} </VLabel>
+                                        <VLabel class="required">{{ t('employee.form.birth_date') }} </VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentUser.birth_date" type="date" placeholder=""
                                                 autocomplete="given-birth_date" />
@@ -288,14 +311,14 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 <div class="column is-half">
 
                                     <VField id="gender">
-                                        <VLabel class="required ml-3">{{t('employee.form.gender')}}</VLabel>
+                                        <VLabel class="required ml-3">{{ t('employee.form.gender') }}</VLabel>
 
                                         <VControl>
                                             <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
                                                 color="success" />
 
-                                            <VRadio v-model="currentUser.gender" value="Female" label="Female"
-                                                name="gender" color="success" />
+                                            <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
+                                                color="success" />
                                             <ErrorMessage class="help is-danger" name="gender" />
                                         </VControl>
                                     </VField>
@@ -303,13 +326,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
-                                        <VLabel class="required">{{t('employee.form.city')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.city') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.city_id">
-                                                <VOption value="">{{t('employee.form.city')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.city') }}</VOption>
                                                 <VOption v-for="city in citiesList" :key="city.id" :value="city.id">{{
-        city.name
-}}
+                                                    city.name
+                                                }}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="city_id" />
@@ -324,7 +347,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-12">
                                     <VField id="address">
-                                        <VLabel class="required">{{t('employee.form.address')}} </VLabel>
+                                        <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
                                         <VControl>
                                             <VTextarea v-model="currentUser.address" />
                                             <ErrorMessage class="help is-danger" name="address" />
@@ -339,17 +362,17 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField>
-                                        <VLabel class="required">{{t('employee.form.department')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.department') }}</VLabel>
                                         <VControl>
                                             <div class="select">
 
                                                 <select @change="getRoomsByDepartment" v-if="currentUser"
                                                     v-model="selectedDepartmentId">
-                                                    <VOption :value="0">{{t('employee.form.department')}}</VOption>
+                                                    <VOption :value="0">{{ t('employee.form.department') }}</VOption>
                                                     <VOption v-for="department in departmentsList" :key="department.id"
                                                         :value="department.id">{{
-        department.name
-}}
+                                                            department.name
+                                                        }}
                                                     </VOption>
                                                 </select>
                                             </div>
@@ -359,14 +382,14 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
                                 <div class="column is-6">
                                     <VField id="room_id">
-                                        <VLabel class="required">{{t('employee.form.room')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.room') }}</VLabel>
                                         <VControl>
                                             <VSelect :disabled="roomsList.length <= 0" v-if="currentUser"
                                                 v-model="currentUser.room_id">
-                                                <VOption>{{t('employee.form.room')}}</VOption>
+                                                <VOption>{{ t('employee.form.room') }}</VOption>
                                                 <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
-        room.number
-}}
+                                                    room.number
+                                                }}
                                                 </VOption>
                                             </VSelect>
                                             <ErrorMessage class="help is-danger" name="room_id" />
@@ -382,7 +405,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="starting_date">
-                                        <VLabel class="required">{{t('employee.form.starting_date')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.starting_date') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.starting_date" type="date" placeholder=""
                                                 autocomplete="given-starting_date" />
@@ -392,7 +415,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="end_date">
-                                        <VLabel class="optional">{{t('employee.form.end_date')}}</VLabel>
+                                        <VLabel class="optional">{{ t('employee.form.end_date') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
                                             <VInput v-model="currentEmployee.end_date" type="date" placeholder=""
                                                 autocomplete="given-end_date" />
@@ -400,7 +423,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
                         <!--Fieldset-->
@@ -408,20 +430,30 @@ const onSubmitEdit = handleSubmit(async (values) => {
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField id="basic_salary">
-                                        <VLabel class="required">{{t('employee.form.basic_salary')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.basic_salary') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
-                                                autocomplete="given-basic_salary" />
+                                            <VInput :disabled="!enableBasicSalary" v-model="currentEmployee.basic_salary"
+                                                type="number" placeholder="" autocomplete="given-basic_salary" />
                                             <ErrorMessage class="help is-danger" name="basic_salary" />
                                         </VControl>
                                     </VField>
                                 </div>
                                 <div class="column is-6">
+                                    <VField id="payment_percentage">
+                                        <VLabel class="required">{{ t('employee.form.payment_percentage') }}</VLabel>
+                                        <VControl icon="feather:percent">
+                                            <VInput :disabled="!enablePaymentPercentage"
+                                                v-model="currentEmployee.payment_percentage" type="number" />
+                                            <ErrorMessage class="help is-danger" name="payment_percentage" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-6">
                                     <VField id="nationality_id">
-                                        <VLabel class="required">{{t('employee.form.nationality')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                                <VOption value="">{{t('employee.form.nationality')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
                                                 <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
                                                     :value="nationality.id">{{ nationality.name }}
                                                 </VOption>
@@ -431,11 +463,11 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     </VField>
                                 </div>
                                 <div class="column is-6">
-                                    <VField id="nationality_id">
-                                        <VLabel class="required">{{t('employee.form.position')}}</VLabel>
+                                    <VField id="position_id">
+                                        <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentEmployee" v-model="currentEmployee.position_id">
-                                                <VOption value="">{{t('employee.form.position')}}</VOption>
+                                                <VOption value="">{{ t('employee.form.position') }}</VOption>
                                                 <VOption v-for="position in positionsList" :key="position.id"
                                                     :value="position.id">{{ position.name }}
                                                 </VOption>
@@ -446,14 +478,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                 </div>
                                 <div class="column is-6">
                                     <VField id="user_status_id">
-                                        <VLabel class="required">{{t('employee.form.status')}}</VLabel>
+                                        <VLabel class="required">{{ t('employee.form.status') }}</VLabel>
                                         <VControl>
                                             <VSelect v-if="currentUser" v-model="currentUser.user_status_id">
-                                                <VOption value="">{{t('employee.form.status')}}</VOption>
-                                                <VOption v-for="status in statusesList" :key="status.id"
-                                                    :value="status.id">
+                                                <VOption value="">{{ t('employee.form.status') }}</VOption>
+                                                <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
                                                     {{
-        status.name
+                                                        status.name
                                                     }}
                                                 </VOption>
                                             </VSelect>
@@ -462,9 +493,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     </VField>
                                 </div>
 
-
                             </div>
-
                         </div>
                     </div>
                 </div>

@@ -215,13 +215,10 @@ const onSubmitAdd = handleSubmit(async () => {
     return;
   }
   const selectedCurrency = currenciesList.value.find((currency) => currency.id == currencyId.value)
-  console.log(selectedCurrency?.name)
   let index = 1;
   tempAccountRecords.value.forEach(entry => {
-    console.log(11);
     const account = accountsListDropDown.value.find((account) => account.id == entry.account_id) ?? defaultAccount
     if (!account?.currency?.is_main && selectedCurrency?.is_main) {
-      console.log(account.id)
       if (index == 1) {
         index++
       }
@@ -229,8 +226,6 @@ const onSubmitAdd = handleSubmit(async () => {
     }
 
   });
-  console.log(index, 'index');
-
   if (index > 1) {
     notif.error(t('financial_record.currency_must_be_dollar'))
     return;
@@ -407,7 +402,6 @@ const calcCurrencyDifferences = debounce(() => {
                     <VControl>
                       <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeRecord(record, mainIndex)"
                         color="danger">
-                        {{ t('financial_record.remove_row') }}
                       </VIconButton>
                     </VControl>
                   </VField>

@@ -83,7 +83,6 @@ const { handleSubmit } = useForm({
     }
 });
 const onSubmit = handleSubmit(async () => {
-    console.log('valid')
     createRecord.value.accounts = []
     createRecord.value.accounts.push(
         { account_id: cashAccountId.value, amount: cashAmount.value, type: AccountConsts.DEBIT_TYPE },

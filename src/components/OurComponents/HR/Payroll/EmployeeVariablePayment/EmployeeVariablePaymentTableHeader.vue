@@ -1,7 +1,7 @@
-<script lang="ts">import { useI18n } from 'vue-i18n'
-import { defaultEmployeeSearchFilter } from '/@src/models/Employee/employee'
+<script lang="ts">
+import { useI18n } from 'vue-i18n'
 import { defaultEmployeeVariablePaymentSearchFilter } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment'
-import { defaultVariablePaymentSearchFilter, VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment'
+import { VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment'
 import { defaultPagination } from '/@src/utils/response'
 
 
@@ -31,7 +31,7 @@ export default defineComponent({
 
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             nameSearchField.value = ''
@@ -67,7 +67,7 @@ export default defineComponent({
             searchFilter.value.type = undefined
             searchFilter.value.status = undefined
             searchFilter.value.from = undefined
-            searchFilter.value.to = undefined            
+            searchFilter.value.to = undefined
             nameSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++
@@ -83,7 +83,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t, keyIncrement, nameSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
+        return { t, keyIncrement, nameSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
@@ -96,7 +96,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="nameSearchField" type="text" :placeholder="t('employee_variable_payment.search_filter.name')" />
+                                <VInput v-model="nameSearchField" type="text"
+                                    :placeholder="t('employee_variable_payment.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

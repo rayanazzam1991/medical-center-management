@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
-import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
 
@@ -25,6 +25,17 @@ export async function getEmployeeApi(
   employee_id: number
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.get(`employee/${employee_id}`)
+  return { response }
+}
+export async function addServicesApi(
+  api: AxiosInstance,
+  employee_id: number,
+  services: Array<CreateUpdateServicesHelper>
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(
+    `employee/${employee_id}/addServices`,
+    { services: services }
+  )
   return { response }
 }
 

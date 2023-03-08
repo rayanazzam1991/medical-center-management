@@ -82,8 +82,10 @@ export default defineComponent({
             variablePaymentSearchFilter.status = EmployeeVariablePaymentConsts.PENDING
             const { variablePayments } = await getVariablePaymentsList(variablePaymentSearchFilter)
             variablePaymentsList.value = variablePayments
-            let employeesSearchFilter = {} as EmployeeSearchFilter
-            employeesSearchFilter.per_page = 500
+            const employeesSearchFilter = {
+                per_page: 500,
+                is_salaries_related: true
+            } as EmployeeSearchFilter
             const { employees } = await getEmployeesList(employeesSearchFilter)
             employeesList.value = employees
 

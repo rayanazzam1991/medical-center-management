@@ -12,7 +12,7 @@ import { useEmployee } from '../stores/Employee/employeeStore';
 import { useI18n } from 'vue-i18n';
 const employeeStore = useEmployee()
 const employeeForm = useEmployeeForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => `${employeeForm.stepTitle} - Employee`),
 })
@@ -34,19 +34,27 @@ useHead({
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(employeeForm.canNavigate && 'is-active')]">
                 <div class="columns buttons-width">
-                    <div class="wizard-buttons-inner-padding">
+                    <div class="wizard-buttons-inner-padding is-flex is-justify-content-start">
                         <VLoader size="small" :active="employeeStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
+                            <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="employeeForm.validateStepFn === null"
                                 :color="employeeForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ t('employee.form.edit_submit')
+                                {{ employeeForm.getStep() == 2 ? t('employee.form.submit_and_finish_button') :
+                                    t('employee.form.submit_and_next_button')
                                 }}
                             </VButton>
                         </VLoader>
+                        <VButton v-if="employeeForm.skipable === true" class="wizard-button-previous"
+                            :color="employeeForm.skipable === true ? 'dark' : 'dark'"
+                            @click="() => employeeForm?.skipStepFn?.()">
+                            {{ employeeForm.getStep() == 2 ? t('employee.form.skip_and_finish_button') :
+                                t('employee.form.skip_button')
+                            }}
+                        </VButton>
                     </div>
                 </div>
-
             </div>
+
         </form>
     </MinimalLayout>
 </template>
