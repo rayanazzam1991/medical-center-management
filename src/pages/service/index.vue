@@ -26,16 +26,24 @@ const router = useRouter()
 const serviceStore = useService()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const quantityItem = ref(0)
 onMounted(async () => {
   const { services, pagination } = await getServicesList(searchFilter.value)
   servicesList.value = services
+  servicesList.value.forEach((service) => {
+    let itemQuantity = 0;
+    if (service.has_item) {
+      service.service_items.forEach((item) => {
+        itemQuantity += item.quantity
+      });
+      service.quantity_item = itemQuantity
+    }
+  });
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
 
 });
-
-
 const search = async (searchFilter2: ServiceSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
@@ -122,6 +130,36 @@ const columns = {
       ),
 
   },
+  has_item: {
+    align: 'center',
+    label: t('service.table.columns.hasItem'),
+    renderRow: (row: any) =>
+      h(
+        VTag,
+        {
+          rounded: true,
+          color:
+            row?.has_item === ServiceConsts.IS_HAS_ITEM
+              ? 'warning'
+              : row?.has_item === ServiceConsts.IS_NOT_HAS_ITEM
+                ? 'info'
+                : undefined,
+        },
+        {
+          default() {
+            return ServiceConsts.showHasItem(row?.has_item)
+          },
+        }
+      ),
+
+  },
+  quantity: {
+    align: 'center',
+    sortable: true,
+    label: t('service.table.columns.quantity'),
+    renderRow: (row: any) =>
+      h('span', row?.quantity_item ?? '-')
+  },
   actions: {
     align: 'center',
     label: t('service.table.columns.actions'),
@@ -167,19 +205,19 @@ const columns = {
       no-router @update:current-page="getServicesPerPage" />
     <h6 class="pt-2 is-size-7" v-if="servicesList.length != 0 && !serviceStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
 
     <VPlaceloadText v-if="serviceStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-
 </template>
 

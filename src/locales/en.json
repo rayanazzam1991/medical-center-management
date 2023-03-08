@@ -255,6 +255,9 @@
       },
       "employee": {
         "basic_salary_payment_percentage_required": "Basic Salary or Payment Percentage is required"
+      },
+      "item": {
+        "item_service_is_duplicated": "Some Items is duplicated"
       }
     },
     "file": {
@@ -1089,7 +1092,11 @@
       "price": "Service Price",
       "description": "Service Description",
       "estimated": "Estimated Duration",
-      "status": "Service Status"
+      "status": "Service Status",
+      "item": {
+        "name": "Name",
+        "quantity": "Quantity"
+      }
     },
     "form": {
       "page_title": "Service",
@@ -1100,7 +1107,10 @@
       "desciption": "Desciption",
       "price": "Price",
       "duration": "Duration",
-      "status": "Status"
+      "status": "Status",
+      "select_item": "Select Item",
+      "yes": "Yes",
+      "no": "No"
     },
     "search_filter": {
       "title": "Filter Service",
