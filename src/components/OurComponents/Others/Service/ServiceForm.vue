@@ -141,12 +141,20 @@ export default defineComponent({
       serviceData.service_items = []
       if (currentService.value.has_item) {
         serviceItems.value.forEach(element => {
+
           serviceData.service_items.push({ item_id: element.item_id, quantity: element.quantity })
           if (element.quantity <= 0) {
+
             const item: Item = itemsList.value.find((itemElemnt) => itemElemnt.id === element.item_id) ?? defaultItem
-            notif.error(`item ${item.name} quantity < 0 `)
+            notif.error(t('toast.error.item.item_service_quantity'))
             quantityError = true
           }
+          if (element.item_id == 0) {
+            const item: Item = itemsList.value.find((itemElemnt) => itemElemnt.id === element.item_id) ?? defaultItem
+            notif.error(t('toast.error.item.item_service_empty'))
+            quantityError = true
+          }
+
         });
         if (quantityError) return
       }
