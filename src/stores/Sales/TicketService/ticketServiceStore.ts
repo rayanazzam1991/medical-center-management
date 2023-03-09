@@ -1,6 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { serveTicketServiceApi } from "/@src/utils/api/Sales/TicketService"
+import { TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
+import { getTicktServicesListApi, serveTicketServiceApi } from "/@src/utils/api/Sales/TicketService"
+import { defaultPagination, Pagination } from "/@src/utils/response"
 
 
 export const useTicketService = defineStore('ticketService', () => {
@@ -9,14 +11,15 @@ export const useTicketService = defineStore('ticketService', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
+    const pagination = ref<Pagination>(defaultPagination)
 
-    async function serveTicketServiceStore(ticketServiceId: number , ticketServiceNote : string | undefined) {
+    async function serveTicketServiceStore(ticketServiceId: number, ticketServiceNote: string | undefined) {
         if (loading.value) return
 
         loading.value = true
 
         try {
-            const returnedResponse = await serveTicketServiceApi(api, ticketServiceId , ticketServiceNote)
+            const returnedResponse = await serveTicketServiceApi(api, ticketServiceId, ticketServiceNote)
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
             message.value = returnedResponse.response.message
@@ -34,15 +37,43 @@ export const useTicketService = defineStore('ticketService', () => {
         }
     }
 
+    async function getTicktServicesListStore(searchFilter: TicketServiceSearchFilter) {
+        if (loading.value) return
 
-    
+        loading.value = true
+
+        try {
+            const returnedResponse = await getTicktServicesListApi(api, searchFilter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data
+
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
+
+
     return {
         success,
         error_code,
         message,
         loading,
-        serveTicketServiceStore
-        } as const
+        pagination,
+        serveTicketServiceStore,
+        getTicktServicesListStore
+    } as const
 })
 
 /**

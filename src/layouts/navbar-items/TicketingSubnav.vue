@@ -46,6 +46,19 @@ const emits = defineEmits<{
                                     </li>
                                 </ul><br />
                             </div>
+                            <div class="column is-4">
+                                <h4 class="column-heading">{{ t('ticketing_subnav.requested_services.requested_services') }}
+                                </h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/requested-services">
+                                            <i class="lnir lnir-service" aria-hidden="true"></i>
+                                            <span>{{ t('ticketing_subnav.requested_services.requested_services') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul><br />
+                            </div>
                         </div>
                     </div>
                 </div>

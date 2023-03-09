@@ -229,6 +229,9 @@
     },
     "waiting_list": {
       "waiting_lists": "غرف الانتظار"
+    },
+    "requested_services": {
+      "requested_services": "الخدمات المطلوبة"
     }
   },
   "user_profile_dropdown": {
@@ -341,7 +344,8 @@
     "view": "معاينة",
     "edit": "تعديل",
     "remove": "إزالة",
-    "change_status": "تغيير الحالة"
+    "change_status": "تغيير الحالة",
+    "view_my_waiting_list": "عرض غرفة الانتظار"
   },
   "add_quantity": {
     "form": {
@@ -2256,6 +2260,35 @@
     "no_data": {
       "title": "لا يوجد بيانات",
       "subtitle": "يرجى التأكد من مدخلات البحث"
+    }
+  },
+  "requested_services": {
+    "table": {
+      "title": "الخدمات المطلوبة",
+      "columns": {
+        "customer_name": "الزبون",
+        "provider_name": "المخدم",
+        "service_name": "الخدمة",
+        "price": "السعر",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": "بواسطة",
+        "currency": "العملة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية الخدمات المطلوبة",
+      "customer": "الزبون",
+      "department": "القسم",
+      "provider": "المخدم",
+      "room": "الغرفة",
+      "service": "الخدمة",
+      "status": "الحالة",
+      "created_at": "تاريخ الإنشاء ",
+      "from": "من: ",
+      "to": "إلى: "
     }
   }
 }

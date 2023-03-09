@@ -324,7 +324,8 @@
     "view": "View",
     "edit": "Edit",
     "remove": "Remove",
-    "change_status": "Change Status"
+    "change_status": "Change Status",
+    "view_my_waiting_list": "View Waiting Room"
   },
   "add_quantity": {
     "form": {
@@ -791,7 +792,42 @@
       "to": "To: ",
       "quick_search": "Name/Number..."
     },
-    "header_button": "Add Employee"
+    "header_button": "Add Employee",
+    "waiting_list": {
+      "header_title": "Waiting Room For Provider",
+      "title": "Waiting Room",
+      "place_holder": {
+        "title": "The Room Is Being Loaded..",
+        "subtitle": "This might take a few seconds/minutes"
+      },
+      "no_data": {
+        "title": "There is no tickets in waiting room",
+        "subtitle": " "
+      },
+      "no_serving_client": {
+        "title": "No Ticket",
+        "subtitle": "There is no serving ticket for now"
+      },
+      "ticket_id": "Ticket # :",
+      "customer_name": "Customer name :",
+      "requested_services": "Requested services :",
+      "service_items_quantity": "Qty :",
+      "service_items": "Items:",
+      "make_served": "Mark as served",
+      "service_name": "Service",
+      "service_provider": "Provider",
+      "notes": "Notes ",
+      "status": "Status",
+      "actions": "Actions",
+      "done": "Done",
+      "serve_next": "Next ticket",
+      "type_notes": "Notes...",
+      "serve_confirmation": {
+        "title": "Mark As Served Confirmation",
+        "caution": "Are You Sure?",
+        "subtitle": "Requested service will be served with written notes"
+      }
+    }
   },
   "employee_attendance": {
     "table": {

@@ -16,8 +16,9 @@ import sleep from '/@src/utils/sleep'
 import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import EmployeeDropDown from '/@src/components/OurComponents/Employee/EmployeeDropDown.vue'
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('employee.table.title'))
 useHead({
     title: t('employee.table.title'),
@@ -196,14 +197,19 @@ const columns = {
         label: t('employee.table.columns.actions'),
 
         renderRow: (row: any) =>
-            h(NoEditDropDown, {
+            h(EmployeeDropDown, {
                 onView: () => {
                     router.push({ path: `/employee/${row?.id}` })
                 },
                 onChangeStatus: () => {
                     emplyeeChangeStatus.value = row
                     changeStatusPopup.value = true
+                },
+                onViewMyWaitingList: () => {
+                    router.push({ path: `/employee/${row?.id}/waiting-list` })
+
                 }
+
             }),
 
     },
@@ -211,11 +217,9 @@ const columns = {
 </script>
 
 <template>
-    <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="t('employee.header_button')" @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page"
-        @update:sort="employeeSort">
+    <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('employee.header_button')"
+        @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <VFlexTableWrapper :columns="columns" :data="employeesList" :limit="searchFilter.per_page" @update:sort="employeeSort">
 
         <VFlexTable separators clickable>
             <template #body>
@@ -228,8 +232,7 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="employeesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitle')"
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -242,20 +245,22 @@ const columns = {
             @update:current-page="getEmployeesPerPage" />
         <h6 class="pt-2 is-size-7" v-if="employeesList.length != 0 && !employeeStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
 
         <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :title="t('employee.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('employee.table.modal_title.status')" :open="changeStatusPopup" actions="center"
+        @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -267,8 +272,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="emplyeeChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-        UserStatusConsts.getStatusName(status.id)
-}}
+                                            UserStatusConsts.getStatusName(status.id)
+                                        }}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />
@@ -280,8 +285,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-
 </template>
