@@ -333,7 +333,8 @@
     "view": "معاينة",
     "edit": "تعديل",
     "remove": "إزالة",
-    "change_status": "تغيير الحالة"
+    "change_status": "تغيير الحالة",
+    "close_ticket": "إغلاق التذكرة"
   },
   "add_quantity": {
     "form": {
@@ -2201,6 +2202,7 @@
     "back_button": "العودة للخلف",
     "table": {
       "title": "التذاكر",
+      "modal_title": "إغلاق التذكرة ",
       "columns": {
         "id": "رقم المعرّف",
         "services_count": "عدد الخدمات",
@@ -2211,6 +2213,10 @@
         "created_at": "تاريخ الإنشاء ",
         "created_by": " بواسطة",
         "actions": "الإجراءات"
+      },
+      "delete_modal": {
+        "title": "هل أنت متأكد؟",
+        "subtitle": "انت على وشك إغلاق التذكرة نهائيا "
       }
     },
     "search_filter": {

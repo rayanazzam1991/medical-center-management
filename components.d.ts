@@ -34,6 +34,7 @@ declare module '@vue/runtime-core' {
     ClientOnly: typeof import('./src/components/ClientOnly.vue')['default']
     ClientsCashReceiptsSearchFilterModal: typeof import('./src/components/OurComponents/Accounting/Transaction/ClientsCashReceiptsSearchFilterModal.vue')['default']
     ClientsCashReceiptsTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/ClientsCashReceiptsTableHeader.vue')['default']
+    CloseTicketDropDown: typeof import('./src/components/OurComponents/CloseTicketDropDown.vue')['default']
     ComponentsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ComponentsMobileSubsidebar.vue')['default']
     ComponentsSubnav: typeof import('./src/layouts/navbar-items/ComponentsSubnav.vue')['default']
     ContactWidget: typeof import('./src/components/partials/widgets/ui-creative/ContactWidget.vue')['default']

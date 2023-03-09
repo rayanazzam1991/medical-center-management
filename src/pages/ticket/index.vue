@@ -6,14 +6,18 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
 import { useI18n } from 'vue-i18n'
-import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
-import { getTicketsList } from '/@src/services/Sales/Ticket/ticketService'
+import { closeTicket, getTicketsList } from '/@src/services/Sales/Ticket/ticketService'
+import CloseTicketDropDown from '/@src/components/OurComponents/CloseTicketDropDown.vue'
+import sleep from '/@src/utils/sleep'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { Notyf } from 'notyf'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('ticket.table.title'))
 useHead({
   title: t('ticket.table.title'),
 })
+const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultTicketSearchFilter)
 const ticketsList = ref<Array<Ticket>>([])
 const paginationVar = ref(defaultPagination)
@@ -21,6 +25,8 @@ const router = useRouter()
 const ticketStore = useTicket()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const closeTicketPopup = ref(false)
+const selectedCloseTicket = ref<Ticket>(defaultTicket)
 onMounted(async () => {
   const { tickets, pagination } = await getTicketsList(searchFilter.value)
   ticketsList.value = tickets
@@ -28,6 +34,22 @@ onMounted(async () => {
   keyIncrement.value = keyIncrement.value + 1
   default_per_page.value = pagination.per_page
 });
+
+
+const closeTicketStatus = async () => {
+  const { message, success } = await closeTicket(selectedCloseTicket.value.id)
+  if (success) {
+    search(searchFilter.value)
+    notif.dismissAll()
+    await sleep(200);
+    notif.success(t('toast.success.edit'))
+  } else {
+    await sleep(200);
+    notif.error(message)
+  }
+  closeTicketPopup.value = false
+}
+
 
 const search = async (newSearchFilter: TicketSearchFilter) => {
   paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
@@ -57,6 +79,7 @@ const ticketSort = async (value: string) => {
   }
   await search(searchFilter.value)
 }
+
 
 const columns = {
   id: {
@@ -134,13 +157,17 @@ const columns = {
     align: 'center',
     label: t('ticket.table.columns.actions'),
     renderRow: (row: any) =>
-      h(NoDeleteDropDown, {
+      h(CloseTicketDropDown, {
         onEdit: () => {
           router.push({ path: `/ticket/${row.id}/edit` })
         },
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
         },
+        onCloseTicket: () => {
+          closeTicketPopup.value = true
+          selectedCloseTicket.value = row
+        }
 
       }),
   },
@@ -186,6 +213,17 @@ const columns = {
 
     <VPlaceloadText v-if="ticketStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
+  <VModal :title="t('ticket.table.modal_title')" :open="closeTicketPopup" actions="center"
+    @close="closeTicketPopup = false">
+    <template #content>
+      <VPlaceholderSection :title="t('ticket.table.delete_modal.title')"
+        :subtitle="t('ticket.table.delete_modal.subtitle', { title: viewWrapper.pageTitle })" />
+    </template>
+    <template #action="{ close }">
+      <VButton color="primary" raised @click="closeTicketStatus()">{{ t('modal.buttons.confirm') }}
+      </VButton>
+    </template>
+  </VModal>
 </template>
 <style lang="scss">
 .tooltip {

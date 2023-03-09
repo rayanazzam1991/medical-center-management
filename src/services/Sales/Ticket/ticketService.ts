@@ -42,3 +42,11 @@ export async function getTicketsList(searchFilter: TicketSearchFilter) {
   return { success, error_code, message, tickets, pagination }
 
 }
+export async function closeTicket(ticketId: number) {
+  const ticketResponse = useTicket()
+  await ticketResponse.closeTicketStore(ticketId)
+  var success: boolean = ticketResponse.success ?? false
+  var error_code: string = ticketResponse.error_code ?? ''
+  var message: string = ticketResponse.message ?? ''
+  return { success, error_code, message }
+}

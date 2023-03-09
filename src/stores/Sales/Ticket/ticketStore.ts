@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { CreateTicket, Ticket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
-import { createTicketApi, getTicketApi, getTicketsListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
+import { closeTicketApi, createTicketApi, getTicketApi, getTicketsListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -106,6 +106,27 @@ export const useTicket = defineStore('ticket', () => {
     }
   }
 
+  async function closeTicketStore(ticketId: number) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await closeTicketApi(api, ticketId)
+      var returnedTicket: Ticket
+      returnedTicket = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
   return {
     success,
@@ -117,7 +138,8 @@ export const useTicket = defineStore('ticket', () => {
     createTicketStore,
     getTicketStore,
     updateTicketStore,
-    getTicketsListStore
+    getTicketsListStore,
+    closeTicketStore
   } as const
 })
 
