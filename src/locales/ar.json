@@ -827,6 +827,7 @@
     },
     "header_button": "إضافة موظف",
     "waiting_list": {
+      "header_title": "غرفة انتظار المخدم",
       "title": "غرفة الانتظار",
       "place_holder": {
         "title": "جاري تحميل غرفة الانتظار...",
@@ -836,24 +837,29 @@
         "title": "لا يوجد أي تذاكر في غرفة الانتظار",
         "subtitle": " "
       },
-      "no_serving_client" : {
-        "title" : "لا يوجد تذكرة",
-        "subtitle" : "لا يوجد تذكرة يتم تخديمها حالياً"
+      "no_serving_client": {
+        "title": "لا يوجد تذكرة",
+        "subtitle": "لا يوجد تذكرة يتم تخديمها حالياً"
       },
       "ticket_id": "التذكرة # :",
       "customer_name": "اسم الزبون :",
       "requested_services": "الخدمات المطلوبة :",
       "service_items_quantity": "عدد :",
-      "service_items": "المواد",
+      "service_items": "المواد:",
       "make_served": "تم التخديم",
       "service_name": "الخدمة",
       "service_provider": "المخدم",
       "notes": "ملاحظات ",
       "status": "الحالة",
       "actions": "الاجراءات",
-      "submit": "تأكيد",
+      "done": "تم",
       "serve_next": "التذكرة التالية",
-      "type_notes": "ملاحظات..."
+      "type_notes": "ملاحظات...",
+      "serve_confirmation": {
+        "title": "تأكيد تخديم الزبون",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
+      }
     }
   },
   "employee_attendance": {

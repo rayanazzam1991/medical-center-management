@@ -1,8 +1,5 @@
-import { CreateVariablePayment, defaultVariablePayment, UpdateVariablePayment, VariablePayment, VariablePaymentSearchFilter } from "/@src/models/HR/Payroll/VariablePayment/variablePayment"
 import { defaultWaitingList, WaitingList, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
-import { useVariablePayment } from "/@src/stores/HR/Payoll/VariablePayment/variablePaymentStore"
 import { useWaitingList } from "/@src/stores/Sales/WaitingList/waitingListStore"
-import { Pagination } from "/@src/utils/response"
 
 
 
@@ -24,5 +21,15 @@ export async function getWaitingListByProvider(providerId: number) {
     let message: string = response.message ?? ''
 
     return { waiting_list, success, error_code, message }
+
+}
+export async function serveNextTicketInProviderWaitingList(providerId: number) {
+    const response = useWaitingList()
+    await response.serveNextTicketInProviderWaitingListStore(providerId) 
+    let success: boolean = response.success ?? false
+    let error_code: string = response.error_code ?? ''
+    let message: string = response.message ?? ''
+
+    return {  success, error_code, message }
 
 }

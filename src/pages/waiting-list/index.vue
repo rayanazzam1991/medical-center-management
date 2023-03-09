@@ -33,14 +33,13 @@ const search = async (newSearchFilter: WaitingListSearchFilter) => {
 }
 const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     searchFilter.value = newSearchFilter
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 
 </script>
 
 <template>
     <WaitingListHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" @resetFilter="resetFilter" />
-
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
         <div v-if="waitingListStore.loading">
             <div class="columns is-multiline placeholder">

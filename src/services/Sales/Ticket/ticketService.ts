@@ -30,3 +30,13 @@ export async function getTicket(ticketId: number) {
     return { success, error_code, message, ticket }
 
 }
+export async function moveTicketToNextWaitingList(ticketId: number) {
+    const ticketResponse = useTicket()
+    await ticketResponse.moveTicketToNextWaitingListStore(ticketId)
+    let success: boolean = ticketResponse.success ?? false
+    let error_code: string = ticketResponse.error_code ?? ''
+    let message: string = ticketResponse.message ?? ''
+    return { success, error_code, message }
+
+}
+

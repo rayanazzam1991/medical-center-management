@@ -5,8 +5,11 @@ import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
-import { WaitingList, defaultWaitingListSearchFilter, WaitingListSearchFilter, defaultWaitingList, TicketServicesNotesHelper } from '/@src/models/Sales/WaitingList/waitingList';
-import { getWaitingListByProvider, getWaitingLists } from '/@src/services/Sales/WaitingList/waitingListService';
+import { WaitingList, defaultWaitingList, TicketServicesNotesHelper } from '/@src/models/Sales/WaitingList/waitingList';
+import { moveTicketToNextWaitingList } from '/@src/services/Sales/Ticket/ticketService';
+import { serveTicketService } from '/@src/services/Sales/TicketService/ticketServiceService';
+import { getWaitingListByProvider, serveNextTicketInProviderWaitingList } from '/@src/services/Sales/WaitingList/waitingListService';
+import { useTicketService } from '/@src/stores/Sales/TicketService/ticketServiceStore';
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
@@ -19,6 +22,7 @@ viewWrapper.setPageTitle(t('employee.waiting_list.title'))
 useHead({ title: t('employee.waiting_list.title'), })
 const notif = useNotyf() as Notyf
 const waitingListStore = useWaitingList()
+const ticketServiceStore = useTicketService()
 const employeeWaitingList = ref<WaitingList>(defaultWaitingList)
 const keyIncrement = ref(0)
 const employeeId = ref(0)
@@ -29,19 +33,60 @@ const notesInput = ref('')
 const isThereServingTicket = ref(false)
 const selectedServeServiceId = ref(0)
 const serveServiceConfirmationPopup = ref(false)
+const intialLoading = ref(false)
+const employeeName = ref('')
 // @ts-ignore
 employeeId.value = route.params.id as number ?? 0
 onMounted(async () => {
+    intialLoading.value = true
+    const { waiting_list } = await getWaitingListByProvider(employeeId.value)
+    employeeWaitingList.value = waiting_list
+    employeeName.value = employeeWaitingList.value.provider.user.first_name + ' ' + employeeWaitingList.value.provider.user.last_name
+    serveingServiceSetup()
+    intialLoading.value = false
+});
+
+const serveNext = async () => {
+    const { success, message } = await serveNextTicketInProviderWaitingList(employeeId.value)
+    if (success) {
+        await refreshWaitingList()
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+}
+const refreshWaitingList = async () => {
     const { waiting_list } = await getWaitingListByProvider(employeeId.value)
     employeeWaitingList.value = waiting_list
 
     serveingServiceSetup()
-});
+
+}
+const markServiceAsServed = async () => {
+    const serviceNote = ticketServicesNotesHelper.value.find((element) => element.requested_service_id == selectedServeServiceId.value)?.note
+    const { success, message } = await serveTicketService(selectedServeServiceId.value, serviceNote)
+    if (success) {
+        await refreshWaitingList()
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+    serveServiceConfirmationPopup.value = false
+}
+const ticketServingDone = async () => {
+    const { success, message } = await moveTicketToNextWaitingList(servingTicket.value.id)
+    if (success) {
+        await refreshWaitingList()
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+    serveServiceConfirmationPopup.value = false
+}
+
+
 
 const serveingServiceSetup = () => {
     ticketServicesNotesHelper.value = []
     const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.SERVING)?.ticket
-    if (firstServingTicket) {
+    if (firstServingTicket && firstServingTicket.id != 0) {
         servingTicket.value = firstServingTicket
         isThereServingTicket.value = true
         servingTicket.value.requested_services.forEach((requestedService) => {
@@ -59,8 +104,9 @@ const serveingServiceSetup = () => {
 const updateTicketNotesHelper = (requestedServiceId: number) => {
     let requestedServiceHelper = ticketServicesNotesHelper.value.find((element) => element.requested_service_id == requestedServiceId)
     if (requestedServiceHelper)
-        requestedServiceHelper.note = notesInput.value
+        requestedServiceHelper.note = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.id == servingTicket.value.id)?.ticket.requested_services.find((service) => service.id == requestedServiceId)?.note
 
+    console.log(ticketServicesNotesHelper.value)
 }
 
 const serveConfirmation = (requestedServiceId: number) => {
@@ -72,8 +118,12 @@ const serveConfirmation = (requestedServiceId: number) => {
 </script>
 
 <template>
+    <div class="header is-flex is-justify-content-space-between is-align-items-center">
+        <h1>{{ t('employee.waiting_list.header_title') }} {{ employeeName }}</h1>
+    </div>
+
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
-        <div v-if="waitingListStore.loading">
+        <div v-if="intialLoading">
             <div class="columns is-multiline placeholder">
                 <div ref="markdownContainer" class="column doc-column is-12">
                     <VPlaceholderPage :title="t('waiting_list.place_holder.title')"
@@ -99,8 +149,10 @@ const serveConfirmation = (requestedServiceId: number) => {
                     <VPlaceholderPage class="placeholder" :title="t('employee.waiting_list.no_data.title')"
                         :subtitle="t('employee.waiting_list.no_data.subtitle')" larger>
                         <template #image>
-                            <img class="light-image" src="/@src/assets/illustrations/placeholders/error-5.svg" alt="" />
-                            <img class="dark-image" src="/@src/assets/illustrations/placeholders/error-5-dark.svg" alt="" />
+                            <img class="light-image" src="/@src/assets/illustrations/placeholders/having-coffee.svg"
+                                alt="" />
+                            <img class="dark-image" src="/@src/assets/illustrations/placeholders/having-coffee-dark.svg"
+                                alt="" />
                         </template>
                     </VPlaceholderPage>
                 </div>
@@ -108,8 +160,7 @@ const serveConfirmation = (requestedServiceId: number) => {
         </div>
         <div class="ticket-details-layout has-slimscroll ">
             <div class="ticket-details-inner is-flex-direction-column is-justify-content-space-between  ">
-                <div class="ticket-content is-flex-grow-1"
-                    v-if="employeeWaitingList.waiting_list.length != 0 || isThereServingTicket">
+                <div class="ticket-content is-flex-grow-1" v-if="isThereServingTicket">
                     <div class="ticket-content-inner">
                         <div class="ticket-header">
                             <h1 class="ticket-title">
@@ -152,13 +203,6 @@ const serveConfirmation = (requestedServiceId: number) => {
                                 class="columns is-multiline pr-2 service-row">
                                 <div class="service-details column is-2">
                                     <p>{{ requested_service.service.name }}</p>
-                                    <p v-if="requested_service.service.has_item">
-                                        {{ t('employee.waiting_list.service_items') }}
-                                        <span v-for="item in requested_service.service.service_items">
-                                            {{ item.item.name }} {{ t('employee.waiting_list.service_items_quantity') }} {{
-                                                item.quantity }} |
-                                        </span>
-                                    </p>
                                 </div>
                                 <div class="service-details column is-2">
                                     <p :class="[requested_service.provider.id == employeeId && 'has-text-primary']">
@@ -174,7 +218,7 @@ const serveConfirmation = (requestedServiceId: number) => {
                                             <VControl>
                                                 <VInput :placeholder="t('employee.waiting_list.type_notes')"
                                                     @input="() => updateTicketNotesHelper(requested_service.id)" type="text"
-                                                    v-model.number="notesInput" />
+                                                    v-model.number="requested_service.note" />
                                             </VControl>
                                         </VField>
                                     </div>
@@ -184,10 +228,18 @@ const serveConfirmation = (requestedServiceId: number) => {
                                 </div>
                                 <div class="service-details column is-1">
                                     <VButton @click="serveConfirmation(requested_service.id)" color="primary" raised
-                                        v-if="requested_service.provider.id == employeeId">
+                                        v-if="requested_service.provider.id == employeeId && requested_service.status == TicketServiceConsts.NOT_SERVED">
                                         {{ t('employee.waiting_list.make_served') }}
                                     </VButton>
                                 </div>
+                                <p class="column is-12 pt-0" v-if="requested_service.service.has_item">
+                                    {{ t('employee.waiting_list.service_items') }}
+                                    <span v-for="(item, index) in requested_service.service.service_items">
+                                        {{ item.item.name }} ({{ t('employee.waiting_list.service_items_quantity') }}
+                                        {{ item.quantity }})
+                                        {{ index !== requested_service.service.service_items.length - 1 ? '|' : '' }}
+                                    </span>
+                                </p>
 
                             </div>
 
@@ -211,9 +263,10 @@ const serveConfirmation = (requestedServiceId: number) => {
                 </div>
                 <div class="ticket-footer">
                     <div class="ticket-footer-inner">
-                        <VButton color="primary" raised v-if="isThereServingTicket"> {{
-                            t(`employee.waiting_list.submit`) }} </VButton>
-                        <VButton color="primary" raised v-else :disabled="employeeWaitingList.waiting_list.length == 0">
+                        <VButton :loading="waitingListStore.loading"  @click="ticketServingDone" color="primary" raised v-if="isThereServingTicket"> {{
+                            t(`employee.waiting_list.done`) }} </VButton>
+                        <VButton :loading="waitingListStore.loading" @click="serveNext" color="primary" raised v-else
+                            :disabled="employeeWaitingList.waiting_list.length == 0">
                             {{ t('employee.waiting_list.serve_next') }}
                         </VButton>
 
@@ -222,9 +275,37 @@ const serveConfirmation = (requestedServiceId: number) => {
             </div>
         </div>
     </div>
+    <VModal :title="t('employee.waiting_list.serve_confirmation.title')" :open="serveServiceConfirmationPopup"
+        actions="center" @close="serveServiceConfirmationPopup = false">
+        <template #content>
+            <VPlaceholderSection :title="t('employee.waiting_list.serve_confirmation.caution')"
+                :subtitle="t('employee.waiting_list.serve_confirmation.subtitle')" />
+        </template>
+        <template #action="{ close }">
+            <VButton :loading="ticketServiceStore.loading" color="primary" raised @click="markServiceAsServed">{{
+                t('modal.buttons.confirm')
+            }}</VButton>
+        </template>
+    </VModal>
 </template>
 
 <style lang="scss">
+.header {
+    background-color: var(--white);
+    min-height: 50px;
+    border-radius: var(--radius-large);
+    border: 1px solid var(--fade-grey-dark-3);
+    padding: 20px;
+
+    h1 {
+        font-family: var(--font-alt);
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+}
+
 .waiting-list-outer-layout {
     flex: 1;
     display: inline-block;
@@ -379,6 +460,10 @@ const serveConfirmation = (requestedServiceId: number) => {
 
 .is-dark {
 
+    .header {
+        background: var(--dark-sidebar-light-6);
+        border-color: var(--dark-sidebar-light-12);
+    }
 
     .waiting-list-outer-layout {
         background: var(--dark-sidebar-light-6);

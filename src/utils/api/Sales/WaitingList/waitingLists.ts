@@ -19,3 +19,12 @@ export async function getWaitingListByProviderIdApi(
 
     return { response }
 }
+export async function serveNextTicketInProviderWaitingListApi(
+    api: AxiosInstance,
+    providerId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.post(`waitingList/serveNextTicketInProviderWaitingList/${providerId}`)
+
+    return { response }
+}
+

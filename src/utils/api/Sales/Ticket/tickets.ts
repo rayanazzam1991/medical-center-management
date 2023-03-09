@@ -19,14 +19,19 @@ export async function updateTicketApi(
 
     return { response }
 }
-
-
-
 export async function getTicketApi(
     api: AxiosInstance,
     ticketId: number
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.get(`ticket/${ticketId}`)
+
+    return { response }
+}
+export async function moveTicketToNextWaitingListApi(
+    api: AxiosInstance,
+    ticketId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.post(`ticket/moveTicketToNextWaitingList/${ticketId}`)
 
     return { response }
 }
