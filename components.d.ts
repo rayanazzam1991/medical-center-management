@@ -163,6 +163,7 @@ declare module '@vue/runtime-core' {
     SupplierTableHeader: typeof import('./src/components/OurComponents/Others/Supplier/SupplierTableHeader.vue')['default']
     TableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/TableCellCard.vue')['default']
     TaskPanel: typeof import('./src/components/partials/panels/TaskPanel.vue')['default']
+    TicketDetails: typeof import('./src/components/OurComponents/Sales/Ticket/TicketDetails.vue')['default']
     TicketForm: typeof import('./src/components/OurComponents/Sales/Ticket/TicketForm.vue')['default']
     TicketTableHeader: typeof import('./src/components/OurComponents/Sales/Ticket/TicketTableHeader.vue')['default']
     ToMainInventoryNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItem/ToMainInventoryNavigation.vue')['default']
