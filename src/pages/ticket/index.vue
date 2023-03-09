@@ -102,12 +102,12 @@ const columns = {
           rounded: true,
           color:
             row.status === TicketConsts.SERVING
-              ? 'danger'
+              ? 'info'
               : row.status === TicketConsts.SERVICES_ARE_DONE
                 ? 'success'
                 : row.status === TicketConsts.WAITING
-                  ? 'info'
-                  : 'warning',
+                  ? 'warning'
+                  : 'danger',
         },
         {
           default() {

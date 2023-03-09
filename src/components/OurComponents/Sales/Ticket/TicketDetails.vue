@@ -18,19 +18,7 @@ viewWrapper.setPageTitle(t('ticket.details.title'))
 useHead({
   title: t('ticket.details.title'),
 })
-const props = withDefaults(
-  defineProps<{
-    activeTab?: 'Details' | 'Services'
-  }>(),
-  {
-    activeTab: 'Details',
-  }
-)
-const tab = ref(props.activeTab)
-if (route.query.tab === 'Details'
-  || route.query.tab === 'Services') {
-  tab.value = route.query.tab
-}
+
 onMounted(async () => {
   loading.value = true
 
@@ -41,130 +29,165 @@ const getCurrentTicket = async () => {
   const { ticket } = await getTicket(ticketId.value)
   currentTicket.value = ticket
 }
+
 </script>
 <template>
   <div class="profile-wrapper">
+    <div class="profile-header has-text-centered">
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <i aria-hidden="true" class="lnil lnil-user"></i>
+          <span class="title is-size-5">{{ t('ticket.details.customer_name') }} : {{
+            currentTicket.customer.user.first_name
+            + ' ' +
+            currentTicket.customer.user.last_name }}
+          </span>
+        </div>
+        <div class="separator"></div>
+        <div class="profile-stat">
+          <i class="iconify mr-2" aria-hidden="true" data-icon="bi:ticket-perforated"></i>
+          <span class="title is-size-5">{{ t('ticket.details.ticket') }}: {{ currentTicket.id }}
+          </span>
+        </div>
+        <div class="separator"></div>
+        <div class="profile-stat">
+          <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
+          <span class="title is-size-5">{{ t('ticket.details.status') }}:
+            <span :class="`has-text-${TicketConsts.getStatusColor(currentTicket.status)}`">{{
+              TicketConsts.getStatusName(currentTicket.status)
+            }}</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-wrapper">
     <div class="project-details">
       <div class="tabs-wrapper is-triple-slider">
-        <div :hidden="loading" class="tabs-inner">
-          <div class="tabs tabs-width">
-            <ul>
-              <li :class="[tab === 'Details' && 'is-active']">
-                <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
-                  t('employee.details.tabs.details')
-                }}</span></a>
-              </li>
-              <li :class="[tab === 'Services' && 'is-active']">
-                <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
-                  t('employee.details.tabs.services')
-                }}</span></a>
-              </li>
-              <li class="tab-naver"></li>
-            </ul>
-          </div>
-        </div>
-        <div v-if="tab === 'Details'" class="tab-content is-active">
-          <div class="columns project-details-inner">
-            <div class="column is-12">
-              <div class="project-details-card">
-                <div class="card-head">
-                  <div class="title-wrap">
-                    <h3>{{ t('employee.details.main_details') }}</h3>
-                  </div>
+        <div class="columns project-details-inner">
+          <div class="column is-12">
+            <div class="project-details-card">
+              <div class="card-head">
+                <div class="title-wrap">
+                  <h3>{{ t('ticket.details.services') }}</h3>
                 </div>
-                <div class="project-files">
-                  <h4>{{ t('employee.details.more_info') }}</h4>
-                  <div class="columns is-multiline">
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.starting_date') }}</span>
-                          <span>
-                            {{ currentTicket.id }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.end_date') }}</span>
-                          <span>
-                            {{ currentTicket.customer.user.first_name + ' ' + currentTicket.customer.user.last_name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.department') }}</span>
-                          <span>
-                            {{ currentTicket.total_amount }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.room_number') }}</span>
-                          <span>
-                            {{ currentTicket.currency.name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.basic_salary') }}</span>
-                          <span>
-                            {{ currentTicket.currency_rate }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.payment_percentage') }}</span>
-                          <span>
-                            {{ currentTicket.paid_amount }}%
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.nationality') }}</span>
-                          <span>
-                            {{ currentTicket.remaining_amount }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.address') }}</span>
-                          <span>
-                            {{ currentTicket.created_at }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta full-width">
-                          <div class="is-justify-content-space-between is-align-items-flex-start is-flex mt-2 ">
+                <div class="buttons">
+                  <VButton color="success" to="/ticket">
+                    {{ t('ticket.back_button') }}
+                  </VButton>
+                </div>
+              </div>
+              <div class="project-features">
+                <div class="project-feature">
+                  <h4>{{ t('ticket.details.name') }}</h4>
+                </div>
+                <div class="project-feature">
+                  <h4>{{ t('ticket.details.service_provider_name') }}</h4>
+                </div>
+                <div class="project-feature">
+                  <h4>{{ t('ticket.details.sell_price') }}</h4>
+                </div>
+                <div class="project-feature">
+                  <h4>{{ t('ticket.details.items_list') }}</h4>
+                </div>
+              </div>
+              <div class="project-features" v-for="(service, index) in currentTicket.requested_services" :key="index">
+                <div class="project-feature">
+
+                  <p>
+                    {{ service.service.name }}
+                  </p>
+                </div>
+                <div class="project-feature">
+
+                  <p> {{ service.provider.user.first_name + ' ' + service.provider.user.last_name }}</p>
+                </div>
+                <div class="project-feature">
+
+                  <p> {{ service.sell_price }}</p>
+                </div>
+                <div class="project-feature" v-if="service.service.has_item"
+                  v-for="(item, index) in service.service.service_items" :key="index">
+                  <VDropdown icon="ion:eye">
+                    <template #content>
+                      <p class="dropdown-item"> ({{ item.quantity }}) {{ item.item.name }} </p>
+                    </template>
+                  </VDropdown>
+                </div>
+                <div v-else class="project-feature">
+                  <p> 0 </p>
+                </div>
+              </div>
+              <div class="project-details">
+                <div class="tabs-wrapper is-triple-slider">
+                  <div class="tab-content is-active">
+                    <div class="columns project-details-inner">
+                      <div class="column is-12">
+                        <div class="project-details-card">
+                          <div class="project-files">
+
                             <div class="columns is-multiline">
-                              <span class="column is-12 pb-0">{{
-                                t('employee.details.employee_number') }}</span>
-                              <span class="column py-2">
-                                {{ currentTicket.created_by.first_name }}
-                              </span>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.paid_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.paid_amount }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.remaining_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.remaining_amount }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.currency') }}</span>
+                                    <span>
+                                      {{ currentTicket.currency.name }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.currency_rate') }}</span>
+                                    <span>
+                                      {{ currentTicket.currency_rate }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.created_at') }}</span>
+                                    <span>
+                                      {{ currentTicket.created_at }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.created_by') }}</span>
+                                    <span>
+                                      {{ currentTicket.created_by.first_name }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -176,81 +199,15 @@ const getCurrentTicket = async () => {
             </div>
           </div>
         </div>
-        <div v-if="tab === 'Services'" class="tab-content is-active">
-          <div class="columns project-details-inner">
-            <div class="column is-12">
-              <div class="project-details-card">
-                <div class="card-head pb-4 border-buttom">
-                  <div class="title-wrap">
-                    <h3>{{ t('employee.details.services') }}</h3>
-                  </div>
-                </div>
-                <div v-if="currentTicket.requested_services.length == 0" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('employee.details.tabs_content_placeholder.services') }}</h4>
-                  </div>
-                </div>
-
-                <div class="project-files">
-                  <div class="columns is-multiline border-buttom" v-for="service in currentTicket.requested_services"
-                    :key="service.service.id">
-
-                    <div class="column is-3">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_name') }}</span>
-                          <span>
-                            {{ service.service.name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-3">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_price') }}</span>
-                          <span>
-                            {{ service.sell_price }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-3">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_price') }}</span>
-                          <span>
-                            {{ service.service.quantity_item ?? 1 }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-3">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_price') }}</span>
-                          <span>
-                            <!-- {{ service }} -->
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
+      </div>
+      <div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/styles/multiTapedDetailsPage.scss';
+@import '/@src/scss/styles/multiTapedDetailsPageServices.scss';
 
 .tabs-width {
   min-width: 350px;

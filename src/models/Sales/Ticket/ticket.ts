@@ -116,6 +116,17 @@ class TicketConsts {
       return i18n.global.t('ticket_statuses.closed')
     else return '';
   }
+  public static getStatusColor(status: number) {
+    if (status == this.WAITING)
+      return 'warning';
+    if (status == this.SERVING)
+      return 'info';
+    if (status == this.SERVICES_ARE_DONE)
+      return 'success';
+    if (status == this.CLOSED)
+      return 'danger';
+    else return undefined;
+  }
 
 
 }
