@@ -30,6 +30,7 @@ export interface Reminder {
     note: string
     time: string
     date: string
+    status: number
 }
 
 export const defaultCreateReminder: CreateReminder = {
@@ -47,7 +48,18 @@ export const defaultReminder: Reminder = {
     note: '',
     date: '',
     time: '',
+    status: 1
 }
+export interface ReminderSearchFilter {
+
+    page?: number
+    per_page?: number
+    order_by?: string
+    order?: string
+}
+
+export const defaultReminderSearchFilter = <ReminderSearchFilter>{}
+
 
 
 class ReminderConsts {

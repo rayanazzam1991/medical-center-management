@@ -300,6 +300,9 @@
       },
       "item": {
         "item_service_is_duplicated": "يوجد بعض المواد المكررة"
+      },
+      "reminder": {
+        "reminder_error": "حدثت مشكلة بتحديد الزبون أو الخدمة المقدمة, يرجى الضغط على العودة وإعادة المحاولة من جديد"
       }
     },
     "file": {
@@ -2275,8 +2278,12 @@
         "status": "الحالة",
         "created_at": "تاريخ الإنشاء ",
         "created_by": "بواسطة",
-        "currency": "العملة"
+        "currency": "العملة",
+        "actions": "الإجراءات"
       }
+    },
+    "drop_down": {
+      "add_reminder": "إضافة مذكرة"
     },
     "search_filter": {
       "title": "تصفية الخدمات المطلوبة",
@@ -2290,5 +2297,35 @@
       "from": "من: ",
       "to": "إلى: "
     }
+  },
+  "reminder": {
+    "table": {
+      "title": "المذكرات",
+      "columns": {
+        "customer": "الزبون",
+        "customer_phone_number": "رقم هاتف الزبون",
+        "requested_service": "الخدمة",
+        "note": "المذكرة",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "form": {
+      "page_title": "المذكرات",
+      "add_reminder_title": "إضافة مذكرة",
+      "form_header": "{type} مذكرة",
+      "customer": "الزبون :",
+      "service": "الخدمة المقدمة :",
+      "note": "المذكرة",
+      "date": "التاريخ",
+      "time": "الوقت"
+    }
+  },
+  "reminder_statuses": {
+    "active": "فعال",
+    "inactive": "غير فعال",
+    "done": "تم التذكير"
   }
 }

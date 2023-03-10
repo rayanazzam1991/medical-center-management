@@ -12,6 +12,14 @@ export async function serveTicketServiceApi(
 
     return { response }
 }
+export async function getTicktServiceApi(
+    api: AxiosInstance,
+    ticketServiceId: number,
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`ticketService/${ticketServiceId}`)
+
+    return { response }
+}
 
 export async function getTicktServicesListApi(
     api: AxiosInstance,

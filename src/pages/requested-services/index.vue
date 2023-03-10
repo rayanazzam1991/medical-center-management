@@ -3,6 +3,7 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
+import TicketServiceDropDown from '/@src/components/OurComponents/Sales/TicketService/TicketServiceDropDown.vue';
 import { addParenthesisToString, stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultTicketServiceSearchFilter, TicketService, TicketServiceConsts, TicketServiceSearchFilter } from '/@src/models/Sales/TicketService/ticketService';
@@ -151,6 +152,19 @@ const columns = {
             h('span', row?.ticket?.created_by?.first_name + ' ' + row?.ticket?.created_by?.last_name),
 
     },
+    actions: {
+        align: 'center',
+        label: t('requested_services.table.columns.actions'),
+
+        renderRow: (row: TicketService) =>
+            h(TicketServiceDropDown, {
+                onAddReminder: () => {
+                    router.push({ path: `/reminder/add`, query: { customer_id: row.ticket?.customer.id, ticket_service_id: row.id } })
+                },
+            }),
+
+    },
+
 } as const
 </script>
 

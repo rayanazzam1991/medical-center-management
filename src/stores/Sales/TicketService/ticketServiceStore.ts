@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
-import { getTicktServicesListApi, serveTicketServiceApi } from "/@src/utils/api/Sales/TicketService"
+import { TicketService, TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
+import { getTicktServiceApi, getTicktServicesListApi, serveTicketServiceApi } from "/@src/utils/api/Sales/TicketService"
 import { defaultPagination, Pagination } from "/@src/utils/response"
 
 
@@ -63,6 +63,31 @@ export const useTicketService = defineStore('ticketService', () => {
         }
     }
 
+    async function getTicketServiceStore(ticketServiceId: number) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getTicktServiceApi(api, ticketServiceId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as TicketService
+
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
 
 
     return {
@@ -72,7 +97,8 @@ export const useTicketService = defineStore('ticketService', () => {
         loading,
         pagination,
         serveTicketServiceStore,
-        getTicktServicesListStore
+        getTicktServicesListStore,
+        getTicketServiceStore
     } as const
 })
 
