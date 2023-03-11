@@ -1,32 +1,53 @@
 import { AxiosInstance } from "axios"
-import { CreateTicket } from "/@src/models/Sales/Ticket/ticket"
+import { CreateTicket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createTicketApi(
-    api: AxiosInstance,
-    ticket: CreateTicket
+  api: AxiosInstance,
+  ticket: CreateTicket
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.post('ticket', ticket)
+  const { data: response, headers } = await api.post('ticket', ticket)
 
-    return { response }
+  return { response }
 }
 export async function updateTicketApi(
-    api: AxiosInstance,
-    ticketId: number,
-    ticket: CreateTicket
+  api: AxiosInstance,
+  ticketId: number,
+  ticket: UpdateTicket
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
+  const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
 
-    return { response }
+  return { response }
 }
 
 
 
 export async function getTicketApi(
-    api: AxiosInstance,
-    ticketId: number
+  api: AxiosInstance,
+  ticketId: number
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.get(`ticket/${ticketId}`)
+  const { data: response, headers } = await api.get(`ticket/${ticketId}`)
 
-    return { response }
+  return { response }
+}
+
+export async function getTicketsListApi(
+  api: AxiosInstance,
+  searchFilter: TicketSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`ticket/getTicketsList`, {
+    params: searchFilter
+  })
+  return { response }
+}
+
+
+export async function closeTicketApi(
+  api: AxiosInstance,
+  ticketId: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(
+    `ticket/closeTicket/${ticketId}`
+  )
+  return { response }
 }

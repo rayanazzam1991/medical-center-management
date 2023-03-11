@@ -98,10 +98,11 @@
 
             .project-features {
                 display: flex;
-                padding: 25px 0;
-                border-top: 1px solid var(--fade-grey-dark-3);
+                padding: 1rem 0;
+                // border-top: 1px solid var(--fade-grey-dark-3);
                 border-bottom: 1px solid var(--fade-grey-dark-3);
                 justify-content: space-around;
+                align-items: center;
 
                 .project-feature {
                     margin-right: 20px;
@@ -111,7 +112,7 @@
                     align-items: center;
 
                     i {
-                        font-size: 1.6rem;
+                        font-size: 1rem;
                         color: var(--primary);
                         margin-bottom: 8px;
                     }
@@ -124,13 +125,16 @@
                     }
 
                     p {
-                        line-height: 1.2;
-                        font-size: 0.85rem;
+                        line-height: 1;
+                        font-size: 1rem;
                         color: var(--light-text);
                         margin-bottom: 0;
                     }
+
                 }
+
             }
+
 
             .project-files {
                 padding: 20px 0;
@@ -154,10 +158,10 @@
                     cursor: pointer;
                     transition: all 0.3s; // transition-all test
 
-                    &:hover {
-                        border-color: var(--fade-grey-dark-3);
-                        box-shadow: var(--light-box-shadow);
-                    }
+                    // &:hover {
+                    //     border-color: var(--fade-grey-dark-3);
+                    //     box-shadow: var(--light-box-shadow);
+                    // }
 
                     img {
                         display: block;
@@ -293,10 +297,10 @@
                 cursor: pointer;
                 transition: all 0.3s; // transition-all test
 
-                &:hover {
-                    transform: translateY(-5px);
-                    box-shadow: var(--light-box-shadow);
-                }
+                // &:hover {
+                //     transform: translateY(-5px);
+                //     box-shadow: var(--light-box-shadow);
+                // }
 
                 .title-wrap {
                     h3 {
@@ -378,6 +382,7 @@
                         }
                     }
                 }
+
                 .border-buttom {
                     border-color: var(--dark-sidebar-light-12) !important;
 
@@ -532,6 +537,7 @@
                         }
                     }
                 }
+
             }
 
             .project-team-card {

@@ -286,7 +286,9 @@
         "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر"
       },
       "item": {
-        "item_service_is_duplicated": "يوجد بعض المواد المكررة"
+        "item_service_is_duplicated": "يوجد بعض المواد المكررة",
+        "item_service_quantity": "كمية المواد المطلوبة < 0",
+        "item_service_empty": "يرجى إضافة بعض المواد"
       }
     },
     "file": {
@@ -331,7 +333,8 @@
     "view": "معاينة",
     "edit": "تعديل",
     "remove": "إزالة",
-    "change_status": "تغيير الحالة"
+    "change_status": "تغيير الحالة",
+    "close_ticket": "إغلاق التذكرة"
   },
   "add_quantity": {
     "form": {
@@ -1183,7 +1186,8 @@
       "price": "السعر...",
       "status": "الحالة"
     },
-    "header_button": "إضافة خدمة"
+    "header_button": "إضافة خدمة",
+    "error": {}
   },
   "settings": {
     "form": {
@@ -2193,6 +2197,52 @@
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
       "add_new_service": "إضافة خدمة جديدة"
+    },
+    "header_button": "إضافة تذكرة",
+    "back_button": "العودة للخلف",
+    "table": {
+      "title": "التذاكر",
+      "modal_title": "إغلاق التذكرة ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "services_count": "عدد الخدمات",
+        "current_service_provider": "مقدم الخدمة",
+        "customer_name": "الاسم",
+        "total_amount": "المبلغ الإجمالي",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": " بواسطة",
+        "actions": "الإجراءات"
+      },
+      "delete_modal": {
+        "title": "هل أنت متأكد؟",
+        "subtitle": "انت على وشك إغلاق التذكرة نهائيا "
+      }
+    },
+    "search_filter": {
+      "customer_name": "الاسم",
+      "status": "الحالة"
+    },
+    "details": {
+      "ticket": "التذكرة",
+      "status": " حالة التذكرة ",
+      "title": "تفاصيل التذكرة",
+      "services": "الخدمات المقدمة",
+      "name": " اسم الخدمة",
+      "service_provider_name": "مقدم الخدمة",
+      "sell_price": "السعر",
+      "quantity_item": "كمية المواد",
+      "items_list": " المواد",
+      "ticket_details": "تفاصيل التذكرة",
+      "id": "رقم المعرّف",
+      "customer_name": "اسم الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "currency_rate": "سعر الصرف",
+      "currency": "العملة",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "created_at": "تاريخ الإنشاء ",
+      "created_by": " بواسطة"
     }
   }
 }
