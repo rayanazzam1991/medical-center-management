@@ -166,7 +166,8 @@ export default defineComponent({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 currency_rate: currentTicket.value.currency_rate,
-                remaining_amount: currentTicket.value.remaining_amount
+                remaining_amount: currentTicket.value.remaining_amount,
+                customer_id: currentTicket.value.customer_id
             } : {
                 customer_id: 0,
                 total_amount: 0,

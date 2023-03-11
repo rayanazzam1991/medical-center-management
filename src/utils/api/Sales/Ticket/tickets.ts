@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateTicket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
+import { CreateTicket, TicketSearchFilter, UpdateTicket, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createTicketApi(
@@ -11,17 +11,14 @@ export async function createTicketApi(
   return { response }
 }
 export async function updateTicketApi(
-  api: AxiosInstance,
-  ticketId: number,
-  ticket: UpdateTicket
+    api: AxiosInstance,
+    ticketId: number,
+    ticket: UpdateTicket
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
 
   return { response }
 }
-
-
-
 export async function getTicketApi(
   api: AxiosInstance,
   ticketId: number
@@ -29,6 +26,14 @@ export async function getTicketApi(
   const { data: response, headers } = await api.get(`ticket/${ticketId}`)
 
   return { response }
+}
+export async function moveTicketToNextWaitingListApi(
+    api: AxiosInstance,
+    ticketId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.post(`ticket/moveTicketToNextWaitingList/${ticketId}`)
+
+    return { response }
 }
 
 export async function getTicketsListApi(

@@ -82,7 +82,8 @@
     "contractor": "الأخصائيون",
     "human_resources": "الموارد البشرية",
     "warehouse": "المستودع",
-    "accounting": "المالية"
+    "accounting": "المالية",
+    "ticketing": "التذاكر"
   },
   "others_subnav": {
     "nationality": {
@@ -221,6 +222,21 @@
       "create_supplier_cash_receipt": "انشاء إيصال نقدي لمورد"
     }
   },
+  "ticketing_subnav": {
+    "ticket": {
+      "tickets": "التذاكر",
+      "create_ticket": "انشاء تذكرة"
+    },
+    "waiting_list": {
+      "waiting_lists": "غرف الانتظار"
+    },
+    "requested_services": {
+      "requested_services": "الخدمات المطلوبة"
+    },
+    "reminder": {
+      "reminders": "المذكرات"
+    }
+  },
   "user_profile_dropdown": {
     "logout": "تسجيل الخروج"
   },
@@ -247,8 +263,8 @@
       "pay_salary": "تم تغيير حالة الراتب إلى مدفوع بنجاح",
       "return_salary": "تم تغيير حالة الراتب إلى مرتجع بنجاح",
       "transfer": "تم التحويل بنجاح",
-      "add_ticket": "تمت إضافة المتابعة رقم {ticket_id} بنجاح",
-      "update_ticket": "تم تعديل المتابعة رقم {ticket_id} بنجاح"
+      "add_ticket": "تمت إضافة التذكرة رقم {ticket_id} بنجاح",
+      "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -289,6 +305,9 @@
         "item_service_is_duplicated": "يوجد بعض المواد المكررة",
         "item_service_quantity": "كمية المواد المطلوبة < 0",
         "item_service_empty": "يرجى إضافة بعض المواد"
+      },
+      "reminder": {
+        "reminder_error": "حدثت مشكلة بتحديد الزبون أو الخدمة المقدمة, يرجى الضغط على العودة وإعادة المحاولة من جديد"
       }
     },
     "file": {
@@ -334,6 +353,7 @@
     "edit": "تعديل",
     "remove": "إزالة",
     "change_status": "تغيير الحالة",
+    "view_my_waiting_list": "عرض غرفة الانتظار",
     "close_ticket": "إغلاق التذكرة"
   },
   "add_quantity": {
@@ -818,7 +838,42 @@
       "to": "إلى: ",
       "quick_search": "الاسم/الرقم..."
     },
-    "header_button": "إضافة موظف"
+    "header_button": "إضافة موظف",
+    "waiting_list": {
+      "header_title": "غرفة انتظار المخدم",
+      "title": "غرفة الانتظار",
+      "place_holder": {
+        "title": "جاري تحميل غرفة الانتظار...",
+        "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+      },
+      "no_data": {
+        "title": "لا يوجد أي تذاكر في غرفة الانتظار",
+        "subtitle": " "
+      },
+      "no_serving_client": {
+        "title": "لا يوجد تذكرة",
+        "subtitle": "لا يوجد تذكرة يتم تخديمها حالياً"
+      },
+      "ticket_id": "التذكرة # :",
+      "customer_name": "اسم الزبون :",
+      "requested_services": "الخدمات المطلوبة :",
+      "service_items_quantity": "عدد :",
+      "service_items": "المواد:",
+      "make_served": "تم التخديم",
+      "service_name": "الخدمة",
+      "service_provider": "المخدم",
+      "notes": "ملاحظات ",
+      "status": "الحالة",
+      "actions": "الاجراءات",
+      "done": "تم",
+      "serve_next": "التذكرة التالية",
+      "type_notes": "ملاحظات...",
+      "serve_confirmation": {
+        "title": "تأكيد تخديم الزبون",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
+      }
+    }
   },
   "employee_attendance": {
     "table": {
@@ -2178,10 +2233,10 @@
   },
   "ticket": {
     "form": {
-      "page_title": "المتابعات",
-      "add_form_header": "إضافة متابعة",
-      "edit_form_header": "تعديل المتابعة رقم #{ticket_id}",
-      "add_ticket_title": "إضافة متابعة",
+      "page_title": "التذاكر",
+      "add_form_header": "إضافة تذكرة",
+      "edit_form_header": "تعديل التذكرة رقم #{ticket_id}",
+      "add_ticket_title": "إضافة تذكرة",
       "customer": "اسم الزبون",
       "select_customer": "تحديد الزبون",
       "total_amount": "المبلغ الإجمالي",
@@ -2244,5 +2299,86 @@
       "created_at": "تاريخ الإنشاء ",
       "created_by": " بواسطة"
     }
+  },
+  "waiting_list": {
+    "title": "غرف الانتظار",
+    "no_tickets_place_holder": "لا يوجد أية تذاكر في غرفة الانتظار.",
+    "place_holder": {
+      "title": "جاري تحميل غرف الانتظار...",
+      "subtitle": "قد تستغرق العملية بضع ثواني/دقائق"
+    },
+    "ticket_id": "التذكرة #{ticket_id}",
+    "search_filter": {
+      "room": "رقم الغرفة",
+      "department": "القسم",
+      "provider": "المخدم"
+    },
+    "no_data": {
+      "title": "لا يوجد بيانات",
+      "subtitle": "يرجى التأكد من مدخلات البحث"
+    }
+  },
+  "requested_services": {
+    "table": {
+      "title": "الخدمات المطلوبة",
+      "columns": {
+        "customer_name": "الزبون",
+        "provider_name": "المخدم",
+        "service_name": "الخدمة",
+        "price": "السعر",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": "بواسطة",
+        "currency": "العملة",
+        "actions": "الإجراءات"
+      }
+    },
+    "drop_down": {
+      "add_reminder": "إضافة مذكرة"
+    },
+    "search_filter": {
+      "title": "تصفية الخدمات المطلوبة",
+      "customer": "الزبون",
+      "department": "القسم",
+      "provider": "المخدم",
+      "room": "الغرفة",
+      "service": "الخدمة",
+      "status": "الحالة",
+      "created_at": "تاريخ الإنشاء ",
+      "from": "من: ",
+      "to": "إلى: "
+    }
+  },
+  "reminder": {
+    "table": {
+      "title": "المذكرات",
+      "columns": {
+        "customer": "الزبون",
+        "customer_phone_number": "رقم هاتف الزبون",
+        "requested_service": "الخدمة",
+        "note": "المذكرة",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      }
+    },
+    "form": {
+      "page_title": "المذكرات",
+      "add_reminder_title": "إضافة مذكرة",
+      "form_header": "{type} مذكرة",
+      "customer": "الزبون :",
+      "service": "الخدمة المقدمة :",
+      "note": "المذكرة",
+      "date": "التاريخ",
+      "time": "الوقت"
+    }
+  },
+  "reminder_statuses": {
+    "active": "فعال",
+    "inactive": "غير فعال",
+    "done": "تم التذكير"
   }
 }
