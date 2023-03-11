@@ -1,0 +1,139 @@
+<script lang="ts">
+import { defaultPagination } from "/@src/utils/response"
+import { useI18n } from "vue-i18n"
+import { defaultTicketSearchFilter, TicketConsts, TicketSearchFilter } from "/@src/models/Sales/Ticket/ticket"
+
+export default defineComponent({
+  props: {
+    title: {
+      type: String,
+      default: '',
+    },
+    button_name: {
+      type: String,
+      default: '',
+    },
+    pagination: {
+      default: defaultPagination,
+    },
+    default_per_page: {
+      type: Number,
+      default: 1,
+    }
+
+  },
+  setup(props, context) {
+    const { t } = useI18n()
+    const onOpen = () => {
+      searchFilterPop.value = !searchFilterPop.value
+      context.emit('onOpen', searchFilterPop.value)
+    }
+    const popUpTrigger = (value: boolean) => {
+      searchFilterPop.value = value
+    }
+    const searchFilterPop = ref(false)
+    const keyTest = ref(0)
+    const default_per_page = props.default_per_page
+    const pagination = props.pagination
+    const searchCustomerName = ref('')
+    const searchStatus = ref()
+    const perPage = ref(pagination.per_page)
+    const searchFilter = ref(defaultTicketSearchFilter)
+    const search = () => {
+      searchFilter.value = {
+        customer_name: searchCustomerName.value,
+        status: searchStatus.value,
+        per_page: perPage.value
+      }
+      context.emit('search', searchFilter.value)
+
+    }
+    const resetFilter = () => {
+      searchCustomerName.value = ''
+      searchStatus.value = undefined
+      searchFilter.value.customer_name = undefined
+      searchFilter.value.status = undefined
+      keyTest.value++
+      context.emit('resetFilter', searchFilter.value)
+
+    }
+    const search_filter = (value: TicketSearchFilter) => {
+      searchFilter.value = value
+      searchFilter.value.per_page = perPage.value
+      searchFilter.value.page = 1
+
+      context.emit('search', searchFilter.value)
+    }
+    const resetFilter_popup = (value: TicketSearchFilter) => {
+      searchFilter.value.customer_name = undefined
+      searchFilter.value.status = undefined
+      context.emit('resetFilter', searchFilter.value)
+
+    }
+    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, TicketConsts, searchFilterPop, search, default_per_page, searchCustomerName, onOpen, keyTest, searchStatus, perPage, pagination }
+  },
+})
+</script>
+
+<template>
+  <form class="form-layout" v-on:submit.prevent="search">
+    <div class="form-outer">
+      <div class="form-header stuck-header">
+        <div class="form-header-inner">
+          <div class="left my-4 mx-2 ">
+            <div class="columns is-flex is-align-items-center">
+              <VControl class="mr-2" icon="feather:search">
+                <VInput v-model="searchCustomerName" type="text" :placeholder="t('ticket.search_filter.customer_name')" />
+              </VControl>
+              <VControl class="mr-2 status-input">
+                <VSelect v-model="searchStatus">
+                  <VOption value="">{{ t('ticket.search_filter.status') }}</VOption>
+                  <VOption value="1">{{ TicketConsts.getStatusName(1) }}</VOption>
+                  <VOption value="2">{{ TicketConsts.getStatusName(2) }}</VOption>
+                  <VOption value="3">{{ TicketConsts.getStatusName(3) }}</VOption>
+                  <VOption value="4">{{ TicketConsts.getStatusName(4) }}</VOption>
+                </VSelect>
+              </VControl>
+              <VIconButton class="mr-2" type="submit" v-on:click="search" icon="feather:search" />
+              <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
+                color="danger" />
+
+            </div>
+          </div>
+          <div class="left my-4 mx-2">
+            <div class="columns is-flex is-align-items-center">
+              <VControl class="mr-2 ">
+                <div class="select">
+
+                  <select v-model="perPage" @change="search">
+                    <VOption :value="default_per_page * 0.1">{{ default_per_page *
+                      0.1
+                    }}
+                    </VOption>
+                    <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
+                    </VOption>
+                    <VOption :value="default_per_page">{{ default_per_page }}
+                    </VOption>
+                    <VOption :value="default_per_page * 2">{{ default_per_page * 2 }}
+                    </VOption>
+                    <VOption :value="default_per_page * 10">{{ default_per_page * 10 }}
+                    </VOption>
+                  </select>
+                </div>
+              </VControl>
+              <VControl>
+                <VButton class="ml-2" to="/ticket/add" color="primary">{{ button_name }}
+                </VButton>
+              </VControl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</template>
+
+<style   lang="scss">
+@import '/@src/scss/styles/tableHeader.scss';
+</style>
+

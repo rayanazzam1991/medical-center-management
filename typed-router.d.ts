@@ -184,6 +184,7 @@ declare module 'vue-router/auto/routes' {
     '/supplier-cash-receipt': RouteRecordInfo<'/supplier-cash-receipt', '/supplier-cash-receipt', Record<never, never>, Record<never, never>>,
     '/ticket': RouteRecordInfo<'/ticket', '/ticket', Record<never, never>, Record<never, never>>,
     '/ticket/': RouteRecordInfo<'/ticket/', '/ticket/', Record<never, never>, Record<never, never>>,
+    '/ticket/[id]/': RouteRecordInfo<'/ticket/[id]/', '/ticket/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/ticket/[id]/edit': RouteRecordInfo<'/ticket/[id]/edit', '/ticket/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/ticket/add': RouteRecordInfo<'/ticket/add', '/ticket/add', Record<never, never>, Record<never, never>>,
     '/to-main-inventory': RouteRecordInfo<'/to-main-inventory', '/to-main-inventory', Record<never, never>, Record<never, never>>,

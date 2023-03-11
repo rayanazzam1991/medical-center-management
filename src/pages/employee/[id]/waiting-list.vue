@@ -57,7 +57,7 @@ const serveNext = async () => {
 const refreshWaitingList = async () => {
     const { waiting_list } = await getWaitingListByProvider(employeeId.value)
     employeeWaitingList.value = waiting_list
-
+    console.log(employeeWaitingList.value)
     serveingServiceSetup()
 
 }
@@ -98,6 +98,7 @@ const serveingServiceSetup = () => {
     } else {
         isThereServingTicket.value = false
     }
+    console.log(isThereServingTicket.value)
 
 }
 
@@ -263,8 +264,9 @@ const serveConfirmation = (requestedServiceId: number) => {
                 </div>
                 <div class="ticket-footer">
                     <div class="ticket-footer-inner">
-                        <VButton :loading="waitingListStore.loading"  @click="ticketServingDone" color="primary" raised v-if="isThereServingTicket"> {{
-                            t(`employee.waiting_list.done`) }} </VButton>
+                        <VButton :loading="waitingListStore.loading" @click="ticketServingDone" color="primary" raised
+                            v-if="isThereServingTicket"> {{
+                                t(`employee.waiting_list.done`) }} </VButton>
                         <VButton :loading="waitingListStore.loading" @click="serveNext" color="primary" raised v-else
                             :disabled="employeeWaitingList.waiting_list.length == 0">
                             {{ t('employee.waiting_list.serve_next') }}

@@ -58,6 +58,18 @@ const emits = defineEmits<{
                                         </RouterLink>
                                     </li>
                                 </ul><br />
+                                <h4 class="column-heading">{{ t('ticketing_subnav.reminder.reminders') }}
+                                </h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/reminder">
+                                            <i class="lnir lnir-alarm-2" aria-hidden="true"></i>
+                                            <span>{{
+                                                t('ticketing_subnav.reminder.reminders') }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                </ul><br />
                             </div>
                         </div>
                     </div>
