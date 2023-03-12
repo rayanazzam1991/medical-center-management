@@ -20,6 +20,8 @@ const waitingList = ref<EmployeeWaitingList[]>([])
 const provider = ref<Employee>()
 waitingList.value = props.waiting_list
 provider.value = props.provider
+const currentTurnNumber = ref(0)
+currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? 0
 </script>
 
 <template>
@@ -36,6 +38,10 @@ provider.value = props.provider
                             <span class="task-count">{{ waiting_list.length }}</span>
                             <p class="column-name has-text-centered">{{ provider.user.room.department?.name }} #{{
                                 provider.user.room.number }}</p>
+                            <p class="column-name has-text-centered is-size-6 has-text-info">{{
+                                t('waiting_list.current_turn_number') }}
+                                {{ currentTurnNumber == 0 ? '-' : currentTurnNumber }}
+                            </p>
 
                         </h3>
                     </div>
@@ -58,6 +64,11 @@ provider.value = props.provider
                                         ticket.ticket.customer.user.last_name
                                     }} | {{ t('waiting_list.ticket_id', { ticket_id: ticket.ticket.id }) }}
                                 </h4>
+                                <p class="column-name is-size-6 has-text-info">{{
+                                    t('waiting_list.turn_number') }}
+                                    {{ ticket.turn_number }}
+                                </p>
+
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
 
                             </div>

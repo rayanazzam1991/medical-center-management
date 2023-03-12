@@ -50,6 +50,7 @@ const serveNext = async () => {
     const { success, message } = await serveNextTicketInProviderWaitingList(employeeId.value)
     if (success) {
         await refreshWaitingList()
+        keyIncrement.value++
     } else {
         notif.error({ message: message, duration: 3000 })
     }
@@ -140,7 +141,7 @@ const serveConfirmation = (requestedServiceId: number) => {
         </div>
         <div v-else-if="employeeWaitingList.waiting_list.length > 0" class="waiting-list-inner">
             <div class="waiting-lists-container is-flex">
-                <WaitingListComponent :waiting_list="employeeWaitingList.waiting_list"
+                <WaitingListComponent :key="keyIncrement" :waiting_list="employeeWaitingList.waiting_list"
                     :provider="employeeWaitingList.provider" />
             </div>
         </div>

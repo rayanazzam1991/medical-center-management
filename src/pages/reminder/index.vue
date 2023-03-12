@@ -88,7 +88,7 @@ const columns = {
     },
     note: {
         align: 'center',
-        grow: 'lg',
+        grow: true,
         label: t("reminder.table.columns.note"),
         renderRow: (row: Reminder) =>
             h('span', row?.note),

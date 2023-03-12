@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
-import { getWaitingListByProviderIdApi, getWaitingListsListApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
+import { getWaitingListByProviderIdApi, getWaitingListByTicketIdApi, getWaitingListsListApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
 
 
 export const useWaitingList = defineStore('waitingList', () => {
@@ -75,8 +75,29 @@ export const useWaitingList = defineStore('waitingList', () => {
             loading.value = false
         }
     }
+    async function getWaitingListByTicketIdStore(ticketId: number) {
+        if (loading.value) return
 
+        loading.value = true
 
+        try {
+            const returnedResponse = await getWaitingListByTicketIdApi(api, ticketId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
+    
     
     return {
         success,
@@ -85,7 +106,8 @@ export const useWaitingList = defineStore('waitingList', () => {
         loading,
         getWaitingListsStore,
         getWaitingListByProviderStore,
-        serveNextTicketInProviderWaitingListStore
+        serveNextTicketInProviderWaitingListStore,
+        getWaitingListByTicketIdStore
     } as const
 })
 

@@ -299,7 +299,9 @@
         "no_services_error": "يرجى تحديد خدمة على الأقل",
         "service_provider_is_required": "مخدم الخدمة {service_name} مطلوب",
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
-        "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر"
+        "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر",
+        "no_waiting_list": "لا يوجد دور حالي للتذكرة.",
+        "cannot_edit_closed_ticket": "لا يمكنك تعديل تذكرة مغلقة."
       },
       "item": {
         "item_service_is_duplicated": "يوجد بعض المواد المكررة",
@@ -354,7 +356,8 @@
     "remove": "إزالة",
     "change_status": "تغيير الحالة",
     "view_my_waiting_list": "عرض غرفة الانتظار",
-    "close_ticket": "إغلاق التذكرة"
+    "close_ticket": "إغلاق التذكرة",
+    "view_current_service_card": "عرض بطاقة الدور الحالي"
   },
   "add_quantity": {
     "form": {
@@ -1869,13 +1872,13 @@
     "fromMainInventoryForm": {
       "title": "سحب كميًة من المستودع الرئيسي",
       "from_inventory": "من المستودع الرئيسي ",
-      "to_inventory": "إلى عهدة الأخصائي",
+      "to_inventory": "إلى عهدة الموظف",
       "level_1": "المستوى الأول",
       "level_2": "المستوى الثاني",
       "select_level_1": "اختيار المستوى الأول",
       "select_level_2": "اختيار المستوى الثاني",
       "select_item": "اختيار مادة",
-      "select_inventory": "اختيار عهدة أخصائي",
+      "select_inventory": "اختيار عهدة موظف",
       "item": "المادة",
       "note": "ملاحظة",
       "quantity": "الكميًة"
@@ -1883,9 +1886,9 @@
     "toMainInventoryForm": {
       "title": "إعادة كميًة إلى المستودع الرئيسي",
       "to_inventory": " إلى المستودع الرئيسي ",
-      "from_inventory": " من عهدة الأخصائي",
+      "from_inventory": " من عهدة الموظف",
       "select_item": "اختيار مادة",
-      "select_inventory": "اختيار عهدة أخصائي",
+      "select_inventory": "اختيار عهدة موظف",
       "item": "المادة",
       "note": "ملاحظة",
       "quantity": "الكميًة"
@@ -2297,11 +2300,24 @@
       "paid_amount": "المبلغ المدفوع",
       "remaining_amount": "المبلغ المتبقي",
       "created_at": "تاريخ الإنشاء ",
-      "created_by": " بواسطة"
+      "created_by": " بواسطة",
+      "view_current_service_card": "عرض بطاقة الدور الحالي",
+      "current_service_card_modal": "بطاقة الدور الحالي",
+      "turn_number": "الدور : ",
+      "date_time": "تاريخ ووقت الانشاء",
+      "current_services": {
+        "columns": {
+          "service_name": "الخدمة",
+          "currency": "العملة",
+          "service_price": "السعر"
+        }
+      }
     }
   },
   "waiting_list": {
     "title": "غرف الانتظار",
+    "turn_number": "الدور : ",
+    "current_turn_number": "الدور الحالي : ",
     "no_tickets_place_holder": "لا يوجد أية تذاكر في غرفة الانتظار.",
     "place_holder": {
       "title": "جاري تحميل غرف الانتظار...",
@@ -2348,7 +2364,8 @@
       "status": "الحالة",
       "created_at": "تاريخ الإنشاء ",
       "from": "من: ",
-      "to": "إلى: "
+      "to": "إلى: ",
+      "note": "ملاحظات..."
     }
   },
   "reminder": {
@@ -2356,7 +2373,7 @@
       "title": "المذكرات",
       "columns": {
         "customer": "الزبون",
-        "customer_phone_number": "رقم هاتف الزبون",
+        "customer_phone_number": "رقم الهاتف",
         "requested_service": "الخدمة",
         "note": "المذكرة",
         "date": "التاريخ",
