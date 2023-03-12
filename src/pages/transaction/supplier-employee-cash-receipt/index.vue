@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
+import { ref, onMounted, h } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { AccountConsts } from '/@src/models/Accounting/Account/account';
-import { Transaction, defaultSuppliersCashReceiptsSearchFilter, SuppliersCashReceiptsSearchFilter } from '/@src/models/Accounting/Transaction/record';
+import { defaultSuppliersCashReceiptsSearchFilter, Transaction, SuppliersCashReceiptsSearchFilter } from '/@src/models/Accounting/Transaction/record';
 import { getSuppliersCashReceiptsList } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
+
 
 
 const { t } = useI18n()
@@ -22,7 +24,6 @@ const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultSuppliersCashReceiptsSearchFilter)
 const suppliersCashReceiptsList = ref<Array<Transaction>>([])
 const paginationVar = ref(defaultPagination)
-const router = useRouter()
 const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
@@ -72,12 +73,18 @@ const suppliersReceiptSort = async (value: string) => {
 }
 
 const columns = {
-  supplier_name: {
+  name: {
     align: 'center',
-    label: t('supplier_cash_receipt.table.columns.supplier_name'),
+    label: t('supplier_cash_receipt.table.columns.name'),
     renderRow: (row: Transaction) =>
-      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE)?.account.name),
+      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE || entry.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE)?.account.name),
     grow: true,
+  },
+  type: {
+    align: 'center',
+    label: t('supplier_cash_receipt.table.columns.type.title'),
+    renderRow: (row: Transaction) =>
+      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE || entry.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE)?.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE ? t('supplier_cash_receipt.table.columns.type.employee') : t('supplier_cash_receipt.table.columns.type.supplier')),
   },
   amount: {
     align: 'center',

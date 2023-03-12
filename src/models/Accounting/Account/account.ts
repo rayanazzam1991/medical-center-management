@@ -275,6 +275,7 @@ class AccountConsts {
   static readonly CLIENTS_CODE = '11'
   static readonly EXPENSES_CODE = '3'
   static readonly SUPPLIER_CODE = '22'
+  static readonly EMPLOYEE_CODE = '21'
 
   public static getAccountStatusName(status: number) {
     if (status == this.ACTIVE)

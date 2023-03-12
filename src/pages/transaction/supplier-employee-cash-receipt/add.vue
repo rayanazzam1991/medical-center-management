@@ -14,6 +14,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
 import { supplierCashReceiptValidationSchema } from '/@src/rules/Accounting/Transaction/supplierCashReceiptValidation';
+import { onMounted } from 'vue';
 
 
 
@@ -29,9 +30,10 @@ const transactionStore = useTransaction()
 const pageTitle = t('supplier_cash_receipt.form.title');
 const cashAccountsList = ref<Account[]>([])
 const suppliersAccountsList = ref<Account[]>([])
+const employeesAccountsList = ref<Account[]>([])
 const currenciesList = ref<Currency[]>([])
 const availableCurrenciesList = ref<Currency[]>([])
-const supplierAccountId = ref<number>(0)
+const supplierEmployeeAccountId = ref<number>(0)
 const cashAccountId = ref<number>(0)
 const currencyId = ref<number>(0)
 const currencyRate = ref<number>(1)
@@ -43,6 +45,8 @@ const currencyDifferencesAmount = ref<number>(0)
 const currencyDifferencesCashAmount = ref<number>(0)
 const currencyDifferencesSupplierAmount = ref<number>(0)
 const confirmPopup = ref<boolean>(false)
+const keyIncrement = ref(0)
+const isEmployee = ref(false)
 
 onMounted(async () => {
   let accountSearchFilter = {} as AccountSearchFilter
@@ -55,7 +59,10 @@ onMounted(async () => {
     } else
       if (account.chart_account?.code == ChartOfAccountConsts.SUPPLIER_CODE) {
         suppliersAccountsList.value.push(account)
-      } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
+      } else if (account.chart_account?.code == ChartOfAccountConsts.EMPLOYEE_CODE && account.code != ChartOfAccountConsts.EMPLOYEE_EMPLOYEE_CODE) {
+        employeesAccountsList.value.push(account)
+      }
+      else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
         currencyDifferencesAccountId.value = account.id ?? 0
       }
   });
@@ -80,7 +87,7 @@ const { handleSubmit } = useForm({
 });
 const onSubmitConfirmation = handleSubmit(() => {
   const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
-  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
+  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
   if (!cashAccount.currency?.is_main && Number(cashAccount.balance) != 0) {
     currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * cashAccount.currency_rate / currencyRate.value)
   } else {
@@ -97,25 +104,45 @@ const onSubmitConfirmation = handleSubmit(() => {
 })
 const onSubmit = async () => {
   const cashAccount = cashAccountsList.value.find((account) => account.id == cashAccountId.value) ?? defaultAccount
-  const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
   createRecord.value.accounts = []
-  createRecord.value.accounts.push(
-    { account_id: cashAccountId.value, amount: !cashAccount.currency?.is_main ? cashAmount.value - currencyDifferencesCashAmount.value : cashAmount.value, type: AccountConsts.CREDIT_TYPE },
-    { account_id: supplierAccountId.value, amount: !supplierAccount.currency?.is_main ? cashAmount.value - currencyDifferencesSupplierAmount.value : cashAmount.value, type: AccountConsts.DEBIT_TYPE })
-  if (currencyDifferencesAmount.value != 0) {
+  if (isEmployee.value) {
+    const employeeAccount = employeesAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
     createRecord.value.accounts.push(
-      { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
-    )
+      { account_id: cashAccountId.value, amount: !cashAccount.currency?.is_main ? cashAmount.value - currencyDifferencesCashAmount.value : cashAmount.value, type: AccountConsts.CREDIT_TYPE },
+      { account_id: supplierEmployeeAccountId.value, amount: !employeeAccount.currency?.is_main ? cashAmount.value - currencyDifferencesSupplierAmount.value : cashAmount.value, type: AccountConsts.DEBIT_TYPE })
+    if (currencyDifferencesAmount.value != 0) {
+      createRecord.value.accounts.push(
+        { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
+      )
+    }
+    createRecord.value.currency_id = currencyId.value
+    createRecord.value.currency_rate = currencyRate.value
+    createRecord.value.transaction_type_id = 1
+    createRecord.value.recordType = TransactionConsts.EMPLOYEE_CASH_RECEIPT
+    createRecord.value.amount = cashAmount.value
   }
-  createRecord.value.currency_id = currencyId.value
-  createRecord.value.currency_rate = currencyRate.value
-  createRecord.value.transaction_type_id = 1
-  createRecord.value.recordType = TransactionConsts.SUPPLIER_CASH_RECEIPT
-  createRecord.value.amount = cashAmount.value
+
+  else {
+    const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
+    createRecord.value.accounts.push(
+      { account_id: cashAccountId.value, amount: !cashAccount.currency?.is_main ? cashAmount.value - currencyDifferencesCashAmount.value : cashAmount.value, type: AccountConsts.CREDIT_TYPE },
+      { account_id: supplierEmployeeAccountId.value, amount: !supplierAccount.currency?.is_main ? cashAmount.value - currencyDifferencesSupplierAmount.value : cashAmount.value, type: AccountConsts.DEBIT_TYPE })
+    if (currencyDifferencesAmount.value != 0) {
+      createRecord.value.accounts.push(
+        { account_id: currencyDifferencesAccountId.value, amount: Math.abs(currencyDifferencesAmount.value), type: currencyDifferencesAmount.value > 0 ? AccountConsts.CREDIT_TYPE : AccountConsts.DEBIT_TYPE },
+      )
+    }
+    createRecord.value.currency_id = currencyId.value
+    createRecord.value.currency_rate = currencyRate.value
+    createRecord.value.transaction_type_id = 1
+    createRecord.value.recordType = TransactionConsts.SUPPLIER_CASH_RECEIPT
+    createRecord.value.amount = cashAmount.value
+  }
+
   const { success, message } = await createRecords(createRecord.value)
   if (success) {
     notif.success(t('toast.success.add'));
-    router.push({ path: `/transaction/supplier-cash-receipt` });
+    router.push({ path: `/transaction/supplier-employee-cash-receipt` });
 
   } else {
     notif.error({ message: message, duration: 3000 })
@@ -124,8 +151,8 @@ const onSubmit = async () => {
 }
 
 watch(currencyId, (value) => {
-  let selectedCurreny = currenciesList.value.find((currency) => currency.id === value);
-  if (selectedCurreny?.is_main) {
+  let selectedCurrency = currenciesList.value.find((currency) => currency.id === value);
+  if (selectedCurrency?.is_main) {
     enableCurrencyRate.value = false
     currencyRate.value = 1
   } else {
@@ -135,38 +162,20 @@ watch(currencyId, (value) => {
 watch(cashAccountId, (value) => {
   if (value) {
 
-    let selectedCashAccount = cashAccountsList.value.find((account) => account.id === value) ?? defaultAccount
-    const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value) ?? defaultAccount
-
+    let selectedCashAccount = cashAccountsList.value.find((account) => account.id === value);
     availableCurrenciesList.value = []
     currenciesList.value.forEach((currency) => {
-      if (!selectedCashAccount.currency?.is_main || !supplierAccount.currency?.is_main) {
-        if (!currency.is_main) {
-          availableCurrenciesList.value.push(currency)
-        }
-      } else {
-        if (currency.is_main) {
-          availableCurrenciesList.value.push(currency)
-        }
+      if (currency.is_main == selectedCashAccount?.currency?.is_main) {
+        availableCurrenciesList.value.push(currency)
       }
     });
     currencyId.value = 0
-    if (!selectedCashAccount.currency?.is_main && Number(selectedCashAccount.balance) != 0) {
-      currencyDifferencesCashAmount.value = cashAmount.value - (cashAmount.value * selectedCashAccount.currency_rate / value)
-    } else {
-      currencyDifferencesCashAmount.value = 0
-    }
-    if (!supplierAccount.currency?.is_main && Number(supplierAccount.balance) != 0) {
-      currencyDifferencesSupplierAmount.value = cashAmount.value - (cashAmount.value * supplierAccount.currency_rate / value)
-    } else {
-      currencyDifferencesSupplierAmount.value = 0
-    }
-    currencyDifferencesAmount.value = currencyDifferencesSupplierAmount.value + currencyDifferencesCashAmount.value
-
   } else {
     availableCurrenciesList.value = currenciesList.value
   }
 })
+
+
 </script>
 <template>
   <div class="page-content-inner">
@@ -196,18 +205,44 @@ watch(cashAccountId, (value) => {
               <h4>{{ pageTitle }}</h4>
             </div>
             <div class="columns is-multiline">
-              <div class="column is-12">
-                <VField id="supplier_account">
+              <div class="form-fieldset">
+                <div class="columns is-multiline">
+                  <div class="is-flex is-justify-content-center">
+                    <VControl class="ml-3">
+                      <VSwitchSegment :key="keyIncrement" v-model="isEmployee"
+                        :label-true="t('supplier_cash_receipt.form.employee')"
+                        :label-false="t('supplier_cash_receipt.form.supplier')" color="success" />
+                    </VControl>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-12" v-if="!isEmployee">
+                <VField id="supplier_employee_account">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.supplier_account') }}</VLabel>
                   <VControl>
-                    <VSelect v-model="supplierAccountId">
+                    <VSelect v-model="supplierEmployeeAccountId">
                       <VOption :value="0"> {{
                         t('supplier_cash_receipt.form.select_account') }}</VOption>
                       <VOption v-for="account in suppliersAccountsList" :value="account.id">
                         {{ account.code }} - {{ account.name }}
                       </VOption>
                     </VSelect>
-                    <ErrorMessage class="help is-danger" name="supplier_account" />
+                    <ErrorMessage class="help is-danger" name="supplier_employee_account" />
+                  </VControl>
+                </VField>
+              </div>
+              <div class="column is-12" v-if="isEmployee">
+                <VField id="supplier_employee_account">
+                  <VLabel class="required">{{ t('supplier_cash_receipt.form.employee_account') }}</VLabel>
+                  <VControl>
+                    <VSelect v-model="supplierEmployeeAccountId">
+                      <VOption :value="0"> {{
+                        t('supplier_cash_receipt.form.select_account') }}</VOption>
+                      <VOption v-for="account in employeesAccountsList" :value="account.id">
+                        {{ account.code }} - {{ account.name }}
+                      </VOption>
+                    </VSelect>
+                    <ErrorMessage class="help is-danger" name="supplier_employee_account" />
                   </VControl>
                 </VField>
               </div>

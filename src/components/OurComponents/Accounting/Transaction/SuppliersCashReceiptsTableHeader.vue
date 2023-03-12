@@ -113,8 +113,8 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton class="" to="/transaction/supplier-cash-receipt/add" color="primary"> {{
-                  t('supplier_cash_receipt.add_supplier_cash_receipts_button') }}
+                <VButton class="" to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
+                  t('supplier_cash_receipt.add_supplier_employee_cash_receipts_button') }}
                 </VButton>
               </VControl>
             </div>

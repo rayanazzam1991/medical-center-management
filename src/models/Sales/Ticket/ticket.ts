@@ -80,6 +80,7 @@ export const defaultTicket: Ticket = {
 }
 
 export interface TicketSearchFilter {
+  id?: number
   customer_name?: string
   status?: number
   page?: number
@@ -89,6 +90,8 @@ export interface TicketSearchFilter {
 }
 
 export const defaultTicketSearchFilter: TicketSearchFilter = {
+  id: undefined,
+  customer_name:undefined ,
   status: undefined,
   page: undefined,
   order: undefined,

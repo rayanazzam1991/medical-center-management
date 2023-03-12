@@ -126,10 +126,10 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/transaction/supplier-cash-receipt/">
+                    <RouterLink to="/transaction/supplier-employee-cash-receipt">
                       <i class="lnir lnir-sales-report" aria-hidden="true"></i>
                       <span>{{
-                        t('accounting_subnav.records.supplier_cash_receipts')
+                        t('accounting_subnav.records.supplier_employee_cash_receipts')
                       }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
@@ -181,10 +181,10 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/transaction/supplier-cash-receipt/add">
+                    <RouterLink to="/transaction/supplier-employee-cash-receipt/add">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
-                        t('accounting_subnav.records.create_supplier_cash_receipt')
+                        t('accounting_subnav.records.create_supplier_employee_cash_receipt')
                       }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
