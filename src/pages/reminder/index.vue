@@ -69,23 +69,6 @@ const remindersSort = async (value: string) => {
   }
   await search(searchFilter.value)
 }
-// const changestatusReminder = async () => {
-//   currentChangeStatusReminder.value.id = currentChangeStatusReminder.value.id
-//   const { message, success } = await changeReminderStatus(currentChangeStatusReminder.value)
-//   if (success) {
-//     search(searchFilter.value)
-//     // @ts-ignore
-//     notif.dismissAll()
-//     await sleep(200);
-//     // @ts-ignore
-//     notif.success(t('toast.success.edit'))
-//   } else {
-//     await sleep(200);
-
-//     notif.error(message)
-//   }
-//   changeStatusPopup.value = false
-// }
 
 const changestatusReminder = async () => {
 
