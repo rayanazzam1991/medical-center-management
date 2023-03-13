@@ -28,3 +28,12 @@ export async function serveNextTicketInProviderWaitingListApi(
     return { response }
 }
 
+export async function getWaitingListByTicketIdApi(
+    api: AxiosInstance,
+    ticketId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`waitingList/getWaitingListByTicketId/${ticketId}`)
+
+    return { response }
+}
+

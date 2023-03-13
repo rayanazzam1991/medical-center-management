@@ -72,7 +72,7 @@ const columns = {
     searchable: true,
     label: t('inventory.table.columns.name'),
     renderRow: (row: any) =>
-      h('span', row?.contractor_id != undefined ? t('inventory.table.columns.custody') + ' ' + row?.name : row?.name)
+      h('span', row?.employee_id != undefined ? t('inventory.table.columns.custody') + ' ' + row?.name : row?.name)
   },
   items_count: {
     sortable: true,

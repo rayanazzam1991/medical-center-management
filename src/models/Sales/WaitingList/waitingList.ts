@@ -1,7 +1,7 @@
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
 import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n";
 import { defaultEmployee, Employee } from '../../Employee/employee';
-import { Ticket } from '../Ticket/ticket';
+import { defaultTicket, Ticket } from '../Ticket/ticket';
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -15,6 +15,7 @@ export interface WaitingList {
 }
 export interface EmployeeWaitingList {
     id: number
+    turn_number: number
     ticket: Ticket
 }
 
@@ -39,5 +40,19 @@ export const defaultWaitingListSearchFilter: WaitingListSearchFilter = {
     room_id: undefined
 
 }
+export interface WaitingListByTicket {
+    id: number
+    turn_number: number
+    ticket: Ticket
+    current_provider: Employee
+    created_at: string
+}
+export const defaultWaitingListByTicket: WaitingListByTicket = {
+    id: 0,
+    turn_number: 0,
+    ticket: defaultTicket,
+    current_provider: defaultEmployee,
+    created_at: ' '
 
+}
 

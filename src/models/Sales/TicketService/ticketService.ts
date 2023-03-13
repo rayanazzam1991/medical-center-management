@@ -37,6 +37,7 @@ export interface CreateTicketServiceHelper {
 export interface TicketServiceSearchFilter {
 
     created_at_from?: string
+    note?: string
     created_at_to?: string
     department_id?: number
     room_id?: number

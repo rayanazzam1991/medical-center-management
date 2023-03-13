@@ -11,6 +11,10 @@ import CloseTicketDropDown from '/@src/components/OurComponents/CloseTicketDropD
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
+import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waitingListService'
+import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
+import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('ticket.table.title'))
@@ -27,6 +31,13 @@ const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const closeTicketPopup = ref(false)
 const selectedCloseTicket = ref<Ticket>(defaultTicket)
+const currentServiceCardPopup = ref(false)
+const isLoading = ref(false)
+const ticketCurrentWaitingList = ref(defaultWaitingListByTicket)
+const currentTicketServices = ref<TicketService[]>([])
+const currentTicketServicesPrice = ref(0)
+const currenctTicketId = ref(0)
+
 onMounted(async () => {
   const { tickets, pagination } = await getTicketsList(searchFilter.value)
   ticketsList.value = tickets
@@ -80,6 +91,37 @@ const ticketSort = async (value: string) => {
   await search(searchFilter.value)
 }
 
+const viewCurrenyServiceCard = async (ticketId: number) => {
+  currenctTicketId.value = ticketId
+  const selectedTicket = ticketsList.value.find((ticket) => ticket.id == ticketId)
+  if (selectedTicket?.status != TicketConsts.WAITING && selectedTicket?.status != TicketConsts.SERVING) {
+    notif.error(t('toast.error.ticket.no_waiting_list'))
+  } else {
+
+    const { waiting_list_by_ticket, success, message } = await getWaitingListByTicketId(ticketId)
+    currentTicketServices.value = []
+    currentTicketServicesPrice.value = 0
+    if (success) {
+      ticketCurrentWaitingList.value = waiting_list_by_ticket
+      waiting_list_by_ticket.ticket.requested_services.forEach((ticketService) => {
+        if (ticketService.provider.id == waiting_list_by_ticket.current_provider.id) {
+          currentTicketServices.value.push(ticketService)
+          currentTicketServicesPrice.value += ticketService.sell_price
+        }
+
+      });
+      currentServiceCardPopup.value = true
+      keyIncrement.value++
+
+
+    } else {
+      notif.error(message)
+    }
+    isLoading.value = false
+
+  }
+
+}
 
 const columns = {
   id: {
@@ -159,7 +201,12 @@ const columns = {
     renderRow: (row: any) =>
       h(CloseTicketDropDown, {
         onEdit: () => {
-          router.push({ path: `/ticket/${row.id}/edit` })
+          if (row.status != TicketConsts.CLOSED) {
+
+            router.push({ path: `/ticket/${row.id}/edit` })
+          } else {
+            notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
+          }
         },
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
@@ -167,11 +214,36 @@ const columns = {
         onCloseTicket: () => {
           closeTicketPopup.value = true
           selectedCloseTicket.value = row
+        },
+        onViewCurrentServiceCard: async () => {
+          await viewCurrenyServiceCard(row.id)
         }
+
 
       }),
   },
 } as const
+const ticketServicesColumns = {
+  service_name: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.service_name"),
+    renderRow: (row: TicketService) =>
+      h('span', row?.service.name),
+  },
+  service_price: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.service_price"),
+    renderRow: (row: TicketService) =>
+      h('span', row?.sell_price),
+  },
+  currency: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.currency"),
+    renderRow: (row: TicketService) =>
+      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency.name),
+  },
+} as const
+
 </script>
 
 <template>
@@ -224,6 +296,39 @@ const columns = {
       </VButton>
     </template>
   </VModal>
+  <VModal :key="keyIncrement" :title="t('ticket.details.current_service_card_modal')" :open="currentServiceCardPopup"
+    actions="right" @close="currentServiceCardPopup = false">
+    <template #content>
+      <div class="modal-header">
+        <h2> {{ t('ticket.details.customer_name') }}:
+          <span>
+            {{
+              ticketCurrentWaitingList.ticket.customer.user.first_name
+            }} {{ ticketCurrentWaitingList.ticket.customer.user.last_name }}
+          </span>
+        </h2>
+        <h2>
+          {{ t('ticket.details.service_provider_name') }}:
+          <span> {{
+            ticketCurrentWaitingList.current_provider.user.first_name
+          }} {{ ticketCurrentWaitingList.current_provider.user.last_name }} </span>
+        </h2>
+        <h2> {{ t('ticket.details.turn_number') }}
+          <span>
+            {{ ticketCurrentWaitingList.turn_number }}</span>
+        </h2>
+        <h2> {{ t('ticket.details.date_time') }}: <span>{{ ticketCurrentWaitingList.created_at }}</span></h2>
+        <h2> {{ t('ticket.details.sell_price') }}: <span>{{ currentTicketServicesPrice }} {{
+          addParenthesisToString(ticketCurrentWaitingList.ticket.currency.name) }}</span></h2>
+      </div>
+      <VFlexTableWrapper :columns="ticketServicesColumns" :data="currentTicketServices">
+        <VFlexTable separators clickable>
+        </VFlexTable>
+      </VFlexTableWrapper>
+    </template>
+    <template>
+    </template>
+  </VModal>
 </template>
 <style lang="scss">
 .tooltip {
@@ -251,6 +356,20 @@ const columns = {
   visibility: visible;
 
 
+}
+
+.modal-header {
+  margin: 0 0 2rem;
+
+  h2 {
+    font-family: var(--font-alt);
+
+    span {
+      font-weight: 600;
+      font-size: 1.1rem;
+
+    }
+  }
 }
 
 .is-dark {

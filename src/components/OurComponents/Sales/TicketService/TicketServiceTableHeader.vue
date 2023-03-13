@@ -30,13 +30,15 @@ export default defineComponent({
     setup(props, context) {
         const { t } = useI18n()
         const onOpen = () => {
+            searchFilter.value.note = undefined
+            searchNote.value = undefined
             searchFilterPop.value = !searchFilterPop.value
             context.emit('onOpen', searchFilterPop.value)
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
         }
-
+        const searchNote = ref()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchFilterPop = ref(false)
@@ -47,12 +49,14 @@ export default defineComponent({
 
         const search = () => {
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.note = searchNote.value
             searchFilter.value.page = 1
             context.emit('search', searchFilter.value)
         }
         const search_filter = (value: TicketServiceSearchFilter) => {
             searchFilter.value = value
             searchFilter.value.per_page = perPage.value
+            searchFilter.value.note = searchNote.value
             context.emit('search', searchFilter.value)
         }
 
@@ -65,6 +69,8 @@ export default defineComponent({
             searchFilter.value.provider_id = undefined
             searchFilter.value.room_id = undefined
             searchFilter.value.service_id = undefined
+            searchFilter.value.note = undefined
+            searchNote.value = undefined
             is_reseted.value = true
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
@@ -79,10 +85,12 @@ export default defineComponent({
             searchFilter.value.provider_id = undefined
             searchFilter.value.room_id = undefined
             searchFilter.value.service_id = undefined
+            searchFilter.value.note = undefined
+            searchNote.value = undefined
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
+        return { t, keyIncrement, is_reseted, default_per_page, searchNote, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
@@ -94,6 +102,11 @@ export default defineComponent({
                 <div class="form-header-inner">
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
+                            <VControl class="mr-2" icon="feather:search">
+                                <VInput v-model="searchNote" type="text"
+                                    :placeholder="t('requested_services.search_filter.note')" />
+                            </VControl>
+
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                                 color="danger" />

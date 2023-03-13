@@ -58,10 +58,10 @@ onMounted(async () => {
     const { inventories } = await getInventoriesList(subInventorySearchFilter)
     inventoriesList.value = inventories
 
-    const MainInventory = inventoriesList.value.find((inventory) => inventory.contractor_id == null)
+    const MainInventory = inventoriesList.value.find((inventory) => inventory.employee_id == null)
     mainInventory.value = MainInventory
 
-    const SubInventory = inventoriesList.value.filter((inventory) => inventory.contractor_id != null)
+    const SubInventory = inventoriesList.value.filter((inventory) => inventory.employee_id != null)
     subInventoriesList.value = SubInventory
 
 

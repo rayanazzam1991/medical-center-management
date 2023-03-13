@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n()
 const emits = defineEmits<{
   (e: 'view'): void
+  (e: 'viewCurrentServiceCard'): void
   (e: 'edit'): void
   (e: 'closeTicket'): void
 }>()
@@ -23,6 +24,20 @@ const emits = defineEmits<{
         </div>
         <div class="meta">
           <span>{{ t('drop_down.view') }}</span>
+        </div>
+      </a>
+      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+        () => {
+          emits('viewCurrentServiceCard')
+          close()
+        }
+      ">
+        <div class="icon">
+          <i class="fas fa-ticket-alt" aria-hidden="true"></i>
+
+        </div>
+        <div class="meta">
+          <span>{{ t('drop_down.view_current_service_card') }}</span>
         </div>
       </a>
 
@@ -47,7 +62,7 @@ const emits = defineEmits<{
         }
       ">
         <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-trash-can-alt"></i>
+          <i class="lnir lnir-close" aria-hidden="true"></i>
         </div>
         <div class="meta">
           <span>{{ t('drop_down.close_ticket') }}</span>
