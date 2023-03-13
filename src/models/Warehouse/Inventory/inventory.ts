@@ -8,7 +8,7 @@ export interface Inventory {
     status: number
     contractor_name?: string
     inventory_items: InventoryItem[]
-    contractor_id?: number
+    employee_id?: number
     items_count: number
     created_at: string
     last_updated_at: string
@@ -29,7 +29,7 @@ export const defaultInventory: Inventory = {
     name: '',
     status: 1,
     contractor_name: '',
-    contractor_id: 0,
+    employee_id: 0,
     items_count: 0,
     inventory_items: [],
     created_at: '',
@@ -43,7 +43,7 @@ export interface ItemsHasInventory {
     name: string
     status: number
     contractor_name?: string
-    contractor_id?: number
+    employee_id?: number
     items_count: number
     items_quantity_count: number
     last_updated_at: string
@@ -66,7 +66,7 @@ export const defaultItemsHasInventory: ItemsHasInventory = {
     items_count: 0,
     items_quantity_count: 0,
     last_updated_at: '',
-    contractor_id: 0,
+    employee_id: 0,
     contractor_name: '',
     id: 0
 }

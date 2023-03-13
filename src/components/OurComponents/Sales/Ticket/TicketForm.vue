@@ -60,20 +60,24 @@ export default defineComponent({
         const isLoading = ref(false)
 
         const getCurrentTicket = async () => {
-            const { ticket } = await getTicket(ticketId.value);
-            currentTicket.value.cash_account_id = ticket.cash_account.id ?? 0
-            currentTicket.value.currency_id = ticket.currency.id
-            currentTicket.value.currency_rate = ticket.currency_rate
-            currentTicket.value.customer_id = ticket.customer.id ?? 0
-            currentTicket.value.paid_amount = ticket.paid_amount
-            currentTicket.value.remaining_amount = ticket.remaining_amount
-            currentTicket.value.total_amount = ticket.total_amount
+            if (ticketId.value > 0) {
 
-            ticket.requested_services.forEach(service => {
-                requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
-            });
-            enableCurrencyRate.value = !ticket.currency.is_main
-            updateTotalAmount()
+                const { ticket } = await getTicket(ticketId.value);
+                currentTicket.value.cash_account_id = ticket.cash_account.id ?? 0
+                currentTicket.value.currency_id = ticket.currency.id
+                currentTicket.value.currency_rate = ticket.currency_rate
+                currentTicket.value.customer_id = ticket.customer.id ?? 0
+                currentTicket.value.paid_amount = ticket.paid_amount
+                currentTicket.value.remaining_amount = ticket.remaining_amount
+                currentTicket.value.total_amount = ticket.total_amount
+
+                ticket.requested_services.forEach(service => {
+                    requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
+                });
+                enableCurrencyRate.value = !ticket.currency.is_main
+                updateTotalAmount()
+            }
+
         }
 
         onMounted(async () => {
@@ -266,7 +270,7 @@ export default defineComponent({
                 await sleep(200);
                 notif.success(t('toast.success.add_ticket', { ticket_id: ticket.id }))
                 currentTicket.value.requested_services = []
-                router.push({ path: "/ticket" });
+                router.push({ path: `/ticket/${ticket.id}` });
             }
             else {
                 currentTicket.value.requested_services = []
@@ -286,7 +290,7 @@ export default defineComponent({
                 await sleep(200);
                 notif.success(t('toast.success.update_ticket', { ticket_id: ticket.id }))
                 currentTicket.value.requested_services = []
-                router.push({ path: "/ticket" });
+                router.push({ path: `/ticket/${ticket.id}` });
             }
             else {
                 currentTicket.value.requested_services = []

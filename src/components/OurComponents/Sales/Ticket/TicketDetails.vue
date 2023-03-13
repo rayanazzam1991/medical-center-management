@@ -4,14 +4,27 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useI18n } from 'vue-i18n'
 import { Ticket, defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { getTicket } from '/@src/services/Sales/Ticket/ticketService';
+import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waitingListService';
+import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList';
+import { notifications } from '/@src/data/widgets/ui/notificationList';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { Notyf } from 'notyf';
+import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 
+const notif = useNotyf() as Notyf
 const route = useRoute()
 const viewWrapper = useViewWrapper()
 const currentTicket = ref<Ticket>(defaultTicket)
 const ticketId = ref(0)
 const loading = ref(false)
-const { t } = useI18n()
-
+const { t, locale } = useI18n()
+const iconArrow = locale.value == "ar" ? "lnir lnir-arrow-right" : "lnir lnir-arrow-left"
+const keyIncrement = ref(0)
+const currentServiceCardPopup = ref(false)
+const isLoading = ref(false)
+const ticketCurrentWaitingList = ref(defaultWaitingListByTicket)
+const currentTicketServices = ref<TicketService[]>([])
+const currentTicketServicesPrice = ref(0)
 // @ts-ignore
 ticketId.value = route.params.id
 viewWrapper.setPageTitle(t('ticket.details.title'))
@@ -29,6 +42,51 @@ const getCurrentTicket = async () => {
   const { ticket } = await getTicket(ticketId.value)
   currentTicket.value = ticket
 }
+const viewCurrenyServiceCard = async () => {
+  isLoading.value = true
+  const { waiting_list_by_ticket, success, message } = await getWaitingListByTicketId(ticketId.value)
+  currentTicketServices.value = []
+  currentTicketServicesPrice.value = 0
+  if (success) {
+    ticketCurrentWaitingList.value = waiting_list_by_ticket
+    waiting_list_by_ticket.ticket.requested_services.forEach((ticketService) => {
+      if (ticketService.provider.id == waiting_list_by_ticket.current_provider.id) {
+        currentTicketServices.value.push(ticketService)
+        currentTicketServicesPrice.value += ticketService.sell_price
+      }
+
+    });
+    currentServiceCardPopup.value = true
+    keyIncrement.value++
+
+
+  } else {
+    notif.error(message)
+  }
+  isLoading.value = false
+
+
+}
+const columns = {
+  service_name: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.service_name"),
+    renderRow: (row: TicketService) =>
+      h('span', row?.service.name),
+  },
+  service_price: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.service_price"),
+    renderRow: (row: TicketService) =>
+      h('span', row?.sell_price),
+  },
+  currency: {
+    align: 'center',
+    label: t("ticket.details.current_services.columns.currency"),
+    renderRow: (row: TicketService) =>
+      h('span', currentTicket.value.currency.name),
+  },
+} as const
 
 </script>
 <template>
@@ -72,9 +130,16 @@ const getCurrentTicket = async () => {
                   <h3>{{ t('ticket.details.services') }}</h3>
                 </div>
                 <div class="buttons">
-                  <VButton color="success" to="/ticket">
+
+                  <VButton :icon="iconArrow" to="/ticket">
                     {{ t('ticket.back_button') }}
                   </VButton>
+                  <VButton :loading="isLoading"
+                    :disabled="currentTicket.status != TicketConsts.SERVING && currentTicket.status != TicketConsts.WAITING"
+                    @click="viewCurrenyServiceCard" color="primary">
+                    {{ t('ticket.details.view_current_service_card') }}
+                  </VButton>
+
                 </div>
               </div>
               <div class="project-features">
@@ -203,6 +268,39 @@ const getCurrentTicket = async () => {
       <div>
       </div>
     </div>
+    <VModal :key="keyIncrement" :title="t('ticket.details.current_service_card_modal')" :open="currentServiceCardPopup"
+      actions="right" @close="currentServiceCardPopup = false">
+      <template #content>
+        <div class="modal-header">
+          <h2> {{ t('ticket.details.customer_name') }}:
+            <span>
+              {{
+                ticketCurrentWaitingList.ticket.customer.user.first_name
+              }} {{ ticketCurrentWaitingList.ticket.customer.user.last_name }}
+            </span>
+          </h2>
+          <h2>
+            {{ t('ticket.details.service_provider_name') }}:
+            <span> {{
+              ticketCurrentWaitingList.current_provider.user.first_name
+            }} {{ ticketCurrentWaitingList.current_provider.user.last_name }} </span>
+          </h2>
+          <h2> {{ t('ticket.details.turn_number') }}
+            <span>
+              {{ ticketCurrentWaitingList.turn_number }}</span>
+          </h2>
+          <h2> {{ t('ticket.details.date_time') }}: <span>{{ ticketCurrentWaitingList.created_at }}</span></h2>
+          <h2> {{ t('ticket.details.sell_price') }}: <span>{{ currentTicketServicesPrice }}</span></h2>
+        </div>
+        <VFlexTableWrapper :columns="columns" :data="currentTicketServices">
+          <VFlexTable separators clickable>
+          </VFlexTable>
+        </VFlexTableWrapper>
+      </template>
+      <template>
+      </template>
+    </VModal>
+
   </div>
 </template>
 
@@ -247,5 +345,19 @@ const getCurrentTicket = async () => {
 .required::after {
   content: ' *';
   color: var(--danger);
+}
+
+.modal-header {
+  margin: 0 0 2rem;
+
+  h2 {
+    font-family: var(--font-alt);
+
+    span {
+      font-weight: 600;
+      font-size: 1.1rem;
+
+    }
+  }
 }
 </style>
