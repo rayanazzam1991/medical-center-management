@@ -11,7 +11,7 @@ import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 import sleep from "/@src/utils/sleep"
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -116,7 +116,7 @@ const columns = {
     align: 'center',
     label: t('department.table.columns.status'),
     renderRow: (row: any) =>
-      h(AddEditDropDown, {
+      h(ViewEditDropDown, {
         onEdit: () => {
           router.push({ path: `/department/${row.id}/edit` })
         },

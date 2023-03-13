@@ -11,7 +11,7 @@ import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import sleep from '/@src/utils/sleep'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('room.table.title'))
@@ -131,7 +131,7 @@ const columns = {
     label: t('room.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(AddEditDropDown, {
+      h(ViewEditDropDown, {
         onEdit: () => {
           router.push({ path: `/room/${row.id}/edit` })
         },

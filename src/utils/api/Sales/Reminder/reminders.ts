@@ -1,6 +1,5 @@
 import { AxiosInstance } from "axios"
 import { ChangeReminderStatus, CreateReminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
-import { CreateTicket, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createReminderApi(

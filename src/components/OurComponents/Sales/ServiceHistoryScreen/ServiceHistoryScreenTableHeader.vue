@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
-import { defaultReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
+import { defaultServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -21,7 +21,7 @@ export default defineComponent({
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const perPage = ref(pagination.per_page)
-        const searchFilter = ref(defaultReminderSearchFilter)
+        const searchFilter = ref(defaultServiceHistoryScreenSearchFilter)
         const search = () => {
             searchFilter.value = {
                 per_page: perPage.value

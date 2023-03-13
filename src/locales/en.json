@@ -2091,5 +2091,21 @@
       "created_at": " Created At ",
       "created_by": " Created By"
     }
+  },
+  "service_history_screen": {
+    "form": {
+      "page_title": "ًWaiting Screen",
+      "add_service_history_screen_title": "Add Waiting Screen",
+      "edit_service_history_screen_title": "Edit Waiting Screen",
+      "form_header": "{type} Waiting Screen",
+      "name": "Name",
+      "filters": "Filters",
+      "select_filter_type": "Filter type",
+      "select_filter_id": "Filter",
+      "room": "Room",
+      "department": "Department",
+      "service": "Service",
+      "add_new_filter": "Add new filter"
+    }
   }
 }

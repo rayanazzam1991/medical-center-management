@@ -71,6 +71,31 @@ const emits = defineEmits<{
                                     </li>
                                 </ul><br />
                             </div>
+                            <div class="column is-4">
+                                <h4 class="column-heading">{{
+                                    t('ticketing_subnav.service_history_screen.service_history_screens') }}
+                                </h4>
+                                <ul>
+                                    <li>
+                                        <RouterLink to="/service-history-screen">
+                                            <i class="lnir lnir-display-alt" aria-hidden="true"></i>
+                                            <span>{{ t('ticketing_subnav.service_history_screen.service_history_screens')
+                                            }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+                                    <li>
+                                        <RouterLink to="/service-history-screen/add">
+                                            <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                                            <span>{{
+                                                t('ticketing_subnav.service_history_screen.create_service_history_screen')
+                                            }}</span>
+                                            <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                                        </RouterLink>
+                                    </li>
+
+                                </ul><br />
+                            </div>
                         </div>
                     </div>
                 </div>
