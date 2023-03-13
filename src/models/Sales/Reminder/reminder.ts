@@ -57,6 +57,14 @@ export interface ReminderSearchFilter {
     order_by?: string
     order?: string
 }
+export interface ChangeReminderStatus {
+  id?: number
+  status?: number
+}
+export const defaultChangeReminderStatus: ChangeReminderStatus = {
+  id: undefined,
+  status: undefined
+}
 
 export const defaultReminderSearchFilter = <ReminderSearchFilter>{}
 
@@ -79,11 +87,11 @@ class ReminderConsts {
     }
     public static getStatusColor(status: number) {
         if (status == this.ACTIVE)
-            return 'primary'
+            return 'success'
         if (status == this.INACTIVE)
             return 'danger'
         if (status == this.DONE)
-            return 'success'
+            return 'info'
         else return undefined;
     }
 

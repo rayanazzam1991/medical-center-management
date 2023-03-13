@@ -35,22 +35,20 @@ export default defineComponent({
     const keyTest = ref(0)
     const default_per_page = props.default_per_page
     const pagination = props.pagination
-    const searchCustomerName = ref('')
-    const searchStatus = ref()
+    const searchId = ref()
     const perPage = ref(pagination.per_page)
     const searchFilter = ref(defaultTicketSearchFilter)
     const search = () => {
       searchFilter.value = {
-        customer_name: searchCustomerName.value,
-        status: searchStatus.value,
+        id: searchId.value,
         per_page: perPage.value
       }
       context.emit('search', searchFilter.value)
 
     }
     const resetFilter = () => {
-      searchCustomerName.value = ''
-      searchStatus.value = undefined
+      searchId.value = undefined
+      searchFilter.value.id = undefined
       searchFilter.value.customer_name = undefined
       searchFilter.value.status = undefined
       keyTest.value++
@@ -65,12 +63,11 @@ export default defineComponent({
       context.emit('search', searchFilter.value)
     }
     const resetFilter_popup = (value: TicketSearchFilter) => {
-      searchFilter.value.customer_name = undefined
-      searchFilter.value.status = undefined
+      searchFilter.value.id = undefined
       context.emit('resetFilter', searchFilter.value)
 
     }
-    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, TicketConsts, searchFilterPop, search, default_per_page, searchCustomerName, onOpen, keyTest, searchStatus, perPage, pagination }
+    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, TicketConsts, searchFilterPop, search, default_per_page, searchId, onOpen, keyTest, perPage, pagination }
   },
 })
 </script>
@@ -83,19 +80,10 @@ export default defineComponent({
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
               <VControl class="mr-2" icon="feather:search">
-                <VInput v-model="searchCustomerName" type="text" :placeholder="t('ticket.search_filter.customer_name')" />
+                <VInput v-model="searchId" type="text" :placeholder="t('ticket.search_filter.id')" />
               </VControl>
-              <VControl class="mr-2 status-input">
-                <VSelect v-model="searchStatus">
-                  <VOption value="">{{ t('ticket.search_filter.status') }}</VOption>
-                  <VOption value="1">{{ TicketConsts.getStatusName(1) }}</VOption>
-                  <VOption value="2">{{ TicketConsts.getStatusName(2) }}</VOption>
-                  <VOption value="3">{{ TicketConsts.getStatusName(3) }}</VOption>
-                  <VOption value="4">{{ TicketConsts.getStatusName(4) }}</VOption>
-                </VSelect>
-              </VControl>
-              <VIconButton class="mr-2" type="submit" v-on:click="search" icon="feather:search" />
-              <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
+              <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+              <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                 color="danger" />
 
             </div>
@@ -130,6 +118,8 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <TicketSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+      @search="search_filter" @resetFilter="resetFilter_popup" />
   </form>
 </template>
 

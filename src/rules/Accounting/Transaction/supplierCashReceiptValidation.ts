@@ -13,7 +13,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 const supplierCashReceiptValidationSchema = toFormValidator(zod
     .object({
-      supplier_account: zod
+      supplier_employee_account: zod
             .preprocess(
                 (input) => {
                     const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);

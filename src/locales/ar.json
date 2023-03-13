@@ -212,14 +212,14 @@
     "records": {
       "records": "القيود والتحويلات المالية",
       "customer_cash_receipts": "الإيصالات النقدية للزبائن",
-      "supplier_cash_receipts": "الإيصالات النقدية للموردين",
+      "supplier_employee_cash_receipts": "الإيصالات النقدية للموردين والموظفين",
       "transactions": "القيود المالية",
       "transfer_cash_money": "تحويل مبلغ نقدي",
       "add_record": "إضافة قيد مالي",
       "add_custom_revenue": "إضافة عوائد",
       "add_custom_expense": "إضافة نفقات",
       "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون",
-      "create_supplier_cash_receipt": "انشاء إيصال نقدي لمورد"
+      "create_supplier_employee_cash_receipt": "انشاء إيصال نقدي لمورد / موظف"
     }
   },
   "ticketing_subnav": {
@@ -2158,9 +2158,12 @@
   },
   "supplier_cash_receipt": {
     "form": {
-      "title": "إيصال نقدي لمورد",
+      "title": "انشاء إيصال نقدي لمورد / موظف",
       "button": "إضافة",
       "supplier_account": "حساب المورد",
+      "employee_account": "حساب الموظف",
+      "supplier": " إيصال نقدي لمورد",
+      "employee": " إيصال نقدي لموظف",
       "select_account": "اختيار الحساب",
       "amount": "المبلغ",
       "cash_amount": "مبلغ النقد",
@@ -2173,15 +2176,15 @@
       "total_amount": "المبلغ الإجمالي",
       "remaining_amount": "المبلغ المتبقي",
       "confirm_popup": {
-        "title": "انشاء إيصال نقدي لمورد",
+        "title": "انشاء إيصال نقدي لمورد/ موظف",
         "confirmation": "هل أنت متأكد؟",
         "currency_difference": "سيتم إضافة مبلغ {currency_difference} دينار عراقي إلى حساب فروقات العملة"
       }
     },
     "table": {
-      "title": "الإيصالات النقدية للموردين",
+      "title": "الإيصالات النقدية للموردين والموظفين",
       "columns": {
-        "supplier_name": "اسم المورد",
+        "name": "الاسم ",
         "amount": "المبلغ الإجمالي",
         "currency": "العملة",
         "currency_rate": "سعر الصرف",
@@ -2189,14 +2192,19 @@
         "note": "ملاحظات",
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
-        "created_by": "بواسطة"
+        "created_by": "بواسطة",
+        "type": {
+          "title": "النوع",
+          "supplier": "مورد",
+          "employee": "موظف"
+        }
       }
     },
-    "add_supplier_cash_receipts_button": "انشاء إيصال نقدي لمورد",
+    "add_supplier_employee_cash_receipts_button": "انشاء إيصال نقدي لمورد / موظف ",
     "search_filter": {
-      "title": "تصفية الايصالات النقدية للموردين",
+      "title": "تصفية الايصالات النقدية للموردين والموظفين",
       "note": "ملاحظات...",
-      "supplier_name": "اسم المورد...",
+      "supplier_name": "اسم المورد/ الموظف...",
       "cash_account_id": "حساب النقد",
       "currency_id": "العملة"
     }
@@ -2264,8 +2272,8 @@
       "columns": {
         "id": "رقم المعرّف",
         "services_count": "عدد الخدمات",
-        "current_service_provider": "مقدم الخدمة",
-        "customer_name": "الاسم",
+        "current_service_provider": "مقدم الخدمة الحالي",
+        "customer_name": "اسم الزبون ",
         "total_amount": "المبلغ الإجمالي",
         "status": "الحالة",
         "created_at": "تاريخ الإنشاء ",
@@ -2278,8 +2286,10 @@
       }
     },
     "search_filter": {
-      "customer_name": "الاسم",
-      "status": "الحالة"
+      "customer_name": "اسم الزبون ",
+      "status": "الحالة",
+      "id": "رقم المعرّف",
+      "title": "تصفية التذاكر"
     },
     "details": {
       "ticket": "التذكرة",
@@ -2287,7 +2297,7 @@
       "title": "تفاصيل التذكرة",
       "services": "الخدمات المقدمة",
       "name": " اسم الخدمة",
-      "service_provider_name": "مقدم الخدمة",
+      "service_provider_name": "مقدم الخدمة الحالي",
       "sell_price": "السعر",
       "quantity_item": "كمية المواد",
       "items_list": " المواد",
@@ -2391,6 +2401,9 @@
       "note": "المذكرة",
       "date": "التاريخ",
       "time": "الوقت"
+    },
+    "model": {
+      "title": "تغيير حالة التذكير"
     }
   },
   "reminder_statuses": {

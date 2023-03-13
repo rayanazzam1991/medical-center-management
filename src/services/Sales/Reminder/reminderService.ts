@@ -1,4 +1,4 @@
-import { CreateReminder, defaultReminder, Reminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
+import { ChangeReminderStatus, CreateReminder, defaultReminder, Reminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
 import { useReminder } from "/@src/stores/Sales/Reminder/reminderStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -22,4 +22,12 @@ export async function getRemindersList(searchFilter: ReminderSearchFilter) {
 
     return { reminders, pagination, success, error_code, message }
 
+}
+export async function changeReminderStatus(reminderData: ChangeReminderStatus) {
+  const reminderResponse = useReminder()
+  await reminderResponse.changeReminderStatusStore(reminderData)
+  var success: boolean = reminderResponse.success ?? false
+  var error_code: string = reminderResponse.error_code ?? ''
+  var message: string = reminderResponse.message ?? ''
+  return { success, error_code, message }
 }

@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { CreateReminder, Reminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
-import { createReminderApi, getRemindersListApi } from "/@src/utils/api/Sales/Reminder"
+import { ChangeReminderStatus, CreateReminder, Reminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
+import { changeReminderStatusApi, createReminderApi, getRemindersListApi } from "/@src/utils/api/Sales/Reminder"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
@@ -57,7 +57,27 @@ export const useReminder = defineStore('reminder', () => {
         finally {
             loading.value = false
         }
+  }
+  async function changeReminderStatusStore(reminder: ChangeReminderStatus) {
+    if (loading.value) return
+    loading.value = true
+    try {
+        const response = await changeReminderStatusApi(api, reminder)
+        var returnedReminder: Reminder
+        returnedReminder = response.response.data
+        success.value = response.response.success
+        error_code.value = response.response.error_code
+        message.value = response.response.message
+
+    } catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
     }
+    finally {
+        loading.value = false
+    }
+}
 
 
 
@@ -69,7 +89,8 @@ export const useReminder = defineStore('reminder', () => {
         pagination,
         reminders,
         createReminderStore,
-        getRemindersStore
+      getRemindersStore,
+      changeReminderStatusStore
     } as const
 })
 

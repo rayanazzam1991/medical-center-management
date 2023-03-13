@@ -171,6 +171,7 @@ declare module '@vue/runtime-core' {
     TicketDetails: typeof import('./src/components/OurComponents/Sales/Ticket/TicketDetails.vue')['default']
     TicketForm: typeof import('./src/components/OurComponents/Sales/Ticket/TicketForm.vue')['default']
     TicketingSubnav: typeof import('./src/layouts/navbar-items/TicketingSubnav.vue')['default']
+    TicketSearchFilterModel: typeof import('./src/components/OurComponents/Sales/Ticket/TicketSearchFilterModel.vue')['default']
     TicketServiceDropDown: typeof import('./src/components/OurComponents/Sales/TicketService/TicketServiceDropDown.vue')['default']
     TicketServiceSearchFilterModal: typeof import('./src/components/OurComponents/Sales/TicketService/TicketServiceSearchFilterModal.vue')['default']
     TicketServiceTableHeader: typeof import('./src/components/OurComponents/Sales/TicketService/TicketServiceTableHeader.vue')['default']
