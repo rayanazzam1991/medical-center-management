@@ -473,7 +473,7 @@ export default defineComponent({
                                 <VField id="cash_account_id">
                                     <VLabel class="required">{{ t('ticket.form.cash_account') }}</VLabel>
                                     <VControl>
-                                        <VSelect v-model="currentTicket.cash_account_id">
+                                        <VSelect :disabled="formType == 'Edit'" v-model="currentTicket.cash_account_id">
                                             <VOption :value="0"> {{ t('ticket.form.select_cash_account')
                                             }}</VOption>
                                             <VOption v-for="account in cashAccountsList" :value="account.id">
@@ -512,8 +512,8 @@ export default defineComponent({
                                 <VField id="paid_amount">
                                     <VLabel class="required">{{ t('ticket.form.paid_amount') }}</VLabel>
                                     <VControl>
-                                        <VInput @input="updateRemainingAmount" v-model="currentTicket.paid_amount"
-                                            placeholder="" type="number" />
+                                        <VInput :disabled="formType == 'Edit'" @input="updateRemainingAmount"
+                                            v-model="currentTicket.paid_amount" placeholder="" type="number" />
                                         <ErrorMessage class="help is-danger" name="paid_amount" />
                                     </VControl>
                                 </VField>
