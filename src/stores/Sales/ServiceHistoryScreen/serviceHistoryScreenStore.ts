@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { CreateUpdateServiceHistoryScreen, ServiceHistoryScreen, ServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
-import { createServiceHistoryScreenApi, getServiceHistoryScreenForEditApi, getServiceHistoryScreensListApi, updateServiceHistoryScreenApi } from "/@src/utils/api/Sales/ServiceHistoryScreen"
+import { CreateUpdateServiceHistoryScreen, ServiceHistoryScreen, ServiceHistoryScreenDetails, ServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
+import { createServiceHistoryScreenApi, getServiceHistoryScreenForEditApi, getServiceHistoryScreensListApi, updateServiceHistoryScreenApi,getServiceHistoryScreensApi } from "/@src/utils/api/Sales/ServiceHistoryScreen"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
@@ -96,7 +96,30 @@ export const useServiceHistoryScreen = defineStore('serviceHistoryScreen', () =>
         finally {
             loading.value = false
         }
+  }
+  async function getServiceHistoryScreenStore(screenId: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+        const returnedResponse = await getServiceHistoryScreensApi(api, screenId)
+        pagination.value = returnedResponse.response.pagination
+        success.value = returnedResponse.response.success
+        error_code.value = returnedResponse.response.error_code
+        message.value = returnedResponse.response.message
+        return returnedResponse.response.data as ServiceHistoryScreenDetails
     }
+    catch (error: any) {
+        success.value = error?.response.data.success
+        error_code.value = error?.response.data.error_code
+        message.value = error?.response.data.message
+
+    }
+    finally {
+        loading.value = false
+    }
+}
 
 
     return {
@@ -109,7 +132,8 @@ export const useServiceHistoryScreen = defineStore('serviceHistoryScreen', () =>
         createServiceHistoryScreenStore,
         updateServiceHistoryScreenStore,
         getServiceHistoryScreenForEditStore,
-        getServiceHistoryScreensStore
+      getServiceHistoryScreensStore,
+      getServiceHistoryScreenStore
     } as const
 })
 
