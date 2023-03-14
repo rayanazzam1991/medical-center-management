@@ -248,7 +248,7 @@ const columns = {
                                   <div class="meta">
                                     <span>{{ t('ticket.details.created_by') }}</span>
                                     <span>
-                                      {{ currentTicket.created_by.first_name }}
+                                      {{ currentTicket.created_by.first_name + ' ' + currentTicket.created_by.last_name }}
                                     </span>
                                   </div>
                                 </div>
