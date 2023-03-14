@@ -235,6 +235,10 @@
     },
     "reminder": {
       "reminders": "المذكرات"
+    },
+    "service_history_screen": {
+      "service_history_screens": "شاشات الانتظار",
+      "create_service_history_screen": "انشاء شاشة انتظار"
     }
   },
   "user_profile_dropdown": {
@@ -310,6 +314,12 @@
       },
       "reminder": {
         "reminder_error": "حدثت مشكلة بتحديد الزبون أو الخدمة المقدمة, يرجى الضغط على العودة وإعادة المحاولة من جديد"
+      },
+      "service_history_screen": {
+        "model_id_type_required": "حقول نوع التصفية والمصفي مطلوبة",
+        "filters_are_duplicated": "يوجد بعض المصفيات المكررة",
+        "name_is_required": "اسم شاشة الانتظار مطلوب",
+        "please_add_some_filter": "يرجى إضافة بعض المصفيات"
       }
     },
     "file": {
@@ -2410,5 +2420,33 @@
     "active": "فعال",
     "inactive": "غير فعال",
     "done": "تم التذكير"
+  },
+  "service_history_screen": {
+    "table": {
+      "title": "شاشات الانتظار",
+      "columns": {
+        "name": "الاسم",
+        "rooms": "الغرف",
+        "departments": "الأقسام",
+        "services": "الخدمات",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": " بواسطة",
+        "actions": "الإجراءات"
+      }
+    },
+    "form": {
+      "page_title": "شاشة انتظار",
+      "add_service_history_screen_title": "إضافة شاشة انتظار",
+      "edit_service_history_screen_title": "تعديل شاشة انتظار",
+      "form_header": "{type} شاشة انتظار",
+      "name": "الاسم",
+      "filters": "المصفيات",
+      "select_filter_type": "نوع المصفي",
+      "select_filter_id": "المصفي",
+      "room": "غرفة",
+      "department": "قسم",
+      "service": "خدمة",
+      "add_new_filter": "إضافة مصفي جديد"
+    }
   }
 }

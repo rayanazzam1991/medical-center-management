@@ -193,7 +193,7 @@ const columns = {
     align: 'center',
     label: t('ticket.table.columns.created_by'),
     renderRow: (row: any) =>
-      h('span', row?.created_by?.first_name)
+      h('span', row?.created_by?.first_name + ' ' + row?.created_by?.last_name)
   },
   actions: {
     align: 'center',

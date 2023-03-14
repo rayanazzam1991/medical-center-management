@@ -9,7 +9,7 @@ import { defaultPagination } from '/@src/utils/response'
 import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('nationality.table.title'))
@@ -112,7 +112,7 @@ const columns = {
     align: 'center',
     label: t('nationality.table.columns.actions'),
     renderRow: (row: any) =>
-      h(AddEditDropDown, {
+      h(ViewEditDropDown, {
         onEdit: () => {
           router.push({ path: `/nationality/${row?.id}/edit` })
         },

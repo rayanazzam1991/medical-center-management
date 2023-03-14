@@ -2,7 +2,7 @@
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
-import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue';
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue';
 import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCustomerGroupSearchFilter, CustomerGroupSearchFilter, CustomerGroupConsts, CustomerGroup } from '/@src/models/Others/CustomerGroup/customerGroup';
@@ -116,7 +116,7 @@ const columns = {
     label: t('customer_group.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(AddEditDropDown, {
+      h(ViewEditDropDown, {
         onEdit: () => {
           router.push({ path: `/customer-group/${row?.id}/edit` })
         },

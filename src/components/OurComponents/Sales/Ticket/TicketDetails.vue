@@ -10,6 +10,7 @@ import { notifications } from '/@src/data/widgets/ui/notificationList';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Notyf } from 'notyf';
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 const notif = useNotyf() as Notyf
 const route = useRoute()
@@ -290,7 +291,8 @@ const columns = {
               {{ ticketCurrentWaitingList.turn_number }}</span>
           </h2>
           <h2> {{ t('ticket.details.date_time') }}: <span>{{ ticketCurrentWaitingList.created_at }}</span></h2>
-          <h2> {{ t('ticket.details.sell_price') }}: <span>{{ currentTicketServicesPrice }}</span></h2>
+          <h2> {{ t('ticket.details.sell_price') }}: <span>{{ currentTicketServicesPrice }} {{
+            addParenthesisToString(ticketCurrentWaitingList.ticket.currency.name) }}</span></h2>
         </div>
         <VFlexTableWrapper :columns="columns" :data="currentTicketServices">
           <VFlexTable separators clickable>

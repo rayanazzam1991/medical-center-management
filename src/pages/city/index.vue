@@ -3,8 +3,7 @@ import { useHead } from '@vueuse/head'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import AddEditDropDown from '/@src/components/OurComponents/AddEditDropDown.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultCitySearchFilter, CitySearchFilter, CityConsts, City } from '/@src/models/Others/City/city'
 import { getCitiesList } from '/@src/services/Others/City/cityService'
@@ -114,7 +113,7 @@ const columns = {
     align: 'center',
     label: t("city.table.columns.actions"),
     renderRow: (row: any) =>
-      h(AddEditDropDown, {
+      h(ViewEditDropDown, {
         onEdit: () => {
           router.push({ path: `/city/${row?.id}/edit` })
         },
