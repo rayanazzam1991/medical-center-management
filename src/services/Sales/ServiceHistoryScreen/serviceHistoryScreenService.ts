@@ -1,4 +1,4 @@
-import { CreateUpdateServiceHistoryScreen, defaultServiceHistoryScreen, ServiceHistoryScreen, ServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
+import { CreateUpdateServiceHistoryScreen, defaultServiceHistoryScreen,defaultServiceHistoryScreenDetails, ServiceHistoryScreen, ServiceHistoryScreenDetails, ServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
 import { useServiceHistoryScreen } from "/@src/stores/Sales/ServiceHistoryScreen/serviceHistoryScreenStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -37,4 +37,12 @@ export async function getServiceHistoryScreensList(searchFilter: ServiceHistoryS
 
     return { screens, pagination, success, error_code, message }
 
+}
+export async function getServiceHistoryScreen(screenId: number) {
+  const response = useServiceHistoryScreen()
+    let screen: ServiceHistoryScreenDetails = await response.getServiceHistoryScreenStore(screenId) ?? defaultServiceHistoryScreenDetails
+    let success: boolean = response.success ?? false
+    let error_code: string = response.error_code ?? ''
+    let message: string = response.message ?? ''
+    return { success, error_code, message, screen }
 }
