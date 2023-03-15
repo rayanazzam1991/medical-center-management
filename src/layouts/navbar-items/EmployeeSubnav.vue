@@ -41,14 +41,14 @@ const { t } = useI18n()
                 <ul>
                   <li>
                     <RouterLink to="/position">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i class="lnir lnir-hierchy-alt" aria-hidden="true"></i>
                       <span>{{ t('human_resources_subnav.position.positions') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
                   <li>
                     <RouterLink to="/position/add">
-                      <i aria-hidden="true" class="lnil lnil-analytics-alt-1"></i>
+                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{ t('human_resources_subnav.position.create_position') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>

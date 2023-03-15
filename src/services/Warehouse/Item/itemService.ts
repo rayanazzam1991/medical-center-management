@@ -16,7 +16,6 @@ export async function addItem(itemData: CreateUpdateItem) {
 export async function editItem(itemData: CreateUpdateItem) {
     const itemResponse = useItem()
     await itemResponse.editItemStore(itemData)
-    await itemResponse.editItemStore(itemData)
     let success: boolean = itemResponse.success ?? false
     let error_code: string = itemResponse.error_code ?? ''
     let message: string = itemResponse.message ?? ''

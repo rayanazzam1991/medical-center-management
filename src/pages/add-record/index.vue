@@ -347,7 +347,7 @@ const calcCurrencyDifferences = debounce(() => {
                       <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
                         :placeholder="t('financial_record.select_account')" :close-on-select="true"
                         ref="accountMultiselect" :filter-results="false" :min-chars="0" :resolve-on-load="false"
-                        :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
+                        :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                         :searchable="true" :canClear="false" @select="setAccountValue()" :options="async (query: any) => {
                           let accountSearchFilter = {} as AccountSearchFilter
                           accountSearchFilter.name = query
