@@ -338,7 +338,7 @@ const calcCurrencyDifferences = debounce(() => {
 
             </div>
             <div class="columns mb-0" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
-              <div class="column is-3">
+              <div class="column is-6">
                 <div class="mb-3">
                   <VField :id="`account_id_${mainIndex}`">
                     <VLabel v-if="mainIndex == 0" class="required">
@@ -396,7 +396,7 @@ const calcCurrencyDifferences = debounce(() => {
                   </VField>
                 </div>
               </div>
-              <div class="column is-3 columns is-flex is-align-items-center">
+              <div class="column is-1 columns is-flex is-align-items-center">
                 <div class="mb-3 column is-6">
                   <VField v-if="tempAccountRecords[mainIndex].has_remove_btn">
                     <VControl>

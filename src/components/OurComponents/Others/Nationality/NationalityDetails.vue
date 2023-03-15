@@ -49,12 +49,12 @@ const toEdit = () => {
                 <!--Fieldset-->
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('nationality.details.name')}}:</h4>
+                        <div class="column is-6">
+                            <h4 class="margin-bottom">{{ t('nationality.details.name') }}:</h4>
                             <span>{{ currentNationality.name }}</span>
                         </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('nationality.details.status')}}:</h4>
+                        <div class="column is-6">
+                            <h4 class="margin-bottom">{{ t('nationality.details.status') }}:</h4>
                             <span>
                                 <VTag
                                     :color="currentNationality.status === NationalityConsts.INACTIVE ? 'danger' : 'success'">
@@ -67,8 +67,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

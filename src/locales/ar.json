@@ -59,7 +59,8 @@
       "invalid_type_error": "يرجى ادخال رقم صالح",
       "payment_percentage": "يرجى ادخال رقم من 0-100",
       "phone_number": "يرجى ادخال رقم هاتف صالح",
-      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
+      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر",
+      "out_of_boundries": "يرجى ادخال رقم صالح"
     },
     "redio": {
       "required": "يرجى الاختيار"
@@ -437,9 +438,9 @@
       "modal_title": "إزالة المدينة"
     },
     "details": {
-      "title": "المدن",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "المدينة",
+      "name": "الاسم ",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "المدن",
@@ -692,15 +693,15 @@
       "modal_title": "إزالة مجموعة الزبون"
     },
     "details": {
-      "title": "مجموعة الزبون",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "مجموعة الزبائن",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "مجموعات الزبون",
       "form_header": "{type} مجموعة زبون",
-      "add_customer_group_title": "إضافة مجموعة الزبون",
-      "edit_customer_group_title": "تعديل مجموعة الزبون",
+      "add_customer_group_title": "إضافة مجموعة زبائن",
+      "edit_customer_group_title": "تعديل مجموعة زبائن",
       "name": "الاسم",
       "status": "الحالة"
     },
@@ -722,9 +723,9 @@
       "modal_title": "إزالة القسم"
     },
     "details": {
-      "title": "الأقسام",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "القسم",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الأقسام",
@@ -1109,9 +1110,9 @@
       "modal_title": "إزالة جنسية"
     },
     "details": {
-      "title": "الجنسيات",
-      "name": "اسم الجنسية",
-      "status": "حالة الجنسية"
+      "title": "الجنسية",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الجنسيات",
@@ -1129,7 +1130,7 @@
   },
   "position": {
     "table": {
-      "title": "المنصب",
+      "title": "المناصب",
       "columns": {
         "id": "رقم المعرّف",
         "name": "الاسم",
@@ -1140,10 +1141,10 @@
       "modal_title": "تغيير حالة منصب"
     },
     "details": {
-      "title": "منصب",
-      "name": "اسم المنصب",
-      "description": "توصيف المنصب",
-      "status": "حالة المنصب"
+      "title": "المنصب",
+      "name": "الاسم",
+      "description": "التوصيف",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "المنصب",
@@ -1174,11 +1175,11 @@
       "modal_title": "إزالة غرفة"
     },
     "details": {
-      "title": "الغرف",
-      "number": "رقم الغرفة",
-      "floor": "طابق الغرفة",
-      "department": "قسم الغرفة",
-      "status": "حالة الغرفة"
+      "title": "الغرفة",
+      "number": "الرقم",
+      "floor": "الطابق",
+      "department": "القسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الغرف",
@@ -1215,18 +1216,18 @@
       "modal_title": "إزالة خدمة"
     },
     "details": {
-      "title": "الخدمات",
-      "name": "اسم الخدمة",
-      "price": "سعر الخدمة",
-      "description": "توصيف الخدمة",
+      "title": "الخدمة",
+      "name": "الاسم",
+      "price": "السعر",
+      "description": "التوصيف",
       "estimated": "المدّة المقدرة",
-      "status": "حالة الخدمة",
+      "status": "الحالة",
       "hasItem": "يحتوي مواد",
       "nothasItem": "لا يحتوي مواد",
       "listItems": "قائمة المواد",
       "item": {
         "name": "اسم المادة",
-        "quantity": "كميًة المادة"
+        "quantity": "الكميًة"
       }
     },
     "form": {
@@ -2449,5 +2450,8 @@
       "service": "خدمة",
       "add_new_filter": "إضافة مصفي جديد"
     }
+  },
+  "place_holder": {
+    "none": "لا يوجد"
   }
 }

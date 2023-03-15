@@ -31,7 +31,10 @@ const ticketValidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
+                    .min(1, i18n.global.t('validation.number.invalid_type_error'))
+                    .max(999999, i18n.global.t('validation.number.out_of_boundries'))
+
+                ,
             ),
         remaining_amount:
             zod.preprocess(
