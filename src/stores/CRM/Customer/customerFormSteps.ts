@@ -91,6 +91,7 @@ export const useCustomerForm = defineStore('CustomerForm', () => {
     medicalInfoForm.value.infectious_diseases = undefined
     medicalInfoForm.value.smoking = undefined
     medicalInfoForm.value.id = undefined
+    medicalInfoForm.value.status = undefined
     customerSocialMediaForm.value = []
     dataUpdate.value.emergency_contact_name = ''
     dataUpdate.value.emergency_contact_phone = ''

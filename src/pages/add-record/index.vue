@@ -338,7 +338,7 @@ const calcCurrencyDifferences = debounce(() => {
 
             </div>
             <div class="columns mb-0" v-for="(record, mainIndex) in tempAccountRecords" :key="mainIndex">
-              <div class="column is-3">
+              <div class="column is-6">
                 <div class="mb-3">
                   <VField :id="`account_id_${mainIndex}`">
                     <VLabel v-if="mainIndex == 0" class="required">
@@ -347,7 +347,7 @@ const calcCurrencyDifferences = debounce(() => {
                       <Multiselect v-model="tempAccountRecords[mainIndex].account_id" mode="single"
                         :placeholder="t('financial_record.select_account')" :close-on-select="true"
                         ref="accountMultiselect" :filter-results="false" :min-chars="0" :resolve-on-load="false"
-                        :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
+                        :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                         :searchable="true" :canClear="false" @select="setAccountValue()" :options="async (query: any) => {
                           let accountSearchFilter = {} as AccountSearchFilter
                           accountSearchFilter.name = query
@@ -396,7 +396,7 @@ const calcCurrencyDifferences = debounce(() => {
                   </VField>
                 </div>
               </div>
-              <div class="column is-3 columns is-flex is-align-items-center">
+              <div class="column is-1 columns is-flex is-align-items-center">
                 <div class="mb-3 column is-6">
                   <VField v-if="tempAccountRecords[mainIndex].has_remove_btn">
                     <VControl>

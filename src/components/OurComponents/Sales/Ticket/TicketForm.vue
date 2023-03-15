@@ -155,11 +155,11 @@ export default defineComponent({
                 currentTicket.value.total_amount += element.sell_price
             })
             context.emit('input-finished', currentTicket.value.total_amount);
-        }, 100)
+        }, 1)
 
         const updateRemainingAmount = debounce(() => {
             currentTicket.value.remaining_amount = currentTicket.value.total_amount - currentTicket.value.paid_amount
-        }, 100)
+        }, 1)
 
         const setCustomerIdValue = () => {
             setFieldValue('customer_id', currentTicket.value.customer_id)
@@ -336,7 +336,7 @@ export default defineComponent({
                                             mode="single" :placeholder="t('ticket.form.select_customer')"
                                             :close-on-select="true" ref="customer_id" @select="setCustomerIdValue()"
                                             :filter-results="false" :min-chars="0" :resolve-on-load="false" :infinite="true"
-                                            :limit="50" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
+                                            :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                                             :searchable="true" :canClear="false" :options="async (query: any) => {
                                                 let customerSearchFilter = {
                                                     user_status_id: UserStatusConsts.ACTIVE,

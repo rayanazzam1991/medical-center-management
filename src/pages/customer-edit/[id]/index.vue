@@ -40,6 +40,7 @@ customerForm.setStep({
             router.push({
                 path: `/customer/${customerForm.dataUpdate.id}`,
             })
+            customerForm.reset()
 
         }
     },

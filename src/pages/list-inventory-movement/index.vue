@@ -160,7 +160,7 @@ const columns = {
     align: 'center',
     label: t('list_inventory_movement.table.columns.action_by'),
     renderRow: (row: any) =>
-      h('span', row?.action_by?.first_name)
+      h('span', row?.action_by?.first_name + ' ' + row?.action_by?.last_name)
   },
 } as const
 </script>
@@ -190,17 +190,17 @@ const columns = {
       :total-items="paginationVar.total" class="mt-6" no-router @update:current-page="getItemHistoriesPerPage" />
     <h6 v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading" class="pt-2 is-size-7">
       {{
-  t('tables.pagination_footer', {
-    from_number: paginationVar.page !=
-      paginationVar.max_page
-      ?
-      (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-  , to_number: paginationVar.page !=
-    paginationVar.max_page ?
-    paginationVar.page *
-    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-})
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        })
       }}</h6>
     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" class="mx-2" last-line-width="20%" />
   </VFlexTableWrapper>

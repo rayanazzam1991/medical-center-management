@@ -3,6 +3,7 @@ export interface VPlaceholderPageProps {
   title: string
   subtitle?: string
   larger?: boolean
+  small?: boolean
 }
 
 const props = withDefaults(defineProps<VPlaceholderPageProps>(), {
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<VPlaceholderPageProps>(), {
     <div class="placeholder-content opacity">
       <slot name="image"></slot>
       <h3 class="dark-inverted">{{ props.title }}</h3>
-      <p v-if="props.subtitle" :class="[props.larger && 'is-larger']">
+      <p v-if="props.subtitle" :class="[props.larger && 'is-larger', props.small && 'is-small']">
         {{ props.subtitle }}
       </p>
       <slot name="action"></slot>
@@ -52,6 +53,10 @@ const props = withDefaults(defineProps<VPlaceholderPageProps>(), {
       &.is-larger {
         max-width: 440px;
       }
+
+      &.is-small {
+        max-width: 160px;
+      }
     }
 
     h3 {
@@ -70,6 +75,7 @@ const props = withDefaults(defineProps<VPlaceholderPageProps>(), {
       &.is-larger {
         max-width: 620px;
       }
+
     }
 
     .btn {

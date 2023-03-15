@@ -450,8 +450,8 @@ const RemoveProfilePicture = async () => {
         </h3>
         <div class="profile-stats">
           <div class="profile-stat">
-            <i aria-hidden="true" class="lnil lnil-p"></i>
-            <span>{{ currentCustomer.user?.city?.name }}</span>
+            <i aria-hidden="true" class="fas fa-city"></i>
+            <span>{{ currentCustomer.user?.city?.name ?? t('place_holder.none') }}</span>
           </div>
           <div class="separator"></div>
           <div class="profile-stat">
@@ -512,10 +512,10 @@ const RemoveProfilePicture = async () => {
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>{{ t('customer.details.name', { title: viewWrapper.pageTitle })}}</h4>
+                    <h4>{{ t('customer.details.name', { title: viewWrapper.pageTitle }) }}</h4>
                     <p>
                       {{ currentCustomer.user.first_name }}
-                      {{ currentCustomer.user.last_name }}.
+                      {{ currentCustomer.user.last_name }}
                     </p>
                   </div>
                   <div class="project-feature">
@@ -528,20 +528,20 @@ const RemoveProfilePicture = async () => {
                     <p>
                       {{
                         currentCustomer.user.gender == 'Not_Selected'
-                          ? t('gender.not_selected')
-                          : t(`gender.${currentCustomer.user.gender.toLowerCase()}`)
-                      }}.
+                        ? t('gender.not_selected')
+                        : t(`gender.${currentCustomer.user.gender.toLowerCase()}`)
+                      }}
                     </p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
                     <h4>{{ t('customer.details.birth_date') }}</h4>
-                    <p>{{ currentCustomer.user.birth_date }}.</p>
+                    <p>{{ currentCustomer.user.birth_date ?? t('place_holder.none') }}</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
                     <h4>{{ t('customer.details.phone_number') }}</h4>
-                    <p>{{ currentCustomer.user.phone_number }}.</p>
+                    <p>{{ currentCustomer.user.phone_number }}</p>
                   </div>
                 </div>
 
@@ -563,7 +563,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.address') }}</span>
                           <span>
-                            {{ currentCustomer.user.address }}
+                            {{ currentCustomer.user.address ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -573,7 +573,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.emergency_contact_name') }}</span>
                           <span>
-                            {{ currentCustomer.emergency_contact_name }}
+                            {{ currentCustomer.emergency_contact_name ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -583,7 +583,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.emergency_contact_phone') }}</span>
                           <span>
-                            {{ currentCustomer.emergency_contact_phone }}
+                            {{ currentCustomer.emergency_contact_phone ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -592,11 +592,11 @@ const RemoveProfilePicture = async () => {
                       <div class="file-box">
                         <div class="meta full-width">
                           <div class="
-                              is-justify-content-space-between
-                              is-align-items-center
-                              is-flex
-                              mt-2
-                            ">
+                                                                  is-justify-content-space-between
+                                                                  is-align-items-center
+                                                                  is-flex
+                                                                  mt-2
+                                                                ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton class="mb-3" size="small" icon="feather:edit-3" tabindex="0"
                               @click="openNotesEditor" />
@@ -604,7 +604,7 @@ const RemoveProfilePicture = async () => {
                           <VFlex class="mb-3">
                             <!-- use any components inside --->
                             <VCard>
-                              <div v-html="currentCustomer.notes" class="ml-3 mb-3"></div>
+                              <div v-html="currentCustomer.notes ?? t('place_holder.none')" class="ml-3 mb-3"></div>
                               <div v-if="currentCustomer.notes != undefined" class="has-text-primary">
                                 -{{ t('customer.details.last_update') }}: {{ currentCustomer.notes_timestamp }} |
                                 {{ t('customer.details.by') }}: {{ currentCustomer.notes_by?.first_name }}
@@ -645,7 +645,7 @@ const RemoveProfilePicture = async () => {
                     <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
                     <h4>{{ t('customer.details.blood_type') }}</h4>
                     <p>
-                      {{ currentCustomer?.medical_info?.blood_type }}
+                      {{ currentCustomer?.medical_info?.blood_type ?? t('place_holder.none') }}
                     </p>
                   </div>
                   <div class="project-feature">
@@ -656,7 +656,7 @@ const RemoveProfilePicture = async () => {
                         MedicalInfoConsts.showBoolean(
                           currentCustomer?.medical_info?.smoking
                         )
-                      }}.
+                      }}
                     </p>
                   </div>
                 </div>
@@ -675,7 +675,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.allergic') }}</span>
                           <span>
-                            {{ currentCustomer?.medical_info?.allergic }}
+                            {{ currentCustomer?.medical_info?.allergic ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -685,7 +685,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.chronic_diseases') }}</span>
                           <span>
-                            {{ currentCustomer?.medical_info?.chronic_diseases }}
+                            {{ currentCustomer?.medical_info?.chronic_diseases ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -695,7 +695,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.infectious_diseases') }}</span>
                           <span>
-                            {{ currentCustomer?.medical_info?.infectious_diseases }}
+                            {{ currentCustomer?.medical_info?.infectious_diseases ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -705,7 +705,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.other_medical_info') }}</span>
                           <span>
-                            {{ currentCustomer?.medical_info?.any_other_info }}
+                            {{ currentCustomer?.medical_info?.any_other_info ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -811,8 +811,8 @@ const RemoveProfilePicture = async () => {
                               <span>
                                 {{
                                   file.size != undefined
-                                    ? (file.size / (1024 * 1024)).toFixed(2)
-                                    : 'Unknown'
+                                  ? (file.size / (1024 * 1024)).toFixed(2)
+                                  : 'Unknown'
                                 }}
                                 {{ file.size != undefined ? t('images.megabyte') : '' }}
                                 <i aria-hidden="true" class="fas fa-circle"></i>
@@ -884,8 +884,8 @@ const RemoveProfilePicture = async () => {
     <template #content>
       <VField class="is-flex is-justify-content-center">
         <VControl>
-          <VFilePond size="large" class="profile-filepond" name="profile_filepond"
-            :chunk-retry-delays="[500, 1000, 3000]" label-idle="<i class='lnil lnil-cloud-upload'></i>"
+          <VFilePond size="large" class="profile-filepond" name="profile_filepond" :chunk-retry-delays="[500, 1000, 3000]"
+            label-idle="<i class='lnil lnil-cloud-upload'></i>"
             :accepted-file-types="['image/png', 'image/jpeg', 'image/webp']" :image-preview-height="140"
             :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
             style-panel-layout="compact circle" style-load-indicator-position="center bottom"

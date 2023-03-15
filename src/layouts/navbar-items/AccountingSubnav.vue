@@ -59,7 +59,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/balance-sheet-report">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-pie-chart-dollar" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.reports.balance_sheet_report')
                       }}</span>
@@ -68,7 +68,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/income-statment-report">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-invest-monitor" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.reports.income_statment_report')
                       }}</span>
@@ -109,7 +109,7 @@ const { t } = useI18n()
                 <ul>
                   <li>
                     <RouterLink to="/transaction">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-money-protection" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.transactions')
                       }}</span>
@@ -118,7 +118,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/transaction/customer-cash-receipt">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-ticket-alt-2" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.customer_cash_receipts')
                       }}</span>
@@ -127,7 +127,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/transaction/supplier-employee-cash-receipt">
-                      <i class="lnir lnir-sales-report" aria-hidden="true"></i>
+                      <i class="lnir lnir-ticket-alt-1" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.supplier_employee_cash_receipts')
                       }}</span>
@@ -136,7 +136,7 @@ const { t } = useI18n()
                   </li>
                   <li>
                     <RouterLink to="/transfer-cash-money">
-                      <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
+                      <i class="lnir lnir-investment" aria-hidden="true"></i>
                       <span>{{
                         t('accounting_subnav.records.transfer_cash_money')
                       }}</span>

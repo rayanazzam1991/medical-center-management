@@ -59,7 +59,8 @@
       "invalid_type_error": "يرجى ادخال رقم صالح",
       "payment_percentage": "يرجى ادخال رقم من 0-100",
       "phone_number": "يرجى ادخال رقم هاتف صالح",
-      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر"
+      "larger_thar_zero": "يجب أن يكون السعر أكبر من الصفر",
+      "out_of_boundries": "يرجى ادخال رقم صالح"
     },
     "redio": {
       "required": "يرجى الاختيار"
@@ -154,12 +155,12 @@
       "create_position": "انشاء منصب"
     },
     "variable_payment": {
-      "variable_payments": "المتغيرات المالية",
-      "create_variable_payment": "انشاء متغير مالي"
+      "variable_payments": "أنواع المتغيرات المالية ",
+      "create_variable_payment": "انشاء نوع متغير مالي"
     },
     "employee_variable_payment": {
-      "employee_variable_payments": "المتغيرات المالية للموظفين",
-      "create_employee_variable_payment": "اضافة متغير مالي لموظف"
+      "employee_variable_payments": "المتغيرات المالية ",
+      "create_employee_variable_payment": "اضافة متغير مالي "
     },
     "attendance_justifications": "تبريرات الغياب",
     "employees_schedule": "جدول الدوام",
@@ -437,9 +438,9 @@
       "modal_title": "إزالة المدينة"
     },
     "details": {
-      "title": "المدن",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "المدينة",
+      "name": "الاسم ",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "المدن",
@@ -692,15 +693,15 @@
       "modal_title": "إزالة مجموعة الزبون"
     },
     "details": {
-      "title": "مجموعة الزبون",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "مجموعة الزبائن",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "مجموعات الزبون",
       "form_header": "{type} مجموعة زبون",
-      "add_customer_group_title": "إضافة مجموعة الزبون",
-      "edit_customer_group_title": "تعديل مجموعة الزبون",
+      "add_customer_group_title": "إضافة مجموعة زبائن",
+      "edit_customer_group_title": "تعديل مجموعة زبائن",
       "name": "الاسم",
       "status": "الحالة"
     },
@@ -722,9 +723,9 @@
       "modal_title": "إزالة القسم"
     },
     "details": {
-      "title": "الأقسام",
-      "name": "اسم {title}",
-      "status": "حالة {title}"
+      "title": "القسم",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الأقسام",
@@ -1109,9 +1110,9 @@
       "modal_title": "إزالة جنسية"
     },
     "details": {
-      "title": "الجنسيات",
-      "name": "اسم الجنسية",
-      "status": "حالة الجنسية"
+      "title": "الجنسية",
+      "name": "الاسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الجنسيات",
@@ -1129,7 +1130,7 @@
   },
   "position": {
     "table": {
-      "title": "المنصب",
+      "title": "المناصب",
       "columns": {
         "id": "رقم المعرّف",
         "name": "الاسم",
@@ -1140,10 +1141,10 @@
       "modal_title": "تغيير حالة منصب"
     },
     "details": {
-      "title": "منصب",
-      "name": "اسم المنصب",
-      "description": "توصيف المنصب",
-      "status": "حالة المنصب"
+      "title": "المنصب",
+      "name": "الاسم",
+      "description": "التوصيف",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "المنصب",
@@ -1174,11 +1175,11 @@
       "modal_title": "إزالة غرفة"
     },
     "details": {
-      "title": "الغرف",
-      "number": "رقم الغرفة",
-      "floor": "طابق الغرفة",
-      "department": "قسم الغرفة",
-      "status": "حالة الغرفة"
+      "title": "الغرفة",
+      "number": "الرقم",
+      "floor": "الطابق",
+      "department": "القسم",
+      "status": "الحالة"
     },
     "form": {
       "page_title": "الغرف",
@@ -1215,18 +1216,18 @@
       "modal_title": "إزالة خدمة"
     },
     "details": {
-      "title": "الخدمات",
-      "name": "اسم الخدمة",
-      "price": "سعر الخدمة",
-      "description": "توصيف الخدمة",
+      "title": "الخدمة",
+      "name": "الاسم",
+      "price": "السعر",
+      "description": "التوصيف",
       "estimated": "المدّة المقدرة",
-      "status": "حالة الخدمة",
+      "status": "الحالة",
       "hasItem": "يحتوي مواد",
       "nothasItem": "لا يحتوي مواد",
       "listItems": "قائمة المواد",
       "item": {
         "name": "اسم المادة",
-        "quantity": "كميًة المادة"
+        "quantity": "الكميًة"
       }
     },
     "form": {
@@ -1522,7 +1523,7 @@
   },
   "variable_payment": {
     "table": {
-      "title": "المتغيرات المالية",
+      "title": "أنواع المتغيرات المالية",
       "columns": {
         "id": "رقم المعرّف",
         "name": "الاسم",
@@ -1533,25 +1534,25 @@
       }
     },
     "form": {
-      "page_title": "المتغيرات المالية",
-      "form_header": "{type} متغير مالي",
-      "add_variable_payment_title": "إضافة متغير مالي",
-      "edit_variable_payment_title": "تعديل متغير مالي",
+      "page_title": "أنواع المتغيرات المالية",
+      "form_header": "{type} نوع متغير مالي",
+      "add_variable_payment_title": "إضافة نوع متغير مالي",
+      "edit_variable_payment_title": "تعديل نوع متغير مالي",
       "name": "الاسم",
       "status": "الحالة",
       "type": "النوع"
     },
     "search_filter": {
-      "title": "تصفية المتغير المالي",
+      "title": "تصفية نوع المتغير المالي",
       "type": "النوع",
       "name": "الاسم...",
       "status": "الحالة"
     },
-    "header_button": "إضافة متغير مالي"
+    "header_button": "إضافة نوع متغير مالي"
   },
   "employee_variable_payment": {
     "table": {
-      "title": "المتغيرات المالية للموظفين",
+      "title": "المتغيرات المالية ",
       "columns": {
         "employee_name": "اسم الموظف",
         "variable_payment": "المتغير المالي",
@@ -1569,10 +1570,10 @@
       "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
     },
     "form": {
-      "page_title": "المتغيرات المالية للموظفين",
+      "page_title": "المتغيرات المالية ",
       "form_header": "{type} متغير مالي",
-      "add_variable_payment_title": "إضافة متغير مالي لموظف",
-      "edit_variable_payment_title": "تعديل متغير مالي لموظف",
+      "add_variable_payment_title": "إضافة متغير مالي ",
+      "edit_variable_payment_title": "تعديل متغير مالي ",
       "employee_name": "اسم الموظف",
       "variable_payment": "المتغير المالي",
       "amount": "القيمة",
@@ -1589,7 +1590,7 @@
       "from": "من: ",
       "to": "إلى: "
     },
-    "header_button": "إضافة متغير مالي لموظف"
+    "header_button": "إضافة متغير مالي "
   },
   "walletMovement": {
     "table": {
@@ -1632,7 +1633,7 @@
         "basic_salary": "الراتب الأساسي",
         "unjustified_hours": "ساعات التأخير الغير مبررة",
         "attendance_deduction": "خصومات التأخير",
-        "variable_payments": "المتغيرات المالية",
+        "variable_payments": " المتغيرات المالية ",
         "net_salary": "الراتب الصافي"
       },
       "placeholder": {
@@ -2449,5 +2450,8 @@
       "service": "خدمة",
       "add_new_filter": "إضافة مصفي جديد"
     }
+  },
+  "place_holder": {
+    "none": "لا يوجد"
   }
 }

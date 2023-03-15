@@ -132,6 +132,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
         customerForm.userForm.phone_number = userData.phone_number
         customerForm.userForm.address = userData.address
         customerForm.userForm.city_id = userData.city_id
+        if (customerForm.userForm.city_id == 0) {
+            userData.city_id = undefined
+        }
         customerForm.userForm.room_id = undefined
         customerForm.userForm.user_status_id = userData.user_status_id
         const { customer, message, success } = await addCustomer(customerForm.data, customerForm.userForm)
@@ -314,8 +317,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="emergency_contact_name">
                                     <VLabel>{{ t('customer.form.emergency_contract_name') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text"
-                                            placeholder="" autocomplete="given-emergency_contact_name" />
+                                        <VInput v-model="currentCustomer.emergency_contact_name" type="text" placeholder=""
+                                            autocomplete="given-emergency_contact_name" />
                                         <ErrorMessage class="help is-danger" name="emergency_contact_name" />
                                     </VControl>
                                 </VField>

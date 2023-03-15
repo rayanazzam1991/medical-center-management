@@ -304,24 +304,24 @@ export default defineComponent({
 
           <div class="form-fieldset" :hidden="!hasItem">
             <div class="columns is-multiline" v-if="serviceItems.length != 0">
-              <div class="column is-4">
+              <div class="column is-6">
                 <P class="label-text">
                   {{ t('service.form.choose_item') }}</P>
               </div>
-              <div class="column is-4">
+              <div class="column is-6">
                 <p class="label-text">
                   {{ t('service.form.quantity') }}</p>
               </div>
             </div>
 
-            <div class="columns is-multiline" v-for="(item, mainIndex) in serviceItems" :key="mainIndex">
-              <div class="column is-4">
+            <div class="columns" v-for="(item, mainIndex) in serviceItems" :key="mainIndex">
+              <div class="column is-6">
                 <VField :id="`item_id_${mainIndex}`">
                   <VControl>
                     <Multiselect v-if="(serviceItems[mainIndex].isNew && formType == 'Edit') || formType == 'Add'"
                       v-model="serviceItems[mainIndex].item_id" mode="single" :placeholder="t('service.form.select_item')"
                       :close-on-select="true" ref="accountMultiselect" :filter-results="false" :min-chars="0"
-                      :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true"
+                      :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true"
                       :delay="0" :searchable="true" :canClear="false" @select="setItemIdValue()" :options="async (query: any) => {
                         let itemSearchFilter = {
                           name: query
@@ -347,23 +347,20 @@ export default defineComponent({
                   <ErrorMessage class="help is-danger" :name="`item_id_${mainIndex}`" />
                 </VField>
               </div>
-              <div class="column is-4">
+              <div class="column is-6">
                 <VField>
                   <VControl>
                     <VInput type="number" v-model.number="serviceItems[mainIndex].quantity" />
                   </VControl>
                 </VField>
               </div>
-              <div class="column is-3 columns is-flex is-align-items-center">
-                <div class=" column is-6">
-                  <VField v-if="(mainIndex != 0 && formType == 'Add') || (formType == 'Edit')">
-                    <VControl>
-                      <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeItem(mainIndex)"
-                        color="danger">
-                      </VIconButton>
-                    </VControl>
-                  </VField>
-                </div>
+              <div class="column columns is-flex is-align-items-center">
+                <VField v-if="(mainIndex != 0 && formType == 'Add') || (formType == 'Edit')">
+                  <VControl>
+                    <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeItem(mainIndex)" color="danger">
+                    </VIconButton>
+                  </VControl>
+                </VField>
               </div>
 
             </div>

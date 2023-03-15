@@ -49,7 +49,8 @@ export default defineComponent({
         const employeeVariablePaymentId = ref(0);
         const requiredDueDate = ref('');
         const employeesList = ref<Employee[]>([])
-        const variablePaymentsList = ref<VariablePayment[]>([])
+        const variablePaymentsList =
+         ref<VariablePayment[]>([])
         const originalEmployeeVariablePaymentStatus = ref<number>();
         const currencies = getCurrenciesFromStorage()
         const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency

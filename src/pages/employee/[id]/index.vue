@@ -507,7 +507,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <h4>{{ t('employee.details.name', { title: viewWrapper.pageTitle }) }}</h4>
                     <p>
                       {{ currentEmployee.user.first_name }}
-                      {{ currentEmployee.user.last_name }}.
+                      {{ currentEmployee.user.last_name }}
                     </p>
                   </div>
                   <div class="project-feature">
@@ -517,22 +517,22 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                         : 'lnir lnir-female'
                     "></i>
                     <h4>{{ t('employee.details.gender') }}</h4>
-                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}.</p>
+                    <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
                     <h4>{{ t('employee.details.birth_date') }}</h4>
-                    <p>{{ currentEmployee.user.birth_date }}.</p>
+                    <p>{{ currentEmployee.user.birth_date }}</p>
                   </div>
                   <div class="project-feature">
                     <i class="fas fa-id-badge" aria-hidden="true"></i>
                     <h4>{{ t('employee.details.position') }}</h4>
-                    <p>{{ currentEmployee.position.name }}.</p>
+                    <p>{{ currentEmployee.position.name }}</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
                     <h4>{{ t('employee.details.phone_number') }}</h4>
-                    <p>{{ currentEmployee.user.phone_number }}.</p>
+                    <p>{{ currentEmployee.user.phone_number }}</p>
                   </div>
                 </div>
 
@@ -554,7 +554,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                         <div class="meta">
                           <span>{{ t('employee.details.end_date') }}</span>
                           <span>
-                            {{ currentEmployee.end_date }}
+                            {{ currentEmployee.end_date ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>

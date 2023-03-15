@@ -137,7 +137,7 @@ watch(
 
       <template #bottom-links>
         <li>
-          <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
+        <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
           <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
         </a>
       </li>
@@ -149,7 +149,7 @@ watch(
     </template>
   </MobileSidebar>
 
-  <!-- Mobile subsidebar links -->
+    <!-- Mobile subsidebar links -->
     <Transition name="slide-x">
       <LayoutsMobileSubsidebar v-if="isMobileSidebarOpen && activeMobileSubsidebar === 'layouts'" />
       <DashboardsMobileSubsidebar v-else-if="isMobileSidebarOpen && activeMobileSubsidebar === 'dashboard'" />
@@ -178,9 +178,9 @@ watch(
           <!-- <ToolbarNotification /> -->
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                                                @click="panels.setActive('activity')">
-                                                                <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                              </a> -->
+                                                                                                                                                                              @click="panels.setActive('activity')">
+                                                                                                                                                                              <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                                                                                                                                            </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -191,8 +191,8 @@ watch(
       <template #links>
         <div class="centered-links" :class="''">
           <a :class="[
-            (activeSubnav === 'others' ||
-              route.path.startsWith('/nationality') ||
+            ((activeSubnav === 'others') && 'is-active is-secondary'),
+            (route.path.startsWith('/nationality') ||
               route.path.startsWith('/department') ||
               route.path.startsWith('/city') ||
               route.path.startsWith('/userStatus') ||
@@ -201,77 +201,79 @@ watch(
               route.path.startsWith('/room') ||
               route.path.startsWith('/settings') ||
               route.path.startsWith('/supplier')
-            ) &&
-            'is-active',
+            ) && 'is-active'
           ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
             @click="toggleSubnav('others')">
             <i class="iconify" data-icon="feather:layers" aria-hidden="true"></i>
             <span>{{ t("navbar.others") }}</span>
           </a>
           <a :class="[
-            (activeSubnav === 'CRM' ||
-              route.path == '/customer' ||
+            (activeSubnav === 'CRM' && 'is-active is-secondary'),
+            (route.path === '/customer' ||
               route.path.startsWith('/customer/') ||
               route.path.startsWith('/customer-add') ||
               route.path.startsWith('/customer-edit') ||
               route.path.startsWith('/customer-group') ||
-              route.path.startsWith('/social-media')) &&
-            'is-active',
-          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
-            @click="toggleSubnav('CRM')">
+              route.path.startsWith('/social-media'))
+            && 'is-active'
+          ]" class="centered-link centered-link-toggle" tabindex="0"
+            @keydown.space.prevent="toggleSubnav('CRM')" @click="toggleSubnav('CRM')">
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
             <span>{{ t("navbar.crm") }}</span>
           </a>
           <!-- <a :class="[((activeSubnav === 'contractor') ||
-                                      route.path.startsWith('/contractor') ||
-                                      route.path.startsWith('/contractor-add') ||
-                                      route.path.startsWith('/contractor-edit') ||
-                                      route.path.startsWith('/speciality') ||
-                                      route.path.startsWith('/bulk-cash-out')
+                                                                                                                                                    route.path.startsWith('/contractor') ||
+                                                                                                                                                    route.path.startsWith('/contractor-add') ||
+                                                                                                                                                    route.path.startsWith('/contractor-edit') ||
+                                                                                                                                                    route.path.startsWith('/speciality') ||
+                                                                                                                                                    route.path.startsWith('/bulk-cash-out')
 
 
-                                    ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-                                      @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-                                      <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-                                      <span>{{ t("navbar.contractor") }}</span>
-                                  </a> -->
-          <a :class="[((activeSubnav === 'ticketing') ||
+                                                                                                                                                  ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+                                                                                                                                                    @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+                                                                                                                                                    <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
+                                                                                                                                                    <span>{{ t("navbar.contractor") }}</span>
+                                                                                                                                                </a> -->
+          <a :class="[((activeSubnav === 'ticketing') && 'is-active is-secondary'),
+          (
             route.path.startsWith('/ticket') ||
             route.path.startsWith('/waiting-list') ||
             route.path.startsWith('/requested-services') ||
             route.path.startsWith('/reminder') ||
             route.path.startsWith('/service-history-screen')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+          ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('ticketing')" @click="toggleSubnav('ticketing')">
             <i class="iconify" data-icon="bi:ticket-perforated" aria-hidden="true"></i>
             <span>{{ t("navbar.ticketing") }}</span>
           </a>
-        <a :class="[(activeSubnav === 'HR' ||
-          route.path.startsWith('/employee') ||
-          route.path.startsWith('/employee-add') ||
-          route.path.startsWith('/employee-edit') ||
-          route.path.startsWith('/position') ||
-          route.path.startsWith('/variable-payment') ||
-          route.path.startsWith('/employee-variable-payment') ||
-          route.path.startsWith('/generate-salaries') ||
-          route.path.startsWith('/attendance-justification')
-        ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+          <a :class="[(activeSubnav === 'HR' && 'is-active is-secondary'),
+          (
+            route.path.startsWith('/employee') ||
+            route.path.startsWith('/employee-add') ||
+            route.path.startsWith('/employee-edit') ||
+            route.path.startsWith('/position') ||
+            route.path.startsWith('/variable-payment') ||
+            route.path.startsWith('/employee-variable-payment') ||
+            route.path.startsWith('/generate-salaries') ||
+            route.path.startsWith('/attendance-justification')
+          ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
             <span>{{ t('navbar.human_resources') }}</span>
           </a>
-          <a :class="[(activeSubnav === 'warehouse' ||
-            route.path.startsWith('/category') ||
+          <a :class="[(activeSubnav === 'warehouse' && 'is-active is-secondary'),
+          (route.path.startsWith('/category') ||
             route.path.startsWith('/item') ||
             route.path.startsWith('/inventory') ||
             route.path.startsWith('/list-inventory-movement')
-          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+          ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
             <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
             <span>{{ t('navbar.warehouse') }}</span>
           </a>
           <a :class="[
-            (activeSubnav === 'accounting' ||
+            (activeSubnav === 'accounting' && 'is-active is-secondary'),
+            (
               route.path.startsWith('/deliver-salaries') ||
               route.path.startsWith('/onhold-salaries') ||
               route.path.startsWith('/salary') ||
@@ -331,13 +333,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                                                    <ToolbarNotification />
+                                                                                                                                                                                  <ToolbarNotification />
 
-                                                                    <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                                                      @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                                                      <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                                    </a>
-                                                                  </Toolbar> -->
+                                                                                                                                                                                  <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                                                                                                                                                                    @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                                                                                                                                                                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                                                                                                                                                  </a>
+                                                                                                                                                                                </Toolbar> -->
             </div>
 
             <slot></slot>
@@ -347,3 +349,15 @@ watch(
     </VViewWrapper>
   </div>
 </template>
+<stype lang="scss">
+.is-active {
+  &.is-secondary {
+
+    svg,
+    span {
+      color: var(--secondary) !important;
+      filter: contrast(90%) !important;
+    }
+  }
+}
+</stype>
