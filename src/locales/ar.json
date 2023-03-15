@@ -154,12 +154,12 @@
       "create_position": "انشاء منصب"
     },
     "variable_payment": {
-      "variable_payments": "المتغيرات المالية",
-      "create_variable_payment": "انشاء متغير مالي"
+      "variable_payments": "أنواع المتغيرات المالية ",
+      "create_variable_payment": "انشاء نوع متغير مالي"
     },
     "employee_variable_payment": {
-      "employee_variable_payments": "المتغيرات المالية للموظفين",
-      "create_employee_variable_payment": "اضافة متغير مالي لموظف"
+      "employee_variable_payments": "المتغيرات المالية ",
+      "create_employee_variable_payment": "اضافة متغير مالي "
     },
     "attendance_justifications": "تبريرات الغياب",
     "employees_schedule": "جدول الدوام",
@@ -1522,7 +1522,7 @@
   },
   "variable_payment": {
     "table": {
-      "title": "المتغيرات المالية",
+      "title": "أنواع المتغيرات المالية",
       "columns": {
         "id": "رقم المعرّف",
         "name": "الاسم",
@@ -1533,25 +1533,25 @@
       }
     },
     "form": {
-      "page_title": "المتغيرات المالية",
-      "form_header": "{type} متغير مالي",
-      "add_variable_payment_title": "إضافة متغير مالي",
-      "edit_variable_payment_title": "تعديل متغير مالي",
+      "page_title": "أنواع المتغيرات المالية",
+      "form_header": "{type} نوع متغير مالي",
+      "add_variable_payment_title": "إضافة نوع متغير مالي",
+      "edit_variable_payment_title": "تعديل نوع متغير مالي",
       "name": "الاسم",
       "status": "الحالة",
       "type": "النوع"
     },
     "search_filter": {
-      "title": "تصفية المتغير المالي",
+      "title": "تصفية نوع المتغير المالي",
       "type": "النوع",
       "name": "الاسم...",
       "status": "الحالة"
     },
-    "header_button": "إضافة متغير مالي"
+    "header_button": "إضافة نوع متغير مالي"
   },
   "employee_variable_payment": {
     "table": {
-      "title": "المتغيرات المالية للموظفين",
+      "title": "المتغيرات المالية ",
       "columns": {
         "employee_name": "اسم الموظف",
         "variable_payment": "المتغير المالي",
@@ -1569,10 +1569,10 @@
       "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
     },
     "form": {
-      "page_title": "المتغيرات المالية للموظفين",
+      "page_title": "المتغيرات المالية ",
       "form_header": "{type} متغير مالي",
-      "add_variable_payment_title": "إضافة متغير مالي لموظف",
-      "edit_variable_payment_title": "تعديل متغير مالي لموظف",
+      "add_variable_payment_title": "إضافة متغير مالي ",
+      "edit_variable_payment_title": "تعديل متغير مالي ",
       "employee_name": "اسم الموظف",
       "variable_payment": "المتغير المالي",
       "amount": "القيمة",
@@ -1589,7 +1589,7 @@
       "from": "من: ",
       "to": "إلى: "
     },
-    "header_button": "إضافة متغير مالي لموظف"
+    "header_button": "إضافة متغير مالي "
   },
   "walletMovement": {
     "table": {
@@ -1632,7 +1632,7 @@
         "basic_salary": "الراتب الأساسي",
         "unjustified_hours": "ساعات التأخير الغير مبررة",
         "attendance_deduction": "خصومات التأخير",
-        "variable_payments": "المتغيرات المالية",
+        "variable_payments": " المتغيرات المالية ",
         "net_salary": "الراتب الصافي"
       },
       "placeholder": {
