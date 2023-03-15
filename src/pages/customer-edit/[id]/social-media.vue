@@ -195,27 +195,27 @@ const onSubmitEdit = handleSubmit(async () => {
           <div class="form-fieldset">
             <div class="columns is-multiline">
               <!-- <div class="column is-12">
-                <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
+                  <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
 
-                  <VField :key="socialMedia.socialMedia.id" :id="`social_media_${socialMedia.socialMedia.id}`">
+                    <VField :key="socialMedia.socialMedia.id" :id="`social_media_${socialMedia.socialMedia.id}`">
 
-                    <VLabel class="required" v-if="socialMedia.checked">Customer's {{
-    socialMedia.socialMedia.name
-}}
-                      URL:
-                    </VLabel>
-                    <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
-                      <VInput v-if="socialMedia.checked" type="text" placeholder="" autocomplete=""
-                        v-model="socialMedia.url" :key="socialMedia.socialMedia.id" />
+                      <VLabel class="required" v-if="socialMedia.checked">Customer's {{
+      socialMedia.socialMedia.name
+  }}
+                        URL:
+                      </VLabel>
+                      <VControl v-if="socialMedia.checked" icon="feather:chevrons-right">
+                        <VInput v-if="socialMedia.checked" type="text" placeholder="" autocomplete=""
+                          v-model="socialMedia.url" :key="socialMedia.socialMedia.id" />
 
-                    </VControl>
-                    <ErrorMessage class="help is-danger" :name="`social_media_${socialMedia.socialMedia.id}`" />
+                      </VControl>
+                      <ErrorMessage class="help is-danger" :name="`social_media_${socialMedia.socialMedia.id}`" />
 
 
-                  </VField>
+                    </VField>
 
-                </div>
-              </div> -->
+                  </div>
+                </div> -->
               <div class="column is-12">
                 <div :class="socialMedia.checked ? 'mb-3' : ''" v-for="socialMedia in socialMediaChecked">
                   <VField v-if="socialMedia.checked" :key="socialMedia.socialMedia.id"

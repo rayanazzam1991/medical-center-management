@@ -179,8 +179,9 @@ export default defineComponent({
             <div class="columns is-multiline">
               <div class="is-flex is-justify-content-center">
                 <VControl class="ml-3">
-                  <VSwitchSegment @change="resetPerant" :key="keyIncrement" v-model="isCategory"
-                    :label-true="t('category.form.level_2')" :label-false="t('category.form.level_1')" color="success" />
+                  <VSwitchSegment :disabled="formType == 'Edit'" @change="resetPerant" :key="keyIncrement"
+                    v-model="isCategory" :label-true="t('category.form.level_2')"
+                    :label-false="t('category.form.level_1')" color="success" />
                 </VControl>
               </div>
             </div>
