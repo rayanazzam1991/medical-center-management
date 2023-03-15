@@ -9,6 +9,7 @@ export const useAuth = defineStore('userAuth', () => {
   const api = useApi();
   const token = useStorage('token', '')
   const user = ref<Partial<User>>()
+  const loggedUser = useStorage('user', '')
   const userFullName = useStorage('userFullName', '')
   const loading = ref(true)
 
@@ -16,6 +17,7 @@ export const useAuth = defineStore('userAuth', () => {
 
   function setUser(newUser: Partial<User>) {
     user.value = newUser
+    loggedUser.value = JSON.stringify(newUser)
     userFullName.value = newUser?.first_name + " " + newUser?.last_name
   }
 
@@ -60,7 +62,7 @@ export const useAuth = defineStore('userAuth', () => {
     }
   }
 
-  return { signInAuthStore, setUser, setToken, setLoading, logoutUser, getUser, getUserFulLName, user, token, isLoggedIn } as const
+  return { signInAuthStore, setUser, setToken, setLoading, logoutUser, getUser, getUserFulLName, user,loggedUser, token, isLoggedIn } as const
 });
 
 if (import.meta.hot) {

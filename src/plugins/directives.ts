@@ -2,6 +2,7 @@ import { definePlugin } from '/@src/app'
 import { vPreloadLink } from '/@src/directives/preload-link'
 import { vTooltip } from '/@src/directives/tooltip'
 import { vBackground } from '/@src/directives/background'
+import { vPermission } from '../directives/permission'
 
 export default definePlugin(({ app }) => {
   // register global v-preload-link directive
@@ -12,4 +13,6 @@ export default definePlugin(({ app }) => {
 
   // register global v-background directive
   app.directive('background', vBackground)
+
+  app.directive('permission', vPermission)
 })
