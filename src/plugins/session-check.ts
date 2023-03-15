@@ -1,5 +1,6 @@
+import { checkRoles } from '../composable/checkRoles';
 import { definePlugin } from '/@src/app'
-import {useAuth} from "/@src/stores/Others/User/authStore";
+import { useAuth } from "/@src/stores/Others/User/authStore";
 
 
 /**
@@ -25,33 +26,23 @@ import {useAuth} from "/@src/stores/Others/User/authStore";
  */
 export default definePlugin(async ({ router, api, pinia }) => {
   const userAuth = useAuth(pinia)
+  const loggedUser = JSON.parse(userAuth.loggedUser);
+  // console.log('logged', loggedUser.roles[0].name);
 
-  // 1. Check token validity at app startup
-  // if (userAuth.isLoggedIn) {
-  //   try {
-  //     // Do api request call to retreive user profile.
-  //     // Note that the api is provided with json-server
-  //     const { data: user } = await api.get('/api/users/me')
-  //     userAuth.setUser(user)
-  //   } catch (err) {
-  //     // delete stored token if it fails
-  //     userAuth.logoutUser()
-  //   }
-  // }
+  router.beforeEach((to, from, next) => {
+    const userRole = loggedUser.roles[0].name; // get the user's role from the store
+    const requiredRoles: string[] = to.meta.roles as string[]; // get the required permissions from the route meta data
 
-  // router.beforeResolve(async to => {
-  //   if (to.path =='/auth/login' && userAuth.isLoggedIn) {
-  //     return {
-  //       name: '/dashboard/',
-  //       // save the location we were at to come back later
-  //       query: { redirect: '/dashboard/' },
-  //     }
-  //   }
-  // })
-  router.beforeEach((to) => {
+    if (requiredRoles && !checkRoles(userRole, requiredRoles)) {
+      next({ name: '/auth/login' }); // redirect to the unauthorized page if the user doesn't have the required permissions
+    } else {
+      next(); // allow the user to access the route
+    }
+
     if (to.meta.requiresAuth && !userAuth.isLoggedIn) {
       // 2. If the page requires auth, check if user is logged in
       // if not, redirect to login page.
+
       return {
         name: '/auth/login',
         // save the location we were at to come back later

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { Permissions } from "../../utils/consts/rolesPermissions";
 
 type TabId = 'others' | 'templates'
 const activeTab = ref<TabId>('others')
@@ -111,7 +112,7 @@ const emits = defineEmits<{
               <div class="column is-4">
                 <h4 class="column-heading">{{ t('others_subnav.city.cities') }}</h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.CITY_SHOW">
                     <RouterLink to="/city">
                       <i class="lnir lnir-map" aria-hidden="true"></i>
                       <span>{{ t('others_subnav.city.cities') }}</span>

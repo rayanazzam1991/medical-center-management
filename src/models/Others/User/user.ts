@@ -92,3 +92,18 @@ const staticNumber = Object.freeze({
     Syria: '963',
     Iraq: '964',
 })
+
+export enum UserRole {
+    ADMIN = 'Admin',
+    USER = 'User',
+}
+
+export const UserRoles = {
+    ADMIN : 'Admin',
+    USER : 'User',
+}
+
+export const RolePermissions = {
+    [UserRole.ADMIN]: ['manageUsers', 'manageSettings'],
+    [UserRole.USER]: ['viewProfile', 'editProfile'],
+};
