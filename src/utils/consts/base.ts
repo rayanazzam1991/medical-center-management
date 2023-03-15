@@ -28,8 +28,8 @@ export class BaseConsts {
     if (value === BaseConsts.FALSE)
       return i18n.global.t('boolean.false')
     if (value === undefined)
-      return ''
+      return i18n.global.t('place_holder.none') 
 
-    return ''
+    return i18n.global.t('place_holder.none') 
   }
 }

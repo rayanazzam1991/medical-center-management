@@ -155,11 +155,11 @@ export default defineComponent({
                 currentTicket.value.total_amount += element.sell_price
             })
             context.emit('input-finished', currentTicket.value.total_amount);
-        }, 100)
+        }, 1)
 
         const updateRemainingAmount = debounce(() => {
             currentTicket.value.remaining_amount = currentTicket.value.total_amount - currentTicket.value.paid_amount
-        }, 100)
+        }, 1)
 
         const setCustomerIdValue = () => {
             setFieldValue('customer_id', currentTicket.value.customer_id)

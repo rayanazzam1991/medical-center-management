@@ -202,7 +202,7 @@ const columns = {
         align: 'center',
         label: t('list_inventory_movement.table.columns.action_by'),
         renderRow: (row: any) =>
-            h('span', row?.action_by?.first_name)
+            h('span', row?.action_by?.first_name + ' ' + row?.action_by?.last_name)
     },
 } as const
 
@@ -367,7 +367,7 @@ const changestatusItemHistory = async () => {
                                                 <div class="meta">
                                                     <span>{{ t('item.details.description') }}</span>
                                                     <span>
-                                                        {{ currentItem.description }}
+                                                        {{ currentItem.description ?? t('place_holder.none') }}
                                                     </span>
                                                 </div>
 

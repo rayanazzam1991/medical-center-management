@@ -58,7 +58,7 @@ const toEdit = () => {
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom"> {{t('position.details.description')}}:</h4>
-                            <span>{{ currentPosition?.description }}</span>
+                            <span>{{ currentPosition?.description ?? t('place_holder.none')  }}</span>
                         </div>
                         <div class="column is-12">
                             <h4 class="margin-bottom"> {{t('position.details.status')}}:</h4>

@@ -1,6 +1,7 @@
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
+
 .is-navbar {
     .project-details {
         padding-top: 30px;
@@ -13,16 +14,53 @@
 
 .form-fieldset {
     margin: 0 30px;
+
+    h4,
+    span {
+        font-family: var(--font-alt);
+    }
+
+    span {
+        font-weight: 600; 
+        
+        .tag {
+            font-weight: normal;
+            border-radius: var(--radius-rounded);
+            padding-left: 1em;
+            padding-right: 1em;
+        
+        }
+    }
+
+    div {
+
+        &.columns {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        &.column {
+            @include vuero-s-card;
+            
+        }
+    }
 }
 
 .margin-bottom {
     margin-bottom: 0.75rem;
 }
 .margin-top-bottom{
-  margin-bottom: 0.75rem;
-  margin-top: 0.75rem;
-  border-bottom: 1px solid var(--fade-grey-dark-3);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    margin-top: 0.75rem;
+    border-bottom: 1px solid var(--fade-grey-dark-3);
 }
+
+  .margin-top-bottom:last-child{
+    border: none;
+  }
+    
 
 .project-details {
     .tabs-wrapper {
@@ -317,6 +355,19 @@
 }
 
 .is-dark {
+
+    div {
+
+
+        &.columns {
+        }
+
+        &.column {
+            @include vuero-card--dark;
+            
+        }
+    }
+
     .project-details {
         .project-details-inner {
             .project-details-card {
@@ -412,6 +463,12 @@
             }
         }
     }
+
+    .margin-top-bottom{
+        border-color: var(--dark-sidebar-light-12) !important;
+    }
+      
+    
 }
 
 @media only screen and (max-width: 767px) {

@@ -29,7 +29,7 @@ const getCurrentRoom = async () => {
     const { room } = await getRoom(roomId.value)
     if (room != undefined)
         currentRoom.value = room
-    pageTitle.value = viewWrapper.pageTitle + '# ' + currentRoom.value.number
+    pageTitle.value = viewWrapper.pageTitle + ' #' + currentRoom.value.number
 
 }
 onMounted(async () => {
@@ -52,19 +52,19 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('room.details.number')}}:</h4>
+                            <h4 class="margin-bottom"> {{ t('room.details.number') }}:</h4>
                             <span>{{ currentRoom.number }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('room.details.floor')}}:</h4>
+                            <h4 class="margin-bottom"> {{ t('room.details.floor') }}:</h4>
                             <span>{{ currentRoom.floor }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('room.details.department')}}:</h4>
+                            <h4 class="margin-bottom"> {{ t('room.details.department') }}:</h4>
                             <span>{{ currentRoom.department?.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('room.details.status')}}:</h4>
+                            <h4 class="margin-bottom"> {{ t('room.details.status') }}:</h4>
                             <span>
                                 <VTag :color="currentRoom.status === RoomConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ RoomConsts.showStatusName(currentRoom.status) }}</VTag>
@@ -76,8 +76,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

@@ -140,7 +140,7 @@ const serveConfirmation = (requestedServiceId: number) => {
             </div>
         </div>
         <div v-else-if="employeeWaitingList.waiting_list.length > 0" class="waiting-list-inner">
-            <div class="waiting-lists-container is-flex">
+            <div class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent :key="keyIncrement" :waiting_list="employeeWaitingList.waiting_list"
                     :provider="employeeWaitingList.provider" />
             </div>
@@ -252,11 +252,11 @@ const serveConfirmation = (requestedServiceId: number) => {
                 <div v-else class="placeholder is-flex is-justify-content-center ">
                     <div ref="markdownContainer" class="column doc-column is-12">
                         <VPlaceholderPage class="placeholder" :title="t('employee.waiting_list.no_serving_client.title')"
-                            :subtitle="t('employee.waiting_list.no_serving_client.subtitle')" larger>
+                            :subtitle="t('employee.waiting_list.no_serving_client.subtitle')" small>
                             <template #image>
-                                <img class="light-image" src="/@src/assets/illustrations/placeholders/thinking-canvas.svg"
-                                    alt="" />
-                                <img class="dark-image"
+                                <img class="light-image is-small"
+                                    src="/@src/assets/illustrations/placeholders/thinking-canvas.svg" alt="" />
+                                <img class="dark-image is-small"
                                     src="/@src/assets/illustrations/placeholders/thinking-canvas-dark.svg" alt="" />
                             </template>
                         </VPlaceholderPage>
@@ -325,6 +325,7 @@ const serveConfirmation = (requestedServiceId: number) => {
         height: 100%;
         padding: 0.6rem;
         padding-bottom: 1.1rem;
+        overflow: auto;
 
         .ticket-details-inner {
 
@@ -334,7 +335,6 @@ const serveConfirmation = (requestedServiceId: number) => {
             border-radius: var(--radius-large);
             padding: 0.5rem;
             display: flex;
-            overflow: auto;
 
             .ticket-content {
                 max-width: 900px;
@@ -424,7 +424,7 @@ const serveConfirmation = (requestedServiceId: number) => {
         }
 
         .placeholder {
-            height: 100%;
+            min-height: 50%;
         }
 
     }
