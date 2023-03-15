@@ -1,5 +1,4 @@
 import { AxiosInstance } from "axios"
-import { ChangeReminderStatus, CreateReminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
 import { CreateUpdateServiceHistoryScreen, ServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
@@ -36,5 +35,13 @@ export async function getServiceHistoryScreensListApi(
         params: searchFilter,
     })
     return { response }
+}
+
+export async function  getServiceHistoryScreensApi(
+  api: AxiosInstance,
+  screenId: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`serviceHistoryScreen/${screenId}`)
+  return { response }
 }
 
