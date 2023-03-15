@@ -321,7 +321,7 @@ export default defineComponent({
                     <Multiselect v-if="(serviceItems[mainIndex].isNew && formType == 'Edit') || formType == 'Add'"
                       v-model="serviceItems[mainIndex].item_id" mode="single" :placeholder="t('service.form.select_item')"
                       :close-on-select="true" ref="accountMultiselect" :filter-results="false" :min-chars="0"
-                      :resolve-on-load="false" :infinite="true" :limit="10" :rtl="true" :max="1" :clear-on-search="true"
+                      :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true"
                       :delay="0" :searchable="true" :canClear="false" @select="setItemIdValue()" :options="async (query: any) => {
                         let itemSearchFilter = {
                           name: query

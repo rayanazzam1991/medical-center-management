@@ -336,7 +336,7 @@ export default defineComponent({
                                             mode="single" :placeholder="t('ticket.form.select_customer')"
                                             :close-on-select="true" ref="customer_id" @select="setCustomerIdValue()"
                                             :filter-results="false" :min-chars="0" :resolve-on-load="false" :infinite="true"
-                                            :limit="50" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
+                                            :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                                             :searchable="true" :canClear="false" :options="async (query: any) => {
                                                 let customerSearchFilter = {
                                                     user_status_id: UserStatusConsts.ACTIVE,
