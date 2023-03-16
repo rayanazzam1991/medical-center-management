@@ -1,4 +1,5 @@
 import { checkRoles } from '../composable/checkRoles';
+import { Roles } from '../utils/consts/rolesPermissions';
 import { definePlugin } from '/@src/app'
 import { useAuth } from "/@src/stores/Others/User/authStore";
 
@@ -29,8 +30,23 @@ export default definePlugin(async ({ router, api, pinia }) => {
   const loggedUser = JSON.parse(userAuth.loggedUser);
   // console.log('logged', loggedUser.roles[0].name);
 
+
   router.beforeEach((to, from, next) => {
-    const userRole = loggedUser.roles[0].name; // get the user's role from the store
+    const hasEmployeePath = to.path.includes('/employee');
+    const userRole = loggedUser?.roles[0].name; // get the user's role from the store
+
+    if (hasEmployeePath && userRole !== Roles.ADMIN) {
+      const employeeId = to.params.id;
+      const loggedEmployeeId = loggedUser?.id
+      if (employeeId !== loggedEmployeeId) {
+        next({ name: '/auth/login' }); // redirect to the unauthorized page if the user doesn't have the required permissions
+      } else {
+        next(); // allow the user to access the route
+      }
+    }
+    
+
+
     const requiredRoles: string[] = to.meta.roles as string[]; // get the required permissions from the route meta data
 
     if (requiredRoles && !checkRoles(userRole, requiredRoles)) {
