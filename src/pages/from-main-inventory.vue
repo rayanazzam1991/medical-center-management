@@ -1,11 +1,16 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Inventory"
+        ]
     }
 }
 </route>
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useInventoryItemForm } from '../stores/Warehouse/InventoryItem/inventoryItemFormSteps';

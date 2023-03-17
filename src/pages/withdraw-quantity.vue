@@ -1,17 +1,22 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Inventory"
+        ]
     }
 }
 </route>
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useWithdrawItemForm } from '../stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useinventoryItemHistory } from '../stores/Warehouse/ItemHistory/inventoryItemHistoryStore';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const itemHistoryStore = useinventoryItemHistory()
 const withdarwQuantityForm = useWithdrawItemForm()
 
@@ -23,8 +28,7 @@ useHead({
 <template>
     <MinimalLayout>
         <!--Wizard Navbar-->
-        <WithdrawQuantityFormNavigation v-model:step="withdarwQuantityForm.step"
-            :title="withdarwQuantityForm.stepTitle" />
+        <WithdrawQuantityFormNavigation v-model:step="withdarwQuantityForm.step" :title="withdarwQuantityForm.stepTitle" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => withdarwQuantityForm?.validateStepFn?.()">
@@ -36,7 +40,7 @@ useHead({
                     <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="itemHistoryStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{ t('withdraw_quantity.form.submit')}}
+                                {{ t('withdraw_quantity.form.submit') }}
                             </VButton>
                         </VLoader>
                     </div>
@@ -51,7 +55,6 @@ useHead({
 
 .buttons-width {
 
-max-width: 45%;
+    max-width: 45%;
 }
-
 </style>

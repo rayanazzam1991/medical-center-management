@@ -1,7 +1,11 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Receptionist"
+        ]
     }
 }
 </route>
@@ -13,7 +17,7 @@ import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-const {t} = useI18n()
+const { t } = useI18n()
 
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
@@ -41,14 +45,16 @@ useHead({
                             <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="customerForm.validateStepFn === null"
                                 :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') : t('customer.form.submit_and_next_button')
+                                {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') :
+                                    t('customer.form.submit_and_next_button')
                                 }}
                             </VButton>
                         </VLoader>
                         <VButton v-if="customerForm.skipable === true" class="wizard-button-previous"
                             :color="customerForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => customerForm?.skipStepFn?.()">
-                            {{ customerForm.getStep() == 2 ? t('customer.form.skip_and_finish_button') : t('customer.form.skip_button')
+                            {{ customerForm.getStep() == 2 ? t('customer.form.skip_and_finish_button') :
+                                t('customer.form.skip_button')
                             }}
                         </VButton>
                     </div>
@@ -60,5 +66,4 @@ useHead({
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
-
 </style>

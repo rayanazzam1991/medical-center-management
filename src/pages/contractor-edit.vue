@@ -1,7 +1,11 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Human_Resources"
+        ]
     }
 }
 </route>
@@ -15,7 +19,7 @@ import { useContractor } from '/@src/stores/Contractor/contractorStore';
 const contractorStore = useContractor()
 
 const contractorForm = useContractorForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => `${contractorForm.stepTitle} - Contractor`),
 })
@@ -35,7 +39,7 @@ useHead({
                     <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="contractorStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{ t('contractor.form.edit_submit')}}
+                                {{ t('contractor.form.edit_submit') }}
                             </VButton>
                         </VLoader>
                     </div>
@@ -47,5 +51,4 @@ useHead({
 
 <style lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
-
 </style>

@@ -1,7 +1,11 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Accountant"
+        ]
     }
 }
 </route>
@@ -14,6 +18,6 @@ const route = useRoute()
 <template>
     <NavbarLayout>
         <RouterView :key="$route.fullPath" />
-</NavbarLayout>
+    </NavbarLayout>
 </template>
     

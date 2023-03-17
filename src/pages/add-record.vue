@@ -1,19 +1,23 @@
 <route lang="json">
-    {
-      "meta": {
-        "requiresAuth": true
-      }
-    }
-    </route>
-    <script setup lang="ts">
-    const route = useRoute()
+{
+  "meta": {
+    "requiresAuth": true,
+    "roles": [
+      "Admin",
+      "Accountant"
+    ]
+  }
+}
+</route>
+<script setup lang="ts">
+const route = useRoute()
+
+
+</script>
     
-    
-    </script>
-    
-    <template>
-      <NavbarLayout>
-        <RouterView :key="$route.fullPath" />
-      </NavbarLayout>
-    </template>
+<template>
+  <NavbarLayout>
+    <RouterView :key="$route.fullPath" />
+  </NavbarLayout>
+</template>
     

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'warehouse' | 'templates'
 const activeTab = ref<TabId>('warehouse')
@@ -21,16 +22,17 @@ const { t, locale } = useI18n()
           <div class="center has-slimscroll">
             <div class="columns">
               <div class="column is-4">
-                <h4 class="column-heading">{{ t('warehouse_subnav.category.categories') }}</h4>
+                <h4 v-permission="Permissions.CATEGORY_ACCESS" class="column-heading">{{
+                  t('warehouse_subnav.category.categories') }}</h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.CATEGORY_LIST">
                     <RouterLink to="/category">
                       <i class="lnir lnir-briefcase" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.category.categories') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li>
+                  <li v-permission="Permissions.CATEGORY_CREATE">
                     <RouterLink to="/category/add">
                       <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                       <span>{{ t('warehouse_subnav.category.create_category') }}</span>
@@ -38,16 +40,17 @@ const { t, locale } = useI18n()
                     </RouterLink>
                   </li>
                 </ul><br />
-                <h4 class="column-heading">{{ t('warehouse_subnav.item.items') }}</h4>
+                <h4 v-permission="Permissions.ITEM_ACCESS" class="column-heading">{{ t('warehouse_subnav.item.items') }}
+                </h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.ITEM_LIST">
                     <RouterLink to="/item">
                       <i class="lnir lnir-diamond-alt" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.item.items') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li>
+                  <li v-permission="Permissions.ITEM_CREATE">
                     <RouterLink to="/item/add">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.item.create_item') }}</span>
@@ -57,9 +60,10 @@ const { t, locale } = useI18n()
                 </ul>
               </div>
               <div class="column is-4">
-                <h4 class="column-heading">{{ t('warehouse_subnav.quantity.quantity') }}</h4>
+                <h4 v-permission="Permissions.INVENTORY_ITEM_ACCESS" class="column-heading">{{
+                  t('warehouse_subnav.quantity.quantity') }}</h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
                     <RouterLink to="/add-quantity">
                       <i class="lnir lnir-arrow-down-circle" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.quantity.add_quantity') }}</span>
@@ -68,7 +72,7 @@ const { t, locale } = useI18n()
                   </li>
                 </ul>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
                     <RouterLink to="/withdraw-quantity">
                       <i class="lnir lnir-arrow-up-circle" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.quantity.withdraw_quantity') }}</span>
@@ -77,7 +81,7 @@ const { t, locale } = useI18n()
                   </li>
                 </ul>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
                     <RouterLink to="/to-main-inventory">
                       <i class="lnir lnir-down-left-arrow-box" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.quantity.to_main_inventory') }}</span>
@@ -86,7 +90,7 @@ const { t, locale } = useI18n()
                   </li>
                 </ul>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
                     <RouterLink to="/from-main-inventory">
                       <i class="lnir lnir-top-right-arrow-box" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.quantity.from_main_inventory') }}</span>
@@ -96,9 +100,10 @@ const { t, locale } = useI18n()
                 </ul>
               </div>
               <div class="column is-4">
-                <h4 class="column-heading">{{ t('warehouse_subnav.inventory.inventory') }}</h4>
+                <h4 v-permission="Permissions.INVENTORY_ACCESS" class="column-heading">{{
+                  t('warehouse_subnav.inventory.inventory') }}</h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_LIST">
                     <RouterLink to="/inventory">
                       <i class="lnir lnir-list" aria-hidden="true"></i>
                       <span>{{ t('warehouse_subnav.inventory.inventory_table') }}</span>
@@ -106,10 +111,10 @@ const { t, locale } = useI18n()
                     </RouterLink>
                   </li>
                 </ul><br />
-                <h4 class="column-heading">
+                <h4 v-permission="Permissions.INVENTORY_ITEM_HISTORY_ACCESS" class="column-heading">
                   {{ t('warehouse_subnav.inventory_item_history.inventory_item_history') }}</h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.INVENTORY_ITEM_HISTORY_LIST">
                     <RouterLink to="/list-inventory-movement">
                       <i class="lnir lnir-reload-alt" aria-hidden="true"></i>
                       <span>{{
@@ -119,7 +124,6 @@ const { t, locale } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
-
               </div>
             </div>
           </div>

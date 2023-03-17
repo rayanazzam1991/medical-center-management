@@ -3,7 +3,8 @@
   "meta": {
     "requiresAuth": true,
     "roles": [
-      "All"
+      "Admin",
+      "Receptionist"
     ]
   }
 }

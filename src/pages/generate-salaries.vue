@@ -1,20 +1,24 @@
 <route lang="json">
-    {
-        "meta": {
-            "requiresAuth": true
-        }
+{
+    "meta": {
+        "requiresAuth": true,
+        "roles": [
+            "Admin",
+            "Human_Resources"
+        ]
     }
-    </route>
+}
+</route>
         
-    <script setup lang="ts">
-    const route = useRoute()
-    
-    
-    </script>
+<script setup lang="ts">
+const route = useRoute()
+
+
+</script>
         
-    <template>
-        <NavbarLayout>
-            <RouterView />
-        </NavbarLayout>
-    </template>
+<template>
+    <NavbarLayout>
+        <RouterView />
+    </NavbarLayout>
+</template>
         

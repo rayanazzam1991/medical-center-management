@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "roles": [
+            "Admin"
+        ]
     }
 }
 </route>
