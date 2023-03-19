@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "speciality_list"
+    ]
+  }
+}
+</route>  
+
 <script setup lang="ts">
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -14,6 +25,7 @@ import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('speciality.table.title'))
@@ -142,6 +154,9 @@ const columns = {
 
     renderRow: (row: any) =>
       h(NoDeleteDropDown, {
+        viewPermission: Permissions.SPECIALITY_SHOW,
+        editPermission: Permissions.SPECIALITY_EDIT,
+        changeStatusPermission: Permissions.SPECIALITY_EDIT,
         onEdit: () => {
           router.push({ path: `/speciality/${row.id}/edit` })
         },

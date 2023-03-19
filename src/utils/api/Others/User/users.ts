@@ -61,12 +61,3 @@ export async function phoneExistsCheckApi(
   })
   return { response }
 }
-export async function getRolesApi(
-  api: AxiosInstance,
-  searchFilter: UserSearchFilter
-): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.get('user/getUserList', {
-    params: searchFilter,
-  })
-  return { response }
-}

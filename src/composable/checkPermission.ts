@@ -1,4 +1,5 @@
 import { useAuth } from '../stores/Others/User/authStore';
+import { Role } from '../utils/consts/rolesPermissions';
 
 
 export function checkPermission(
@@ -13,9 +14,27 @@ export function checkPermission(
 
 }
 
+export function checkRequiredPermissions(
+    userPermission: string,
+    allowedPermissions: string[],
+): boolean {
+    if (allowedPermissions === undefined || allowedPermissions.length === 0) {
+        return false;
+    }
+
+    return checkStringExistsInArray(userPermission, allowedPermissions);
+}
+function checkStringExistsInArray(str: string, arr: string[]): boolean {
+    return arr.includes(str);
+}
 function getAuthUserPermissions(): string[] {
     const userAuth = useAuth()
+    const userPermissions: string[] = []
     const loggedUser = JSON.parse(userAuth.loggedUser);
-    const userPermissions = loggedUser?.roles[0]?.permissions?.map((obj: any) => obj.name);
+    loggedUser.roles.forEach((role: Role) => {
+        role.permissions.forEach((permission) => {
+            userPermissions.push(permission.name)
+        });
+    });
     return userPermissions
 }

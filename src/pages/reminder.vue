@@ -2,10 +2,8 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Receptionist",
-            "Service_Provider"
+        "permissions": [
+            "reminder_access"
         ]
     }
 }

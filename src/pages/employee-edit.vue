@@ -2,11 +2,9 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Human_Resources"
+        "permissions": [
+            "employee_edit"
         ]
-
     }
 }
 </route>
@@ -18,7 +16,7 @@ import { useEmployee } from '../stores/Employee/employeeStore';
 import { useI18n } from 'vue-i18n';
 const employeeStore = useEmployee()
 const employeeForm = useEmployeeForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => `${employeeForm.stepTitle} - Employee`),
 })
@@ -40,7 +38,7 @@ useHead({
                     <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="employeeStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{t('employee.form.edit_submit')}}
+                                {{ t('employee.form.edit_submit') }}
                             </VButton>
                         </VLoader>
                     </div>

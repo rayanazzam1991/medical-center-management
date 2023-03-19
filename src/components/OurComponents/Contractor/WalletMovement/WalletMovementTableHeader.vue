@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultWalletMovementSearchFilter, WalletMovementSearchFilter } from "/@src/models/Contractor/walletMovement"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -25,7 +25,7 @@ export default defineComponent({
 
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -86,7 +86,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
+        return { t, keyIncrement, Permissions, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
     },
 
 
@@ -105,7 +105,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" :placeholder="t('walletMovement.search_filter.contractor_name')" />
+                                <VInput v-model="quickSearchField" type="text"
+                                    :placeholder="t('walletMovement.search_filter.contractor_name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -120,7 +121,7 @@ export default defineComponent({
 
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page *
-                                                0.1
+                                            0.1
                                         }}
                                         </VOption>
                                         <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
@@ -135,11 +136,13 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl class="mr-2 ">
-                                <VButton class="" to="/contractor/cash-out/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.WALLET_EDIT" class="" to="/contractor/cash-out/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                             <VControl>
-                                <VButton class="mr-l" to="/bulk-cash-out" color="primary">{{t('modal.buttons.bulk_cash_out')}}
+                                <VButton v-permission="Permissions.WALLET_EDIT" class="mr-l" to="/bulk-cash-out"
+                                    color="primary">{{ t('modal.buttons.bulk_cash_out') }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -154,6 +157,4 @@ export default defineComponent({
     </form>
 </template>
 
-<style scoped lang="scss">
-@import '/@src/scss/styles/tableHeader.scss';
-</style>
+<style scoped lang="scss">@import '/@src/scss/styles/tableHeader.scss';</style>

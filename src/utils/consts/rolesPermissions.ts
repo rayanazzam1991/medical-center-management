@@ -1,17 +1,18 @@
-interface Role {
+export interface Role {
     id: number,
     name: string,
+    description?: string,
+    display_name: string,
     permissions: Permission[]
 }
 
-interface Permission {
-    name: string
+export interface Permission {
+    id: number,
+    name: string,
+    display_name: string
+
 }
 
-export enum Roles {
-    ADMIN = 'Admin',
-    HR = 'HR',
-}
 
 export enum Permissions {
     ACCOUNT_ACCESS = 'account_access',
@@ -370,6 +371,12 @@ export enum Permissions {
     SALARY_MOVE_TO_ONHOLD = 'salary_move_to_onhold',
     TICKET_CLOSE = 'ticket_close',
     ACTIVITY_LOG_LIST = 'activity_log_list',
+    RESET_PASSWORD = 'reset_password',
+    CHANGE_PASSWORD = 'change_password',
+    SHOW_WAITING_LIST_SERVE_CLIENT = 'show_waiting_list_serve_client',
+    SHOW_ALL_WAITING_LISTS = 'show_all_waiting_lists',
+
+
     ACCOUNTING_ACCESS = 'accounting_access',
     HR_ACCESS = 'hr_access',
     OTHERS_ACCESS = 'others_access',

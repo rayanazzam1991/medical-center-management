@@ -1,4 +1,16 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "onhold_salary_list"
+        ]
+    }
+}
+</route>
+    
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
@@ -8,9 +20,10 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { DeliveringSalary, defaultOnholdSalariesSearchFilter, SalaryConsts, OnholdSalariesSearchFilter } from '/@src/models/HR/Payroll/Salary/salary';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
-import {  getOnholdSalariesList, paySalaryService, returnSalaryService } from '/@src/services/HR/Payroll/Salary/salaryService';
+import { getOnholdSalariesList, paySalaryService, returnSalaryService } from '/@src/services/HR/Payroll/Salary/salaryService';
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
@@ -119,6 +132,8 @@ const columns = {
 
         renderRow: (row: any) =>
             h(OnholdSalariesDropDown, {
+                paySalaryPermission: Permissions.SALARY_PAY,
+                returnSalaryPermission: Permissions.SALARY_RETURN,
                 onClickPay: async () => {
                     await paySalary(row?.id)
                 },
@@ -133,9 +148,8 @@ const columns = {
 </script>
 
 <template>
-    <OnholdSalariesTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" />
+    <OnholdSalariesTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search"
+        :pagination="paginationVar" :default_per_page="default_per_page" />
 
 
     <VFlexTableWrapper :columns="columns" :data="salariesList">
@@ -156,25 +170,22 @@ const columns = {
 
             </template>
         </VFlexTable>
-        <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)"
-            :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
-            :total-items="paginationVar.total" :max-links-displayed="3" no-router
-            @update:current-page="getSalariesPerPage" />
+        <VFlexPagination v-if="(salariesList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
+            class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+            no-router @update:current-page="getSalariesPerPage" />
         <h6 class="pt-2 is-size-7" v-if="salariesList.length != 0 && !salaryStore?.loading">
             {{
-                t('tables.pagination_footer', { from_number: paginationVar.page !=
-                    paginationVar.max_page
-                    ?
-                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-                , to_number: paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-            })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
         <VPlaceloadText v-if="salaryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-
-
-
 </template>

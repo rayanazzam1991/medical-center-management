@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { checkPermission } from "/@src/composable/checkPermission";
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'others' | 'templates'
@@ -20,7 +21,8 @@ const emits = defineEmits<{
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-4" v-if="checkPermission(Permissions.NATIONALITY_ACCESS) || checkPermission(Permissions.SERVICE_ACCESS)
+                || checkPermission(Permissions.SUPPLIER_ACCESS)">
                 <h4 v-permission="Permissions.NATIONALITY_ACCESS" class="column-heading">{{
                   t('others_subnav.nationality.nationalities') }}</h4>
                 <ul>
@@ -77,7 +79,8 @@ const emits = defineEmits<{
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.DEPARTMENT_ACCESS) || checkPermission(Permissions.ROOM_ACCESS)">
                 <h4 v-permission="Permissions.DEPARTMENT_ACCESS" class="column-heading">{{
                   t('others_subnav.department.departments')
                 }}</h4>
@@ -115,7 +118,8 @@ const emits = defineEmits<{
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.CITY_ACCESS) || checkPermission(Permissions.SETTING_EDIT)">
                 <h4 v-permission="Permissions.CITY_ACCESS" class="column-heading">{{ t('others_subnav.city.cities') }}
                 </h4>
                 <ul>
@@ -134,7 +138,7 @@ const emits = defineEmits<{
                     </RouterLink>
                   </li>
                 </ul><br />
-                <h4 v-permission="Permissions.SETTING_ACCESS" class="column-heading">{{
+                <h4 v-permission="Permissions.SETTING_EDIT" class="column-heading">{{
                   t('others_subnav.setting.settings') }}</h4>
                 <ul>
                   <li v-permission="Permissions.SETTING_EDIT">

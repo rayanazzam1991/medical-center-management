@@ -1,3 +1,4 @@
+import { checkRequiredPermissions } from '../composable/checkPermission';
 import { checkRoles } from '../composable/checkRoles';
 import { definePlugin } from '/@src/app'
 import { useAuth } from "/@src/stores/Others/User/authStore";
@@ -26,18 +27,39 @@ import { useAuth } from "/@src/stores/Others/User/authStore";
  */
 export default definePlugin(async ({ router, api, pinia }) => {
   const userAuth = useAuth(pinia)
-  const loggedUser = JSON.parse(userAuth.loggedUser);
+  const loggedUser = userAuth.getUser();
   // console.log('logged', loggedUser.roles[0].name);
 
   router.beforeEach((to, from, next) => {
-    const userRole = loggedUser.roles[0].name; // get the user's role from the store
-    const requiredRoles: string[] = to.meta.roles as string[]; // get the required permissions from the route meta data
+    const userRoles = loggedUser?.roles ?? []; // get the user's role from the store
+    const userPermissions: string[] = []
+    let havePermission = false
+    userRoles.forEach((userRole) => {
+      userRole.permissions.forEach((permission) => {
+        userPermissions.push(permission.name)
+      });
+    });
+    const requiredPermissions: string[] = to.meta.permissions as string[]; // get the required permissions from the route meta data
 
-    if (requiredRoles && !checkRoles(userRole, requiredRoles)) {
-      next({ name: '/auth/login' }); // redirect to the unauthorized page if the user doesn't have the required permissions
-    } else {
-      next(); // allow the user to access the route
+    if (userPermissions.length > 0) {
+      userPermissions.forEach((userPermission) => {
+        if (!requiredPermissions) {
+          havePermission = true
+        } else {
+          if (checkRequiredPermissions(userPermission, requiredPermissions)) {
+            havePermission = true
+          }
+        }
+
+      });
+      if (!havePermission) {
+        next({ name: '/auth/no-permission' }); // redirect to the unauthorized page if the user doesn't have the required permissions
+      } else {
+        next();
+      }
+
     }
+
 
     if (to.meta.requiresAuth && !userAuth.isLoggedIn) {
       // 2. If the page requires auth, check if user is logged in

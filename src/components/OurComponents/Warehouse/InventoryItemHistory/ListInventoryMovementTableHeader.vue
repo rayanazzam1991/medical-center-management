@@ -4,8 +4,7 @@ import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/mod
 import { defaultInventoryItemHistorySearchFilter, InventoryItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { defaultPagination } from "/@src/utils/response"
 import ListInventoryMovementSearchFilterModel from "./ListInventoryMovementSearchFilterModel.vue"
-import { boolean } from "zod"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 export default defineComponent({
@@ -21,7 +20,7 @@ export default defineComponent({
             type: Number,
             default: 1,
         },
-        has_item_filter : {
+        has_item_filter: {
             type: Boolean,
             default: true,
 
@@ -94,7 +93,7 @@ export default defineComponent({
             searchFilter.value.to = undefined;
             context.emit("resetFilter", searchFilter.value);
         };
-        return { t, searchFilterPop, default_per_page, keyIncrement,hasItemFilter, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField };
+        return { t, Permissions, searchFilterPop, default_per_page, keyIncrement, hasItemFilter, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField };
     },
     components: { ListInventoryMovementSearchFilterModel }
 })
@@ -131,11 +130,13 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl v-if="hasItemFilter" class="ml-2">
-                                <VButton class="" to="/from-main-inventory" color="primary">{{ t('inventory.table.buttons_name.from_main_inventory') }}
+                                <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/from-main-inventory" color="primary">{{
+                                    t('inventory.table.buttons_name.from_main_inventory') }}
                                 </VButton>
                             </VControl>
-                            <VControl v-if="hasItemFilter" >
-                                <VButton class="" to="/to-main-inventory" color="primary">{{ t('inventory.table.buttons_name.to_main_inventory') }}
+                            <VControl v-if="hasItemFilter">
+                                <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/to-main-inventory" color="primary">{{
+                                    t('inventory.table.buttons_name.to_main_inventory') }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -143,11 +144,10 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ListInventoryMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop" :has_item_filter="hasItemFilter"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+        <ListInventoryMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
+            :has_item_filter="hasItemFilter" @search_filter_popup="popUpTrigger" @search="search_filter"
+            @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
-<style scoped  lang="scss">
-@import '/@src/scss/styles/tableHeader.scss';
-</style>
+<style scoped  lang="scss">@import '/@src/scss/styles/tableHeader.scss';</style>

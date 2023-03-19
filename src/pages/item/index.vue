@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "item_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -15,6 +26,7 @@ import { useI18n } from 'vue-i18n'
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency'
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService'
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('item.table.title'))
@@ -118,7 +130,7 @@ const columns = {
         sortable: true,
         align: 'center',
         searchable: true,
-        grow:true,
+        grow: true,
         label: t('item.table.columns.price') + addParenthesisToString(mainCurrency.name)
 
     },
@@ -196,6 +208,9 @@ const columns = {
         label: t('item.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoDeleteDropDownVue, {
+                changeStatusPermission: Permissions.ITEM_EDIT,
+                editPermission: Permissions.ITEM_EDIT,
+                viewPermission: Permissions.ITEM_SHOW,
                 onChangeStatus: () => {
                     currentChangeStatusItem.value = row
                     selectedStatus.value = row?.status

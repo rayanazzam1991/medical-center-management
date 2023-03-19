@@ -1,4 +1,16 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "contractor_list"
+        ]
+    }
+}
+</route>
+    
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
@@ -16,7 +28,7 @@ import { useContractor } from '/@src/stores/Contractor/contractorStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('contractor.table.title'))
@@ -200,6 +212,8 @@ const columns = {
         label: t('contractor.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoEditDropDown, {
+                viewPermission: Permissions.CONTRACTOR_SHOW,
+                changeStatusPermission: Permissions.CONTRACTOR_EDIT,
                 onView: () => {
                     router.push({ path: `/contractor/${row?.id}` })
                 },
@@ -216,9 +230,8 @@ const columns = {
 </script>
 
 <template>
-    <ContractorTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="t('contractor.header_button')" @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <ContractorTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('contractor.header_button')"
+        @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="contractorsList" :limit="searchFilter.per_page"
         @update:sort="contractorSort">
 
@@ -233,8 +246,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="contractorsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')"
-                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+                        class="my-6">
                     </VPlaceholderSection>
                 </div>
 
@@ -246,23 +259,24 @@ const columns = {
             @update:current-page="getContractorsPerPage" />
         <h6 class="pt-2 is-size-7" v-if="contractorsList.length != 0 && !contractorStore?.loading && !isLoading">
             {{
-                t('tables.pagination_footer', { from_number: paginationVar.page !=
-                    paginationVar.max_page
-                    ?
-                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-                , to_number: paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-            })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
 
         <VPlaceloadText v-if="contractorStore?.loading || isLoading" :lines="1" last-line-width="20%" class="mx-2" />
 
 
     </VFlexTableWrapper>
-    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup"
-        actions="center" @close="changeStatusPopup = false">
+    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.status')" :open="changeStatusPopup" actions="center"
+        @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -290,5 +304,4 @@ const columns = {
             <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-
 </template>

@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultTransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -43,7 +43,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, resetFilter, search, default_per_page, searchTitle, searchNote, perPage, pagination }
+        return { t, resetFilter, search,Permissions, default_per_page, searchTitle, searchNote, perPage, pagination }
     },
 
 
@@ -96,7 +96,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/add-record" color="primary"> {{ t('transaction.add_record_button') }}
+                                <VButton v-permission="Permissions.TRANSACTION_CREATE" class="" to="/add-record" color="primary"> {{ t('transaction.add_record_button') }}
                                 </VButton>
                             </VControl>
                         </div>

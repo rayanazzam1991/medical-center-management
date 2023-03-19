@@ -2,9 +2,8 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Human_Resources"
+    "permissions": [
+      "attendance_justification_access"
     ]
   }
 }

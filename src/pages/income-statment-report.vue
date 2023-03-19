@@ -2,9 +2,8 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Accountant"
+    "permissions": [
+      "income_statement_generate"
     ]
   }
 }

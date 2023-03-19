@@ -1,4 +1,14 @@
-
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "customer_show"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
@@ -37,6 +47,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import { checkPermission } from '/@src/composable/checkPermission'
 
 const route = useRoute()
 const router = useRouter()
@@ -442,8 +454,10 @@ const RemoveProfilePicture = async () => {
     <VLoader size="large" :active="loading">
       <div class="profile-header has-text-centered">
         <VAvatar v-if="customerProfilePicture.id == undefined" size="xl"
-          :picture="MediaConsts.getAvatarIcon(currentCustomer.user.gender)" edit @edit="editProfilePicture" />
-        <VAvatar v-else size="xl" :picture="customerProfilePicture.relative_path" edit @edit="editProfilePicture" />
+          :picture="MediaConsts.getAvatarIcon(currentCustomer.user.gender)"
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
+        <VAvatar v-else size="xl" :picture="customerProfilePicture.relative_path"
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
         <h3 class="title is-4 is-narrow is-thin">
           {{ currentCustomer.user.first_name }}
           {{ currentCustomer.user.last_name }}
@@ -502,10 +516,11 @@ const RemoveProfilePicture = async () => {
                     <h3>{{ t('customer.details.main_details') }}</h3>
                   </div>
                   <div class="buttons">
-                    <VButton @click.prevent="onOpen" color="dark">
+                    <VButton v-permission="Permissions.CUSTOMER_EDIT" @click.prevent="onOpen" color="dark">
                       {{ t('customer.table.modal_title.status') }}
                     </VButton>
-                    <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditMainInfo" />
+                    <VIconButton v-permission="Permissions.CUSTOMER_EDIT" size="small" icon="feather:edit-3" tabindex="0"
+                      @click="onClickEditMainInfo" />
                   </div>
                 </div>
 
@@ -592,14 +607,14 @@ const RemoveProfilePicture = async () => {
                       <div class="file-box">
                         <div class="meta full-width">
                           <div class="
-                                                                  is-justify-content-space-between
-                                                                  is-align-items-center
-                                                                  is-flex
-                                                                  mt-2
-                                                                ">
+                                                                                is-justify-content-space-between
+                                                                                is-align-items-center
+                                                                                is-flex
+                                                                                mt-2
+                                                                              ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
-                            <VIconButton class="mb-3" size="small" icon="feather:edit-3" tabindex="0"
-                              @click="openNotesEditor" />
+                            <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
+                              icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
                           </div>
                           <VFlex class="mb-3">
                             <!-- use any components inside --->
@@ -637,7 +652,8 @@ const RemoveProfilePicture = async () => {
                   <div class="title-wrap">
                     <h3>{{ t('customer.details.medical_info') }}</h3>
                   </div>
-                  <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditMedicalInfo" />
+                  <VIconButton v-permission="Permissions.MEDICAL_INFO_EDIT" size="small" icon="feather:edit-3"
+                    tabindex="0" @click="onClickEditMedicalInfo" />
                 </div>
 
                 <div v-if="currentCustomer.medical_info" class="project-features">
@@ -725,7 +741,8 @@ const RemoveProfilePicture = async () => {
                     <h3>{{ t('customer.details.customer_social_media') }}</h3>
                   </div>
 
-                  <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditSocialMedia" />
+                  <VIconButton v-permission="Permissions.CUSTOMER_SOCIAL_MEDIA_EDIT" size="small" icon="feather:edit-3"
+                    tabindex="0" @click="onClickEditSocialMedia" />
                 </div>
 
                 <div class="project-features">
@@ -763,7 +780,7 @@ const RemoveProfilePicture = async () => {
                   </div>
                 </div>
 
-                <div class="project-files project-section">
+                <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
                   <h4>{{ t('customer.details.upload_file') }}</h4>
                   <div class="is-flex is-justify-content-space-between">
                     <VField class="mr-6" grouped>

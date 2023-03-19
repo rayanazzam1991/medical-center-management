@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "trial_balance_generate"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -96,7 +107,9 @@ const toggle = () => {
             </div>
 
         </div>
-</div>
+    </div>
 </template>
 
-<style   lang="scss">@import '/@src/scss/Styles/TrialBalanceReport/trialBalance.scss';</style>
+<style   lang="scss">
+@import '/@src/scss/Styles/TrialBalanceReport/trialBalance.scss';
+</style>

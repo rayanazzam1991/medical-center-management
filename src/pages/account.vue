@@ -2,11 +2,9 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Accountant"
+    "permissions": [
+      "account_access"
     ]
-
   }
 }
 </route>

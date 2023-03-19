@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'accounting' | 'templates'
@@ -18,7 +19,7 @@ const { t } = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-4" v-if="checkPermission(Permissions.SALARY_ACCESS)">
                 <h4 v-permission="Permissions.SALARY_ACCESS" class="column-heading">{{
                   t('accounting_subnav.salary.salaries') }}</h4>
                 <ul>
@@ -47,8 +48,10 @@ const { t } = useI18n()
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
-                <h4 v-permission="Permissions.ACCOUNTING_ACCESS" class="column-heading">{{
+              <div
+                v-if="checkPermission(Permissions.ACCOUNT_ACCESS) || checkPermission(Permissions.TRIAL_BALANCE_GENERATE)"
+                class="column is-4">
+                <h4 v-permission="Permissions.TRIAL_BALANCE_GENERATE" class="column-heading">{{
                   t('accounting_subnav.reports.reports') }}</h4>
                 <ul>
                   <li v-permission="Permissions.TRIAL_BALANCE_GENERATE">
@@ -78,7 +81,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul><br />
+                </ul><br v-if="checkPermission(Permissions.TRIAL_BALANCE_GENERATE)" />
                 <ul>
                   <h4 v-permission="Permissions.ACCOUNT_ACCESS" class="column-heading">
                     {{ t('account.sun_navbar_heading') }}</h4>
@@ -107,7 +110,7 @@ const { t } = useI18n()
                 </ul>
 
               </div>
-              <div class="column is-4">
+              <div class="column is-4" v-if="checkPermission(Permissions.TRANSACTION_ACCESS)">
                 <h4 v-permission="Permissions.TRANSACTION_ACCESS" class="column-heading">{{
                   t('accounting_subnav.records.records') }}</h4>
                 <ul>

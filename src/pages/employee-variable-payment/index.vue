@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "employee_variable_payment_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -5,7 +16,6 @@ import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { Tippy } from 'vue-tippy';
 import VTag from '/@src/components/base/tags/VTag.vue';
-import EditDropDown from '/@src/components/OurComponents/EditDropDown.vue';
 import NoViewDropDown from '/@src/components/OurComponents/NoViewDropDown.vue';
 import VTagTippy from '/@src/components/OurComponents/VTagTippy.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
@@ -19,6 +29,7 @@ import sleep from '/@src/utils/sleep';
 import { addParenthesisToString, stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 const viewWrapper = useViewWrapper()
@@ -237,7 +248,8 @@ const columns = {
     label: t("variable_payment.table.columns.actions"),
     renderRow: (row: any) =>
       h(NoViewDropDown, {
-
+        changeStatusPermission: Permissions.VARIABLE_PAYMENT_EDIT,
+        editPermission: Permissions.VARIABLE_PAYMENT_EDIT,
         onEdit: () => {
           (row?.status != EmployeeVariablePaymentConsts.RELEASED && row?.status != EmployeeVariablePaymentConsts.INACTIVE) ?
             router.push({ path: `/employee-variable-payment/${row?.id}/edit` }) :

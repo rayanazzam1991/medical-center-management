@@ -2,14 +2,13 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Receptionist"
+    "permissions": [
+      "department_access"
     ]
   }
 }
 </route>
-
+  
 <script setup lang="ts">
 const route = useRoute()
 

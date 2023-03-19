@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'HR' | 'templates'
@@ -20,7 +21,8 @@ const { t } = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.EMPLOYEE_ACCESS) || checkPermission(Permissions.POSITION_ACCESS)">
                 <h4 v-permission="Permissions.EMPLOYEE_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.employee.employees') }}</h4>
                 <ul>
@@ -42,7 +44,7 @@ const { t } = useI18n()
                 <h4 v-permission="Permissions.POSITION_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.position.positions') }}</h4>
                 <ul>
-                  <li v-permission="Permissions.PERMISSION_LIST">
+                  <li v-permission="Permissions.POSITION_LIST">
                     <RouterLink to="/position">
                       <i class="lnir lnir-hierchy-alt" aria-hidden="true"></i>
                       <span>{{ t('human_resources_subnav.position.positions') }}</span>
@@ -58,7 +60,8 @@ const { t } = useI18n()
                   </li>
                 </ul><br />
               </div>
-              <div class="column is-4">
+              <div class="column is-4" v-if="checkPermission(Permissions.EMPLOYEE_SCHEDULE_ACCESS) || checkPermission(Permissions.ATTENDANCE_JUSTIFICATION_ACCESS)
+                || checkPermission(Permissions.ATTENDANCE_ACCESS) || checkPermission(Permissions.SALARIES_GENERATE)">
                 <h4 v-permission="Permissions.EMPLOYEE_SCHEDULE_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.employees_schedule') }}</h4>
                 <ul>
@@ -104,7 +107,8 @@ const { t } = useI18n()
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.VARIABLE_PAYMENT_ACCESS) || checkPermission(Permissions.EMPLOYEE_VARIABLE_PAYMENT_ACCESS)">
                 <h4 v-permission="Permissions.VARIABLE_PAYMENT_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.variable_payment.variable_payments') }}</h4>
                 <ul>
@@ -154,4 +158,5 @@ const { t } = useI18n()
 <style lang="scss">
 // @import '/@src/scss/abstracts/all';
 // @import '/@src/scss/layout/navbar';
-// @import '/@src/scss/layout/responsive';</style>
+// @import '/@src/scss/layout/responsive';
+</style>

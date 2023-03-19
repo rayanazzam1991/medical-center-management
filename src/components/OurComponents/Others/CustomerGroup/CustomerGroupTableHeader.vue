@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultCustomerGroupSearchFilter, CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerGroup"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 export default defineComponent({
@@ -53,7 +53,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, CustomerGroupConsts }
+        return {t , resetFilter, search, Permissions, default_per_page, searchName, searchStatus, perPage, pagination, CustomerGroupConsts }
     },
 
 
@@ -106,7 +106,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/customer-group/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.CUSTOMER_GROUP_CREATE" class="" to="/customer-group/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

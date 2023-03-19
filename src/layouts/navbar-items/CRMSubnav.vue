@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'CRM' | 'templates'
@@ -18,7 +19,8 @@ const emits = defineEmits<{
         <div class="tab-content-inner">
           <div class="center">
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.CUSTOMER_ACCESS) || checkPermission(Permissions.CUSTOMER_GROUP_ACCESS)">
                 <h4 v-permission="Permissions.CUSTOMER_ACCESS" class="column-heading">{{
                   t('crm_subnav.customer.customers') }}</h4>
                 <ul>

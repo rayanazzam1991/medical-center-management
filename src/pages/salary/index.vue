@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "salary_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -17,6 +28,7 @@ import { numberFormat } from '/@src/composable/helpers/numberMoneyFormat';
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 const viewWrapper = useViewWrapper()
@@ -150,6 +162,7 @@ const columns = {
     label: t("salary.table.columns.actions"),
     renderRow: (row: any) =>
       h(SalaryHistoryDropDown, {
+        viewSalaryPermission: Permissions.SALARY_SHOW,
         onView: () => {
           router.push({ path: `/salary/${row?.id}` })
         },

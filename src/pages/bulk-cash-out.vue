@@ -2,14 +2,13 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Accountant"
+    "permissions": [
+      "wallet_movement_create"
     ]
   }
 }
 </route>
-      
+        
 <script setup lang="ts">
 const route = useRoute()
 </script>

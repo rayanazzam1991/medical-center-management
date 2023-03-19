@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 
@@ -19,7 +20,8 @@ const emits = defineEmits<{
                 <div class="tab-content-inner">
                     <div class="center">
                         <div class="columns">
-                            <div class="column is-4">
+                            <div class="column is-4"
+                                v-if="checkPermission(Permissions.TICKET_ACCESS) || checkPermission(Permissions.WAITING_LIST_ACCESS)">
                                 <h4 v-permission="Permissions.TICKET_ACCESS" class="column-heading">{{
                                     t('ticketing_subnav.ticket.tickets') }}</h4>
                                 <ul>
@@ -50,7 +52,8 @@ const emits = defineEmits<{
                                     </li>
                                 </ul><br />
                             </div>
-                            <div class="column is-4">
+                            <div class="column is-4"
+                                v-if="checkPermission(Permissions.TICKET_SERVICE_ACCESS) || checkPermission(Permissions.REMINDER_ACCESS)">
                                 <h4 v-permission="Permissions.TICKET_SERVICE_ACCESS" class="column-heading">{{
                                     t('ticketing_subnav.requested_services.requested_services') }}
                                 </h4>
@@ -77,7 +80,7 @@ const emits = defineEmits<{
                                     </li>
                                 </ul><br />
                             </div>
-                            <div class="column is-4">
+                            <div class="column is-4" v-if="checkPermission(Permissions.SERVICE_HISTORY_SCREEN_ACCESS)">
                                 <h4 v-permission="Permissions.SERVICE_HISTORY_SCREEN_ACCESS" class="column-heading">{{
                                     t('ticketing_subnav.service_history_screen.service_history_screens') }}
                                 </h4>

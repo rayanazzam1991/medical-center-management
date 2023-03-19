@@ -2,14 +2,13 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Accountant"
+    "permissions": [
+      "onhold_salary_list"
     ]
   }
 }
 </route>
-    
+      
 <script setup lang="ts">
 const route = useRoute()
 

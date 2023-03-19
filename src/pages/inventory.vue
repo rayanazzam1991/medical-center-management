@@ -2,14 +2,13 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Inventory"
+        "permissions": [
+            "inventory_access"
         ]
     }
 }
 </route>
-        
+            
 <script setup lang="ts">
 const route = useRoute()
 

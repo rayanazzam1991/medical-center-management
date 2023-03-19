@@ -2,9 +2,8 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Inventory"
+        "permissions": [
+            "inventory_item_create"
         ]
     }
 }

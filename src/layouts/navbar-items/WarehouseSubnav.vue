@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 type TabId = 'warehouse' | 'templates'
@@ -8,7 +9,6 @@ const emits = defineEmits<{
   (e: 'close'): void
 }>()
 const { t, locale } = useI18n()
-// const marginLR = locale.value =="ar" ? "ml-2" : ""
 
 </script>
 
@@ -21,7 +21,8 @@ const { t, locale } = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.CATEGORY_ACCESS) || checkPermission(Permissions.ITEM_ACCESS)">
                 <h4 v-permission="Permissions.CATEGORY_ACCESS" class="column-heading">{{
                   t('warehouse_subnav.category.categories') }}</h4>
                 <ul>
@@ -39,7 +40,7 @@ const { t, locale } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul><br />
+                </ul><br v-permission="Permissions.CATEGORY_ACCESS" />
                 <h4 v-permission="Permissions.ITEM_ACCESS" class="column-heading">{{ t('warehouse_subnav.item.items') }}
                 </h4>
                 <ul>
@@ -59,8 +60,8 @@ const { t, locale } = useI18n()
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
-                <h4 v-permission="Permissions.INVENTORY_ITEM_ACCESS" class="column-heading">{{
+              <div class="column is-4" v-if="checkPermission(Permissions.INVENTORY_ITEM_CREATE)">
+                <h4 v-permission="Permissions.INVENTORY_ITEM_CREATE" class="column-heading">{{
                   t('warehouse_subnav.quantity.quantity') }}</h4>
                 <ul>
                   <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
@@ -99,7 +100,8 @@ const { t, locale } = useI18n()
                   </li>
                 </ul>
               </div>
-              <div class="column is-4">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.INVENTORY_ACCESS) || checkPermission(Permissions.INVENTORY_ITEM_HISTORY_ACCESS)">
                 <h4 v-permission="Permissions.INVENTORY_ACCESS" class="column-heading">{{
                   t('warehouse_subnav.inventory.inventory') }}</h4>
                 <ul>

@@ -2,12 +2,8 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "Admin",
-      "Human_Resources",
-      "Receptionist",
-      "Inventory",
-      "Service_Provider"
+    "permissions": [
+      "user_access"
     ]
   }
 }

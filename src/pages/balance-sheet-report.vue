@@ -2,9 +2,8 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Accountant"
+        "permissions": [
+            "balance_sheet_generate"
         ]
     }
 }

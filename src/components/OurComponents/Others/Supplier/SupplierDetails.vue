@@ -6,7 +6,7 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { SupplierConsts } from "/@src/models/Others/Supplier/supplier"
 import { useSupplier } from "/@src/stores/Others/Supplier/supplierStore"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 const { t } = useI18n()
 const route = useRoute()
@@ -30,7 +30,7 @@ const getCurrentSupplier = async () => {
     const { supplier } = await getSupplier(supplierId.value)
 
     if (supplier != undefined)
-    currentSupplier.value = supplier
+        currentSupplier.value = supplier
     pageTitle.value = viewWrapper.pageTitle + ': ' + currentSupplier.value.name
 
 }
@@ -45,59 +45,57 @@ const toEdit = () => {
 </script>
 
 <template>
-  <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/supplier'" @onSubmit="toEdit"
-      :isLoading="supplierStore?.loading" />
-  <section class="form-layout">
-      <div class="form-outer">
-          <div class="form-body">
-              <!--Fieldset-->
-              <div class="form-fieldset">
-                  <div class="columns is-multiline">
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.name')}}:</h4>
-                          <span>{{ currentSupplier.name }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.phone_number')}}:</h4>
-                          <span>{{ currentSupplier.phone_number }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.address')}}:</h4>
-                          <span>{{ currentSupplier.address }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.city')}}:</h4>
-                          <span>{{ currentSupplier.city?.name }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.notes')}}:</h4>
-                          <span>{{ currentSupplier.notes }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.created_at')}}:</h4>
-                          <span>{{ currentSupplier.created_at }}</span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.status')}}:</h4>
-                          <span>
-                              <VTag
-                                  :color="currentSupplier.status === SupplierConsts.INACTIVE ? 'danger' :currentSupplier.status === SupplierConsts.ACTIVE ? 'success': 'info'" >
-                                  {{ SupplierConsts.getSupplierStatusName(currentSupplier.status) }}</VTag>
-                          </span>
-                      </div>
-                      <div class="column is-12">
-                          <h4 class="margin-bottom">{{t('supplier.details.created_by')}}:</h4>
-                          <span>{{ currentSupplier.created_by?.first_name }}</span>
-                      </div>
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/supplier'" @onSubmit="toEdit"
+        :permission="Permissions.SPECIALITY_EDIT" :isLoading="supplierStore?.loading" />
+    <section class="form-layout">
+        <div class="form-outer">
+            <div class="form-body">
+                <!--Fieldset-->
+                <div class="form-fieldset">
+                    <div class="columns is-multiline">
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.name') }}:</h4>
+                            <span>{{ currentSupplier.name }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.phone_number') }}:</h4>
+                            <span>{{ currentSupplier.phone_number }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.address') }}:</h4>
+                            <span>{{ currentSupplier.address }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.city') }}:</h4>
+                            <span>{{ currentSupplier.city?.name }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.notes') }}:</h4>
+                            <span>{{ currentSupplier.notes }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.created_at') }}:</h4>
+                            <span>{{ currentSupplier.created_at }}</span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.status') }}:</h4>
+                            <span>
+                                <VTag
+                                    :color="currentSupplier.status === SupplierConsts.INACTIVE ? 'danger' : currentSupplier.status === SupplierConsts.ACTIVE ? 'success' : 'info'">
+                                    {{ SupplierConsts.getSupplierStatusName(currentSupplier.status) }}</VTag>
+                            </span>
+                        </div>
+                        <div class="column is-12">
+                            <h4 class="margin-bottom">{{ t('supplier.details.created_by') }}:</h4>
+                            <span>{{ currentSupplier.created_by?.first_name }}</span>
+                        </div>
 
-                  </div>
-              </div>
-              <!--Fieldset-->
-          </div>
-      </div>
-  </section>
-
-
+                    </div>
+                </div>
+                <!--Fieldset-->
+            </div>
+        </div>
+    </section>
 </template>
 
 <style scoped lang="scss">

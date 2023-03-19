@@ -1,3 +1,14 @@
+<route lang="json">
+    {
+      "meta": {
+        "requiresAuth": true,
+        "permissions": [
+          "attendance_justification_list"
+        ]
+      }
+    }
+    </route>
+  
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';

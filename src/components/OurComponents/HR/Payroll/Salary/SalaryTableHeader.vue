@@ -9,7 +9,7 @@ import { defaultPagination } from "/@src/utils/response"
 import Datepicker from '@vuepic/vue-datepicker';
 import { useDarkmode } from '/@src/stores/darkmode';
 import { DatePicker } from "v-calendar"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
   props: {
@@ -73,7 +73,7 @@ export default defineComponent({
       searchFilter.value.department_id = undefined;
       context.emit("resetFilter", searchFilter.value);
     };
-    return { t, locale, dark, month, iconArrow, updateSelectedMonth, resetFilter, search, default_per_page, searchName, searchDepartment, selectedMonth, perPage, pagination, departmentsList };
+    return { t, Permissions ,locale, dark, month, iconArrow, updateSelectedMonth, resetFilter, search, default_per_page, searchName, searchDepartment, selectedMonth, perPage, pagination, departmentsList };
   },
   components: { Datepicker },
 })
@@ -140,7 +140,7 @@ export default defineComponent({
 
               </Datepicker>
               <VControl>
-                <VButton class="" @click="search" color="primary">{{ button_name }}
+                <VButton v-permission="Permissions.SALARY_LIST" class="" @click="search" color="primary">{{ button_name }}
                 </VButton>
               </VControl>
             </div>

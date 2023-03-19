@@ -1,9 +1,9 @@
 <script lang="ts">
 import { PropType } from "vue"
 import { useI18n } from "vue-i18n"
-import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts, Category,defaultCategory } from "/@src/models/Warehouse/Category/category"
+import { defaultCategorySearchFilter, CategorySearchFilter, CategoryConsts, Category, defaultCategory } from "/@src/models/Warehouse/Category/category"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 export default defineComponent({
@@ -24,14 +24,14 @@ export default defineComponent({
             default: 1,
         },
 
-        categoriesList:{
+        categoriesList: {
             type: Array as PropType<Category[]>
         }
 
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
 
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
@@ -97,7 +97,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return {  t , searchFilterPop, default_per_page, keyIncrement,categoriesList, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
+        return { t, Permissions, searchFilterPop, default_per_page, keyIncrement, categoriesList, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchPrice, perPage, pagination, CategoryConsts, quickSearch, quickSearchField }
     },
 
 
@@ -116,7 +116,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" :placeholder="t('category.search_filter.name')" />
+                                <VInput v-model="quickSearchField" type="text"
+                                    :placeholder="t('category.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -143,7 +144,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/category/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.CATEGORY_CREATE" class="" to="/category/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -151,8 +153,8 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <CategorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
-           :data="categoriesList" @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+        <CategorySearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop" :data="categoriesList"
+            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 

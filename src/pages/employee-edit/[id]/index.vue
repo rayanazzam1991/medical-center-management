@@ -24,6 +24,8 @@ import { getDepartmentsList } from '/@src/services/Others/Department/departmentS
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { EmployeeConsts } from '/@src/models/Employee/employee';
+import { getRolesList } from '/@src/services/Others/Role/roleService';
+import { Role } from '/@src/utils/consts/rolesPermissions';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -70,13 +72,13 @@ const fetchEmployee = async () => {
     currentUser.value.city_id = employee.user.city.id
     currentUser.value.room_id = employee.user.room.id
     currentUser.value.user_status_id = employee.user.status.id
+    currentUser.value.roles = employee.user.roles?.map(function (element) { return element.name }) ?? []
     currentEmployee.value.nationality_id = employee.nationality.id
     currentEmployee.value.position_id = employee.position.id
     currentEmployee.value.starting_date = employee.starting_date
     currentEmployee.value.end_date = employee.end_date
     currentEmployee.value.basic_salary = employee.basic_salary
     currentEmployee.value.id = employee.id
-    currentEmployee.value.user = employee.user
     currentEmployee.value.payment_percentage = employee.payment_percentage
     currentEmployee.value.type = employee.payment_percentage
     employeeForm.userForm.id = employee.user.id
@@ -96,6 +98,8 @@ const fetchEmployee = async () => {
     employeeForm.dataUpdate.position_id = currentEmployee.value.position_id
     employeeForm.dataUpdate.id = currentEmployee.value.id
 
+    currentEmployee.value.user = currentUser.value
+
     selectedDepartmentId.value = employee.user.room.department?.id ?? 0
     selectedType.value = employee.type
 
@@ -108,6 +112,7 @@ const statusesList = ref<UserStatus[]>([])
 const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
+const rolesList = ref<Role[]>([])
 
 
 onMounted(async () => {
@@ -133,6 +138,9 @@ onMounted(async () => {
         departmentSearchFilter.per_page = 500
         const { departments } = await getDepartmentsList(departmentSearchFilter)
         departmentsList.value = departments
+        const { roles } = await getRolesList()
+        rolesList.value = roles
+
         await fetchEmployee()
         let roomsFilter: RoomSearchFilter = defaultRoomSearchFilter
         roomsFilter.department_id = selectedDepartmentId.value
@@ -182,6 +190,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
     var userData = currentUser.value
     var employeeData = currentEmployee.value
     let selectedType
+    let rolesError = false
+
     if (employeeData.basic_salary == 0) {
         if (employeeData.payment_percentage == 0) {
             notif.error(t('toast.error.basic_salary_payment_percentage_required'))
@@ -196,6 +206,13 @@ const onSubmitEdit = handleSubmit(async (values) => {
             selectedType = EmployeeConsts.TYPE_HYBRID_EMPLOYEE
         }
     }
+    userData.roles.forEach((role) => {
+        if (role == 'No_Access' && userData.roles.length > 1) {
+            notif.error({ message: t('toast.error.employee.cannot_combine_no_access'), duration: 4000 })
+            rolesError = true
+        }
+    });
+    if (rolesError) return
 
     employeeForm.dataUpdate.starting_date = employeeData.starting_date
     employeeForm.dataUpdate.end_date = employeeData.end_date
@@ -213,6 +230,12 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
+    if (userData.roles.length <= 0) {
+        employeeForm.userForm.roles.push('No_Access')
+    } else {
+        employeeForm.userForm.roles = userData.roles
+    }
+
     const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm, [])
     if (success) {
         employeeForm.dataUpdate.id = employee.id
@@ -345,7 +368,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="address">
                                         <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
                                         <VControl>
@@ -354,6 +377,22 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField>
+                                        <VLabel class="required">{{ t('employee.form.roles') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.roles" multiple size="3">
+                                                <VOption v-for="role in rolesList" :key="role.name" :value="role.name">
+                                                    {{
+                                                        role.display_name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <p class="help is-info">{{ t('employee.form.roles_helper') }}</p>
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
                         <!--Fieldset-->

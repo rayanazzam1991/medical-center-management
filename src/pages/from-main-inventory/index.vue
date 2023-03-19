@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_create"
+        ]
+    }
+}
+</route>
+    
 <script setup  lang="ts">
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
@@ -154,8 +165,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-6">
-                                <label
-                                    class="lable required">{{ t('inventoryItem.fromMainInventoryForm.from_inventory') }}</label>
+                                <label class="lable required">{{ t('inventoryItem.fromMainInventoryForm.from_inventory')
+                                }}</label>
                                 <input class="input" disabled type="text" :placeholder="mainInventory?.name" />
                             </div>
                             <div class="column is-6">
@@ -164,7 +175,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     </VLabel>
                                     <VControl>
                                         <VSelect v-model="selectrdInventoryId">
-                                            <VOption>{{ t('inventoryItem.fromMainInventoryForm.select_inventory') }}</VOption>
+                                            <VOption>{{ t('inventoryItem.fromMainInventoryForm.select_inventory') }}
+                                            </VOption>
                                             <VOption v-for="subInventory in subInventoriesList" :key="subInventory.id"
                                                 :value="subInventory.id">
                                                 {{ subInventory.name }}
@@ -235,7 +247,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                             </div>
                             <div class="column is-6">
                                 <VField id="quantity">
-                                    <VLabel class="required"> {{ t('inventoryItem.fromMainInventoryForm.quantity') }}</VLabel>
+                                    <VLabel class="required"> {{ t('inventoryItem.fromMainInventoryForm.quantity') }}
+                                    </VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentsubInventoryMovement.quantity" type="number" placeholder=""
                                             autocomplete="given-quantity" />

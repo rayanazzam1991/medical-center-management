@@ -2,9 +2,8 @@
 {
     "meta": {
         "requiresAuth": true,
-        "roles": [
-            "Admin",
-            "Receptionist"
+        "permissions": [
+            "customer_edit"
         ]
     }
 }

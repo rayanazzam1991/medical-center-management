@@ -1,14 +1,26 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "variable_payment_list"
+    ]
+  }
+}
+</route>
+  
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import EditDropDown from '/@src/components/OurComponents/EditDropDown.vue';
-import NoViewDropDown from '/@src/components/OurComponents/NoViewDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultVariablePaymentSearchFilter, VariablePayment, VariablePaymentSearchFilter, VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
 import { getVariablePaymentsList } from '/@src/services/HR/Payroll/VariablePayment/variablePaymentService';
 import { useVariablePayment } from '/@src/stores/HR/Payoll/VariablePayment/variablePaymentStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 
 
@@ -132,7 +144,7 @@ const columns = {
     label: t("variable_payment.table.columns.actions"),
     renderRow: (row: any) =>
       h(EditDropDown, {
-
+        editPermission: Permissions.VARIABLE_PAYMENT_EDIT,
         onEdit: () => {
           router.push({ path: `/variable-payment/${row?.id}/edit` })
         },
@@ -144,8 +156,9 @@ const columns = {
 </script>
 
 <template>
-  <VariablePaymentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('variable_payment.header_button')" 
-    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <VariablePaymentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+    :button_name="t('variable_payment.header_button')" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
   <VFlexTableWrapper :columns="columns" :data="variablePaymentsList" @update:sort="variablePaymentsSort">
@@ -166,21 +179,23 @@ const columns = {
         </div>
       </template>
     </VFlexTable>
-    <VFlexPagination v-if="(variablePaymentsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
-      class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
-      no-router @update:current-page="getVariablePaymentsPerPage" />
+    <VFlexPagination v-if="(variablePaymentsList.length != 0 && paginationVar.max_page != 1)"
+      :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
+      :total-items="paginationVar.total" :max-links-displayed="3" no-router
+      @update:current-page="getVariablePaymentsPerPage" />
     <h6 class="pt-2 is-size-7" v-if="variablePaymentsList.length != 0 && !variablePaymentStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="variablePaymentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
 </template>
