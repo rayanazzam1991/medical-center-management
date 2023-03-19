@@ -1,11 +1,14 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "setting_edit"
+        ]
     }
 }
 </route>
-    
+        
 <script setup lang="ts">
 const route = useRoute()
 

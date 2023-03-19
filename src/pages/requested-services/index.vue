@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "ticket_service_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -10,6 +21,7 @@ import { defaultTicketServiceSearchFilter, TicketService, TicketServiceConsts, T
 import { getTicktServicesList } from '/@src/services/Sales/TicketService/ticketServiceService';
 import { useTicketService } from '/@src/stores/Sales/TicketService/ticketServiceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 
 
@@ -158,6 +170,7 @@ const columns = {
 
         renderRow: (row: TicketService) =>
             h(TicketServiceDropDown, {
+                addReminderPermission: Permissions.REMINDER_CREATE,
                 onAddReminder: () => {
                     router.push({ path: `/reminder/add`, query: { customer_id: row.ticket?.customer.id, ticket_service_id: row.id } })
                 },

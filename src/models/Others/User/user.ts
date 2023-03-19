@@ -1,6 +1,7 @@
 import { City, defaultCity } from "../City/city"
 import { Room, defaultRoom } from "../Room/room"
 import { UserStatus, defaultUserStatus } from "../UserStatus/userStatus"
+import { Role } from "/@src/utils/consts/rolesPermissions"
 
 export interface User {
     id?: number
@@ -14,7 +15,7 @@ export interface User {
     city: City
     room: Room
     status: UserStatus
-    role?: string
+    roles?: Role[]
     token?: string
 }
 export interface CreateUpdateUser {
@@ -29,6 +30,7 @@ export interface CreateUpdateUser {
     city_id?: number
     room_id?: number
     user_status_id?: number
+    roles: string[]
 }
 export interface ChangeUserStatus {
     id?: number
@@ -57,6 +59,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
     room_id: undefined,
     user_status_id: undefined,
     password: '0000000000',
+    roles: []
 }
 export const defaultChangeStatusUser: ChangeUserStatus = {
     id: undefined,
@@ -99,8 +102,8 @@ export enum UserRole {
 }
 
 export const UserRoles = {
-    ADMIN : 'Admin',
-    USER : 'User',
+    ADMIN: 'Admin',
+    USER: 'User',
 }
 
 export const RolePermissions = {

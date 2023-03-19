@@ -1,9 +1,10 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { defaultSocialMedia } from '/@src/models/CRM/SocialMedia/socialMedia';
 import { getSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { SocialMediaConsts } from '/@src/models/CRM/SocialMedia/socialMedia';
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 const route = useRoute()
 const router = useRouter()
 const pageTitle = ref('')
@@ -37,7 +38,8 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/social-media'" @onSubmit="toEdit" />
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/social-media'" @onSubmit="toEdit"
+        :permission="Permissions.SOCIAL_MEDIA_EDIT" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -66,8 +68,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

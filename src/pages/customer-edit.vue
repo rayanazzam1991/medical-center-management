@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "customer_edit"
+        ]
     }
 }
 </route>
@@ -14,7 +17,7 @@ import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
 })
@@ -35,7 +38,7 @@ useHead({
                     <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="customerStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{t('customer.form.edit_submit')}}
+                                {{ t('customer.form.edit_submit') }}
                             </VButton>
                         </VLoader>
 
@@ -49,5 +52,4 @@ useHead({
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
-
 </style>

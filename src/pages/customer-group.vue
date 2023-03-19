@@ -1,10 +1,14 @@
 <route lang="json">
 {
   "meta": {
-    "requiresAuth": true
+    "requiresAuth": true,
+    "permissions": [
+      "customer_group_access"
+    ]
   }
 }
 </route>
+  </route>
 
 <script setup lang="ts">
 const route = useRoute()

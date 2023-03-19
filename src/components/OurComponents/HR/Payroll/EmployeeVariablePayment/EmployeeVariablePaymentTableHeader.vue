@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { defaultEmployeeVariablePaymentSearchFilter } from '/@src/models/HR/Payroll/EmployeVariablePayment/employeeVariablePayment'
 import { VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment'
 import { defaultPagination } from '/@src/utils/response'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 
 
@@ -83,7 +83,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, keyIncrement, nameSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
+        return { t, Permissions, keyIncrement, nameSearchField, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination }
     },
 })
 </script>
@@ -123,7 +123,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/employee-variable-payment/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.EMPLOYEE_VARIABLE_PAYMENT_CREATE" class=""
+                                    to="/employee-variable-payment/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

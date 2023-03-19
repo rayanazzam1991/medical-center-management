@@ -1,19 +1,22 @@
 <route lang="json">
-    {
-      "meta": {
-        "requiresAuth": true
-      }
-    }
-    </route>
-    <script setup lang="ts">
-    const route = useRoute()
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "attendance_justification_access"
+    ]
+  }
+}
+</route>
+<script setup lang="ts">
+const route = useRoute()
+
+
+</script>
     
-    
-    </script>
-    
-    <template>
-      <NavbarLayout>
-        <RouterView :key="$route.fullPath" />
-      </NavbarLayout>
-    </template>
+<template>
+  <NavbarLayout>
+    <RouterView :key="$route.fullPath" />
+  </NavbarLayout>
+</template>
     

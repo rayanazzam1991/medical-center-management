@@ -2,6 +2,7 @@
   "select-language": "Select Language",
   "cancel-label": "Cancel",
   "auth": {
+    "login_title": "Login",
     "success_login": "Welcome back",
     "success_signUp": "Welcome",
     "title": "Join Us Now.",
@@ -44,6 +45,12 @@
         "password": "Password"
       },
       "sign_in_button": "Sign In"
+    },
+    "no_permission": {
+      "title": "No Permission",
+      "you_have_no_permission": "Sorry, You do not have permission to access this page.",
+      "content": "Your account does not have permission to access page, If you think this is a mistake, please contact site administrator.",
+      "back_to_previous_page": "Back to previous page"
     }
   },
   "validation": {
@@ -2107,5 +2114,8 @@
       "service": "Service",
       "add_new_filter": "Add new filter"
     }
+  },
+  "place_holder": {
+    "none": "No Data"
   }
 }

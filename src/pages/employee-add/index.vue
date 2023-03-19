@@ -29,6 +29,8 @@ import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/curr
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { EmployeeConsts } from '/@src/models/Employee/employee';
+import { Role } from '/@src/utils/consts/rolesPermissions';
+import { getRolesList } from '/@src/services/Others/Role/roleService';
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('employee.form.step_1_title'))
@@ -71,6 +73,7 @@ const statusesList = ref<UserStatus[]>([])
 const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
+const rolesList = ref<Role[]>([])
 onMounted(async () => {
 
     let citySearchFilter = {} as CitySearchFilter
@@ -101,7 +104,8 @@ onMounted(async () => {
     const { departments } = await getDepartmentsList(departmentSearchFilter)
     departmentsList.value = departments
 
-
+    const { roles } = await getRolesList()
+    rolesList.value = roles
 })
 onMounted(() => {
     getCurrentEmployee()
@@ -148,6 +152,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     if (phoneCheck.value === 'false') {
         let employeeData = currentEmployee.value
         let selectedType
+        let rolesError = false
         if (employeeData.basic_salary == 0) {
             if (employeeData.payment_percentage == 0) {
                 notif.error(t('toast.error.basic_salary_payment_percentage_required'))
@@ -162,7 +167,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                 selectedType = EmployeeConsts.TYPE_HYBRID_EMPLOYEE
             }
         }
-
+        userData.roles.forEach((role) => {
+            if (role == 'No_Access' && userData.roles.length > 1) {
+                notif.error({ message: t('toast.error.employee.cannot_combine_no_access'), duration: 4000 })
+                rolesError = true
+            }
+        });
+        if (rolesError) return
         employeeForm.data.starting_date = employeeData.starting_date
         employeeForm.data.end_date = employeeData.end_date
         employeeForm.data.nationality_id = employeeData.nationality_id
@@ -181,21 +192,21 @@ const onSubmitAdd = handleSubmit(async (values) => {
             employeeForm.userForm.room_id = userData.room_id
         employeeForm.userForm.city_id = userData.city_id
         employeeForm.userForm.user_status_id = userData.user_status_id
-
+        if (userData.roles.length <= 0) {
+            employeeForm.userForm.roles.push('No_Access')
+        } else {
+            employeeForm.userForm.roles = userData.roles
+        }
         const { employee, success, message } = await addEmployee(employeeForm.data, employeeForm.userForm)
 
         if (success) {
             employeeForm.data.id = employee.id
             await sleep(200);
-            // @ts-ignore
             notif.success(t('toast.success.add'))
-
             return true
         }
         else {
             await sleep(200);
-            // @ts-ignore
-
             notif.error(message)
             return false
         }
@@ -309,7 +320,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
-                                <div class="column is-12">
+                                <div class="column is-6">
                                     <VField id="address">
                                         <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
                                         <VControl>
@@ -318,8 +329,25 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField>
+                                        <VLabel class="required">{{ t('employee.form.roles') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentUser" v-model="currentUser.roles" multiple size="3">
+                                                <VOption v-for="role in rolesList" :key="role.name" :value="role.name">
+                                                    {{
+                                                        role.display_name
+                                                    }}
+                                                </VOption>
+                                            </VSelect>
+                                            <p class="help is-info">{{ t('employee.form.roles_helper') }}</p>
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                         </div>
+
                         <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
@@ -483,6 +511,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 .layout {
     min-width: 50%;
+    margin-bottom: 2rem;
 }
 
 .form-fieldset {

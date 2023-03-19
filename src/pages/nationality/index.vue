@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "nationality_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -10,6 +21,7 @@ import { useNationality } from '/@src/stores/Others/Nationality/nationalityStore
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('nationality.table.title'))
@@ -113,6 +125,8 @@ const columns = {
     label: t('nationality.table.columns.actions'),
     renderRow: (row: any) =>
       h(ViewEditDropDown, {
+        editPermission: Permissions.NATIONALITY_EDIT,
+        viewPermission: Permissions.NATIONALITY_SHOW,
         onEdit: () => {
           router.push({ path: `/nationality/${row?.id}/edit` })
         },
@@ -127,9 +141,8 @@ const columns = {
 </script>
 
 <template>
-  <NationalityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="t('nationality.header_button')" @search="search" :pagination="paginationVar"
-    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <NationalityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('nationality.header_button')"
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="nationalitiesList" @update:sort="citySort">
     <VFlexTable separators clickable>
       <template #body>
@@ -153,18 +166,18 @@ const columns = {
       @update:current-page="getNationalitiesPerPage" />
     <h6 class="pt-2 is-size-7" v-if="nationalitiesList.length != 0 && !nationalityStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="nationalityStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-
 </template>
 

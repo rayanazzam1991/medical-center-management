@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -23,7 +23,7 @@ export default defineComponent({
 
     },
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const pagination = props.pagination
         const { y } = useWindowScroll()
         const searchName = ref('')
@@ -48,7 +48,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {  t, resetFilter, search, searchName, perPage, pagination, default_per_page }
+        return { t, Permissions, resetFilter, search, searchName, perPage, pagination, default_per_page }
     },
 
 
@@ -67,7 +67,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" :placeholder="t('user_status.search_filter.name')" />
+                                <VInput v-model="searchName" type="text"
+                                    :placeholder="t('user_status.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw"
                                 :raised="false" color="danger" />
@@ -94,7 +95,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/userstatus/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.USER_STATUS_CREATE" class="" to="/userstatus/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

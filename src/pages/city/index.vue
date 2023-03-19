@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "city_list"
+    ]
+  }
+}
+</route>
+
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { Notyf } from 'notyf'
@@ -11,7 +22,7 @@ import { useCity } from '/@src/stores/Others/City/cityStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('city.table.title'))
@@ -114,6 +125,8 @@ const columns = {
     label: t("city.table.columns.actions"),
     renderRow: (row: any) =>
       h(ViewEditDropDown, {
+        viewPermission: Permissions.CITY_SHOW,
+        editPermission: Permissions.CITY_EDIT,
         onEdit: () => {
           router.push({ path: `/city/${row?.id}/edit` })
         },
@@ -166,16 +179,17 @@ const columns = {
       no-router @update:current-page="getCitiesPerPage" />
     <h6 class="pt-2 is-size-7" v-if="citiesList.length != 0 && !cityStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="cityStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>

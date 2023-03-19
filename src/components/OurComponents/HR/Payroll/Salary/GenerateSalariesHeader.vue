@@ -2,7 +2,7 @@
 import { defaultGeneratableMonth, GeneratableMonth } from '/@src/models/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonth'
 import { defaultVariablePaymentSearchFilter, VariablePaymentSearchFilter } from '/@src/models/HR/Payroll/VariablePayment/variablePayment'
 import { defaultPagination } from '/@src/utils/response'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 
 
@@ -38,7 +38,7 @@ export default defineComponent({
 
         }
 
-        return { t, generatableMonths, selectedGeneratableMonth, getSalariesReview, title }
+        return { t,Permissions, generatableMonths, selectedGeneratableMonth, getSalariesReview, title }
     },
 })
 </script>
@@ -64,7 +64,7 @@ export default defineComponent({
                                 </VSelect>
                             </VControl>
                             <VControl>
-                                <VButton :disabled="generatableMonths.length == 0"  @click="getSalariesReview" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.SALARIES_REVIEW" :disabled="generatableMonths.length == 0"  @click="getSalariesReview" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

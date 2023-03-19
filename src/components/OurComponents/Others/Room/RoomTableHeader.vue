@@ -3,7 +3,7 @@ import { getDepartmentsList } from "/@src/services/Others/Department/departmentS
 import { Department, defaultDepartmentSearchFilter } from "/@src/models/Others/Department/department"
 import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts } from "/@src/models/Others/Room/room"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -80,7 +80,7 @@ export default defineComponent({
             const { departments } = await getDepartmentsList(defaultDepartmentSearchFilter)
             departments2.value = departments
         })
-        return { keyTest, searchFilterPop, default_per_page, popUpTrigger, onOpen, resetFilter_popup, search_filter, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
+        return { keyTest, Permissions, searchFilterPop, default_per_page, popUpTrigger, onOpen, resetFilter_popup, search_filter, departments2, resetFilter, search, searchNumber, searchFloor, searchDepartment, searchStatus, perPage, pagination, RoomConsts }
     },
 
 
@@ -122,7 +122,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/room/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.ROOM_CREATE" class="" to="/room/add" color="primary">{{
+                                    button_name }}
                                 </VButton>
                             </VControl>
                         </div>

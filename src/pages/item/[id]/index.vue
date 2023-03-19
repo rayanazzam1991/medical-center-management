@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "item_show"
+        ]
+    }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
@@ -20,7 +31,7 @@ import { BaseConsts } from "/@src/utils/consts/base"
 import { addParenthesisToString, stringTrim } from "/@src/composable/helpers/stringHelpers"
 import { Currency, defaultCurrency } from "/@src/models/Accounting/Currency/currency"
 import { getCurrenciesFromStorage } from "/@src/services/Accounting/Currency/currencyService"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 const route = useRoute()
@@ -306,11 +317,11 @@ const changestatusItemHistory = async () => {
                                         <h3>{{ t('item.details.main_details') }}</h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton @click.prevent="onOpen" color="dark">
+                                        <VButton v-permission="Permissions.ITEM_EDIT" @click.prevent="onOpen" color="dark">
                                             {{ t('item.table.modal_title.item') }}
                                         </VButton>
-                                        <VIconButton size="small" icon="feather:edit-3" tabindex="0"
-                                            @click="onClickEditMainInfo" />
+                                        <VIconButton v-permission="Permissions.ITEM_EDIT" size="small" icon="feather:edit-3"
+                                            tabindex="0" @click="onClickEditMainInfo" />
                                     </div>
                                 </div>
 

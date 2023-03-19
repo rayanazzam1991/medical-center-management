@@ -8,7 +8,7 @@ import { DepartmentConsts } from '/@src/models/Others/Department/department'
 import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const panels = usePanels()
 const { t } = useI18n()
 const route = useRoute()
@@ -44,7 +44,7 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/department'" @onSubmit="toEdit"
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/department'" @onSubmit="toEdit" :permission="Permissions.DEPARTMENT_EDIT"
         :isLoading="departmentStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
@@ -53,11 +53,12 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('department.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('department.details.name', { title: viewWrapper.pageTitle }) }}:</h4>
                             <span>{{ currentDepartment.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('department.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('department.details.status', { title: viewWrapper.pageTitle }) }}:
+                            </h4>
                             <span>
                                 <VTag
                                     :color="currentDepartment.status === DepartmentConsts.INACTIVE ? 'danger' : 'success'">
@@ -70,8 +71,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

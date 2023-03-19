@@ -1,11 +1,14 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_history_list"
+        ]
     }
 }
 </route>
-
+    
 <script setup lang="ts">
 const route = useRoute()
 

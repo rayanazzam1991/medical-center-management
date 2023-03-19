@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "account_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { Notyf } from 'notyf'
@@ -14,7 +25,7 @@ import { useAccount } from '/@src/stores/Accounting/Account/accountStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('account.table.title'))
@@ -247,6 +258,8 @@ const columns = {
     label: t("account.table.columns.actions"),
     renderRow: (row: Account) =>
       h(AccountDropDown, {
+        changeCurrencyPermission: Permissions.ACCOUNT_EDIT,
+        changeStatusPermission: Permissions.ACCOUNT_EDIT,
         onChangeCurrency: () => {
           selectedAccount.value = row
           changeAccountCurrencyPopup.value = true
