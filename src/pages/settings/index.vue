@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "settings_edit"
+    ]
+  }
+}
+</route>
+  
 <script lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';

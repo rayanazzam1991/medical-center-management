@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "customer_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -16,8 +27,9 @@ import sleep from '/@src/utils/sleep'
 import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('customer.table.title'))
 useHead({
     title: t('customer.table.title'),
@@ -137,11 +149,11 @@ const columns = {
                 VTag,
                 {
                     rounded: true,
-                    color: UserStatusConsts.getStatusColor(row?.user?.status?.id) 
+                    color: UserStatusConsts.getStatusColor(row?.user?.status?.id)
                 },
                 {
                     default() {
-                        return UserStatusConsts.getStatusName(row?.user?.status?.id) 
+                        return UserStatusConsts.getStatusName(row?.user?.status?.id)
                     },
                 }
             ),
@@ -217,6 +229,8 @@ const columns = {
 
         renderRow: (row: any) =>
             h(NoEditDropDown, {
+                viewPermission: Permissions.CUSTOMER_SHOW,
+                changeStatusPermission: Permissions.CUSTOMER_EDIT,
                 onView: () => {
                     router.push({ path: `/customer/${row?.id}` })
                 },
@@ -233,11 +247,9 @@ const columns = {
 </script>
 
 <template>
-    <CustomerTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="t('customer.header_button')" @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="customersList" :limit="searchFilter.per_page"
-        @update:sort="customerSort">
+    <CustomerTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('customer.header_button')"
+        @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <VFlexTableWrapper :columns="columns" :data="customersList" :limit="searchFilter.per_page" @update:sort="customerSort">
 
         <VFlexTable separators clickable>
             <template #body>
@@ -263,20 +275,22 @@ const columns = {
             @update:current-page="getCustomersPerPage" />
         <h6 class="pt-2 is-size-7" v-if="customersList.length != 0 && !customerStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
         <VPlaceloadText v-if="customerStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
     </VFlexTableWrapper>
-    <VModal :title="t('customer.table.modal_title.status')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('customer.table.modal_title.status')" :open="changeStatusPopup" actions="center"
+        @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -288,8 +302,8 @@ const columns = {
                                 <VControl>
                                     <VSelect v-model="customerChangeStatus.user.status.id">
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-        UserStatusConsts.getStatusName(status.id)
-}}
+                                            UserStatusConsts.getStatusName(status.id)
+                                        }}
                                         </VOption>
                                     </VSelect>
                                     <ErrorMessage name="user_status_id" />
@@ -301,8 +315,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-
 </template>

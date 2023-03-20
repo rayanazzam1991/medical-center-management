@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "service_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -12,6 +23,7 @@ import { useService } from '/@src/stores/Others/Service/serviceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('service.table.title'))
@@ -166,7 +178,8 @@ const columns = {
 
     renderRow: (row: any) =>
       h(ViewEditDropDown, {
-
+        editPermission: Permissions.SERVICE_EDIT,
+        viewPermission: Permissions.SERVICE_SHOW,
         onEdit: () => {
           router.push({ path: `/service/${row?.id}/edit` })
         },

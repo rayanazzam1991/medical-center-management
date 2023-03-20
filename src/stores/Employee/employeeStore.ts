@@ -3,7 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -20,6 +20,9 @@ export const useEmployee = defineStore('employee', () => {
   const error_code = ref<string>()
   const message = ref<string>()
   const loading = ref(false)
+  const loggedEmployee = useStorage('employee', '')
+  const employee = ref<Employee>()
+
 
   async function addEmployeeStore(employee: CreateEmployee) {
     if (loading.value) return
@@ -411,6 +414,41 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
+  async function getEmployeeByUserIdStore(user_id: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getEmployeeByUserIdApi(api, user_id)
+      setEmployee(returnedResponse.response.data)
+
+      employeesAttendance.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  function setEmployee(newEmployee: Employee) {
+    employee.value = newEmployee
+    loggedEmployee.value = JSON.stringify(newEmployee)
+  }
+
+  function getEmployee(): Employee {
+    return JSON.parse(loggedEmployee.value) as Employee;
+  }
+
 
 
   return {
@@ -434,6 +472,11 @@ export const useEmployee = defineStore('employee', () => {
     updateEmployeeNumberStore,
     getEmployeesAttendanceStore,
     addServicesStore,
+    getEmployeeByUserIdStore,
+    getEmployee,
+    setEmployee,
+    loggedEmployee,
+    employee,
     success,
     error_code,
     message,

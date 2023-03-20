@@ -2,7 +2,7 @@ import { UserRole, RolePermissions } from '../models/Others/User/user';
 
 
 export function checkRoles(
-    userRole: UserRole,
+    userRole: string,
     allowedRoles: string[],
 ): boolean {
 

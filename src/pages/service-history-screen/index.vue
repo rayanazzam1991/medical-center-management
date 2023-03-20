@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "service_history_screen_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -10,6 +21,7 @@ import { useServiceHistoryScreen } from '/@src/stores/Sales/ServiceHistoryScreen
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 
@@ -150,6 +162,8 @@ const columns = {
         label: t('service_history_screen.table.columns.actions'),
         renderRow: (row: ServiceHistoryScreen) =>
             h(ViewEditDropDown, {
+                editPermission: Permissions.SERVICE_HISTORY_SCREEN_EDIT,
+                viewPermission: Permissions.SERVICE_HISTORY_SCREEN_SHOW,
                 onEdit: () => {
 
                     router.push({ path: `/service-history-screen/${row.id}/edit` })

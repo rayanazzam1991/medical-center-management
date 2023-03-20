@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useI18n } from 'vue-i18n'
-
+import { string } from 'zod'
 
 
 
@@ -21,6 +21,10 @@ export default defineComponent({
     isLoading: {
       type: Boolean,
       default: false
+    },
+    permission: {
+      type: String,
+      default: undefined
     }
   },
 
@@ -28,11 +32,13 @@ export default defineComponent({
   setup(props, context) {
     const { t, locale } = useI18n()
     const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
+    const permission = props.permission
     var submited = false
     const onSubmit = () => {
       context.emit('onSubmit', submited)
     }
-    return { onSubmit, t, iconArrow }
+
+    return { onSubmit, t, iconArrow, permission }
   },
 
 
@@ -58,7 +64,7 @@ export default defineComponent({
                 dark-outlined>
                 {{ t('forms.back_button') }}
               </VButton>
-              <VButton :loading="isLoading" @click="onSubmit" color="primary" raised> {{
+              <VButton v-permission="permission" :loading="isLoading" @click="onSubmit" color="primary" raised> {{
                 t(`forms.type.${form_submit_name.toLowerCase()}`) }} </VButton>
             </div>
           </div>

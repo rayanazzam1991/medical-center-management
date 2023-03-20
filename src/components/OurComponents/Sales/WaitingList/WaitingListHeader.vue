@@ -129,10 +129,6 @@ export default defineComponent({
                     </div>
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
-                            <!-- <VControl>
-                                                    <VButton class="" to="/city/add" color="primary">{{ button_name }}
-                                                    </VButton>
-                                                </VControl> -->
                         </div>
                     </div>
                 </div>

@@ -52,6 +52,7 @@ declare module 'vue-router/auto/routes' {
     '/attendance-justification/': RouteRecordInfo<'/attendance-justification/', '/attendance-justification/', Record<never, never>, Record<never, never>>,
     '/auth': RouteRecordInfo<'/auth', '/auth', Record<never, never>, Record<never, never>>,
     '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
+    '/auth/no-permission': RouteRecordInfo<'/auth/no-permission', '/auth/no-permission', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
     '/balance-sheet-report': RouteRecordInfo<'/balance-sheet-report', '/balance-sheet-report', Record<never, never>, Record<never, never>>,
     '/balance-sheet-report/': RouteRecordInfo<'/balance-sheet-report/', '/balance-sheet-report/', Record<never, never>, Record<never, never>>,

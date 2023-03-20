@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "employee_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -17,6 +28,7 @@ import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import EmployeeDropDown from '/@src/components/OurComponents/Employee/EmployeeDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('employee.table.title'))
@@ -198,6 +210,9 @@ const columns = {
 
         renderRow: (row: any) =>
             h(EmployeeDropDown, {
+                changeStatusPermission: Permissions.EMPLOYEE_EDIT,
+                viewPermission: Permissions.EMPLOYEE_SHOW,
+                viewMyWaitingListPermission: Permissions.SHOW_ALL_WAITING_LISTS,
                 onView: () => {
                     router.push({ path: `/employee/${row?.id}` })
                 },

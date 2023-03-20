@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "ticket_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -15,6 +26,7 @@ import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waiti
 import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('ticket.table.title'))
@@ -200,6 +212,10 @@ const columns = {
     label: t('ticket.table.columns.actions'),
     renderRow: (row: any) =>
       h(CloseTicketDropDown, {
+        viewPermission: Permissions.TICKET_SHOW,
+        viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
+        editPermission: Permissions.TICKET_EDIT,
+        closeTicketPermission: Permissions.TICKET_CLOSE,
         onEdit: () => {
           if (row.status != TicketConsts.CLOSED) {
 

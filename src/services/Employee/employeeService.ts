@@ -20,7 +20,6 @@ export async function addEmployee(
   employeeData: CreateEmployee,
   userData: CreateUpdateUser
 ) {
-  userData.password = '1231313'
   employeeData.user = userData
   const employeeResponse = useEmployee()
   var employee: Employee =
@@ -203,6 +202,15 @@ export async function getEmployeesAttendance(searchFilter: EmployeeAttendanceSea
   const message: string = employee.message ?? ''
 
   return { employeesAttendance, pagination, success, message, error_code }
+}
+export async function getEmployeeByUserId(user_id: number) {
+  const employee = useEmployee()
+  await employee.getEmployeeByUserIdStore(user_id)
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+  const loggedEmployee = employee.getEmployee()
+  return { loggedEmployee, success, message, error_code }
 }
 
 

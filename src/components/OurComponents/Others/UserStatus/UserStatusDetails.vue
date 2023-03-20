@@ -7,7 +7,7 @@ import { useViewWrapper } from "/@src/stores/viewWrapper"
 import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 import sleep from "/@src/utils/sleep"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 const { t } = useI18n()
 const panels = usePanels()
 const route = useRoute()
@@ -43,7 +43,7 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/userstatus'" @onSubmit="toEdit"
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/userstatus'" @onSubmit="toEdit"   :permission="Permissions.USER_STATUS_EDIT"
         :isLoading="userStatusStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
@@ -52,7 +52,7 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('user_status.details.name')}}:</h4>
+                            <h4 class="margin-bottom">{{ t('user_status.details.name') }}:</h4>
                             <span>{{ currentUserStatus.name }}</span>
                         </div>
                     </div>
@@ -61,8 +61,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

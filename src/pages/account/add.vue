@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "account_create"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n';
@@ -14,4 +25,6 @@ const head = useHead({
 
 </script>
 
-<template><AccountForm :formType="'Add'" /></template>
+<template>
+  <AccountForm :formType="'Add'" />
+</template>

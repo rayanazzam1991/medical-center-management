@@ -1,11 +1,14 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "contractor_access"
+        ]
     }
 }
 </route>
-    
+        
 <script setup lang="ts">
 const route = useRoute()
 

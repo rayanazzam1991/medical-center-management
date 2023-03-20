@@ -4,7 +4,7 @@ import { defaultContractorSearchFilter, ContractorSearchFilter } from "/@src/mod
 import { CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
 import { defaultPagination } from "/@src/utils/response"
 import { isNumber } from "/@src/composable/helpers/isNumberCheck"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -109,7 +109,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
+        return { t, keyIncrement, is_reseted, default_per_page,Permissions, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
     },
 
 
@@ -158,7 +158,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/contractor-add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.CONTRACTOR_CREATE" class="" to="/contractor-add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

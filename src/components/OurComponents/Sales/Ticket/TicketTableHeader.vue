@@ -2,6 +2,7 @@
 import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
 import { defaultTicketSearchFilter, TicketConsts, TicketSearchFilter } from "/@src/models/Sales/Ticket/ticket"
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
   props: {
@@ -67,7 +68,7 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
 
     }
-    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, TicketConsts, searchFilterPop, search, default_per_page, searchId, onOpen, keyTest, perPage, pagination }
+    return { t, Permissions, resetFilter, popUpTrigger, resetFilter_popup, search_filter, TicketConsts, searchFilterPop, search, default_per_page, searchId, onOpen, keyTest, perPage, pagination }
   },
 })
 </script>
@@ -110,7 +111,8 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton class="ml-2" to="/ticket/add" color="primary">{{ button_name }}
+                <VButton v-permission="Permissions.TICKET_CREATE" class="ml-2" to="/ticket/add" color="primary">{{
+                  button_name }}
                 </VButton>
               </VControl>
             </div>

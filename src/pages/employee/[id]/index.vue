@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "employee_show"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -36,7 +47,10 @@ import { useI18n } from 'vue-i18n'
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency'
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService'
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import { checkPermission } from '/@src/composable/checkPermission'
+import { useAuth } from '/@src/stores/Others/User/authStore'
+import { resetPassword } from '/@src/services/Others/User/authService'
 const currencies = getCurrenciesFromStorage()
 const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const route = useRoute()
@@ -45,6 +59,7 @@ const viewWrapper = useViewWrapper()
 const changeStatus = ref()
 const currentChangeStatusUser = ref(defaultChangeStatusUser)
 const changeStatusPopup = ref(false)
+const resetPasswordPopup = ref(false)
 const currentEmployee = ref<Employee>(defaultEmployee)
 const employeeId = ref(0)
 const deleteFilePopup = ref(false)
@@ -65,7 +80,7 @@ const maxEmployeeNumber = ref(0)
 const employeeForm = useEmployeeForm()
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
-
+const authStore = useAuth()
 // @ts-ignore
 employeeId.value = route.params.id
 viewWrapper.setPageTitle(t('employee.details.title'))
@@ -116,6 +131,30 @@ const fetchMaxEmployeeNumber = async () => {
 const onOpen = () => {
   changeStatusPopup.value = !changeStatusPopup.value
 }
+const openResetPasswordConfirmation = () => {
+  resetPasswordPopup.value = !resetPasswordPopup.value
+}
+
+const onSubmitResetPassword = async () => {
+  if (currentEmployee.value.user.id) {
+    const { success, message } = await resetPassword(currentEmployee.value.user.id)
+    if (success) {
+      await sleep(200);
+      notif.success(t('toast.success.reset_password'))
+      return true
+    }
+    else {
+      await sleep(200);
+      notif.error(message)
+
+    }
+    resetPasswordPopup.value = false
+  }
+  else return
+
+
+}
+
 const changestatusUser = async () => {
   const userData = currentEmployee.value
   var userForm = currentChangeStatusUser.value
@@ -147,6 +186,7 @@ const fetchEmployee = async () => {
   employeeForm.userForm.address = employee.user.address
   employeeForm.userForm.room_id = employee.user.room.id
   employeeForm.userForm.city_id = employee.user.city.id
+  employeeForm.userForm.roles = employee.user.roles?.map(function (element) { return element.name }) ?? []
   employeeForm.userForm.user_status_id = employee.user.status.id
   employeeForm.dataUpdate.starting_date = employee.starting_date
   employeeForm.dataUpdate.basic_salary = employee.basic_salary
@@ -436,8 +476,10 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     <VLoader size="large" :active="loading">
       <div class="profile-header has-text-centered">
         <VAvatar v-if="employeeProfilePicture.id == undefined" size="xl"
-          :picture="MediaConsts.getAvatarIcon(currentEmployee.user.gender)" edit @edit="editProfilePicture" />
-        <VAvatar v-else size="xl" :picture="employeeProfilePicture.relative_path" edit @edit="editProfilePicture" />
+          :picture="MediaConsts.getAvatarIcon(currentEmployee.user.gender)"
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
+        <VAvatar v-else size="xl" :picture="employeeProfilePicture.relative_path"
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
 
         <h3 class="title is-4 is-narrow is-thin">
           {{ currentEmployee.user.first_name }} {{ currentEmployee.user.last_name }}
@@ -456,6 +498,14 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
               }}</span></span>
           </div>
           <div class="separator"></div>
+          <div class="profile-stat">
+            <i class="lnir lnir-medal-alt" aria-hidden="true"></i>
+            <span>{{ t('employee.details.roles') }}:
+              <span v-if="currentEmployee.user.roles" v-for="(role, index) in currentEmployee.user.roles">
+                {{ role.display_name }} {{ index != currentEmployee.user.roles?.length - 1 ? ' | ' : '' }} </span>
+            </span>
+          </div>
+
         </div>
       </div>
     </VLoader>
@@ -494,10 +544,15 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <h3>{{ t('employee.details.main_details') }}</h3>
                   </div>
                   <div class="buttons">
-                    <VButton @click.prevent="onOpen" color="dark">
+                    <VButton v-permission="Permissions.EMPLOYEE_EDIT" @click.prevent="onOpen" color="dark">
                       {{ t('employee.table.modal_title.status') }}
                     </VButton>
-                    <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditMainInfo" />
+                    <VButton v-permission="Permissions.RESET_PASSWORD" @click.prevent="openResetPasswordConfirmation"
+                      class="mr-0" color="dark">
+                      {{ t('employee.details.reset_password_button') }}
+                    </VButton>
+                    <VIconButton v-permission="Permissions.EMPLOYEE_EDIT" size="small" icon="feather:edit-3" tabindex="0"
+                      @click="onClickEditMainInfo" />
                   </div>
                 </div>
 
@@ -649,8 +704,9 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                               </div>
                             </div>
                             <div>
-                              <VIconButton v-if="!editEmployeeNumberTrigger" class="mb-3 mx-2" icon="feather:edit-3"
-                                tabindex="0" @click="editEmployeeNumberTrigger = true" />
+                              <VIconButton v-permission="Permissions.EMPLOYEE_EDIT" v-if="!editEmployeeNumberTrigger"
+                                class="mb-3 mx-2" icon="feather:edit-3" tabindex="0"
+                                @click="editEmployeeNumberTrigger = true" />
                               <VIconButton :loading="updateLoading" v-if="editEmployeeNumberTrigger" class="mx-2"
                                 icon="feather:x" tabindex="0" @click="editEmployeeNumberTrigger = false" />
                               <VIconButton :loading="updateLoading" type="submit" v-if="editEmployeeNumberTrigger"
@@ -676,7 +732,8 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                   <div class="title-wrap">
                     <h3>{{ t('employee.details.services') }}</h3>
                   </div>
-                  <VIconButton size="small" icon="feather:edit-3" tabindex="0" @click="onClickEditServices" />
+                  <VIconButton v-permission="Permissions.SERVICE_PROVIDER_EDIT" size="small" icon="feather:edit-3"
+                    tabindex="0" @click="onClickEditServices" />
                 </div>
                 <div v-if="currentEmployee.services.length == 0" class="project-features">
                   <div class="project-feature">
@@ -731,7 +788,7 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <h4>{{ t('employee.details.tabs_content_placeholder.files') }}</h4>
                   </div>
                 </div>
-                <div class="project-files project-section">
+                <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
                   <h4>{{ t('employee.details.upload_file') }}</h4>
                   <div class="is-flex is-justify-content-space-between">
                     <VField class="mr-6" grouped>
@@ -874,6 +931,19 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
       </VLoader>
       <VLoader size="small" :active="uploadLoading">
         <VButton color="primary" raised @click="UploadProfilePicture">{{ t('modal.buttons.update') }}</VButton>
+      </VLoader>
+    </template>
+  </VModal>
+  <VModal :title="t('employee.details.reset_password_confirm_popup.title')" :open="resetPasswordPopup" actions="center"
+    @close="resetPasswordPopup = false">
+    <template #content>
+      <VPlaceholderSection :title="t('employee.details.reset_password_confirm_popup.confirmation')"
+        :subtitle="t('employee.details.reset_password_confirm_popup.caution')" />
+    </template>
+    <template #action="{ close }">
+      <VLoader size="small" :active="authStore.loading">
+        <VButton color="primary" raised @click="onSubmitResetPassword">{{ t('modal.buttons.confirm') }}
+        </VButton>
       </VLoader>
     </template>
   </VModal>

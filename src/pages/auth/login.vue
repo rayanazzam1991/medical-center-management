@@ -12,6 +12,7 @@ import { useI18n } from "vue-i18n";
 import { Notyf } from 'notyf'
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
 import { defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
+import { getEmployeeByUserId } from '/@src/services/Employee/employeeService'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -26,6 +27,7 @@ const userAuth = useAuth();
 
 
 onBeforeMount(() => {
+  
   if (userAuth.isLoggedIn) {
     router.push({
       name: "/dashboard/"
@@ -42,6 +44,7 @@ const handleLogin = async () => {
       const loggedUser = await signIn(signRequest.value);
       const { settings } = await getSettings();
       const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter);
+      const { loggedEmployee } = await getEmployeeByUserId(loggedUser.id);
 
       if (userAuth.isLoggedIn) {
 
@@ -70,7 +73,7 @@ const handleLogin = async () => {
 }
 
 useHead({
-  title: 'Auth Login - Vuero',
+  title: t('auth.login_title'),
 })
 </script>
 

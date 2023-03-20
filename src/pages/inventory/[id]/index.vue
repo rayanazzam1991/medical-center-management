@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -158,5 +169,5 @@ const columns = {
                 }) }}</h6>
 
         <VPlaceloadText v-if="itemStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
-</VFlexTableWrapper>
+    </VFlexTableWrapper>
 </template>

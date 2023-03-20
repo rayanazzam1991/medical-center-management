@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { ClientsCashReceiptsSearchFilter, defaultClientsCashReceiptsSearchFilter } from "/@src/models/Accounting/Transaction/record"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
   props: {
@@ -65,7 +65,7 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
     }
 
-    return { t, resetFilter, search, default_per_page, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
+    return { t, resetFilter, search, default_per_page,Permissions, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
   },
 
 
@@ -112,7 +112,7 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton class="" to="/transaction/customer-cash-receipt/add" color="primary"> {{
+                <VButton v-permission="Permissions.TRANSACTION_CREATE" class="" to="/transaction/customer-cash-receipt/add" color="primary"> {{
                   t('customer_cash_receipt.add_customer_cash_receipts_button') }}
                 </VButton>
               </VControl>

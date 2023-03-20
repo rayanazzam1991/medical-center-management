@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "contractor_show"
+        ]
+    }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import { useNotyf } from "/@src/composable/useNotyf"
@@ -392,8 +403,7 @@ const RemoveProfilePicture = async () => {
 
             <div class="profile-header has-text-centered">
                 <VAvatar v-if="contractorProfilePicture.id == undefined" size="xl"
-                    :picture="MediaConsts.getAvatarIcon(currentContractor.user.gender)" edit
-                    @edit="editProfilePicture" />
+                    :picture="MediaConsts.getAvatarIcon(currentContractor.user.gender)" edit @edit="editProfilePicture" />
                 <VAvatar v-else size="xl" :picture="contractorProfilePicture.relative_path" edit
                     @edit="editProfilePicture" />
 
@@ -423,14 +433,13 @@ const RemoveProfilePicture = async () => {
                     <div class="tabs tabs-width">
                         <ul>
                             <li :class="[tab === 'Details' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'Details'"
-                                    @click="tab = 'Details'"><span>{{ t('contractor.details.tabs.details') }}</span></a>
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
+                                    t('contractor.details.tabs.details') }}</span></a>
                             </li>
                             <li :class="[tab === 'Services' && 'is-active']">
-                                <a tabindex="0" @keydown.space.prevent="tab = 'Services'"
-                                    @click="tab = 'Services'"><span>{{
-                                        t('contractor.details.tabs.services')
-                                    }}</span></a>
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
+                                    t('contractor.details.tabs.services')
+                                }}</span></a>
                             </li>
                             <li :class="[tab === 'Files' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
@@ -466,7 +475,7 @@ const RemoveProfilePicture = async () => {
                                 <div class="project-features">
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-user"></i>
-                                        <h4>{{ t('contractor.details.name', { title: viewWrapper.pageTitle })}}</h4>
+                                        <h4>{{ t('contractor.details.name', { title: viewWrapper.pageTitle }) }}</h4>
                                         <p>
                                             {{ currentContractor.user.first_name }} {{
                                                 currentContractor.user.last_name
@@ -475,7 +484,7 @@ const RemoveProfilePicture = async () => {
                                     </div>
                                     <div class="project-feature">
                                         <i class="fas fa-medal" aria-hidden="true"></i>
-                                        <h4>{{ t('contractor.details.speciality', { title: viewWrapper.pageTitle })}}
+                                        <h4>{{ t('contractor.details.speciality', { title: viewWrapper.pageTitle }) }}
                                         </h4>
                                         <p>
                                             {{ currentContractor.speciality.name }}
@@ -486,37 +495,37 @@ const RemoveProfilePicture = async () => {
                                             :class="currentContractor.user.gender == 'Male' ? 'lnir lnir-male' : 'lnir lnir-female'"></i>
                                         <h4>{{ t('contractor.details.gender') }}</h4>
                                         <p>
-                                            {{ t(`gender.${currentContractor.user.gender.toLowerCase() }`) }}.
+                                            {{ t(`gender.${currentContractor.user.gender.toLowerCase()}`) }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-calendar"></i>
-                                        <h4>{{t('contractor.details.birth_date')}}</h4>
+                                        <h4>{{ t('contractor.details.birth_date') }}</h4>
                                         <p>
                                             {{ currentContractor.user.birth_date }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="lnil lnil-phone"></i>
-                                        <h4>{{t('contractor.details.phone_number')}}</h4>
+                                        <h4>{{ t('contractor.details.phone_number') }}</h4>
                                         <p> {{ currentContractor.user.phone_number }}.
                                         </p>
                                     </div>
                                     <div class="project-feature">
                                         <i aria-hidden="true" class="fas fa-percentage"></i>
-                                        <h4>{{t('contractor.details.payment_percentage')}}</h4>
+                                        <h4>{{ t('contractor.details.payment_percentage') }}</h4>
                                         <p> {{ currentContractor.payment_percentage }}%
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="project-files">
-                                    <h4>{{t('contractor.details.more_info')}}</h4>
+                                    <h4>{{ t('contractor.details.more_info') }}</h4>
                                     <div class="columns is-multiline">
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.starting_date')}}</span>
+                                                    <span>{{ t('contractor.details.starting_date') }}</span>
                                                     <span>
                                                         {{ currentContractor.starting_date }}
                                                     </span>
@@ -527,7 +536,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.end_date')}}</span>
+                                                    <span>{{ t('contractor.details.end_date') }}</span>
                                                     <span>
                                                         {{ currentContractor.end_date }}
                                                     </span>
@@ -538,7 +547,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.department')}}</span>
+                                                    <span>{{ t('contractor.details.department') }}</span>
                                                     <span>
                                                         {{ currentContractor?.user?.room?.department?.name }}
                                                     </span>
@@ -548,7 +557,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.room_number')}}</span>
+                                                    <span>{{ t('contractor.details.room_number') }}</span>
                                                     <span>
                                                         {{ currentContractor?.user?.room?.number }}
                                                     </span>
@@ -559,7 +568,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-12">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.address')}}</span>
+                                                    <span>{{ t('contractor.details.address') }}</span>
                                                     <span>
                                                         {{ currentContractor.user.address }}
                                                     </span>
@@ -579,7 +588,7 @@ const RemoveProfilePicture = async () => {
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>{{t('contractor.details.service')}}</h3>
+                                        <h3>{{ t('contractor.details.service') }}</h3>
                                     </div>
 
                                     <VIconButton size="small" icon="feather:edit-3" tabindex="0"
@@ -590,12 +599,16 @@ const RemoveProfilePicture = async () => {
                                     <div :key="service.id" v-for="service in currentContractor.services"
                                         class="project-feature">
                                         <h4>{{ service.name }}</h4>
-                                        <p class="has-text-centered">{{t('contractor.details.price',{title
-                                        :viewWrapper.pageTitle })}}:
+                                        <p class="has-text-centered">{{ t('contractor.details.price', {
+                                            title
+                                                : viewWrapper.pageTitle
+                                        }) }}:
                                             <span class="has-text-primary">{{ service.price }}</span>
                                         </p>
-                                        <p class="has-text-centered">{{t('contractor.details.service_ammount',{title
-                                        :viewWrapper.pageTitle })}}:
+                                        <p class="has-text-centered">{{ t('contractor.details.service_ammount', {
+                                            title
+                                                : viewWrapper.pageTitle
+                                        }) }}:
                                             <span class="has-text-primary">{{ service.contractor_service_amount
                                             }}</span>
                                         </p>
@@ -619,7 +632,7 @@ const RemoveProfilePicture = async () => {
                             <div class="project-details-card">
                                 <div class="card-head">
                                     <div class="title-wrap">
-                                        <h3>{{t('contractor.details.file')}}</h3>
+                                        <h3>{{ t('contractor.details.file') }}</h3>
                                     </div>
 
                                 </div>
@@ -633,7 +646,7 @@ const RemoveProfilePicture = async () => {
 
 
                                 <div class="project-files project-section">
-                                    <h4>{{t('contractor.details.upload_file')}}</h4>
+                                    <h4>{{ t('contractor.details.upload_file') }}</h4>
                                     <div class="is-flex is-justify-content-space-between ">
                                         <VField class="mr-6" grouped>
                                             <VControl>
@@ -645,10 +658,10 @@ const RemoveProfilePicture = async () => {
                                                                 <i class="fas fa-cloud-upload-alt"></i>
                                                             </span>
                                                             <span class="file-label">
-                                                                {{t('images.image_name_placeholder')}}</span>
+                                                                {{ t('images.image_name_placeholder') }}</span>
                                                         </span>
                                                         <span class="file-name light-text"> {{ filesToUpload?.name ??
-                                                        t('images.image_select_file')
+                                                            t('images.image_select_file')
                                                         }}
                                                         </span>
                                                     </label>
@@ -658,7 +671,7 @@ const RemoveProfilePicture = async () => {
                                         <VLoader size="small" :active="uploadLoading">
                                             <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
                                                 icon="lnir lnir-add-files rem-100" light dark-outlined>
-                                                {{t('contractor.details.upload')}}
+                                                {{ t('contractor.details.upload') }}
                                             </VButton>
                                         </VLoader>
                                     </div>
@@ -667,31 +680,30 @@ const RemoveProfilePicture = async () => {
                                 </div>
                                 <div v-if="contractorFiles.length != 0" class="project-files project-section">
                                     <div>
-                                        <h4>{{t('contractor.details.tabs.files')}}</h4>
+                                        <h4>{{ t('contractor.details.tabs.files') }}</h4>
                                         <div class="columns is-multiline">
-                                            <div v-for="(file , index) in contractorFiles" class="column is-6">
+                                            <div v-for="(file, index) in contractorFiles" class="column is-6">
                                                 <div class="file-box is-flex is-justify-content-space-between">
                                                     <div class="file-box">
 
-                                                        <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')"
-                                                            alt="" />
+                                                        <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
                                                         <div class="meta">
-                                                            <span class="file-link"> <a target="_blank"
-                                                                    class="file-link" :href="file.relative_path">
+                                                            <span class="file-link"> <a target="_blank" class="file-link"
+                                                                    :href="file.relative_path">
                                                                     {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
                                                             </span>
                                                             <span>
                                                                 {{ file.size != undefined ? (file.size / (1024 *
-                                                                1024)).toFixed(2) :
-                                                                'Unknown'
+                                                                    1024)).toFixed(2) :
+                                                                    'Unknown'
                                                                 }} {{ file.size != undefined ? t('images.megabyte') : ''
-                                                                }}
+}}
                                                                 <i aria-hidden="true" class="fas fa-circle"></i> {{
-                                                                file.created_at
+                                                                    file.created_at
                                                                 }}
                                                                 <i aria-hidden="true" class="fas fa-circle"></i>
-                                                                {{t('images.by')}} {{ file.uploaded_by?.first_name }}{{
-                                                                file.uploaded_by?.last_name }}
+                                                                {{ t('images.by') }} {{ file.uploaded_by?.first_name }}{{
+                                                                    file.uploaded_by?.last_name }}
 
                                                             </span>
                                                         </div>
@@ -727,12 +739,12 @@ const RemoveProfilePicture = async () => {
                                                     {{ WalletConsts.showStatusName(currentContractor?.wallet.status) }}
                                                 </VTag>
                                             </span>
-                                            {{t('contractor.details.wallet')}}
+                                            {{ t('contractor.details.wallet') }}
 
                                         </h3>
                                     </div>
                                     <div class="buttons">
-                                        <VButton color="dark" @click="onClickCashOut"> {{t('modal.buttons.cash_out')}}
+                                        <VButton color="dark" @click="onClickCashOut"> {{ t('modal.buttons.cash_out') }}
                                         </VButton>
                                     </div>
 
@@ -742,7 +754,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.amount')}}</span>
+                                                    <span>{{ t('contractor.details.amount') }}</span>
                                                     <span>
                                                         {{ currentContractor?.wallet?.amount }}
                                                     </span>
@@ -753,7 +765,7 @@ const RemoveProfilePicture = async () => {
                                         <div class="column is-6">
                                             <div class="file-box">
                                                 <div class="meta">
-                                                    <span>{{t('contractor.details.created_at')}}</span>
+                                                    <span>{{ t('contractor.details.created_at') }}</span>
                                                     <span>
                                                         {{ currentContractor?.wallet?.created_at }}
                                                     </span>
@@ -783,12 +795,12 @@ const RemoveProfilePicture = async () => {
                     <div class="columns is-multiline">
                         <div class="column is-12">
                             <VField class="column " id="user_status_id">
-                                <VLabel>{{t('contractor.details.status',{title :viewWrapper.pageTitle })}}</VLabel>
+                                <VLabel>{{ t('contractor.details.status', { title: viewWrapper.pageTitle }) }}</VLabel>
                                 <VControl>
                                     <VSelect v-if="currentContractor.user.status" v-model="changeStatus">
-                                        <VOption value="">{{t('contractor.details.user_status')}}</VOption>
+                                        <VOption value="">{{ t('contractor.details.user_status') }}</VOption>
                                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                        status.name
+                                            status.name
                                         }}
                                         </VOption>
                                     </VSelect>
@@ -816,8 +828,8 @@ const RemoveProfilePicture = async () => {
             </VLoader>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.profile_picture')"
-        :open="updateProfilePicturePopup" actions="center" @close="updateProfilePicturePopup = false">
+    <VModal :key="keyIncrement" :title="t('contractor.table.modal_title.profile_picture')" :open="updateProfilePicturePopup"
+        actions="center" @close="updateProfilePicturePopup = false">
         <template #content>
             <VField class="is-flex is-justify-content-center">
                 <VControl>
@@ -849,7 +861,6 @@ const RemoveProfilePicture = async () => {
             </VLoader>
         </template>
     </VModal>
-
 </template>
 
 <style  lang="scss">
@@ -887,6 +898,4 @@ const RemoveProfilePicture = async () => {
     color: var(--primary) !important;
 
 }
-
-
 </style>

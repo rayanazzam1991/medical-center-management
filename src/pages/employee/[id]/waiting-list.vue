@@ -1,17 +1,32 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "show_waiting_list_serve_client"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
 import { useNotyf } from '/@src/composable/useNotyf';
+import { Employee } from '/@src/models/Employee/employee';
 import { defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { WaitingList, defaultWaitingList, TicketServicesNotesHelper } from '/@src/models/Sales/WaitingList/waitingList';
 import { moveTicketToNextWaitingList } from '/@src/services/Sales/Ticket/ticketService';
 import { serveTicketService } from '/@src/services/Sales/TicketService/ticketServiceService';
 import { getWaitingListByProvider, serveNextTicketInProviderWaitingList } from '/@src/services/Sales/WaitingList/waitingListService';
+import { useEmployee } from '/@src/stores/Employee/employeeStore';
 import { useTicketService } from '/@src/stores/Sales/TicketService/ticketServiceStore';
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 
@@ -35,15 +50,24 @@ const selectedServeServiceId = ref(0)
 const serveServiceConfirmationPopup = ref(false)
 const intialLoading = ref(false)
 const employeeName = ref('')
+const loggedEmployee = ref<Employee>()
+const employeeStore = useEmployee()
+loggedEmployee.value = employeeStore.getEmployee()
+
 // @ts-ignore
 employeeId.value = route.params.id as number ?? 0
 onMounted(async () => {
-    intialLoading.value = true
-    const { waiting_list } = await getWaitingListByProvider(employeeId.value)
-    employeeWaitingList.value = waiting_list
-    employeeName.value = employeeWaitingList.value.provider.user.first_name + ' ' + employeeWaitingList.value.provider.user.last_name
-    serveingServiceSetup()
-    intialLoading.value = false
+    if (employeeId.value != loggedEmployee.value?.id && !checkPermission(Permissions.SHOW_ALL_WAITING_LISTS)) {
+        notif.error({ message: t('toast.error.cannot_access_waiting_list'), duration: 4000 })
+    } else {
+        intialLoading.value = true
+        const { waiting_list } = await getWaitingListByProvider(employeeId.value)
+        employeeWaitingList.value = waiting_list
+        employeeName.value = employeeWaitingList.value.provider.user.first_name + ' ' + employeeWaitingList.value.provider.user.last_name
+        serveingServiceSetup()
+        intialLoading.value = false
+    }
+
 });
 
 const serveNext = async () => {
@@ -99,7 +123,6 @@ const serveingServiceSetup = () => {
     } else {
         isThereServingTicket.value = false
     }
-    console.log(isThereServingTicket.value)
 
 }
 
@@ -229,7 +252,8 @@ const serveConfirmation = (requestedServiceId: number) => {
                                     <p> {{ TicketServiceConsts.getStatusName(requested_service.status) }}</p>
                                 </div>
                                 <div class="service-details column is-1">
-                                    <VButton @click="serveConfirmation(requested_service.id)" color="primary" raised
+                                    <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
+                                        @click="serveConfirmation(requested_service.id)" color="primary" raised
                                         v-if="requested_service.provider.id == employeeId && requested_service.status == TicketServiceConsts.NOT_SERVED">
                                         {{ t('employee.waiting_list.make_served') }}
                                     </VButton>
@@ -265,10 +289,12 @@ const serveConfirmation = (requestedServiceId: number) => {
                 </div>
                 <div class="ticket-footer">
                     <div class="ticket-footer-inner">
-                        <VButton :loading="waitingListStore.loading" @click="ticketServingDone" color="primary" raised
+                        <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
+                            :loading="waitingListStore.loading" @click="ticketServingDone" color="primary" raised
                             v-if="isThereServingTicket"> {{
                                 t(`employee.waiting_list.done`) }} </VButton>
-                        <VButton :loading="waitingListStore.loading" @click="serveNext" color="primary" raised v-else
+                        <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
+                            :loading="waitingListStore.loading" @click="serveNext" color="primary" raised v-else
                             :disabled="employeeWaitingList.waiting_list.length == 0">
                             {{ t('employee.waiting_list.serve_next') }}
                         </VButton>

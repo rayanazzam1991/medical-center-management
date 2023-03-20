@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "deliver_salary_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -12,6 +23,7 @@ import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/cur
 import { getDeliveringSalariesList, moveSalariesToOnholdList, paySalaryService } from '/@src/services/HR/Payroll/Salary/salaryService';
 import { useSalary } from '/@src/stores/HR/Payoll/Salary/salaryStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
@@ -123,6 +135,7 @@ const columns = {
 
         renderRow: (row: any) =>
             h(DeliverSalariesDropDown, {
+                paySalaryPermission: Permissions.SALARY_PAY,
                 onClickPay: async () => {
                     await paySalary(row?.id)
                 },

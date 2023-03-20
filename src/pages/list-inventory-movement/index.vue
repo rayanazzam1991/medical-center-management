@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "inventory_item_history_list"
+    ]
+  }
+}
+</route>
+  
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';

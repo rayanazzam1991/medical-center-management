@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "transaction_create"
+    ]
+  }
+}
+</route>
+
 <script setup lang="ts">
 import { getCurrentInstance } from 'vue'
 import { toFormValidator } from '@vee-validate/zod';

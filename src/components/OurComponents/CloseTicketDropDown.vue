@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { checkPermission } from '/@src/composable/checkPermission';
+export interface TicketDropDownProps {
+  viewPermission: string,
+  viewCurrentServiceCardPermission: string,
+  editPermission: string,
+  closeTicketPermission: string,
+}
+const props = withDefaults(defineProps<TicketDropDownProps>(), {
+  viewPermission: undefined,
+})
+const viewPermission = props.viewPermission
 
 const { t } = useI18n()
 const emits = defineEmits<{
@@ -13,7 +24,7 @@ const emits = defineEmits<{
 <template>
   <VDropdown icon="feather:more-vertical" class="is-pushed-mobile" spaced right>
     <template #content="{ close }">
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="viewPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('view')
           close()
@@ -26,12 +37,13 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.view') }}</span>
         </div>
       </a>
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-        () => {
-          emits('viewCurrentServiceCard')
-          close()
-        }
-      ">
+      <a v-permission="viewCurrentServiceCardPermission" role="menuitem" href="#" class="dropdown-item is-media"
+        @click.prevent="
+          () => {
+            emits('viewCurrentServiceCard')
+            close()
+          }
+        ">
         <div class="icon">
           <i class="fas fa-ticket-alt" aria-hidden="true"></i>
 
@@ -41,7 +53,7 @@ const emits = defineEmits<{
         </div>
       </a>
 
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="editPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('edit')
           close()
@@ -55,7 +67,7 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.edit') }}</span>
         </div>
       </a>
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="closeTicketPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('closeTicket')
           close()
@@ -66,6 +78,16 @@ const emits = defineEmits<{
         </div>
         <div class="meta">
           <span>{{ t('drop_down.close_ticket') }}</span>
+        </div>
+      </a>
+      <a v-if="!checkPermission(viewPermission) && !checkPermission(viewCurrentServiceCardPermission) &&
+        !checkPermission(editPermission) && !checkPermission(closeTicketPermission)" role="menuitem"
+        class="dropdown-item is-media">
+        <div class=" icon">
+          <i class="fas fa-window-close" aria-hidden="true"></i>
+        </div>
+        <div class="meta">
+          <span>{{ t('drop_down.no_actions') }}</span>
         </div>
       </a>
 
