@@ -74,6 +74,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     data.value.user.city_id = 0
     data.value.user.room_id = 0
     data.value.user.user_status_id = 0
+    data.value.user.roles = []
     dataUpdate.value.basic_salary = 0
     dataUpdate.value.end_date = ''
     dataUpdate.value.nationality_id = 0
@@ -86,6 +87,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     dataUpdate.value.user.phone_number = ''
     dataUpdate.value.user.city_id = 0
     dataUpdate.value.user.room_id = 0
+    dataUpdate.value.user.roles = []
     dataUpdate.value.user.user_status_id = 0
     employeeServicesForm.value.splice(0, employeeServicesForm.value.length)
     originalServices.value.splice(0, originalServices.value.length)

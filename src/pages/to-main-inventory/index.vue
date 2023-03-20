@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_create"
+        ]
+    }
+}
+</route>
+    
 <script setup  lang="ts">
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
@@ -155,8 +166,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 </VField>
                             </div>
                             <div class="column is-6">
-                                <label
-                                    class="lable required">{{ t('inventoryItem.toMainInventoryForm.to_inventory') }}</label>
+                                <label class="lable required">{{ t('inventoryItem.toMainInventoryForm.to_inventory')
+                                }}</label>
                                 <input class="input" disabled type="text" :placeholder="mainInventory?.name" />
                             </div>
                         </div>

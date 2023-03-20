@@ -3,14 +3,18 @@ import { checkPermission } from '../composable/checkPermission'
 
 const onUpdate: DirectiveHook = (el: HTMLElement, bindings) => {
     const value = bindings.value
-    if (!checkPermission(value)) {
-        el.style.display = 'none'
+    if (value) {
+        if (!checkPermission(value)) {
+            el.style.display = 'none'
+        }
     }
 }
 const onMounted: DirectiveHook = (el: HTMLElement, bindings) => {
     const value = bindings.value
-    if (!checkPermission(value)) {
-        el.style.display = 'none'
+    if (value) {
+        if (!checkPermission(value)) {
+            el.style.display = 'none'
+        }
     }
 }
 

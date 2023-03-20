@@ -2,8 +2,8 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": [
-      "All"
+    "permissions": [
+      "city_access"
     ]
   }
 }

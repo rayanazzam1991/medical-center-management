@@ -8,6 +8,7 @@ import { CityConsts } from '/@src/models/Others/City/city'
 import { useCity } from '/@src/stores/Others/City/cityStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -44,7 +45,7 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/city'" @onSubmit="toEdit"
-        :isLoading="cityStore?.loading" />
+        :permission="Permissions.CITY_EDIT" :isLoading="cityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -52,11 +53,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('city.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('city.details.name', { title: viewWrapper.pageTitle }) }}:</h4>
                             <span>{{ currentCity.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('city.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('city.details.status', { title: viewWrapper.pageTitle }) }}:</h4>
                             <span>
                                 <VTag :color="currentCity.status === CityConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ CityConsts.showStatusName(currentCity.status) }}</VTag>
@@ -68,8 +69,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

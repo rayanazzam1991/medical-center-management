@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n"
 import { defaultDeliveringSalariesSearchFilter } from "/@src/models/HR/Payroll/Salary/salary"
 import { defaultCitySearchFilter, CityConsts } from "/@src/models/Others/City/city"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -42,7 +42,7 @@ export default defineComponent({
             context.emit('moveToOnhold')
         }
 
-        return {t ,moveToOnhold , search, default_per_page, perPage, pagination, CityConsts }
+        return {t,Permissions ,moveToOnhold , search, default_per_page, perPage, pagination, CityConsts }
     },
 
 
@@ -85,7 +85,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton @click="moveToOnhold" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.SALARY_MOVE_TO_ONHOLD" @click="moveToOnhold" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_history_create"
+        ]
+    }
+}
+</route>
+    
 <script setup  lang="ts">
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
@@ -174,7 +185,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                         <div class="select">
                                             <select @change="getSubCategoryByCategroy" v-if="currentwithdrawQuantity"
                                                 v-model="selectedCategoryId">
-                                                <VOption :value="0">{{ t('withdraw_quantity.form.select_level_1') }}</VOption>
+                                                <VOption :value="0">{{ t('withdraw_quantity.form.select_level_1') }}
+                                                </VOption>
                                                 <VOption v-for="category in mainCategoriesList" :key="category.id"
                                                     :value="category.id">{{ category.name }}
                                                 </VOption>

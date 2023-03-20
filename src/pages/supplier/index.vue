@@ -1,7 +1,17 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "supplier_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { editSupplier, getSuppliersList } from '/@src/services/Others/Supplier/supplierService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultSupplierSearchFilter, SupplierSearchFilter, SupplierConsts, Supplier, defaultSupplier, defaultUpdateSupplier, UpdateSupplier } from '/@src/models/Others/Supplier/supplier'
@@ -13,6 +23,7 @@ import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { stringTrim } from '/@src/composable/helpers/stringHelpers'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('supplier.table.title'))
@@ -199,6 +210,9 @@ const columns = {
     label: t('supplier.table.columns.actions'),
     renderRow: (row: any) =>
       h(NoDeleteDropDown, {
+        changeStatusPermission: Permissions.SUPPLIER_EDIT,
+        editPermission: Permissions.SUPPLIER_EDIT,
+        viewPermission: Permissions.SUPPLIER_SHOW,
         onChangeStatus: () => {
           supplierChangeStatus.value = row
           newStatus.value = row.status

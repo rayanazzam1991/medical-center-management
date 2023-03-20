@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "balance_sheet_generate"
+        ]
     }
 }
 </route>
@@ -14,6 +17,6 @@ const route = useRoute()
 <template>
     <NavbarLayout>
         <RouterView :key="$route.fullPath" />
-</NavbarLayout>
+    </NavbarLayout>
 </template>
     

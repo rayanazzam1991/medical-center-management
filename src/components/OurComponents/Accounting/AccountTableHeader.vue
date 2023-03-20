@@ -2,7 +2,7 @@
 import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
 import { defaultAccountSearchFilter, AccountConsts, AccountSearchFilter } from "/@src/models/Accounting/Account/account"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
   props: {
     title: {
@@ -75,7 +75,7 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
 
     }
-    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, searchFilterPop, search, default_per_page, searchName, onOpen, keyTest, searchStatus, searchCode, perPage, pagination, AccountConsts }
+    return { t, resetFilter, popUpTrigger, resetFilter_popup, search_filter, Permissions, searchFilterPop, search, default_per_page, searchName, onOpen, keyTest, searchStatus, searchCode, perPage, pagination, AccountConsts }
   },
 })
 </script>
@@ -123,11 +123,13 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton class="ml-2" to="/account/add" color="primary">{{ button_name }}
+                <VButton v-permission="Permissions.ACCOUNT_CREATE" class="ml-2" to="/account/add" color="primary">{{
+                  button_name }}
                 </VButton>
               </VControl>
               <VControl>
-                <VButton class="" to="/account/add-cash-account" color="primary">{{ t('account.header_button2') }}
+                <VButton v-permission="Permissions.ACCOUNT_CREATE" class="" to="/account/add-cash-account"
+                  color="primary">{{ t('account.header_button2') }}
                 </VButton>
               </VControl>
             </div>

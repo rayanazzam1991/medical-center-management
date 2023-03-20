@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultSpecialitySearchFilter, SpecialityConsts } from "/@src/models/Others/Speciality/speciality"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -25,7 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -51,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SpecialityConsts }
+        return { t, Permissions, resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, SpecialityConsts }
     },
 
 
@@ -70,11 +70,12 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" :placeholder="t('speciality.search_filter.name')" />
+                                <VInput v-model="searchName" type="text"
+                                    :placeholder="t('speciality.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">{{t('speciality.search_filter.status')}}</VOption>
+                                    <VOption value="">{{ t('speciality.search_filter.status') }}</VOption>
                                     <VOption value="0">{{ SpecialityConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ SpecialityConsts.showStatusName(1) }}</VOption>
                                 </VSelect>
@@ -91,7 +92,7 @@ export default defineComponent({
 
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page *
-                                                0.1
+                                            0.1
                                         }}
                                         </VOption>
                                         <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
@@ -106,7 +107,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/speciality/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.POSITION_CREATE" class="" to="/speciality/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

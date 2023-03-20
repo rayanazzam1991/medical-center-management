@@ -1,14 +1,26 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "customer_group_list"
+    ]
+  }
+}
+</route>
+  
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue';
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCustomerGroupSearchFilter, CustomerGroupSearchFilter, CustomerGroupConsts, CustomerGroup } from '/@src/models/Others/CustomerGroup/customerGroup';
 import { getCustomerGroupsList } from '/@src/services/Others/CustomerGroup/customerGroupService';
 import { useCustomerGroup } from '/@src/stores/Others/CustomerGroup/customerGroupStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 
@@ -117,6 +129,8 @@ const columns = {
 
     renderRow: (row: any) =>
       h(ViewEditDropDown, {
+        editPermission: Permissions.CUSTOMER_GROUP_EDIT,
+        viewPermission: Permissions.CUSTOMER_GROUP_SHOW,
         onEdit: () => {
           router.push({ path: `/customer-group/${row?.id}/edit` })
         },
@@ -161,18 +175,18 @@ const columns = {
     <h6 class="pt-2 is-size-7" v-if="customerGroupsList.length != 0 && !customerGroupStore?.loading">
 
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="customerGroupStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-
 </template>
 

@@ -7,7 +7,7 @@ import { ServiceConsts } from '/@src/models/Others/Service/service'
 import { useService } from '/@src/stores/Others/Service/serviceStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -44,7 +44,7 @@ const toEdit = () => {
 
 <template>
   <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/service'" @onSubmit="toEdit"
-    :isLoading="serviceStore?.loading" />
+    :permission="Permissions.SERVICE_EDIT" :isLoading="serviceStore?.loading" />
   <section class="form-layout">
     <div class="form-outer">
       <div class="form-body">

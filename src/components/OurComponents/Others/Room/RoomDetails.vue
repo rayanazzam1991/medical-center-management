@@ -7,7 +7,7 @@ import { RoomConsts } from "/@src/models/Others/Room/room"
 import { useRoom } from "/@src/stores/Others/Room/roomStore"
 import sleep from "/@src/utils/sleep"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -43,7 +43,7 @@ const toEdit = () => {
 </script>
 
 <template>
-    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit"
+    <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/room'" @onSubmit="toEdit"   :permission="Permissions.ROOM_EDIT"
         :isLoading="roomStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">

@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "contractor_create"
+        ]
     }
 }
 </route>
@@ -58,8 +61,9 @@ useHead({
                 </div>
             </div>
         </form>
-</MinimalLayout>
+    </MinimalLayout>
 </template>
 
-<style scoped lang="scss">@import '/@src/scss/Styles/wizardForm.scss';
+<style scoped lang="scss">
+@import '/@src/scss/Styles/wizardForm.scss';
 </style>

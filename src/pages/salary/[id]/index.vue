@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "salary_show"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { useI18n } from 'vue-i18n';

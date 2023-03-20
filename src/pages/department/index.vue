@@ -1,5 +1,15 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "department_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useHead } from '@vueuse/head'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
@@ -12,6 +22,7 @@ import sleep from "/@src/utils/sleep"
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -117,6 +128,8 @@ const columns = {
     label: t('department.table.columns.status'),
     renderRow: (row: any) =>
       h(ViewEditDropDown, {
+        editPermission: Permissions.DEPARTMENT_EDIT,
+        viewPermission: Permissions.DEPARTMENT_SHOW,
         onEdit: () => {
           router.push({ path: `/department/${row.id}/edit` })
         },
@@ -160,19 +173,19 @@ const columns = {
     <h6 class="pt-2 is-size-7" v-if="departmentsList.length != 0 && !departmentStore?.loading">
 
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="departmentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
-
 </template>
 

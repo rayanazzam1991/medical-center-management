@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "reminder_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -9,6 +20,7 @@ import { defaultReminderSearchFilter, Reminder, ReminderSearchFilter, ReminderCo
 import { changeReminderStatus, getRemindersList } from '/@src/services/Sales/Reminder/reminderService';
 import { useReminder } from '/@src/stores/Sales/Reminder/reminderStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from "/@src/utils/sleep"
 
@@ -159,7 +171,7 @@ const columns = {
     label: t("reminder.table.columns.actions"),
     renderRow: (row: any) =>
       h(ChangeStatusDropDown, {
-
+        changeStatusPermission: Permissions.REMINDER_EDIT,
         onChangeStatus: () => {
           reminderChangeStatus.value = row
           newStatus.value = row.status

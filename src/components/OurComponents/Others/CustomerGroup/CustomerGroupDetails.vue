@@ -7,7 +7,7 @@ import { CustomerGroupConsts } from "/@src/models/Others/CustomerGroup/customerG
 import { useCustomerGroup } from "/@src/stores/Others/CustomerGroup/customerGroupStore"
 import sleep from "/@src/utils/sleep"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -44,7 +44,7 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/customer-group'" @onSubmit="toEdit"
-        :isLoading="customerGroupStore?.loading" />
+        :permission="Permissions.CUSTOMER_GROUP_EDIT" :isLoading="customerGroupStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -52,11 +52,14 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('customer_group.details.name',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('customer_group.details.name', { title: viewWrapper.pageTitle }) }}:
+                            </h4>
                             <span>{{ currentCustomerGroup.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('customer_group.details.status',{title :viewWrapper.pageTitle  })}}:</h4>
+                            <h4 class="margin-bottom">{{ t('customer_group.details.status', {
+                                title: viewWrapper.pageTitle
+                            }) }}:</h4>
                             <span>
                                 <VTag
                                     :color="currentCustomerGroup.status === CustomerGroupConsts.INACTIVE ? 'danger' : 'success'">
@@ -69,8 +72,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

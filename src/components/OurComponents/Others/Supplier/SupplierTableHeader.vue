@@ -1,8 +1,8 @@
 <script lang="ts">
-import { defaultSupplierSearchFilter ,SupplierConsts, SupplierSearchFilter} from "/@src/models/Others/Supplier/supplier"
+import { defaultSupplierSearchFilter, SupplierConsts, SupplierSearchFilter } from "/@src/models/Others/Supplier/supplier"
 import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -23,16 +23,16 @@ export default defineComponent({
 
     },
     setup(props, context) {
-      const { t } = useI18n()
-      const onOpen = () => {
+        const { t } = useI18n()
+        const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             context.emit('onOpen', searchFilterPop.value)
         }
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
         }
-      const searchFilterPop = ref(false)
-      const keyTest = ref(0)
+        const searchFilterPop = ref(false)
+        const keyTest = ref(0)
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -44,7 +44,7 @@ export default defineComponent({
             searchFilter.value = {
                 name: searchName.value,
                 status: searchStatus.value,
-                phone_number:searchPhoneNumber.value,
+                phone_number: searchPhoneNumber.value,
                 per_page: perPage.value
             }
             context.emit('search', searchFilter.value)
@@ -75,7 +75,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t , resetFilter,popUpTrigger,resetFilter_popup,search_filter,searchFilterPop, search, default_per_page, searchName,onOpen,keyTest, searchStatus,searchPhoneNumber, perPage, pagination, SupplierConsts }
+        return { t, Permissions, resetFilter, popUpTrigger, resetFilter_popup, search_filter, searchFilterPop, search, default_per_page, searchName, onOpen, keyTest, searchStatus, searchPhoneNumber, perPage, pagination, SupplierConsts }
     },
 })
 </script>
@@ -92,7 +92,7 @@ export default defineComponent({
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">{{t('supplier.search_filter.status')}}</VOption>
+                                    <VOption value="">{{ t('supplier.search_filter.status') }}</VOption>
                                     <VOption value="0">{{ SupplierConsts.getSupplierStatusName(0) }}</VOption>
                                     <VOption value="1">{{ SupplierConsts.getSupplierStatusName(1) }}</VOption>
                                     <VOption value="2">{{ SupplierConsts.getSupplierStatusName(2) }}</VOption>
@@ -101,7 +101,7 @@ export default defineComponent({
                             <VIconButton class="mr-2" type="submit" v-on:click="search" icon="feather:search" />
                             <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw"
                                 :raised="false" color="danger" />
-                                <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+                            <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
 
                         </div>
                     </div>
@@ -112,7 +112,7 @@ export default defineComponent({
 
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page *
-                                                0.1
+                                            0.1
                                         }}
                                         </VOption>
                                         <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
@@ -127,7 +127,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/supplier/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.SUPPLIER_CREATE" class="" to="/supplier/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

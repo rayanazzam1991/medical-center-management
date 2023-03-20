@@ -91,3 +91,10 @@ export async function getEmployeesAttendanceApi(
   })
   return { response }
 }
+export async function getEmployeeByUserIdApi(
+  api: AxiosInstance,
+  user_id: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`employee/getEmployeeByUserId/${user_id}`)
+  return { response }
+}

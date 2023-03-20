@@ -3,6 +3,7 @@ import { useI18n } from "vue-i18n"
 import { defaultCustomerSearchFilter, CustomerSearchFilter } from "/@src/models/CRM/Customer/customer"
 import { defaultPagination } from "/@src/utils/response"
 import { isNumber } from "/@src/composable/helpers/isNumberCheck"
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -26,7 +27,7 @@ export default defineComponent({
 
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
 
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
@@ -111,7 +112,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t , keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
+        return { t, Permissions, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
     },
 
 
@@ -130,7 +131,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" :placeholder="t('customer.search_filter.quick_search')" />
+                                <VInput v-model="quickSearchField" type="text"
+                                    :placeholder="t('customer.search_filter.quick_search')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -158,7 +160,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/customer-add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.CUSTOMER_CREATE" class="" to="/customer-add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

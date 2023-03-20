@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "employee_schedule_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import TableCellCard from '/@src/components/OurComponents/HR/Attendance/TableCellCard.vue';
@@ -434,16 +445,17 @@ const columns = {
       @update:current-page="getEmployeesSchedulePerPage" />
     <h6 class="pt-2 is-size-7" v-if="employeesScheduleList.length != 0 && !employeeStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
   <VModal :key="keyIncement" :title="t('employee_schedule.table.modal.title')" :open="tableCellPopup" actions="right"
@@ -451,7 +463,7 @@ const columns = {
     <template #content>
       <h2 class="is-size-5 has-text-primary mb-3">{{ t('employee_schedule.table.modal.day') }} {{
         t(`dates.days.${selectedCell.day_of_week.toLowerCase()
-      }`) }}</h2>
+          }`) }}</h2>
       <h2 class="is-size-5">{{ selectedEmployee.user.first_name }}
         {{ selectedEmployee.user.last_name }}</h2>
       <h4 class="mb-3"><span class=""> {{ selectedEmployee.position.name
@@ -464,7 +476,7 @@ const columns = {
         <div class="form-fieldset">
           <div class="columns is-multiline">
             <div class="column is-12">
-              <h2 class="mb-3">{{t('employee_schedule.table.modal.start_time')}}</h2>
+              <h2 class="mb-3">{{ t('employee_schedule.table.modal.start_time') }}</h2>
               <div class="columns">
                 <VField class="column is-12 ">
                   <VControl>
@@ -476,7 +488,7 @@ const columns = {
               </div>
             </div>
             <div class="column is-12">
-              <h2 class="mb-3">{{t('employee_schedule.table.modal.end_time')}}</h2>
+              <h2 class="mb-3">{{ t('employee_schedule.table.modal.end_time') }}</h2>
               <div class="columns ">
                 <VField class="column is-12">
                   <VControl>
@@ -495,14 +507,13 @@ const columns = {
     <template #action="{ close }">
       <VLoader size="small" :active="loading.delete">
         <VButton v-if="!selectedCell.is_vacation" class="mr-2" color="danger" outlined @click="deleteSchedule">
-          {{ t('employee_schedule.table.modal.make_vacation')}}</VButton>
+          {{ t('employee_schedule.table.modal.make_vacation') }}</VButton>
       </VLoader>
       <VLoader size="small" :active="loading.update">
-        <VButton color="primary" raised @click="updateSchedule"> {{ t('modal.buttons.update')}}</VButton>
+        <VButton color="primary" raised @click="updateSchedule"> {{ t('modal.buttons.update') }}</VButton>
       </VLoader>
     </template>
   </VModal>
-
 </template>
 <style  lang="scss">
 @import '@vuepic/vue-datepicker/dist/main.css';

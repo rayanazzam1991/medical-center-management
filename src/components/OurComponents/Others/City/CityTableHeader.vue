@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultCitySearchFilter, CityConsts } from "/@src/models/Others/City/city"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -25,7 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -51,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t  ,resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, CityConsts }
+        return { t, resetFilter, search, Permissions, default_per_page, searchName, searchStatus, perPage, pagination, CityConsts }
     },
 
 
@@ -74,7 +74,7 @@ export default defineComponent({
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">{{t('city.search_filter.status')}}</VOption>
+                                    <VOption value="">{{ t('city.search_filter.status') }}</VOption>
                                     <VOption value="0">{{ CityConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ CityConsts.showStatusName(1) }}</VOption>
                                 </VSelect>
@@ -91,7 +91,7 @@ export default defineComponent({
 
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page *
-                                                0.1
+                                            0.1
                                         }}
                                         </VOption>
                                         <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
@@ -106,7 +106,7 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/city/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.CITY_CREATE" class="" to="/city/add" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

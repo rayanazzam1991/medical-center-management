@@ -8,7 +8,7 @@ import { SpecialityConsts } from '/@src/models/Others/Speciality/speciality'
 import { useSpeciality } from '/@src/stores/Others/Speciality/specialityStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -45,7 +45,7 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/speciality'" @onSubmit="toEdit"
-        :isLoading="specialityStore?.loading" />
+        :permission="Permissions.SPECIALITY_EDIT" :isLoading="specialityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -53,11 +53,11 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('speciality.details.name')}}:</h4>
+                            <h4 class="margin-bottom">{{ t('speciality.details.name') }}:</h4>
                             <span>{{ currentSpeciality.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('speciality.details.status')}}:</h4>
+                            <h4 class="margin-bottom">{{ t('speciality.details.status') }}:</h4>
                             <span>
                                 <VTag
                                     :color="currentSpeciality.status === SpecialityConsts.INACTIVE ? 'danger' : 'success'">
@@ -70,8 +70,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

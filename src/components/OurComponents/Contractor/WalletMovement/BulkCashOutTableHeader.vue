@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useI18n } from 'vue-i18n'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 export default defineComponent({
     props: {
         title: {
@@ -28,7 +28,7 @@ export default defineComponent({
         const onSubmit = () => {
         context.emit('onSubmit', submited)
         }
-        return { t,disabled, title ,onSubmit}
+        return { t,disabled, title , Permissions ,onSubmit}
     },
 })
 </script>

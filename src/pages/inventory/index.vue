@@ -1,3 +1,14 @@
+<route lang="json">
+  {
+      "meta": {
+          "requiresAuth": true,
+          "permissions": [
+              "inventory_list"
+          ]
+      }
+  }
+  </route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -10,6 +21,7 @@ import { defaultInventorySearchFilter, Inventory, InventoryConsts, InventorySear
 import { useInventory } from '/@src/stores/Warehouse/Inventory/inventoryStore'
 import { getInventoriesList } from '/@src/services/Warehouse/Inventory/inventoryService'
 import ViewDropDown from '/@src/components/OurComponents/ViewDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -129,6 +141,7 @@ const columns = {
 
     renderRow: (row: any) =>
       h(ViewDropDown, {
+        viewPermission: Permissions.INVENTORY_SHOW,
         onView: () => {
           router.push({ path: `/inventory/${row?.id}` })
         },
@@ -178,5 +191,5 @@ const columns = {
         }) }}</h6>
 
     <VPlaceloadText v-if="inventoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
-</VFlexTableWrapper>
+  </VFlexTableWrapper>
 </template>

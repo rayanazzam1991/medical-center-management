@@ -7,7 +7,7 @@ import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { useNationality } from "/@src/stores/Others/Nationality/nationalityStore"
 import sleep from "/@src/utils/sleep"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -42,7 +42,7 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/nationality'" @onSubmit="toEdit"
-        :isLoading="nationalityStore?.loading" />
+        :permission="Permissions.NATIONALITY_EDIT" :isLoading="nationalityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">

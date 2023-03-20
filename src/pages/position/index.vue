@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "position_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import NoDeleteDropDown from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -14,7 +25,8 @@ import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { useI18n } from 'vue-i18n'
 import { Notyf } from 'notyf'
-const {t} = useI18n()
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('position.table.title'))
 useHead({
@@ -98,25 +110,28 @@ const columns = {
     id: {
         align: 'center',
         sortable: true,
-        label : t('position.table.columns.id')
+        label: t('position.table.columns.id')
 
     },
     name: {
         align: 'center',
         sortable: true,
-        label : t('position.table.columns.name')
+        label: t('position.table.columns.name')
 
 
     },
     description: {
         align: 'center',
         sortable: true,
-        label : t('position.table.columns.description')
+        label: t('position.table.columns.description'),
+        renderRow: (row: Position) =>
+            h('span', row?.description ?? '-'),
+
 
     },
     status: {
         align: 'center',
-        label : t('position.table.columns.status'),
+        label: t('position.table.columns.status'),
 
         renderRow: (row: any) =>
             h(
@@ -140,10 +155,13 @@ const columns = {
     },
     actions: {
         align: 'center',
-        label : t('position.table.columns.actions'),
+        label: t('position.table.columns.actions'),
 
         renderRow: (row: any) =>
             h(NoDeleteDropDown, {
+                changeStatusPermission: Permissions.POSITION_EDIT,
+                editPermission: Permissions.POSITION_EDIT,
+                viewPermission: Permissions.POSITION_SHOW,
                 onEdit: () => {
                     router.push({ path: `/position/${row.id}/edit` })
                 },
@@ -161,9 +179,8 @@ const columns = {
 </script>
 
 <template>
-    <PositionTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-        :button_name="t('position.header_button')" @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <PositionTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('position.header_button')"
+        @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
     <VFlexTableWrapper :columns="columns" :data="positionsList" @update:sort="positionSort">
 
         <VFlexTable separators clickable>
@@ -177,8 +194,7 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="positionsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitle')"
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -191,16 +207,17 @@ const columns = {
             @update:current-page="getPositionsPerPage" />
         <h6 class="pt-2 is-size-7" v-if="positionsList.length != 0 && !positionStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
         <VPlaceloadText v-if="positionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
     </VFlexTableWrapper>
@@ -215,9 +232,8 @@ const columns = {
                             <VField id="status" v-slot="{ field }">
                                 <VLabel class="required">{{ t('position.table.columns.status') }}</VLabel>
                                 <VControl>
-                                    <VRadio v-model="currentChangeStatusPosition.status"
-                                        :value="PositionConsts.INACTIVE" :label="PositionConsts.showStatusName(0)"
-                                        name="status" color="danger" />
+                                    <VRadio v-model="currentChangeStatusPosition.status" :value="PositionConsts.INACTIVE"
+                                        :label="PositionConsts.showStatusName(0)" name="status" color="danger" />
                                     <VRadio v-model="currentChangeStatusPosition.status" :value="PositionConsts.ACTIVE"
                                         :label="PositionConsts.showStatusName(1)" name="status" color="success" />
                                     <ErrorMessage class="help is-danger" name="status" />
@@ -230,10 +246,8 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusPosition()">{{ t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusPosition()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-
-
 </template>
 
