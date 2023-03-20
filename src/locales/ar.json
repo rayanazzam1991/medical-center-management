@@ -109,7 +109,8 @@
     },
     "setting": {
       "settings": "الاعدادات",
-      "edit_settings": "تعديل الاعدادات"
+      "edit_settings": "تعديل الاعدادات",
+      "activity-log": "سجل النشاط"
     },
     "user_status": {
       "user_statuses": "حالات المستخدم",
@@ -1826,6 +1827,21 @@
     "supplier_subnav": {
       "suppliers": "الموردين",
       "create_supplier": "إنشاء مورد"
+    }
+  },
+  "activityLog": {
+    "table": {
+      "title": " سجل النشاطات  ",
+      "columns": {
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "entity": "العنصر",
+        "action": "النشاط"
+      }
+    },
+    "search_filter": {
+      "class_name": "اختر عنصر",
+      "select_user": "اختر مستخدم"
     }
   },
   "unjustified_hours_rounding_options": {

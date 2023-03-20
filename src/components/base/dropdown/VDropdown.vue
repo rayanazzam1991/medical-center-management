@@ -29,37 +29,21 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    ref="dropdownElement"
-    :class="[
-      props.right && 'is-right',
-      props.up && 'is-up',
-      props.icon && 'is-dots',
-      props.modern && 'is-modern',
-      props.spaced && 'is-spaced',
-    ]"
-    class="dropdown"
-  >
+  <div ref="dropdownElement" :class="[
+    props.right && 'is-right',
+    props.up && 'is-up',
+    props.icon && 'is-dots',
+    props.modern && 'is-modern',
+    props.spaced && 'is-spaced',
+  ]" class="dropdown">
     <slot name="button" v-bind="dropdown">
-      <a
-        v-if="props.icon"
-        tabindex="0"
-        class="is-trigger dropdown-trigger"
-        aria-label="View more actions"
-        @keydown.space.prevent="dropdown.toggle"
-        @click="dropdown.toggle"
-      >
+      <a v-if="props.icon" tabindex="0" class="is-trigger dropdown-trigger" aria-label="View more actions"
+        @keydown.space.prevent="dropdown.toggle" @click="dropdown.toggle">
         <VIcon :icon="props.icon" />
       </a>
 
-      <a
-        v-else
-        tabindex="0"
-        class="is-trigger button dropdown-trigger"
-        :class="[props.color && `is-${props.color}`]"
-        @keydown.space.prevent="dropdown.toggle"
-        @click="dropdown.toggle"
-      >
+      <a v-else tabindex="0" class="is-trigger button dropdown-trigger" :class="[props.color && `is-${props.color}`]"
+        @keydown.space.prevent="dropdown.toggle" @click="dropdown.toggle">
         <span v-if="props.title">{{ props.title }}</span>
         <span :class="[!props.modern && 'base-caret', props.modern && 'base-caret']">
           <VIcon v-if="!dropdown.isOpen" icon="fa:angle-down" />
@@ -79,6 +63,7 @@ defineExpose({
 <style lang="scss">
 .dropdown {
   &.is-dots {
+
     &:hover,
     &.is-active {
       .is-trigger {
@@ -170,6 +155,7 @@ defineExpose({
       .dropdown-content {
         border: 1px solid var(--fade-grey);
         box-shadow: none;
+
       }
     }
 
@@ -404,8 +390,10 @@ defineExpose({
   }
 
   .dropdown {
+
     &.is-spaced,
     &.is-dots {
+
       &:hover,
       &.is-active {
         .is-trigger {
@@ -441,6 +429,7 @@ defineExpose({
           .notification-list {
             li {
               .notification-item {
+
                 &:hover,
                 *:hover {
                   background: var(--dark-sidebar) !important;

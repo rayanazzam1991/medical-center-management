@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
-import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi } from "/@src/utils/api/Others/User"
+import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi, getUsersWithoutCustomerApi } from "/@src/utils/api/Others/User"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -160,6 +160,28 @@ export const useUser = defineStore('user', () => {
       loading.value = false
     }
   }
+  async function getUsersWithoutCustomerStore(searchFilter: UserSearchFilter) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getUsersWithoutCustomerApi(api, searchFilter)
+      users.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
   async function phoneExistsCheckStore(phone_number: string) {
     if (loading.value) return
 
@@ -195,7 +217,8 @@ export const useUser = defineStore('user', () => {
     getUserStore,
     getUsersStore,
     phoneExistsCheckStore,
-    changeUserStatusStore
+    changeUserStatusStore,
+    getUsersWithoutCustomerStore
   } as const
 })
 

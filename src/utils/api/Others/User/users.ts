@@ -52,6 +52,18 @@ export async function getUsersApi(
   })
   return { response }
 }
+
+
+
+export async function getUsersWithoutCustomerApi(
+  api: AxiosInstance,
+  searchFilter: UserSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('user/getUserListWithoutCustomer', {
+    params: searchFilter,
+  })
+  return { response }
+}
 export async function phoneExistsCheckApi(
   api: AxiosInstance,
   phone_number: string

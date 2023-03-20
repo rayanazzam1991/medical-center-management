@@ -94,8 +94,8 @@ watch(
           <AnimatedLogo width="38px" height="38px" />
         </RouterLink>
 
-      <div class="brand-end">
-        <NotificationsMobileDropdown />
+        <div class="brand-end">
+          <NotificationsMobileDropdown />
           <UserProfileDropdown />
         </div>
       </template>
@@ -135,8 +135,8 @@ watch(
         </li>
       </template>
 
-      <template #bottom-links>
-        <li>
+    <template #bottom-links>
+      <li>
         <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
           <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
         </a>
@@ -146,8 +146,8 @@ watch(
           <i aria-hidden="true" class="iconify" data-icon="feather:settings"></i>
         </a>
       </li>
-    </template>
-  </MobileSidebar>
+      </template>
+    </MobileSidebar>
 
     <!-- Mobile subsidebar links -->
     <Transition name="slide-x">
@@ -175,12 +175,8 @@ watch(
       <!-- Custom navbar toolbar -->
       <template #toolbar>
         <Toolbar class="desktop-toolbar">
-          <!-- <ToolbarNotification /> -->
+          <ActivityLogToolbar />
 
-          <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                                                                                                                                                              @click="panels.setActive('activity')">
-                                                                                                                                                                              <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                                                                                                                                            </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -200,6 +196,7 @@ watch(
               route.path == ('/service') ||
               route.path.startsWith('/room') ||
               route.path.startsWith('/settings') ||
+              route.path.startsWith('/activity-log') ||
               route.path.startsWith('/supplier')
             ) && 'is-active'
           ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('others')"
@@ -216,24 +213,24 @@ watch(
               route.path.startsWith('/customer-group') ||
               route.path.startsWith('/social-media'))
             && 'is-active'
-          ]" class="centered-link centered-link-toggle" tabindex="0"
-            @keydown.space.prevent="toggleSubnav('CRM')" @click="toggleSubnav('CRM')">
+          ]" class="centered-link centered-link-toggle" tabindex="0" @keydown.space.prevent="toggleSubnav('CRM')"
+            @click="toggleSubnav('CRM')">
             <i aria-hidden="true" class="iconify" data-icon="feather:user"></i>
             <span>{{ t("navbar.crm") }}</span>
           </a>
           <!-- <a :class="[((activeSubnav === 'contractor') ||
-                                                                                                                                                    route.path.startsWith('/contractor') ||
-                                                                                                                                                    route.path.startsWith('/contractor-add') ||
-                                                                                                                                                    route.path.startsWith('/contractor-edit') ||
-                                                                                                                                                    route.path.startsWith('/speciality') ||
-                                                                                                                                                    route.path.startsWith('/bulk-cash-out')
+                                                                                                                                                                                            route.path.startsWith('/contractor') ||
+                                                                                                                                                                                            route.path.startsWith('/contractor-add') ||
+                                                                                                                                                                                            route.path.startsWith('/contractor-edit') ||
+                                                                                                                                                                                            route.path.startsWith('/speciality') ||
+                                                                                                                                                                                            route.path.startsWith('/bulk-cash-out')
 
 
-                                                                                                                                                  ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-                                                                                                                                                    @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-                                                                                                                                                    <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-                                                                                                                                                    <span>{{ t("navbar.contractor") }}</span>
-                                                                                                                                                </a> -->
+                                                                                                                                                                                          ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+                                                                                                                                                                                            @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+                                                                                                                                                                                            <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
+                                                                                                                                                                                            <span>{{ t("navbar.contractor") }}</span>
+                                                                                                                                                                                        </a> -->
           <a :class="[((activeSubnav === 'ticketing') && 'is-active is-secondary'),
           (
             route.path.startsWith('/ticket') ||
@@ -333,13 +330,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                                                                                                                                                                  <ToolbarNotification />
+                                                                                                                                                                                                                          <ToolbarNotification />
 
-                                                                                                                                                                                  <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                                                                                                                                                                    @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                                                                                                                                                                    <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                                                                                                                                                  </a>
-                                                                                                                                                                                </Toolbar> -->
+                                                                                                                                                                                                                          <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                                                                                                                                                                                                            @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                                                                                                                                                                                                            <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                                                                                                                                                                                          </a>
+                                                                                                                                                                                                                        </Toolbar> -->
             </div>
 
             <slot></slot>
