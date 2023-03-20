@@ -27,6 +27,7 @@ const userAuth = useAuth();
 
 
 onBeforeMount(() => {
+  
   if (userAuth.isLoggedIn) {
     router.push({
       name: "/dashboard/"

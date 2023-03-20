@@ -9,7 +9,7 @@ export const useAuth = defineStore('userAuth', () => {
   const api = useApi();
   const token = useStorage('token', '')
   const user = ref<User>()
-  const loggedUser = useStorage('user', '')
+  const loggedUser = useStorage('loggedUser', '')
   const userFullName = useStorage('userFullName', '')
   const loading = ref(false)
   const success = ref<boolean>()
@@ -26,6 +26,17 @@ export const useAuth = defineStore('userAuth', () => {
 
   function getUser(): User {
     return JSON.parse(loggedUser.value) as User;
+    // let parsedUser = '';
+    // try {
+    //   parsedUser = JSON.parse(loggedUser.value) as User;
+
+    // } catch (error) {
+    //   console.log('Failed to parse JSON string:', error);
+    //   parsedUser = undefined
+    //   // Handle the error
+    // }
+    // return parsedUser;
+
   }
   function setToken(newToken: string) {
     token.value = newToken
@@ -36,8 +47,11 @@ export const useAuth = defineStore('userAuth', () => {
   }
 
   async function logoutUser() {
+    console.log("logout")
     token.value = undefined
     user.value = undefined
+    loggedUser.value = ''
+    userFullName.value = undefined
   }
   function getUserFulLName(): string {
     return userFullName.value;

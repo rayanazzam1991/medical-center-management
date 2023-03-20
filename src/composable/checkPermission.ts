@@ -30,11 +30,15 @@ function checkStringExistsInArray(str: string, arr: string[]): boolean {
 function getAuthUserPermissions(): string[] {
     const userAuth = useAuth()
     const userPermissions: string[] = []
-    const loggedUser = JSON.parse(userAuth.loggedUser);
-    loggedUser.roles.forEach((role: Role) => {
-        role.permissions.forEach((permission) => {
-            userPermissions.push(permission.name)
+    try {
+        const loggedUser = JSON.parse(userAuth.loggedUser);
+        loggedUser.roles.forEach((role: Role) => {
+            role.permissions.forEach((permission) => {
+                userPermissions.push(permission.name)
+            });
         });
-    });
+    } catch (error: any) {
+
+    }
     return userPermissions
 }
