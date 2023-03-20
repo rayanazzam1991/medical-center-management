@@ -13,6 +13,8 @@ declare module '@vue/runtime-core' {
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     AccountSearchFilterModel: typeof import('./src/components/OurComponents/Accounting/AccountSearchFilterModel.vue')['default']
     AccountTableHeader: typeof import('./src/components/OurComponents/Accounting/AccountTableHeader.vue')['default']
+    ActivityLogTableHeader: typeof import('./src/components/OurComponents/Others/AcivityLog/ActivityLogTableHeader.vue')['default']
+    ActivityLogToolbar: typeof import('./src/components/partials/toolbars/ActivityLogToolbar.vue')['default']
     ActivityPanel: typeof import('./src/components/partials/panels/ActivityPanel.vue')['default']
     AddQuantityFormNavigation: typeof import('./src/components/OurComponents/Warehouse/InventoryItemHistory/AddQuantityFormNavigation.vue')['default']
     AnalyticsDashboard: typeof import('./src/components/pages/dashboards/finance/AnalyticsDashboard.vue')['default']
