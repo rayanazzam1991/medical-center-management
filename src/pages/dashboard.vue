@@ -1,8 +1,8 @@
 <route lang="json">
 {
-"meta": {
-"requiresAuth": true
-}
+  "meta": {
+    "requiresAuth": true
+  }
 }
 </route>
 <script setup lang="ts">
@@ -23,7 +23,7 @@ onMounted(() => {
     <!-- Content Wrapper -->
     <RouterView v-slot="{ Component }" :key="route.fullPath">
       <Transition name="fade-fast" mode="out-in">
-        <component :is="Component" :key="route.fullPath"/>
+        <component :is="Component" :key="route.fullPath" />
       </Transition>
     </RouterView>
   </NavbarLayout>

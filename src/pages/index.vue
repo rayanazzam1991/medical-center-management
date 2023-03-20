@@ -7,18 +7,18 @@ useHead({
 })
 const router = useRouter();
 const userAuth = useAuth();
-// onBeforeMount(() => {
-//   console.log("isLo1", userAuth.isLoggedIn)
-//   if (userAuth.isLoggedIn) {
-//     router.push({
-//       name: "/dashboard/"
-//     })
-//   } else {
-//     router.push({
-//       name: '/auth/login'
-//     })
-//   }
-// })
+
+onBeforeMount(() => {
+  if (userAuth.isLoggedIn) {
+    router.push({
+      name: "/dashboard/"
+    })
+  } else {
+    router.push({
+      name: '/auth/login'
+    })
+  }
+})
 
 
 

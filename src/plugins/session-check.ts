@@ -28,7 +28,7 @@ import { useAuth } from "/@src/stores/Others/User/authStore";
  */
 export default definePlugin(async ({ router, api, pinia }) => {
   const userAuth = useAuth(pinia)
-  // let loggedUser = {} as User
+
   // try {
   //   loggedUser = userAuth.getUser();
   // }
@@ -36,47 +36,49 @@ export default definePlugin(async ({ router, api, pinia }) => {
   //   console.log('logged1', loggedUser);
   // }
 
+  console.log("sdf");
   router.beforeEach((to, from, next) => {
     // console.log('logged2', loggedUser);
+    if (!to.meta.requiresAuth) next()
+    else {
+      if (!userAuth.isLoggedIn && to.name !== "/auth/login") {
+        // 2. If the page requires auth, check if user is logged in
+        // if not, redirect to login page.
+        next({ name: '/auth/login' })
+      } else {
+        let loggedUser = {} as User
+        loggedUser = userAuth.getUser();
+        const userRoles = loggedUser?.roles ?? []; // get the user's role from the store
+        const userPermissions: string[] = []
+        let havePermission = false
+        userRoles.forEach((userRole) => {
+          userRole.permissions.forEach((permission) => {
+            userPermissions.push(permission.name)
+          });
+        });
+        const requiredPermissions: string[] = to.meta.permissions as string[]; // get the required permissions from the route meta data
 
-    if (to.meta.requiresAuth && !userAuth.isLoggedIn) {
-      // 2. If the page requires auth, check if user is logged in
-      // if not, redirect to login page.
-      return {
-        name: '/auth/login',
-        // save the location we were at to come back later
-        query: { redirect: to.fullPath },
+        if (userPermissions.length > 0) {
+          userPermissions.forEach((userPermission) => {
+            if (!requiredPermissions) {
+              havePermission = true
+            } else {
+              if (checkRequiredPermissions(userPermission, requiredPermissions)) {
+                havePermission = true
+              }
+            }
+
+          });
+          if (!havePermission) {
+            next({ name: '/auth/no-permission' }); // redirect to the unauthorized page if the user doesn't have the required permissions
+          } else {
+            next();
+          }
+        } else {
+          next({ name: '/auth/login' })
+        }
       }
     }
-    // const userRoles = loggedUser?.roles ?? []; // get the user's role from the store
-    // const userPermissions: string[] = []
-    // let havePermission = false
-    // userRoles.forEach((userRole) => {
-    //   userRole.permissions.forEach((permission) => {
-    //     userPermissions.push(permission.name)
-    //   });
-    // });
-    // const requiredPermissions: string[] = to.meta.permissions as string[]; // get the required permissions from the route meta data
-
-    // if (userPermissions.length > 0) {
-    //   userPermissions.forEach((userPermission) => {
-    //     if (!requiredPermissions) {
-    //       havePermission = true
-    //     } else {
-    //       if (checkRequiredPermissions(userPermission, requiredPermissions)) {
-    //         havePermission = true
-    //       }
-    //     }
-
-    //   });
-    //   if (!havePermission) {
-    //     next({ name: '/auth/no-permission' }); // redirect to the unauthorized page if the user doesn't have the required permissions
-    //   } else {
-    //     next();
-    //   }
-
-    // }
-
 
   })
 })
