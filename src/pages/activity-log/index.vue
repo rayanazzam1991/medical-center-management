@@ -35,7 +35,6 @@ const search = async (newSearchFilter: ActivityLogSearchFilter) => {
   paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
   const { activitiesLog, pagination } = await getActivityLogList(newSearchFilter)
   actitivityLogList.value = activitiesLog
-  console.log(actitivityLogList.value)
   paginationVar.value = pagination
   searchFilter.value = newSearchFilter
 }

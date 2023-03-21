@@ -30,7 +30,7 @@ const changePasswordPopupConfirmation = ref(false)
 const loggedEmployeeProfilePic = ref(defaultEmployeeProfilePic)
 const changePasswordData = ref<ChangePassword>(defaultChangePassword)
 const keyIncrement = ref(0)
-const passwordPattern = new RegExp(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/)
+const passwordPattern = new RegExp(/^.(?=.{8,})(?=.[a-zA-Z])(?=.\d).$/)
 const passwordMatchPattern = ref(false)
 const passwordMatchConfirmation = ref(false)
 
@@ -122,68 +122,47 @@ const onClickViewMyWaitingList = () => {
 
     <template #content>
       <div class="dropdown-head">
-        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
-        <div class="meta">
-          <span>{{ userFullName }}</span>
-          <!-- <span>Product Manager</span> -->
+        <VAvatar v-if="!loggedEmployee"
+          :picture="MediaConsts.getAvatarIcon(user.gender ? user.gender : 'not_selected')" />
+
+        <VAvatar v-else-if="loggedEmployeeProfilePic.id == undefined"
+          :picture="MediaConsts.getAvatarIcon(loggedEmployee.user.gender)" />
+
+        <VAvatar v-else :picture="loggedEmployeeProfilePic.relative_path" />
+        <div class="meta mr-4">
+          <div>
+            <span class="is-size-7">{{ t('user_profile_dropdown.name') }}</span>
+            <span class="is-size-5">{{ userFullName }}</span>
+          </div>
         </div>
       </div>
 
-      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
-              <div class="icon">
-                <i aria-hidden="true" class="lnil lnil-user-alt"></i>
-              </div>
-              <div class="meta">
-                <span>Profile</span>
-                <span>View your profile</span>
-              </div>
-            </a> -->
+      <a role="menuitem" class="dropdown-item is-media no-cursor">
+        <div class="icon">
+          <i aria-hidden="true" class="lnil lnil-user-alt"></i>
+        </div>
+        <div class="mr-2">
+          <h1>{{ t('user_profile_dropdown.roles') }}</h1>
+          <span class="is-size-6" v-if="user.roles" v-for="(role, index) in user.roles">{{ role.display_name }}
+            {{ index != user.roles?.length - 1 ? ' | ' : '' }}</span>
+        </div>
+      </a>
+      <div class="dropdown-item is-button mt-2">
+        <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT" class=" logout-button mb-2" icon="feather:list"
+          color="info" role="menuitem" @click="onClickViewMyWaitingList" raised fullwidth>
+          {{ t('user_profile_dropdown.view_my_waiting_list') }}
+        </VButton>
 
-      <!-- <hr class="dropdown-divider" />
-
-            <a href="#" role="menuitem" class="dropdown-item is-media">
-              <div class="icon">
-                <i aria-hidden="true" class="lnil lnil-briefcase"></i>
-              </div>
-              <div class="meta">
-                <span>Projects</span>
-                <span>All my projects</span>
-              </div>
-            </a> -->
-
-      <!-- <a href="#" role="menuitem" class="dropdown-item is-media">
-              <div class="icon">
-                <i aria-hidden="true" class="lnil lnil-users-alt"></i>
-              </div>
-              <div class="meta">
-                <span>Team</span>
-                <span>Manage your team</span>
-              </div>
-            </a> -->
-
-      <!-- <hr class="dropdown-divider" />
-
-            <a href="#" role="menuitem" class="dropdown-item is-media">
-              <div class="icon">
-                <i aria-hidden="true" class="lnil lnil-cog"></i>
-              </div>
-              <div class="meta">
-                <span>Settings</span>
-                <span>Account settings</span>
-              </div>
-            </a> -->
-
-      <hr class="dropdown-divider" />
-
-      <div class="dropdown-item is-button">
+        <VButton v-permission="Permissions.CHANGE_PASSWORD" class=" logout-button mb-2" icon="carbon:password"
+          color="info" role="menuitem" @click="openChangePassword" raised fullwidth>
+          {{ t('user_profile_dropdown.change_password') }}
+        </VButton>
         <VButton class="logout-button" icon="feather:log-out" color="primary" role="menuitem" @click="logoutUser" raised
           fullwidth>
           {{ t('user_profile_dropdown.logout') }}
         </VButton>
       </div>
     </template>
-
-
   </VDropdown>
   <VModal class="is-disabled" :title="t('user_profile_dropdown.change_password_popup.title')" :open="changePasswordPopup"
     actions="center" @close="changePasswordPopup = false">

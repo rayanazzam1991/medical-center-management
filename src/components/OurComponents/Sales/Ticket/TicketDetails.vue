@@ -273,12 +273,9 @@ const columns = {
       actions="right" @close="currentServiceCardPopup = false">
       <template #content>
         <div class="modal-header">
-          <h2> {{ t('ticket.details.customer_name') }}:
+          <h2> {{ t('ticket.details.turn_number') }}
             <span>
-              {{
-                ticketCurrentWaitingList.ticket.customer.user.first_name
-              }} {{ ticketCurrentWaitingList.ticket.customer.user.last_name }}
-            </span>
+              {{ ticketCurrentWaitingList.turn_number }}</span>
           </h2>
           <h2>
             {{ t('ticket.details.service_provider_name') }}:
@@ -286,18 +283,7 @@ const columns = {
               ticketCurrentWaitingList.current_provider.user.first_name
             }} {{ ticketCurrentWaitingList.current_provider.user.last_name }} </span>
           </h2>
-          <h2> {{ t('ticket.details.turn_number') }}
-            <span>
-              {{ ticketCurrentWaitingList.turn_number }}</span>
-          </h2>
-          <h2> {{ t('ticket.details.date_time') }}: <span>{{ ticketCurrentWaitingList.created_at }}</span></h2>
-          <h2> {{ t('ticket.details.sell_price') }}: <span>{{ currentTicketServicesPrice }} {{
-            addParenthesisToString(ticketCurrentWaitingList.ticket.currency.name) }}</span></h2>
         </div>
-        <VFlexTableWrapper :columns="columns" :data="currentTicketServices">
-          <VFlexTable separators clickable>
-          </VFlexTable>
-        </VFlexTableWrapper>
       </template>
       <template>
       </template>

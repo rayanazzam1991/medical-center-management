@@ -326,7 +326,8 @@
         "basic_salary_payment_percentage_required": "أحد الحقلين الراتب الأساسي أو نسبة العملة مطلوب",
         "services_prices_error": "سعر خدمة الـ{service_name} يجب أن يكون أكبر من الصفر",
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
-        "cannot_combine_no_access": "لا يمكن اختيار الدور 'لا يوجد وصول' مع أدوار أخرى"
+        "cannot_combine_no_access": "لا يمكن اختيار الدور 'لا يوجد وصول' مع أدوار أخرى",
+        "choose_role": "يرجى اختيار دور"
       },
       "ticket": {
         "service_is_required": "يرجى تحديد الخدمات المطلوبة",
@@ -2298,6 +2299,7 @@
     "hybrid": "موظف براتب وعمولة"
   },
   "ticket_statuses": {
+    "pending": "معلّق ",
     "waiting": "انتظار",
     "serving": "قيد التخديم",
     "services_are_done": "جميع الخدمات مخدمة",
@@ -2333,6 +2335,88 @@
     "back_button": "العودة للخلف",
     "table": {
       "title": "التذاكر",
+      "modal_title": "إغلاق التذكرة ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "services_count": "عدد الخدمات",
+        "current_service_provider": "مقدم الخدمة الحالي",
+        "customer_name": "اسم الزبون ",
+        "total_amount": "المبلغ الإجمالي",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": " بواسطة",
+        "actions": "الإجراءات"
+      },
+      "delete_modal": {
+        "title": "هل أنت متأكد؟",
+        "subtitle": "انت على وشك إغلاق التذكرة نهائيا "
+      }
+    },
+    "search_filter": {
+      "customer_name": "اسم الزبون ",
+      "status": "الحالة",
+      "id": "رقم المعرّف",
+      "title": "تصفية التذاكر"
+    },
+    "details": {
+      "ticket": "التذكرة",
+      "status": " حالة التذكرة ",
+      "title": "تفاصيل التذكرة",
+      "services": "الخدمات المقدمة",
+      "name": " اسم الخدمة",
+      "service_provider_name": "مقدم الخدمة الحالي",
+      "sell_price": "السعر",
+      "quantity_item": "كمية المواد",
+      "items_list": " المواد",
+      "ticket_details": "تفاصيل التذكرة",
+      "id": "رقم المعرّف",
+      "customer_name": "اسم الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "currency_rate": "سعر الصرف",
+      "currency": "العملة",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "created_at": "تاريخ الإنشاء ",
+      "created_by": " بواسطة",
+      "view_current_service_card": "عرض بطاقة الدور الحالي",
+      "current_service_card_modal": "بطاقة الدور الحالي",
+      "turn_number": "الدور : ",
+      "date_time": "تاريخ ووقت الانشاء",
+      "current_services": {
+        "columns": {
+          "service_name": "الخدمة",
+          "currency": "العملة",
+          "service_price": "السعر"
+        }
+      }
+    }
+  },
+  "pending_ticket": {
+    "form": {
+      "page_title": " التذاكر المعلقة",
+      "add_form_header": "إضافة تذكرة",
+      "edit_form_header": "تعديل التذكرة رقم #{ticket_id}",
+      "add_ticket_title": "إضافة تذكرة",
+      "customer": "اسم الزبون",
+      "select_customer": "تحديد الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "cash_account": "حساب النقد",
+      "select_cash_account": "تحديد حساب النقد",
+      "currency": "العملة",
+      "select_currency": "تحديد العملة",
+      "currency_rate": "سعر الصرف",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "services": "الخدمات المطلوبة",
+      "select_service": "تحديد الخدمة",
+      "select_provider": "تحديد المخدم",
+      "sell_price": "سعر المبيع",
+      "add_new_service": "إضافة خدمة جديدة"
+    },
+    "header_button": "إضافة تذكرة",
+    "back_button": "العودة للخلف",
+    "table": {
+      "title": " التذاكر المعلقة",
       "modal_title": "إغلاق التذكرة ",
       "columns": {
         "id": "رقم المعرّف",

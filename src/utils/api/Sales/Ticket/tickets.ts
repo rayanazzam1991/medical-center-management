@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateTicket, TicketSearchFilter, UpdateTicket, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
+import { CreateTicket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createTicketApi(
@@ -41,6 +41,15 @@ export async function getTicketsListApi(
   searchFilter: TicketSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
   const { data: response, headers } = await api.get(`ticket/getTicketsList`, {
+    params: searchFilter
+  })
+  return { response }
+}
+export async function getPendingTicketsListApi(
+  api: AxiosInstance,
+  searchFilter: TicketSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`ticket/getPendingTicketsList`, {
     params: searchFilter
   })
   return { response }
