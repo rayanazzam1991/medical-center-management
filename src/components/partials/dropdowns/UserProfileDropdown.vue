@@ -30,7 +30,7 @@ const changePasswordPopupConfirmation = ref(false)
 const loggedEmployeeProfilePic = ref(defaultEmployeeProfilePic)
 const changePasswordData = ref<ChangePassword>(defaultChangePassword)
 const keyIncrement = ref(0)
-const passwordPattern = new RegExp(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/)
+const passwordPattern = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
 const passwordMatchPattern = ref(false)
 const passwordMatchConfirmation = ref(false)
 
@@ -60,6 +60,9 @@ const logoutUser = async () => {
 const openChangePassword = () => {
   changePasswordData.value.password = ''
   changePasswordData.value.password_confirmation = ''
+  changePasswordData.value.current_password = ''
+  passwordMatchPattern.value = false
+  passwordMatchConfirmation.value = false
   keyIncrement.value++
   changePasswordPopup.value = true
 }
@@ -106,7 +109,7 @@ const onClickViewMyWaitingList = () => {
 
 </script>
 <template>
-  <VDropdown LR spaced class="user-dropdown profile-dropdown">
+  <VDropdown :right="true" spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
       <a tabindex="0" class="is-trigger dropdown-trigger" aria-haspopup="true" @keydown.space.prevent="toggle"
         @click="toggle">
@@ -171,14 +174,22 @@ const onClickViewMyWaitingList = () => {
         <!--Fieldset-->
         <div class="form-fieldset">
           <div class="columns is-multiline">
+            <div class="column is-12">
+              <VField class="column">
+                <VLabel>{{ t('user_profile_dropdown.change_password_popup.current_password') }}</VLabel>
+                <VControl>
+                  <VInput v-model="changePasswordData.current_password" type="password" />
+                </VControl>
+              </VField>
+
+            </div>
             <div class="column is-12 pr-0 is-flex is-jsutify-content-center is-align-items-center">
 
               <div class="column is-11 pl-0">
                 <VField class="column">
                   <VLabel>{{ t('user_profile_dropdown.change_password_popup.password') }}</VLabel>
                   <VControl>
-                    <VInput :icon="passwordMatchPattern ? 'feather:check' : 'feather:x'" @input="checkPassword"
-                      v-model="changePasswordData.password" type="password" />
+                    <VInput @input="checkPassword" v-model="changePasswordData.password" type="password" />
                   </VControl>
                   <p class="is-info help">{{ t('user_profile_dropdown.change_password_popup.helper') }}</p>
                 </VField>

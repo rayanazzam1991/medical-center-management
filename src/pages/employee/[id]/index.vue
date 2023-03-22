@@ -141,7 +141,6 @@ const onSubmitResetPassword = async () => {
     if (success) {
       await sleep(200);
       notif.success(t('toast.success.reset_password'))
-      return true
     }
     else {
       await sleep(200);

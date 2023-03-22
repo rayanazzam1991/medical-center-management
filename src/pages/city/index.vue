@@ -143,8 +143,6 @@ const columns = {
 <template>
   <CityTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('city.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
-
-
   <VFlexTableWrapper :columns="columns" :data="citiesList" @update:sort="citySort">
 
     <VFlexTable separators clickable>

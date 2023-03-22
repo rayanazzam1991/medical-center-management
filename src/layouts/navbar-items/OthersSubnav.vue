@@ -116,6 +116,16 @@ const emits = defineEmits<{
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                </ul><br />
+                <h4 v-permission="Permissions.ROLE_ACCESS" class="column-heading">{{ t('others_subnav.role.roles') }}</h4>
+                <ul>
+                  <li v-permission="Permissions.ROLE_LIST">
+                    <RouterLink to="/role">
+                      <i class="lnir lnir-medal-alt" aria-hidden="true"></i>
+                      <span>{{ t('others_subnav.role.roles') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul>
               </div>
               <div class="column is-4"
