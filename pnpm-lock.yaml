@@ -126,12 +126,11 @@ specifiers:
   vue-tippy: 6.0.0-alpha.63
   vue-tsc: 0.40.6
   vue3-apexcharts: 1.4.1
+  vue3-print-nb: ^0.1.4
   yorkie: 2.0.0
   zod: ~3.20.2
 
 dependencies:
-  '@casl/ability': 6.3.3
-  '@casl/vue': 2.2.1_ipzq37qc6djeke6e7xg3hphf2e
   '@ckeditor/ckeditor5-build-classic': 35.1.0
   '@ckeditor/ckeditor5-vue': 4.0.1
   '@fortawesome/fontawesome-svg-core': 6.2.1
@@ -193,6 +192,7 @@ dependencies:
   vue-scrollto: 2.20.0
   vue-tippy: 6.0.0-alpha.63_vue@3.2.38
   vue3-apexcharts: 1.4.1_pzo2uwmueqbdjnfljvsxuiuhxq
+  vue3-print-nb: 0.1.4
   zod: 3.20.2
 
 devDependencies:
@@ -1421,22 +1421,6 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
-
-  /@casl/ability/6.3.3:
-    resolution: {integrity: sha512-UzbqsE9etu6QzZrRmqIyVun2kztAzJ46Tz7lC/2P2buCE6B6Ll7Vptz7JTQtGwapLbeKo2jS7dL966TVOQ7x4g==}
-    dependencies:
-      '@ucast/mongo2js': 1.3.4
-    dev: false
-
-  /@casl/vue/2.2.1_ipzq37qc6djeke6e7xg3hphf2e:
-    resolution: {integrity: sha512-1OeGhT4A7VBkEACacF2ZlHkPiFJvyFy9h2PhBnMoetFDojMHbrn3ZjKgL5zQ4wSIrTQo9KbbzG3f0uAei2GKCQ==}
-    peerDependencies:
-      '@casl/ability': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.1.0 || ^6.0.0
-      vue: ^3.0.0
-    dependencies:
-      '@casl/ability': 6.3.3
-      vue: 3.2.38
-    dev: false
 
   /@ckeditor/ckeditor5-adapter-ckfinder/35.4.0:
     resolution: {integrity: sha512-0o0nkggKYwjx60Ge7GGuJp2jJGwGW9LlAOZEVPTMRG8b/uSzMNLHyCChKeakRO4z7tiopJM6o9Y8sfbDM/nKpA==}
@@ -2810,30 +2794,6 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@ucast/core/1.10.2:
-    resolution: {integrity: sha512-ons5CwXZ/51wrUPfoduC+cO7AS1/wRb0ybpQJ9RrssossDxVy4t49QxWoWgfBDvVKsz9VXzBk9z0wqTdZ+Cq8g==}
-    dev: false
-
-  /@ucast/js/3.0.3:
-    resolution: {integrity: sha512-jBBqt57T5WagkAjqfCIIE5UYVdaXYgGkOFYv2+kjq2AVpZ2RIbwCo/TujJpDlwTVluUI+WpnRpoGU2tSGlEvFQ==}
-    dependencies:
-      '@ucast/core': 1.10.2
-    dev: false
-
-  /@ucast/mongo/2.4.3:
-    resolution: {integrity: sha512-XcI8LclrHWP83H+7H2anGCEeDq0n+12FU2mXCTz6/Tva9/9ddK/iacvvhCyW6cijAAOILmt0tWplRyRhVyZLsA==}
-    dependencies:
-      '@ucast/core': 1.10.2
-    dev: false
-
-  /@ucast/mongo2js/1.3.4:
-    resolution: {integrity: sha512-ahazOr1HtelA5AC1KZ9x0UwPMqqimvfmtSm/PRRSeKKeE5G2SCqTgwiNzO7i9jS8zA3dzXpKVPpXMkcYLnyItA==}
-    dependencies:
-      '@ucast/core': 1.10.2
-      '@ucast/js': 3.0.3
-      '@ucast/mongo': 2.4.3
-    dev: false
-
   /@vee-validate/zod/4.7.3_vxgyc6szc53qquwul3stxmeelu:
     resolution: {integrity: sha512-81yqHk9fbrZy+BaU6SEevEmJlABl6UCZ0Tv3/zY6T9wosubV7/uErf4Gw3Rpi2GFUpSQKYlD3dLSt1rzndrf+Q==}
     peerDependencies:
@@ -3135,12 +3095,12 @@ packages:
       acorn: 7.4.1
     dev: true
 
-  /acorn-jsx/5.3.2_acorn@8.8.1:
+  /acorn-jsx/5.3.2_acorn@8.8.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
     dev: true
 
   /acorn-walk/8.2.0:
@@ -3150,12 +3110,6 @@ packages:
 
   /acorn/7.4.1:
     resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-    dev: true
-
-  /acorn/8.8.1:
-    resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -5740,8 +5694,8 @@ packages:
     resolution: {integrity: sha512-XwctdmTO6SIvCzd9810yyNzIrOrqNYV9Koizx4C/mRhf9uq0o4yHoCEU/670pOxOL/MSraektvSAji79kX90Vg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      acorn: 8.8.1
-      acorn-jsx: 5.3.2_acorn@8.8.1
+      acorn: 8.8.2
+      acorn-jsx: 5.3.2_acorn@8.8.2
       eslint-visitor-keys: 3.3.0
     dev: true
 
@@ -8319,7 +8273,7 @@ packages:
   /mlly/0.5.17:
     resolution: {integrity: sha512-Rn+ai4G+CQXptDFSRNnChEgNr+xAEauYhwRvpPl/UHStTlgkIftplgJRsA2OXPuoUn86K4XAjB26+x5CEvVb6A==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
       pathe: 1.0.0
       pkg-types: 1.0.1
       ufo: 1.0.1
@@ -11224,7 +11178,7 @@ packages:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
       '@types/node': 18.7.14
-      acorn: 8.8.1
+      acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1
@@ -11544,7 +11498,7 @@ packages:
   /unplugin/0.9.6:
     resolution: {integrity: sha512-YYLtfoNiie/lxswy1GOsKXgnLJTE27la/PeCGznSItk+8METYZErO+zzV9KQ/hXhPwzIJsfJ4s0m1Rl7ZCWZ4Q==}
     dependencies:
-      acorn: 8.8.1
+      acorn: 8.8.2
       chokidar: 3.5.3
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.4.6
@@ -11913,6 +11867,12 @@ packages:
       vue: '> 3.0.0'
     dependencies:
       apexcharts: 3.35.5
+      vue: 3.2.38
+    dev: false
+
+  /vue3-print-nb/0.1.4:
+    resolution: {integrity: sha512-LExI7viEzplR6ZKQ2b+V4U0cwGYbVD4fut/XHvk3UPGlT5CcvIGs6VlwGp107aKgk6P8Pgx4rco3Rehv2lti3A==}
+    dependencies:
       vue: 3.2.38
     dev: false
 

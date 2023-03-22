@@ -149,6 +149,7 @@ declare module 'vue-router/auto/routes' {
     '/position/[id]/': RouteRecordInfo<'/position/[id]/', '/position/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/position/[id]/edit': RouteRecordInfo<'/position/[id]/edit', '/position/:id/edit', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/position/add': RouteRecordInfo<'/position/add', '/position/add', Record<never, never>, Record<never, never>>,
+    '/print': RouteRecordInfo<'/print', '/print', Record<never, never>, Record<never, never>>,
     '/reminder': RouteRecordInfo<'/reminder', '/reminder', Record<never, never>, Record<never, never>>,
     '/reminder/': RouteRecordInfo<'/reminder/', '/reminder/', Record<never, never>, Record<never, never>>,
     '/reminder/add': RouteRecordInfo<'/reminder/add', '/reminder/add', Record<never, never>, Record<never, never>>,

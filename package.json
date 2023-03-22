@@ -125,6 +125,7 @@
     "vue-scrollto": "2.20.0",
     "vue-tippy": "6.0.0-alpha.63",
     "vue3-apexcharts": "1.4.1",
+    "vue3-print-nb": "^0.1.4",
     "zod": "~3.20.2"
   },
   "devDependencies": {

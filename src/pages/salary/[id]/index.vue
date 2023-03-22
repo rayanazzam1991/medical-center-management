@@ -24,6 +24,10 @@ import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/curr
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
+import usePrintDiv from '/@src/composable/print';
+import myStyle from '/@src/print_styles'
+
+
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -34,6 +38,11 @@ const head = useHead({
   title: t('salary.payslip.title'),
 })
 
+const styles = myStyle;
+const { printDiv } = usePrintDiv(styles);
+const divId = 'my-div';
+
+const print = () => printDiv(divId)
 
 const salaryStore = useSalary()
 const salaryId = ref(0)
@@ -241,6 +250,8 @@ const totalTotalColumns = {
 
 <template>
   <div class="invoice-wrapper">
+    <button @click="print">Print Div</button>
+
     <div class="invoice-header">
       <div class="left is-flex is-align-items-center">
         <VIconButton class="ml-3" color="white" darkOutlined icon="feather:arrow-right" :to="{ path: '/salary' }" />
@@ -248,7 +259,7 @@ const totalTotalColumns = {
       </div>
     </div>
     <VLoader size="large" :active="salaryStore.loading">
-      <div class="invoice-body">
+      <div class="invoice-body" ref="myDiv" id="my-div">
         <div class="invoice-card">
           <div class="invoice-section is-flex mb-0 pb-0">
             <div class="meta">
