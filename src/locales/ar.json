@@ -2621,5 +2621,32 @@
       "group_id": "رقم معرف المجموعة...",
       "group_name": "المجموعة..."
     }
+  },
+  "print": {
+    "date": "التاريخ:",
+    "trial_balance": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "total_credit": "دائن",
+      "total_debit": "مدين",
+      "total": "المجموع"
+    },
+    "balance_sheet": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "balance": "الرصيد",
+      "total_liabilities": "محموع الخصوم",
+      "total_assets": "مجموع الأصول"
+    },
+    "income_statement": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "balance": "الرصيد",
+      "total_other_expenses": "مجموع النفقات الأخرى",
+      "net_income": "صافي الدخل",
+      "gross_profit": "إجمالي الربح",
+      "total_costs": "مجموع التكاليف",
+      "total_revenues": "مجموع العائدات"
+    }
   }
 }

@@ -14,14 +14,18 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
+import usePrint from '/@src/composable/usePrint';
 import { BalanceSheet, defaultBalanceSheet } from '/@src/models/Accounting/Account/account';
 import { generateBalanceSheetReport } from '/@src/services/Accounting/Account/accountService';
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { trialBalancePrintStyle } from '/@src/utils/PrintStyles/printStyles';
 
 
 
 
+const { printDiv } = usePrint('');
+const print = () => printDiv('printerable')
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -50,8 +54,13 @@ const toggle = () => {
 <template>
   <div class="header is-flex is-justify-content-space-between is-align-items-center">
     <h1>{{ t('balance_sheet_report.title') }}</h1>
-    <VButton :loading="accountStore.loading" color="primary" @click="toggle">{{
-      t('balance_sheet_report.expand_collapse_button') }} </VButton>
+    <div class="is-flex is-align-items-center">
+
+      <VButton class="mr-2" :loading="accountStore.loading" color="primary" @click="toggle">{{
+        t('balance_sheet_report.expand_collapse_button') }} </VButton>
+      <VIconButton icon="lnir lnir-printer" :loading="accountStore.loading" outlined color="primary" @click="print" />
+    </div>
+
   </div>
 
   <div class="balance-sheet-report-layout">
@@ -145,6 +154,75 @@ const toggle = () => {
         <div class="chart-row total"> {{ t('balance_sheet_report.total_liabilites_balances') }} </div>
       </div>
     </div>
+  </div>
+  <div class="is-hidden" id="printerable">
+    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px;">{{ t('print.date') }} {{ new
+      Date().toLocaleDateString() }}
+    </h1>
+    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
+      t('balance_sheet_report.title') }}
+    </h1>
+    <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+      <thead>
+        <tr>
+
+          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+            t('print.balance_sheet.balance') }}</th>
+          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+            t('print.balance_sheet.account_name') }}</th>
+          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+            t('print.balance_sheet.account_code') }}</th>
+
+
+
+        </tr>
+      </thead>
+      <tbody>
+        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
+          <strong>{{ balanceSheet.assets.name }}</strong>
+        </td>
+
+        <tr v-for="lvl2 in balanceSheet.assets.children">
+        <tr v-for="account in lvl2.accounts">
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
+
+        </tr>
+        </tr>
+        <tr>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ balanceSheet.assets.total_balances }}
+          </td>
+
+          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+            <strong>{{ t('print.balance_sheet.total_assets') }}</strong>
+          </td>
+        </tr>
+        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
+          <strong>{{ balanceSheet.liabilities.name }}</strong>
+        </td>
+
+        <tr v-for="lvl2 in balanceSheet.liabilities.children">
+        <tr v-for="account in lvl2.accounts">
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
+
+
+        </tr>
+        </tr>
+        <tr>
+          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ balanceSheet.liabilities.total_balances
+          }}</td>
+
+          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+            <strong>{{ t('print.balance_sheet.total_liabilities') }}</strong>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
   </div>
 </template>
 
