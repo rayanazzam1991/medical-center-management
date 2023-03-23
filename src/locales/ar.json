@@ -110,6 +110,9 @@
       "rooms": "الغرف",
       "create_room": "انشاء غرفة"
     },
+    "role": {
+      "roles": "الأدوار"
+    },
     "city": {
       "cities": "المدن",
       "create_city": "انشاء مدينة"
@@ -259,8 +262,9 @@
     "change_password_popup": {
       "title": "تغيير كلمة المرور",
       "password": "كلمة المرور الجديدة",
+      "current_password": "كلمة المرور الحالية",
       "password_confirmation": "تأكيد كلمة المرور",
-      "helper": "يجب أن تتألف على الأقل من 8 محارف وتتضمن حرف واحد ورقم واحد على الأقل."
+      "helper": "يجب أن تتألف على الأقل من 8 محارف وتتضمن حرف ورقم ورمز واحد على الأقل."
     },
     "change_password_popup_confirmation": {
       "title": "تأكيد تغيير كلمة المرور",
@@ -272,7 +276,8 @@
     "type": {
       "add": "إضافة",
       "edit": "تعديل",
-      "withdraw": "سحب"
+      "withdraw": "سحب",
+      "save": "حفظ"
     },
     "back_button": "العودة"
   },
@@ -2591,5 +2596,30 @@
   },
   "place_holder": {
     "none": "لا يوجد"
+  },
+  "role": {
+    "table": {
+      "title": "الأدوار",
+      "columns": {
+        "name": "الاسم",
+        "users_count": "عدد المستخدمين",
+        "created_at": "تاريخ الإنشاء",
+        "created_by": "بواسطة",
+        "actions": "الإجراءات"
+      }
+    },
+    "details": {
+      "page_title": "الدور",
+      "title": "الدور : {role_name}"
+    },
+    "form": {
+      "page_title": "الدور",
+      "edit_form_header": "تعديل الدور : {role_name}"
+    },
+    "search_filter": {
+      "permission_name": "الصلاحية...",
+      "group_id": "رقم معرف المجموعة...",
+      "group_name": "المجموعة..."
+    }
   }
 }
