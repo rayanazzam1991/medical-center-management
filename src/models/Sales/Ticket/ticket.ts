@@ -101,14 +101,16 @@ export const defaultTicketSearchFilter: TicketSearchFilter = {
 
 
 class TicketConsts {
-
+  static readonly PENDING = 0;
   static readonly WAITING = 1;
   static readonly SERVING = 2;
   static readonly SERVICES_ARE_DONE = 3;
   static readonly CLOSED = 4;
-  static readonly TICKET_STATUSES = [this.WAITING, this.SERVING, this.SERVICES_ARE_DONE, this.CLOSED]
+  static readonly TICKET_STATUSES = [this.WAITING, this.SERVING, this.SERVICES_ARE_DONE, this.CLOSED,this.PENDING]
 
   public static getStatusName(status: number) {
+    if (status == this.PENDING)
+    return i18n.global.t('ticket_statuses.pending')
     if (status == this.WAITING)
       return i18n.global.t('ticket_statuses.waiting')
     if (status == this.SERVING)
@@ -120,6 +122,8 @@ class TicketConsts {
     else return '';
   }
   public static getStatusColor(status: number) {
+    if (status == this.PENDING)
+      return 'secondary';
     if (status == this.WAITING)
       return 'warning';
     if (status == this.SERVING)

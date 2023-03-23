@@ -70,6 +70,7 @@ export default defineComponent({
           <VControl>
             <VSelect v-model="searchStatus" class="">
               <VOption value="">{{ t('ticket.search_filter.status') }}</VOption>
+              <VOption value="0">{{ TicketConsts.getStatusName(0) }}</VOption>
               <VOption value="1">{{ TicketConsts.getStatusName(1) }}</VOption>
               <VOption value="2">{{ TicketConsts.getStatusName(2) }}</VOption>
               <VOption value="3">{{ TicketConsts.getStatusName(3) }}</VOption>

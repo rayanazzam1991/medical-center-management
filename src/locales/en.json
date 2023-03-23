@@ -2026,6 +2026,7 @@
     "hybrid": "Hybrid Employee"
   },
   "ticket_statuses": {
+    "pending": "Pending",
     "waiting": "Waiting",
     "serving": "Serving",
     "services_are_done": "Services Are Done",

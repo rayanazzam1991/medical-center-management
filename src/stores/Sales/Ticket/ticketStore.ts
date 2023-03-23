@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { CreateTicket, Ticket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
-import { closeTicketApi, createTicketApi, getTicketApi, getTicketsListApi, moveTicketToNextWaitingListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
+import { closeTicketApi, createTicketApi, getPendingTicketsListApi, getTicketApi, getTicketsListApi, moveTicketToNextWaitingListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -83,13 +83,34 @@ export const useTicket = defineStore('ticket', () => {
       loading.value = false
     }
   }
-    
+
   async function getTicketsListStore(searchFilter: TicketSearchFilter) {
     if (loading.value) return
     loading.value = true
     sleep(1000)
     try {
       const response = await getTicketsListApi(api, searchFilter)
+      tickets.value = response.response.data
+      pagination.value = response.response.pagination
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return tickets
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    } finally {
+      loading.value = false
+    }
+  }
+  async function getPendingTicketsListStore(searchFilter: TicketSearchFilter) {
+    if (loading.value) return
+    loading.value = true
+    sleep(1000)
+    try {
+      const response = await getPendingTicketsListApi(api, searchFilter)
       tickets.value = response.response.data
       pagination.value = response.response.pagination
       success.value = response.response.success
@@ -152,7 +173,7 @@ export const useTicket = defineStore('ticket', () => {
         }
     }
 
-    
+
   return {
     success,
     error_code,
@@ -165,7 +186,8 @@ export const useTicket = defineStore('ticket', () => {
     updateTicketStore,
     getTicketsListStore,
     closeTicketStore,
-        moveTicketToNextWaitingListStore
+    moveTicketToNextWaitingListStore,
+    getPendingTicketsListStore
   } as const
 })
 
