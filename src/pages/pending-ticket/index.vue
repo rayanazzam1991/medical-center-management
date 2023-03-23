@@ -17,7 +17,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
 import { useI18n } from 'vue-i18n'
-import { closeTicket, getTicketsList } from '/@src/services/Sales/Ticket/ticketService'
+import { closeTicket, getPendingTicketsList } from '/@src/services/Sales/Ticket/ticketService'
 import CloseTicketDropDown from '/@src/components/OurComponents/CloseTicketDropDown.vue'
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -29,9 +29,9 @@ import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
-viewWrapper.setPageTitle(t('ticket.table.title'))
+viewWrapper.setPageTitle(t('pending_ticket.table.title'))
 useHead({
-  title: t('ticket.table.title'),
+  title: t('pending_ticket.table.title'),
 })
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultTicketSearchFilter)
@@ -51,7 +51,7 @@ const currentTicketServicesPrice = ref(0)
 const currenctTicketId = ref(0)
 
 onMounted(async () => {
-  const { tickets, pagination } = await getTicketsList(searchFilter.value)
+  const { tickets, pagination } = await getPendingTicketsList(searchFilter.value)
   ticketsList.value = tickets
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
@@ -76,7 +76,7 @@ const closeTicketStatus = async () => {
 
 const search = async (newSearchFilter: TicketSearchFilter) => {
   paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
-  const { tickets, pagination } = await getTicketsList(newSearchFilter)
+  const { tickets, pagination } = await getPendingTicketsList(newSearchFilter)
   ticketsList.value = tickets
   paginationVar.value = pagination
   searchFilter.value = newSearchFilter
@@ -139,39 +139,39 @@ const columns = {
   id: {
     searchable: true,
     align: 'center',
-    label: t('ticket.table.columns.id')
+    label: t('pending_ticket.table.columns.id')
   },
   customer_name: {
     searchable: true,
     align: 'center',
-    label: t('ticket.table.columns.customer_name'),
+    label: t('pending_ticket.table.columns.customer_name'),
     renderRow: (row: any) =>
       h('span', row.customer.user.first_name + ' ' + row.customer.user.last_name)
   },
   services_count: {
     searchable: true,
     align: 'center',
-    label: t('ticket.table.columns.services_count'),
+    label: t('pending_ticket.table.columns.services_count'),
     renderRow: (row: any) =>
       h('span', row.services_count)
   },
   current_service_provider: {
     searchable: true,
     align: 'center',
-    label: t('ticket.table.columns.current_service_provider'),
+    label: t('pending_ticket.table.columns.current_service_provider'),
     renderRow: (row: any) =>
       h('span', row.current_service_provider ?? '-')
   },
   total_amount: {
     searchable: true,
     align: 'center',
-    label: t('ticket.table.columns.total_amount'),
+    label: t('pending_ticket.table.columns.total_amount'),
     renderRow: (row: any) =>
       h('span', row.total_amount)
   },
   status: {
     align: 'center',
-    label: t('ticket.table.columns.status'),
+    label: t('pending_ticket.table.columns.status'),
     renderRow: (row: any) =>
       h(
         VTag,
@@ -199,19 +199,19 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
-    label: t('ticket.table.columns.created_at'),
+    label: t('pending_ticket.table.columns.created_at'),
     renderRow: (row: any) =>
       h('span', row.created_at)
   },
   created_by: {
     align: 'center',
-    label: t('ticket.table.columns.created_by'),
+    label: t('pending_ticket.table.columns.created_by'),
     renderRow: (row: any) =>
       h('span', row?.created_by?.first_name + ' ' + row?.created_by?.last_name)
   },
   actions: {
     align: 'center',
-    label: t('ticket.table.columns.actions'),
+    label: t('pending_ticket.table.columns.actions'),
     renderRow: (row: any) =>
       h(CloseTicketDropDown, {
         viewPermission: Permissions.TICKET_SHOW,
@@ -244,13 +244,13 @@ const columns = {
 const ticketServicesColumns = {
   service_name: {
     align: 'center',
-    label: t("ticket.details.current_services.columns.service_name"),
+    label: t('pending_ticket.details.current_services.columns.service_name'),
     renderRow: (row: TicketService) =>
       h('span', row?.service.name),
   },
   service_price: {
     align: 'center',
-    label: t("ticket.details.current_services.columns.service_price"),
+    label: t("pending_ticket.details.current_services.columns.service_price"),
     renderRow: (row: TicketService) =>
       h('span', row?.sell_price),
   },
@@ -265,8 +265,8 @@ const ticketServicesColumns = {
 </script>
 
 <template>
-  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('ticket.header_button')"
-    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="ticketsList" @update:sort="ticketSort">
     <VFlexTable separators clickable>
       <template #body>
@@ -303,10 +303,10 @@ const ticketServicesColumns = {
 
     <VPlaceloadText v-if="ticketStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('ticket.table.modal_title')" :open="closeTicketPopup" actions="center"
+  <VModal :title="t('pending_ticket.table.modal_title')" :open="closeTicketPopup" actions="center"
     @close="closeTicketPopup = false">
     <template #content>
-      <VPlaceholderSection :title="t('ticket.table.delete_modal.title')"
+      <VPlaceholderSection :title="t('pending_ticket.table.delete_modal.title')"
         :subtitle="t('ticket.table.delete_modal.subtitle', { title: viewWrapper.pageTitle })" />
     </template>
     <template #action="{ close }">
@@ -314,16 +314,16 @@ const ticketServicesColumns = {
       </VButton>
     </template>
   </VModal>
-  <VModal :key="keyIncrement" :title="t('ticket.details.current_service_card_modal')" :open="currentServiceCardPopup"
-    actions="right" @close="currentServiceCardPopup = false">
+  <VModal :key="keyIncrement" :title="t('pending_ticket.details.current_service_card_modal')"
+    :open="currentServiceCardPopup" actions="right" @close="currentServiceCardPopup = false">
     <template #content>
       <div class="modal-header">
-        <h2> {{ t('ticket.details.turn_number') }}
+        <h2> {{ t('pending_ticket.details.turn_number') }}
           <span>
             {{ ticketCurrentWaitingList.turn_number }}</span>
         </h2>
         <h2>
-          {{ t('ticket.details.service_provider_name') }}:
+          {{ t('pending_ticket.details.service_provider_name') }}:
           <span> {{
             ticketCurrentWaitingList.current_provider.user.first_name
           }} {{ ticketCurrentWaitingList.current_provider.user.last_name }} </span>

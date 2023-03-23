@@ -144,6 +144,8 @@ declare module 'vue-router/auto/routes' {
     '/nationality/add': RouteRecordInfo<'/nationality/add', '/nationality/add', Record<never, never>, Record<never, never>>,
     '/onhold-salaries': RouteRecordInfo<'/onhold-salaries', '/onhold-salaries', Record<never, never>, Record<never, never>>,
     '/onhold-salaries/': RouteRecordInfo<'/onhold-salaries/', '/onhold-salaries/', Record<never, never>, Record<never, never>>,
+    '/pending-ticket': RouteRecordInfo<'/pending-ticket', '/pending-ticket', Record<never, never>, Record<never, never>>,
+    '/pending-ticket/': RouteRecordInfo<'/pending-ticket/', '/pending-ticket/', Record<never, never>, Record<never, never>>,
     '/position': RouteRecordInfo<'/position', '/position', Record<never, never>, Record<never, never>>,
     '/position/': RouteRecordInfo<'/position/', '/position/', Record<never, never>, Record<never, never>>,
     '/position/[id]/': RouteRecordInfo<'/position/[id]/', '/position/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,

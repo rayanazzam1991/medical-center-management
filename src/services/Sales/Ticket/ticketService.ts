@@ -53,6 +53,17 @@ export async function getTicketsList(searchFilter: TicketSearchFilter) {
   return { success, error_code, message, tickets, pagination }
 
 }
+export async function getPendingTicketsList(searchFilter: TicketSearchFilter) {
+  const ticketResponse = useTicket()
+  await ticketResponse.getPendingTicketsListStore(searchFilter)
+  let tickets: Ticket[] = ticketResponse.tickets
+  let success: boolean = ticketResponse.success ?? false
+  let error_code: string = ticketResponse.error_code ?? ''
+  let pagination: Pagination = ticketResponse.pagination ?? defaultPagination
+  let message: string = ticketResponse.message ?? ''
+  return { success, error_code, message, tickets, pagination }
+
+}
 export async function closeTicket(ticketId: number) {
   const ticketResponse = useTicket()
   await ticketResponse.closeTicketStore(ticketId)
