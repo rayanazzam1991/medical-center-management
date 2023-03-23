@@ -89,6 +89,7 @@ const onSubmitChangePassword = async () => {
       notif.success(t('toast.success.password_changed'))
       changePasswordPopupConfirmation.value = false
       changePasswordPopup.value = false
+      await logoutUser()
     } else {
       notif.error({ message: message, duration: 4000 })
     }
