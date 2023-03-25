@@ -1,6 +1,7 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { defaultServiceHistoryScreenSearchFilter } from "/@src/models/Sales/ServiceHistoryScreen/serviceHistoryScreen"
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -35,7 +36,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, resetFilter, search, default_per_page, perPage, pagination, }
+        return { t, resetFilter, search, default_per_page, perPage, pagination, Permissions }
     },
 
 
@@ -79,6 +80,13 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
+                            <VControl>
+                                <VButton v-permission="Permissions.SERVICE_HISTORY_SCREEN_CREATE"
+                                    to="/service-history-screen/add" color="primary">{{
+                                        t('service_history_screen.button_name') }}
+                                </VButton>
+                            </VControl>
+
                         </div>
                     </div>
                 </div>

@@ -266,7 +266,6 @@ export default defineComponent({
                                 </VField>
                             </div>
                             <div class="column is-12 pb-0 my-0">
-                                <p class="required label is-size-6">{{ t('service_history_screen.form.filters') }}</p>
                                 <div class="columns mb-0" v-if="filtersHelper.length != 0">
                                     <div class="column is-5">
                                         <div class="mb-4">

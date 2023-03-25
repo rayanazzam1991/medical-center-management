@@ -110,6 +110,10 @@ export default defineComponent({
                   </select>
                 </div>
               </VControl>
+              <VControl>
+                <VButton v-permission="Permissions.TICKET_CREATE" to="/ticket/add" color="primary">{{ button_name }}
+                </VButton>
+              </VControl>
 
             </div>
           </div>

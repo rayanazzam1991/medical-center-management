@@ -2572,13 +2572,14 @@
   },
   "service_history_screen": {
     "title": "شاشة الانتظار",
+    "button_name" : "إضافة شاشة انتظار",
     "table": {
       "title": "شاشات الانتظار",
       "columns": {
         "name": "الاسم",
-        "rooms": "الغرف",
-        "departments": "الأقسام",
-        "services": "الخدمات",
+        "rooms": "الغرفة",
+        "departments": "القسم",
+        "services": "الخدمة",
         "created_at": "تاريخ الإنشاء ",
         "created_by": " بواسطة",
         "actions": "الإجراءات"
