@@ -166,7 +166,7 @@ const onSubmit = handleSubmit(async () => {
     const { success, message } = await createRecords(createRecord.value)
     if (success) {
         notif.success(t('toast.success.transfer'));
-        router.push({ path: `/account` });
+        router.push({ path: `/transaction` });
 
     } else {
         notif.error({ message: message, duration: 3000 })

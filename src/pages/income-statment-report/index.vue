@@ -21,7 +21,7 @@ import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
 const { printDiv } = usePrint('');
-const print = () => printDiv('printerable')
+const print = () => printDiv('printerable', t('income_statment_report.title'))
 
 
 const viewWrapper = useViewWrapper()
@@ -121,109 +121,7 @@ const toggle = () => {
       </div>
     </div>
   </div>
-  <div class="is-hidden" id="printerable">
-    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px;">{{ t('print.date') }} {{ new
-      Date().toLocaleDateString() }}
-    </h1>
-    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
-      t('income_statment_report.title') }}
-    </h1>
-    <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
-      <thead>
-        <tr>
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.income_statement.balance') }}</th>
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.income_statement.account_name') }}</th>
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.income_statement.account_code') }}</th>
-
-
-        </tr>
-      </thead>
-      <tbody>
-        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
-          <strong>{{ incomeStatment.revenues.name }}</strong>
-        </td>
-
-        <tr v-for="lvl2 in incomeStatment.revenues.children">
-        <tr v-for="account in lvl2.accounts">
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
-
-        </tr>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ incomeStatment.revenues.total_balances }}
-          </td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.income_statement.total_revenues') }}</strong>
-          </td>
-        </tr>
-        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
-          <strong>{{ incomeStatment.costs.name }}</strong>
-        </td>
-
-        <tr v-for="account in incomeStatment.costs.accounts">
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-
-
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ incomeStatment.costs.total_balances
-          }}</td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.income_statement.total_costs') }}</strong>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ incomeStatment.gross_profit
-          }}</td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.income_statement.gross_profit') }}</strong>
-          </td>
-        </tr>
-        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
-          <strong>{{ incomeStatment.other_expenses.name }}</strong>
-        </td>
-
-        <tr v-for="lvl2 in incomeStatment.other_expenses.children">
-        <tr v-for="account in lvl2.accounts">
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
-
-        </tr>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{
-            incomeStatment.other_expenses.total_balances }}
-          </td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.income_statement.total_other_expenses') }}</strong>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{
-            incomeStatment.net_income }}
-          </td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.income_statement.net_income') }}</strong>
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
-  </div>
+  <IncomeStatementReportPrint :key="keyIncrement" :income-statement="incomeStatment" />
 </template>
 
 <style lang="scss">

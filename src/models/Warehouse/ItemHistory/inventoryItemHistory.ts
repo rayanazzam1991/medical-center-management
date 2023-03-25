@@ -1,3 +1,4 @@
+import { string } from "zod"
 import { CreateRecords, createRecordsWithDefault } from "../../Accounting/Transaction/record"
 import { defaultUser, User } from "../../Others/User/user"
 import { defaultInventory, Inventory } from "../Inventory/inventory"
@@ -17,8 +18,12 @@ export interface inventoryItemHistory {
     requester_name: string
     created_by?: User
     withdraw_item_price: number
-    movement_type?:string
-    action_type?:string
+    movement_type?: string
+    action_type?: string
+    from_inventory?: string
+    to_inventory?: string
+    created_at?: string
+
 }
 
 export interface InventoryItemHistorySearchFilter {
@@ -46,8 +51,8 @@ export interface addQuantity {
     add_item_cost: number
     note: string
     invoice_number: string
-  status: number
-  record : CreateRecords
+    status: number
+    record: CreateRecords
 }
 export interface withdrawQuantity {
     id?: number
@@ -86,8 +91,11 @@ export const defaultInventoryItemHistory: inventoryItemHistory = {
     created_by: defaultUser,
     withdraw_item_price: 0,
     status: 1,
-    movement_type:undefined,
-    action_type:undefined
+    movement_type: undefined,
+    action_type: undefined,
+    from_inventory: undefined,
+    created_at: undefined,
+    to_inventory: undefined
 }
 export const defaultInventoryItemHistorySearchFilter: InventoryItemHistorySearchFilter = {
     item_id: undefined,
@@ -114,8 +122,8 @@ export const defaultAddQuantityItem: addQuantity = {
     add_item_cost: 0,
     note: '',
     invoice_number: '',
-  status: 1,
-    record : createRecordsWithDefault
+    status: 1,
+    record: createRecordsWithDefault
 
 }
 

@@ -25,7 +25,7 @@ import { trialBalancePrintStyle } from '/@src/utils/PrintStyles/printStyles';
 
 
 const { printDiv } = usePrint('');
-const print = () => printDiv('printerable')
+const print = () => printDiv('printerable', t('balance_sheet_report.title'))
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -155,75 +155,7 @@ const toggle = () => {
       </div>
     </div>
   </div>
-  <div class="is-hidden" id="printerable">
-    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px;">{{ t('print.date') }} {{ new
-      Date().toLocaleDateString() }}
-    </h1>
-    <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
-      t('balance_sheet_report.title') }}
-    </h1>
-    <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
-      <thead>
-        <tr>
-
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.balance_sheet.balance') }}</th>
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.balance_sheet.account_name') }}</th>
-          <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-            t('print.balance_sheet.account_code') }}</th>
-
-
-
-        </tr>
-      </thead>
-      <tbody>
-        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
-          <strong>{{ balanceSheet.assets.name }}</strong>
-        </td>
-
-        <tr v-for="lvl2 in balanceSheet.assets.children">
-        <tr v-for="account in lvl2.accounts">
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
-
-        </tr>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ balanceSheet.assets.total_balances }}
-          </td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.balance_sheet.total_assets') }}</strong>
-          </td>
-        </tr>
-        <td colspan="3" style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
-          <strong>{{ balanceSheet.liabilities.name }}</strong>
-        </td>
-
-        <tr v-for="lvl2 in balanceSheet.liabilities.children">
-        <tr v-for="account in lvl2.accounts">
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
-
-
-        </tr>
-        </tr>
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ balanceSheet.liabilities.total_balances
-          }}</td>
-
-          <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-            <strong>{{ t('print.balance_sheet.total_liabilities') }}</strong>
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
-  </div>
+  <BalanceSheetReportPrint :key="keyIncrement" :balance-sheet="balanceSheet" />
 </template>
 
 <style lang="scss">

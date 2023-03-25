@@ -46,7 +46,7 @@ const toggle = () => {
     keyIncrement.value++
 }
 const { printDiv } = usePrint('');
-const print = () => printDiv('printerable')
+const print = () => printDiv('printerable', t('trial_balance_report.title'))
 
 </script>
 
@@ -93,14 +93,14 @@ const print = () => printDiv('printerable')
             <div class="column is-12 pb-0">
                 <TrailBalanceCollapse :items="trialBalance.main_charts" with-chevron :key="keyIncrement"
                     :is_expanded="isExpanded" />
-        </div>
+            </div>
 
-        <div v-if="trialBalance.main_charts.length != 0"
+            <div v-if="trialBalance.main_charts.length != 0"
                 class="account-details accounts-footer columns is-flex-direction-row-reverse is-justify-content-end account-details-padding mt-4 mb-0">
                 <div class="is-flex">
-                <div class="chart-row">
-                    <div class="accounts-cell has-bold">
-                        {{ trialBalance.total_credits }}
+                    <div class="chart-row">
+                        <div class="accounts-cell has-bold">
+                            {{ trialBalance.total_credits }}
                         </div>
 
                     </div>
@@ -116,67 +116,7 @@ const print = () => printDiv('printerable')
 
         </div>
     </div>
-    <div class="is-hidden" id="printerable">
-        <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px;">{{ t('print.date') }} {{ new
-            Date().toLocaleDateString() }}
-        </h1>
-        <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
-            t('trial_balance_report.title') }}
-        </h1>
-        <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">{{
-                        t('print.trial_balance.total_credit') }}</th>
-                    <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                        {{ t('print.trial_balance.total_debit') }}</th>
-                    <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">{{
-                        t('print.trial_balance.account_name') }}</th>
-                    <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">{{
-                        t('print.trial_balance.account_code') }}</th>
-
-
-
-
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="chart in trialBalance.main_charts">
-                    <!-- <td style="padding: 8px; border: 1px solid #ddd;">{{ chart.code }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ chart.name }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ chart.total_credits }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ chart.total_debits }}</td> -->
-                <tr v-for="lvl2 in chart.children">
-                    <!-- <td style="padding: 8px; border: 1px solid #ddd;">{{ lvl2.code }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ lvl2.name }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ lvl2.total_credits }}</td>
-                                                                                                                                                            <td style="padding: 8px; border: 1px solid #ddd;">{{ lvl2.total_debits }}</td> -->
-                <tr v-for="account in lvl2.accounts">
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ account.absolute_type == AccountConsts.CREDIT_TYPE
-                        ? account.absolute_balance : '0.00' }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ account.absolute_type == AccountConsts.DEBIT_TYPE ?
-                        account.absolute_balance : '0.00' }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ account.name }}</td>
-
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ account.code }}</td>
-
-                </tr>
-                </tr>
-
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ trialBalance.total_credits }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">{{ trialBalance.total_debits }}</td>
-                    <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
-                        <strong>{{ t('print.trial_balance.total') }}</strong>
-                    </td>
-
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+    <TrialBalanceReportPrint :key="keyIncrement" :trail-balance="trialBalance" />
 </template>
 
 <style   lang="scss">
