@@ -2544,7 +2544,7 @@
         "customer": "الزبون",
         "customer_phone_number": "رقم الهاتف",
         "requested_service": "الخدمة",
-        "note": "المذكرة",
+        "note": "ملاحظات",
         "date": "التاريخ",
         "time": "الوقت",
         "status": "الحالة",
@@ -2557,7 +2557,7 @@
       "form_header": "{type} مذكرة",
       "customer": "الزبون :",
       "service": "الخدمة المقدمة :",
-      "note": "المذكرة",
+      "note": "ملاحظات",
       "date": "التاريخ",
       "time": "الوقت"
     },
