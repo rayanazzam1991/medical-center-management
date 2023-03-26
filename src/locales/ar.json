@@ -234,6 +234,7 @@
   "ticketing_subnav": {
     "ticket": {
       "tickets": "التذاكر",
+      "pending_tickets": "التذاكر المعلّقة",
       "create_ticket": "انشاء تذكرة"
     },
     "waiting_list": {
@@ -272,7 +273,8 @@
     "type": {
       "add": "إضافة",
       "edit": "تعديل",
-      "withdraw": "سحب"
+      "withdraw": "سحب",
+      "cofirm_payment": "تأكيد عملية الدفع"
     },
     "back_button": "العودة"
   },
@@ -395,6 +397,7 @@
     "view": "معاينة",
     "edit": "تعديل",
     "remove": "إزالة",
+    "confirm_payement": "تأكيد عملية الدفع",
     "change_status": "تغيير الحالة",
     "view_my_waiting_list": "عرض غرفة الانتظار",
     "close_ticket": "إغلاق التذكرة",
@@ -879,7 +882,8 @@
       "select_service": "اختيار خدمة",
       "no_service_added_placeholder": "لا يوجد خدمات مقدمة من قبل الموظف",
       "roles": "الأدوار",
-      "roles_helper": "اضغط على زر (Ctrl) لتحديد عدّة خيارات"
+      "roles_helper": "اضغط على زر (Ctrl) لتحديد عدّة خيارات",
+      "isUser": "مستخدم"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
@@ -2329,7 +2333,11 @@
       "select_service": "تحديد الخدمة",
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
-      "add_new_service": "إضافة خدمة جديدة"
+      "add_new_service": "إضافة خدمة جديدة",
+      "confirm_payment": {
+        "page_title": "تأكيد عملية الدفع",
+        "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
+      }
     },
     "header_button": "إضافة تذكرة",
     "back_button": "العودة للخلف",

@@ -85,7 +85,7 @@ const columns = {
     align: 'center',
     label: t("ticket.details.current_services.columns.currency"),
     renderRow: (row: TicketService) =>
-      h('span', currentTicket.value.currency.name),
+      h('span', currentTicket.value.currency?.name ?? t('place_holder.none')),
   },
 } as const
 
@@ -172,11 +172,11 @@ const columns = {
 
                   <p> {{ service.sell_price }}</p>
                 </div>
-                <div class="project-feature" v-if="service.service.has_item"
-                  v-for="(item, index) in service.service.service_items" :key="index">
+                <div class="project-feature" v-if="service.service.has_item">
                   <VDropdown icon="ion:eye">
                     <template #content>
-                      <p class="dropdown-item"> ({{ item.quantity }}) {{ item.item.name }} </p>
+                      <p class="dropdown-item" v-for="(item, index) in service.service.service_items" :key="index"> ({{
+                        item.quantity }}) {{ item.item.name }} </p>
                     </template>
                   </VDropdown>
                 </div>
@@ -198,7 +198,7 @@ const columns = {
                                   <div class="meta">
                                     <span>{{ t('ticket.details.paid_amount') }}</span>
                                     <span>
-                                      {{ currentTicket.paid_amount }}
+                                      {{ currentTicket.paid_amount ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
@@ -208,7 +208,7 @@ const columns = {
                                   <div class="meta">
                                     <span>{{ t('ticket.details.remaining_amount') }}</span>
                                     <span>
-                                      {{ currentTicket.remaining_amount }}
+                                      {{ currentTicket.remaining_amount ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
@@ -218,7 +218,7 @@ const columns = {
                                   <div class="meta">
                                     <span>{{ t('ticket.details.currency') }}</span>
                                     <span>
-                                      {{ currentTicket.currency.name }}
+                                      {{ currentTicket.currency?.name ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
@@ -228,7 +228,7 @@ const columns = {
                                   <div class="meta">
                                     <span>{{ t('ticket.details.currency_rate') }}</span>
                                     <span>
-                                      {{ currentTicket.currency_rate }}
+                                      {{ currentTicket.currency_rate ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>

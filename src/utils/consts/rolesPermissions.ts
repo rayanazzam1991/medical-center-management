@@ -303,6 +303,7 @@ export enum Permissions {
     TICKET_DELETE = 'ticket_delete',
     TICKET_EDIT = 'ticket_edit',
     TICKET_LIST = 'ticket_list',
+    PNDING_TICKET_LIST = 'pending_ticket_list',
     TICKET_SERVICE_ACCESS = 'ticket_service_access',
     TICKET_SERVICE_SHOW = 'ticket_service_show',
     TICKET_SERVICE_CREATE = 'ticket_service_create',

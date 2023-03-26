@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "position_access"
+      "pending_ticket_list"
     ]
   }
 }

@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "ticket_list"
+      "pending_ticket_list"
     ]
   }
 }
@@ -226,6 +226,14 @@ const columns = {
             notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
           }
         },
+        onConfirmPayement: () => {
+          if (row.status != TicketConsts.CLOSED) {
+
+            router.push({ path: `/pending-ticket/${row.id}/edit` })
+          } else {
+            notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
+          }
+        },
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
         },
@@ -258,15 +266,15 @@ const ticketServicesColumns = {
     align: 'center',
     label: t("ticket.details.current_services.columns.currency"),
     renderRow: (row: TicketService) =>
-      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency.name),
+      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency?.name),
   },
 } as const
 
 </script>
 
 <template>
-  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
-    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('ticket.header_button')"
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="ticketsList" @update:sort="ticketSort">
     <VFlexTable separators clickable>
       <template #body>
