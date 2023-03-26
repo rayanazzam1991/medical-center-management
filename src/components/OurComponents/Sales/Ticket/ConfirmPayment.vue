@@ -72,6 +72,7 @@ export default defineComponent({
           requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
         });
         updateTotalAmount()
+
       }
     }
     onMounted(async () => {
@@ -106,28 +107,18 @@ export default defineComponent({
       isLoading.value = false
     })
 
-    const addService = (service: CreateTicketServiceHelper) => {
-      requestedServicesHelper.value?.push(service)
-    }
-
-    const updatePrice = (service: CreateTicketServiceHelper, index: number) => {
-      const serviceWithProvider = servicesWithProviders.value.find((serviceElm) => serviceElm.id == service.service_id)
-      const provider = serviceWithProvider?.providers.find((serviceProvider) => serviceProvider.id == service.service_provider_id)
-      service.sell_price = provider?.price ?? 0
-      updateTotalAmount()
-    }
-
-    const removeService = (index: number) => {
-      if (index !== -1) {
-        requestedServicesHelper.value.splice(index, 1);
-        updateTotalAmount()
-      }
-    }
-
     const updateTotalAmount = () => {
       debouncedTotalAmount();
       updateRemainingAmount()
     }
+    const debouncedTotalAmount = debounce(() => {
+      currentTicket.value.total_amount = 0
+      requestedServicesHelper.value.forEach((element) => {
+        currentTicket.value.total_amount += element.sell_price
+      })
+      context.emit('input-finished', currentTicket.value.total_amount);
+    }, 1)
+
 
     const updateCurrencyRate = () => {
       const currency = currenciesList.value.find((currencyElm) => currencyElm.id == currentConfirmPayment.value.currency_id)
@@ -137,27 +128,18 @@ export default defineComponent({
       else enableCurrencyRate.value = false
     }
 
-    const debouncedTotalAmount = debounce(() => {
-      currentTicket.value.total_amount = 0
-      requestedServicesHelper.value.forEach((element) => {
-        currentTicket.value.total_amount += element.sell_price
-      })
-      context.emit('input-finished', currentTicket.value.total_amount);
-    }, 1)
 
     const updateRemainingAmount = debounce(() => {
       currentConfirmPayment.value.remaining_amount = currentTicket.value.total_amount - currentConfirmPayment.value.paid_amount
     }, 1)
 
-    const setCustomerIdValue = () => {
-      setFieldValue('customer_id', currentTicket.value.customer_id)
-    }
 
     const validationSchema = ticketValidationSchema
     const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
       initialValues: {
         customer_id: currentTicket.value.customer_id,
+        total_amount: currentTicket.value.total_amount,
         ticket_id: currentConfirmPayment.value.ticket_id,
         currency_rate: currentConfirmPayment.value.currency_rate,
         remaining_amount: currentConfirmPayment.value.remaining_amount,
@@ -174,67 +156,14 @@ export default defineComponent({
         return;
     }
 
-    const validateRequestedServices = () => {
-      let serviceError = false
-      let serviceProviderError = false
-      let servicePriceError = false
-      if (requestedServicesHelper.value.length == 0) {
-        notif.error({ message: t('toast.error.ticket.no_services_error'), duration: 3000 })
-        return false
-
-      }
-
-      requestedServicesHelper.value.forEach((service) => {
-        if (service.service_id == 0) {
-          notif.error({ message: t('toast.error.ticket.service_is_required'), duration: 3000 })
-          serviceError = true
-        }
-      });
-      if (serviceError)
-        return false
-
-
-      requestedServicesHelper.value.forEach((service) => {
-        if (service.service_provider_id == 0) {
-          const serviceProvider = servicesWithProviders.value.find((serviceWithProvider) => service.service_id == serviceWithProvider.id)
-          notif.error({ message: t('toast.error.ticket.service_provider_is_required', { service_name: serviceProvider?.name }), duration: 3000 })
-          serviceProviderError = true
-        }
-      });
-      if (serviceProviderError)
-        return false
-
-      requestedServicesHelper.value.forEach((service) => {
-        if (service.sell_price <= 0 || Number.isNaN(service.sell_price)) {
-          const serviceProvider = servicesWithProviders.value.find((serviceWithProvider) => service.service_id == serviceWithProvider.id)
-          notif.error({ message: t('toast.error.ticket.service_price_is_invalid', { service_name: serviceProvider?.name }), duration: 3000 })
-          servicePriceError = true
-        }
-      });
-      if (servicePriceError)
-        return false
-
-      let requestedServices = requestedServicesHelper.value.map(function (item) { return item.service_id });
-      let isDuplicate = requestedServices.some(function (item, idx) {
-        return requestedServices.indexOf(item) != idx
-      });
-      if (isDuplicate) {
-        notif.error(t('toast.error.ticket.services_is_duplicated'))
-        return false
-      }
-      return true
-    }
 
     const onSubmitEdit = handleSubmit(async () => {
-      const isValid = validateRequestedServices()
-      if (!isValid)
-        return
       currentConfirmPayment.value.ticket_id = ticketId.value
       const { success, message, ticket } = await confirmPaymentTicket(ticketId.value, currentConfirmPayment.value)
       if (success) {
         await sleep(200);
         notif.success(t('toast.success.update_ticket', { ticket_id: ticket.id }))
-        router.push({ path: `/ticket` });
+        router.push({ path: `/pending-ticket` });
       }
       else {
         await sleep(200);
@@ -244,8 +173,7 @@ export default defineComponent({
 
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore, updateRemainingAmount,
-      enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      cashAccountsList, updateCurrencyRate, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment
+      enableCurrencyRate, UserStatusConsts, cashAccountsList, updateCurrencyRate, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment
     };
   },
   components: { ErrorMessage }
@@ -273,23 +201,8 @@ export default defineComponent({
                 <VField id="customer_id">
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
-                    <Multiselect v-if="formType == 'Add'" v-model="currentTicket.customer_id" mode="single"
-                      :placeholder="t('ticket.form.select_customer')" :close-on-select="true" ref="customer_id"
-                      @select="setCustomerIdValue()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
-                      :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
-                      :searchable="true" :canClear="false" :options="async (query: any) => {
-                        let customerSearchFilter = {
-                          user_status_id: UserStatusConsts.ACTIVE,
-                          name: query,
-                        } as CustomerSearchFilter
-                        //@ts-ignore
-                        const data = await getCustomersList(customerSearchFilter)
-                        //@ts-ignore
-                        return data.customers.map((customer: Customer) => {
-                          return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                        })
-                      }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
-                    <VSelect disabled v-else v-model="currentTicket.customer_id">
+
+                    <VSelect disabled v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
                       </VOption>
@@ -324,8 +237,7 @@ export default defineComponent({
                       <VField>
                         <VControl>
                           <div class="select">
-                            <select disabled @change="updatePrice(record, mainIndex)"
-                              v-model="requestedServicesHelper[mainIndex].service_provider_id">
+                            <select disabled v-model="requestedServicesHelper[mainIndex].service_provider_id">
                               <option :value="0"> {{ t('ticket.form.select_provider')
                               }}</option>
                               <option
@@ -344,8 +256,7 @@ export default defineComponent({
                     <div class="mb-3">
                       <VField>
                         <VControl>
-                          <VInput disabled @input="() => updateTotalAmount()" type="number"
-                            v-model.number="requestedServicesHelper[mainIndex].sell_price" />
+                          <VInput disabled type="number" v-model.number="requestedServicesHelper[mainIndex].sell_price" />
                         </VControl>
                       </VField>
                     </div>

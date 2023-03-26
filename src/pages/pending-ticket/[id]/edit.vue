@@ -26,5 +26,5 @@ const head = useHead({
 </script>
 
 <template>
-  <ConfirmPayement :formType="'Edit'" />
+  <ConfirmPayment :formType="'Edit'" />
 </template>

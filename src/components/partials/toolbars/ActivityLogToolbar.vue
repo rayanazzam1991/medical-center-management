@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useDropdown } from '/@src/composable/useDropdown'
 import { useI18n } from "vue-i18n";
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { checkPermission } from '/@src/composable/checkPermission';
 
 const { t } = useI18n()
 const dropdownElement = ref<HTMLElement>()
@@ -17,7 +19,7 @@ const dropdown = useDropdown(dropdownElement)
       <div class="dropdown-menu">
         <div class="dropdown-content">
           <ul class="notification-list">
-            <li>
+            <li v-permission="Permissions.ACTIVITY_LOG_LIST">
               <a class="notification-item">
                 <div class="img-left">
                   <i class="iconify mr-2" data-icon="feather:activity" aria-hidden="true"></i>
@@ -29,6 +31,18 @@ const dropdown = useDropdown(dropdownElement)
                 </div>
               </a>
             </li>
+            <li>
+
+              <a v-if="!checkPermission(Permissions.ACTIVITY_LOG_LIST)" role="menuitem" class="dropdown-item is-media">
+                <div class=" icon">
+                  <i class="fas fa-window-close" aria-hidden="true"></i>
+                </div>
+                <div class="meta">
+                  <span>{{ t('drop_down.no_actions') }}</span>
+                </div>
+              </a>
+            </li>
+
           </ul>
         </div>
       </div>

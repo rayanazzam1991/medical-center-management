@@ -4,15 +4,11 @@ import { Notyf } from 'notyf';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Account, AccountSearchFilter, AccountConsts } from '/@src/models/Accounting/Account/account';
-import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/customer';
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidationSchema';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
-import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -55,26 +51,18 @@ export default defineComponent({
     const servicesWithProviders = ref<ServiceWithProvider[]>([]);
     const enableCurrencyRate = ref(false)
     const customersList = ref<Customer[]>([])
-    // const currenciesList = ref<Currency[]>([])
-    // const cashAccountsList = ref<Account[]>([])
     const isLoading = ref(false)
 
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
 
         const { ticket } = await getTicket(ticketId.value);
-        // currentTicket.value.cash_account_id = ticket.cash_account.id ?? 0
-        // currentTicket.value.currency_id = ticket.currency.id
-        // currentTicket.value.currency_rate = ticket.currency_rate
         currentTicket.value.customer_id = ticket.customer.id ?? 0
-        // currentTicket.value.paid_amount = ticket.paid_amount
-        // currentTicket.value.remaining_amount = ticket.remaining_amount
         currentTicket.value.total_amount = ticket.total_amount
 
         ticket.requested_services.forEach(service => {
           requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
         });
-        // enableCurrencyRate.value = !ticket.currency.is_main
         updateTotalAmount()
       }
 
@@ -92,27 +80,6 @@ export default defineComponent({
       } as CustomerSearchFilter
       const { customers } = await getCustomersList(customerSearchFilter)
       customersList.value = customers
-
-
-      const currencySearchFilter = {
-        per_page: 500
-      } as CurrencySearchFilter
-      // const { currencies } = await getCurrenciesList(currencySearchFilter)
-      // currenciesList.value = currencies
-      // if (formType.value == 'Add')
-      //     currentTicket.value.currency_id = currenciesList.value.find((currency) => currency.is_main)?.id ?? 0
-
-
-      const accountSearchFilter = {
-        per_page: 500
-      } as AccountSearchFilter
-      // const { accounts } = await getAccountsList(accountSearchFilter)
-      // accounts.forEach((account) => {
-      //     if (account.chart_account?.code == AccountConsts.CASH_CODE) {
-      //         cashAccountsList.value.push(account)
-      //     }
-      // });
-
       const { services } = await getServicesWithProviders()
       servicesWithProviders.value = services
       isLoading.value = false
@@ -138,16 +105,8 @@ export default defineComponent({
 
     const updateTotalAmount = () => {
       debouncedTotalAmount();
-      //updateRemainingAmount()
     }
 
-    // const updateCurrencyRate = () => {
-    //     const currency = currenciesList.value.find((currencyElm) => currencyElm.id == currentTicket.value.currency_id)
-    //     currentTicket.value.currency_rate = currency?.rate ?? 1
-    //     if (!currency?.is_main)
-    //         enableCurrencyRate.value = true
-    //     else enableCurrencyRate.value = false
-    // }
 
     const debouncedTotalAmount = debounce(() => {
       currentTicket.value.total_amount = 0
@@ -157,9 +116,6 @@ export default defineComponent({
       context.emit('input-finished', currentTicket.value.total_amount);
     }, 1)
 
-    // const updateRemainingAmount = debounce(() => {
-    //     currentTicket.value.remaining_amount = currentTicket.value.total_amount - currentTicket.value.paid_amount
-    // }, 1)
 
     const setCustomerIdValue = () => {
       setFieldValue('customer_id', currentTicket.value.customer_id)
@@ -169,16 +125,10 @@ export default defineComponent({
     const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
       initialValues: formType.value == "Edit" ? {
-        // currency_rate: currentTicket.value.currency_rate,
-        // remaining_amount: currentTicket.value.remaining_amount,
         customer_id: currentTicket.value.customer_id
       } : {
         customer_id: 0,
         total_amount: 0,
-        // remaining_amount: 0,
-        // paid_amount: 0,
-        // cash_account_id: 0,
-        // currency_rate: 1
       },
     })
 
@@ -244,10 +194,6 @@ export default defineComponent({
 
     const formatUpdateData = () => {
       let updateTicket = {
-        // cash_account_id: currentTicket.value.cash_account_id,
-        // currency_rate: currentTicket.value.currency_rate,
-        // paid_amount: currentTicket.value.paid_amount,
-        // remaining_amount: currentTicket.value.remaining_amount,
         total_amount: currentTicket.value.total_amount
       } as UpdateTicket
       updateTicket.requested_services = []
@@ -299,11 +245,6 @@ export default defineComponent({
       }
     })
 
-    //   return {
-    //       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore, updateRemainingAmount,
-    //       enableCurrencyRate, setCustomerIdValue, updateCurrencyRate, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-    //       cashAccountsList, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper
-    // };
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
@@ -469,64 +410,6 @@ export default defineComponent({
                   </VControl>
                 </VField>
               </div>
-              <!-- <div class="column is-6">
-                        <VField id="cash_account_id">
-                          <VLabel class="required">{{ t('ticket.form.cash_account') }}</VLabel>
-                          <VControl>
-                            <VSelect :disabled="formType == 'Edit'" v-model="currentTicket.cash_account_id">
-                              <VOption :value="0"> {{ t('ticket.form.select_cash_account')
-                              }}</VOption>
-                              <VOption v-for="account in cashAccountsList" :value="account.id">
-                                {{ account.code }} - {{ account.name }}
-                              </VOption>
-                            </VSelect>
-                            <ErrorMessage class="help is-danger" name="cash_account_id" />
-                          </VControl>
-                        </VField>
-                      </div>
-                      <div class="column is-6">
-                        <VField id="currency_id">
-                          <VLabel class="required">{{ t('ticket.form.currency') }}</VLabel>
-                          <VControl>
-                            <VSelect :disabled="formType == 'Edit'" @change="updateCurrencyRate"
-                              v-model="currentTicket.currency_id">
-                              <VOption v-for="currency in currenciesList" :value="currency.id">
-                                {{ currency.code }} - {{ currency.name }}
-                              </VOption>
-                            </VSelect>
-                            <ErrorMessage class="help is-danger" name="currency_id" />
-                          </VControl>
-                        </VField>
-                      </div>
-                      <div class="column is-6">
-                        <VField id="currency_rate" v-slot="{ field }">
-                          <VLabel class="required">{{ t('ticket.form.currency_rate') }}</VLabel>
-                          <VControl icon="feather:dollar-sign">
-                            <VInput :disabled="!enableCurrencyRate" v-model="currentTicket.currency_rate" placeholder=""
-                              type="number" />
-                            <ErrorMessage class="help is-danger" name="currency_rate" />
-                          </VControl>
-                        </VField>
-                      </div>
-                      <div class="column is-6">
-                        <VField id="paid_amount">
-                          <VLabel class="required">{{ t('ticket.form.paid_amount') }}</VLabel>
-                          <VControl>
-                            <VInput :disabled="formType == 'Edit'" @input="updateRemainingAmount"
-                              v-model="currentTicket.paid_amount" placeholder="" type="number" />
-                            <ErrorMessage class="help is-danger" name="paid_amount" />
-                          </VControl>
-                        </VField>
-                      </div>
-                      <div class="column is-6">
-                        <VField id="remaining_amount">
-                          <VLabel class="required">{{ t('ticket.form.remaining_amount') }}</VLabel>
-                          <VControl>
-                            <VInput disabled v-model="currentTicket.remaining_amount" placeholder="" type="number" />
-                            <ErrorMessage class="help is-danger" name="remaining_amount" />
-                          </VControl>
-                        </VField>
-                      </div> -->
             </div>
           </div>
         </div>
