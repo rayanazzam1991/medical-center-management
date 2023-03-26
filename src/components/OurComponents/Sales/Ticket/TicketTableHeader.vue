@@ -110,7 +110,11 @@ export default defineComponent({
                   </select>
                 </div>
               </VControl>
-
+              <VControl>
+                <VButton v-permission="Permissions.TICKET_CREATE" class="ml-2" to="/ticket/add" color="primary">{{
+                  button_name }}
+                </VButton>
+              </VControl>
             </div>
           </div>
         </div>
@@ -124,4 +128,3 @@ export default defineComponent({
 <style   lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 </style>
-

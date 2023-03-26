@@ -18,16 +18,16 @@ export interface Ticket {
   id: number
   customer: Customer
   total_amount: number
-  currency: Currency
-  currency_rate: number
-  paid_amount: number
-  remaining_amount: number
-  cash_account: Account
+  currency?: Currency
+  currency_rate?: number
+  paid_amount?: number
+  remaining_amount?: number
+  cash_account?: Account
   status: number
   created_at: string
   created_by: User
-  services_count: number
-  current_service_provider: string
+  services_count?: number
+  current_service_provider?: string
   requested_services: TicketService[]
 }
 
@@ -35,11 +35,6 @@ export interface Ticket {
 export interface CreateTicket {
   customer_id: number
   total_amount: number
-  cash_account_id: number
-  currency_id: number
-  currency_rate: number
-  paid_amount: number
-  remaining_amount: number
   requested_services: CreateUpdateTicketService[]
 }
 export interface UpdateTicket {
@@ -50,33 +45,45 @@ export interface UpdateTicket {
   remaining_amount: number
   requested_services: CreateUpdateTicketService[]
 }
-
-export const defaultCreateTicket: CreateTicket = {
-  customer_id: 0,
-  total_amount: 0,
+export interface ConfirmPaymentTicket{
+  ticket_id: number
+  cash_account_id: number
+  currency_id: number
+  currency_rate: number
+  paid_amount: number
+  remaining_amount: number
+}
+export const defaultConfirmPaymentTicket: ConfirmPaymentTicket = {
+  ticket_id:0,
   cash_account_id: 0,
   currency_id: 0,
   currency_rate: 1,
   paid_amount: 0,
-  remaining_amount: 0,
+  remaining_amount: 0
+}
+
+
+export const defaultCreateTicket: CreateTicket = {
+  customer_id: 0,
+  total_amount: 0,
   requested_services: []
 
 }
 export const defaultTicket: Ticket = {
-  cash_account: defaultAccount,
+  cash_account: undefined,
   created_at: '',
   created_by: defaultUser,
-  currency: defaultCurrency,
-  currency_rate: 1,
+  currency: undefined,
+  currency_rate: undefined,
   customer: defaultCustomer,
   id: 0,
-  paid_amount: 0,
-  remaining_amount: 0,
+  paid_amount: undefined,
+  remaining_amount: undefined,
   requested_services: [],
   status: 1,
   total_amount: 0,
-  services_count: 0,
-  current_service_provider: ''
+  services_count: undefined,
+  current_service_provider: undefined
 }
 
 export interface TicketSearchFilter {

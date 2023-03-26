@@ -182,7 +182,7 @@ body {
 
             .notification-item {
               display: flex;
-              padding: 0.65rem 0;
+              padding: 0.5rem 0;
 
               .img-left {
                 img {
@@ -199,6 +199,7 @@ body {
               .user-content {
                 text-align: left;
                 font-family: var(--font);
+
 
                 .user-info {
                   color: var(--dark-text);

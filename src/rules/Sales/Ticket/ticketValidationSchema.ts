@@ -36,56 +36,56 @@ const ticketValidationSchema = toFormValidator(zod
 
                 ,
             ),
-        remaining_amount:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
-            ),
-        paid_amount:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
-            ),
-        cash_account_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
-            ),
-        currency_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
-            ),
-        currency_rate:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
-            ),
+        // remaining_amount:
+        //     zod.preprocess(
+        //         (input) => {
+        //             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+        //             return processed.success ? processed.data : input;
+        //         },
+        //         zod
+        //             .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+        //             .min(0, i18n.global.t('validation.number.invalid_type_error')),
+        //     ),
+        // paid_amount:
+        //     zod.preprocess(
+        //         (input) => {
+        //             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+        //             return processed.success ? processed.data : input;
+        //         },
+        //         zod
+        //             .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+        //             .min(1, i18n.global.t('validation.number.invalid_type_error')),
+        //     ),
+        // cash_account_id: zod
+        //     .preprocess(
+        //         (input) => {
+        //             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+        //             return processed.success ? processed.data : input;
+        //         },
+        //         zod
+        //             .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+        //             .min(1, i18n.global.t('validation.required')),
+        //     ),
+        // currency_id: zod
+        //     .preprocess(
+        //         (input) => {
+        //             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+        //             return processed.success ? processed.data : input;
+        //         },
+        //         zod
+        //             .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+        //             .min(1, i18n.global.t('validation.required')),
+        //     ),
+        // currency_rate:
+        //     zod.preprocess(
+        //         (input) => {
+        //             const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+        //             return processed.success ? processed.data : input;
+        //         },
+        //         zod
+        //             .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
+        //             .min(1, i18n.global.t('validation.number.invalid_type_error')),
+        //     ),
     }));
 export {
     ticketValidationSchema
