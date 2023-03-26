@@ -1,0 +1,31 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "role_edit"
+        ]
+    }
+}
+</route>
+        
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
+import { useI18n } from 'vue-i18n';
+import { useViewWrapper } from '/@src/stores/viewWrapper';
+const { t } = useI18n()
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle(t('role.form.page_title'))
+const route = useRoute()
+
+const head = useHead({
+    title: t('role.form.edit_role_title'),
+})
+
+
+</script>
+    
+<template>
+    <RoleForm :formType="'Edit'" />
+</template>
+    

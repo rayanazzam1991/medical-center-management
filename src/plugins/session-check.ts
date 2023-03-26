@@ -37,7 +37,6 @@ export default definePlugin(async ({ router, api, pinia }) => {
   // }
 
   router.beforeEach((to, from, next) => {
-    // console.log('logged2', loggedUser);
     if (!to.meta.requiresAuth) next()
     else {
       if (!userAuth.isLoggedIn && to.name !== "/auth/login") {

@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Room, CreateUpdateRoom, RoomSearchFilter } from "/@src/models/Others/Room/room"
-import { getRolesApi } from "/@src/utils/api/Others/Role"
+import { getRoleApi, getRolesApi, updateRolePermissionsApi } from "/@src/utils/api/Others/Role"
 import { deleteRoomApi, getRoomApi, addRoomApi, editRoomApi, getRoomsApi } from "/@src/utils/api/Others/Room"
 import { Role } from "/@src/utils/consts/rolesPermissions"
 import { Pagination, defaultPagination } from "/@src/utils/response"
@@ -40,6 +40,49 @@ export const useRole = defineStore('role', () => {
             loading.value = false
         }
     }
+    async function getRoleStore(roleId: number) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getRoleApi(api, roleId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as Role
+
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
+    async function updateRolePermissionsStore(roleId: number, permissions: String[]) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await updateRolePermissionsApi(api, roleId, permissions)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as Role
+
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
     return {
         success,
@@ -49,6 +92,8 @@ export const useRole = defineStore('role', () => {
         pagination,
         loading,
         getRolesStore,
+        getRoleStore,
+        updateRolePermissionsStore
     } as const
 })
 
