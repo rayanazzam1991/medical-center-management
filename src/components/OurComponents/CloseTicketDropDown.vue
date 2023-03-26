@@ -5,8 +5,7 @@ export interface TicketDropDownProps {
   viewPermission: string,
   viewCurrentServiceCardPermission: string,
   editPermission: string,
-  closeTicketPermission: string,
-  confirmPayement: string
+  closeTicketPermission: string
 }
 const props = withDefaults(defineProps<TicketDropDownProps>(), {
   viewPermission: undefined,
@@ -18,7 +17,6 @@ const emits = defineEmits<{
   (e: 'view'): void
   (e: 'viewCurrentServiceCard'): void
   (e: 'edit'): void
-  (e: 'confirmPayement'): void
   (e: 'closeTicket'): void
 }>()
 </script>
@@ -69,19 +67,7 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.edit') }}</span>
         </div>
       </a>
-      <a v-permission="confirmPayement" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
-        () => {
-          emits('confirmPayement')
-          close()
-        }
-      ">
-        <div class="icon">
-          <i class="fas fa-edit" aria-hidden="true"></i>
-        </div>
-        <div class="meta">
-          <span>{{ t('drop_down.confirm_payement') }}</span>
-        </div>
-      </a>
+
       <a v-permission="closeTicketPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('closeTicket')

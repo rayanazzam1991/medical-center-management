@@ -218,7 +218,6 @@ const columns = {
         viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
         editPermission: Permissions.TICKET_EDIT,
         closeTicketPermission: Permissions.TICKET_CLOSE,
-        confirmPayement: Permissions.CONFIRM_PAYMENT_TICKET,
         onEdit: () => {
           if (row.status != TicketConsts.CLOSED) {
 

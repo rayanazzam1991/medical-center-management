@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "ticket_edit"
+      "confirm_payment_ticket"
     ]
   }
 }

@@ -32,7 +32,7 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.view') }}</span>
         </div>
       </a>
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="confirmPayementPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('confirmPayement')
           close()
