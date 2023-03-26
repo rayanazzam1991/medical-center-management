@@ -40,6 +40,7 @@ declare module '@vue/runtime-core' {
     ComponentsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/ComponentsMobileSubsidebar.vue')['default']
     ComponentsSubnav: typeof import('./src/layouts/navbar-items/ComponentsSubnav.vue')['default']
     ConfirmPayement: typeof import('./src/components/OurComponents/Sales/Ticket/ConfirmPayement.vue')['default']
+    ConfirmPaymentTicket: typeof import('./src/components/OurComponents/ConfirmPaymentTicket.vue')['default']
     ContactWidget: typeof import('./src/components/partials/widgets/ui-creative/ContactWidget.vue')['default']
     ContractorFormNavigation: typeof import('./src/components/OurComponents/Contractor/ContractorFormNavigation.vue')['default']
     ContractorSearchFilterModal: typeof import('./src/components/OurComponents/Contractor/ContractorSearchFilterModal.vue')['default']

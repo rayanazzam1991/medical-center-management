@@ -18,14 +18,12 @@ import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
 import { useI18n } from 'vue-i18n'
 import { closeTicket, getPendingTicketsList } from '/@src/services/Sales/Ticket/ticketService'
-import CloseTicketDropDown from '/@src/components/OurComponents/CloseTicketDropDown.vue'
+import ConfirmPaymentTicket from '/@src/components/OurComponents/ConfirmPaymentTicket.vue'
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
-import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waitingListService'
 import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
-import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -44,11 +42,8 @@ const default_per_page = ref(1)
 const closeTicketPopup = ref(false)
 const selectedCloseTicket = ref<Ticket>(defaultTicket)
 const currentServiceCardPopup = ref(false)
-const isLoading = ref(false)
 const ticketCurrentWaitingList = ref(defaultWaitingListByTicket)
-const currentTicketServices = ref<TicketService[]>([])
-const currentTicketServicesPrice = ref(0)
-const currenctTicketId = ref(0)
+
 
 onMounted(async () => {
   const { tickets, pagination } = await getPendingTicketsList(searchFilter.value)
@@ -103,37 +98,6 @@ const ticketSort = async (value: string) => {
   await search(searchFilter.value)
 }
 
-const viewCurrenyServiceCard = async (ticketId: number) => {
-  currenctTicketId.value = ticketId
-  const selectedTicket = ticketsList.value.find((ticket) => ticket.id == ticketId)
-  if (selectedTicket?.status != TicketConsts.WAITING && selectedTicket?.status != TicketConsts.SERVING) {
-    notif.error(t('toast.error.ticket.no_waiting_list'))
-  } else {
-
-    const { waiting_list_by_ticket, success, message } = await getWaitingListByTicketId(ticketId)
-    currentTicketServices.value = []
-    currentTicketServicesPrice.value = 0
-    if (success) {
-      ticketCurrentWaitingList.value = waiting_list_by_ticket
-      waiting_list_by_ticket.ticket.requested_services.forEach((ticketService) => {
-        if (ticketService.provider.id == waiting_list_by_ticket.current_provider.id) {
-          currentTicketServices.value.push(ticketService)
-          currentTicketServicesPrice.value += ticketService.sell_price
-        }
-
-      });
-      currentServiceCardPopup.value = true
-      keyIncrement.value++
-
-
-    } else {
-      notif.error(message)
-    }
-    isLoading.value = false
-
-  }
-
-}
 
 const columns = {
   id: {
@@ -213,19 +177,9 @@ const columns = {
     align: 'center',
     label: t('pending_ticket.table.columns.actions'),
     renderRow: (row: any) =>
-      h(CloseTicketDropDown, {
+      h(ConfirmPaymentTicket, {
         viewPermission: Permissions.TICKET_SHOW,
-        viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
-        editPermission: Permissions.TICKET_EDIT,
-        closeTicketPermission: Permissions.TICKET_CLOSE,
-        onEdit: () => {
-          if (row.status != TicketConsts.CLOSED) {
-
-            router.push({ path: `/ticket/${row.id}/edit` })
-          } else {
-            notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
-          }
-        },
+        confirmPayementPermission: Permissions.CONFIRM_PAYMENT_TICKET,
         onConfirmPayement: () => {
           if (row.status != TicketConsts.CLOSED) {
 
@@ -237,13 +191,6 @@ const columns = {
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
         },
-        onCloseTicket: () => {
-          closeTicketPopup.value = true
-          selectedCloseTicket.value = row
-        },
-        onViewCurrentServiceCard: async () => {
-          await viewCurrenyServiceCard(row.id)
-        }
 
 
       }),
@@ -261,12 +208,6 @@ const ticketServicesColumns = {
     label: t("pending_ticket.details.current_services.columns.service_price"),
     renderRow: (row: TicketService) =>
       h('span', row?.sell_price),
-  },
-  currency: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.currency"),
-    renderRow: (row: TicketService) =>
-      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency?.name),
   },
 } as const
 

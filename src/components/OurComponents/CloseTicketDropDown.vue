@@ -6,6 +6,7 @@ export interface TicketDropDownProps {
   viewCurrentServiceCardPermission: string,
   editPermission: string,
   closeTicketPermission: string,
+  confirmPayement: string
 }
 const props = withDefaults(defineProps<TicketDropDownProps>(), {
   viewPermission: undefined,
@@ -68,7 +69,7 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.edit') }}</span>
         </div>
       </a>
-      <a v-permission="editPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="confirmPayement" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('confirmPayement')
           close()
