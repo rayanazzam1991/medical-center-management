@@ -104,14 +104,12 @@ export const useAuth = defineStore('userAuth', () => {
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-
       return
     }
     catch (error: any) {
       success.value = error?.response.data.success
       error_code.value = error?.response.data.error_code
-      message.value = error?.response.data.messageu
-
+      message.value = error?.response.data.message
     }
     finally {
       loading.value = false

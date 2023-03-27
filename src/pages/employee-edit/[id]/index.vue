@@ -56,8 +56,6 @@ const currentEmployee = ref(defaultCreateEmployee)
 const employeeId = ref(0)
 const selectedDepartmentId = ref(0)
 const selectedType = ref<number>(0)
-const enableBasicSalary = ref<boolean>(false)
-const enablePaymentPercentage = ref<boolean>(false)
 
 // @ts-ignore
 employeeId.value = route.params.id
@@ -471,8 +469,8 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VField id="basic_salary">
                                         <VLabel class="required">{{ t('employee.form.basic_salary') }}</VLabel>
                                         <VControl icon="feather:chevrons-right">
-                                            <VInput :disabled="!enableBasicSalary" v-model="currentEmployee.basic_salary"
-                                                type="number" placeholder="" autocomplete="given-basic_salary" />
+                                            <VInput v-model="currentEmployee.basic_salary" type="number" placeholder=""
+                                                autocomplete="given-basic_salary" />
                                             <ErrorMessage class="help is-danger" name="basic_salary" />
                                         </VControl>
                                     </VField>
@@ -481,8 +479,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
                                     <VField id="payment_percentage">
                                         <VLabel class="required">{{ t('employee.form.payment_percentage') }}</VLabel>
                                         <VControl icon="feather:percent">
-                                            <VInput :disabled="!enablePaymentPercentage"
-                                                v-model="currentEmployee.payment_percentage" type="number" />
+                                            <VInput v-model="currentEmployee.payment_percentage" type="number" />
                                             <ErrorMessage class="help is-danger" name="payment_percentage" />
                                         </VControl>
                                     </VField>
