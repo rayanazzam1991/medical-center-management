@@ -375,7 +375,8 @@
       "save": "حفظ",
       "filter": "تصفية",
       "cash_out": "سحب مبلغ",
-      "bulk_cash_out": "سحب كلي"
+      "bulk_cash_out": "سحب كلي",
+      "print": "طباعة"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
@@ -407,7 +408,8 @@
     "view_my_waiting_list": "عرض غرفة الانتظار",
     "close_ticket": "إغلاق التذكرة",
     "view_current_service_card": "عرض بطاقة الدور الحالي",
-    "no_actions": "لا يوجد اجراءات"
+    "no_actions": "لا يوجد اجراءات",
+    "print": "طباعة"
   },
   "add_quantity": {
     "form": {
@@ -1112,7 +1114,8 @@
         "created_at": "تاريخ الإنشاء",
         "action_by": "  بواسطة",
         "action": "النشاط",
-        "movement_type": "نوع الحركة"
+        "movement_type": "نوع الحركة",
+        "actions": "الإجراءات"
       },
       "action_types": {
         "add_quantity": "إضافة كميًة",
@@ -2210,6 +2213,7 @@
     },
     "table": {
       "title": "الإيصالات النقدية للزبائن",
+      "print_title": "إيصال نقدي",
       "columns": {
         "client_name": "اسم الزبون",
         "amount": "المبلغ الإجمالي",
@@ -2219,7 +2223,8 @@
         "note": "ملاحظات",
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
-        "created_by": "بواسطة"
+        "created_by": "بواسطة",
+        "actions": "الإجراءات"
       }
     },
     "add_customer_cash_receipts_button": "انشاء إيصال نقدي لزبون",
@@ -2547,7 +2552,7 @@
         "customer": "الزبون",
         "customer_phone_number": "رقم الهاتف",
         "requested_service": "الخدمة",
-        "note": "المذكرة",
+        "note": "ملاحظات",
         "date": "التاريخ",
         "time": "الوقت",
         "status": "الحالة",
@@ -2560,7 +2565,7 @@
       "form_header": "{type} مذكرة",
       "customer": "الزبون :",
       "service": "الخدمة المقدمة :",
-      "note": "المذكرة",
+      "note": "ملاحظات",
       "date": "التاريخ",
       "time": "الوقت"
     },
@@ -2575,13 +2580,14 @@
   },
   "service_history_screen": {
     "title": "شاشة الانتظار",
+    "button_name" : "إضافة شاشة انتظار",
     "table": {
       "title": "شاشات الانتظار",
       "columns": {
         "name": "الاسم",
-        "rooms": "الغرف",
-        "departments": "الأقسام",
-        "services": "الخدمات",
+        "rooms": "الغرفة",
+        "departments": "القسم",
+        "services": "الخدمة",
         "created_at": "تاريخ الإنشاء ",
         "created_by": " بواسطة",
         "actions": "الإجراءات"
@@ -2628,6 +2634,50 @@
       "permission_name": "الصلاحية...",
       "group_id": "رقم معرف المجموعة...",
       "group_name": "المجموعة..."
+    }
+  },
+  "print": {
+    "date": "التاريخ:",
+    "signature": "التوقيع/الختم",
+    "trial_balance": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "total_credit": "دائن",
+      "total_debit": "مدين",
+      "total": "المجموع"
+    },
+    "balance_sheet": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "balance": "الرصيد",
+      "total_liabilities": "محموع الخصوم",
+      "total_assets": "مجموع الأصول"
+    },
+    "income_statement": {
+      "account_code": "رمز الحساب",
+      "account_name": "اسم الحساب",
+      "balance": "الرصيد",
+      "total_other_expenses": "مجموع النفقات الأخرى",
+      "net_income": "صافي الدخل",
+      "gross_profit": "إجمالي الربح",
+      "total_costs": "مجموع التكاليف",
+      "total_revenues": "مجموع العائدات"
+    },
+    "customer_cash_receipt": {
+      "for_customer": "للسيد/ة ",
+      "cash_account": "حساب النقد",
+      "amount": "المبلغ",
+      "note": "ملاحظات",
+      "for": "لقاء "
+    },
+    "ticket": {
+      "ticket": "التذكرة #",
+      "customer_name": "اسم الزبون :",
+      "services": "الخدمات المطلوبة",
+      "service": "الخدمة",
+      "service_provider": "المخدم",
+      "price": "السعر",
+      "total_price": "السعر الاجمالي"
     }
   }
 }

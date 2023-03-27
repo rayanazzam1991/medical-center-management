@@ -27,6 +27,10 @@ import { useinventoryItemHistory } from '/@src/stores/Warehouse/ItemHistory/inve
 import { BaseConsts } from '/@src/utils/consts/base';
 import { defaultPagination } from '/@src/utils/response';
 import { stringTrim } from "/@src/composable/helpers/stringHelpers";
+import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintDropDown.vue';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import usePrint from '/@src/composable/usePrint';
+import sleep from '/@src/utils/sleep';
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -45,6 +49,12 @@ const router = useRouter()
 const itemHistoryStore = useinventoryItemHistory()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const selectedMovementForPrint = ref(defaultInventoryItemHistory)
+const { printDiv } = usePrint('');
+const print = async () => {
+  await sleep(500)
+  printDiv('printerable', t('list_inventory_movement.table.title'))
+}
 
 onMounted(async () => {
   searchFilter.value = {} as InventoryItemHistorySearchFilter
@@ -173,6 +183,20 @@ const columns = {
     renderRow: (row: any) =>
       h('span', row?.action_by?.first_name + ' ' + row?.action_by?.last_name)
   },
+  actions: {
+    align: 'center',
+    label: t('list_inventory_movement.table.columns.actions'),
+    renderRow: (row: inventoryItemHistory) =>
+      h(PrintDropDown, {
+        printPermission: Permissions.INVENTORY_ITEM_HISTORY_SHOW,
+        onPrint: async () => {
+          selectedMovementForPrint.value = row
+          keyIncrement.value++
+          await print()
+        },
+      }),
+  },
+
 } as const
 </script>
 
@@ -215,6 +239,8 @@ const columns = {
       }}</h6>
     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" class="mx-2" last-line-width="20%" />
   </VFlexTableWrapper>
+  <InventoryMovementPrint :key="keyIncrement" :inventory-item-movement="selectedMovementForPrint" />
+-
 </template>
 <style lang="scss">
 .tooltip {

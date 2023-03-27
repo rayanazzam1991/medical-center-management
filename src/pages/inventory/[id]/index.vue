@@ -106,8 +106,9 @@ const columns = {
         renderRow: (row: ItemInInventory) =>
             h('span', row?.category.name)
     },
-    "inventory_items.quantity": {
+    "quantity": {
         align: 'center',
+        sortable: true,
         label: t('inventory.details.table.quantity'),
         renderRow: (row: ItemInInventory) =>
             h('span', row?.quantity),

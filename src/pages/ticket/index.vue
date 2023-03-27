@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import { defaultTicketSearchFilter, Ticket, defaultTicket, TicketSearchFilter, TicketConsts } from '/@src/models/Sales/Ticket/ticket'
+import { defaultTicketSearchFilter, defaultTicket, TicketSearchFilter, TicketConsts, Ticket } from '/@src/models/Sales/Ticket/ticket'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
@@ -27,6 +27,7 @@ import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waiti
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import usePrint from '/@src/composable/usePrint'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('ticket.table.title'))
@@ -49,6 +50,16 @@ const ticketCurrentWaitingList = ref(defaultWaitingListByTicket)
 const currentTicketServices = ref<TicketService[]>([])
 const currentTicketServicesPrice = ref(0)
 const currenctTicketId = ref(0)
+const selectedTicketForPrint = ref(defaultTicket)
+const { printDiv } = usePrint('');
+const printTicket = async () => {
+  await sleep(500)
+  printDiv('printerable', t('ticket.table.title'))
+}
+const printServiceCard = async () => {
+  await sleep(500)
+  printDiv('printerable_service_card', t('ticket.table.title'))
+}
 
 onMounted(async () => {
   const { tickets, pagination } = await getTicketsList(searchFilter.value)
@@ -218,6 +229,7 @@ const columns = {
         viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
         editPermission: Permissions.TICKET_EDIT,
         closeTicketPermission: Permissions.TICKET_CLOSE,
+        printPermission: Permissions.TICKET_SHOW,
         onEdit: () => {
           if (row.status != TicketConsts.CLOSED) {
 
@@ -236,7 +248,13 @@ const columns = {
         },
         onViewCurrentServiceCard: async () => {
           await viewCurrenyServiceCard(row.id)
-        }
+        },
+        onPrint: async () => {
+          selectedTicketForPrint.value = row
+          keyIncrement.value++
+          await printTicket()
+        },
+
 
 
       }),
@@ -331,9 +349,14 @@ const ticketServicesColumns = {
         </h2>
       </div>
     </template>
-    <template>
+    <template #action="{ close }">
+      <VButton icon="lnir lnir-printer" color="primary" raised @click="printServiceCard">{{ t('modal.buttons.print') }}
+      </VButton>
     </template>
+
   </VModal>
+  <TicketPrint :key="keyIncrement" :ticket="selectedTicketForPrint" />
+  <ClientServiceCardPrint :key="keyIncrement" :service-card="ticketCurrentWaitingList" />
 </template>
 <style lang="scss">
 .tooltip {

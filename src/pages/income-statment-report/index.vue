@@ -14,11 +14,14 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
+import usePrint from '/@src/composable/usePrint';
 import { IncomeStatment, defaultIncomeStatment } from '/@src/models/Accounting/Account/account';
 import { generateIncomeStatmentReport } from '/@src/services/Accounting/Account/accountService';
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 
+const { printDiv } = usePrint('');
+const print = () => printDiv('printerable', t('income_statment_report.title'))
 
 
 const viewWrapper = useViewWrapper()
@@ -48,8 +51,12 @@ const toggle = () => {
 <template>
   <div class="header is-flex is-justify-content-space-between is-align-items-center">
     <h1>{{ t('income_statment_report.title') }}</h1>
-    <VButton :loading="accountStore.loading" color="primary" @click="toggle">{{
-      t('income_statment_report.expand_collapse_button') }} </VButton>
+    <div class="is-flex is-align-items-center">
+
+      <VButton class="mr-2" :loading="accountStore.loading" color="primary" @click="toggle">{{
+        t('income_statment_report.expand_collapse_button') }} </VButton>
+      <VIconButton icon="lnir lnir-printer" :loading="accountStore.loading" outlined color="primary" @click="print" />
+    </div>
   </div>
 
   <div class="income-statment-report-layout">
@@ -114,6 +121,7 @@ const toggle = () => {
       </div>
     </div>
   </div>
+  <IncomeStatementReportPrint :key="keyIncrement" :income-statement="incomeStatment" />
 </template>
 
 <style lang="scss">

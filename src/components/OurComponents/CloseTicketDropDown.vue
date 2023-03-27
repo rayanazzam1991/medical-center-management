@@ -5,16 +5,27 @@ export interface TicketDropDownProps {
   viewPermission: string,
   viewCurrentServiceCardPermission: string,
   editPermission: string,
-  closeTicketPermission: string
+  closeTicketPermission: string,
+  printPermission: string,
 }
 const props = withDefaults(defineProps<TicketDropDownProps>(), {
   viewPermission: undefined,
+  viewCurrentServiceCardPermission: undefined,
+  editPermission: undefined,
+  closeTicketPermission: undefined,
+  printPermission: undefined,
+
 })
 const viewPermission = props.viewPermission
+const printPermission = props.printPermission
+const viewCurrentServiceCardPermission = props.viewCurrentServiceCardPermission
+const editPermission = props.editPermission
+const closeTicketPermission = props.closeTicketPermission
 
 const { t } = useI18n()
 const emits = defineEmits<{
   (e: 'view'): void
+  (e: 'print'): void
   (e: 'viewCurrentServiceCard'): void
   (e: 'edit'): void
   (e: 'closeTicket'): void
@@ -37,6 +48,21 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.view') }}</span>
         </div>
       </a>
+      <a v-permission="printPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+        () => {
+          emits('print')
+          close()
+        }
+      ">
+        <div class="icon ml-1">
+
+          <i class="lnir lnir-printer" aria-hidden="true"></i>
+        </div>
+        <div class="meta">
+          <span>{{ t('drop_down.print') }}</span>
+        </div>
+      </a>
+
       <a v-permission="viewCurrentServiceCardPermission" role="menuitem" href="#" class="dropdown-item is-media"
         @click.prevent="
           () => {
@@ -82,8 +108,8 @@ const emits = defineEmits<{
         </div>
       </a>
       <a v-if="!checkPermission(viewPermission) && !checkPermission(viewCurrentServiceCardPermission) &&
-        !checkPermission(editPermission) && !checkPermission(closeTicketPermission)" role="menuitem"
-        class="dropdown-item is-media">
+        !checkPermission(editPermission) && !checkPermission(closeTicketPermission) && !checkPermission(printPermission)"
+        role="menuitem" class="dropdown-item is-media">
         <div class=" icon">
           <i class="fas fa-window-close" aria-hidden="true"></i>
         </div>

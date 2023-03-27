@@ -130,7 +130,7 @@ export default defineComponent({
                                         <VIconWrap class="m-0 p-0 ml-2"
                                             :icon="permissionGroup.checked ? 'lnil lnil-star-fill' : permissionGroup.permissions.find((permission) => permission.checked) ? 'lnil lnil-star-half' : 'lnil lnil-star'" />
                                         <h3 class="is-size-6 title">
-                                            {{ permissionGroup.display_name }}</h3>
+                                            {{ permissionGroup.id }} - {{ permissionGroup.display_name }}</h3>
                                     </div>
                                     <div class="column is-2" v-for="(permission, index) in permissionGroup.permissions"
                                         :key="index">

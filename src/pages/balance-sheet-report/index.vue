@@ -14,14 +14,18 @@ import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
+import usePrint from '/@src/composable/usePrint';
 import { BalanceSheet, defaultBalanceSheet } from '/@src/models/Accounting/Account/account';
 import { generateBalanceSheetReport } from '/@src/services/Accounting/Account/accountService';
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { trialBalancePrintStyle } from '/@src/utils/PrintStyles/printStyles';
 
 
 
 
+const { printDiv } = usePrint('');
+const print = () => printDiv('printerable', t('balance_sheet_report.title'))
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
@@ -50,8 +54,13 @@ const toggle = () => {
 <template>
   <div class="header is-flex is-justify-content-space-between is-align-items-center">
     <h1>{{ t('balance_sheet_report.title') }}</h1>
-    <VButton :loading="accountStore.loading" color="primary" @click="toggle">{{
-      t('balance_sheet_report.expand_collapse_button') }} </VButton>
+    <div class="is-flex is-align-items-center">
+
+      <VButton class="mr-2" :loading="accountStore.loading" color="primary" @click="toggle">{{
+        t('balance_sheet_report.expand_collapse_button') }} </VButton>
+      <VIconButton icon="lnir lnir-printer" :loading="accountStore.loading" outlined color="primary" @click="print" />
+    </div>
+
   </div>
 
   <div class="balance-sheet-report-layout">
@@ -146,6 +155,7 @@ const toggle = () => {
       </div>
     </div>
   </div>
+  <BalanceSheetReportPrint :key="keyIncrement" :balance-sheet="balanceSheet" />
 </template>
 
 <style lang="scss">

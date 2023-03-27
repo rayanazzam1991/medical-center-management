@@ -15,11 +15,12 @@ import { Notyf } from 'notyf';
 import { ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { TrialBalance, defaultTrialBalance } from '/@src/models/Accounting/Account/account';
+import { TrialBalance, defaultTrialBalance, AccountConsts } from '/@src/models/Accounting/Account/account';
 import { generateTrailBalanceReport } from '/@src/services/Accounting/Account/accountService';
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-
+import usePrint from '/@src/composable/usePrint';
+import { trialBalancePrintStyle } from '/@src/utils/PrintStyles/printStyles'
 
 
 const viewWrapper = useViewWrapper()
@@ -44,13 +45,20 @@ const toggle = () => {
     isExpanded.value = !isExpanded.value
     keyIncrement.value++
 }
+const { printDiv } = usePrint('');
+const print = () => printDiv('printerable', t('trial_balance_report.title'))
+
 </script>
 
 <template>
     <div class="header is-flex is-justify-content-space-between is-align-items-center">
         <h1>{{ t('trial_balance_report.title') }}</h1>
-        <VButton :loading="accountStore.loading" color="primary" @click="toggle">{{
-            t('trial_balance_report.expand_collapse_button') }} </VButton>
+        <div class="is-flex is-align-items-center">
+
+            <VButton class="mr-2" :loading="accountStore.loading" color="primary" @click="toggle">{{
+                t('trial_balance_report.expand_collapse_button') }} </VButton>
+            <VIconButton icon="lnir lnir-printer" :loading="accountStore.loading" outlined color="primary" @click="print" />
+        </div>
     </div>
 
     <div class="trial-balance-report-layout">
@@ -108,6 +116,7 @@ const toggle = () => {
 
         </div>
     </div>
+    <TrialBalanceReportPrint :key="keyIncrement" :trail-balance="trialBalance" />
 </template>
 
 <style   lang="scss">

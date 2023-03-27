@@ -5,7 +5,7 @@ import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/resp
 export async function getRolesApi(
     api: AxiosInstance,
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get('role/')
+    const { data: response, headers } = await api.get('role')
     return { response }
 }
 export async function getRoleApi(

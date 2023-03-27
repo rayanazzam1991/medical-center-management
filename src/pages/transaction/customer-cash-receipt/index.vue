@@ -16,11 +16,15 @@ import { useI18n } from 'vue-i18n';
 import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { AccountConsts } from '/@src/models/Accounting/Account/account';
-import { defaultClientsCashReceiptsSearchFilter, Transaction, ClientsCashReceiptsSearchFilter } from '/@src/models/Accounting/Transaction/record';
+import { defaultClientsCashReceiptsSearchFilter, Transaction, ClientsCashReceiptsSearchFilter, defaultTransaction } from '/@src/models/Accounting/Transaction/record';
 import { getClientsCashReceiptsList } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
+import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintDropDown.vue'
+import usePrint from '/@src/composable/usePrint';
+import sleep from '/@src/utils/sleep';
 
 
 const { t } = useI18n()
@@ -37,6 +41,7 @@ const router = useRouter()
 const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
+const selectedReceiptForPrint = ref(defaultTransaction)
 
 onMounted(async () => {
 
@@ -49,7 +54,11 @@ onMounted(async () => {
 
 });
 
-
+const { printDiv } = usePrint('');
+const print = async () => {
+    await sleep(500)
+    printDiv('printerable', t('customer_cash_receipt.table.print_title'))
+}
 const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
     paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
     const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(newSearchFilter)
@@ -145,6 +154,20 @@ const columns = {
         renderRow: (row: Transaction) =>
             h('span', row.created_by ? (row.created_by?.first_name + ' ' + row.created_by?.last_name) : '-'),
     },
+    actions: {
+        align: 'center',
+        label: t('customer_cash_receipt.table.columns.actions'),
+        renderRow: (row: Transaction) =>
+            h(PrintDropDown, {
+                printPermission: Permissions.TRANSACTION_SHOW,
+                onPrint: async () => {
+                    selectedReceiptForPrint.value = row
+                    keyIncrement.value++
+                    await print()
+                },
+            }),
+    },
+
 } as const
 </script>
 
@@ -188,6 +211,8 @@ const columns = {
                 }) }}</h6>
         <VPlaceloadText v-if="transactionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
+
+    <CustomerCashReceiptPrint :key="keyIncrement" :customer-cash-receipt="selectedReceiptForPrint" />
 </template>
 <style lang="scss">
 .tooltip {

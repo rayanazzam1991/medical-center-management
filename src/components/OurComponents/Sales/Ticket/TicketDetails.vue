@@ -11,6 +11,8 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { Notyf } from 'notyf';
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
+import usePrint from '/@src/composable/usePrint';
+import sleep from '/@src/utils/sleep';
 
 const notif = useNotyf() as Notyf
 const route = useRoute()
@@ -32,6 +34,14 @@ viewWrapper.setPageTitle(t('ticket.details.title'))
 useHead({
   title: t('ticket.details.title'),
 })
+const { printDiv } = usePrint('');
+const print = async () => {
+  printDiv('printerable', t('ticket.table.title'))
+}
+const printServiceCard = async () => {
+  await sleep(500)
+  printDiv('printerable_service_card', t('ticket.table.title'))
+}
 
 onMounted(async () => {
   loading.value = true
@@ -42,6 +52,7 @@ onMounted(async () => {
 const getCurrentTicket = async () => {
   const { ticket } = await getTicket(ticketId.value)
   currentTicket.value = ticket
+  keyIncrement.value++
 }
 const viewCurrenyServiceCard = async () => {
   isLoading.value = true
@@ -140,6 +151,8 @@ const columns = {
                     @click="viewCurrenyServiceCard" color="primary">
                     {{ t('ticket.details.view_current_service_card') }}
                   </VButton>
+                  <VIconButton icon="lnir lnir-printer" outlined color="primary" @click="print" />
+
 
                 </div>
               </div>
@@ -285,11 +298,15 @@ const columns = {
           </h2>
         </div>
       </template>
-      <template>
+      <template #action="{ close }">
+        <VButton icon="lnir lnir-printer" color="primary" raised @click="printServiceCard">{{ t('modal.buttons.print') }}
+        </VButton>
       </template>
     </VModal>
 
   </div>
+  <TicketPrint :key="keyIncrement" :ticket="currentTicket" />
+  <ClientServiceCardPrint :key="keyIncrement" :service-card="ticketCurrentWaitingList" />
 </template>
 
 <style scoped lang="scss">
