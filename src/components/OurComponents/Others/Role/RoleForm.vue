@@ -96,7 +96,6 @@ export default defineComponent({
 
             permissionGroupsList.value = permission_groups
 
-            // await getPermissionGroups()
             await initPermissionGroupHelper(false)
             isLoading.value = false
         }
@@ -181,13 +180,6 @@ export default defineComponent({
             })
             console.log(newPermissions.length)
 
-            // permissionGroupsHelper.value.forEach((permissionGroup) => {
-            //     permissionGroup.permissions.forEach((permission) => {
-            //         if (permission.checked)
-            //             newPermissions.push(permission.name)
-            //     });
-
-            // });
             const { success, message, role } = await updateRolePermissions(roleId.value, newPermissions)
             if (success) {
                 await sleep(200);
@@ -235,7 +227,7 @@ export default defineComponent({
                                         <VCheckbox class="p-0 pl-2" v-model="permissionGroup.checked" color="primary"
                                             @click.number="toggleAll(mainIndex, permissionGroup.checked)" />
                                         <h3 class="is-size-6 title">
-                                            {{ permissionGroup.display_name }}</h3>
+                                            {{ permissionGroup.id }} - {{ permissionGroup.display_name }}</h3>
                                     </div>
                                     <div class="column is-2" v-for="(permission, index) in permissionGroup.permissions"
                                         :key="index">
