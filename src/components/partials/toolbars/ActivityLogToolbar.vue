@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useDropdown } from '/@src/composable/useDropdown'
 import { useI18n } from "vue-i18n";
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { checkPermission } from '/@src/composable/checkPermission';
 
 const { t } = useI18n()
 const dropdownElement = ref<HTMLElement>()
@@ -16,16 +18,32 @@ const dropdown = useDropdown(dropdownElement)
       </div>
       <div class="dropdown-menu">
         <div class="dropdown-content">
-          <div class="heading">
-            <div class="heading-left">
-              <h6 class="heading-title">
-                <i class="iconify mr-2" data-icon="feather:activity" aria-hidden="true"></i>
-                <RouterLink to="/activity-log">
-                  <span class="is-size-6"> {{ t('others_subnav.setting.activity-log') }}</span>
-                </RouterLink>
-              </h6>
-            </div>
-          </div>
+          <ul class="notification-list">
+            <li v-permission="Permissions.ACTIVITY_LOG_LIST">
+              <a class="notification-item">
+                <div class="img-left">
+                  <i class="iconify mr-2" data-icon="feather:activity" aria-hidden="true"></i>
+                </div>
+                <div class="user-content mr-2">
+                  <RouterLink to="/activity-log">
+                    <p class="is-size-6"> {{ t('others_subnav.setting.activity-log') }}</p>
+                  </RouterLink>
+                </div>
+              </a>
+            </li>
+            <li>
+
+              <a v-if="!checkPermission(Permissions.ACTIVITY_LOG_LIST)" role="menuitem" class="dropdown-item is-media">
+                <div class=" icon">
+                  <i class="fas fa-window-close" aria-hidden="true"></i>
+                </div>
+                <div class="meta">
+                  <span>{{ t('drop_down.no_actions') }}</span>
+                </div>
+              </a>
+            </li>
+
+          </ul>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "ticket_list"
+      "pending_ticket_list"
     ]
   }
 }
@@ -17,16 +17,13 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
 import { useI18n } from 'vue-i18n'
-import { closeTicket, getPendingTicketsList } from '/@src/services/Sales/Ticket/ticketService'
-import CloseTicketDropDown from '/@src/components/OurComponents/CloseTicketDropDown.vue'
-import sleep from '/@src/utils/sleep'
+import { getPendingTicketsList } from '/@src/services/Sales/Ticket/ticketService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
-import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waitingListService'
 import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
-import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import PendingTicketDropDown from '../../components/OurComponents/Sales/Ticket/PendingTicketDropDown.vue'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('pending_ticket.table.title'))
@@ -41,14 +38,9 @@ const router = useRouter()
 const ticketStore = useTicket()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
-const closeTicketPopup = ref(false)
-const selectedCloseTicket = ref<Ticket>(defaultTicket)
 const currentServiceCardPopup = ref(false)
-const isLoading = ref(false)
 const ticketCurrentWaitingList = ref(defaultWaitingListByTicket)
-const currentTicketServices = ref<TicketService[]>([])
-const currentTicketServicesPrice = ref(0)
-const currenctTicketId = ref(0)
+
 
 onMounted(async () => {
   const { tickets, pagination } = await getPendingTicketsList(searchFilter.value)
@@ -58,20 +50,6 @@ onMounted(async () => {
   default_per_page.value = pagination.per_page
 });
 
-
-const closeTicketStatus = async () => {
-  const { message, success } = await closeTicket(selectedCloseTicket.value.id)
-  if (success) {
-    search(searchFilter.value)
-    notif.dismissAll()
-    await sleep(200);
-    notif.success(t('toast.success.edit'))
-  } else {
-    await sleep(200);
-    notif.error(message)
-  }
-  closeTicketPopup.value = false
-}
 
 
 const search = async (newSearchFilter: TicketSearchFilter) => {
@@ -103,37 +81,6 @@ const ticketSort = async (value: string) => {
   await search(searchFilter.value)
 }
 
-const viewCurrenyServiceCard = async (ticketId: number) => {
-  currenctTicketId.value = ticketId
-  const selectedTicket = ticketsList.value.find((ticket) => ticket.id == ticketId)
-  if (selectedTicket?.status != TicketConsts.WAITING && selectedTicket?.status != TicketConsts.SERVING) {
-    notif.error(t('toast.error.ticket.no_waiting_list'))
-  } else {
-
-    const { waiting_list_by_ticket, success, message } = await getWaitingListByTicketId(ticketId)
-    currentTicketServices.value = []
-    currentTicketServicesPrice.value = 0
-    if (success) {
-      ticketCurrentWaitingList.value = waiting_list_by_ticket
-      waiting_list_by_ticket.ticket.requested_services.forEach((ticketService) => {
-        if (ticketService.provider.id == waiting_list_by_ticket.current_provider.id) {
-          currentTicketServices.value.push(ticketService)
-          currentTicketServicesPrice.value += ticketService.sell_price
-        }
-
-      });
-      currentServiceCardPopup.value = true
-      keyIncrement.value++
-
-
-    } else {
-      notif.error(message)
-    }
-    isLoading.value = false
-
-  }
-
-}
 
 const columns = {
   id: {
@@ -145,7 +92,7 @@ const columns = {
     searchable: true,
     align: 'center',
     label: t('pending_ticket.table.columns.customer_name'),
-    renderRow: (row: any) =>
+    renderRow: (row: Ticket) =>
       h('span', row.customer.user.first_name + ' ' + row.customer.user.last_name)
   },
   services_count: {
@@ -177,16 +124,8 @@ const columns = {
         VTag,
         {
           rounded: true,
-          color:
-            row.status === TicketConsts.SERVING
-              ? 'info'
-              : row.status === TicketConsts.SERVICES_ARE_DONE
-                ? 'success'
-                : row.status === TicketConsts.WAITING
-                  ? 'warning'
-                  : row.status === TicketConsts.PENDING
-                    ? 'secondary'
-                    : 'danger',
+          color: TicketConsts.getStatusColor(row.status)
+
         },
         {
           default() {
@@ -213,29 +152,15 @@ const columns = {
     align: 'center',
     label: t('pending_ticket.table.columns.actions'),
     renderRow: (row: any) =>
-      h(CloseTicketDropDown, {
+      h(PendingTicketDropDown, {
         viewPermission: Permissions.TICKET_SHOW,
-        viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
-        editPermission: Permissions.TICKET_EDIT,
-        closeTicketPermission: Permissions.TICKET_CLOSE,
-        onEdit: () => {
-          if (row.status != TicketConsts.CLOSED) {
-
-            router.push({ path: `/ticket/${row.id}/edit` })
-          } else {
-            notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
-          }
+        confirmPayementPermission: Permissions.CONFIRM_PAYMENT_TICKET,
+        onConfirmPayement: () => {
+          router.push({ path: `/pending-ticket/${row.id}/edit` })
         },
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
         },
-        onCloseTicket: () => {
-          closeTicketPopup.value = true
-          selectedCloseTicket.value = row
-        },
-        onViewCurrentServiceCard: async () => {
-          await viewCurrenyServiceCard(row.id)
-        }
 
 
       }),
@@ -254,19 +179,13 @@ const ticketServicesColumns = {
     renderRow: (row: TicketService) =>
       h('span', row?.sell_price),
   },
-  currency: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.currency"),
-    renderRow: (row: TicketService) =>
-      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency.name),
-  },
 } as const
 
 </script>
 
 <template>
-  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
-    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <TicketTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('ticket.header_button')"
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="ticketsList" @update:sort="ticketSort">
     <VFlexTable separators clickable>
       <template #body>
@@ -303,17 +222,6 @@ const ticketServicesColumns = {
 
     <VPlaceloadText v-if="ticketStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('pending_ticket.table.modal_title')" :open="closeTicketPopup" actions="center"
-    @close="closeTicketPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('pending_ticket.table.delete_modal.title')"
-        :subtitle="t('ticket.table.delete_modal.subtitle', { title: viewWrapper.pageTitle })" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="closeTicketStatus()">{{ t('modal.buttons.confirm') }}
-      </VButton>
-    </template>
-  </VModal>
   <VModal :key="keyIncrement" :title="t('pending_ticket.details.current_service_card_modal')"
     :open="currentServiceCardPopup" actions="right" @close="currentServiceCardPopup = false">
     <template #content>

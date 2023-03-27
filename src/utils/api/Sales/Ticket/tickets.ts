@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateTicket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
+import { ConfirmPaymentTicket, CreateTicket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function createTicketApi(
@@ -18,6 +18,15 @@ export async function updateTicketApi(
   const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
 
   return { response }
+}
+export async function confirmPaymentTicketApi(
+  api: AxiosInstance,
+  ticketId: number,
+  ticket: ConfirmPaymentTicket
+): Promise<{ response: CustomResponseSingle }> {
+const { data: response, headers } = await api.put(`ticket/confirmPaymentTicket/${ticketId}`, ticket)
+
+return { response }
 }
 export async function getTicketApi(
   api: AxiosInstance,

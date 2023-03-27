@@ -93,6 +93,7 @@ const emits = defineEmits<{
           <span>{{ t('drop_down.edit') }}</span>
         </div>
       </a>
+
       <a v-permission="closeTicketPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('closeTicket')

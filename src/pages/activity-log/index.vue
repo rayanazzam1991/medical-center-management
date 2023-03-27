@@ -1,3 +1,14 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "activity_log_list"
+    ]
+  }
+}
+</route>
+
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -83,7 +94,7 @@ const columns = {
     align: 'center',
     label: t('activityLog.table.columns.action'),
     renderRow: (row: any) =>
-      h('span', row.event)
+      h('span', row.description)
   },
 
 
@@ -92,7 +103,7 @@ const columns = {
     align: 'center',
     label: t('activityLog.table.columns.created_by'),
     renderRow: (row: any) =>
-      h('span', row?.createdBy)
+      h('span', row?.createdBy ?? '-')
   },
 
 } as const

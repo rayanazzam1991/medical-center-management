@@ -128,4 +128,3 @@ export default defineComponent({
 <style   lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 </style>
-

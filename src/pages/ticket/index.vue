@@ -238,6 +238,7 @@ const columns = {
             notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
           }
         },
+
         onView: () => {
           router.push({ path: `/ticket/${row.id}` })
         },
@@ -276,7 +277,7 @@ const ticketServicesColumns = {
     align: 'center',
     label: t("ticket.details.current_services.columns.currency"),
     renderRow: (row: TicketService) =>
-      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency.name),
+      h('span', ticketsList.value.find((ticket) => ticket.id == currenctTicketId.value)?.currency?.name),
   },
 } as const
 
