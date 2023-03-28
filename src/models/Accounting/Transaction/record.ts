@@ -38,6 +38,7 @@ export interface TransactionSearchFilter {
   order?: string
 }
 export interface ClientsCashReceiptsSearchFilter {
+  customer_id?: number
   client_name?: string
   note?: string
   currency_id?: number

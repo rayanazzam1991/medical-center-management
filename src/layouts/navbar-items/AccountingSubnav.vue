@@ -123,7 +123,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_LIST">
+                  <li v-permission="Permissions.CLIENT_CASH_RECEIPT_LIST">
                     <RouterLink to="/transaction/customer-cash-receipt">
                       <i class="lnir lnir-ticket-alt-2" aria-hidden="true"></i>
                       <span>{{
@@ -132,7 +132,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_LIST">
+                  <li v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_LIST">
                     <RouterLink to="/transaction/supplier-employee-cash-receipt">
                       <i class="lnir lnir-ticket-alt-1" aria-hidden="true"></i>
                       <span>{{
@@ -178,7 +178,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE">
                     <RouterLink to="/transaction/customer-cash-receipt/add">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
@@ -187,7 +187,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_CREATE">
                     <RouterLink to="/transaction/supplier-employee-cash-receipt/add">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{

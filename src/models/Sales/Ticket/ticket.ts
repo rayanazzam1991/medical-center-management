@@ -45,7 +45,7 @@ export interface UpdateTicket {
   remaining_amount: number
   requested_services: CreateUpdateTicketService[]
 }
-export interface ConfirmPaymentTicket{
+export interface ConfirmPaymentTicket {
   ticket_id: number
   cash_account_id: number
   currency_id: number
@@ -54,7 +54,7 @@ export interface ConfirmPaymentTicket{
   remaining_amount: number
 }
 export const defaultConfirmPaymentTicket: ConfirmPaymentTicket = {
-  ticket_id:0,
+  ticket_id: 0,
   cash_account_id: 0,
   currency_id: 0,
   currency_rate: 1,
@@ -94,16 +94,18 @@ export interface TicketSearchFilter {
   per_page?: number
   order_by?: string
   order?: string
+  customer_id?: number
 }
 
 export const defaultTicketSearchFilter: TicketSearchFilter = {
   id: undefined,
-  customer_name:undefined ,
+  customer_name: undefined,
   status: undefined,
   page: undefined,
   order: undefined,
   order_by: undefined,
   per_page: undefined,
+  customer_id: undefined
 }
 
 
@@ -113,11 +115,11 @@ class TicketConsts {
   static readonly SERVING = 2;
   static readonly SERVICES_ARE_DONE = 3;
   static readonly CLOSED = 4;
-  static readonly TICKET_STATUSES = [this.WAITING, this.SERVING, this.SERVICES_ARE_DONE, this.CLOSED,this.PENDING]
+  static readonly TICKET_STATUSES = [this.WAITING, this.SERVING, this.SERVICES_ARE_DONE, this.CLOSED, this.PENDING]
 
   public static getStatusName(status: number) {
     if (status == this.PENDING)
-    return i18n.global.t('ticket_statuses.pending')
+      return i18n.global.t('ticket_statuses.pending')
     if (status == this.WAITING)
       return i18n.global.t('ticket_statuses.waiting')
     if (status == this.SERVING)

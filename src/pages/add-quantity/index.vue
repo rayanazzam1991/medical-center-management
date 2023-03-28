@@ -1,13 +1,13 @@
 <route lang="json">
-  {
-    "meta": {
-      "requiresAuth": true,
-      "permissions": [
-        "inventory_item_history_create"
-      ]
-    }
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "inventory_item_history_create"
+    ]
   }
-  </route>
+}
+</route>
   
 <script setup  lang="ts">
 import { useHead } from '@vueuse/head';
@@ -206,6 +206,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
   }
   let addQuantityForm = currentaddQuantity.value
+  const selectedSupplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value)
+  addQuantityForm.requester_name = selectedSupplierAccount?.name ?? undefined
   addQuantityForm.item_quantity = itemQuantity.value
   addQuantityForm.add_item_cost = itemCost.value
   addQuantityForm.record.amount = totalAmount.value
@@ -214,7 +216,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
   addQuantityForm.record.transaction_type_id = 1
   addQuantityForm.record.recordType = undefined
   addQuantityForm.record.date = createRecord.value.date
-
   addQuantityForm.record.accounts = []
   addQuantityForm.record.accounts.push(
     { account_id: inventoryAccountId.value, amount: totalAmount.value, type: AccountConsts.DEBIT_TYPE },
@@ -401,7 +402,7 @@ watch(cashAccountId, (value) => {
               <div class="column is-6">
                 <VField id="total_amount">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.total_amount') }}</VLabel>
-                  <VControl >
+                  <VControl>
                     <VInput disabled v-model="totalAmount" placeholder="" type="number" />
                     <ErrorMessage class="help is-danger" name="total_amount" />
                   </VControl>

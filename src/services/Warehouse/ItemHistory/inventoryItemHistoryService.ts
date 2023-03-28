@@ -57,3 +57,33 @@ export async function changeItemHistoryStatus(itemHistoryData: ChangeItemHistory
     let message: string = itemResponse.message ?? ''
     return { success, error_code, message }
 }
+export function getFromName(data: inventoryItemHistory) {
+    let from = ''
+    if (data.action_type == 'Withdraw from main inventory') {
+        from = data.from_inventory ?? '-'
+    } else if (data.action_type == 'Return to main inventory') {
+        from = data.from_inventory ?? '-'
+    } else if (data.action_type == 'Add Quantity') {
+        from = data.requester_name ?? '-'
+    } else if (data.action_type == 'Withdraw Quantity') {
+        from = data.from_inventory ?? '-'
+    } else if (data.action_type == 'Sell Quantity') {
+        from = data.from_inventory ?? '-'
+    } else from = '-'
+    return from
+}
+export function getToName(data: inventoryItemHistory) {
+    let to = ''
+    if (data.action_type == 'Withdraw from main inventory') {
+        to = data.to_inventory ?? '-'
+    } else if (data.action_type == 'Return to main inventory') {
+        to = data.to_inventory ?? '-'
+    } else if (data.action_type == 'Add Quantity') {
+        to = data.to_inventory ?? '-'
+    } else if (data.action_type == 'Withdraw Quantity') {
+        to = data.requester_name ?? '-'
+    } else if (data.action_type == 'Sell Quantity') {
+        to = data.requester_name ?? '-'
+    } else to = '-'
+    return to
+}

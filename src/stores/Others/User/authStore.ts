@@ -47,7 +47,6 @@ export const useAuth = defineStore('userAuth', () => {
   }
 
   async function logoutUser() {
-    console.log("logout")
     token.value = undefined
     user.value = undefined
     loggedUser.value = ''

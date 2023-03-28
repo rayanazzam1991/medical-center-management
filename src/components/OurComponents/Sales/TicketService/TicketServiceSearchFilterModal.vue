@@ -19,6 +19,11 @@ export default defineComponent({
     search_filter_popup: {
       default: false,
     },
+    is_for_customer: {
+      type: Boolean,
+      default: false,
+    },
+
 
   },
   emits: ['search_filter_popup', 'search', 'resetFilter'],
@@ -75,30 +80,6 @@ export default defineComponent({
       searchFilter.value.created_at_to = undefined
       context.emit('resetFilter', searchFilter.value)
     }
-
-    // const customersList = ref<Customer[]>([])
-    // const roomsList = ref<Room[]>([])
-    // const departmentsList = ref<Department[]>([])
-    // const employeesList = ref<Employee[]>([])
-    // onMounted(async () => {
-    //     let customerSearchFilter = {} as CustomerSearchFilter
-    //     const { customers } = await getCustomersList(customerSearchFilter)
-    //     customersList.value = customers
-
-    //     let roomSearchFilter = {} as RoomSearchFilter
-    //     const { rooms } = await getRoomsList(roomSearchFilter)
-    //     roomsList.value = rooms
-
-    //     let departmentSearchFilter = {} as DepartmentSearchFilter
-    //     const { departments } = await getDepartmentsList(departmentSearchFilter)
-    //     departmentsList.value = departments
-
-    //     let employeeSearchFilter = {} as EmployeeSearchFilter
-    //     const { employees } = await getEmployeesList(employeeSearchFilter)
-    //     employeesList.value = employees
-
-    // })
-
     return {
       t, search, resetFilter, search_filter_popup, searchCustomerId, searchProviderId, searchServiceId, searchStatus, searchCreateAtFrom,
       searchDepartmentId, searchCreateAtTo, searchRoomId, TicketServiceConsts, getCustomersList, getDepartmentsList, getRoomsList, getEmployeesList, getServicesList
@@ -112,7 +93,7 @@ export default defineComponent({
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
-        <VField class="column filter">
+        <VField v-if="!$props.is_for_customer" class="column filter">
           <VControl>
             <Multiselect v-model="searchCustomerId" mode="single"
               :placeholder="t('requested_services.search_filter.customer')" :close-on-select="true" ref="customer_id"

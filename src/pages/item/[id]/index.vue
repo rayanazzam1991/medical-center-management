@@ -20,7 +20,7 @@ import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
 import { defaultChangeItemHistoryStatus, defaultInventoryItemHistory, defaultInventoryItemHistorySearchFilter, inventoryItemHistory, InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
-import { changeItemHistoryStatus, getInventoryMovementsList, getItemHistory } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
+import { changeItemHistoryStatus, getFromName, getInventoryMovementsList, getItemHistory, getToName } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useinventoryItemHistory } from "/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
@@ -135,8 +135,8 @@ const columns = {
         searchable: true,
         grow: true,
         label: t('list_inventory_movement.table.columns.from'),
-        renderRow: (row: any) =>
-            h('span', row?.from_inventory ? row?.from_inventory : '-'),
+        renderRow: (row: inventoryItemHistory) =>
+            h('span', getFromName(row)),
     },
     to_inventory: {
         sortable: true,
@@ -144,8 +144,8 @@ const columns = {
         searchable: true,
         label: t('list_inventory_movement.table.columns.to'),
         grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.to_inventory ? row?.to_inventory : !row?.to_inventory && row?.from_inventory ? row?.requester_name : '-'),
+        renderRow: (row: inventoryItemHistory) =>
+            h('span', getToName(row)),
     },
     action: {
         align: 'center',
@@ -153,11 +153,9 @@ const columns = {
         label: t('list_inventory_movement.table.columns.action'),
         grow: true,
         renderRow: (row: any) =>
-            h('span', row?.to_inventory && !row?.from_inventory ? t('list_inventory_movement.table.action_types.add_quantity')
-                : !row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.action_types.withdraw_quantity')
-                    : '-'
+            h('span', row?.action_type ? t(`list_inventory_movement.table.action_types.${row?.action_type.replaceAll(' ', '_').toLowerCase()}`)
+                : '-'
             ),
-
     },
     movement_type: {
         align: 'center',
@@ -165,18 +163,9 @@ const columns = {
         label: t('list_inventory_movement.table.columns.movement_type'),
         grow: true,
         renderRow: (row: any) =>
-            h('span', row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.movement_types.internal')
-                : t('list_inventory_movement.table.movement_types.external')
+            h('span', row?.movement_type ? t(`list_inventory_movement.table.movement_types.${row?.movement_type.replaceAll(' ', '_').toLowerCase()}`)
+                : '-'
             ),
-
-    },
-    item: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: t('list_inventory_movement.table.columns.item'),
-        renderRow: (row: any) =>
-            h('span', row?.item)
     },
     item_quantity: {
         align: 'center',
@@ -194,9 +183,7 @@ const columns = {
             h('span', {
                 innerHTML: row?.note ?
                     `<div class="tooltip">${stringTrim(row?.note, 10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
-
             }),
-
     },
     created_at: {
         align: 'center',

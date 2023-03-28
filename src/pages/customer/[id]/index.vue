@@ -90,7 +90,7 @@ useHead({
 const customerStore = useCustomer()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files'
+    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files' | 'Tickets' | 'Services' | 'Cash Receipts' | 'Reminders'
   }>(),
   {
     activeTab: 'Details',
@@ -218,8 +218,8 @@ const fetchCustomer = async () => {
     customerForm.medicalInfoForm.id = customer.medical_info.id
   }
   for (let i = 0; i < customer.social_medias.length; i++) {
-    // @ts-ignore
     customerForm.customerSocialMediaForm.push({
+      // @ts-ignore
       social_media_id: customer.social_medias[i].id,
       url: customer.social_medias[i].url,
     })
@@ -448,6 +448,34 @@ const RemoveProfilePicture = async () => {
     deleteLoading.value = false
   }
 }
+const permissionCheck = async () => {
+  if (tab.value == 'Tickets' && !checkPermission(Permissions.TICKET_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Services' && !checkPermission(Permissions.TICKET_SERVICE_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Cash Receipts' && !checkPermission(Permissions.CLIENT_CASH_RECEIPT_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Reminders' && !checkPermission(Permissions.REMINDER_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Details' && !checkPermission(Permissions.CUSTOMER_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Medical Info' && !checkPermission(Permissions.MEDICAL_INFO_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Social Media' && !checkPermission(Permissions.CUSTOMER_SOCIAL_MEDIA_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+
+}
+
 </script>
 <template>
   <div class="profile-wrapper">
@@ -479,28 +507,48 @@ const RemoveProfilePicture = async () => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-quad-slider">
+      <div class="tabs-wrapper is-8-slider">
         <div class="tabs-inner" :hidden="loading">
           <div class="tabs tabs-width">
             <ul>
-              <li :class="[tab === 'Details' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Details' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
                   t('customer.details.tabs.details')
                 }}</span></a>
               </li>
-              <li :class="[tab === 'Medical Info' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Medical Info' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Medical Info'" @click="tab = 'Medical Info'"><span>{{
                   t('customer.details.tabs.medical_info')
                 }}</span></a>
               </li>
-              <li :class="[tab === 'Social Media' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Social Media' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Social Media'" @click="tab = 'Social Media'"><span>{{
                   t('customer.details.tabs.social_media')
                 }}</span></a>
               </li>
-              <li :class="[tab === 'Files' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Files' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
                   t('customer.details.tabs.files')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Tickets' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Tickets'" @click="tab = 'Tickets'"><span>{{
+                  t('customer.details.tabs.tickets')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Services' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
+                  t('customer.details.tabs.services')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Cash Receipts' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Cash Receipts'" @click="tab = 'Cash Receipts'"><span>{{
+                  t('customer.details.tabs.cash_receipts')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Reminders' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Reminders'" @click="tab = 'Reminders'"><span>{{
+                  t('customer.details.tabs.reminders')
                 }}</span></a>
               </li>
               <li class="tab-naver"></li>
@@ -606,12 +654,13 @@ const RemoveProfilePicture = async () => {
                     <div v-if="!notesEditor" class="column is-12">
                       <div class="file-box">
                         <div class="meta full-width">
-                          <div class="
-                                                                                is-justify-content-space-between
-                                                                                is-align-items-center
-                                                                                is-flex
-                                                                                mt-2
-                                                                              ">
+                          <div
+                            class="
+                                                                                                                                                                                        is-justify-content-space-between
+                                                                                                                                                                                        is-align-items-center
+                                                                                                                                                                                        is-flex
+                                                                                                                                                                                        mt-2
+                                                                                                                                                                                      ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
                               icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
@@ -853,6 +902,43 @@ const RemoveProfilePicture = async () => {
             </div>
           </div>
         </div>
+        <div v-if="tab === 'Tickets'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Services'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketServiceTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Cash Receipts'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <ClientsCashReceiptsTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Reminders'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <ReminderTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -933,7 +1019,7 @@ const RemoveProfilePicture = async () => {
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-  min-width: 700px;
+  min-width: 1200px;
   min-height: 40px;
 
   .is-active {
@@ -941,8 +1027,8 @@ const RemoveProfilePicture = async () => {
   }
 }
 
-.tabs-wrapper.is-quad-slider .tabs li a,
-.tabs-wrapper-alt.is-quad-slider .tabs li a {
+.tabs-wrapper.is-8-slider .tabs li a,
+.tabs-wrapper-alt.is-8-slider .tabs li a {
   height: 40px;
 }
 

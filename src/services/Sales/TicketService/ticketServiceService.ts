@@ -36,3 +36,23 @@ export async function getTicktServicesList(searchFilter: TicketServiceSearchFilt
 
 }
 
+export function resetTicketServiceSearchFilter() {
+    const blankSearchFilter: TicketServiceSearchFilter = {
+        created_at_from: undefined,
+        created_at_to: undefined,
+        customer_id: undefined,
+        department_id: undefined,
+        note: undefined,
+        order: undefined,
+        order_by: undefined,
+        page: undefined,
+        per_page: undefined,
+        provider_id: undefined,
+        room_id: undefined,
+        service_id: undefined,
+        status: undefined
+    }
+
+    return blankSearchFilter
+
+}

@@ -51,7 +51,6 @@ export default defineComponent({
         }
         const onClickMainButton = () => {
 
-            console.log('asd')
             context.emit('mainButtonClicked')
 
         }

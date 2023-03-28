@@ -51,7 +51,7 @@ export const defaultReminder: Reminder = {
     status: 1
 }
 export interface ReminderSearchFilter {
-
+    customer_id?:number 
     page?: number
     per_page?: number
     order_by?: string

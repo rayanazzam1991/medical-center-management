@@ -34,6 +34,10 @@ const sliderClass = computed(() => {
   }
 
   if (props.type === 'rounded') {
+    if (props.tabs.length === 8) {
+      return 'is-8-slider'
+    }
+
     if (props.tabs.length === 4) {
       return 'is-quad-slider'
     }
@@ -49,6 +53,10 @@ const sliderClass = computed(() => {
   }
 
   if (!props.type) {
+    if (props.tabs.length === 8) {
+      return 'is-squared is-8-slider'
+    }
+
     if (props.tabs.length === 4) {
       return 'is-squared is-quad-slider'
     }
@@ -97,8 +105,7 @@ watch(activeValue, (value) => {
               key,
               toggle,
             }">
-              <RouterLink tabindex="0" :to="tab.to ?? '#'" @keydown.enter="toggle(tab.value)"
-                @click="toggle(tab.value)">
+              <RouterLink tabindex="0" :to="tab.to ?? '#'" @keydown.enter="toggle(tab.value)" @click="toggle(tab.value)">
                 <VIcon v-if="tab.icon" :icon="tab.icon" />
                 <span>
                   <slot name="tab-link-label" v-bind="{

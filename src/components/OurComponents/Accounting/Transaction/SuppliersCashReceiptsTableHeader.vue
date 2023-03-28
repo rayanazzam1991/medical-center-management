@@ -113,7 +113,7 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton v-permission="Permissions.TRANSACTION_CREATE" class="" to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
+                <VButton v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_CREATE" class="" to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
                   t('supplier_cash_receipt.add_supplier_employee_cash_receipts_button') }}
                 </VButton>
               </VControl>

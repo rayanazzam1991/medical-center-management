@@ -17,7 +17,6 @@ export default defineComponent({
         const { t } = useI18n()
         const customerCashReceipt = ref(defaultTransaction)
         customerCashReceipt.value = props.customerCashReceipt
-        console.log(customerCashReceipt.value)
 
         return { t, customerCashReceipt, AccountConsts, addParenthesisToString }
     },

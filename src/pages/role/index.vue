@@ -72,7 +72,7 @@ const columns = {
         align: 'center',
         label: t('role.table.columns.created_by'),
         renderRow: (row: Role) =>
-            h('span', row?.created_by?.first_name + ' ' + row.created_by?.last_name)
+            h('span', row.created_by ? row?.created_by?.first_name + ' ' + row.created_by?.last_name : '-')
     },
     actions: {
         align: 'center',

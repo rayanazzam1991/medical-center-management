@@ -306,6 +306,7 @@
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
       "password_confirmation_no_match": "كلمة المرور المدخلة وتأكديها غير متطابقين",
+      "no_permission": "لا يمتلك المستخدم الخاص بك الأذونات المطلوبة لتنفيذ هذا الإجراء",
       "password_dont_match_pattern": "كلمة المرور الجديدة يجب أن تتألف على الأقل من 8 محارف وتتضمن حرف واحد ورقم واحد على الأقل.",
       "cannot_access_waiting_list": "لا يمكنك الوصول لمعومات هذه الصفحة",
       "Attendance": {
@@ -633,7 +634,11 @@
         "details": "التفاصيل",
         "medical_info": "المعلومات الطبية",
         "social_media": "التواصل الاجتماعي",
-        "files": "الملفات"
+        "files": "الملفات",
+        "tickets": "التذاكر",
+        "services": "الخدمات",
+        "reminders": "المذكرات",
+        "cash_receipts": "الإيصالات النقدية"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "الاسم",
@@ -1120,7 +1125,7 @@
       "action_types": {
         "add_quantity": "إضافة كميًة",
         "withdraw_quantity": " سحب كميًة",
-        "sell": "مبيع",
+        "sell_quantity": "مبيع كميًة",
         "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي",
         "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي"
       },
@@ -1135,7 +1140,7 @@
       "select_to_inventory": "تحديد إلى أي مستودع",
       "select_movement_type": "تحديد نوع الحركة",
       "select_action_by": "بواسطة",
-      "select_requester_name": "اسم الموظف الطالب",
+      "requester_name": "اسم الموظف/الزبون/المورد",
       "select_action": "تحديد النشاط",
       "select_item": "تحديد مادة",
       "select_type": "تحديد النوع",
@@ -2580,7 +2585,7 @@
   },
   "service_history_screen": {
     "title": "شاشة الانتظار",
-    "button_name" : "إضافة شاشة انتظار",
+    "button_name": "إضافة شاشة انتظار",
     "table": {
       "title": "شاشات الانتظار",
       "columns": {

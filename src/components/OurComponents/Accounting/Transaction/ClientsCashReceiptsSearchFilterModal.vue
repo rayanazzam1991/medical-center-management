@@ -14,7 +14,12 @@ export default defineComponent({
         is_reseted: {
             type: Boolean,
             default: false,
-        }
+        },
+        is_for_customer: {
+            type: Boolean,
+            default: false,
+        },
+
 
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
@@ -90,7 +95,7 @@ export default defineComponent({
                             :placeholder="t('customer_cash_receipt.search_filter.note')" />
                     </VControl>
                 </VField>
-                <VField class="column filter">
+                <VField v-if="!$props.is_for_customer" class="column filter">
                     <VControl icon="feather:search">
                         <input v-model="searchClientName" type="text" class="input"
                             :placeholder="t('customer_cash_receipt.search_filter.client_name')" />

@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "transaction_list"
+      "supplier_employee_cash_receipt_list"
     ]
   }
 }

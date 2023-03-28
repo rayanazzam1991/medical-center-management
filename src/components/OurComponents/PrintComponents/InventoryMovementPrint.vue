@@ -17,7 +17,6 @@ export default defineComponent({
         const { t } = useI18n()
         const inventoryItemMovement = ref(defaultInventoryItemHistory)
         inventoryItemMovement.value = props.inventoryItemMovement
-        console.log(inventoryItemMovement.value)
 
         return { t, inventoryItemMovement }
     },

@@ -37,7 +37,7 @@ export default defineComponent({
   setup(props, context) {
     const { t } = useI18n()
     const searchItem = ref()
-    const searchAction = ref<'Add Quantity' | 'Withdraw Quantity' | 'Sell' | 'Return to main inventory' | 'Withdraw from main inventory' | undefined>()
+    const searchAction = ref<'Add Quantity' | 'Withdraw Quantity' | 'Sell Quantity' | 'Return to main inventory' | 'Withdraw from main inventory' | undefined>()
     const searchActionBy = ref()
     const searchRequesterName = ref()
     const searchMovementType = ref<'Internal' | 'External' | undefined>()
@@ -174,9 +174,9 @@ export default defineComponent({
               <VOption value="Withdraw Quantity">
                 {{ t('list_inventory_movement.table.action_types.withdraw_quantity') }}
               </VOption>
-              <!-- <VOption  value="Sell">
-                                {{ t('list_inventory_movement.table.action_types.sell') }}
-                            </VOption> -->
+              <VOption value="Sell Quantity">
+                {{ t('list_inventory_movement.table.action_types.sell_quantity') }}
+              </VOption>
             </VSelect>
           </VControl>
         </VField>
@@ -195,15 +195,9 @@ export default defineComponent({
           </VControl>
         </VField>
         <VField v-if="searchMovementType == 'External'" class="column filter">
-          <VControl>
-            <VSelect v-model="searchRequesterName">
-              <VOption value="">{{ t('list_inventory_movement.search_filter.select_requester_name') }}
-              </VOption>
-              <VOption v-for="employee in employeesList" :key="employee.id"
-                :value="employee.user.first_name + ' ' + employee.user.last_name">
-                {{ employee.user.first_name + ' ' + employee.user.last_name }}
-              </VOption>
-            </VSelect>
+          <VControl icon="feather:search">
+            <VInput v-model="searchRequesterName" type="text" class="input "
+              :placeholder="t('list_inventory_movement.search_filter.requester_name')" />
           </VControl>
         </VField>
         <VField v-if="hasItemFilter" class="column filter">

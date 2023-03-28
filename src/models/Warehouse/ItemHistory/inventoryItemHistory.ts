@@ -52,6 +52,7 @@ export interface addQuantity {
     note: string
     invoice_number: string
     status: number
+    requester_name?: string
     record: CreateRecords
 }
 export interface withdrawQuantity {
@@ -123,6 +124,7 @@ export const defaultAddQuantityItem: addQuantity = {
     note: '',
     invoice_number: '',
     status: 1,
+    requester_name: undefined,
     record: createRecordsWithDefault
 
 }

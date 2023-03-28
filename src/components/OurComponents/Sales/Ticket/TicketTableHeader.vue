@@ -20,6 +20,10 @@ export default defineComponent({
     default_per_page: {
       type: Number,
       default: 1,
+    },
+    is_for_customer: {
+      type: Boolean,
+      default: false,
     }
 
   },
@@ -120,7 +124,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <TicketSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+    <TicketSearchFilterModel :is_for_customer="$props.is_for_customer" :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
       @search="search_filter" @resetFilter="resetFilter_popup" />
   </form>
 </template>

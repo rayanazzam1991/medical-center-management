@@ -76,7 +76,6 @@ onMounted(async () => {
 
     const SubInventory = inventoriesList.value.filter((inventory) => inventory.employee_id != null)
     subInventoriesList.value = SubInventory
-    console.log(subInventoriesList.value)
 
     let categorySearchFilter = {} as CategorySearchFilter
     categorySearchFilter.status = BaseConsts.ACTIVE

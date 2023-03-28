@@ -21,7 +21,7 @@ import {
   inventoryItemHistory,
   InventoryItemHistorySearchFilter
 } from '/@src/models/Warehouse/ItemHistory/inventoryItemHistory';
-import { getInventoryMovementsList } from '/@src/services/Warehouse/ItemHistory/inventoryItemHistoryService';
+import { getFromName, getInventoryMovementsList, getToName } from '/@src/services/Warehouse/ItemHistory/inventoryItemHistoryService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { useinventoryItemHistory } from '/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore';
 import { BaseConsts } from '/@src/utils/consts/base';
@@ -104,8 +104,8 @@ const columns = {
     searchable: true,
     grow: true,
     label: t('list_inventory_movement.table.columns.from'),
-    renderRow: (row: any) =>
-      h('span', row?.from_inventory ? row?.from_inventory : '-'),
+    renderRow: (row: inventoryItemHistory) =>
+      h('span', getFromName(row)),
   },
   to_inventory: {
     sortable: true,
@@ -113,8 +113,8 @@ const columns = {
     searchable: true,
     label: t('list_inventory_movement.table.columns.to'),
     grow: true,
-    renderRow: (row: any) =>
-      h('span', row?.to_inventory ? row?.to_inventory : !row?.to_inventory && row?.from_inventory ? row?.requester_name : '-'),
+    renderRow: (row: inventoryItemHistory) =>
+      h('span', getToName(row)),
   },
   action: {
     align: 'center',
@@ -240,7 +240,7 @@ const columns = {
     <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" class="mx-2" last-line-width="20%" />
   </VFlexTableWrapper>
   <InventoryMovementPrint :key="keyIncrement" :inventory-item-movement="selectedMovementForPrint" />
--
+  -
 </template>
 <style lang="scss">
 .tooltip {

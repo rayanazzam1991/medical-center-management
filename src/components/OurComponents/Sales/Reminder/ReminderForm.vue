@@ -57,7 +57,6 @@ export default defineComponent({
         const sellectedTicketService = ref(defaultTicketService);
         const time = ref({ hours: '00', minutes: '00' })
         const date = ref('')
-        console.log(Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id)))
         if (Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id))) {
             customerId.value = Number(route.query.customer_id)
             currentReminder.value.customer_id = customerId.value

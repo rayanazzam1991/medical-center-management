@@ -12,7 +12,12 @@ export default defineComponent({
     default_per_page: {
       type: Number,
       default: 1,
+    },
+    is_for_customer: {
+      type: Boolean,
+      default: false,
     }
+
 
   },
 
@@ -65,7 +70,7 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
     }
 
-    return { t, resetFilter, search, default_per_page,Permissions, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
+    return { t, resetFilter, search, default_per_page, Permissions, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
   },
 
 
@@ -112,8 +117,9 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl>
-                <VButton v-permission="Permissions.TRANSACTION_CREATE" class="" to="/transaction/customer-cash-receipt/add" color="primary"> {{
-                  t('customer_cash_receipt.add_customer_cash_receipts_button') }}
+                <VButton v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE" class=""
+                  to="/transaction/customer-cash-receipt/add" color="primary"> {{
+                    t('customer_cash_receipt.add_customer_cash_receipts_button') }}
                 </VButton>
               </VControl>
             </div>
@@ -121,8 +127,9 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <ClientsCashReceiptsSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
-      @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+    <ClientsCashReceiptsSearchFilterModal :is_for_customer="$props.is_for_customer" :key="keyIncrement"
+      :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger" @search="search_filter"
+      @resetFilter="resetFilter_popup" />
 
   </form>
 </template>
