@@ -301,7 +301,8 @@
       "add_ticket": "تمت إضافة التذكرة رقم {ticket_id} بنجاح",
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
-      "password_changed": "تم تعديل كلمة المرور بنجاح"
+      "password_changed": "تم تعديل كلمة المرور بنجاح",
+      "dismiss": "تمت عملية إقالة الموظف بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -409,7 +410,8 @@
     "close_ticket": "إغلاق التذكرة",
     "view_current_service_card": "عرض بطاقة الدور الحالي",
     "no_actions": "لا يوجد اجراءات",
-    "print": "طباعة"
+    "print": "طباعة",
+    "dismiss_employee": "إقالة الموظف"
   },
   "add_quantity": {
     "form": {
@@ -802,7 +804,9 @@
         "placeholderSection": {
           "title": "هل أنت متأكد?",
           "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
-        }
+        },
+        "dismiss_employee": " إقالة الموظف",
+        "dismiss_employee_content": "سبب إقالة الموظف"
       }
     },
     "details": {
@@ -938,6 +942,11 @@
         "caution": "هل أنت متأكد؟",
         "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
       }
+    },
+    "employee_statuses": {
+      "active": "فعال",
+      "inactive": "غير فعال",
+      "dismissed": "مُقال"
     }
   },
   "employee_attendance": {
@@ -2580,7 +2589,7 @@
   },
   "service_history_screen": {
     "title": "شاشة الانتظار",
-    "button_name" : "إضافة شاشة انتظار",
+    "button_name": "إضافة شاشة انتظار",
     "table": {
       "title": "شاشات الانتظار",
       "columns": {

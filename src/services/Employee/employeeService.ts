@@ -15,6 +15,7 @@ import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
+import { defaultEmployeeHistories, EmployeeHistories } from '/@src/models/Employee/employeeHistories'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -29,6 +30,19 @@ export async function addEmployee(
   var message: string = employeeResponse.message ?? ''
   return { success, error_code, message, employee }
 }
+export async function dismissEmployeeHistory(
+  employeeHistoriesData: EmployeeHistories,
+) {
+
+  const employeeHistoriesResponse = useEmployee()
+  var employeeHistories: EmployeeHistories =
+    (await employeeHistoriesResponse.dismissEmployeeStore(employeeHistoriesData)) ?? defaultEmployeeHistories
+  var success: boolean = employeeHistoriesResponse.success ?? false
+  var error_code: string = employeeHistoriesResponse.error_code ?? ''
+  var message: string = employeeHistoriesResponse.message ?? ''
+  return { success, error_code, message, employeeHistories }
+}
+
 export async function updateEmployee(
   employee_id: number,
   employeeData: UpdateEmployee,

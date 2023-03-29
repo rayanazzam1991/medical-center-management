@@ -3,6 +3,7 @@ import { CustomResponseSingle, CustomResponseCollection } from "../../response"
 import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { EmployeeHistories } from "/@src/models/Employee/employeeHistories"
 
 
 export async function addEmployeeApi(
@@ -98,3 +99,15 @@ export async function getEmployeeByUserIdApi(
   const { data: response, headers } = await api.get(`employee/getEmployeeByUserId/${user_id}`)
   return { response }
 }
+
+export async function dismissEmployeeApi(
+  api: AxiosInstance,
+  employeeHistories: EmployeeHistories
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post('employee/dismissEmployee',employeeHistories)
+  return { response }
+}
+
+
+
+

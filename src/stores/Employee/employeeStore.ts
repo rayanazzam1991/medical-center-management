@@ -3,7 +3,8 @@ import { useApi } from "/@src/composable/useApi"
 import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi } from "/@src/utils/api/Employee"
+import {EmployeeHistories} from "/@src/models/Employee/employeeHistories"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -13,6 +14,7 @@ import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
+  const employeesHistories =ref<EmployeeHistories[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
   const employeesAttendance = ref<EmployeeAttendance[]>([])
   const pagination = ref<Pagination>(defaultPagination)
@@ -449,10 +451,37 @@ export const useEmployee = defineStore('employee', () => {
     return JSON.parse(loggedEmployee.value) as Employee;
   }
 
+  async function dismissEmployeeStore(employeeHistories: EmployeeHistories) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await dismissEmployeeApi(api, employeeHistories)
+      var returnedEmployeeHistories: EmployeeHistories
+      returnedEmployeeHistories = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      employeesHistories.value.push(returnedEmployeeHistories)
+
+      return returnedEmployeeHistories
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
 
   return {
     employees,
+    employeesHistories,
     employeesSchedule,
     employeesAttendance,
     pagination,
@@ -475,6 +504,7 @@ export const useEmployee = defineStore('employee', () => {
     getEmployeeByUserIdStore,
     getEmployee,
     setEmployee,
+    dismissEmployeeStore,
     loggedEmployee,
     employee,
     success,
