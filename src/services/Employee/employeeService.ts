@@ -15,7 +15,7 @@ import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
-import { defaultEmployeeHistories, EmployeeHistories } from '/@src/models/Employee/employeeHistories'
+import { defaultEmployeeHistories,defaultDismissedEmployee, DismissedEmployee, EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistories'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -31,17 +31,26 @@ export async function addEmployee(
   return { success, error_code, message, employee }
 }
 export async function dismissEmployeeHistory(
-  employeeHistoriesData: EmployeeHistories,
+  dismissedEmployeeData: DismissedEmployee,
 ) {
 
   const employeeHistoriesResponse = useEmployee()
-  var employeeHistories: EmployeeHistories =
-    (await employeeHistoriesResponse.dismissEmployeeStore(employeeHistoriesData)) ?? defaultEmployeeHistories
+  var dismissedEmployee : DismissedEmployee=
+    (await employeeHistoriesResponse.dismissEmployeeStore(dismissedEmployeeData)) ?? defaultDismissedEmployee
   var success: boolean = employeeHistoriesResponse.success ?? false
   var error_code: string = employeeHistoriesResponse.error_code ?? ''
   var message: string = employeeHistoriesResponse.message ?? ''
-  return { success, error_code, message, employeeHistories }
+  return { success, error_code, message, dismissedEmployee }
 }
+
+export async function getDismissedEmployeesList(searchFilter: EmployeeHistoriesSearchFilter) {
+  const employee = useEmployee()
+  await employee.getDismissedEmployeesStore(searchFilter)
+  var dismissedEmployees: EmployeeHistories[] = employee.employeesHistories
+  var pagination: Pagination = employee.pagination
+  return { dismissedEmployees, pagination }
+}
+
 
 export async function updateEmployee(
   employee_id: number,

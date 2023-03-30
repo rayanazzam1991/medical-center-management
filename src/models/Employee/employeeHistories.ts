@@ -10,15 +10,24 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   messages: messages
 })
 export interface EmployeeHistories {
-  employee_id: number
+  employee_id: Employee
   notes?: string
   status?: number
   created_at?: string
   created_by?: User
 }
+export interface DismissedEmployee {
+  employee_id: number
+  notes?: string
+}
+
+export const defaultDismissedEmployee: DismissedEmployee ={
+  employee_id: 0,
+  notes: undefined
+}
 
 export const defaultEmployeeHistories: EmployeeHistories = {
-  employee_id: 0,
+  employee_id: defaultEmployee,
   notes: undefined,
   status: undefined,
   created_at: undefined,
@@ -32,7 +41,7 @@ export interface EmployeeHistoriesSearchFilter {
   order_by?: string
   order?: string
 }
-export const defaultEmployeeHistoriesSearchFilterSearchFilter = <EmployeeHistoriesSearchFilter>{}
+export const defaultEmployeeHistoriesSearchFilter = <EmployeeHistoriesSearchFilter>{}
 
 
 class EmployeeStatusConsts {
@@ -43,11 +52,11 @@ class EmployeeStatusConsts {
 
   public static getStatusName(status: number) {
       if (status == this.ACTIVE)
-          return i18n.global.t('employee_statuses.active')
+          return i18n.global.t('employee.employee_statuses.active')
       if (status == this.INACTIVE)
-          return i18n.global.t('employee_statuses.inactive')
+          return i18n.global.t('employee.employee_statuses.inactive')
       if (status == this.DISMISSED)
-          return i18n.global.t('employee_statuses.dismiss')
+          return i18n.global.t('employee.employee_statuses.dismissed')
       else return '';
   }
   public static getStatusColor(status: number) {

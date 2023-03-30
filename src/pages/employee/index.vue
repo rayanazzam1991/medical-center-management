@@ -18,7 +18,7 @@ import { defaultEmployee, defaultEmployeeSearchFilter, Employee, EmployeeSearchF
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
-import { ErrorMessage } from 'vee-validate'
+import { ErrorMessage, useForm } from 'vee-validate'
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
@@ -29,7 +29,7 @@ import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import EmployeeDropDown from '/@src/components/OurComponents/Employee/EmployeeDropDown.vue'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
-import { defaultEmployeeHistories, EmployeeHistories } from '/@src/models/Employee/employeeHistories'
+import { DismissedEmployee } from '/@src/models/Employee/employeeHistories'
 
 import { dismissEmployeevalidationSchema } from '/@src/rules/Employee/dismissEmployeeValidation';
 
@@ -56,7 +56,6 @@ const currentChangeStatusUser = ref(defaultChangeStatusUser)
 
 const dismissEmployeePopup = ref(false)
 const currentEmployee = ref<Employee>(defaultEmployee)
-const dismissEmployeeHistories = ref(defaultEmployeeHistories)
 const newNote = ref<string>('')
 
 onMounted(async () => {
@@ -91,18 +90,19 @@ const changestatusUser = async () => {
 }
 const dismissEmployee = async () => {
 
-  const dismissedEmployeeData: EmployeeHistories = {
+  const dismissedEmployeeData: DismissedEmployee = {
     employee_id: currentEmployee.value.id ?? 0,
     notes: newNote.value
   }
   const { message, success } = await dismissEmployeeHistory(dismissedEmployeeData)
   if (success) {
+    search(searchFilter.value)
 
     // @ts-ignore
     notif.dismissAll()
     await sleep(200);
     // @ts-ignore
-    dismissEmployeeHistories.value.notes = newNote.value
+
     notif.success(t('toast.success.dismiss'))
   } else {
     await sleep(200);
@@ -112,6 +112,10 @@ const dismissEmployee = async () => {
   }
   dismissEmployeePopup.value = false
 }
+const validationSchema = dismissEmployeevalidationSchema
+const { handleSubmit } = useForm({
+  validationSchema,
+});
 
 
 const search = async (searchFilter2: EmployeeSearchFilter) => {
@@ -260,7 +264,6 @@ const columns = {
         },
         onDismissEmployee: () => {
           currentEmployee.value = row
-
           dismissEmployeePopup.value = true
         },
 
