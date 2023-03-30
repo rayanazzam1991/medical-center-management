@@ -23,6 +23,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    is_for_employee: {
+      type: Boolean,
+      default: false,
+    },
 
 
   },
@@ -147,7 +151,7 @@ export default defineComponent({
               }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
           </VControl>
         </VField>
-        <VField class="column filter">
+        <VField v-if="!$props.is_for_employee" class="column filter">
           <VControl icon="">
             <Multiselect v-model="searchProviderId" mode="single"
               :placeholder="t('requested_services.search_filter.provider')" :close-on-select="true" ref="provider_id"

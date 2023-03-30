@@ -656,11 +656,11 @@ const permissionCheck = async () => {
                         <div class="meta full-width">
                           <div
                             class="
-                                                                                                                                                                                        is-justify-content-space-between
-                                                                                                                                                                                        is-align-items-center
-                                                                                                                                                                                        is-flex
-                                                                                                                                                                                        mt-2
-                                                                                                                                                                                      ">
+                                                                                                                                                                                                                            is-justify-content-space-between
+                                                                                                                                                                                                                            is-align-items-center
+                                                                                                                                                                                                                            is-flex
+                                                                                                                                                                                                                            mt-2
+                                                                                                                                                                                                                          ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
                               icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
@@ -704,77 +704,84 @@ const permissionCheck = async () => {
                   <VIconButton v-permission="Permissions.MEDICAL_INFO_EDIT" size="small" icon="feather:edit-3"
                     tabindex="0" @click="onClickEditMedicalInfo" />
                 </div>
-
-                <div v-if="currentCustomer.medical_info" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
-                    <h4>{{ t('customer.details.blood_type') }}</h4>
-                    <p>
-                      {{ currentCustomer?.medical_info?.blood_type ?? t('place_holder.none') }}
-                    </p>
+                <div v-if="checkPermission(Permissions.MEDICAL_INFO_SHOW)">
+                  <div v-if="currentCustomer.medical_info" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
+                      <h4>{{ t('customer.details.blood_type') }}</h4>
+                      <p>
+                        {{ currentCustomer?.medical_info?.blood_type ?? t('place_holder.none') }}
+                      </p>
+                    </div>
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnir lnir-grow"></i>
+                      <h4>{{ t('customer.details.smooke') }}</h4>
+                      <p>
+                        {{
+                          MedicalInfoConsts.showBoolean(
+                            currentCustomer?.medical_info?.smoking
+                          )
+                        }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnir lnir-grow"></i>
-                    <h4>{{ t('customer.details.smooke') }}</h4>
-                    <p>
-                      {{
-                        MedicalInfoConsts.showBoolean(
-                          currentCustomer?.medical_info?.smoking
-                        )
-                      }}
-                    </p>
+                  <div v-else class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('customer.details.tabs_content_placeholder.medical_info') }}</h4>
+                    </div>
+                  </div>
+
+                  <div v-if="currentCustomer.medical_info" class="project-files">
+                    <h4>{{ t('customer.details.more_info') }}</h4>
+                    <div class="columns is-multiline">
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.allergic') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.allergic ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.chronic_diseases') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.chronic_diseases ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.infectious_diseases') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.infectious_diseases ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.other_medical_info') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.any_other_info ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div v-else class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('customer.details.tabs_content_placeholder.medical_info') }}</h4>
-                  </div>
-                </div>
-
-                <div v-if="currentCustomer.medical_info" class="project-files">
-                  <h4>{{ t('customer.details.more_info') }}</h4>
-                  <div class="columns is-multiline">
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('customer.details.allergic') }}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.allergic ?? t('place_holder.none') }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('customer.details.chronic_diseases') }}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.chronic_diseases ?? t('place_holder.none') }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('customer.details.infectious_diseases') }}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.infectious_diseases ?? t('place_holder.none') }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('customer.details.other_medical_info') }}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.any_other_info ?? t('place_holder.none') }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
                   </div>
                 </div>
               </div>
@@ -794,7 +801,7 @@ const permissionCheck = async () => {
                     tabindex="0" @click="onClickEditSocialMedia" />
                 </div>
 
-                <div class="project-features">
+                <div v-if="checkPermission(Permissions.CUSTOMER_SOCIAL_MEDIA_SHOW)" class="project-features">
                   <div v-for="socialMedia in currentCustomer.social_medias" class="project-feature">
                     <i aria-hidden="true" :class="socialMedia.icon"></i>
                     <h4>{{ socialMedia.name }}</h4>
@@ -807,6 +814,12 @@ const permissionCheck = async () => {
                   <div v-if="currentCustomer.social_medias.length == 0" class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
                     <h4>{{ t('customer.details.tabs_content_placeholder.social_modia') }}</h4>
+                  </div>
+                </div>
+                <div v-else class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
                   </div>
                 </div>
               </div>
@@ -822,82 +835,90 @@ const permissionCheck = async () => {
                     <h3>{{ t('customer.details.customer_files') }}</h3>
                   </div>
                 </div>
-                <div v-if="customerFiles.length == 0" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('customer.details.tabs_content_placeholder.files') }}</h4>
+                <div v-if="checkPermission(Permissions.MEDIA_ACCESS)">
+                  <div v-if="customerFiles.length == 0" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('customer.details.tabs_content_placeholder.files') }}</h4>
+                    </div>
                   </div>
-                </div>
-
-                <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
-                  <h4>{{ t('customer.details.upload_file') }}</h4>
-                  <div class="is-flex is-justify-content-space-between">
-                    <VField class="mr-6" grouped>
-                      <VControl>
-                        <div class="file has-name">
-                          <label class="file-label">
-                            <input class="file-input" type="file" v-on:change="onAddFile" />
-                            <span class="file-cta">
-                              <span class="file-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                  <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
+                    <h4>{{ t('customer.details.upload_file') }}</h4>
+                    <div class="is-flex is-justify-content-space-between">
+                      <VField class="mr-6" grouped>
+                        <VControl>
+                          <div class="file has-name">
+                            <label class="file-label">
+                              <input class="file-input" type="file" v-on:change="onAddFile" />
+                              <span class="file-cta">
+                                <span class="file-icon">
+                                  <i class="fas fa-cloud-upload-alt"></i>
+                                </span>
+                                <span class="file-label">{{ t('images.image_name_placeholder') }}</span>
                               </span>
-                              <span class="file-label">{{ t('images.image_name_placeholder') }}</span>
-                            </span>
-                            <span class="file-name light-text">
-                              {{ filesToUpload?.name ?? t('images.image_select_file') }}
-                            </span>
-                          </label>
-                        </div>
-                      </VControl>
-                    </VField>
-                    <VLoader size="small" :active="uploadLoading">
-                      <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
-                        icon="lnir lnir-add-files rem-100" light dark-outlined>
-                        {{ t('customer.details.upload') }}
-                      </VButton>
-                    </VLoader>
-                  </div>
-                  <h6 class="ml-2 mt-2 help">
-                    {{ t('images.accepted_file') }}
-                  </h6>
-                </div>
-                <div v-if="customerFiles.length != 0" class="project-files project-section">
-                  <div>
-                    <h4>{{ t('customer.details.tabs.files') }}</h4>
-                    <div class="columns is-multiline">
-                      <div v-for="(file, index) in customerFiles" class="column is-6">
-                        <div class="file-box is-flex is-justify-content-space-between">
-                          <div class="file-box">
-                            <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
-                            <div class="meta">
-                              <span class="file-link">
-                                <a target="_blank" class="file-link" :href="file.relative_path">
-                                  {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                              <span class="file-name light-text">
+                                {{ filesToUpload?.name ?? t('images.image_select_file') }}
                               </span>
-                              <span>
-                                {{
-                                  file.size != undefined
-                                  ? (file.size / (1024 * 1024)).toFixed(2)
-                                  : 'Unknown'
-                                }}
-                                {{ file.size != undefined ? t('images.megabyte') : '' }}
-                                <i aria-hidden="true" class="fas fa-circle"></i>
-                                {{ file.created_at }}
-                                <i aria-hidden="true" class="fas fa-circle"></i>
-                                {{ t('images.by') }} {{
-                                  file.uploaded_by?.first_name
-                                }}{{ file.uploaded_by?.last_name }}
-                              </span>
-                            </div>
+                            </label>
                           </div>
-                          <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
-                            size="small" icon="feather:trash" tabindex="0" color="danger"
-                            @click="onDeleteFile(file.id ?? 0)" />
+                        </VControl>
+                      </VField>
+                      <VLoader size="small" :active="uploadLoading">
+                        <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                          icon="lnir lnir-add-files rem-100" light dark-outlined>
+                          {{ t('customer.details.upload') }}
+                        </VButton>
+                      </VLoader>
+                    </div>
+                    <h6 class="ml-2 mt-2 help">
+                      {{ t('images.accepted_file') }}
+                    </h6>
+                  </div>
+                  <div v-if="customerFiles.length != 0" class="project-files project-section">
+                    <div>
+                      <h4>{{ t('customer.details.tabs.files') }}</h4>
+                      <div class="columns is-multiline">
+                        <div v-for="(file, index) in customerFiles" class="column is-6">
+                          <div class="file-box is-flex is-justify-content-space-between">
+                            <div class="file-box">
+                              <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
+                              <div class="meta">
+                                <span class="file-link">
+                                  <a target="_blank" class="file-link" :href="file.relative_path">
+                                    {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                                </span>
+                                <span>
+                                  {{
+                                    file.size != undefined
+                                    ? (file.size / (1024 * 1024)).toFixed(2)
+                                    : 'Unknown'
+                                  }}
+                                  {{ file.size != undefined ? t('images.megabyte') : '' }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ file.created_at }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ t('images.by') }} {{
+                                    file.uploaded_by?.first_name
+                                  }}{{ file.uploaded_by?.last_name }}
+                                </span>
+                              </div>
+                            </div>
+                            <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
+                              size="small" icon="feather:trash" tabindex="0" color="danger"
+                              @click="onDeleteFile(file.id ?? 0)" />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div v-else class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -1017,6 +1038,10 @@ const permissionCheck = async () => {
   
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
+
+.profile-wrapper {
+  max-width: 100%;
+}
 
 .tabs-width {
   min-width: 1200px;

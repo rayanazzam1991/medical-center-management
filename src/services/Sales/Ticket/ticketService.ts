@@ -90,7 +90,8 @@ export function resetTicketSearchFilter() {
     page: undefined,
     per_page: undefined,
     status: undefined,
-    customer_id: undefined
+    customer_id: undefined,
+    employee_id: undefined
   }
 
   return blankSearchFilter

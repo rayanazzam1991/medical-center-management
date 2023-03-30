@@ -126,7 +126,7 @@ export const useinventoryItemHistory = defineStore('inventoryItemHistory', () =>
             var returnedItemHistory: inventoryItemHistory
             returnedItemHistory = response.response.data
             inventoryItemHistories.value.splice(
-                inventoryItemHistories.value.findIndex((inventoryItemHistoryElement) => (inventoryItemHistoryElement.id = inventoryItemHistory.id)),
+                inventoryItemHistories.value.findIndex((inventoryItemHistoryElement) => (inventoryItemHistoryElement.id == inventoryItemHistory.id)),
                 1
             )
             success.value = response.response.success

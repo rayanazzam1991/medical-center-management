@@ -3,49 +3,51 @@
     "meta": {
         "requiresAuth": true,
         "permissions": [
-            "client_cash_receipt_list"
+            "supplier_employee_cash_receipt_list"
         ]
     }
 }
 </route>
-        
+      
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
+import { ref, onMounted, h } from 'vue';
 import { useI18n } from 'vue-i18n';
+import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintDropDown.vue';
+import SupplierEmployeeCashReceiptPrint from '/@src/components/OurComponents/PrintComponents/SupplierEmployeeCashReceiptPrint.vue';
 import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 import { useNotyf } from '/@src/composable/useNotyf';
+import usePrint from '/@src/composable/usePrint';
 import { AccountConsts } from '/@src/models/Accounting/Account/account';
-import { defaultClientsCashReceiptsSearchFilter, Transaction, ClientsCashReceiptsSearchFilter, defaultTransaction } from '/@src/models/Accounting/Transaction/record';
-import { getClientsCashReceiptsList, resetClientsCashReceiptsSearchFilter } from '/@src/services/Accounting/Transaction/transactionService';
+import { defaultSuppliersCashReceiptsSearchFilter, Transaction, SuppliersCashReceiptsSearchFilter, defaultTransaction } from '/@src/models/Accounting/Transaction/record';
+import { getSuppliersCashReceiptsList, resetEmployeeSuppliersCashReceiptsSearchFilter } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
-import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintDropDown.vue'
-import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
 
-export interface ClientsCashReceiptsTableProps {
-    isForCustomer: boolean,
-    customerId: number | undefined
+export interface SupplierEmployeeCashReceiptsTableProps {
+    isForEmployee: boolean,
+    employeeId: number | undefined
 }
-const props = withDefaults(defineProps<ClientsCashReceiptsTableProps>(), {
-    isForCustomer: false,
-    customerId: undefined
+const props = withDefaults(defineProps<SupplierEmployeeCashReceiptsTableProps>(), {
+    isForEmployee: false,
+    employeeId: undefined
 })
+
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const notif = useNotyf() as Notyf
-const searchFilter = ref(resetClientsCashReceiptsSearchFilter())
-if (props.isForCustomer && props.customerId) {
-    searchFilter.value.customer_id = props.customerId
+const searchFilter = ref(resetEmployeeSuppliersCashReceiptsSearchFilter())
+if (props.isForEmployee && props.employeeId) {
+    searchFilter.value.employee_id = props.employeeId
 }
 
-const clientsCashReceiptsList = ref<Array<Transaction>>([])
+const suppliersCashReceiptsList = ref<Array<Transaction>>([])
 const paginationVar = ref(defaultPagination)
-const router = useRouter()
 const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
@@ -53,8 +55,8 @@ const selectedReceiptForPrint = ref(defaultTransaction)
 
 onMounted(async () => {
 
-    const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(searchFilter.value)
-    clientsCashReceiptsList.value = clients_cash_receipts
+    const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(searchFilter.value)
+    suppliersCashReceiptsList.value = suppliers_cash_receipts
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
@@ -65,35 +67,36 @@ onMounted(async () => {
 const { printDiv } = usePrint('');
 const print = async () => {
     await sleep(500)
-    printDiv('printerable', t('customer_cash_receipt.table.print_title'))
+    printDiv('printerable', t('supplier_cash_receipt.table.print_title'))
 }
-const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
+
+const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
     paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
-    if (props.isForCustomer && props.customerId) {
-        newSearchFilter.customer_id = props.customerId
+    if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.employee_id = props.employeeId
     }
 
-    const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(newSearchFilter)
-    clientsCashReceiptsList.value = clients_cash_receipts
+    const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(newSearchFilter)
+    suppliersCashReceiptsList.value = suppliers_cash_receipts
     paginationVar.value = pagination
     searchFilter.value = newSearchFilter
 }
 
-const resetFilter = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
-    if (props.isForCustomer && props.customerId) {
-        newSearchFilter.customer_id = props.customerId
+const resetFilter = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
+    if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.employee_id = props.employeeId
     }
 
     searchFilter.value = newSearchFilter
     await search(searchFilter.value)
 }
 
-const getClientsReceiptsPerPage = async (pageNum: number) => {
+const getSuppliersReceiptsPerPage = async (pageNum: number) => {
     searchFilter.value.page = pageNum
     await search(searchFilter.value)
 }
 
-const clientReceiptSort = async (value: string) => {
+const suppliersReceiptSort = async (value: string) => {
     if (value != undefined) {
         const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
         searchFilter.value.order_by = sortField
@@ -108,12 +111,18 @@ const clientReceiptSort = async (value: string) => {
 }
 
 const columns = {
-    client_name: {
+    name: {
         align: 'center',
-        label: t('customer_cash_receipt.table.columns.client_name'),
+        label: t('supplier_cash_receipt.table.columns.name'),
         renderRow: (row: Transaction) =>
-            h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.CLIENTS_CODE)?.account.name),
+            h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE || entry.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE)?.account.name),
         grow: true,
+    },
+    type: {
+        align: 'center',
+        label: t('supplier_cash_receipt.table.columns.type.title'),
+        renderRow: (row: Transaction) =>
+            h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.SUPPLIER_CODE || entry.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE)?.account.chart_account?.code == AccountConsts.EMPLOYEE_CODE ? t('supplier_cash_receipt.table.columns.type.employee') : t('supplier_cash_receipt.table.columns.type.supplier')),
     },
     amount: {
         align: 'center',
@@ -188,11 +197,10 @@ const columns = {
 </script>
     
 <template>
-    <ClientsCashReceiptsTableHeader :is_for_customer="props.isForCustomer" :key="keyIncrement"
-        :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar" :default_per_page="default_per_page"
-        @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="columns" :data="clientsCashReceiptsList" :limit="searchFilter.per_page"
-        @update:sort="clientReceiptSort">
+    <SuppliersCashReceiptsTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search"
+        :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <VFlexTableWrapper :columns="columns" :data="suppliersCashReceiptsList" :limit="searchFilter.per_page"
+        @update:sort="suppliersReceiptSort">
         <VFlexTable separators clickable>
             <template #body>
                 <div v-if="transactionStore?.loading" class="flex-list-inner">
@@ -202,18 +210,18 @@ const columns = {
                         </VFlexTableCell>
                     </div>
                 </div>
-                <div v-else-if="clientsCashReceiptsList.length === 0" class="flex-list-inner">
+                <div v-else-if="suppliersCashReceiptsList.length === 0" class="flex-list-inner">
                     <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
             </template>
         </VFlexTable>
-        <VFlexPagination v-if="(clientsCashReceiptsList.length != 0 && paginationVar.max_page != 1)"
+        <VFlexPagination v-if="(suppliersCashReceiptsList.length != 0 && paginationVar.max_page != 1)"
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
-            @update:current-page="getClientsReceiptsPerPage" />
-        <h6 class="pt-2 is-size-7" v-if="clientsCashReceiptsList.length != 0 && !transactionStore?.loading">
+            @update:current-page="getSuppliersReceiptsPerPage" />
+        <h6 class="pt-2 is-size-7" v-if="suppliersCashReceiptsList.length != 0 && !transactionStore?.loading">
             {{
                 t('tables.pagination_footer', {
                     from_number: paginationVar.page !=
@@ -228,8 +236,7 @@ const columns = {
                 }) }}</h6>
         <VPlaceloadText v-if="transactionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-
-    <CustomerCashReceiptPrint :key="keyIncrement" :customer-cash-receipt="selectedReceiptForPrint" />
+    <SupplierEmployeeCashReceiptPrint :key="keyIncrement" :cash-receipt="selectedReceiptForPrint" />
 </template>
 <style lang="scss">
 .tooltip {

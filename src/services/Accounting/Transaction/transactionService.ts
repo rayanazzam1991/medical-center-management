@@ -133,3 +133,19 @@ export function resetClientsCashReceiptsSearchFilter() {
   return blankSearchFilter
 
 }
+export function resetEmployeeSuppliersCashReceiptsSearchFilter() {
+  const blankSearchFilter: SuppliersCashReceiptsSearchFilter = {
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+    cash_account_id: undefined,
+    currency_id: undefined,
+    note: undefined,
+    supplier_name: undefined,
+    employee_id: undefined
+  }
+
+  return blankSearchFilter
+
+}

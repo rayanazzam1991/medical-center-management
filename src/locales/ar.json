@@ -815,7 +815,10 @@
       "tabs": {
         "details": "التفاصيل",
         "files": "الملفات",
-        "services": "الخدمات"
+        "services": "الخدمات",
+        "cash_receipts": "الإيصالات النقدية",
+        "tickets": "التذاكر",
+        "ticket_services": "الخدمات المقدمة"
       },
       "main_details": "المعلومات الأساسية",
       "services": "الخدمات",
@@ -1040,7 +1043,9 @@
       "title": "مادة",
       "tabs": {
         "details": "تفاصيل",
-        "item_history": "تاريخ المادة"
+        "item_history": "تاريخ المادة",
+        "inventories": "المستودعات",
+        "suppliers": "الموردون"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "{title} الاسم",
@@ -1120,7 +1125,10 @@
         "action_by": "  بواسطة",
         "action": "النشاط",
         "movement_type": "نوع الحركة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "image": "الصورة",
+        "supplier_name": "المورد",
+        "invoice_number": "رقم الفاتورة"
       },
       "action_types": {
         "add_quantity": "إضافة كميًة",
@@ -1150,7 +1158,8 @@
       "level_2": "المستوى 2",
       "create_date": "تاريخ الإنشاء: ",
       "from": "من: ",
-      "to": "الى: "
+      "to": "الى: ",
+      "supplier_name": "اسم المورد..."
     },
     "add_quantity_button": "إضافة كميًة",
     "withdraw_quantity_button": " سحب كميًة"
@@ -2684,5 +2693,29 @@
       "price": "السعر",
       "total_price": "السعر الاجمالي"
     }
+  },
+  "inventories_by_item": {
+    "table": {
+      "title": "مستودعات المادة",
+      "columns": {
+        "inventory_name": "المستودع",
+        "quantity": "الكميًة"
+      }
+    },
+    "search_filter": {
+      "inventory_name": "المستودع...",
+      "quantity": "الكميًة..."
+    }
+  },
+  "inventory_item_history_types": {
+    "internal": "داخلية",
+    "external": "خارجية"
+  },
+  "inventory_item_history_actions": {
+    "add_quantity": "إضافة كميًة",
+    "withdraw_quantity": " سحب كميًة",
+    "sell_quantity": "مبيع كميًة",
+    "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي",
+    "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي"
   }
 }

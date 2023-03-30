@@ -35,10 +35,6 @@ const props = withDefaults(defineProps<ReminderTableProps>(), {
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
-viewWrapper.setPageTitle(t('reminder.table.title'))
-useHead({
-    title: t('reminder.table.title'),
-})
 const notif = useNotyf() as Notyf
 const reminderStore = useReminder()
 const searchFilter = ref(defaultReminderSearchFilter)

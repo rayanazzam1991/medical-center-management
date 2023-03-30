@@ -49,6 +49,7 @@ export interface ClientsCashReceiptsSearchFilter {
   order?: string
 }
 export interface SuppliersCashReceiptsSearchFilter {
+  employee_id?: number
   supplier_name?: string
   note?: string
   currency_id?: number

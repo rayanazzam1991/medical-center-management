@@ -13,7 +13,7 @@
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { addQuantity, defaultAddQuantityItem, ItemHsitoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
+import { addQuantity, defaultAddQuantityItem, InventoryItemHistoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
 import { addQuantityService, addItemHistoryFile } from '../../services/Warehouse/ItemHistory/inventoryItemHistoryService';
 import { useItemHistoryForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -207,9 +207,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
   }
   let addQuantityForm = currentaddQuantity.value
   const selectedSupplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value)
-  addQuantityForm.requester_name = selectedSupplierAccount?.name ?? undefined
   addQuantityForm.item_quantity = itemQuantity.value
   addQuantityForm.add_item_cost = itemCost.value
+  addQuantityForm.causerable_account_id = selectedSupplierAccount?.id ?? 0
   addQuantityForm.record.amount = totalAmount.value
   addQuantityForm.record.currency_id = currencyId.value
   addQuantityForm.record.currency_rate = currencyRate.value
@@ -495,10 +495,12 @@ watch(cashAccountId, (value) => {
                 <VField id="status" v-slot="{ field }">
                   <VLabel class="required">{{ t('add_quantity.form.status') }}</VLabel>
                   <VControl>
-                    <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
-                      :label="ItemHsitoryConsts.showStatusName(1)" name="status" color="success" />
-                    <VRadio v-model="currentaddQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
-                      :label="ItemHsitoryConsts.showStatusName(0)" name="status" color="danger" />
+                    <VRadio v-model="currentaddQuantity.status" :value="InventoryItemHistoryConsts.ACTIVE_ITEM_HISTORY"
+                      :label="InventoryItemHistoryConsts.getStatusName(InventoryItemHistoryConsts.ACTIVE_ITEM_HISTORY)"
+                      name="status" color="success" />
+                    <VRadio v-model="currentaddQuantity.status" :value="InventoryItemHistoryConsts.INACTIVE_ITEM_HISTORY"
+                      :label="InventoryItemHistoryConsts.getStatusName(InventoryItemHistoryConsts.INACTIVE_ITEM_HISTORY)"
+                      name="status" color="danger" />
                     <ErrorMessage name="status" class="help is-danger" />
                   </VControl>
                 </VField>

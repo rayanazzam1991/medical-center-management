@@ -26,26 +26,30 @@ import { defaultPagination } from '/@src/utils/response';
 export interface TicketServiceTableProps {
     isForCustomer: boolean,
     customerId: number | undefined
+    isForEmployee: boolean,
+    employeeId: number | undefined
 }
 const props = withDefaults(defineProps<TicketServiceTableProps>(), {
     isForCustomer: false,
-    customerId: undefined
+    customerId: undefined,
+    isForEmployee: false,
+    employeeId: undefined
+
 })
 
 
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
-viewWrapper.setPageTitle(t('requested_services.table.title'))
-useHead({
-    title: t('requested_services.table.title'),
-})
 const notif = useNotyf() as Notyf
 const ticketServiceStore = useTicketService()
 const searchFilter = ref(resetTicketServiceSearchFilter())
 if (props.isForCustomer && props.customerId) {
     searchFilter.value.customer_id = props.customerId
+} else if (props.isForEmployee && props.employeeId) {
+    searchFilter.value.provider_id = props.employeeId
 }
+
 
 const ticketServicesList = ref<Array<TicketService>>([])
 const paginationVar = ref(defaultPagination)
@@ -66,7 +70,10 @@ const search = async (newSearchFilter: TicketServiceSearchFilter) => {
     paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
+    } else if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.provider_id = props.employeeId
     }
+
 
     const { ticket_services, pagination } = await getTicktServicesList(newSearchFilter)
     ticketServicesList.value = ticket_services
@@ -77,7 +84,10 @@ const search = async (newSearchFilter: TicketServiceSearchFilter) => {
 const resetFilter = async (newSearchFilter: TicketServiceSearchFilter) => {
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
+    } else if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.provider_id = props.employeeId
     }
+
 
     searchFilter.value = newSearchFilter
     await search(searchFilter.value)
@@ -291,14 +301,109 @@ const customerTicketsServicesColumns = {
     },
 
 } as const
+const employeeTicketsServicesColumns = {
+    "customer_name": {
+        align: 'center',
+        label: t("requested_services.table.columns.customer_name"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.ticket?.customer.user.first_name + ' ' + row?.ticket?.customer.user.last_name),
+    },
+    "service_name": {
+        align: 'center',
+        label: t("requested_services.table.columns.service_name"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.service.name),
+    },
+    "sell_price": {
+        align: 'center',
+        label: t("requested_services.table.columns.price"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.sell_price),
+    },
+    "currency": {
+        align: 'center',
+        label: t("requested_services.table.columns.currency"),
+        renderRow: (row: TicketService) =>
+            h('span', row.ticket?.currency?.name ?? '-'),
+    },
+    "note": {
+        align: 'center',
+        label: t("requested_services.table.columns.note"),
+        renderRow: (row: TicketService) =>
+            h('span', {
+                innerHTML: row?.note ?
+                    `<div class="tooltip">${stringTrim(row?.note, 5)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
+            }),
+    },
+    "updated_at": {
+        align: 'center',
+        sortable: true,
+
+        label: t("requested_services.table.columns.action_date"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.updated_at),
+    },
+    status: {
+        align: 'center',
+        label: t("requested_services.table.columns.status"),
+        renderRow: (row: TicketService) => {
+
+            return h(
+                VTag,
+                {
+                    rounded: true,
+                    color: TicketServiceConsts.getStatusColor(row?.status),
+                },
+                {
+                    default() {
+                        return TicketServiceConsts.getStatusName(row?.status)
+                    },
+                }
+            );
+        }
+
+
+    },
+    "created_at": {
+        align: 'center',
+        sortable: true,
+        label: t("requested_services.table.columns.created_at"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.created_at),
+    },
+    "created_by": {
+        align: 'center',
+        label: t("requested_services.table.columns.created_by"),
+        renderRow: (row: TicketService) =>
+            h('span', row?.ticket?.created_by?.first_name + ' ' + row?.ticket?.created_by?.last_name),
+
+    },
+    actions: {
+        align: 'center',
+        label: t('requested_services.table.columns.actions'),
+
+        renderRow: (row: TicketService) =>
+            h(TicketServiceDropDown, {
+                addReminderPermission: Permissions.REMINDER_CREATE,
+                onAddReminder: () => {
+                    router.push({ path: `/reminder/add`, query: { customer_id: row.ticket?.customer.id, ticket_service_id: row.id } })
+                },
+            }),
+
+    },
+
+} as const
+
 </script>
     
 <template>
-    <TicketServiceTableHeader :is_for_customer="props.isForCustomer" :key="keyIncrement" :title="viewWrapper.pageTitle"
-        @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <TicketServiceTableHeader :is_for_customer="props.isForCustomer" :is_for_employee="props.isForEmployee"
+        :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
+        :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
-    <VFlexTableWrapper :columns="props.isForCustomer ? customerTicketsServicesColumns : allTicketsServicesColumns"
+    <VFlexTableWrapper
+        :columns="props.isForCustomer ? customerTicketsServicesColumns : props.isForEmployee ? employeeTicketsServicesColumns : allTicketsServicesColumns"
         :data="ticketServicesList" @update:sort="TicketServiceSort">
 
         <VFlexTable separators clickable>

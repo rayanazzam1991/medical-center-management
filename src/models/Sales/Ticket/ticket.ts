@@ -95,6 +95,7 @@ export interface TicketSearchFilter {
   order_by?: string
   order?: string
   customer_id?: number
+  employee_id?: number
 }
 
 export const defaultTicketSearchFilter: TicketSearchFilter = {
@@ -105,7 +106,8 @@ export const defaultTicketSearchFilter: TicketSearchFilter = {
   order: undefined,
   order_by: undefined,
   per_page: undefined,
-  customer_id: undefined
+  customer_id: undefined,
+  employee_id: undefined
 }
 
 

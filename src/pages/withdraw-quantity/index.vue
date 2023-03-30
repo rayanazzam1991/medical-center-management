@@ -13,7 +13,7 @@
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { withdrawQuantity, defaultWithdrawQuantityItem, ItemHsitoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
+import { defaultWithdrawQuantityItem, InventoryItemHistoryConsts } from '../../models/Warehouse/ItemHistory/inventoryItemHistory';
 import { withdrawQuantityService } from '../../services/Warehouse/ItemHistory/inventoryItemHistoryService';
 import { useWithdrawItemForm } from '/@src/stores/Warehouse/ItemHistory/itemHistoryFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -24,7 +24,7 @@ import { Category, CategorySearchFilter, defaultCategory, defaultCategorySearchF
 import { getFilterCategoriesList } from '/@src/services/Warehouse/Category/CategoryService';
 import { defaultItem, defaultItemSearchFilter, Item, ItemConsts, ItemSearchFilter } from '/@src/models/Warehouse/Item/item';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
-import { Contractor, ContractorSearchFilter, defaultContractorSearchFilter } from '/@src/models/Contractor/contractor';
+import { Contractor } from '/@src/models/Contractor/contractor';
 import { defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee';
 import { getEmployeesList } from '/@src/services/Employee/employeeService';
 import { getContractorsList } from '/@src/services/Contractor/contractorService';
@@ -52,19 +52,15 @@ withdarwQuantityForm.setStep({
     },
 })
 
-const route = useRoute()
 const router = useRouter()
 const notif = useNotyf() as Notyf
 const pageTitle = t('withdraw_quantity.form.title')
-const phoneCheck = ref<string>('false')
 const currentwithdrawQuantity = ref(defaultWithdrawQuantityItem)
 const selectedCategoryId = ref()
 const selectedSubCategoryId = ref()
 const subcategoeisList = ref<Category[]>([])
 const allCategoriesList = ref<Category[]>([])
-const itemHistoryId = ref(0)
 const employeesList = ref<Employee[]>([])
-const contractorsList = ref<Contractor[]>([])
 const requesterId = ref()
 const selectedItem = ref()
 const allItemsList = ref<Item[]>([])
@@ -136,18 +132,11 @@ const { handleSubmit } = useForm({
 })
 
 const onSubmitAdd = handleSubmit(async (values) => {
-    let withdrawQuantityForm = currentwithdrawQuantity.value
-    withdrawQuantityForm.item_id = selectedItem.value
-    withdrawQuantityForm.item_quantity = itemCostPriceQuantity.value.quantity
-    if (requesterId != undefined) {
-        const employee = employeesList.value.find((employee) => employee.id == requesterId.value)
-        withdrawQuantityForm.user_id = employee?.user.id ?? 0
-        withdrawQuantityForm.requester_name = employee?.user.first_name + ' ' + employee?.user.last_name ?? ''
-    }
-    else {
-        return false
-    }
-    const { withdrawQuantity, success, message } = await withdrawQuantityService(withdrawQuantityForm)
+    let withdrawQuantityData = currentwithdrawQuantity.value
+    withdrawQuantityData.item_id = selectedItem.value
+    withdrawQuantityData.item_quantity = itemCostPriceQuantity.value.quantity
+    withdrawQuantityData.causerable_id = requesterId.value
+    const { withdrawQuantity, success, message } = await withdrawQuantityService(withdrawQuantityData)
     if (success) {
         let formData = new FormData();
         // @ts-ignore
@@ -274,11 +263,13 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="status">
                                     <VLabel class="required">{{ t('withdraw_quantity.form.status') }}</VLabel>
                                     <VControl>
-                                        <VRadio v-model="currentwithdrawQuantity.status" :value="ItemHsitoryConsts.ACTIVE"
-                                            :label="ItemHsitoryConsts.showStatusName(ItemHsitoryConsts.ACTIVE)"
+                                        <VRadio v-model="currentwithdrawQuantity.status"
+                                            :value="InventoryItemHistoryConsts.ACTIVE_ITEM_HISTORY"
+                                            :label="InventoryItemHistoryConsts.getStatusName(InventoryItemHistoryConsts.ACTIVE_ITEM_HISTORY)"
                                             name="status" color="success" />
-                                        <VRadio v-model="currentwithdrawQuantity.status" :value="ItemHsitoryConsts.INACTIVE"
-                                            :label="ItemHsitoryConsts.showStatusName(ItemHsitoryConsts.INACTIVE)"
+                                        <VRadio v-model="currentwithdrawQuantity.status"
+                                            :value="InventoryItemHistoryConsts.INACTIVE_ITEM_HISTORY"
+                                            :label="InventoryItemHistoryConsts.getStatusName(InventoryItemHistoryConsts.INACTIVE_ITEM_HISTORY)"
                                             name="status" color="danger" />
                                         <ErrorMessage name="status" class="help is-danger" />
                                     </VControl>

@@ -30,24 +30,27 @@ import usePrint from '/@src/composable/usePrint'
 export interface TicketTableProps {
     isForCustomer: boolean,
     customerId: number | undefined
+    isForEmployee: boolean,
+    employeeId: number | undefined
 }
 const props = withDefaults(defineProps<TicketTableProps>(), {
     isForCustomer: false,
-    customerId: undefined
+    customerId: undefined,
+    isForEmployee: false,
+    employeeId: undefined
+
 })
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
-viewWrapper.setPageTitle(t('ticket.table.title'))
-useHead({
-    title: t('ticket.table.title'),
-})
 
 
 const notif = useNotyf() as Notyf
 const searchFilter = ref(resetTicketSearchFilter())
 if (props.isForCustomer && props.customerId) {
     searchFilter.value.customer_id = props.customerId
+} else if (props.isForEmployee && props.employeeId) {
+    searchFilter.value.employee_id = props.employeeId
 }
 const ticketsList = ref<Array<Ticket>>([])
 const paginationVar = ref(defaultPagination)
@@ -102,7 +105,10 @@ const search = async (newSearchFilter: TicketSearchFilter) => {
     paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
+    } else if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.employee_id = props.employeeId
     }
+
     const { tickets, pagination } = await getTicketsList(newSearchFilter)
     ticketsList.value = tickets
     paginationVar.value = pagination
@@ -111,7 +117,10 @@ const search = async (newSearchFilter: TicketSearchFilter) => {
 const resetFilter = async (newSearchFilter: TicketSearchFilter) => {
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
+    } else if (props.isForEmployee && props.employeeId) {
+        newSearchFilter.employee_id = props.employeeId
     }
+
     searchFilter.value = newSearchFilter
     await search(searchFilter.value)
 }
@@ -387,6 +396,122 @@ const customerTicketsColumns = {
             }),
     },
 } as const
+const employeeTicketsColumns = {
+    id: {
+        searchable: true,
+        align: 'center',
+        label: t('ticket.table.columns.id')
+    },
+    customer_name: {
+        searchable: true,
+        align: 'center',
+        label: t('ticket.table.columns.customer_name'),
+        renderRow: (row: any) =>
+            h('span', row.customer.user.first_name + ' ' + row.customer.user.last_name)
+    },
+    services_count: {
+        searchable: true,
+        align: 'center',
+        label: t('ticket.table.columns.services_count'),
+        renderRow: (row: any) =>
+            h('span', row.services_count)
+    },
+    current_service_provider: {
+        searchable: true,
+        align: 'center',
+        label: t('ticket.table.columns.current_service_provider'),
+        renderRow: (row: any) =>
+            h('span', row.current_service_provider ?? '-')
+    },
+    total_amount: {
+        searchable: true,
+        align: 'center',
+        label: t('ticket.table.columns.total_amount'),
+        renderRow: (row: any) =>
+            h('span', row.total_amount)
+    },
+    status: {
+        align: 'center',
+        grow: true,
+        label: t('ticket.table.columns.status'),
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row.status === TicketConsts.SERVING
+                            ? 'info'
+                            : row.status === TicketConsts.SERVICES_ARE_DONE
+                                ? 'success'
+                                : row.status === TicketConsts.WAITING
+                                    ? 'warning'
+                                    : row.status === TicketConsts.PENDING
+                                        ? 'secondary'
+                                        : 'danger',
+                },
+                {
+                    default() {
+                        return TicketConsts.getStatusName(row.status)
+                    },
+                }
+            ),
+    },
+    created_at: {
+        searchable: true,
+        sortable: true,
+        align: 'center',
+        label: t('ticket.table.columns.created_at'),
+        renderRow: (row: any) =>
+            h('span', row.created_at)
+    },
+    created_by: {
+        align: 'center',
+        label: t('ticket.table.columns.created_by'),
+        renderRow: (row: any) =>
+            h('span', row?.created_by?.first_name + ' ' + row?.created_by?.last_name)
+    },
+    actions: {
+        align: 'center',
+        label: t('ticket.table.columns.actions'),
+        renderRow: (row: any) =>
+            h(CloseTicketDropDown, {
+                viewPermission: Permissions.TICKET_SHOW,
+                viewCurrentServiceCardPermission: Permissions.TICKET_SHOW,
+                editPermission: Permissions.TICKET_EDIT,
+                closeTicketPermission: Permissions.TICKET_CLOSE,
+                printPermission: Permissions.TICKET_SHOW,
+                onEdit: () => {
+                    if (row.status != TicketConsts.CLOSED) {
+
+                        router.push({ path: `/ticket/${row.id}/edit` })
+                    } else {
+                        notif.error(t('toast.error.ticket.cannot_edit_closed_ticket'))
+                    }
+                },
+
+                onView: () => {
+                    router.push({ path: `/ticket/${row.id}` })
+                },
+                onCloseTicket: () => {
+                    closeTicketPopup.value = true
+                    selectedCloseTicket.value = row
+                },
+                onViewCurrentServiceCard: async () => {
+                    await viewCurrenyServiceCard(row.id)
+                },
+                onPrint: async () => {
+                    selectedTicketForPrint.value = row
+                    keyIncrement.value++
+                    await printTicket()
+                },
+
+
+
+            }),
+    },
+} as const
+
 const ticketServicesColumns = {
     service_name: {
         align: 'center',
@@ -414,8 +539,9 @@ const ticketServicesColumns = {
     <TicketTableHeader :is_for_customer="props.isForCustomer" :key="keyIncrement" :title="viewWrapper.pageTitle"
         :button_name="t('ticket.header_button')" @search="search" :pagination="paginationVar"
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
-    <VFlexTableWrapper :columns="props.isForCustomer ? customerTicketsColumns : allTicketsColumns" :data="ticketsList"
-        @update:sort="ticketSort">
+    <VFlexTableWrapper
+        :columns="props.isForCustomer ? customerTicketsColumns : props.isForEmployee ? employeeTicketsColumns : allTicketsColumns"
+        :data="ticketsList" @update:sort="ticketSort">
         <VFlexTable separators clickable>
             <template #body>
                 <div v-if="ticketStore?.loading" class="flex-list-inner">
