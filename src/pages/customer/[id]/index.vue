@@ -90,7 +90,7 @@ useHead({
 const customerStore = useCustomer()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files' | 'Tickets' | 'Services' | 'Cash Receipts' | 'Reminders'
+    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files' | 'Tickets' | 'Services' | 'Cash Receipts' | 'Reminders' | 'Balances'
   }>(),
   {
     activeTab: 'Details',
@@ -473,6 +473,10 @@ const permissionCheck = async () => {
   if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
+  if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+
 
 }
 
@@ -507,7 +511,7 @@ const permissionCheck = async () => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-8-slider">
+      <div class="tabs-wrapper is-9-slider">
         <div class="tabs-inner" :hidden="loading">
           <div class="tabs tabs-width">
             <ul>
@@ -551,6 +555,12 @@ const permissionCheck = async () => {
                   t('customer.details.tabs.reminders')
                 }}</span></a>
               </li>
+              <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
+                  t('employee.details.tabs.balances')
+                }} </span></a>
+              </li>
+
               <li class="tab-naver"></li>
             </ul>
           </div>
@@ -656,11 +666,11 @@ const permissionCheck = async () => {
                         <div class="meta full-width">
                           <div
                             class="
-                                                                                                                                                                                                                            is-justify-content-space-between
-                                                                                                                                                                                                                            is-align-items-center
-                                                                                                                                                                                                                            is-flex
-                                                                                                                                                                                                                            mt-2
-                                                                                                                                                                                                                          ">
+                                                                                                                                                                                                                                                        is-justify-content-space-between
+                                                                                                                                                                                                                                                        is-align-items-center
+                                                                                                                                                                                                                                                        is-flex
+                                                                                                                                                                                                                                                        mt-2
+                                                                                                                                                                                                                                                      ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
                               icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
@@ -959,6 +969,15 @@ const permissionCheck = async () => {
             </div>
           </div>
         </div>
+        <div v-if="tab === 'Balances'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <JournalEntryTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -1044,7 +1063,7 @@ const permissionCheck = async () => {
 }
 
 .tabs-width {
-  min-width: 1200px;
+  min-width: 1300px;
   min-height: 40px;
 
   .is-active {
@@ -1052,8 +1071,8 @@ const permissionCheck = async () => {
   }
 }
 
-.tabs-wrapper.is-8-slider .tabs li a,
-.tabs-wrapper-alt.is-8-slider .tabs li a {
+.tabs-wrapper.is-9-slider .tabs li a,
+.tabs-wrapper-alt.is-9-slider .tabs li a {
   height: 40px;
 }
 

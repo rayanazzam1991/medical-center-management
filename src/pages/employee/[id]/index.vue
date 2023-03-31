@@ -90,7 +90,7 @@ useHead({
 const employeeStore = useEmployee()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts'
+    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances'
   }>(),
   {
     activeTab: 'Details',
@@ -488,6 +488,9 @@ const permissionCheck = async () => {
   if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
+  if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
 
 }
 
@@ -532,7 +535,7 @@ const permissionCheck = async () => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-6-slider">
+      <div class="tabs-wrapper is-7-slider">
         <div :hidden="loading" class="tabs-inner">
           <div class="tabs tabs-width">
             <ul>
@@ -565,6 +568,11 @@ const permissionCheck = async () => {
               <li @click="permissionCheck()" :class="[tab === 'Cash Receipts' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Cash Receipts'" @click="tab = 'Cash Receipts'"><span>{{
                   t('employee.details.tabs.cash_receipts')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
+                  t('employee.details.tabs.balances')
                 }} </span></a>
               </li>
               <li class="tab-naver"></li>
@@ -940,6 +948,15 @@ const permissionCheck = async () => {
             </div>
           </div>
         </div>
+        <div v-if="tab === 'Balances'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <JournalEntryTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -1037,7 +1054,7 @@ const permissionCheck = async () => {
 }
 
 .tabs-width {
-  min-width: 900px;
+  min-width: 1050px;
   min-height: 40px;
 
   .is-active {
@@ -1046,8 +1063,8 @@ const permissionCheck = async () => {
   }
 }
 
-.tabs-wrapper.is-6-slider .tabs li a,
-.tabs-wrapper-alt.is-6-slider .tabs li a {
+.tabs-wrapper.is-7-slider .tabs li a,
+.tabs-wrapper-alt.is-7-slider .tabs li a {
   height: 40px;
 
 }

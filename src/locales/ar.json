@@ -818,7 +818,8 @@
         "services": "الخدمات",
         "cash_receipts": "الإيصالات النقدية",
         "tickets": "التذاكر",
-        "ticket_services": "الخدمات المقدمة"
+        "ticket_services": "الخدمات المقدمة",
+        "balances": "الأرصدة"
       },
       "main_details": "المعلومات الأساسية",
       "services": "الخدمات",
@@ -2560,6 +2561,7 @@
     }
   },
   "reminder": {
+    "add_button": "إضافة مذكرة",
     "table": {
       "title": "المذكرات",
       "columns": {
@@ -2717,5 +2719,17 @@
     "sell_quantity": "مبيع كميًة",
     "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي",
     "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي"
+  },
+  "journal_entry": {
+    "table": {
+      "columns": {
+        "type": "نوع الحركة",
+        "in_out": "داخل/خارج",
+        "in": "داخل",
+        "out": "خارج",
+        "date": "التاريخ",
+        "amount": "المبلغ"
+      }
+    }
   }
 }

@@ -139,7 +139,7 @@ const allRemindersColumns = {
         align: 'center',
         label: t("reminder.table.columns.requested_service"),
         renderRow: (row: Reminder) =>
-            h('span', row?.service.service.name),
+            h('span', row?.service?.service?.name ?? '-'),
     },
     note: {
         align: 'center',
@@ -203,7 +203,7 @@ const customerRemindersColumns = {
         align: 'center',
         label: t("reminder.table.columns.requested_service"),
         renderRow: (row: Reminder) =>
-            h('span', row?.service.service.name),
+            h('span', row?.service?.service?.name ?? '-'),
     },
     note: {
         align: 'center',
@@ -265,8 +265,9 @@ const customerRemindersColumns = {
 </script>
     
 <template>
-    <ReminderTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
-        :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <ReminderTableHeader :is_for_customer="$props.isForCustomer" :customer_id="$props.customerId" :key="keyIncrement"
+        :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar" :default_per_page="default_per_page"
+        @resetFilter="resetFilter" />
 
 
     <VFlexTableWrapper :columns="$props.isForCustomer ? customerRemindersColumns : allRemindersColumns"
