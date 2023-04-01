@@ -35,7 +35,9 @@ const ticketValidationSchema = toFormValidator(zod
                     .max(999999, i18n.global.t('validation.number.out_of_boundries'))
 
                 ,
-            ),
+        ),
+
+
     }));
 export {
     ticketValidationSchema

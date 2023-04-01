@@ -3,7 +3,7 @@ import { useApi } from "/@src/composable/useApi"
 import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { DismissedEmployee, EmployeeHistories, EmployeeHistoriesSearchFilter } from "/@src/models/Employee/employeeHistories"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "../../models/Employee/employeeHistory"
 import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getDismissedEmployeesApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
@@ -14,7 +14,7 @@ import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
-  const employeesHistories =ref<EmployeeHistories[]>([])
+  const employeesHistory =ref<EmployeeHistory[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
   const employeesAttendance = ref<EmployeeAttendance[]>([])
   const pagination = ref<Pagination>(defaultPagination)
@@ -457,12 +457,12 @@ export const useEmployee = defineStore('employee', () => {
     sleep(2000)
     try {
       const response = await dismissEmployeeApi(api, dismissedEmployee)
-      var returnedDismissedEmployee: EmployeeHistories
+      var returnedDismissedEmployee: EmployeeHistory
       returnedDismissedEmployee = response.response.data
       success.value = response.response.success
       error_code.value = response.response.error_code
       message.value = response.response.message
-      employeesHistories.value.push(returnedDismissedEmployee)
+      employeesHistory.value.push(returnedDismissedEmployee)
 
       return returnedDismissedEmployee
     }
@@ -476,14 +476,14 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
-  async function getDismissedEmployeesStore(searchFilter: EmployeeHistoriesSearchFilter) {
+  async function getDismissedEmployeesStore(searchFilter: EmployeeHistorySearchFilter) {
     if (loading.value) return
 
     loading.value = true
 
     try {
       const returnedResponse = await getDismissedEmployeesApi(api, searchFilter)
-      employeesHistories.value = returnedResponse.response.data
+      employeesHistory.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
       success.value = returnedResponse.response.success
       error_code.value = returnedResponse.response.error_code
@@ -505,7 +505,7 @@ export const useEmployee = defineStore('employee', () => {
 
   return {
     employees,
-    employeesHistories,
+    employeesHistory,
     employeesSchedule,
     employeesAttendance,
     pagination,

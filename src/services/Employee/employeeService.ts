@@ -15,7 +15,7 @@ import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
-import { defaultEmployeeHistories,defaultDismissedEmployee, DismissedEmployee, EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistories'
+import { defaultEmployeeHistory,defaultDismissedEmployee, DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from '../../models/Employee/employeeHistory'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -30,6 +30,7 @@ export async function addEmployee(
   var message: string = employeeResponse.message ?? ''
   return { success, error_code, message, employee }
 }
+
 export async function dismissEmployeeHistory(
   dismissedEmployeeData: DismissedEmployee,
 ) {
@@ -43,10 +44,10 @@ export async function dismissEmployeeHistory(
   return { success, error_code, message, dismissedEmployee }
 }
 
-export async function getDismissedEmployeesList(searchFilter: EmployeeHistoriesSearchFilter) {
+export async function getDismissedEmployeesList(searchFilter: EmployeeHistorySearchFilter) {
   const employee = useEmployee()
   await employee.getDismissedEmployeesStore(searchFilter)
-  var dismissedEmployees: EmployeeHistories[] = employee.employeesHistories
+  var dismissedEmployees: EmployeeHistory[] = employee.employeesHistory
   var pagination: Pagination = employee.pagination
   return { dismissedEmployees, pagination }
 }

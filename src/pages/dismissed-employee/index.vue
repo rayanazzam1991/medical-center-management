@@ -1,4 +1,13 @@
-
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "employee_record_list"
+    ]
+  }
+}
+</route>
 
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'

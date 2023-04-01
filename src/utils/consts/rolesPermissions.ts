@@ -145,6 +145,8 @@ export enum Permissions {
     EMPLOYEE_DELETE = 'employee_delete',
     EMPLOYEE_EDIT = 'employee_edit',
     EMPLOYEE_LIST = 'employee_list',
+    EMPLOYEE_RECORD_LIST = 'employee_record_list',
+    DISMISS_EMPLOYEE='dismiss_employee',
     EMPLOYEE_SCHEDULE_ACCESS = 'employee_schedule_access',
     EMPLOYEE_SCHEDULE_SHOW = 'employee_schedule_show',
     EMPLOYEE_SCHEDULE_CREATE = 'employee_schedule_create',
