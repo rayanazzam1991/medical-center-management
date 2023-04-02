@@ -3,6 +3,7 @@ import { CustomResponseSingle, CustomResponseCollection } from "../../response"
 import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { DismissedEmployee, EmployeeHistories, EmployeeHistoriesSearchFilter } from "/@src/models/Employee/employeeHistories"
 
 
 export async function addEmployeeApi(
@@ -98,3 +99,26 @@ export async function getEmployeeByUserIdApi(
   const { data: response, headers } = await api.get(`employee/getEmployeeByUserId/${user_id}`)
   return { response }
 }
+
+export async function dismissEmployeeApi(
+  api: AxiosInstance,
+  dismissedEmployee: DismissedEmployee
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post('employeeHistory/dismissEmployee',dismissedEmployee)
+  return { response }
+}
+
+
+export async function getDismissedEmployeesApi(
+  api: AxiosInstance,
+  searchFilter: EmployeeHistoriesSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('employeeHistory/getDismissedEmployees', {
+    params: searchFilter,
+  })
+  return { response }
+}
+
+
+
+

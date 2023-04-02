@@ -90,7 +90,7 @@ useHead({
 const employeeStore = useEmployee()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances'
+    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances' | 'History Record'
   }>(),
   {
     activeTab: 'Details',
@@ -482,7 +482,7 @@ const permissionCheck = async () => {
   if (tab.value == 'Ticket Services' && !checkPermission(Permissions.TICKET_SERVICE_LIST)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
-  if (tab.value == 'Details' && !checkPermission(Permissions.CUSTOMER_SHOW)) {
+  if (tab.value == 'Details' && !checkPermission(Permissions.EMPLOYEE_SHOW)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
   if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
@@ -491,6 +491,9 @@ const permissionCheck = async () => {
   if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
+  // if (tab.value == 'History Record' && !checkPermission(Permissions.)) {
+  //   notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  // }
 
 }
 

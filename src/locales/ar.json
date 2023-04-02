@@ -159,7 +159,8 @@
   "human_resources_subnav": {
     "employee": {
       "employees": "الموظفين",
-      "create_employee": "انشاء موظف"
+      "create_employee": "انشاء موظف",
+      "employee_history": "سجل نشاط الموظفين"
     },
     "position": {
       "positions": "المناصب",
@@ -301,7 +302,8 @@
       "add_ticket": "تمت إضافة التذكرة رقم {ticket_id} بنجاح",
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
-      "password_changed": "تم تعديل كلمة المرور بنجاح"
+      "password_changed": "تم تعديل كلمة المرور بنجاح",
+      "dismiss": "تمت عملية إقالة الموظف بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -410,7 +412,8 @@
     "close_ticket": "إغلاق التذكرة",
     "view_current_service_card": "عرض بطاقة الدور الحالي",
     "no_actions": "لا يوجد اجراءات",
-    "print": "طباعة"
+    "print": "طباعة",
+    "dismiss_employee": "إقالة الموظف"
   },
   "add_quantity": {
     "form": {
@@ -807,7 +810,9 @@
         "placeholderSection": {
           "title": "هل أنت متأكد?",
           "subtitle": "أنت على وشك حذف هذا الملف بشكل دائم"
-        }
+        },
+        "dismiss_employee": " إقالة الموظف",
+        "dismiss_employee_content": "سبب إقالة الموظف"
       }
     },
     "details": {
@@ -947,6 +952,65 @@
         "caution": "هل أنت متأكد؟",
         "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
       }
+    },
+    "employee_statuses": {
+      "active": "فعال",
+      "inactive": "غير فعال",
+      "dismissed": "مُقال"
+    }
+  },
+  "dismissed_employee": {
+    "table": {
+      "title": "سجل نشاط الموظفين ",
+      "columns": {
+        "name": "اسم الموظف",
+        "status": "الحالة",
+        "notes": "ملاحظات ",
+        "created_at": "تاريخ الإنشاء"
+      }
+    },
+    "details": {
+      "main_details": "المعلومات الأساسية",
+      "services": "الخدمات",
+      "more_info": "معلومات إضافية",
+      "name": " اسم {title}",
+      "starting_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "gender": "الجنس",
+      "department": "القسم",
+      "room_number": "رقم الغرفة",
+      "nationality": "الجنسية",
+      "position": "المنصب",
+      "phone_number": "رقم الهاتف",
+      "basic_salary": "الراتب الأساسي",
+      "payment_percentage": "نسبة العمولة",
+      "address": "العنوان",
+      "employee_number": "رقم الموظف",
+      "last_employee_number": "الرقم الأخير للموظف",
+      "status": "الحالة",
+      "birth_date": "تاريخ الميلاد",
+      "employee_files": "الملفات ",
+      "upload_file": "تحميل ملف",
+      "upload": "تحميل",
+      "employee_status": "حالة الموظف",
+      "select_employee_status": "اختيار حالة الموظف",
+      "service_price": "سعر الخدمة",
+      "roles": "الأدوار",
+      "service_name": "اسم الخدمة",
+      "reset_password_button": "إعادة تعيين كلمة المرور",
+      "tabs_content_placeholder": {
+        "files": "لا يمتلك الموظف أية ملفات...",
+        "services": "لا يمتلك الموظف أية خدمات..."
+      },
+      "reset_password_confirm_popup": {
+        "title": "إعادة تعيين كلمة مرور المستخدم",
+        "confirmation": "هل أنت متأكد؟",
+        "caution": "سيتم إعادة كلمة مرور المستخدم إلى كلمة المرور الافتراضية"
+      }
+    },
+    "search_filter": {
+      "employee_name": "ادخل اسم الموظف",
+      "notes": "ادخل الملاحظة "
     }
   },
   "employee_attendance": {
