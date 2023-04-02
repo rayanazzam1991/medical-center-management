@@ -4,7 +4,7 @@ import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateU
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
 import { DismissedEmployee, EmployeeHistories, EmployeeHistoriesSearchFilter } from "/@src/models/Employee/employeeHistories"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getDismissedEmployeesApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getEmployeesHistoryApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
@@ -476,13 +476,13 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
-  async function getDismissedEmployeesStore(searchFilter: EmployeeHistoriesSearchFilter) {
+  async function getEmployeesHistoryListStore(searchFilter: EmployeeHistoriesSearchFilter) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const returnedResponse = await getDismissedEmployeesApi(api, searchFilter)
+      const returnedResponse = await getEmployeesHistoryApi(api, searchFilter)
       employeesHistories.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
       success.value = returnedResponse.response.success
@@ -529,7 +529,7 @@ export const useEmployee = defineStore('employee', () => {
     getEmployee,
     setEmployee,
     dismissEmployeeStore,
-    getDismissedEmployeesStore,
+    getEmployeesHistoryListStore,
     loggedEmployee,
     employee,
     success,

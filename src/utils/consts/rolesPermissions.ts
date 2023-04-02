@@ -139,6 +139,8 @@ export enum Permissions {
     DEPARTMENT_DELETE = 'department_delete',
     DEPARTMENT_EDIT = 'department_edit',
     DEPARTMENT_LIST = 'department_list',
+    EMPLOYEE_RECORD_LIST = 'employee_record_list',
+    DISMISS_EMPLOYEE = 'dismiss_employee',
     EMPLOYEE_ACCESS = 'employee_access',
     EMPLOYEE_SHOW = 'employee_show',
     EMPLOYEE_CREATE = 'employee_create',

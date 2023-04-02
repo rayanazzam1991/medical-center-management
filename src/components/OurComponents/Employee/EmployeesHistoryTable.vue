@@ -6,10 +6,10 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
 import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistories'
-import { getDismissedEmployeesList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
+import { getEmployeesHistoryList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import { defaultEmployeeHistoriesSearchFilter, EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistories'
+import { EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistories'
 export interface EmployeeHistoryTableProps {
   isForEmployee: boolean,
   employeeId: number | undefined
@@ -42,7 +42,7 @@ const keyIncrement = ref(0)
 
 
 onMounted(async () => {
-  const { dismissedEmployees, pagination } = await getDismissedEmployeesList(searchFilter.value)
+  const { dismissedEmployees, pagination } = await getEmployeesHistoryList(searchFilter.value)
   dismissedEmployeesList.value = dismissedEmployees
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
@@ -54,7 +54,7 @@ const search = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
   if (props.isForEmployee && props.employeeId) {
     newSearchFilter.employee_id = props.employeeId
   }
-  const { dismissedEmployees, pagination } = await getDismissedEmployeesList(newSearchFilter)
+  const { dismissedEmployees, pagination } = await getEmployeesHistoryList(newSearchFilter)
 
   dismissedEmployeesList.value = dismissedEmployees
   paginationVar.value = pagination

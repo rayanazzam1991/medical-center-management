@@ -824,7 +824,8 @@
         "cash_receipts": "الإيصالات النقدية",
         "tickets": "التذاكر",
         "ticket_services": "الخدمات المقدمة",
-        "balances": "الأرصدة"
+        "balances": "الأرصدة",
+        "history_record": "سجل تاريخ الموظف"
       },
       "main_details": "المعلومات الأساسية",
       "services": "الخدمات",

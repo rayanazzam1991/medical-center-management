@@ -43,9 +43,9 @@ export async function dismissEmployeeHistory(
   return { success, error_code, message, dismissedEmployee }
 }
 
-export async function getDismissedEmployeesList(searchFilter: EmployeeHistoriesSearchFilter) {
+export async function getEmployeesHistoryList(searchFilter: EmployeeHistoriesSearchFilter) {
   const employee = useEmployee()
-  await employee.getDismissedEmployeesStore(searchFilter)
+  await employee.getEmployeesHistoryListStore(searchFilter)
   var dismissedEmployees: EmployeeHistories[] = employee.employeesHistories
   var pagination: Pagination = employee.pagination
   return { dismissedEmployees, pagination }

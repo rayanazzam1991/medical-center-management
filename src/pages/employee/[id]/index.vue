@@ -491,9 +491,9 @@ const permissionCheck = async () => {
   if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
-  // if (tab.value == 'History Record' && !checkPermission(Permissions.)) {
-  //   notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
-  // }
+  if (tab.value == 'History Record' && !checkPermission(Permissions.EMPLOYEE_RECORD_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
 
 }
 
@@ -538,7 +538,7 @@ const permissionCheck = async () => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-7-slider">
+      <div class="tabs-wrapper is-8-slider">
         <div :hidden="loading" class="tabs-inner">
           <div class="tabs tabs-width">
             <ul>
@@ -576,6 +576,11 @@ const permissionCheck = async () => {
               <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
                   t('employee.details.tabs.balances')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'History Record' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'History Record'" @click="tab = 'History Record'"><span>{{
+                  t('employee.details.tabs.history_record')
                 }} </span></a>
               </li>
               <li class="tab-naver"></li>
@@ -960,6 +965,15 @@ const permissionCheck = async () => {
             </div>
           </div>
         </div>
+        <div v-if="tab === 'History Record'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <EmployeesHistoryTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -1057,7 +1071,7 @@ const permissionCheck = async () => {
 }
 
 .tabs-width {
-  min-width: 1050px;
+  min-width: 1250px;
   min-height: 40px;
 
   .is-active {
@@ -1066,8 +1080,8 @@ const permissionCheck = async () => {
   }
 }
 
-.tabs-wrapper.is-7-slider .tabs li a,
-.tabs-wrapper-alt.is-7-slider .tabs li a {
+.tabs-wrapper.is-8-slider .tabs li a,
+.tabs-wrapper-alt.is-8-slider .tabs li a {
   height: 40px;
 
 }
