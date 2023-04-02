@@ -10,7 +10,7 @@ import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/custom
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultConfirmPaymentTicket, ConfirmPaymentTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
-import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidationSchema';
+import { confirmPaymentTicketValidationSchema } from '/@src/rules/Sales/Ticket/confirmPaymentTicketValidationSchema';
 import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
@@ -134,7 +134,7 @@ export default defineComponent({
     }, 1)
 
 
-    const validationSchema = ticketValidationSchema
+    const validationSchema = confirmPaymentTicketValidationSchema
     const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
       initialValues: {

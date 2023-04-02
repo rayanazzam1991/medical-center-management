@@ -29,7 +29,7 @@ import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import EmployeeDropDown from '/@src/components/OurComponents/Employee/EmployeeDropDown.vue'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
-import { DismissedEmployee } from '/@src/models/Employee/employeeHistories'
+import { DismissedEmployee } from '../../models/Employee/employeeHistory'
 
 import { dismissEmployeevalidationSchema } from '/@src/rules/Employee/dismissEmployeeValidation';
 
@@ -88,8 +88,13 @@ const changestatusUser = async () => {
   }
   changeStatusPopup.value = false
 }
-const dismissEmployee = async () => {
 
+const validationSchema = dismissEmployeevalidationSchema
+const { handleSubmit } = useForm({
+  validationSchema,
+});
+
+const dismissEmployee = handleSubmit(async (values) => {
   const dismissedEmployeeData: DismissedEmployee = {
     employee_id: currentEmployee.value.id ?? 0,
     notes: newNote.value
@@ -111,10 +116,6 @@ const dismissEmployee = async () => {
     notif.error(message)
   }
   dismissEmployeePopup.value = false
-}
-const validationSchema = dismissEmployeevalidationSchema
-const { handleSubmit } = useForm({
-  validationSchema,
 });
 
 
@@ -251,6 +252,7 @@ const columns = {
         changeStatusPermission: Permissions.EMPLOYEE_EDIT,
         viewPermission: Permissions.EMPLOYEE_SHOW,
         viewMyWaitingListPermission: Permissions.SHOW_ALL_WAITING_LISTS,
+        dismissEmployeePermission: Permissions.DISMISS_EMPLOYEE,
         onView: () => {
           router.push({ path: `/employee/${row?.id}` })
         },
@@ -353,10 +355,10 @@ const columns = {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column " id="notes">
-                <VLabel>{{ t('employee.table.modal_title.dismiss_employee_content') }}</VLabel>
+                <VLabel class="required">{{ t('employee.table.modal_title.dismiss_employee_content') }}</VLabel>
                 <VControl>
                   <VTextarea v-model="newNote" />
-                  <ErrorMessage name="notes" />
+                  <ErrorMessage class="help is-danger" name="notes" />
                 </VControl>
               </VField>
             </div>

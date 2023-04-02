@@ -9,8 +9,8 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   fallbackLocale: 'en',
   messages: messages
 })
-export interface EmployeeHistories {
-  employee_id: Employee
+export interface EmployeeHistory {
+  employee_id: number
   notes?: string
   status?: number
   created_at?: string
@@ -26,14 +26,14 @@ export const defaultDismissedEmployee: DismissedEmployee ={
   notes: undefined
 }
 
-export const defaultEmployeeHistories: EmployeeHistories = {
-  employee_id: defaultEmployee,
+export const defaultEmployeeHistory: EmployeeHistory = {
+  employee_id:0,
   notes: undefined,
   status: undefined,
   created_at: undefined,
   created_by:undefined
 }
-export interface EmployeeHistoriesSearchFilter {
+export interface EmployeeHistorySearchFilter {
   employee_name?: string
   notes?: string
   page?: number
@@ -41,7 +41,7 @@ export interface EmployeeHistoriesSearchFilter {
   order_by?: string
   order?: string
 }
-export const defaultEmployeeHistoriesSearchFilter = <EmployeeHistoriesSearchFilter>{}
+export const defaultEmployeeHistorySearchFilter = <EmployeeHistorySearchFilter>{}
 
 
 class EmployeeStatusConsts {

@@ -41,7 +41,7 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink to="/dismissed-employee">
+                    <RouterLink v-permission="Permissions.EMPLOYEE_RECORD_LIST" to="/dismissed-employee">
 
                       <i class="lnil lnil-firecracker" aria-hidden="true"></i>
                       <span>{{ t('human_resources_subnav.employee.employee_history') }}</span>

@@ -5,6 +5,7 @@ export interface EmployeeDropDownProps {
   viewPermission: string,
   changeStatusPermission: string,
   viewMyWaitingListPermission: string,
+  dismissEmployeePermission: string
 }
 
 const { t } = useI18n()
@@ -17,11 +18,13 @@ const emits = defineEmits<{
 const props = withDefaults(defineProps<EmployeeDropDownProps>(), {
   viewPermission: undefined,
   changeStatusPermission: undefined,
-  viewMyWaitingListPermission: undefined
+  viewMyWaitingListPermission: undefined,
+  dismissEmployeePermission: undefined
 })
 const viewPermission = props.viewPermission
 const changeStatusPermission = props.changeStatusPermission
 const viewMyWaitingListPermission = props.viewMyWaitingListPermission
+const dismissEmployeePermission = props.dismissEmployeePermission
 
 </script>
 
@@ -70,7 +73,7 @@ const viewMyWaitingListPermission = props.viewMyWaitingListPermission
         </div>
       </a>
 
-      <a role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
+      <a v-permission="dismissEmployeePermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('dismissEmployee')
           close()
