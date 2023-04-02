@@ -64,7 +64,6 @@ declare module '@vue/runtime-core' {
     DepartmentDetails: typeof import('./src/components/OurComponents/Others/Department/DepartmentDetails.vue')['default']
     DepartmentForm: typeof import('./src/components/OurComponents/Others/Department/DepartmentForm.vue')['default']
     DepartmentTableHeader: typeof import('./src/components/OurComponents/Others/Department/DepartmentTableHeader.vue')['default']
-    DismissedEmployees: typeof import('./src/components/OurComponents/Employee/DismissedEmployees.vue')['default']
     DismissedEmployeesTable: typeof import('./src/components/OurComponents/Employee/DismissedEmployeesTable.vue')['default']
     DismissedEmployeeTableHeader: typeof import('./src/components/OurComponents/Employee/DismissedEmployeeTableHeader.vue')['default']
     DropDown: typeof import('./src/components/OurComponents/DropDown.vue')['default']
