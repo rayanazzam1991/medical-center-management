@@ -40,6 +40,14 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink to="/dismissed-employee">
+
+                      <i class="lnil lnil-firecracker" aria-hidden="true"></i>
+                      <span>{{ t('human_resources_subnav.employee.employee_history') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul><br />
                 <h4 v-permission="Permissions.POSITION_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.position.positions') }}</h4>
