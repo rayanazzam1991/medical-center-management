@@ -122,7 +122,11 @@ export async function getEmployeesList(searchFilter: EmployeeSearchFilter) {
   await employee.getEmployeesStore(searchFilter)
   var employees: Employee[] = employee.employees
   var pagination: Pagination = employee.pagination
-  return { employees, pagination }
+  let success: boolean = employee.success ?? false
+  let error_code: string = employee.error_code ?? ''
+  let message: string = employee.message ?? ''
+
+  return { employees, pagination , success, message , error_code }
 }
 
 
