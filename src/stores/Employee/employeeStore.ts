@@ -3,18 +3,18 @@ import { useApi } from "/@src/composable/useApi"
 import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "../../models/Employee/employeeHistory"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getDismissedEmployeesApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getEmployeesHistoryApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "/@src/models/Employee/employeeHistory"
 
 
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
-  const employeesHistory =ref<EmployeeHistory[]>([])
+  const employeesHistory = ref<EmployeeHistory[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
   const employeesAttendance = ref<EmployeeAttendance[]>([])
   const pagination = ref<Pagination>(defaultPagination)
@@ -476,13 +476,13 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
-  async function getDismissedEmployeesStore(searchFilter: EmployeeHistorySearchFilter) {
+  async function getEmployeesHistoryListStore(searchFilter: EmployeeHistorySearchFilter) {
     if (loading.value) return
 
     loading.value = true
 
     try {
-      const returnedResponse = await getDismissedEmployeesApi(api, searchFilter)
+      const returnedResponse = await getEmployeesHistoryApi(api, searchFilter)
       employeesHistory.value = returnedResponse.response.data
       pagination.value = returnedResponse.response.pagination
       success.value = returnedResponse.response.success
@@ -529,7 +529,7 @@ export const useEmployee = defineStore('employee', () => {
     getEmployee,
     setEmployee,
     dismissEmployeeStore,
-    getDismissedEmployeesStore,
+    getEmployeesHistoryListStore,
     loggedEmployee,
     employee,
     success,

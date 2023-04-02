@@ -28,6 +28,7 @@ import NoEditDropDown from '/@src/components/OurComponents/NoEditDropDown.vue'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import CustomerDropDown from '/@src/components/OurComponents/CRM/Customer/CustomerDropDown.vue'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('customer.table.title'))
@@ -227,16 +228,20 @@ const columns = {
         align: 'center',
         label: t('customer.table.columns.actions'),
 
-        renderRow: (row: any) =>
-            h(NoEditDropDown, {
+        renderRow: (row: Customer) =>
+            h(CustomerDropDown, {
                 viewPermission: Permissions.CUSTOMER_SHOW,
                 changeStatusPermission: Permissions.CUSTOMER_EDIT,
+                addReminderPermission: Permissions.REMINDER_CREATE,
                 onView: () => {
                     router.push({ path: `/customer/${row?.id}` })
                 },
                 onChangeStatus: () => {
                     customerChangeStatus.value = row
                     changeStatusPopup.value = true
+                },
+                onAddReminder: () => {
+                    router.push({ path: `/reminder/add`, query: { customer_id: row.id} })
                 }
 
 

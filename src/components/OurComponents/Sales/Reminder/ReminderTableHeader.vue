@@ -1,6 +1,7 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { defaultReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 import { defaultPagination } from "/@src/utils/response"
 
 
@@ -12,12 +13,23 @@ export default defineComponent({
         default_per_page: {
             type: Number,
             default: 1,
+        },
+        is_for_customer: {
+            type: Boolean,
+            default: false,
+        },
+        customer_id: {
+            type: Number,
+            default: undefined,
         }
+
+
 
     },
 
     setup(props, context) {
         const { t } = useI18n()
+        const router = useRouter()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const perPage = ref(pagination.per_page)
@@ -35,7 +47,10 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, resetFilter, search, default_per_page, perPage, pagination, }
+        const goToAddReminder = () => {
+            router.push({ path: `/reminder/add`, query: { customer_id: props.customer_id } })
+        }
+        return { t, resetFilter, search, default_per_page, perPage, pagination, Permissions, goToAddReminder }
     },
 
 
@@ -79,6 +94,11 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
+                            <VControl v-permission="Permissions.REMINDER_CREATE">
+                                <VButton @click="goToAddReminder" color="primary">{{ t('reminder.add_button') }}
+                                </VButton>
+                            </VControl>
+
                         </div>
                     </div>
                 </div>

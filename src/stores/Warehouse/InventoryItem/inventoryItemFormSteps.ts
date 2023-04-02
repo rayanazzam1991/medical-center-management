@@ -1,8 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
-import ar from '/@src/locales/ar.json';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
-import { addQuantity, defaultAddQuantityItem, defaultCreateInventoryItemHistoryMovement, defaultWithdrawQuantityItem, itemHistory, withdrawQuantity } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { defaultCreateInventoryItemHistoryMovement } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { CreateInventoryItem, defaultCreateInventoryItem } from "/@src/models/Warehouse/InventoryItem/inventoryItem";
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({

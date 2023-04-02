@@ -13,6 +13,16 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 const reminderValidationSchema = toFormValidator(zod
     .object({
+        customer_id: zod
+            .preprocess(
+                (input) => {
+                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
+                    return processed.success ? processed.data : input;
+                },
+                zod
+                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+                    .min(1, i18n.global.t('validation.required')),
+            ),
         note:
             zod
                 .string({

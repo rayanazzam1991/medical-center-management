@@ -82,7 +82,6 @@ const serveNext = async () => {
 const refreshWaitingList = async () => {
     const { waiting_list } = await getWaitingListByProvider(employeeId.value)
     employeeWaitingList.value = waiting_list
-    console.log(employeeWaitingList.value)
     serveingServiceSetup()
 
 }
@@ -131,7 +130,6 @@ const updateTicketNotesHelper = (requestedServiceId: number) => {
     if (requestedServiceHelper)
         requestedServiceHelper.note = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.id == servingTicket.value.id)?.ticket.requested_services.find((service) => service.id == requestedServiceId)?.note
 
-    console.log(ticketServicesNotesHelper.value)
 }
 
 const serveConfirmation = (requestedServiceId: number) => {

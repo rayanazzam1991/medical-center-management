@@ -14,6 +14,7 @@ import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
 
+const router = useRouter()
 const notif = useNotyf() as Notyf
 const route = useRoute()
 const viewWrapper = useViewWrapper()
@@ -76,9 +77,11 @@ const viewCurrenyServiceCard = async () => {
     notif.error(message)
   }
   isLoading.value = false
-
-
 }
+const goToAddReminder = (ticketServiceId: number) => {
+  router.push({ path: `/reminder/add`, query: { customer_id: currentTicket.value.customer.id, ticket_service_id: ticketServiceId } })
+}
+
 const columns = {
   service_name: {
     align: 'center',
@@ -99,7 +102,6 @@ const columns = {
       h('span', currentTicket.value.currency?.name ?? t('place_holder.none')),
   },
 } as const
-
 </script>
 <template>
   <div class="profile-wrapper">
@@ -169,6 +171,8 @@ const columns = {
                 <div class="project-feature">
                   <h4>{{ t('ticket.details.items_list') }}</h4>
                 </div>
+                <div class="project-feature">
+                </div>
               </div>
               <div class="project-features" v-for="(service, index) in currentTicket.requested_services" :key="index">
                 <div class="project-feature">
@@ -196,6 +200,11 @@ const columns = {
                 <div v-else class="project-feature">
                   <p> 0 </p>
                 </div>
+                <div class="project-feature">
+                  <VButton @click="goToAddReminder(service.id)" color="primary" outlined icon="lnir lnir-alarm-2">{{
+                    t('reminder.add_button') }}</VButton>
+                </div>
+
               </div>
               <div class="project-details">
                 <div class="tabs-wrapper is-triple-slider">

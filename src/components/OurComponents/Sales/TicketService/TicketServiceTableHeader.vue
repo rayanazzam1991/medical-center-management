@@ -22,6 +22,15 @@ export default defineComponent({
             type: Number,
             default: 1,
         },
+        is_for_customer: {
+            type: Boolean,
+            default: false,
+        },
+        is_for_employee: {
+            type: Boolean,
+            default: false,
+        }
+
 
 
     },
@@ -136,8 +145,9 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <TicketServiceSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+        <TicketServiceSearchFilterModal :is_for_customer="$props.is_for_customer" :is_for_employee="$props.is_for_employee"
+            :key="keyIncrement" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+            @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 

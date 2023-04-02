@@ -62,3 +62,18 @@ export async function getItemsInInventory(inventory_id: number, searchFilter: It
     return { items_in_inventory, pagination, success, error_code, message }
 
 }
+export function resetItemsInInventorySearchFilter() {
+    const blankSearchFilter: ItemsInInventorySearchFilter = {
+        category_id: undefined,
+        item_name: undefined,
+        order: undefined,
+        order_by: undefined,
+        page: undefined,
+        parent_category_id: undefined,
+        per_page: undefined
+    }
+
+    return blankSearchFilter
+
+}
+

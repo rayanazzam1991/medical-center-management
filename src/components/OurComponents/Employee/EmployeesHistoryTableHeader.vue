@@ -21,7 +21,12 @@ export default defineComponent({
     default_per_page: {
       type: Number,
       default: 1,
+    },
+    is_for_employee: {
+      type: Boolean,
+      default: false,
     }
+
 
   },
   setup(props, context) {
@@ -84,7 +89,7 @@ export default defineComponent({
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
 
-              <VControl class="mr-2" icon="feather:search">
+              <VControl v-if="!$props.is_for_employee" class="mr-2" icon="feather:search">
                 <VInput v-model="searchEmployeeName" type="text"
                   :placeholder="t('dismissed_employee.search_filter.employee_name')" />
               </VControl>

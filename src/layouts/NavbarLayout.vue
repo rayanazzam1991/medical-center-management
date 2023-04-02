@@ -178,9 +178,9 @@ watch(
           <ActivityLogToolbar />
 
           <!-- <a class="toolbar-link right-panel-trigger" tabindex="0" @keydown.space.prevent="panels.setActive('activity')"
-                                                                                                                                                                                        @click="panels.setActive('activity')">
-                                                                                                                                                                                        <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                                                                                                                                                      </a> -->
+                                                                                                                                                                                            @click="panels.setActive('activity')">
+                                                                                                                                                                                            <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                                                                                                                                                          </a> -->
         </Toolbar>
 
         <!--        <LayoutSwitcher />-->
@@ -223,18 +223,18 @@ watch(
             <span>{{ t("navbar.crm") }}</span>
           </a>
           <!-- <a :class="[((activeSubnav === 'contractor') ||
-                                                                                                                                                              route.path.startsWith('/contractor') ||
-                                                                                                                                                              route.path.startsWith('/contractor-add') ||
-                                                                                                                                                              route.path.startsWith('/contractor-edit') ||
-                                                                                                                                                              route.path.startsWith('/speciality') ||
-                                                                                                                                                              route.path.startsWith('/bulk-cash-out')
+                                                                                                                                                                  route.path.startsWith('/contractor') ||
+                                                                                                                                                                  route.path.startsWith('/contractor-add') ||
+                                                                                                                                                                  route.path.startsWith('/contractor-edit') ||
+                                                                                                                                                                  route.path.startsWith('/speciality') ||
+                                                                                                                                                                  route.path.startsWith('/bulk-cash-out')
 
 
-                                                                                                                                                            ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
-                                                                                                                                                              @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
-                                                                                                                                                              <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
-                                                                                                                                                              <span>{{ t("navbar.contractor") }}</span>
-                                                                                                                                                          </a> -->
+                                                                                                                                                                ) && 'is-active']" class="centered-link centered-link-toggle" tabindex="0"
+                                                                                                                                                                  @keydown.space.prevent="toggleSubnav('contractor')" @click="toggleSubnav('contractor')">
+                                                                                                                                                                  <i class="iconify" data-icon="feather:file-text" aria-hidden="true"></i>
+                                                                                                                                                                  <span>{{ t("navbar.contractor") }}</span>
+                                                                                                                                                              </a> -->
           <a v-permission="Permissions.TICKETING_ACCESS" :class="[((activeSubnav === 'ticketing') && 'is-active is-secondary'),
           (
             route.path.startsWith('/ticket') ||
@@ -256,6 +256,7 @@ watch(
             route.path.startsWith('/variable-payment') ||
             route.path.startsWith('/employee-variable-payment') ||
             route.path.startsWith('/generate-salaries') ||
+            route.path.startsWith('/employees-history') ||
             route.path.startsWith('/attendance-justification')
           ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
@@ -334,13 +335,13 @@ watch(
               </div>
 
               <!-- <Toolbar class="mobile-toolbar">
-                                                                                                                                                                                            <ToolbarNotification />
+                                                                                                                                                                                                <ToolbarNotification />
 
-                                                                                                                                                                                            <a class="toolbar-link right-panel-trigger" tabindex="0"
-                                                                                                                                                                                              @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
-                                                                                                                                                                                              <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
-                                                                                                                                                                                            </a>
-                                                                                                                                                                                          </Toolbar> -->
+                                                                                                                                                                                                <a class="toolbar-link right-panel-trigger" tabindex="0"
+                                                                                                                                                                                                  @keydown.space.prevent="panels.setActive('activity')" @click="panels.setActive('activity')">
+                                                                                                                                                                                                  <i aria-hidden="true" class="iconify" data-icon="feather:grid"></i>
+                                                                                                                                                                                                </a>
+                                                                                                                                                                                              </Toolbar> -->
             </div>
 
             <slot></slot>

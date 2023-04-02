@@ -12,16 +12,16 @@ export interface Media {
   mime_type?: string
   size?: number
   created_at?: string
-  uploaded_by? : User
+  uploaded_by?: User
 }
 class MediaConsts extends BaseConsts {
   static readonly EMPLOYEE_MODEL_ROUTE = "App\\Domain\\Employee\\Entity\\Employee";
   static readonly CONTRACTOR_MODEL_ROUTE = "App\\Domain\\Contractor\\Entity\\Contractor";
-  static readonly ItemHistory_MODEL_ROUTE = "App\\Domain\\Warehouse\\Entity\\ItemHistory";
+  static readonly INVENTORY_ITEM_HISTORY_MODEL_ROUTE = "App\\Domain\\Warehouse\\Entity\\InventoryItemHistory";
   static readonly CUSTOMER_MODEL_ROUTE = "App\\Domain\\CRM\\Entity\\Customer";
   static readonly MEDICAL_INFO_ROUTE = "App\\Domain\\CRM\\Entity\\Medical_info";
   static readonly ATTENDANCE_JUSTIFICATION_ROUTE = "App\\Domain\\HR\\Attendance\\Entity\\AttendanceJustification";
-  
+
   static readonly MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL;
 
   public static getMediaIcon(mime_type: string): string {

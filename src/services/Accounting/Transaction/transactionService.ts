@@ -117,3 +117,35 @@ export async function getSuppliersCashReceiptsList(searchFilter: SuppliersCashRe
   return { success, error_code, message, suppliers_cash_receipts, pagination }
 }
 
+export function resetClientsCashReceiptsSearchFilter() {
+  const blankSearchFilter: ClientsCashReceiptsSearchFilter = {
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+    cash_account_id: undefined,
+    client_name: undefined,
+    currency_id: undefined,
+    note: undefined,
+    customer_id: undefined
+  }
+
+  return blankSearchFilter
+
+}
+export function resetEmployeeSuppliersCashReceiptsSearchFilter() {
+  const blankSearchFilter: SuppliersCashReceiptsSearchFilter = {
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+    cash_account_id: undefined,
+    currency_id: undefined,
+    note: undefined,
+    supplier_name: undefined,
+    employee_id: undefined
+  }
+
+  return blankSearchFilter
+
+}

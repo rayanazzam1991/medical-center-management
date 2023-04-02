@@ -90,7 +90,7 @@ useHead({
 const employeeStore = useEmployee()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Services' | 'Files'
+    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances' | 'History Record'
   }>(),
   {
     activeTab: 'Details',
@@ -469,6 +469,34 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
   updateLoading.value = false
 
 })
+const permissionCheck = async () => {
+  if (tab.value == 'Tickets' && !checkPermission(Permissions.TICKET_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Services' && !checkPermission(Permissions.SERVICE_PROVIDER_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Cash Receipts' && !checkPermission(Permissions.CLIENT_CASH_RECEIPT_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Ticket Services' && !checkPermission(Permissions.TICKET_SERVICE_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Details' && !checkPermission(Permissions.EMPLOYEE_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'History Record' && !checkPermission(Permissions.EMPLOYEE_RECORD_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+
+}
+
 </script>
 <template>
   <div class="profile-wrapper">
@@ -510,24 +538,49 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-triple-slider">
+      <div class="tabs-wrapper is-8-slider">
         <div :hidden="loading" class="tabs-inner">
           <div class="tabs tabs-width">
             <ul>
-              <li :class="[tab === 'Details' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Details' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
                   t('employee.details.tabs.details')
                 }}</span></a>
               </li>
-              <li :class="[tab === 'Services' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Services' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
                   t('employee.details.tabs.services')
                 }}</span></a>
               </li>
 
-              <li :class="[tab === 'Files' && 'is-active']">
+              <li @click="permissionCheck()" :class="[tab === 'Files' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
                   t('employee.details.tabs.files')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Tickets' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Tickets'" @click="tab = 'Tickets'"><span>{{
+                  t('employee.details.tabs.tickets')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Ticket Services' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Ticket Services'" @click="tab = 'Ticket Services'"><span>{{
+                  t('employee.details.tabs.ticket_services')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Cash Receipts' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Cash Receipts'" @click="tab = 'Cash Receipts'"><span>{{
+                  t('employee.details.tabs.cash_receipts')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
+                  t('employee.details.tabs.balances')
+                }} </span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'History Record' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'History Record'" @click="tab = 'History Record'"><span>{{
+                  t('employee.details.tabs.history_record')
                 }} </span></a>
               </li>
               <li class="tab-naver"></li>
@@ -734,40 +787,46 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                   <VIconButton v-permission="Permissions.SERVICE_PROVIDER_EDIT" size="small" icon="feather:edit-3"
                     tabindex="0" @click="onClickEditServices" />
                 </div>
-                <div v-if="currentEmployee.services.length == 0" class="project-features">
+                <div v-if="checkPermission(Permissions.SERVICE_PROVIDER_LIST)">
+                  <div v-if="currentEmployee.services.length == 0" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('employee.details.tabs_content_placeholder.services') }}</h4>
+                    </div>
+                  </div>
+                  <div class="project-files">
+                    <div class="columns is-multiline border-buttom" v-for="service in currentEmployee.services"
+                      :key="service.service.id">
+
+                      <div class="column is-6">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('employee.details.service_name') }}</span>
+                            <span>
+                              {{ service.service.name }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-6">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('employee.details.service_price') }}</span>
+                            <span>
+                              {{ service.price }} {{ addParenthesisToString(mainCurrency.name) }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('employee.details.tabs_content_placeholder.services') }}</h4>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
                   </div>
                 </div>
-
-                <div class="project-files">
-                  <div class="columns is-multiline border-buttom" v-for="service in currentEmployee.services"
-                    :key="service.service.id">
-
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_name') }}</span>
-                          <span>
-                            {{ service.service.name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-6">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.service_price') }}</span>
-                          <span>
-                            {{ service.price }} {{ addParenthesisToString(mainCurrency.name) }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
@@ -781,85 +840,141 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
                     <h3>{{ t('employee.details.employee_files') }}</h3>
                   </div>
                 </div>
-                <div v-if="employeeFiles.length == 0" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('employee.details.tabs_content_placeholder.files') }}</h4>
+                <div v-if="checkPermission(Permissions.MEDIA_ACCESS)">
+                  <div v-if="employeeFiles.length == 0" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('employee.details.tabs_content_placeholder.files') }}</h4>
+                    </div>
                   </div>
-                </div>
-                <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
-                  <h4>{{ t('employee.details.upload_file') }}</h4>
-                  <div class="is-flex is-justify-content-space-between">
-                    <VField class="mr-6" grouped>
-                      <VControl>
-                        <div class="file has-name">
-                          <label class="file-label">
-                            <input class="file-input" type="file" v-on:change="onAddFile" />
-                            <span class="file-cta">
-                              <span class="file-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                  <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
+                    <h4>{{ t('employee.details.upload_file') }}</h4>
+                    <div class="is-flex is-justify-content-space-between">
+                      <VField class="mr-6" grouped>
+                        <VControl>
+                          <div class="file has-name">
+                            <label class="file-label">
+                              <input class="file-input" type="file" v-on:change="onAddFile" />
+                              <span class="file-cta">
+                                <span class="file-icon">
+                                  <i class="fas fa-cloud-upload-alt"></i>
+                                </span>
+                                <span class="file-label"> {{ t('images.image_name_placeholder') }} </span>
                               </span>
-                              <span class="file-label"> {{ t('images.image_name_placeholder') }} </span>
-                            </span>
-                            <span class="file-name light-text">
-                              {{ filesToUpload?.name ?? t('images.image_select_file') }}
-                            </span>
-                          </label>
-                        </div>
-                      </VControl>
-                    </VField>
-                    <VLoader size="small" :active="uploadLoading">
-                      <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
-                        icon="lnir lnir-add-files rem-100" light dark-outlined>
-                        {{ t('employee.details.upload') }}
-                      </VButton>
-                    </VLoader>
-                  </div>
-                  <h6 class="ml-2 mt-2 help">
-                    {{ t('images.accepted_file') }}
-                  </h6>
-                </div>
-                <div v-if="employeeFiles.length != 0" class="project-files project-section">
-                  <div>
-                    <h4>{{ t('employee.details.tabs.files') }}</h4>
-                    <div class="columns is-multiline">
-                      <div v-for="(file, index) in employeeFiles" class="column is-6">
-                        <div class="file-box is-flex is-justify-content-space-between">
-                          <div class="file-box">
-
-                            <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
-                            <div class="meta">
-                              <span class="file-link">
-                                <a target="_blank" class="file-link" :href="file.relative_path">
-                                  {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                              <span class="file-name light-text">
+                                {{ filesToUpload?.name ?? t('images.image_select_file') }}
                               </span>
-                              <span>
-                                {{
-                                  file.size != undefined
-                                  ? (file.size / (1024 * 1024)).toFixed(2)
-                                  : 'Unknown'
-                                }}
-                                {{ file.size != undefined ? t('images.megabyte') : '' }}
-                                <i aria-hidden="true" class="fas fa-circle"></i>
-                                {{ file.created_at }}
-                                <i aria-hidden="true" class="fas fa-circle"></i>
-                                {{ t('images.by') }} {{ file.uploaded_by?.first_name
-                                }}{{ file.uploaded_by?.last_name }}
-                              </span>
-                            </div>
+                            </label>
                           </div>
-                          <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
-                            size="small" icon="feather:trash" tabindex="0" color="danger"
-                            @click="onDeleteFile(file.id ?? 0)" />
+                        </VControl>
+                      </VField>
+                      <VLoader size="small" :active="uploadLoading">
+                        <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                          icon="lnir lnir-add-files rem-100" light dark-outlined>
+                          {{ t('employee.details.upload') }}
+                        </VButton>
+                      </VLoader>
+                    </div>
+                    <h6 class="ml-2 mt-2 help">
+                      {{ t('images.accepted_file') }}
+                    </h6>
+                  </div>
+                  <div v-if="employeeFiles.length != 0" class="project-files project-section">
+                    <div>
+                      <h4>{{ t('employee.details.tabs.files') }}</h4>
+                      <div class="columns is-multiline">
+                        <div v-for="(file, index) in employeeFiles" class="column is-6">
+                          <div class="file-box is-flex is-justify-content-space-between">
+                            <div class="file-box">
+
+                              <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
+                              <div class="meta">
+                                <span class="file-link">
+                                  <a target="_blank" class="file-link" :href="file.relative_path">
+                                    {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                                </span>
+                                <span>
+                                  {{
+                                    file.size != undefined
+                                    ? (file.size / (1024 * 1024)).toFixed(2)
+                                    : 'Unknown'
+                                  }}
+                                  {{ file.size != undefined ? t('images.megabyte') : '' }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ file.created_at }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ t('images.by') }} {{ file.uploaded_by?.first_name
+                                  }}{{ file.uploaded_by?.last_name }}
+                                </span>
+                              </div>
+                            </div>
+                            <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
+                              size="small" icon="feather:trash" tabindex="0" color="danger"
+                              @click="onDeleteFile(file.id ?? 0)" />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div v-else class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
+                  </div>
+                </div>
+                <div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <div v-if="tab === 'Tickets'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Ticket Services'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketServiceTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Cash Receipts'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <SupplierEmployeeCashReceiptsTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Balances'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <JournalEntryTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'History Record'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <EmployeesHistoryTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -951,8 +1066,12 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
+.profile-wrapper {
+  max-width: 100%;
+}
+
 .tabs-width {
-  min-width: 350px;
+  min-width: 1250px;
   min-height: 40px;
 
   .is-active {
@@ -961,8 +1080,8 @@ const onSubmitEditEmployeeNumber = handleSubmit(async (values) => {
   }
 }
 
-.tabs-wrapper .tabs li a,
-.tabs-wrapper-alt .tabs li a {
+.tabs-wrapper.is-8-slider .tabs li a,
+.tabs-wrapper-alt.is-8-slider .tabs li a {
   height: 40px;
 
 }

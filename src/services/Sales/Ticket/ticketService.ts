@@ -41,12 +41,12 @@ export async function getTicket(ticketId: number) {
 
 }
 export async function moveTicketToNextWaitingList(ticketId: number) {
-    const ticketResponse = useTicket()
-    await ticketResponse.moveTicketToNextWaitingListStore(ticketId)
-    let success: boolean = ticketResponse.success ?? false
-    let error_code: string = ticketResponse.error_code ?? ''
-    let message: string = ticketResponse.message ?? ''
-    return { success, error_code, message }
+  const ticketResponse = useTicket()
+  await ticketResponse.moveTicketToNextWaitingListStore(ticketId)
+  let success: boolean = ticketResponse.success ?? false
+  let error_code: string = ticketResponse.error_code ?? ''
+  let message: string = ticketResponse.message ?? ''
+  return { success, error_code, message }
 
 }
 
@@ -80,4 +80,20 @@ export async function closeTicket(ticketId: number) {
   var error_code: string = ticketResponse.error_code ?? ''
   var message: string = ticketResponse.message ?? ''
   return { success, error_code, message }
+}
+export function resetTicketSearchFilter() {
+  const blankSearchFilter: TicketSearchFilter = {
+    customer_name: undefined,
+    id: undefined,
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+    status: undefined,
+    customer_id: undefined,
+    employee_id: undefined
+  }
+
+  return blankSearchFilter
+
 }

@@ -15,7 +15,7 @@ import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
-import { defaultEmployeeHistory,defaultDismissedEmployee, DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from '../../models/Employee/employeeHistory'
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, defaultEmployeeHistory } from '/@src/models/Employee/employeeHistory'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -36,17 +36,17 @@ export async function dismissEmployeeHistory(
 ) {
 
   const employeeHistoriesResponse = useEmployee()
-  var dismissedEmployee : DismissedEmployee=
-    (await employeeHistoriesResponse.dismissEmployeeStore(dismissedEmployeeData)) ?? defaultDismissedEmployee
+  var dismissedEmployee: EmployeeHistory =
+    (await employeeHistoriesResponse.dismissEmployeeStore(dismissedEmployeeData)) ?? defaultEmployeeHistory
   var success: boolean = employeeHistoriesResponse.success ?? false
   var error_code: string = employeeHistoriesResponse.error_code ?? ''
   var message: string = employeeHistoriesResponse.message ?? ''
   return { success, error_code, message, dismissedEmployee }
 }
 
-export async function getDismissedEmployeesList(searchFilter: EmployeeHistorySearchFilter) {
+export async function getEmployeesHistoryList(searchFilter: EmployeeHistorySearchFilter) {
   const employee = useEmployee()
-  await employee.getDismissedEmployeesStore(searchFilter)
+  await employee.getEmployeesHistoryListStore(searchFilter)
   var dismissedEmployees: EmployeeHistory[] = employee.employeesHistory
   var pagination: Pagination = employee.pagination
   return { dismissedEmployees, pagination }
@@ -237,4 +237,19 @@ export async function getEmployeeByUserId(user_id: number) {
   return { loggedEmployee, success, message, error_code }
 }
 
+export function resetEmployeeHistorySearchFilter() {
+  const blankSearchFilter: EmployeeHistorySearchFilter = {
+    employee_name: undefined,
+    employee_id: undefined,
+    notes: undefined,
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+
+  }
+
+  return blankSearchFilter
+
+}
 

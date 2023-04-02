@@ -26,5 +26,5 @@ const head = useHead({
 </script>
 
 <template>
-  <DismissedEmployeesTable />
+  <EmployeesHistoryTable />
 </template>
