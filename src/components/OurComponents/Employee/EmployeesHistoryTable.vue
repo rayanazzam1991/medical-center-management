@@ -5,11 +5,11 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
-import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistories'
+import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
 import { getEmployeesHistoryList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import { EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistories'
+import { EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistory'
 export interface EmployeeHistoryTableProps {
   isForEmployee: boolean,
   employeeId: number | undefined
