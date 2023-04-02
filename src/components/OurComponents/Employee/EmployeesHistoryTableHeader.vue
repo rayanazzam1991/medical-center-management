@@ -3,7 +3,7 @@ import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
 import { getUsersList, getUsersWithoutCustomerList } from "/@src/services/Others/User/userService"
 import { User, UserSearchFilter } from "/@src/models/Others/User/user"
-import { defaultEmployeeHistoriesSearchFilter, EmployeeHistoriesSearchFilter } from "/@src/models/Employee/employeeHistories"
+import { defaultEmployeeHistorySearchFilter, EmployeeHistorySearchFilter } from "../../../models/Employee/employeeHistory"
 
 export default defineComponent({
   props: {
@@ -39,7 +39,7 @@ export default defineComponent({
     const searchEmployeeName = ref<string | undefined>(undefined)
     const searchNotes = ref<string | undefined>(undefined)
     const perPage = ref(pagination.per_page)
-    const searchFilter = ref(defaultEmployeeHistoriesSearchFilter)
+    const searchFilter = ref(defaultEmployeeHistorySearchFilter)
     const usersList = ref<User[]>([])
     const search = () => {
       searchFilter.value = {
@@ -63,14 +63,14 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
 
     }
-    const search_filter = (value: EmployeeHistoriesSearchFilter) => {
+    const search_filter = (value: EmployeeHistorySearchFilter) => {
       searchFilter.value = value
       searchFilter.value.per_page = perPage.value
       searchFilter.value.page = 1
 
       context.emit('search', searchFilter.value)
     }
-    const resetFilter_popup = (value: EmployeeHistoriesSearchFilter) => {
+    const resetFilter_popup = (value: EmployeeHistorySearchFilter) => {
       searchFilter.value.employee_name = undefined
       searchFilter.value.notes = undefined
       context.emit('resetFilter', searchFilter.value)
