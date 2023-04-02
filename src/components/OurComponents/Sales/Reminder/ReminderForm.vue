@@ -4,12 +4,12 @@ import { Notyf } from 'notyf';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { defaultCustomer } from '/@src/models/CRM/Customer/customer';
+import { Customer, CustomerSearchFilter, defaultCustomer } from '/@src/models/CRM/Customer/customer';
 import { defaultCreateVariablePayment, defaultUpdateVariablePayment, defaultVariablePayment, VariablePayment, VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
 import { defaultCreateReminder } from '/@src/models/Sales/Reminder/reminder';
 import { defaultTicketService } from '/@src/models/Sales/TicketService/ticketService';
 import { variablePaymentValidationSchema } from '/@src/rules/HR/Payroll/VariablePayment/variablePaymentValidation';
-import { getCustomer } from '/@src/services/CRM/Customer/customerService';
+import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { addVariablePayment, getVariablePayment, editVariablePayment } from '/@src/services/HR/Payroll/VariablePayment/variablePaymentService';
 import { getTicketService } from '/@src/services/Sales/TicketService/ticketServiceService';
 import { useVariablePayment } from '/@src/stores/HR/Payoll/VariablePayment/variablePaymentStore';
@@ -20,6 +20,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import { useDarkmode } from '/@src/stores/darkmode';
 import { reminderValidationSchema } from '/@src/rules/Sales/Reminder/reminderValidationSchema';
 import { createReminder } from '/@src/services/Sales/Reminder/reminderService';
+import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 
 
 
@@ -49,26 +50,28 @@ export default defineComponent({
         const router = useRouter();
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
         const pageTitle = t('reminder.form.form_header', { type: formTypeName });
-        const backRoute = "/requested-services";
+        const backRoute = "/reminder";
         const currentReminder = ref(defaultCreateReminder);
         const customerId = ref(0);
+        const enableSelectCustomer = ref(false);
         const sellectedCustomer = ref(defaultCustomer);
-        const ticketServiceId = ref(0);
+        const ticketServiceId = ref<number | undefined>(undefined);
         const sellectedTicketService = ref(defaultTicketService);
         const time = ref({ hours: '00', minutes: '00' })
         const date = ref('')
-        console.log(Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id)))
         if (Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id))) {
             customerId.value = Number(route.query.customer_id)
             currentReminder.value.customer_id = customerId.value
         } else {
             customerId.value = 0
+            enableSelectCustomer.value = true
         }
         if (Number.isInteger(Number(route.query.ticket_service_id)) && !Number.isNaN(Number(route.query.ticket_service_id))) {
             ticketServiceId.value = Number(route.query.ticket_service_id)
             currentReminder.value.ticket_service_id = ticketServiceId.value
         } else {
-            ticketServiceId.value = 0
+            ticketServiceId.value = undefined
+            currentReminder.value.ticket_service_id = undefined
         }
 
 
@@ -77,18 +80,25 @@ export default defineComponent({
             if (ticketServiceId.value != 0 && customerId.value != 0) {
                 const { customer } = await getCustomer(customerId.value)
                 sellectedCustomer.value = customer
-                const { ticket_service } = await getTicketService(ticketServiceId.value)
-                sellectedTicketService.value = ticket_service
+                if (ticketServiceId.value) {
+                    const { ticket_service } = await getTicketService(ticketServiceId.value)
+                    sellectedTicketService.value = ticket_service
+                }
+
             }
             isLoading.value = false
 
         });
+        const setCustomerIdValue = () => {
+            setFieldValue('customer_id', currentReminder.value.customer_id)
+        }
 
         const validationSchema = reminderValidationSchema
-        const { handleSubmit } = useForm({
+        const { handleSubmit, setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
             } : {
+                customer_id: currentReminder.value.customer_id,
                 name: "",
                 type: VariablePaymentConsts.INCREMENT_TYPE,
                 status: VariablePaymentConsts.ACTIVE,
@@ -123,7 +133,7 @@ export default defineComponent({
 
             }
         });
-        return { t, pageTitle, onSubmit, currentReminder, isLoading, viewWrapper, backRoute, sellectedTicketService, sellectedCustomer, reminderStore, time, date, locale, dark };
+        return { t, UserStatusConsts, getCustomersList, pageTitle, onSubmit, setCustomerIdValue, currentReminder, isLoading, viewWrapper, backRoute, sellectedTicketService, ticketServiceId, sellectedCustomer, reminderStore, time, date, locale, dark, enableSelectCustomer };
     },
     components: { ErrorMessage, Datepicker }
 })
@@ -147,7 +157,7 @@ export default defineComponent({
                             <h4>{{ pageTitle }}</h4>
                         </div>
                         <div class="columns is-multiline">
-                            <div class="column is-12">
+                            <div v-if="!enableSelectCustomer" class="column is-12">
                                 <h4 class="label"> {{ t('reminder.form.customer') }}
                                     <span class="is-size-5">
                                         {{ sellectedCustomer.user.first_name }}
@@ -155,7 +165,26 @@ export default defineComponent({
                                     </span>
                                 </h4>
                             </div>
-                            <div class="column is-12">
+                            <div v-else class="column is-12">
+                                <Multiselect v-if="formType == 'Add'" v-model="currentReminder.customer_id" mode="single"
+                                    :placeholder="t('reminder.form.customer')" :close-on-select="true" ref="customer_id"
+                                    @select="setCustomerIdValue()" :filter-results="false" :min-chars="0"
+                                    :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
+                                    :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
+                                        let customerSearchFilter = {
+                                            user_status_id: UserStatusConsts.ACTIVE,
+                                            name: query,
+                                        } as CustomerSearchFilter
+                                        //@ts-ignore
+                                        const data = await getCustomersList(customerSearchFilter)
+                                        //@ts-ignore
+                                        return data.customers.map((customer: Customer) => {
+                                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                                        })
+                                    }"
+                                    @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                            </div>
+                            <div v-if="ticketServiceId" class="column is-12">
                                 <h4 class="label"> {{ t('reminder.form.service') }}
                                     <span class="is-size-5">
                                         {{ sellectedTicketService.service.name }}
@@ -166,7 +195,7 @@ export default defineComponent({
                                 <VField id="note">
                                     <VLabel class="required">{{ t('reminder.form.note') }}</VLabel>
                                     <VControl>
-                                        <VTextarea v-model="currentReminder.note" class="is-primary-focus" rows="2"
+                                        <VTextarea v-model="currentReminder.note" class="is-primary-focus" rows="4"
                                             :placeholder="t('reminder.form.note') + '...'"></VTextarea>
                                         <ErrorMessage class="help is-danger" name="note" />
                                     </VControl>

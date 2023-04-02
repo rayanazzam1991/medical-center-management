@@ -18,7 +18,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { defaultItemsInInventorySearchFilter, ItemsInInventory, defaultItemsInInventory, ItemsInInventorySearchFilter, ItemInInventory } from '/@src/models/Warehouse/Item/item';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
-import { getItemsInInventory } from '/@src/services/Warehouse/Item/itemService';
+import { getItemsInInventory, resetItemsInInventorySearchFilter } from '/@src/services/Warehouse/Item/itemService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore';
 import { defaultPagination } from '/@src/utils/response';
@@ -35,7 +35,7 @@ const inventoryId = ref(0)
 // @ts-ignore
 inventoryId.value = route.params?.id as number ?? 0
 const notif = useNotyf() as Notyf
-const searchFilter = ref(defaultItemsInInventorySearchFilter)
+const searchFilter = ref<ItemsInInventorySearchFilter>(resetItemsInInventorySearchFilter())
 const itemsInInvetory = ref<ItemsInInventory>(defaultItemsInInventory)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()

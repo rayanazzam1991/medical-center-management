@@ -13,6 +13,7 @@ import { defaultPermissionGroupSearchFilter, PermissionGroup, PermissionGroupHel
 import { getRole, updateRolePermissions } from '/@src/services/Others/Role/roleService';
 import { getPermissionGroupsList } from '/@src/services/Others/PermissionGroup/permissionGroupService';
 import { usePermissionGroup } from '/@src/stores/Others/PermissionGroup/permissionGroupStore';
+import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 
 export default defineComponent({
     props: {
@@ -85,7 +86,6 @@ export default defineComponent({
                 permissionGroupsHelper.value.push({ id: permissionGroup.id, name: permissionGroup.name, display_name: permissionGroup.display_name, permissions: permissionsHelper, checked: allPermissionsChecked })
 
             });
-            console.log(permissionGroupsHelperForEditing.value.length)
 
 
         }
@@ -129,7 +129,6 @@ export default defineComponent({
                 }
 
             })
-            console.log(permissionGroupsHelperForEditing.value.length)
 
         }
         const togglePermission = (permissionGroupIndex: number, permissionIndex: number) => {
@@ -160,7 +159,6 @@ export default defineComponent({
                 });
                 permissionGroup.checked = allPermissionsChecked
             }
-            console.log(permissionGroupsHelperForEditing.value.length)
 
 
         }
@@ -178,7 +176,6 @@ export default defineComponent({
             newPermissions = permissionGroupsHelperForEditing.value.filter(function (elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            console.log(newPermissions.length)
 
             const { success, message, role } = await updateRolePermissions(roleId.value, newPermissions)
             if (success) {
@@ -195,7 +192,7 @@ export default defineComponent({
         }
 
         return {
-            t, pageTitle, onSubmit, currentRole, isLoading, search, resetFilter, permissionGroupStore, permissionGroupsHelper, permissionGroupsHelperForEditing, viewWrapper, backRoute, toggleAll, togglePermission, keyIncrement, getCustomersList,
+            t, pageTitle, onSubmit, currentRole, isLoading, stringTrim, search, resetFilter, permissionGroupStore, permissionGroupsHelper, permissionGroupsHelperForEditing, viewWrapper, backRoute, toggleAll, togglePermission, keyIncrement, getCustomersList,
         };
     },
 })
@@ -232,7 +229,7 @@ export default defineComponent({
                                     <div class="column is-2" v-for="(permission, index) in permissionGroup.permissions"
                                         :key="index">
                                         <VTag class="cursor" @click="togglePermission(mainIndex, index)" :color="permissionGroupsHelperForEditing.find((el) => permission.name == el) ?
-                                            'primary' : 'solid'" :label="permission.display_name" />
+                                            'primary' : 'solid'" :label="stringTrim(permission.display_name, 40)" />
                                     </div>
                                 </div>
                             </div>

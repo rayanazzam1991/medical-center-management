@@ -29,7 +29,7 @@ export interface ItemInInventory {
     cost: number
     category: Category
     quantity: number
-    created_at : string
+    created_at: string
 }
 export interface ItemsInInventory {
     inventory: ItemsHasInventory
@@ -117,7 +117,15 @@ export const defaultChangeItemStatus: ChangeItemStatus = {
     id: undefined,
     status: undefined
 }
-export const defaultItemsInInventorySearchFilter: Partial<ItemsInInventorySearchFilter> = {}
+export const defaultItemsInInventorySearchFilter: ItemsInInventorySearchFilter = {
+    category_id: undefined,
+    item_name: undefined,
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    parent_category_id: undefined,
+    per_page: undefined
+}
 
 
 

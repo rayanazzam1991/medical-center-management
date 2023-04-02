@@ -19,7 +19,12 @@ export default defineComponent({
     is_reseted: {
       type: Boolean,
       default: false,
-    }
+    },
+    is_for_customer: {
+      type: Boolean,
+      default: false,
+    },
+
   },
   emits: ['search_filter_popup', 'search', 'resetFilter'],
   setup(props, context) {
@@ -60,7 +65,7 @@ export default defineComponent({
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
-        <VField class="column filter">
+        <VField v-if="!$props.is_for_customer" class="column filter">
           <VControl icon="feather:search">
             <input v-model="searchCustomerName" type="text" class="input "
               :placeholder="t('ticket.search_filter.customer_name')" />

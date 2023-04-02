@@ -1,13 +1,15 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { ItemConsts, Item, ItemSearchFilter } from "/@src/models/Warehouse/Item/item"
-import { defaultInventoryItemHistorySearchFilter } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { defaultInventoryItemHistorySearchFilter, InventoryItemHistoryConsts } from "../../../../models/Warehouse/ItemHistory/inventoryItemHistory"
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService'
 import { BaseConsts } from "/@src/utils/consts/base"
 import { Inventory, InventorySearchFilter } from "/@src/models/Warehouse/Inventory/inventory"
 import { getInventoriesList } from "/@src/services/Warehouse/Inventory/inventoryService"
 import { Employee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { getEmployeesList } from "/@src/services/Employee/employeeService"
+import { Supplier, SupplierSearchFilter } from "/@src/models/Others/Supplier/supplier"
+import { getSuppliersList } from "/@src/services/Others/Supplier/supplierService"
 
 
 export default defineComponent({
@@ -27,30 +29,33 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    has_item_filter: {
+    is_for_item: {
       type: Boolean,
-      default: true
-    }
+      default: false,
+    },
+    suppliers_only: {
+      type: Boolean,
+      default: false,
+    },
 
   },
   emits: ['search_filter_popup', 'search', 'resetFilter'],
   setup(props, context) {
     const { t } = useI18n()
     const searchItem = ref()
-    const searchAction = ref<'Add Quantity' | 'Withdraw Quantity' | 'Sell' | 'Return to main inventory' | 'Withdraw from main inventory' | undefined>()
+    const searchAction = ref()
     const searchActionBy = ref()
-    const searchRequesterName = ref()
-    const searchMovementType = ref<'Internal' | 'External' | undefined>()
+    const searchType = ref()
     const searchFromInventory = ref()
     const searchToInventory = ref()
     const searchDateBetween = ref()
+    const searchSupplierName = ref()
     const searchFrom = ref()
     const searchTo = ref()
     const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
     const itemsList = ref<Item[]>([])
     const inventoriesList = ref<Inventory[]>([])
     const employeesList = ref<Employee[]>([])
-    const hasItemFilter = props.has_item_filter
 
     let search_filter_popup = computed({
       get: () => props.search_filter_popup as boolean,
@@ -66,11 +71,11 @@ export default defineComponent({
         to_inventory: searchToInventory.value,
         action: searchAction.value,
         action_by: searchActionBy.value,
-        movement_type: searchMovementType.value,
-        requester_name: searchMovementType.value == "External" ? searchRequesterName.value : undefined,
+        type: searchType.value,
         date_between: searchFrom.value && searchTo.value ? 'created_at' : undefined,
         from: searchFrom.value,
         to: searchTo.value,
+        supplier_name: searchSupplierName.value
       }
       context.emit('search', searchFilter.value)
       search_filter_popup.value = false
@@ -84,8 +89,7 @@ export default defineComponent({
       searchTo.value = undefined
       searchAction.value = undefined
       searchActionBy.value = undefined
-      searchMovementType.value = undefined
-      searchRequesterName.value = undefined
+      searchType.value = undefined
       searchFilter.value.item_id = undefined
       searchFilter.value.from_inventory = undefined
       searchFilter.value.to_inventory = undefined
@@ -94,8 +98,8 @@ export default defineComponent({
       searchFilter.value.to = undefined
       searchFilter.value.action = undefined
       searchFilter.value.action_by = undefined
-      searchFilter.value.requester_name = undefined
-      searchFilter.value.movement_type = undefined
+      searchFilter.value.type = undefined
+      searchFilter.value.supplier_name = undefined
       context.emit('resetFilter', searchFilter.value)
     }
     onMounted(async () => {
@@ -114,8 +118,9 @@ export default defineComponent({
       employeeSearchFilter.per_page = 500
       const { employees } = await getEmployeesList(employeeSearchFilter)
       employeesList.value = employees
+
     })
-    return { t, inventoriesList, employeesList, hasItemFilter, itemsList, ItemConsts, search, resetFilter, search_filter_popup, searchItem, searchFromInventory, searchFrom, searchTo, searchToInventory, searchAction, searchActionBy, searchMovementType, searchRequesterName }
+    return { t, inventoriesList, employeesList, itemsList, InventoryItemHistoryConsts, ItemConsts, search, resetFilter,searchSupplierName, search_filter_popup, searchItem, searchFromInventory, searchFrom, searchTo, searchToInventory, searchAction, searchActionBy, searchType }
   },
 })
 
@@ -127,7 +132,15 @@ export default defineComponent({
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="search">
-        <VField class="column filter">
+        <VField v-if="$props.suppliers_only" class="column filter">
+
+          <VControl>
+            <VInput v-model="searchSupplierName" type="text"
+              :placeholder="t('list_inventory_movement.search_filter.supplier_name')" />
+          </VControl>
+        </VField>
+
+        <VField v-if="!$props.suppliers_only" class="column filter">
           <VControl>
             <VSelect v-model="searchFromInventory">
               <VOption value="">{{ t('list_inventory_movement.search_filter.select_from_inventory') }}
@@ -138,7 +151,7 @@ export default defineComponent({
             </VSelect>
           </VControl>
         </VField>
-        <VField class="column filter">
+        <VField v-if="!$props.suppliers_only" class="column filter">
           <VControl>
             <VSelect v-model="searchToInventory">
               <VOption value="">{{ t('list_inventory_movement.search_filter.select_to_inventory') }}
@@ -149,64 +162,29 @@ export default defineComponent({
             </VSelect>
           </VControl>
         </VField>
-        <VField class="column filter">
+        <VField v-if="!$props.suppliers_only" class="column filter">
           <VControl>
-            <VSelect v-model="searchMovementType">
+            <VSelect v-model="searchType">
               <VOption value="">{{ t('list_inventory_movement.search_filter.select_movement_type') }}
               </VOption>
-              <VOption value="Internal">
-                {{ t('list_inventory_movement.table.movement_types.internal') }}
-              </VOption>
-              <VOption value="External">
-                {{ t('list_inventory_movement.table.movement_types.external') }}
+              <VOption v-for="(type, index) in InventoryItemHistoryConsts.TYPES" :key="type" :value="type">
+                {{ InventoryItemHistoryConsts.getTypeName(type) }}
               </VOption>
             </VSelect>
           </VControl>
         </VField>
-        <VField v-if="searchMovementType == 'External'" class="column filter">
+        <VField v-if="!$props.suppliers_only" class="column filter">
           <VControl>
             <VSelect v-model="searchAction">
               <VOption value="">{{ t('list_inventory_movement.search_filter.select_action') }}
               </VOption>
-              <VOption value="Add Quantity">
-                {{ t('list_inventory_movement.table.action_types.add_quantity') }}
-              </VOption>
-              <VOption value="Withdraw Quantity">
-                {{ t('list_inventory_movement.table.action_types.withdraw_quantity') }}
-              </VOption>
-              <!-- <VOption  value="Sell">
-                                {{ t('list_inventory_movement.table.action_types.sell') }}
-                            </VOption> -->
-            </VSelect>
-          </VControl>
-        </VField>
-        <VField v-if="searchMovementType == 'Internal'" class="column filter">
-          <VControl>
-            <VSelect v-model="searchAction">
-              <VOption value="">{{ t('list_inventory_movement.search_filter.select_action') }}
-              </VOption>
-              <VOption value="Return to main inventory">
-                {{ t('list_inventory_movement.table.action_types.return_to_main_inventory') }}
-              </VOption>
-              <VOption value="Withdraw from main inventory">
-                {{ t('list_inventory_movement.table.action_types.withdraw_from_main_inventory') }}
+              <VOption v-for="(action, index) in InventoryItemHistoryConsts.ACTIONS" :key="action" :value="action">
+                {{ InventoryItemHistoryConsts.getActionName(action) }}
               </VOption>
             </VSelect>
           </VControl>
         </VField>
-        <VField v-if="searchMovementType == 'External'" class="column filter">
-          <VControl>
-            <VSelect v-model="searchRequesterName">
-              <VOption value="">{{ t('list_inventory_movement.search_filter.select_requester_name') }}
-              </VOption>
-              <VOption v-for="employee in employeesList" :key="employee.id"
-                :value="employee.user.first_name + ' ' + employee.user.last_name">
-                {{ employee.user.first_name + ' ' + employee.user.last_name }}
-              </VOption>
-            </VSelect>
-          </VControl>
-        </VField>
-        <VField v-if="hasItemFilter" class="column filter">
+        <VField v-if="!$props.is_for_item" class="column filter">
           <VControl>
             <VSelect v-model="searchItem">
               <VOption value="">{{ t('list_inventory_movement.search_filter.select_item') }}</VOption>

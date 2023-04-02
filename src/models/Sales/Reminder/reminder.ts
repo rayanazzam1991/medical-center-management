@@ -18,7 +18,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 export interface CreateReminder {
     customer_id: number
-    ticket_service_id: number
+    ticket_service_id?: number
     note: string
     date: string
     time: string
@@ -26,7 +26,7 @@ export interface CreateReminder {
 export interface Reminder {
     id: number
     customer: Customer
-    service: TicketService
+    service?: TicketService
     note: string
     time: string
     date: string
@@ -35,7 +35,7 @@ export interface Reminder {
 
 export const defaultCreateReminder: CreateReminder = {
     customer_id: 0,
-    ticket_service_id: 0,
+    ticket_service_id: undefined,
     note: '',
     date: '',
     time: '',
@@ -51,19 +51,19 @@ export const defaultReminder: Reminder = {
     status: 1
 }
 export interface ReminderSearchFilter {
-
+    customer_id?: number
     page?: number
     per_page?: number
     order_by?: string
     order?: string
 }
 export interface ChangeReminderStatus {
-  id?: number
-  status?: number
+    id?: number
+    status?: number
 }
 export const defaultChangeReminderStatus: ChangeReminderStatus = {
-  id: undefined,
-  status: undefined
+    id: undefined,
+    status: undefined
 }
 
 export const defaultReminderSearchFilter = <ReminderSearchFilter>{}

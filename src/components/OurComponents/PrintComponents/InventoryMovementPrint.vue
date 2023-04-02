@@ -2,7 +2,8 @@
 import { useI18n } from "vue-i18n"
 import { addParenthesisToString } from "/@src/composable/helpers/stringHelpers"
 import { AccountConsts, defaultBalanceSheet } from "/@src/models/Accounting/Account/account"
-import { defaultInventoryItemHistory } from "/@src/models/Warehouse/ItemHistory/inventoryItemHistory"
+import { defaultInventoryItemHistory, InventoryItemHistoryConsts } from "/@src/models/Warehouse/ItemHistory/inventoryItemHistory"
+import { getFromName, getToName } from "/@src/services/Warehouse/ItemHistory/inventoryItemHistoryService"
 
 
 export default defineComponent({
@@ -17,9 +18,8 @@ export default defineComponent({
         const { t } = useI18n()
         const inventoryItemMovement = ref(defaultInventoryItemHistory)
         inventoryItemMovement.value = props.inventoryItemMovement
-        console.log(inventoryItemMovement.value)
 
-        return { t, inventoryItemMovement }
+        return { t, inventoryItemMovement, getFromName, getToName, InventoryItemHistoryConsts }
     },
 
 
@@ -41,16 +41,13 @@ export default defineComponent({
 
         </div>
         <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
-            inventoryItemMovement.action_type ?
-            t(`list_inventory_movement.table.action_types.${inventoryItemMovement?.action_type.replaceAll(' ',
-                '_').toLowerCase()}`)
-            : '-' }}
+            InventoryItemHistoryConsts.getActionName(inventoryItemMovement.action) }}
         </h1>
         <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
             <tbody>
                 <tr>
                     <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
-                        inventoryItemMovement.from_inventory ? inventoryItemMovement?.from_inventory : '-' }}
+                        getFromName(inventoryItemMovement) }}
                     </td>
 
                     <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
@@ -59,9 +56,8 @@ export default defineComponent({
                 </tr>
                 <tr>
                     <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
-                        inventoryItemMovement?.to_inventory ? inventoryItemMovement?.to_inventory :
-                        !inventoryItemMovement?.to_inventory && inventoryItemMovement?.from_inventory ?
-                            inventoryItemMovement?.requester_name : '-' }}
+                        getToName(inventoryItemMovement)
+                    }}
                     </td>
 
                     <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">

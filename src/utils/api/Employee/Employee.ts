@@ -100,16 +100,16 @@ export async function dismissEmployeeApi(
   api: AxiosInstance,
   dismissedEmployee: DismissedEmployee
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.post('employeeHistory/dismissEmployee',dismissedEmployee)
+  const { data: response, headers } = await api.post('employeeHistory/dismissEmployee', dismissedEmployee)
   return { response }
 }
 
 
-export async function getDismissedEmployeesApi(
+export async function getEmployeesHistoryApi(
   api: AxiosInstance,
   searchFilter: EmployeeHistorySearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.get('employeeHistory/getDismissedEmployees', {
+  const { data: response, headers } = await api.get('employeeHistory/getEmployeeHistoryList', {
     params: searchFilter,
   })
   return { response }

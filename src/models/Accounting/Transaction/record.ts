@@ -38,6 +38,7 @@ export interface TransactionSearchFilter {
   order?: string
 }
 export interface ClientsCashReceiptsSearchFilter {
+  customer_id?: number
   client_name?: string
   note?: string
   currency_id?: number
@@ -48,6 +49,7 @@ export interface ClientsCashReceiptsSearchFilter {
   order?: string
 }
 export interface SuppliersCashReceiptsSearchFilter {
+  employee_id?: number
   supplier_name?: string
   note?: string
   currency_id?: number

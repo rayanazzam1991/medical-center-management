@@ -1,5 +1,5 @@
 import { defaultUser, User } from "../Others/User/user"
-import { Employee,defaultEmployee } from "./employee"
+import { Employee, defaultEmployee } from "./employee"
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
 import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n";
 
@@ -21,7 +21,7 @@ export interface DismissedEmployee {
   notes?: string
 }
 
-export const defaultDismissedEmployee: DismissedEmployee ={
+export const defaultDismissedEmployee: DismissedEmployee = {
   employee_id: 0,
   notes: undefined
 }
@@ -31,10 +31,11 @@ export const defaultEmployeeHistory: EmployeeHistory = {
   notes: undefined,
   status: undefined,
   created_at: undefined,
-  created_by:undefined
+  created_by: undefined
 }
 export interface EmployeeHistorySearchFilter {
   employee_name?: string
+  employee_id?: number
   notes?: string
   page?: number
   per_page?: number
@@ -51,22 +52,22 @@ class EmployeeStatusConsts {
 
 
   public static getStatusName(status: number) {
-      if (status == this.ACTIVE)
-          return i18n.global.t('employee.employee_statuses.active')
-      if (status == this.INACTIVE)
-          return i18n.global.t('employee.employee_statuses.inactive')
-      if (status == this.DISMISSED)
-          return i18n.global.t('employee.employee_statuses.dismissed')
-      else return '';
+    if (status == this.ACTIVE)
+      return i18n.global.t('employee.employee_statuses.active')
+    if (status == this.INACTIVE)
+      return i18n.global.t('employee.employee_statuses.inactive')
+    if (status == this.DISMISSED)
+      return i18n.global.t('employee.employee_statuses.dismissed')
+    else return '';
   }
   public static getStatusColor(status: number) {
-      if (status == this.ACTIVE)
-          return 'success'
-      if (status == this.INACTIVE)
-          return 'info'
-      if (status == this.DISMISSED)
-          return 'danger'
-      else return undefined;
+    if (status == this.ACTIVE)
+      return 'success'
+    if (status == this.INACTIVE)
+      return 'info'
+    if (status == this.DISMISSED)
+      return 'danger'
+    else return undefined;
   }
 
 

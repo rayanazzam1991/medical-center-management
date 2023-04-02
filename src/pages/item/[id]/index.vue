@@ -19,10 +19,9 @@ import { useItem } from "/@src/stores/Warehouse/Item/itemStore"
 import sleep from "/@src/utils/sleep"
 import { ErrorMessage } from "vee-validate"
 import { ItemConsts } from '/@src/models/Warehouse/Item/item'
-import { defaultChangeItemHistoryStatus, defaultInventoryItemHistory, defaultInventoryItemHistorySearchFilter, inventoryItemHistory, InventoryItemHistorySearchFilter, ItemHsitoryConsts } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
-import { changeItemHistoryStatus, getInventoryMovementsList, getItemHistory } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
+import { defaultChangeItemHistoryStatus, defaultInventoryItemHistory, defaultInventoryItemHistorySearchFilter, inventoryItemHistory, InventoryItemHistoryConsts, InventoryItemHistorySearchFilter } from "../../../models/Warehouse/ItemHistory/inventoryItemHistory"
+import { changeItemHistoryStatus, getFromName, getInventoryMovementsList, getItemHistory, getToName } from "../../../services/Warehouse/ItemHistory/inventoryItemHistoryService"
 import { defaultPagination } from "/@src/utils/response"
-import VTag from '/@src/components/base/tags/VTag.vue'
 import { useinventoryItemHistory } from "/@src/stores/Warehouse/ItemHistory/inventoryItemHistoryStore"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
@@ -32,30 +31,29 @@ import { addParenthesisToString, stringTrim } from "/@src/composable/helpers/str
 import { Currency, defaultCurrency } from "/@src/models/Accounting/Currency/currency"
 import { getCurrenciesFromStorage } from "/@src/services/Accounting/Currency/currencyService"
 import { Permissions } from "/@src/utils/consts/rolesPermissions"
+import { checkPermission } from "/@src/composable/checkPermission"
+import PrintDropDown from "/@src/components/OurComponents/PrintComponents/PrintDropDown.vue"
+import usePrint from "/@src/composable/usePrint"
 
 
 const route = useRoute()
 const router = useRouter()
 const viewWrapper = useViewWrapper()
-const itemHistoryStore = useinventoryItemHistory()
 const currentItem = ref<Item>(defaultItem)
 const currentItemModel = ref<Item>(defaultItem)
-
 const itemId = ref(0)
 const changeStatusPopup = ref(false)
-const changeHistoryStatusPopup = ref(false)
 const currentChangeStatusItem = ref(defaultChangeItemStatus)
-const currentChangeStatusItemHistory = ref(defaultChangeItemHistoryStatus)
 const keyIncrement = ref(1)
 const loading = ref(false)
 const itemHistoriesList = ref<inventoryItemHistory[]>([])
 const searchFilter = ref(defaultInventoryItemHistorySearchFilter)
-const inventoryItemHistoryList = ref<Array<inventoryItemHistory>>([])
 const paginationVar = ref(defaultPagination)
 const default_per_page = ref(1)
-const selectedStatus = ref(0)
 const currencies = getCurrenciesFromStorage()
 const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
+const selectedMovementForPrint = ref(defaultInventoryItemHistory)
+
 
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
@@ -66,13 +64,14 @@ useHead({
 const itemStore = useItem()
 const props = withDefaults(
     defineProps<{
-        activeTab?: 'Details' | 'History'
+        activeTab?: 'Details' | 'History' | 'Inventories' | 'Suppliers'
     }>(),
     {
         activeTab: 'Details',
     }
 )
 const tab = ref(props.activeTab)
+// @ts-ignore
 itemId.value = route.params?.id as number ?? 0
 
 const onOpen = () => {
@@ -95,127 +94,7 @@ onMounted(async () => {
 
 })
 
-const search = async (searchFilter2: InventoryItemHistorySearchFilter) => {
-    searchFilter2.status = BaseConsts.ACTIVE
-    paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
-    searchFilter2.item_id = itemId.value
-    const { itemHistories, pagination } = await getInventoryMovementsList(searchFilter2)
-    itemHistoriesList.value = itemHistories
-    paginationVar.value = pagination
-    searchFilter.value = searchFilter2
-}
 
-const resetFilter = async (searchFilter2: InventoryItemHistorySearchFilter) => {
-    searchFilter.value = searchFilter2
-    searchFilter.value.status = BaseConsts.ACTIVE
-
-    await search(searchFilter.value)
-}
-
-const getItemHistoriesPerPage = async (pageNum: number) => {
-    searchFilter.value.page = pageNum
-    await search(searchFilter.value)
-}
-const itemSort = async (value: string) => {
-    if (value != undefined) {
-        const [sortField, sortOrder] = value.split(':') as [string, 'desc' | 'asc']
-        searchFilter.value.order_by = sortField
-        searchFilter.value.order = sortOrder
-    }
-    else {
-        searchFilter.value.order = undefined
-        searchFilter.value.order_by = undefined
-    }
-    await search(searchFilter.value)
-}
-const columns = {
-    from_inventory: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label: t('list_inventory_movement.table.columns.from'),
-        renderRow: (row: any) =>
-            h('span', row?.from_inventory ? row?.from_inventory : '-'),
-    },
-    to_inventory: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        label: t('list_inventory_movement.table.columns.to'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.to_inventory ? row?.to_inventory : !row?.to_inventory && row?.from_inventory ? row?.requester_name : '-'),
-    },
-    action: {
-        align: 'center',
-        searchable: true,
-        label: t('list_inventory_movement.table.columns.action'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.to_inventory && !row?.from_inventory ? t('list_inventory_movement.table.action_types.add_quantity')
-                : !row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.action_types.withdraw_quantity')
-                    : '-'
-            ),
-
-    },
-    movement_type: {
-        align: 'center',
-        searchable: true,
-        label: t('list_inventory_movement.table.columns.movement_type'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.to_inventory && row?.from_inventory ? t('list_inventory_movement.table.movement_types.internal')
-                : t('list_inventory_movement.table.movement_types.external')
-            ),
-
-    },
-    item: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: t('list_inventory_movement.table.columns.item'),
-        renderRow: (row: any) =>
-            h('span', row?.item)
-    },
-    item_quantity: {
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label: t('list_inventory_movement.table.columns.quantity'),
-    },
-    note: {
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label: t('list_inventory_movement.table.columns.note'),
-
-        renderRow: (row: any) =>
-            h('span', {
-                innerHTML: row?.note ?
-                    `<div class="tooltip">${stringTrim(row?.note, 10)}<div class="tooltiptext"><p class="text-white">${row?.note}</p></div></div>` : '-',
-
-            }),
-
-    },
-    created_at: {
-        align: 'center',
-        label: t('list_inventory_movement.table.columns.created_at'),
-        grow: true,
-        renderRow: (row: any) =>
-            h('span', row?.created_at),
-        searchable: true,
-        sortable: true,
-    },
-    action_by: {
-        searchable: true,
-        grow: true,
-        align: 'center',
-        label: t('list_inventory_movement.table.columns.action_by'),
-        renderRow: (row: any) =>
-            h('span', row?.action_by?.first_name + ' ' + row?.action_by?.last_name)
-    },
-} as const
 
 const getCurrentItem = async () => {
     const { item } = await getItem(itemId.value)
@@ -244,24 +123,21 @@ const onClickEditMainInfo = () => {
     })
 }
 
-const onOpenHistory = () => {
-    changeHistoryStatusPopup.value = !changeHistoryStatusPopup.value
-}
 
-const changestatusItemHistory = async () => {
-    currentChangeStatusItemHistory.value.id = currentChangeStatusItemHistory.value.id
-    currentChangeStatusItemHistory.value.status = selectedStatus.value
-    changeHistoryStatusPopup.value = false
-    const { message, success } = await changeItemHistoryStatus(currentChangeStatusItemHistory.value)
-    if (success) {
-        await search(searchFilter.value)
-        notif.dismissAll()
-        await sleep(200);
-        notif.success(t('toast.success.edit'))
-    } else {
-        await sleep(200);
-        notif.error(message)
+const permissionCheck = async () => {
+    if (tab.value == 'History' && !checkPermission(Permissions.INVENTORY_ITEM_HISTORY_LIST)) {
+        notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
     }
+    if (tab.value == 'Inventories' && !checkPermission(Permissions.INVENTORY_ITEM_LIST)) {
+        notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+    }
+    if (tab.value == 'Details' && !checkPermission(Permissions.CUSTOMER_SHOW)) {
+        notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+    }
+    if (tab.value == 'Suppliers' && !checkPermission(Permissions.INVENTORY_ITEM_HISTORY_LIST)) {
+        notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+    }
+
 }
 
 
@@ -269,7 +145,7 @@ const changestatusItemHistory = async () => {
 <template>
     <div class="profile-wrapper">
         <VLoader size="large" :active="loading">
-            <div class="profile-header has-text-centered">
+            <div class="loader-size profile-header has-text-centered">
                 <h3 class="title is-4 is-narrow is-thin">{{ currentItem.name }}</h3>
                 <div class="profile-stats">
                     <div class="profile-stat">
@@ -292,19 +168,28 @@ const changestatusItemHistory = async () => {
             </div>
         </VLoader>
         <div class="project-details">
-            <div class="tabs-wrapper is-slider">
+            <div class="tabs-wrapper is-quad-slider">
                 <div :hidden="loading" class="tabs-inner">
                     <div class="tabs tabs-width">
                         <ul>
-                            <li :class="[tab === 'Details' && 'is-active']">
+                            <li @click="permissionCheck()" :class="[tab === 'Details' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
                                     t('item.details.tabs.details') }}</span></a>
                             </li>
-                            <li :class="[tab === 'History' && 'is-active']">
+                            <li @click="permissionCheck()" :class="[tab === 'History' && 'is-active']">
                                 <a tabindex="0" @keydown.space.prevent="tab = 'History'" @click="tab = 'History'">
                                     <span>{{ t('item.details.tabs.item_history') }}</span></a>
                             </li>
+                            <li @click="permissionCheck()" :class="[tab === 'Inventories' && 'is-active']">
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Inventories'" @click="tab = 'Inventories'">
+                                    <span>{{ t('item.details.tabs.inventories') }}</span></a>
+                            </li>
+                            <li @click="permissionCheck()" :class="[tab === 'Suppliers' && 'is-active']">
+                                <a tabindex="0" @keydown.space.prevent="tab = 'Suppliers'" @click="tab = 'Suppliers'">
+                                    <span>{{ t('item.details.tabs.suppliers') }}</span></a>
+                            </li>
                             <li class="tab-naver"></li>
+
                         </ul>
                     </div>
                 </div>
@@ -390,62 +275,36 @@ const changestatusItemHistory = async () => {
                         </div>
                     </div>
                 </div>
-
-
                 <div v-if="tab === 'History'" class="tab-content is-active mb-8">
                     <div class="columns project-details-inner">
                         <div class="column is-12">
                             <div class="project-details-card">
-                                <ListInventoryMovementTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-                                    class="mb-2" :has_item_filter="false" @search="search" :pagination="paginationVar"
-                                    :default_per_page="default_per_page" @resetFilter="resetFilter" />
-                                <VFlexTableWrapper :columns="columns" :data="itemHistoriesList" @update:sort="itemSort">
-                                    <VFlexTable separators clickable>
-                                        <template #body>
-                                            <div v-if="itemHistoryStore?.loading" class="flex-list-inner">
-                                                <div v-for="key in paginationVar.per_page" :key="key"
-                                                    class="flex-table-item">
-                                                    <VFlexTableCell>
-                                                        <VPlaceload />
-                                                    </VFlexTableCell>
-                                                </div>
-                                            </div>
-                                            <div v-else-if="itemHistoriesList.length === 0" class="flex-list-inner">
-                                                <VPlaceholderSection :title="t('tables.placeholder.title')"
-                                                    :subtitle="t('tables.placeholder.subtitle')" class="my-6">
-                                                </VPlaceholderSection>
-                                            </div>
-                                        </template>
-                                    </VFlexTable>
-                                    <VFlexPagination v-if="(itemHistoriesList.length != 0 && paginationVar.max_page != 1)"
-                                        :current-page="paginationVar.page" class="mt-6"
-                                        :item-per-page="paginationVar.per_page" :total-items="paginationVar.total"
-                                        :max-links-displayed="3" no-router @update:current-page="getItemHistoriesPerPage" />
-                                    <h6 class="pt-2 is-size-7"
-                                        v-if="itemHistoriesList.length != 0 && !itemHistoryStore?.loading">
-                                        {{
-                                            t('tables.pagination_footer', {
-                                                from_number: paginationVar.page !=
-                                                    paginationVar.max_page
-                                                    ?
-                                                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page ==
-                                                        paginationVar.max_page ? (1 +
-                                                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ?
-                                                        1 : paginationVar.total
-                                                , to_number: paginationVar.page !=
-                                                    paginationVar.max_page ?
-                                                    paginationVar.page *
-                                                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-                                            }) }}</h6>
-                                    <VPlaceloadText v-if="itemHistoryStore?.loading" :lines="1" last-line-width="20%"
-                                        class="mx-2" />
-                                </VFlexTableWrapper>
+                                <InventoryMovementsTable is-for-item :item-id="itemId" />
                             </div>
                         </div>
-
                     </div>
 
                 </div>
+                <div v-if="tab === 'Inventories'" class="tab-content is-active">
+                    <div class="columns project-details-inner">
+                        <div class="column is-12">
+                            <div class="project-details-card">
+                                <InventoryByItemTable :item-id="itemId" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="tab === 'Suppliers'" class="tab-content is-active mb-8">
+                    <div class="columns project-details-inner">
+                        <div class="column is-12">
+                            <div class="project-details-card">
+                                <InventoryMovementsTable is-for-item :item-id="itemId" suppliers-only />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -476,60 +335,73 @@ const changestatusItemHistory = async () => {
             <VButton color="primary" raised @click="changestatusItem()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
-    <VModal :key="keyIncrement" :title="t('item.table.modal_title.item_history')" :open="changeHistoryStatusPopup"
-        actions="center" @close="changeHistoryStatusPopup = false">
-        <template #content>
-            <form class="form-layout" @submit.prevent="">
-                <!--Fieldset-->
-                <div class="form-fieldset">
-                    <div class="columns is-multiline">
-                        <div class="column is-12">
-                            <VField class="column " id="status">
-
-                                <VLabel class="required">{{ t('item.details.history_status') }}</VLabel>
-                                <VControl>
-                                    <VRadio v-model="selectedStatus" :value="ItemHsitoryConsts.INACTIVE"
-                                        :label="ItemConsts.showStatusName(0)" name="status" color="danger" />
-                                    <VRadio v-model="selectedStatus" :value="ItemHsitoryConsts.ACTIVE"
-                                        :label="ItemConsts.showStatusName(1)" name="status" color="success" />
-                                    <ErrorMessage class="help is-danger" name="status" />
-                                </VControl>
-                            </VField>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </template>
-        <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItemHistory()">{{ t('modal.buttons.confirm') }}
-            </VButton>
-        </template>
-    </VModal>
+    <InventoryMovementPrint :key="keyIncrement" :inventory-item-movement="selectedMovementForPrint" />
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
 .tabs-width {
-    min-width: 250px;
+    min-width: 600px;
     min-height: 40px;
 
     .is-active {
         min-height: 40px;
+
     }
 }
 
-.tabs-wrapper.is-slider .tabs li a,
-.tabs-wrapper-alt.is-slider .tabs li a {
+.tabs-wrapper.is-quad-slider .tabs li a,
+.tabs-wrapper-alt.is-quad-slider .tabs li a {
     height: 40px;
+
 }
 
 .tabs li {
-    min-height: 40px !important;
+    min-height: 38px !important;
+
 }
+
 
 .full-width {
     width: 100%;
     margin-right: 12px;
+}
+
+.loader-size {
+    min-height: 100px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    word-break: keep-all;
+    white-space: normal;
+
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+
+
+}
+
+.is-dark {
+    .tooltip .tooltiptext {
+        background-color: rgb(43, 41, 41);
+    }
 }
 </style>

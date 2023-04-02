@@ -20,11 +20,15 @@ export default defineComponent({
             type: Number,
             default: 1,
         },
-        has_item_filter: {
+        is_for_item: {
             type: Boolean,
-            default: true,
-
+            default: false,
+        },
+        suppliers_only: {
+            type: Boolean,
+            default: false,
         }
+
     },
     setup(props, context) {
         const { t } = useI18n();
@@ -45,17 +49,6 @@ export default defineComponent({
         const is_reseted = ref(false);
         const keyIncrement = ref(0);
         const quickSearchField = ref("");
-        const hasItemFilter = props.has_item_filter
-        const quickSearch = () => {
-            if (quickSearchField.value != "") {
-                searchFilter.value.type = quickSearchField.value;
-            }
-            else {
-                searchFilter.value.type = undefined;
-            }
-            searchFilter.value.per_page = perPage.value;
-            search();
-        };
         const search = () => {
             searchFilter.value.page = 1;
             searchFilter.value.per_page = perPage.value;
@@ -76,8 +69,8 @@ export default defineComponent({
             searchFilter.value.to = undefined;
             searchFilter.value.action = undefined
             searchFilter.value.action_by = undefined
-            searchFilter.value.requester_name = undefined
-            searchFilter.value.movement_type = undefined
+            searchFilter.value.type = undefined
+            searchFilter.value.supplier_name = undefined
             quickSearchField.value = "";
             is_reseted.value = true;
             keyIncrement.value++;
@@ -91,15 +84,16 @@ export default defineComponent({
             searchFilter.value.item_id = undefined;
             searchFilter.value.from = undefined;
             searchFilter.value.to = undefined;
+            searchFilter.value.supplier_name = undefined
             context.emit("resetFilter", searchFilter.value);
         };
-        return { t, Permissions, searchFilterPop, default_per_page, keyIncrement, hasItemFilter, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearch, quickSearchField };
+        return { t, Permissions, searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchType, perPage, pagination, ItemConsts, quickSearchField };
     },
     components: { ListInventoryMovementSearchFilterModel }
 })
 </script>
 <template>
-    <form class="form-layout" v-on:submit.prevent="quickSearch">
+    <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="form-header-inner">
@@ -129,14 +123,16 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl v-if="hasItemFilter" class="ml-2">
-                                <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/from-main-inventory" color="primary">{{
-                                    t('inventory.table.buttons_name.from_main_inventory') }}
+                            <VControl v-if="!$props.is_for_item" class="ml-2">
+                                <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/from-main-inventory"
+                                    color="primary">{{
+                                        t('inventory.table.buttons_name.from_main_inventory') }}
                                 </VButton>
                             </VControl>
-                            <VControl v-if="hasItemFilter">
-                                <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/to-main-inventory" color="primary">{{
-                                    t('inventory.table.buttons_name.to_main_inventory') }}
+                            <VControl>
+                                <VButton v-if="!$props.is_for_item" v-permission="Permissions.INVENTORY_ITEM_CREATE"
+                                    class="" to="/to-main-inventory" color="primary">{{
+                                        t('inventory.table.buttons_name.to_main_inventory') }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -144,10 +140,12 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <ListInventoryMovementSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
-            :has_item_filter="hasItemFilter" @search_filter_popup="popUpTrigger" @search="search_filter"
-            @resetFilter="resetFilter_popup" />
+        <ListInventoryMovementSearchFilterModel :is_for_item="$props.is_for_item" :suppliers_only="$props.suppliers_only"
+            :key="keyIncrement" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+            @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
-<style scoped  lang="scss">@import '/@src/scss/styles/tableHeader.scss';</style>
+<style scoped  lang="scss">
+@import '/@src/scss/styles/tableHeader.scss';
+</style>

@@ -10,6 +10,7 @@ import { getRole } from '/@src/services/Others/Role/roleService';
 import { getPermissionGroupsList } from '/@src/services/Others/PermissionGroup/permissionGroupService';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { usePermissionGroup } from '/@src/stores/Others/PermissionGroup/permissionGroupStore';
+import { stringTrim } from '/@src/composable/helpers/stringHelpers';
 export default defineComponent({
     setup(props, context) {
         const { t } = useI18n()
@@ -94,12 +95,11 @@ export default defineComponent({
         })
 
         const toEdit = () => {
-            console.log('ad')
             router.push({ path: `/role/${roleId.value}/edit` })
         }
 
         return {
-            t, toEdit, currentRole, isLoading, permissionGroupsHelper, viewWrapper, backRoute, Permissions, keyIncrement, search, resetFilter, permissionGroupStore, pageTitle
+            t, toEdit, stringTrim, currentRole, isLoading, permissionGroupsHelper, viewWrapper, backRoute, Permissions, keyIncrement, search, resetFilter, permissionGroupStore, pageTitle
         };
     },
 })
@@ -135,7 +135,7 @@ export default defineComponent({
                                     <div class="column is-2" v-for="(permission, index) in permissionGroup.permissions"
                                         :key="index">
                                         <VTag :color="permission.checked ? 'primary' : 'solid'"
-                                            :label="permission.display_name" />
+                                            :label="stringTrim(permission.display_name, 40)" />
                                     </div>
                                 </div>
                             </div>

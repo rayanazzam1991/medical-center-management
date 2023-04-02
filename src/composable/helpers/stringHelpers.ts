@@ -4,7 +4,9 @@ export function stringTrim(value: string, length: number) {
   }
   else {
     let trimmedString = value?.substring(0, length);
-    return trimmedString + '...'
+    if (length < value.length) {
+      return trimmedString + '...'
+    } else return trimmedString
   }
 
 }

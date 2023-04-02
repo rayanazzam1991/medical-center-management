@@ -67,16 +67,16 @@ const columns = {
     align: 'center',
     label: t('role.table.columns.created_at')
 
-  },
-  created_by: {
-    align: 'center',
-    label: t('role.table.columns.created_by'),
-    renderRow: (row: Role) =>
-      h('span', row?.created_by?.first_name + ' ' + row.created_by?.last_name ?? '-')
-  },
-  actions: {
-    align: 'center',
-    label: t('role.table.columns.actions'),
+    },
+    created_by: {
+        align: 'center',
+        label: t('role.table.columns.created_by'),
+        renderRow: (row: Role) =>
+            h('span', row.created_by ? row?.created_by?.first_name + ' ' + row.created_by?.last_name : '-')
+    },
+    actions: {
+        align: 'center',
+        label: t('role.table.columns.actions'),
 
     renderRow: (row: any) =>
       h(ViewEditDropDown, {

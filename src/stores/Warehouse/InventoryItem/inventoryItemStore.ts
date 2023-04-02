@@ -1,8 +1,8 @@
 import { AxiosInstance } from "axios";
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { CreateInventoryItem, InventoryItem } from "/@src/models/Warehouse/InventoryItem/inventoryItem";
-import { fromMainInventoryApi, toMainInventoryApi } from "/@src/utils/api/Warehouse/InventoryItem";
+import { CreateInventoryItem, InventoryByItem, InventoryByItemSearchFilter, InventoryItem } from "/@src/models/Warehouse/InventoryItem/inventoryItem";
+import { fromMainInventoryApi, getInventoriesListByItemApi, toMainInventoryApi } from "/@src/utils/api/Warehouse/InventoryItem";
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -69,6 +69,33 @@ export const useInventoryItem = defineStore('inventoryItem', () => {
         }
     }
 
+    async function getInventoriesListByItemStore(itemId: number, filter: InventoryByItemSearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await getInventoriesListByItemApi(api, itemId, filter)
+
+            let returnedInventoriesItem: InventoryByItem[]
+            returnedInventoriesItem = response.response.data
+            pagination.value = response.response.pagination
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+
+            return returnedInventoriesItem
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+
+        finally {
+            loading.value = false
+        }
+    }
+
 
 
 
@@ -81,6 +108,7 @@ export const useInventoryItem = defineStore('inventoryItem', () => {
         loading,
         fromMainInventoryStore,
         toMainInventoryStore,
+        getInventoriesListByItemStore
     } as const
 })
 

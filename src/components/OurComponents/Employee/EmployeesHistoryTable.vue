@@ -5,11 +5,20 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
-import { EmployeeStatusConsts } from '../../../models/Employee/employeeHistory'
-import { getDismissedEmployeesList } from '/@src/services/Employee/employeeService'
+import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
+import { getEmployeesHistoryList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import { defaultEmployeeHistorySearchFilter, EmployeeHistory, EmployeeHistorySearchFilter } from '../../../models/Employee/employeeHistory'
+import { EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistory'
+export interface EmployeeHistoryTableProps {
+  isForEmployee: boolean,
+  employeeId: number | undefined
+}
+const props = withDefaults(defineProps<EmployeeHistoryTableProps>(), {
+  isForEmployee: false,
+  employeeId: undefined
+
+})
 
 
 
@@ -20,8 +29,11 @@ useHead({
   title: t('dismissed_employee.table.title'),
 })
 const notif = useNotyf() as Notyf
-const searchFilter = ref(defaultEmployeeHistorySearchFilter)
-const dismissedEmployeesList = ref<Array<EmployeeHistory>>([])
+const searchFilter = ref(resetEmployeeHistorySearchFilter())
+if (props.isForEmployee && props.employeeId) {
+  searchFilter.value.employee_id = props.employeeId
+}
+const dismissedEmployeesList = ref<Array<EmployeeHistories>>([])
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const employeeStore = useEmployee()
@@ -30,7 +42,7 @@ const keyIncrement = ref(0)
 
 
 onMounted(async () => {
-  const { dismissedEmployees, pagination } = await getDismissedEmployeesList(searchFilter.value)
+  const { dismissedEmployees, pagination } = await getEmployeesHistoryList(searchFilter.value)
   dismissedEmployeesList.value = dismissedEmployees
   paginationVar.value = pagination
   keyIncrement.value = keyIncrement.value + 1
@@ -38,18 +50,23 @@ onMounted(async () => {
 });
 
 
-const search = async (searchFilter2: EmployeeHistorySearchFilter) => {
-
-  const { dismissedEmployees, pagination } = await getDismissedEmployeesList(searchFilter2)
+const search = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
+  if (props.isForEmployee && props.employeeId) {
+    newSearchFilter.employee_id = props.employeeId
+  }
+  const { dismissedEmployees, pagination } = await getEmployeesHistoryList(newSearchFilter)
 
   dismissedEmployeesList.value = dismissedEmployees
   paginationVar.value = pagination
-  searchFilter.value = searchFilter2
+  searchFilter.value = newSearchFilter
 }
 
-const resetFilter = async (searchFilter2: EmployeeHistorySearchFilter) => {
-  searchFilter.value = searchFilter2
-  search(searchFilter.value)
+const resetFilter = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
+  if (props.isForEmployee && props.employeeId) {
+    newSearchFilter.employee_id = props.employeeId
+  }
+  searchFilter.value = newSearchFilter
+  await search(searchFilter.value)
 }
 
 const getEmployeesPerPage = async (pageNum: number) => {
@@ -124,7 +141,7 @@ const columns = {
 </script>
 
 <template>
-  <DismissedEmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
+  <EmployeesHistoryTableHeader :is_for_employee="props.isForEmployee" :key="keyIncrement" :title="viewWrapper.pageTitle"
     :button_name="t('employee.header_button')" @search="search" :pagination="paginationVar"
     :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="dismissedEmployeesList" :limit="searchFilter.per_page"
