@@ -5,11 +5,10 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
-import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
+import { EmployeeHistory, EmployeeHistorySearchFilter, EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
 import { getEmployeesHistoryList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
-import { EmployeeHistories, EmployeeHistoriesSearchFilter } from '/@src/models/Employee/employeeHistory'
 export interface EmployeeHistoryTableProps {
   isForEmployee: boolean,
   employeeId: number | undefined
@@ -33,7 +32,7 @@ const searchFilter = ref(resetEmployeeHistorySearchFilter())
 if (props.isForEmployee && props.employeeId) {
   searchFilter.value.employee_id = props.employeeId
 }
-const dismissedEmployeesList = ref<Array<EmployeeHistories>>([])
+const dismissedEmployeesList = ref<Array<EmployeeHistory>>([])
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const employeeStore = useEmployee()
@@ -50,7 +49,7 @@ onMounted(async () => {
 });
 
 
-const search = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
+const search = async (newSearchFilter: EmployeeHistorySearchFilter) => {
   if (props.isForEmployee && props.employeeId) {
     newSearchFilter.employee_id = props.employeeId
   }
@@ -61,7 +60,7 @@ const search = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
   searchFilter.value = newSearchFilter
 }
 
-const resetFilter = async (newSearchFilter: EmployeeHistoriesSearchFilter) => {
+const resetFilter = async (newSearchFilter: EmployeeHistorySearchFilter) => {
   if (props.isForEmployee && props.employeeId) {
     newSearchFilter.employee_id = props.employeeId
   }
