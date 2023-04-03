@@ -25,12 +25,17 @@ import IconButton from '/@src/components/OurComponents/Warehouse/InventoryItemHi
 export interface InventoryMovementsTableProps {
     isForItem: boolean,
     itemId: number | undefined,
-    suppliersOnly: boolean
+    suppliersOnly: boolean,
+    toMainInventory: boolean,
+    fromMainInventory: boolean
 }
 const props = withDefaults(defineProps<InventoryMovementsTableProps>(), {
     isForItem: false,
     itemId: undefined,
     suppliersOnly: false,
+    fromMainInventory: true,
+    toMainInventory: true
+
 
 })
 
@@ -375,7 +380,8 @@ const itemMovementsSuppliersOnlyColumns = {
 
 <template>
     <ListInventoryMovementTableHeader :is_for_item="props.isForItem" :suppliers_only="props.suppliersOnly"
-        :key="keyIncrement" :default_per_page="default_per_page" :pagination="paginationVar" :title="viewWrapper.pageTitle"
+        :to_main_inventory="props.toMainInventory" :from_main_inventory="props.fromMainInventory" :key="keyIncrement"
+        :default_per_page="default_per_page" :pagination="paginationVar" :title="viewWrapper.pageTitle"
         @resetFilter="resetFilter" @search="search" />
     <VFlexTableWrapper
         :columns="props.suppliersOnly && props.isForItem ? itemMovementsSuppliersOnlyColumns : props.isForItem && !props.suppliersOnly ? itemMovementsColumns : allMovementsColumns"

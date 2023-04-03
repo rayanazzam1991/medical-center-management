@@ -27,7 +27,15 @@ export default defineComponent({
         suppliers_only: {
             type: Boolean,
             default: false,
-        }
+        },
+        to_main_inventory: {
+            type: Boolean,
+            default: true,
+        },
+        from_main_inventory: {
+            type: Boolean,
+            default: true,
+        },
 
     },
     setup(props, context) {
@@ -123,15 +131,16 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl v-if="!$props.is_for_item" class="ml-2">
+                            <VControl v-if="!$props.is_for_item && $props.from_main_inventory" class="ml-2">
                                 <VButton v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/from-main-inventory"
                                     color="primary">{{
                                         t('inventory.table.buttons_name.from_main_inventory') }}
                                 </VButton>
                             </VControl>
                             <VControl>
-                                <VButton v-if="!$props.is_for_item" v-permission="Permissions.INVENTORY_ITEM_CREATE"
-                                    class="" to="/to-main-inventory" color="primary">{{
+                                <VButton v-if="!$props.is_for_item && $props.to_main_inventory"
+                                    v-permission="Permissions.INVENTORY_ITEM_CREATE" class="" to="/to-main-inventory"
+                                    color="primary">{{
                                         t('inventory.table.buttons_name.to_main_inventory') }}
                                 </VButton>
                             </VControl>
