@@ -828,6 +828,7 @@
         "history_record": "سجل تاريخ الموظف"
       },
       "main_details": "المعلومات الأساسية",
+      "current_balance": "الرصيد الحالي : ",
       "services": "الخدمات",
       "more_info": "معلومات إضافية",
       "name": " اسم {title}",

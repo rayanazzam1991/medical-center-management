@@ -77,6 +77,8 @@ const updateLoading = ref(false)
 const editEmployeeNumberTrigger = ref(false)
 const newEmployeeNumber = ref<number>()
 const maxEmployeeNumber = ref(0)
+const employeeAccountCurrentBalance = ref('0')
+const employeeAccountCurrency = ref('')
 const employeeForm = useEmployeeForm()
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
@@ -496,7 +498,10 @@ const permissionCheck = async () => {
   }
 
 }
-
+const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
+  employeeAccountCurrentBalance.value = accountBalance
+  employeeAccountCurrency.value = accountCurrency
+}
 </script>
 <template>
   <div class="profile-wrapper">
@@ -959,11 +964,21 @@ const permissionCheck = async () => {
         <div v-if="tab === 'Balances'" class="tab-content is-active">
           <div class="columns project-details-inner">
             <div class="column is-12">
+              <div class="project-details-card py-5">
+                <div class="card-head my-1">
+                  <div class="title-wrap">
+                    <h3>{{ t('employee.details.current_balance') }} <span
+                        :class="employeeAccountCurrentBalance.includes('-') ? 'has-text-danger' : 'has-text-primary'">{{
+                          employeeAccountCurrentBalance }}</span> {{ addParenthesisToString(employeeAccountCurrency) }}</h3>
+                  </div>
+                </div>
+              </div>
               <div class="project-details-card">
-                <JournalEntryTable is-for-employee :employee-id="employeeId" />
+                <JournalEntryTable is-for-employee :employee-id="employeeId" @update-balance="setAccountBalance" />
               </div>
             </div>
           </div>
+
         </div>
         <div v-if="tab === 'History Record'" class="tab-content is-active">
           <div class="columns project-details-inner">
