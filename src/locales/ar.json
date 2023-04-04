@@ -801,7 +801,8 @@
         "status": "الحالة",
         "position": "المنصب",
         "actions": "الإجراءات",
-        "created_at": "تاريخ الإنشاء"
+        "created_at": "تاريخ الإنشاء",
+        "created_by": " بواسطة"
       },
       "modal_title": {
         "status": "تغيير حالة المستخدم",
@@ -906,7 +907,8 @@
       "no_service_added_placeholder": "لا يوجد خدمات مقدمة من قبل الموظف",
       "roles": "الأدوار",
       "roles_helper": "اضغط على زر (Ctrl) لتحديد عدّة خيارات",
-      "isUser": "مستخدم"
+      "have_permission": "يمتلك صلاحيات",
+      "haveNot_permission": "لا يمتلك صلاحيات"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
@@ -1012,7 +1014,9 @@
     },
     "search_filter": {
       "employee_name": "ادخل اسم الموظف",
-      "notes": "ادخل الملاحظة "
+      "notes": "ادخل الملاحظة ",
+      "title": "تصفية معلومات الموظف",
+      "status": "اختر الحالة"
     }
   },
   "employee_attendance": {
