@@ -180,7 +180,6 @@ declare module '@vue/runtime-core' {
     SalaryHistoryDropDown: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryHistoryDropDown.vue')['default']
     SalaryTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryTableHeader.vue')['default']
     SalaryVariablePaymentsCell: typeof import('./src/components/OurComponents/HR/Payroll/Salary/SalaryVariablePaymentsCell.vue')['default']
-    SamaraDashboard: typeof import('./src/components/OurComponents/Dashboards/SamaraDashboard.vue')['default']
     SearchPanel: typeof import('./src/components/partials/panels/SearchPanel.vue')['default']
     ServiceDetails: typeof import('./src/components/OurComponents/Others/Service/ServiceDetails.vue')['default']
     ServiceForm: typeof import('./src/components/OurComponents/Others/Service/ServiceForm.vue')['default']
