@@ -33,6 +33,9 @@ const keyIncrement = ref(0)
 const passwordPattern = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
 const passwordMatchPattern = ref(false)
 const passwordMatchConfirmation = ref(false)
+const showPasswordConfirmaion = ref(false)
+const showPassword = ref(false)
+const showCurrentPassword = ref(false)
 
 if (loggedEmployee.value) {
 
@@ -106,7 +109,16 @@ const checkPasswordConfirmation = () => {
 const onClickViewMyWaitingList = () => {
   router.push({ path: `/employee/${loggedEmployee.value?.id}/waiting-list` })
 }
+const toggleShowPassowordConfirmation = () => {
+  showPasswordConfirmaion.value = !showPasswordConfirmaion.value
 
+}
+const toggleShowPassoword = () => {
+  showPassword.value = !showPassword.value
+}
+const toggleShowCurrentPassword = () => {
+  showCurrentPassword.value = !showCurrentPassword.value
+}
 
 </script>
 <template>
@@ -177,20 +189,32 @@ const onClickViewMyWaitingList = () => {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column">
-                <VLabel>{{ t('user_profile_dropdown.change_password_popup.current_password') }}</VLabel>
+                <div class="is-flex is-align-items-center">
+                  <span class="label ml-2">{{ t('user_profile_dropdown.change_password_popup.current_password')
+                  }}</span>
+                  <span @click="toggleShowCurrentPassword">
+                    <i aria-hidden="true" class="iconify clickable" data-icon="feather:eye"></i>
+                  </span>
+                </div>
                 <VControl>
-                  <VInput v-model="changePasswordData.current_password" type="password" />
+                  <VInput v-model="changePasswordData.current_password"
+                    :type="showCurrentPassword ? 'text' : 'password'" />
                 </VControl>
               </VField>
-
             </div>
             <div class="column is-12 pr-0 is-flex is-jsutify-content-center is-align-items-center">
-
               <div class="column is-11 pl-0">
                 <VField class="column">
-                  <VLabel>{{ t('user_profile_dropdown.change_password_popup.password') }}</VLabel>
+                  <div class="is-flex is-align-items-center">
+                    <span class="label ml-2">{{ t('user_profile_dropdown.change_password_popup.password')
+                    }}</span>
+                    <span @click="toggleShowPassoword">
+                      <i aria-hidden="true" class="iconify clickable" data-icon="feather:eye"></i>
+                    </span>
+                  </div>
                   <VControl>
-                    <VInput @input="checkPassword" v-model="changePasswordData.password" type="password" />
+                    <VInput @input="checkPassword" v-model="changePasswordData.password"
+                      :type="showPassword ? 'text' : 'password'" />
                   </VControl>
                   <p class="is-info help">{{ t('user_profile_dropdown.change_password_popup.helper') }}</p>
                 </VField>
@@ -204,10 +228,16 @@ const onClickViewMyWaitingList = () => {
 
               <div class="column is-11 pl-0">
                 <VField class="column">
-                  <VLabel>{{ t('user_profile_dropdown.change_password_popup.password_confirmation') }}</VLabel>
+                  <div class="is-flex is-align-items-center">
+                    <span class="label ml-2">{{ t('user_profile_dropdown.change_password_popup.password_confirmation')
+                    }}</span>
+                    <span @click="toggleShowPassowordConfirmation">
+                      <i aria-hidden="true" class="iconify clickable" data-icon="feather:eye"></i>
+                    </span>
+                  </div>
                   <VControl>
                     <VInput @input="checkPasswordConfirmation" v-model="changePasswordData.password_confirmation"
-                      type="password" />
+                      :type="showPasswordConfirmaion ? 'text' : 'password'" />
                   </VControl>
                 </VField>
               </div>
@@ -249,6 +279,23 @@ const onClickViewMyWaitingList = () => {
 .meta {
   .h1 {
     display: block;
+  }
+}
+
+.label {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--light-text) !important;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+  cursor: pointer;
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
   }
 }
 </style>
