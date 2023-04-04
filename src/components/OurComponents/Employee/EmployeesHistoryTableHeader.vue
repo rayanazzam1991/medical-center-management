@@ -32,6 +32,13 @@ export default defineComponent({
   setup(props, context) {
     const { t } = useI18n()
 
+    const onOpen = () => {
+      searchFilterPop.value = !searchFilterPop.value
+      context.emit('onOpen', searchFilterPop.value)
+    }
+    const popUpTrigger = (value: boolean) => {
+      searchFilterPop.value = value
+    }
     const searchFilterPop = ref(false)
     const keyTest = ref(0)
     const default_per_page = props.default_per_page
@@ -76,7 +83,7 @@ export default defineComponent({
       context.emit('resetFilter', searchFilter.value)
 
     }
-    return { t, resetFilter, resetFilter_popup, usersList, getUsersList, getUsersWithoutCustomerList, searchNotes, search_filter, searchFilterPop, search, default_per_page, searchEmployeeName, keyTest, perPage, pagination }
+    return { t, resetFilter, onOpen, popUpTrigger, resetFilter_popup, usersList, getUsersList, getUsersWithoutCustomerList, searchNotes, search_filter, searchFilterPop, search, default_per_page, searchEmployeeName, keyTest, perPage, pagination }
   },
 })
 </script>
@@ -100,6 +107,8 @@ export default defineComponent({
               <VIconButton class="mr-2" type="submit" v-on:click="search" icon="feather:search" />
               <VIconButton class="mr-2" type="submit" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                 color="danger" />
+              <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+
             </div>
           </div>
           <div class="left my-4 mx-2">
@@ -128,6 +137,8 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <EmployeesHistorySearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop"
+      @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
   </form>
 </template>
 

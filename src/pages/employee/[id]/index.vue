@@ -8,7 +8,7 @@
   }
 }
 </route>
-  
+
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -51,6 +51,7 @@ import { Permissions } from '/@src/utils/consts/rolesPermissions'
 import { checkPermission } from '/@src/composable/checkPermission'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { resetPassword } from '/@src/services/Others/User/authService'
+import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
 const currencies = getCurrenciesFromStorage()
 const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const route = useRoute()
@@ -520,9 +521,15 @@ const permissionCheck = async () => {
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span>{{ t('employee.details.status') }}:
-              <span :class="`has-text-${UserStatusConsts.getStatusColor(currentEmployee.user.status.id)}`">{{
+              <span v-if="currentEmployee.is_dismissed == true"
+                :class="`has-text-${EmployeeStatusConsts.getStatusColor(EmployeeStatusConsts.DISMISSED)}`">{{
+                  EmployeeStatusConsts.getStatusName(EmployeeStatusConsts.DISMISSED)
+                }}</span></span>
+
+            <span v-if="currentEmployee.is_dismissed == false"
+              :class="`has-text-${UserStatusConsts.getStatusColor(currentEmployee.user.status.id)}`">{{
                 UserStatusConsts.getStatusName(currentEmployee.user.status.id)
-              }}</span></span>
+              }}</span>
           </div>
           <div class="separator"></div>
           <div class="profile-stat">

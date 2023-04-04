@@ -320,8 +320,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
                 <div class="columns">
                   <div class="is-flex is-justify-content-center">
                     <VControl class="ml-3">
-                      <VSwitchSegment :key="keyIncrement" v-model="isUser" :label-true="t('employee.form.isUser')"
-                        color="success" />
+                      <VSwitchSegment :key="keyIncrement" v-model="isUser"
+                        :label-true="t('employee.form.have_permission')"
+                        :label-false="t('employee.form.haveNot_permission')" color="success" />
                     </VControl>
                   </div>
                 </div>

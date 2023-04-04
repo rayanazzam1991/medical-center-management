@@ -56,6 +56,7 @@ const itemvalidationSchema = toFormValidator(zod
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
                     .min(1, i18n.global.t('validation.required')),
+                    
             ),
         status: zod
             .number({ required_error: i18n.global.t('validation.redio.required') }),

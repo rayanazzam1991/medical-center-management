@@ -17,7 +17,9 @@ const dismissEmployeevalidationSchema = toFormValidator(zod
                 .string({
                     required_error: i18n.global.t('validation.required'),
                 })
-                .min(1, i18n.global.t('validation.required')),
+                .min(1, i18n.global.t('validation.required'))
+
+
     }));
 
 export {

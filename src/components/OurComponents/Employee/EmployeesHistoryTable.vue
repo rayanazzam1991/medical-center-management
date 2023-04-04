@@ -9,6 +9,7 @@ import { EmployeeHistory, EmployeeHistorySearchFilter, EmployeeStatusConsts } fr
 import { getEmployeesHistoryList, resetEmployeeHistorySearchFilter } from '/@src/services/Employee/employeeService'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { stringTrim } from '/@src/composable/helpers/stringHelpers'
 export interface EmployeeHistoryTableProps {
   isForEmployee: boolean,
   employeeId: number | undefined
@@ -122,9 +123,11 @@ const columns = {
     align: 'center',
     label: t('dismissed_employee.table.columns.notes'),
     renderRow: (row: any) =>
-      h('span', row?.notes ?? '-'),
-    grow: true
+      h('span', {
+        innerHTML: row?.notes ?
+          `<div class="tooltip">${stringTrim(row?.notes, 10)}<div class="tooltiptext"><p class="text-white">${row?.notes}</p></div></div>` : '-',
 
+      }),
   },
   created_at: {
     align: 'center',
@@ -132,6 +135,14 @@ const columns = {
     label: t('employee.table.columns.created_at'),
     renderRow: (row: any) =>
       h('span', row?.created_at),
+    grow: true
+
+  },
+  created_by: {
+    align: 'center',
+    label: t('employee.table.columns.created_by'),
+    renderRow: (row: any) =>
+      h('span', row?.created_by.first_name + ' ' + row?.created_by.last_name),
     grow: true
 
   },
@@ -184,3 +195,37 @@ const columns = {
     <VPlaceloadText v-if="employeeStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
 </template>
+<style lang="scss">
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  word-break: keep-all;
+  white-space: normal;
+
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+
+
+}
+
+.is-dark {
+  .tooltip .tooltiptext {
+    background-color: rgb(43, 41, 41);
+  }
+}
+</style>

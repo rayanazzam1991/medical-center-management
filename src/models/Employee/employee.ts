@@ -23,6 +23,7 @@ export interface Employee {
     position: Position
     payment_percentage: number
     type: number,
+    is_dismissed:boolean
     services: EmployeeService[],
     media?: Media[]
 }
@@ -107,7 +108,8 @@ export const defaultEmployee: Employee = {
     employee_number: undefined,
     payment_percentage: 0,
     type: 1,
-    services: [],
+  services: [],
+    is_dismissed:false,
     media: undefined
 }
 export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
