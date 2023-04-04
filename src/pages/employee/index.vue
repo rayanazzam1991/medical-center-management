@@ -28,8 +28,9 @@ import sleep from '/@src/utils/sleep'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import EmployeeDropDown from '/@src/components/OurComponents/Employee/EmployeeDropDown.vue'
+import DismissEmployeeDropDown from '/@src/components/OurComponents/Employee/DismissEmployeeDropDown.vue'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
-import { DismissedEmployee } from '../../models/Employee/employeeHistory'
+import { DismissedEmployee, EmployeeStatusConsts } from '../../models/Employee/employeeHistory'
 
 import { dismissEmployeevalidationSchema } from '/@src/rules/Employee/dismissEmployeeValidation';
 
@@ -209,11 +210,11 @@ const columns = {
         VTag,
         {
           rounded: true,
-          color: UserStatusConsts.getStatusColor(row?.user?.status?.id)
+          color: row.is_dismissed == true ? EmployeeStatusConsts.getStatusColor(EmployeeStatusConsts.DISMISSED) : UserStatusConsts.getStatusColor(row?.user?.status?.id)
         },
         {
           default() {
-            return UserStatusConsts.getStatusName(row?.user?.status?.id)
+            return row.is_dismissed == true ? EmployeeStatusConsts.getStatusName(EmployeeStatusConsts.DISMISSED) : UserStatusConsts.getStatusName(row?.user?.status?.id)
           },
         }
       ),
@@ -248,11 +249,12 @@ const columns = {
     label: t('employee.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(EmployeeDropDown, {
+      h(row.is_dismissed == true ? DismissEmployeeDropDown : EmployeeDropDown, {
         changeStatusPermission: Permissions.EMPLOYEE_EDIT,
         viewPermission: Permissions.EMPLOYEE_SHOW,
         viewMyWaitingListPermission: Permissions.SHOW_ALL_WAITING_LISTS,
         dismissEmployeePermission: Permissions.DISMISS_EMPLOYEE,
+
         onView: () => {
           router.push({ path: `/employee/${row?.id}` })
         },
