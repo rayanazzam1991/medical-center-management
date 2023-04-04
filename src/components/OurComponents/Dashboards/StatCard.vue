@@ -21,6 +21,8 @@ export interface StatCardProps {
     rounded: boolean
     bordered: boolean
     loading: boolean
+    stat_ext: string
+    percentage_color_inverted: boolean
 
 
 }
@@ -35,7 +37,9 @@ const props = withDefaults(defineProps<StatCardProps>(), {
     title: '',
     bordered: false,
     rounded: false,
-    loading: true
+    loading: true,
+    stat_ext: '',
+    percentage_color_inverted: false
 })
 const percentageIcon = computed(() => {
     if (props.increase === 'less') {
@@ -47,14 +51,26 @@ const percentageIcon = computed(() => {
     }
 })
 const percentageColor = computed(() => {
-    if (props.increase === 'less') {
-        console.log('asd')
-        return 'text-h-red'
-    } else if (props.increase === 'more') {
-        return 'text-h-green'
-    } else if (props.increase === 'same') {
-        return 'text-h-blue'
+    if (props.percentage_color_inverted) {
+        if (props.increase === 'less') {
+            console.log('asd')
+            return 'text-h-green'
+        } else if (props.increase === 'more') {
+            return 'text-h-red'
+        } else if (props.increase === 'same') {
+            return 'text-h-blue'
+        }
+    } else {
+        if (props.increase === 'less') {
+            console.log('asd')
+            return 'text-h-red'
+        } else if (props.increase === 'more') {
+            return 'text-h-green'
+        } else if (props.increase === 'same') {
+            return 'text-h-blue'
+        }
     }
+
 })
 
 </script>
@@ -71,10 +87,10 @@ const percentageColor = computed(() => {
                 </VIconBox>
             </div>
             <div class="tile-body">
-                <span class="dark-inverted">{{ props.stat }}</span>
+                <span class="dark-inverted">{{ props.stat }} <span class="is-size-6">{{ props.stat_ext }}</span></span>
             </div>
             <div class="tile-foot">
-                <span v-if="props.percentage" :class="percentageColor">
+                <span v-if="props.percentage != undefined" :class="percentageColor">
                     {{ props.percentage.toString() + ' ' + '%' }}
                     <i class="iconify" :data-icon="percentageIcon" aria-hidden="true"></i>
                 </span>

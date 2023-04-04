@@ -3,7 +3,7 @@
   "meta": {
     "requiresAuth": true,
     "permissions": [
-      "settings_edit"
+      "setting_edit"
     ]
   }
 }
@@ -13,12 +13,8 @@
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf';
 import { ErrorMessage, useForm } from 'vee-validate';
-import { defaultCity, City, CityConsts } from '/@src/models/Others/City/city';
-import { getCity, addCity, editCity } from '/@src/services/Others/City/cityService';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-import { cityvalidationSchema } from '/@src/rules/Others/City/cityValidation';
 import sleep from "/@src/utils/sleep";
-import { useCity } from "/@src/stores/Others/City/cityStore";
 import { Setting, UnjustifiedHoursRoundConsts } from '/@src/models/Others/Setting/setting';
 import { editSettings, getSettings } from '/@src/services/Others/Setting/settingService';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';

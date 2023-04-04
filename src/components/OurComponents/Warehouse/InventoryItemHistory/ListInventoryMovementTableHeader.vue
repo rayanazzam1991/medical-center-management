@@ -36,6 +36,10 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
+        with_title: {
+            type: Boolean,
+            default: false,
+        },
 
     },
     setup(props, context) {
@@ -104,6 +108,10 @@ export default defineComponent({
     <form class="form-layout" v-on:submit.prevent="search">
         <div class="form-outer">
             <div class="form-header stuck-header">
+                <h1 v-if="$props.with_title" class="title">
+                    {{ t('list_inventory_movement.table.title') }}
+                </h1>
+
                 <div class="form-header-inner">
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
@@ -157,4 +165,11 @@ export default defineComponent({
 
 <style scoped  lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.title {
+    font-family: var(--font-alt);
+    font-size: 1.25rem;
+    margin-top: 1rem;
+
+}
 </style>

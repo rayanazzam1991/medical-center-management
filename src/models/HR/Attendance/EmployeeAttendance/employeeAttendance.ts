@@ -1,4 +1,4 @@
-import { Employee } from "/@src/models/Employee/employee"
+import { defaultEmployee, Employee } from "/@src/models/Employee/employee"
 import { defaultPosition, Position } from "/@src/models/Others/Position/position"
 import { User, defaultUser } from "/@src/models/Others/User/user"
 import { BaseConsts } from "/@src/utils/consts/base"
@@ -27,6 +27,25 @@ export interface JustificationRequestData {
 export interface JustificationResponseData {
     id: number
 }
+export interface PendingAttendance {
+    id: number
+    employee: Employee
+    date: string
+    day: string
+    check_in?: string
+    check_out?: string
+    status: number
+}
+export const defaultPendingAttendance: PendingAttendance = {
+    id: 0,
+    date: '',
+    day: '',
+    employee: defaultEmployee,
+    status: 1,
+    check_in: undefined,
+    check_out: undefined
+}
+
 
 
 export const defaultEmployeeAttendance: EmployeeAttendance = {
@@ -129,7 +148,7 @@ class AttendanceConsts extends BaseConsts {
             return '◯';
         else return '-';
     }
-    
+
     public static getAttendanceStatusColor(status: number) {
         if (status == this.ATTEND || status == this.VACATION)
             return 'blue';

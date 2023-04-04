@@ -101,7 +101,7 @@ const toReturnToMainInventory = () => {
                     </div>
                 </div>
                 <div>
-                    <InventoryMovementsTable :to-main-inventory="false" :from-main-inventory="false" />
+                    <InventoryMovementsTable with-title :to-main-inventory="false" :from-main-inventory="false" />
                 </div>
             </div>
         </div>

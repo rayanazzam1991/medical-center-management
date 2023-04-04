@@ -11,3 +11,13 @@ export async function getInventoryDashboardData() {
     return { success, error_code, message, dashboard_data }
 
 }
+export async function getHumanResourcesDashboardData() {
+    const response = useDashboard()
+    await response.getHumanResourcesDashboardStore()
+    const dashboard_data = response.hrDashboard
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message, dashboard_data }
+
+}

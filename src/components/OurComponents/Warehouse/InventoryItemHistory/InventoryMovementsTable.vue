@@ -27,14 +27,16 @@ export interface InventoryMovementsTableProps {
     itemId: number | undefined,
     suppliersOnly: boolean,
     toMainInventory: boolean,
-    fromMainInventory: boolean
+    fromMainInventory: boolean,
+    withTitle: boolean
 }
 const props = withDefaults(defineProps<InventoryMovementsTableProps>(), {
     isForItem: false,
     itemId: undefined,
     suppliersOnly: false,
     fromMainInventory: true,
-    toMainInventory: true
+    toMainInventory: true,
+    withTitle: false
 
 
 })
@@ -379,10 +381,10 @@ const itemMovementsSuppliersOnlyColumns = {
 </script>
 
 <template>
-    <ListInventoryMovementTableHeader :is_for_item="props.isForItem" :suppliers_only="props.suppliersOnly"
-        :to_main_inventory="props.toMainInventory" :from_main_inventory="props.fromMainInventory" :key="keyIncrement"
-        :default_per_page="default_per_page" :pagination="paginationVar" :title="viewWrapper.pageTitle"
-        @resetFilter="resetFilter" @search="search" />
+    <ListInventoryMovementTableHeader :with_title="$props.withTitle" :is_for_item="props.isForItem"
+        :suppliers_only="props.suppliersOnly" :to_main_inventory="props.toMainInventory"
+        :from_main_inventory="props.fromMainInventory" :key="keyIncrement" :default_per_page="default_per_page"
+        :pagination="paginationVar" :title="viewWrapper.pageTitle" @resetFilter="resetFilter" @search="search" />
     <VFlexTableWrapper
         :columns="props.suppliersOnly && props.isForItem ? itemMovementsSuppliersOnlyColumns : props.isForItem && !props.suppliersOnly ? itemMovementsColumns : allMovementsColumns"
         :data="itemHistoriesList" @update:sort="itemSort">
