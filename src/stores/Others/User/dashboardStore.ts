@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { HRDashboard, InventoryDashboard, defaultHRDashboard, defaultInventoryDashboard } from "/@src/models/Others/User/dashboard"
-import { getHumanResourcesDashboadApi, getInventoryDashboardApi } from "/@src/utils/api/Others/User"
+import { AnalystDashboard, HRDashboard, InventoryDashboard, defaultAnalystDashboard, defaultHRDashboard, defaultInventoryDashboard } from "/@src/models/Others/User/dashboard"
+import { getAnalystDashboadApi, getHumanResourcesDashboadApi, getInventoryDashboardApi } from "/@src/utils/api/Others/User"
 import sleep from "/@src/utils/sleep"
 
 
@@ -12,6 +12,7 @@ export const useDashboard = defineStore('dashboard', () => {
     const api = useApi()
     const inventoryDashboard = ref<InventoryDashboard>(defaultInventoryDashboard)
     const hrDashboard = ref<HRDashboard>(defaultHRDashboard)
+    const analystDashboard = ref<AnalystDashboard>(defaultAnalystDashboard)
     const loading = ref(false)
     const success = ref<boolean>()
     const error_code = ref<string>()
@@ -60,6 +61,27 @@ export const useDashboard = defineStore('dashboard', () => {
             loading.value = false
         }
     }
+    async function getAnalystDashboardStore() {
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await getAnalystDashboadApi(api)
+            analystDashboard.value = response.response.data
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
     return {
         success,
@@ -68,8 +90,10 @@ export const useDashboard = defineStore('dashboard', () => {
         loading,
         inventoryDashboard,
         hrDashboard,
+        analystDashboard,
         getInventoryDashboardStore,
-        getHumanResourcesDashboardStore
+        getHumanResourcesDashboardStore,
+        getAnalystDashboardStore
     } as const
 })
 

@@ -42,7 +42,7 @@ const toReturnToMainInventory = () => {
                     </div>
                     <div class="column is-4">
                         <StatCard :key="keyIncrement" :title="t('dashboards.inventory.added_items')" color="blue"
-                            icon="lnir lnir-arrow-down" :stat="inventoryDashboardData.add_stats.quantity" rounded bordered
+                            icon="lnir lnir-arrow-down" :stat="inventoryDashboardData.add_stats.quantity" rounded
                             :loading="dashboardStore.loading"
                             :percentage="inventoryDashboardData.add_stats.increment_percentage"
                             :increase="inventoryDashboardData.add_stats.increment_percentage == 0 ? 'same' : inventoryDashboardData.add_stats.is_increase ? 'more' : 'less'"
@@ -52,7 +52,7 @@ const toReturnToMainInventory = () => {
                     <div class="column is-4">
                         <StatCard :key="keyIncrement" :title="t('dashboards.inventory.withdrawn_items')" color="orange"
                             icon="lnir lnir-arrow-up" :stat="inventoryDashboardData.withdraw_stats.quantity" rounded
-                            :loading="dashboardStore.loading" bordered
+                            :loading="dashboardStore.loading"
                             :percentage="inventoryDashboardData.withdraw_stats.increment_percentage"
                             :increase="inventoryDashboardData.withdraw_stats.increment_percentage == 0 ? 'same' : inventoryDashboardData.withdraw_stats.is_increase ? 'more' : 'less'"
                             :percentage_subtitle="inventoryDashboardData.withdraw_stats.is_increase ? t('dashboards.inventory.more_since_last_day') : t('dashboards.inventory.less_since_last_day')" />

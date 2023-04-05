@@ -81,8 +81,7 @@ const percentageColor = computed(() => {
             <div class="tile-head">
                 <h3 class="dark-inverted">{{ props.title }}</h3>
                 <VIconBox :color="props.color" :size="props.size" :bordered="props.bordered" :rounded="props.rounded">
-                    <i v-if="props.icon.startsWith('feather')" class="iconify" :data-icon="props.icon"
-                        aria-hidden="true"></i>
+                    <i v-if="props.icon.includes(':')" class="iconify" :data-icon="props.icon" aria-hidden="true"></i>
                     <i v-else aria-hidden="true" :class="props.icon"></i>
                 </VIconBox>
             </div>

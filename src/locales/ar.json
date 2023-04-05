@@ -2862,6 +2862,19 @@
       "generate_salaries": "توليد الراوتب",
       "day": "يوم",
       "hour": "ساعة"
+    },
+    "analyst": {
+      "clients_in_center": "عدد الزبائن في المركز",
+      "active_users_count": "عدد المستخدمين الفعّالين",
+      "active_employees_count": "عدد الموظفين الفعّالين",
+      "active_clients_count": "عدد الزبائن الفعّالين",
+      "active_suppliers_count": "عدد الموردين الفعّالين",
+      "active_items_count": "عدد المواد الفعّالة",
+      "cash_amounts": "المبالغ النقدية خلال اليوم",
+      "total_amount": "المجموع",
+      "more_since_last_day": "أكثر من اليوم السابق",
+      "less_since_last_day": "أقل من اليوم السابق",
+      "roles": "عدد مستخدميّ الأدوار"
     }
   }
 }
