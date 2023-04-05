@@ -10,7 +10,6 @@
 </route>
     
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { defaultTicket, TicketSearchFilter, TicketConsts, Ticket } from '/@src/models/Sales/Ticket/ticket'
 import { useViewWrapper } from '/@src/stores/viewWrapper'

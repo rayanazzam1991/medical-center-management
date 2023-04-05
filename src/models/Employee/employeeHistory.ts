@@ -37,6 +37,7 @@ export interface EmployeeHistorySearchFilter {
   employee_name?: string
   employee_id?: number
   notes?: string
+  status?:number
   page?: number
   per_page?: number
   order_by?: string
@@ -66,7 +67,7 @@ class EmployeeStatusConsts {
     if (status == this.INACTIVE)
       return 'info'
     if (status == this.DISMISSED)
-      return 'danger'
+      return 'secondary'
     else return undefined;
   }
 

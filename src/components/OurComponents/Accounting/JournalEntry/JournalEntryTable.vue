@@ -32,6 +32,9 @@ const props = withDefaults(defineProps<JournalEntryTableProps>(), {
     employeeId: undefined
 
 })
+const emits = defineEmits<{
+    (e: 'updateBalance', balance: string, currency: string): void
+}>()
 
 
 
@@ -59,6 +62,8 @@ onMounted(async () => {
     paginationVar.value = pagination
     keyIncrement.value = keyIncrement.value + 1
     default_per_page.value = pagination.per_page
+    emits('updateBalance', journalEntriesByAccount.value.account.balance, journalEntriesByAccount.value.account.currency?.name ?? '')
+
 
 });
 

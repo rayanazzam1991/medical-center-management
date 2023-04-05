@@ -1,0 +1,207 @@
+@import '/@src/scss/abstracts/all';
+
+.dashboard {
+    .text-h-green {
+        color: var(--green);
+    }
+
+    .text-h-red {
+        color: var(--red);
+    }
+
+    .text-h-blue {
+        color: var(--blue) !important;
+    }
+
+    .text-widget {
+        color: var(--widget-grey);
+    }
+
+    .dashboard-tile {
+        @include vuero-s-card;
+
+        font-family: var(--font);
+
+        .tile-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            h3 {
+                font-family: var(--font-alt);
+                color: var(--dark-text);
+                font-weight: 600;
+            }
+        }
+
+        .tile-body {
+            font-size: 2rem;
+            padding: 4px 0 8px;
+
+            span {
+                color: var(--dark-text);
+                font-weight: 600;
+            }
+        }
+
+        .tile-foot {
+            span {
+                &:first-child {
+                    font-weight: 500;
+
+                    svg {
+                        height: 16px;
+                        width: 16px;
+                        margin-right: 6px;
+                        stroke-width: 3px;
+                    }
+                }
+
+                &:nth-child(2) {
+                    color: var(--light-text);
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+
+    .dashboard-card {
+        @include vuero-s-card;
+
+        font-family: var(--font);
+        height: 100%;
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+
+            h3 {
+                font-family: var(--font-alt);
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--dark-text);
+            }
+        }
+
+        .revenue-stats {
+            display: flex;
+
+            .revenue-stat {
+                margin-right: 30px;
+                font-family: var(--font);
+
+                span {
+                    display: block;
+
+                    &:first-child {
+                        color: var(--light-text);
+                        font-size: 0.9rem;
+                    }
+
+                    &:nth-child(2) {
+                        color: var(--dark-text);
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                    }
+
+                    &.current {
+                        color: var(--primary);
+                    }
+                }
+            }
+        }
+
+        .radial-wrap {
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 44px);
+
+            .radial-stats {
+                margin-top: auto;
+                display: flex;
+                padding-top: 20px;
+                border-top: 1px solid var(--fade-grey-dark-3);
+
+                .radial-stat {
+                    width: 50%;
+                    text-align: center;
+
+                    &:first-child {
+                        border-right: 1px solid var(--fade-grey-dark-3);
+                    }
+
+                    span {
+                        display: block;
+
+                        &:first-child {
+                            color: var(--light-text);
+                            font-size: 0.9rem;
+                        }
+
+                        &:nth-child(2) {
+                            color: var(--dark-text);
+                            font-size: 1.3rem;
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+        }
+
+        .progress-block {
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 44px);
+            font-family: var(--font);
+
+            .value {
+                font-size: 1.4rem;
+                font-weight: 600;
+
+                span {
+                    color: var(--dark-text);
+                }
+            }
+
+            .progress {
+                margin-bottom: 8px;
+            }
+
+            .progress-foot {
+                span {
+                    &:first-child {
+                        font-weight: 500;
+
+                        svg {
+                            height: 16px;
+                            width: 16px;
+                            margin-right: 6px;
+                            stroke-width: 3px;
+                        }
+                    }
+
+                    &:nth-child(2) {
+                        color: var(--light-text);
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+
+            .circle-chart-wrapper {
+                margin-top: auto;
+            }
+        }
+    }
+}
+
+.is-dark {
+    .dashboard {
+
+        .dashboard-tile,
+        .dashboard-card {
+            @include vuero-card--dark;
+        }
+    }
+}

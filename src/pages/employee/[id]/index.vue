@@ -8,7 +8,7 @@
   }
 }
 </route>
-  
+
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -51,6 +51,7 @@ import { Permissions } from '/@src/utils/consts/rolesPermissions'
 import { checkPermission } from '/@src/composable/checkPermission'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { resetPassword } from '/@src/services/Others/User/authService'
+import { EmployeeStatusConsts } from '/@src/models/Employee/employeeHistory'
 const currencies = getCurrenciesFromStorage()
 const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 const route = useRoute()
@@ -77,6 +78,8 @@ const updateLoading = ref(false)
 const editEmployeeNumberTrigger = ref(false)
 const newEmployeeNumber = ref<number>()
 const maxEmployeeNumber = ref(0)
+const employeeAccountCurrentBalance = ref('0')
+const employeeAccountCurrency = ref('')
 const employeeForm = useEmployeeForm()
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
@@ -496,7 +499,10 @@ const permissionCheck = async () => {
   }
 
 }
-
+const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
+  employeeAccountCurrentBalance.value = accountBalance
+  employeeAccountCurrency.value = accountCurrency
+}
 </script>
 <template>
   <div class="profile-wrapper">
@@ -520,9 +526,15 @@ const permissionCheck = async () => {
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span>{{ t('employee.details.status') }}:
-              <span :class="`has-text-${UserStatusConsts.getStatusColor(currentEmployee.user.status.id)}`">{{
+              <span v-if="currentEmployee.is_dismissed == true"
+                :class="`has-text-${EmployeeStatusConsts.getStatusColor(EmployeeStatusConsts.DISMISSED)}`">{{
+                  EmployeeStatusConsts.getStatusName(EmployeeStatusConsts.DISMISSED)
+                }}</span></span>
+
+            <span v-if="currentEmployee.is_dismissed == false"
+              :class="`has-text-${UserStatusConsts.getStatusColor(currentEmployee.user.status.id)}`">{{
                 UserStatusConsts.getStatusName(currentEmployee.user.status.id)
-              }}</span></span>
+              }}</span>
           </div>
           <div class="separator"></div>
           <div class="profile-stat">
@@ -959,11 +971,21 @@ const permissionCheck = async () => {
         <div v-if="tab === 'Balances'" class="tab-content is-active">
           <div class="columns project-details-inner">
             <div class="column is-12">
+              <div class="project-details-card py-5">
+                <div class="card-head my-1">
+                  <div class="title-wrap">
+                    <h3>{{ t('employee.details.current_balance') }} <span
+                        :class="employeeAccountCurrentBalance.includes('-') ? 'has-text-danger' : 'has-text-primary'">{{
+                          employeeAccountCurrentBalance }}</span> {{ addParenthesisToString(employeeAccountCurrency) }}</h3>
+                  </div>
+                </div>
+              </div>
               <div class="project-details-card">
-                <JournalEntryTable is-for-employee :employee-id="employeeId" />
+                <JournalEntryTable is-for-employee :employee-id="employeeId" @update-balance="setAccountBalance" />
               </div>
             </div>
           </div>
+
         </div>
         <div v-if="tab === 'History Record'" class="tab-content is-active">
           <div class="columns project-details-inner">

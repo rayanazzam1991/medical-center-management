@@ -192,8 +192,8 @@
       "quantity": "الكميّات",
       "add_quantity": "إضافة كميًة",
       "withdraw_quantity": " سحب كميًة",
-      "from_main_inventory": "سحب كمية من المستودع الرئيسي",
-      "to_main_inventory": "اعادة كمية للمستودع الرئيسي"
+      "from_main_inventory": "نقل إلى عهدة موظف",
+      "to_main_inventory": "إرجاع العهدة"
     },
     "inventory_item_history": {
       "inventory_item_history": "سجل المستودعات",
@@ -801,7 +801,8 @@
         "status": "الحالة",
         "position": "المنصب",
         "actions": "الإجراءات",
-        "created_at": "تاريخ الإنشاء"
+        "created_at": "تاريخ الإنشاء",
+        "created_by": " بواسطة"
       },
       "modal_title": {
         "status": "تغيير حالة المستخدم",
@@ -828,6 +829,7 @@
         "history_record": "سجل تاريخ الموظف"
       },
       "main_details": "المعلومات الأساسية",
+      "current_balance": "الرصيد الحالي : ",
       "services": "الخدمات",
       "more_info": "معلومات إضافية",
       "name": " اسم {title}",
@@ -905,7 +907,8 @@
       "no_service_added_placeholder": "لا يوجد خدمات مقدمة من قبل الموظف",
       "roles": "الأدوار",
       "roles_helper": "اضغط على زر (Ctrl) لتحديد عدّة خيارات",
-      "isUser": "مستخدم"
+      "have_permission": "يمتلك صلاحيات",
+      "haveNot_permission": "لا يمتلك صلاحيات"
     },
     "search_filter": {
       "title": "تصفية معلومات الموظف",
@@ -1011,7 +1014,9 @@
     },
     "search_filter": {
       "employee_name": "ادخل اسم الموظف",
-      "notes": "ادخل الملاحظة "
+      "notes": "ادخل الملاحظة ",
+      "title": "تصفية معلومات الموظف",
+      "status": "اختر الحالة"
     }
   },
   "employee_attendance": {
@@ -1200,8 +1205,8 @@
         "add_quantity": "إضافة كميًة",
         "withdraw_quantity": " سحب كميًة",
         "sell_quantity": "مبيع كميًة",
-        "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي",
-        "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي"
+        "return_to_main_inventory": "إرجاع العهدة",
+        "withdraw_from_main_inventory": "نقل إلى عهدة موظف"
       },
       "movement_types": {
         "internal": "داخلية",
@@ -1995,8 +2000,8 @@
         "actions": "الإجراءات"
       },
       "buttons_name": {
-        "from_main_inventory": "سحب كمية من المستودع الرئيسي",
-        "to_main_inventory": "اعادة كمية للمستودع الرئيسي"
+        "from_main_inventory": "نقل إلى عهدة موظف",
+        "to_main_inventory": "إرجاع العهدة"
       }
     },
     "search_filter": {
@@ -2782,8 +2787,8 @@
     "add_quantity": "إضافة كميًة",
     "withdraw_quantity": " سحب كميًة",
     "sell_quantity": "مبيع كميًة",
-    "withdraw_from_main_inventory": "سحب كمية من المستودع الرئيسي",
-    "return_to_main_inventory": "إعادة كمية للمستودع الرئيسي"
+    "withdraw_from_main_inventory": "نقل إلى عهدة موظف",
+    "return_to_main_inventory": "إرجاع العهدة"
   },
   "journal_entry": {
     "table": {
@@ -2795,6 +2800,22 @@
         "date": "التاريخ",
         "amount": "المبلغ"
       }
+    }
+  },
+  "dashboards": {
+    "title": "Grand Samara Center",
+    "inventory": {
+      "active_items_count": "عدد المواد الفعّالة",
+      "added_items": "الكميّات المضافة",
+      "more_since_last_month": "أكثر من الشهر الماضي",
+      "less_since_last_month": "أقل من الشهر الماضي",
+      "withdrawn_items": "الكميّات المسحوبة",
+      "more_since_last_day": "أكثر من الأمس",
+      "less_since_last_day": "أقل من الأمس",
+      "add_quantity": "إضافة كميًة",
+      "withdraw_quantity": " سحب كميًة",
+      "withdraw_from_main_inventory": "نقل إلى عهدة موظف",
+      "return_to_main_inventory": "إرجاع العهدة"
     }
   }
 }
