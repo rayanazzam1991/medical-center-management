@@ -8,3 +8,10 @@ export async function getInventoryDashboardApi(
 
     return { response }
 }
+export async function getHumanResourcesDashboadApi(
+    api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`dashboard/getHumanResourcesDashboard`)
+
+    return { response }
+}

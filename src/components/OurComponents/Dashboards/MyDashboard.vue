@@ -16,6 +16,9 @@ const props = withDefaults(defineProps<MyDashboardProps>(), {
         <div v-if="role == 'Inventory'">
             <InventoryDashboard />
         </div>
+        <div v-if="role == 'Human_Resources'">
+            <HumanResourcesDashboard />
+        </div>
     </div>
 </template>
 

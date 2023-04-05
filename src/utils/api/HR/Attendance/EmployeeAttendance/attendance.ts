@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { JustificationRequestData, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { EmployeeAttendanceSearchFilter, JustificationRequestData, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function updateAttendanceApi(
@@ -28,3 +28,14 @@ export async function unjustifyAttendanceApi(
 
   return { response }
 }
+
+export async function getPendingAttendanceListApi(
+  api: AxiosInstance,
+  searchFilter: EmployeeAttendanceSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('attendance/getPendingAttendanceList', {
+    params: searchFilter,
+  })
+  return { response }
+}
+

@@ -2802,6 +2802,36 @@
       }
     }
   },
+  "pending_attendances": {
+    "table": {
+      "title": "الغيابات المعلقة",
+      "columns": {
+        "employee_name": "الموظف",
+        "phone_number": "رقم الهاتف",
+        "status": "الحالة",
+        "date": "التاريخ",
+        "day": "اليوم",
+        "check_in": "تسجيل دخول الموظف",
+        "check_out": "تسجيل خروج الموظف",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "quick_search": "الاسم/الرقم...",
+      "title": "تصفية الغيابات المعلقة",
+      "name": "اسم الموظف",
+      "phone_number": "رقم الهاتف",
+      "department": "القسم",
+      "position": "المنصب",
+      "date": "التاريخ",
+      "from": "من",
+      "to": "إلى"
+    },
+    "drop_down": {
+      "justify_attendance": "تبرير الغياب",
+      "unjustify_attendance": "عدم تبرير الغياب"
+    }
+  },
   "dashboards": {
     "title": "Grand Samara Center",
     "inventory": {
@@ -2816,6 +2846,22 @@
       "withdraw_quantity": " سحب كميًة",
       "withdraw_from_main_inventory": "نقل إلى عهدة موظف",
       "return_to_main_inventory": "إرجاع العهدة"
+    },
+    "hr": {
+      "active_employee_count": "عدد الموظفين الفعّالين",
+      "attendance_employee_count": "عدد الموظفين بحضور",
+      "service_providers_count": "عدد مفدميّ الخدمة",
+      "remaining_days_for_generate": "عدد الأيام المتبقي لتوليد الراتب",
+      "absence_hours_last_month": "ساعات الغياب خلال الشهر الماضي",
+      "more_since_previous_month": "أكثر من الشهر السابق",
+      "less_since_previous_month": "أقل من الشهر السابق",
+      "justified_absence_hours_last_month": "ساعات الغياب المبررة خلال الشهر الماضي",
+      "unjustified_absence_hours_last_month": "ساعات الغياب الغير مبررة خلال الشهر الماضي",
+      "add_employee": "إضافة موظف",
+      "employee_attendance": "جدول حضور الموظفين",
+      "generate_salaries": "توليد الراوتب",
+      "day": "يوم",
+      "hour": "ساعة"
     }
   }
 }

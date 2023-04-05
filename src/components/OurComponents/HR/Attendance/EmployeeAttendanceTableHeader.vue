@@ -221,7 +221,6 @@ export default defineComponent({
                   <template #arrow-right>
                     <i :class="iconArrow.right" aria-hidden="true"></i>
                   </template>
-
                 </Datepicker>
 
               </div>
