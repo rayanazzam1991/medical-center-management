@@ -55,7 +55,7 @@ const toGenerateSalary = () => {
                     <div class="column is-4">
                         <StatCard :key="keyIncrement" :title="t('dashboards.hr.absence_hours_last_month')" color="info"
                             percentage_color_inverted icon="fas fa-running"
-                            :stat="humanResourcesDashboardData.absence_hours_stats.absenece_hours" rounded bordered
+                            :stat="humanResourcesDashboardData.absence_hours_stats.absenece_hours" rounded
                             :loading="dashboardStore.loading"
                             :percentage="humanResourcesDashboardData.absence_hours_stats.increment_percentage"
                             :increase="humanResourcesDashboardData.absence_hours_stats.increment_percentage == 0 ? 'same' : humanResourcesDashboardData.absence_hours_stats.is_increase ? 'more' : 'less'"
@@ -67,7 +67,7 @@ const toGenerateSalary = () => {
                         <StatCard :key="keyIncrement" :title="t('dashboards.hr.justified_absence_hours_last_month')"
                             color="success" icon="fas fa-check" percentage_color_inverted
                             :stat="humanResourcesDashboardData.justified_absence_hours_stats.absenece_hours" rounded
-                            :loading="dashboardStore.loading" bordered
+                            :loading="dashboardStore.loading"
                             :percentage="humanResourcesDashboardData.justified_absence_hours_stats.increment_percentage"
                             :stat_ext="t('dashboards.hr.hour')"
                             :increase="humanResourcesDashboardData.justified_absence_hours_stats.increment_percentage == 0 ? 'same' : humanResourcesDashboardData.justified_absence_hours_stats.is_increase ? 'more' : 'less'"
@@ -77,7 +77,7 @@ const toGenerateSalary = () => {
                         <StatCard :key="keyIncrement" :title="t('dashboards.hr.unjustified_absence_hours_last_month')"
                             color="danger" icon="fas fa-times" percentage_color_inverted
                             :stat="humanResourcesDashboardData.unjustified_absence_hours_stats.absenece_hours" rounded
-                            :loading="dashboardStore.loading" bordered :stat_ext="t('dashboards.hr.hour')"
+                            :loading="dashboardStore.loading" :stat_ext="t('dashboards.hr.hour')"
                             :percentage="humanResourcesDashboardData.unjustified_absence_hours_stats.increment_percentage"
                             :increase="humanResourcesDashboardData.unjustified_absence_hours_stats.increment_percentage == 0 ? 'same' : humanResourcesDashboardData.unjustified_absence_hours_stats.is_increase ? 'more' : 'less'"
                             :percentage_subtitle="humanResourcesDashboardData.unjustified_absence_hours_stats.is_increase ? t('dashboards.hr.more_since_previous_month') : t('dashboards.hr.less_since_previous_month')" />
@@ -114,7 +114,7 @@ const toGenerateSalary = () => {
                     </div>
                 </div>
                 <div>
-                    <PendingAttendanceTable  />
+                    <PendingAttendanceTable />
                 </div>
             </div>
         </div>

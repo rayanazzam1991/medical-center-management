@@ -48,3 +48,53 @@ export const defaultHRDashboard: HRDashboard = {
     service_providers_count: '0',
     unjustified_absence_hours_stats: defaultHRStatDashboard
 }
+export interface AnalystDashboard {
+    clients_in_center: string
+    active_clients_count: string
+    active_users_count: string
+    active_employees_count: string
+    active_suppliers_count: string
+    active_items_count: string
+    cash_amount_stats: AnalystDashboardCashStats
+    roles_stats: AnalystDashboardRoleStats[]
+}
+export interface AnalystDashboardCashStats {
+    USD_stats: AnalystDashboardCashStat
+    IQD_stats: AnalystDashboardCashStat
+    total_stats: AnalystDashboardCashStat
+}
+export interface AnalystDashboardCashStat {
+    currency_code: string
+    currency_name: string
+    amount: string
+    is_increase: boolean
+    increment_percentage: number
+}
+export interface AnalystDashboardRoleStats {
+    name: string
+    display_name: string
+    users_count: string
+}
+export const defaultAnalystDashboardCashStat: AnalystDashboardCashStat = {
+    amount: '0',
+    currency_code: "",
+    currency_name: "",
+    increment_percentage: 0,
+    is_increase: false
+
+}
+export const defaultAnalystDashboardCashStats: AnalystDashboardCashStats = {
+    IQD_stats: defaultAnalystDashboardCashStat,
+    USD_stats: defaultAnalystDashboardCashStat,
+    total_stats: defaultAnalystDashboardCashStat,
+}
+export const defaultAnalystDashboard: AnalystDashboard = {
+    clients_in_center: '0',
+    active_clients_count: '0',
+    active_users_count: '0',
+    active_employees_count: '0',
+    active_items_count: '0',
+    active_suppliers_count: '0',
+    cash_amount_stats: defaultAnalystDashboardCashStats,
+    roles_stats: []
+}

@@ -22,6 +22,15 @@
 
         font-family: var(--font);
 
+        .tile-section {
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--fade-grey-dark-3) !important;
+        }
+        
+        .tile-section:last-child {
+            border: none !important;
+        }
+        
         .tile-head {
             display: flex;
             align-items: center;
@@ -203,5 +212,10 @@
         .dashboard-card {
             @include vuero-card--dark;
         }
+        .tile-section {
+            border-color: var(--dark-sidebar-light-12) !important;
+    
+        }
+
     }
 }

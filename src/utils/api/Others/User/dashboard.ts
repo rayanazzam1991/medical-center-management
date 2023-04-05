@@ -15,3 +15,10 @@ export async function getHumanResourcesDashboadApi(
 
     return { response }
 }
+export async function getAnalystDashboadApi(
+    api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`dashboard/getAnalystDashboard`)
+
+    return { response }
+}
