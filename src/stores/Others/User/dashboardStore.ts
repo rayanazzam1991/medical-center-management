@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { HRDashboard, InventoryDashboard, defaultHRDashboard, defaultInventoryDashboard } from "/@src/models/Others/User/dashboard"
-import { getHumanResourcesDashboadApi, getInventoryDashboardApi } from "/@src/utils/api/Others/User"
+import { AdminDashboard, HRDashboard, InventoryDashboard, defaultAdminDashboard, defaultHRDashboard, defaultInventoryDashboard } from "/@src/models/Others/User/dashboard"
+import { getAdminDashboardApi, getHumanResourcesDashboadApi, getInventoryDashboardApi } from "/@src/utils/api/Others/User"
 import sleep from "/@src/utils/sleep"
 
 
@@ -10,14 +10,35 @@ import sleep from "/@src/utils/sleep"
 export const useDashboard = defineStore('dashboard', () => {
 
     const api = useApi()
-    const inventoryDashboard = ref<InventoryDashboard>(defaultInventoryDashboard)
+  const inventoryDashboard = ref<InventoryDashboard>(defaultInventoryDashboard)
+  const adminDashboard = ref<AdminDashboard>(defaultAdminDashboard)
     const hrDashboard = ref<HRDashboard>(defaultHRDashboard)
     const loading = ref(false)
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
 
+    async function getAdminDashboardStore() {
+      if (loading.value) return
+      loading.value = true
+      sleep(2000)
+      try {
+          const response = await getAdminDashboardApi(api)
+          adminDashboard.value = response.response.data
+          success.value = response.response.success
+          error_code.value = response.response.error_code
+          message.value = response.response.message
+      }
+      catch (error: any) {
+          success.value = error?.response.data.success
+          error_code.value = error?.response.data.error_code
+          message.value = error?.response.data.message
 
+      }
+      finally {
+          loading.value = false
+      }
+  }
     async function getInventoryDashboardStore() {
         if (loading.value) return
         loading.value = true
@@ -67,7 +88,9 @@ export const useDashboard = defineStore('dashboard', () => {
         message,
         loading,
         inventoryDashboard,
-        hrDashboard,
+      hrDashboard,
+      adminDashboard,
+      getAdminDashboardStore,
         getInventoryDashboardStore,
         getHumanResourcesDashboardStore
     } as const
