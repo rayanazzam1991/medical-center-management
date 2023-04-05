@@ -30,3 +30,13 @@ export async function getHumanResourcesDashboardData() {
     return { success, error_code, message, dashboard_data }
 
 }
+export async function getAnalystDashboardData() {
+    const response = useDashboard()
+    await response.getAnalystDashboardStore()
+    const analyst_dashboard = response.analystDashboard
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message, analyst_dashboard }
+
+}
