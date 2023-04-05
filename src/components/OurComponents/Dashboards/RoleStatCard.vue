@@ -62,12 +62,14 @@ console.log(props.roles)
 @import '/@src/scss/Styles/Dashboards/statCard.scss';
 
 .dashboard-tile {
-    min-height: 165px;
+    min-height: 180px;
 }
 
 .company-header {
     display: flex;
-    padding: 5px 10px;
+    padding: 10px;
+    padding-bottom: 5px;
+    padding-top: 20px;
     background: var(--white);
 
     .header-item {
