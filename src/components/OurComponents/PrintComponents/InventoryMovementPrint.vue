@@ -32,12 +32,12 @@ export default defineComponent({
 
 <template>
     <div class="is-hidden" id="printerable">
-        <div style="display: flex; justify-content: space-around;">
+        <div style="display: flex; justify-content: space-between;">
 
             <h1 style="font-weight: normal; font-size: 1rem;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="100">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="123" height="35">
 
         </div>
         <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
@@ -46,12 +46,12 @@ export default defineComponent({
         <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
             <tbody>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="width: 87%; padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         getFromName(inventoryItemMovement) }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.from') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.from') }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -60,8 +60,8 @@ export default defineComponent({
                     }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.to') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.to') }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -69,8 +69,8 @@ export default defineComponent({
                         inventoryItemMovement.item }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.item') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.item') }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -78,8 +78,8 @@ export default defineComponent({
                         inventoryItemMovement.item_quantity }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.quantity') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.quantity') }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -87,8 +87,8 @@ export default defineComponent({
                         inventoryItemMovement.note ?? '-' }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.note') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.note') }}</strong>
                     </td>
                 </tr>
                 <tr>
@@ -96,8 +96,8 @@ export default defineComponent({
                         inventoryItemMovement.created_at ?? '-' }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('list_inventory_movement.table.columns.created_at') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.list_inventory_movement.date') }}</strong>
                     </td>
                 </tr>
 
@@ -107,7 +107,7 @@ export default defineComponent({
         <p style="font-weight: normal;text-align: right; font-size: 16px;">{{
             t('print.signature') }}
         </p>
-        <p style="font-weight: normal;text-align: right; font-size: 16px; border-buttoms: 1px solid #ddd;">
+        <p style="font-weight: normal;text-align: right; font-size: 16px;">
             ____________________</p>
 
     </div>

@@ -29,38 +29,39 @@ export default defineComponent({
 <template>
     <div class="is-hidden" id="printerable_service_card">
 
-        <div style="display: flex; justify-content: space-around;">
+        <div style="display: flex; justify-content: space-between;">
 
-            <h1 style="font-weight: normal; font-size: 1rem;text-align: center;">{{ t('print.date') }} {{ new
+            <h1 style="font-weight: normal; font-size: 10px;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="100">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="41" height="11">
 
         </div>
 
-        <div style=" font-size: 24px; width: 100%; display: flex; flex-direction: row-reverse;">
-            <h2 style="font-weight: 600;text-align: center; font-size: 24px; width: 50%;">{{
+        <div style=" font-size: 12px; width: 100%; display: flex; flex-direction: row-reverse;">
+            <h2 style="font-weight: 600;text-align: center; font-size: 12px; width: 50%;">{{
                 t('print.ticket.customer_name') }}{{ serviceCard.ticket.customer.user.first_name }} {{
         serviceCard.ticket.customer.user.last_name
     }}</h2>
 
         </div>
-        <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+        <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
             <tbody>
                 <tr>
 
-                    <td style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{ serviceCard.turn_number }}</td>
-                    <td style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{ t('ticket.details.turn_number')
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{ serviceCard.turn_number }}</td>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
+                        t('print.ticket.turn_number')
                     }}</td>
 
                 </tr>
                 <tr>
 
-                    <td style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
                         serviceCard.current_provider.user.first_name
                     }} {{ serviceCard.current_provider.user.last_name }}</td>
-                    <td style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
-                        t('ticket.details.service_provider_name')
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
+                        t('print.ticket.current_service_provider')
                     }}</td>
 
                 </tr>

@@ -27,6 +27,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import usePrint8CM from '/@src/composable/usePrint8CM';
 
 export interface SupplierEmployeeCashReceiptsTableProps {
     isForEmployee: boolean,
@@ -64,10 +65,10 @@ onMounted(async () => {
 
 });
 
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const print = async () => {
     await sleep(500)
-    printDiv('printerable', t('supplier_cash_receipt.table.print_title'))
+    printDiv8CM('printerable', t('supplier_cash_receipt.table.print_title'))
 }
 
 const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
