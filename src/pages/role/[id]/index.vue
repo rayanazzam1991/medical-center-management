@@ -3,7 +3,7 @@
     "meta": {
         "requiresAuth": true,
         "permissions": [
-            "role_create"
+            "role_show"
         ]
     }
 }

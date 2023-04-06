@@ -21,7 +21,11 @@ export default defineComponent({
     default_per_page: {
       type: Number,
       default: 1,
-    }
+    },
+    with_title: {
+      type: Boolean,
+      default: false,
+    },
 
   },
   setup(props, context) {
@@ -79,6 +83,9 @@ export default defineComponent({
   <form class="form-layout" v-on:submit.prevent="search">
     <div class="form-outer">
       <div class="form-header stuck-header">
+        <h1 v-if="$props.with_title" class="title">
+          {{ t('activityLog.table.title') }}
+        </h1>
         <div class="form-header-inner">
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">

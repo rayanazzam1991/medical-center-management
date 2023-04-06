@@ -47,6 +47,21 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+
+
+                <br v-if="checkPermission(Permissions.PNDING_TICKET_LIST)" />
+                <h4 v-permission="Permissions.SALARY_ACCESS" class="column-heading">{{
+                  t('ticketing_subnav.ticket.tickets') }}</h4>
+                <ul>
+                  <li v-permission="Permissions.SALARY_LIST">
+                    <RouterLink to="/pending-ticket">
+                      <i class="lnir lnir-ticket-alt" aria-hidden="true"></i> <span>{{
+                        t('ticketing_subnav.ticket.pending_tickets')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
               </div>
               <div
                 v-if="checkPermission(Permissions.ACCOUNT_ACCESS) || checkPermission(Permissions.TRIAL_BALANCE_GENERATE)"
