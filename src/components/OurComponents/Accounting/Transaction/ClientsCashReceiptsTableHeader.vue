@@ -16,9 +16,19 @@ export default defineComponent({
     is_for_customer: {
       type: Boolean,
       default: false,
-    }
-
-
+    },
+    with_title: {
+      type: Boolean,
+      default: false,
+    },
+    is_for_show: {
+      type: Boolean,
+      default: true,
+    },
+    is_on_day: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props, context) {
@@ -44,6 +54,11 @@ export default defineComponent({
         note: searchNote.value,
         per_page: perPage.value
       }
+      if (props.is_on_day == true) {
+        searchFilter.value.isOnDay = true
+      } else {
+        searchFilter.value.isOnDay = Number(false)
+      }
       context.emit('search', searchFilter.value)
 
     }
@@ -53,11 +68,13 @@ export default defineComponent({
       searchFilter.value.client_name = undefined
       searchFilter.value.currency_id = undefined
       searchFilter.value.cash_account_id = undefined
+
       is_reseted.value = true
       keyIncrement.value++
       context.emit('resetFilter', searchFilter.value)
     }
     const search_filter = (value: ClientsCashReceiptsSearchFilter) => {
+
       searchFilter.value = value
       searchFilter.value.per_page = perPage.value
       context.emit('search', searchFilter.value)
@@ -67,6 +84,7 @@ export default defineComponent({
       searchFilter.value.cash_account_id = undefined
       searchFilter.value.note = undefined
       searchFilter.value.client_name = undefined
+
       context.emit('resetFilter', searchFilter.value)
     }
 
@@ -85,6 +103,9 @@ export default defineComponent({
   <form class="form-layout" v-on:submit.prevent="search">
     <div class="form-outer">
       <div class="form-header stuck-header">
+        <h1 v-if="$props.with_title" class="title">
+          {{ t('dashboards.accountant.client_cash_receipt_list') }}
+        </h1>
         <div class="form-header-inner">
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
@@ -116,7 +137,7 @@ export default defineComponent({
                   </select>
                 </div>
               </VControl>
-              <VControl>
+              <VControl v-if="$props.is_for_show">
                 <VButton v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE" class=""
                   to="/transaction/customer-cash-receipt/add" color="primary"> {{
                     t('customer_cash_receipt.add_customer_cash_receipts_button') }}

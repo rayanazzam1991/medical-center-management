@@ -10,7 +10,6 @@
 </route>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useI18n } from 'vue-i18n'
@@ -18,7 +17,6 @@ import { ActivityLog, ActivityLogSearchFilter, defaultActivityLogSearchFilter } 
 import { useActivityLog } from '/@src/stores/Others/ActivityLog/activityLogStore'
 import { getActivityLogList } from '/@src/services/Others/ActivityLog/activityLogService'
 import usePrint from '/@src/composable/usePrint'
-import sleep from '/@src/utils/sleep'
 export interface ActivityLogTableProps {
   withTitle: boolean
 }
@@ -32,10 +30,6 @@ const searchFilter = ref(defaultActivityLogSearchFilter)
 const actitivityLogList = ref<Array<ActivityLog>>([])
 
 const { printDiv } = usePrint('');
-const print = async () => {
-  await sleep(500)
-  printDiv('printerable', t('activityLog.table.title'))
-}
 
 
 const paginationVar = ref(defaultPagination)

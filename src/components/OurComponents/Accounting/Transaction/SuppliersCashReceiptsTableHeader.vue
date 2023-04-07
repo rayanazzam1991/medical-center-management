@@ -12,8 +12,19 @@ export default defineComponent({
     default_per_page: {
       type: Number,
       default: 1,
-    }
-
+    },
+    with_title: {
+      type: Boolean,
+      default: false,
+    },
+    is_for_show: {
+      type: Boolean,
+      default: true,
+    },
+    is_on_day: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   setup(props, context) {
@@ -34,10 +45,16 @@ export default defineComponent({
     const keyIncrement = ref(0)
     const perPage = ref(pagination.per_page)
     const searchFilter = ref(defaultSuppliersCashReceiptsSearchFilter)
+
     const search = () => {
       searchFilter.value = {
         note: searchNote.value,
         per_page: perPage.value
+      }
+      if (props.is_on_day == true) {
+        searchFilter.value.isOnDay = true
+      } else {
+        searchFilter.value.isOnDay = Number(false)
       }
       context.emit('search', searchFilter.value)
 
@@ -81,6 +98,9 @@ export default defineComponent({
   <form class="form-layout" v-on:submit.prevent="search">
     <div class="form-outer">
       <div class="form-header stuck-header">
+        <h1 v-if="$props.with_title" class="title">
+          {{ t('dashboards.accountant.supplier_cash_receipt_list') }}
+        </h1>
         <div class="form-header-inner">
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
@@ -112,9 +132,10 @@ export default defineComponent({
                   </select>
                 </div>
               </VControl>
-              <VControl>
-                <VButton v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_CREATE" class="" to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
-                  t('supplier_cash_receipt.add_supplier_employee_cash_receipts_button') }}
+              <VControl v-if="$props.is_for_show">
+                <VButton v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_CREATE" class=""
+                  to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
+                    t('supplier_cash_receipt.add_supplier_employee_cash_receipts_button') }}
                 </VButton>
               </VControl>
             </div>

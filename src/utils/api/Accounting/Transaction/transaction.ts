@@ -24,7 +24,7 @@ export async function getClientsCashReceiptsListApi(
     api: AxiosInstance,
     searchFilter: ClientsCashReceiptsSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-    const { data: response, headers } = await api.get(`transaction/getClientsCashReceiptsList`, {
+    const { data: response, headers } = await api.get(`transaction/getClientsCashRecieptsList`, {
         params: searchFilter
     })
     return { response }
