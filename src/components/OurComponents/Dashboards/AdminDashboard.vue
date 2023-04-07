@@ -87,7 +87,7 @@ addParenthesisToString(t('dashboards.admin.total_amount'))]"
 
         </div>
         <div>
-          <ActivityLogTable with-title :to-main-inventory="false" :from-main-inventory="false" />
+          <ActivityLogTable with-title />
         </div>
       </div>
     </div>

@@ -40,6 +40,7 @@ export default defineComponent({
         cash_account_id: searchCashAccountId.value,
         supplier_name: searchSupplierName.value,
       }
+      searchFilter.value.isOnDay = true
       context.emit('search', searchFilter.value)
       search_filter_popup.value = false
     }
@@ -52,6 +53,7 @@ export default defineComponent({
       searchFilter.value.currency_id = undefined
       searchFilter.value.cash_account_id = undefined
       searchFilter.value.supplier_name = undefined
+      searchFilter.value.isOnDay = true
       context.emit('resetFilter', searchFilter.value)
     }
     const currenciesList = ref<Currency[]>([])

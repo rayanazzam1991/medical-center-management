@@ -2888,6 +2888,12 @@
       "more_since_last_day": "أكثر من اليوم السابق",
       "less_since_last_day": "أقل من اليوم السابق",
       "roles": "عدد مستخدميّ الأدوار"
+    },
+    "accountant": {
+      "supplier_cash_receipt": "إنشاء إيصال نقدي لمورد/موظف",
+      "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
+      "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
+      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
     }
   }
 }

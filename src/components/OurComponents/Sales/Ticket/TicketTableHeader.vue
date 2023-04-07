@@ -24,7 +24,11 @@ export default defineComponent({
     is_for_customer: {
       type: Boolean,
       default: false,
-    }
+    },
+    with_title: {
+      type: Boolean,
+      default: false,
+    },
 
   },
   setup(props, context) {
@@ -81,6 +85,9 @@ export default defineComponent({
   <form class="form-layout" v-on:submit.prevent="search">
     <div class="form-outer">
       <div class="form-header stuck-header">
+        <h1 v-if="$props.with_title" class="title">
+          {{ t('pending_ticket.table.title') }}
+        </h1>
         <div class="form-header-inner">
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
@@ -125,8 +132,9 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <TicketSearchFilterModel :is_for_customer="$props.is_for_customer" :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
-      @search="search_filter" @resetFilter="resetFilter_popup" />
+    <TicketSearchFilterModel :is_for_customer="$props.is_for_customer" :key="keyTest"
+      :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger" @search="search_filter"
+      @resetFilter="resetFilter_popup" />
   </form>
 </template>
 
