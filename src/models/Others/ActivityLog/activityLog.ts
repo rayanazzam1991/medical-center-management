@@ -7,6 +7,7 @@ export interface ActivityLog {
   log_name: string
   description: string
   subject_type: string
+  subject_type_view:string
   subject_id:number
   event: string
   createdBy: User
@@ -17,14 +18,15 @@ id:0,
 log_name: '',
 description: '',
 subject_type: '',
-subject_id:0,
+subject_type_view: '',
+subject_id: 0,
 event: '',
 createdBy: defaultUser
 }
 
 
 export interface ActivityLogSearchFilter {
-  subject_type?: string
+  subject_type_view?: string
   user_id? : number
   page?: number
   per_page?: number
@@ -34,7 +36,7 @@ export interface ActivityLogSearchFilter {
 
 
 export const defaultActivityLogSearchFilter: ActivityLogSearchFilter = {
-  subject_type: undefined,
+  subject_type_view: undefined,
   user_id : undefined,
   page: undefined,
   order: undefined,
