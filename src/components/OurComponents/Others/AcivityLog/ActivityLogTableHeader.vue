@@ -35,14 +35,14 @@ export default defineComponent({
     const keyTest = ref(0)
     const default_per_page = props.default_per_page
     const pagination = props.pagination
-    const searchSubjectType = ref<string | undefined>(undefined)
+    const searchSubjectTypeView = ref<string | undefined>(undefined)
     const searchUserId = ref<number | undefined>(undefined)
     const perPage = ref(pagination.per_page)
     const searchFilter = ref(defaultActivityLogSearchFilter)
     const usersList = ref<User[]>([])
     const search = () => {
       searchFilter.value = {
-        subject_type: searchSubjectType.value,
+        subject_type_view: searchSubjectTypeView.value,
         user_id: searchUserId.value,
         per_page: perPage.value
       }
@@ -54,9 +54,9 @@ export default defineComponent({
     })
 
     const resetFilter = () => {
-      searchSubjectType.value = undefined
+      searchSubjectTypeView.value = undefined
       searchUserId.value = undefined
-      searchFilter.value.subject_type = undefined
+      searchFilter.value.subject_type_view = undefined
       searchFilter.value.user_id = undefined
       keyTest.value++
       context.emit('resetFilter', searchFilter.value)
@@ -70,11 +70,11 @@ export default defineComponent({
       context.emit('search', searchFilter.value)
     }
     const resetFilter_popup = (value: ActivityLogSearchFilter) => {
-      searchFilter.value.subject_type = undefined
+      searchFilter.value.subject_type_view = undefined
       context.emit('resetFilter', searchFilter.value)
 
     }
-    return { t, resetFilter, resetFilter_popup, usersList, getUsersList, getUsersWithoutCustomerList, searchUserId, search_filter, searchFilterPop, search, default_per_page, searchSubjectType, keyTest, perPage, pagination }
+    return { t, resetFilter, resetFilter_popup, usersList, getUsersList, getUsersWithoutCustomerList, searchUserId, search_filter, searchFilterPop, search, default_per_page, searchSubjectTypeView, keyTest, perPage, pagination }
   },
 })
 </script>
@@ -91,7 +91,7 @@ export default defineComponent({
             <div class="columns is-flex is-align-items-center">
 
               <VControl class="mr-2" icon="feather:search">
-                <VInput v-model="searchSubjectType" type="text"
+                <VInput v-model="searchSubjectTypeView" type="text"
                   :placeholder="t('activityLog.search_filter.class_name')" />
               </VControl>
               <VControl class="width mr-2">
