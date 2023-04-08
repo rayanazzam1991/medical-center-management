@@ -65,11 +65,11 @@ onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
   }
-  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(searchFilter.value)
+  const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(searchFilter.value)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = suppliersPagination
   keyIncrement.value = keyIncrement.value + 1
-  default_per_page.value = pagination.per_page
+  default_per_page.value = suppliersPagination.per_page
 
 
 });
@@ -91,9 +91,9 @@ const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
     newSearchFilter.isOnDay = Number(false)
   }
 
-  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(newSearchFilter)
+  const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(newSearchFilter)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = suppliersPagination
   searchFilter.value = newSearchFilter
 }
 

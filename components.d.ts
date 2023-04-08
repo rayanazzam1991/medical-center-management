@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AccountantDashboard: typeof import('./src/components/OurComponents/Dashboards/AccountantDashboard.vue')['default']
+    AccountantDashboardTables: typeof import('./src/components/OurComponents/Dashboards/AccountantDashboardTables.vue')['default']
     AccountCashForm: typeof import('./src/components/OurComponents/Accounting/AccountCashForm.vue')['default']
     AccountDropDown: typeof import('./src/components/OurComponents/Accounting/Account/AccountDropDown.vue')['default']
     AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
@@ -32,6 +33,7 @@ declare module '@vue/runtime-core' {
     BulkCashOutTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/BulkCashOutTableHeader.vue')['default']
     CashAmountStatCard: typeof import('./src/components/OurComponents/Dashboards/CashAmountStatCard.vue')['default']
     CashOutForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/CashOutForm.vue')['default']
+    CashReceiptsTables: typeof import('./src/components/OurComponents/Accounting/Transaction/CashReceiptsTables.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
     CategorySearchFilterModel: typeof import('./src/components/OurComponents/Warehouse/Category/CategorySearchFilterModel.vue')['default']
     CategoryTableHeader: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryTableHeader.vue')['default']
@@ -215,6 +217,7 @@ declare module '@vue/runtime-core' {
     SuppliersCashReceiptsDashboardTable: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsDashboardTable.vue')['default']
     SuppliersCashReceiptsSearchFilterModel: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsSearchFilterModel.vue')['default']
     SuppliersCashReceiptsTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptsTableHeader.vue')['default']
+    SuppliersCashReceiptTables: typeof import('./src/components/OurComponents/Accounting/Transaction/SuppliersCashReceiptTables.vue')['default']
     SupplierSearchFilterModel: typeof import('./src/components/OurComponents/Others/Supplier/SupplierSearchFilterModel.vue')['default']
     SupplierTableHeader: typeof import('./src/components/OurComponents/Others/Supplier/SupplierTableHeader.vue')['default']
     TableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/TableCellCard.vue')['default']
