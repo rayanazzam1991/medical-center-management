@@ -50,10 +50,7 @@ const toCreateClientCashReceipt = () => {
             <PendingTicketsTable with_title />
           </div>
           <div class="column is-12">
-            <ClientsCashReceiptsTable with-title :is_for_show="false" :is_on_day="true" />
-          </div>
-          <div class="column is-12">
-            <SupplierEmployeeCashReceiptsTable with-title :is_for_show="false" :is_on_day="true" />
+            <CashReceiptsTables with-title :is_for_show="false" :is_on_day="true" />
           </div>
         </div>
       </div>
