@@ -83,11 +83,11 @@ const columns = {
     renderRow: (row: any) =>
       h('span', row.created_at)
   },
-  subject_type: {
+  subject_type_view: {
     align: 'center',
     label: t('activityLog.table.columns.entity'),
     renderRow: (row: any) =>
-      h('span', row.subject_type)
+      h('span', row.subject_type_view)
   },
 
   event: {
