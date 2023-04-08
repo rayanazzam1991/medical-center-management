@@ -106,9 +106,7 @@ export async function getProfilePicture(employee_id: number) {
   var mediaParams = defaultEmployeeProfilePic
   mediaParams.is_featured = '1'
   mediaParams.model_id = employee_id
-  // this code stopped by rayan
-  // var media: Media[] = await employeeResponse.getEmployeeProfilePicture(mediaParams) ?? []
-  var media: Media[] =  []
+  var media: Media[] = await employeeResponse.getEmployeeProfilePicture(mediaParams) ?? []
   media.forEach(element => {
     element.file_name = element.relative_path
     element.relative_path = MediaConsts.MEDIA_BASE_URL + element.relative_path
@@ -128,7 +126,7 @@ export async function getEmployeesList(searchFilter: EmployeeSearchFilter) {
   let error_code: string = employee.error_code ?? ''
   let message: string = employee.message ?? ''
 
-  return { employees, pagination , success, message , error_code }
+  return { employees, pagination, success, message, error_code }
 }
 
 

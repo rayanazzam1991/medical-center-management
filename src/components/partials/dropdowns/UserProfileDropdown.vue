@@ -40,11 +40,8 @@ const showCurrentPassword = ref(false)
 if (loggedEmployee.value) {
 
   if (loggedEmployee.value.id) {
-
-    const profilePic = await getProfilePicture(loggedEmployee.value.id)
-    if (profilePic.media.length != 0) {
-      loggedEmployeeProfilePic.value = profilePic.media[profilePic.media.length - 1]
-    }
+    loggedEmployeeProfilePic.value = loggedEmployee.value.media?.find((media) => media.is_featured) ?? defaultEmployeeProfilePic
+    loggedEmployeeProfilePic.value.relative_path = MediaConsts.MEDIA_BASE_URL + loggedEmployeeProfilePic.value.relative_path
   }
 }
 
