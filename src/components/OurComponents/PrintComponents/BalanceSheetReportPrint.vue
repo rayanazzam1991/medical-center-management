@@ -27,12 +27,12 @@ export default defineComponent({
 
 <template>
     <div class="is-hidden" id="printerable">
-        <div style="display: flex; justify-content: space-around;">
+        <div style="display: flex; justify-content: space-between;">
 
             <h1 style="font-weight: normal; font-size: 1rem;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="100">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="123" height="35">
 
         </div>
         <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
@@ -42,11 +42,11 @@ export default defineComponent({
             <thead>
                 <tr>
 
-                    <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+                    <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">{{
                         t('print.balance_sheet.balance') }}</th>
-                    <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+                    <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">{{
                         t('print.balance_sheet.account_name') }}</th>
-                    <th style="text-align: right; padding: 8px; border: 1px solid #ddd;">{{
+                    <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">{{
                         t('print.balance_sheet.account_code') }}</th>
 
 
@@ -54,48 +54,46 @@ export default defineComponent({
                 </tr>
             </thead>
             <tbody>
-                <td colspan="3"
-                    style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
+                <td colspan="3" style="text-align: center; padding: 16px; border: 2px solid #333;">
                     <strong>{{ balanceSheet.assets.name }}</strong>
                 </td>
 
                 <tr v-for="lvl2 in balanceSheet.assets.children">
                 <tr v-for="account in lvl2.accounts">
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.balance }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.name }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.code }}</td>
 
                 </tr>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{
                         balanceSheet.assets.total_balances }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: center; padding: 8px; border: 1px solid #ddd;">
                         <strong>{{ t('print.balance_sheet.total_assets') }}</strong>
                     </td>
                 </tr>
-                <td colspan="3"
-                    style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
+                <td colspan="3" style="text-align: center; padding: 16px; border: 2px solid #333;">
                     <strong>{{ balanceSheet.liabilities.name }}</strong>
                 </td>
 
                 <tr v-for="lvl2 in balanceSheet.liabilities.children">
                 <tr v-for="account in lvl2.accounts">
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.balance }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.name }}</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{ account.code }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.balance }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.name }}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{ account.code }}</td>
 
 
                 </tr>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 8px; border: 1px solid #ddd;text-align: center;">{{
                         balanceSheet.liabilities.total_balances
                     }}</td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: center; padding: 8px; border: 1px solid #ddd;">
                         <strong>{{ t('print.balance_sheet.total_liabilities') }}</strong>
                     </td>
                 </tr>

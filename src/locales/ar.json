@@ -2751,19 +2751,30 @@
     },
     "customer_cash_receipt": {
       "for_customer": "للسيد/ة ",
-      "cash_account": "حساب النقد",
-      "amount": "المبلغ",
-      "note": "ملاحظات",
-      "for": "لقاء "
+      "cash_account": ":حساب النقد ",
+      "amount": ":المبلغ ",
+      "note": ":ملاحظات ",
+      "for": ":لقاء ",
+      "date": ":التاريخ "
     },
     "ticket": {
       "ticket": "التذكرة #",
-      "customer_name": "اسم الزبون :",
+      "customer_name": "اسم الزبون: ",
       "services": "الخدمات المطلوبة",
       "service": "الخدمة",
       "service_provider": "المخدم",
       "price": "السعر",
-      "total_price": "السعر الاجمالي"
+      "total_price": "السعر الاجمالي",
+      "turn_number": ":الدور ",
+      "current_service_provider": ":مقدم الخدمة الحالي "
+    },
+    "list_inventory_movement": {
+      "from": ":من ",
+      "to": ":إلى ",
+      "item": ":المادة ",
+      "quantity": ":الكميًة ",
+      "note": ":ملاحظات ",
+      "date": ":التاريخ "
     }
   },
   "inventories_by_item": {

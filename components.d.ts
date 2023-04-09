@@ -56,7 +56,6 @@ declare module '@vue/runtime-core' {
     ContractorSearchFilterModal: typeof import('./src/components/OurComponents/Contractor/ContractorSearchFilterModal.vue')['default']
     ContractorSubnav: typeof import('./src/layouts/navbar-items/ContractorSubnav.vue')['default']
     ContractorTableHeader: typeof import('./src/components/OurComponents/Contractor/ContractorTableHeader.vue')['default']
-    copy: typeof import('./src/components/OurComponents/Dashboards/StatCard copy.vue')['default']
     CRMSubnav: typeof import('./src/layouts/navbar-items/CRMSubnav.vue')['default']
     CustomerCashReceiptPrint: typeof import('./src/components/OurComponents/PrintComponents/CustomerCashReceiptPrint.vue')['default']
     CustomerCreateFormNavigation: typeof import('./src/components/OurComponents/CRM/Customer/CustomerCreateFormNavigation.vue')['default']

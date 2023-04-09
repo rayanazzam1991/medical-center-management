@@ -1,7 +1,8 @@
 
-export default function usePrint(styles: any) {
-  console.log('adad')
-  const printDiv = (divId: string, title: string) => {
+export default function usePrint8CM(styles: any) {
+  console.log('asd');
+
+  const printDiv8CM = (divId: string, title: string) => {
     const div = document.getElementById(divId);
     if (div) {
       const printContent = div.innerHTML;
@@ -11,7 +12,7 @@ export default function usePrint(styles: any) {
           <html>
             <head></title>
               <style>
-              @page { margin: 30px; }
+              @page { margin: 30px; size:8cm }
               </style>
             </head>
             <body>
@@ -28,6 +29,6 @@ export default function usePrint(styles: any) {
     }
   };
   return {
-    printDiv,
+    printDiv8CM,
   };
 }

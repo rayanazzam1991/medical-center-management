@@ -26,6 +26,7 @@ import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waiti
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 import usePrint from '/@src/composable/usePrint'
+import usePrint8CM from '/@src/composable/usePrint8CM'
 export interface TicketTableProps {
     isForCustomer: boolean,
     customerId: number | undefined
@@ -66,14 +67,14 @@ const currentTicketServices = ref<TicketService[]>([])
 const currentTicketServicesPrice = ref(0)
 const currenctTicketId = ref(0)
 const selectedTicketForPrint = ref(defaultTicket)
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const printTicket = async () => {
     await sleep(500)
-    printDiv('printerable', t('ticket.table.title'))
+    printDiv8CM('printerable', t('ticket.table.title'))
 }
 const printServiceCard = async () => {
     await sleep(500)
-    printDiv('printerable_service_card', t('ticket.table.title'))
+    printDiv8CM('printerable_service_card', t('ticket.table.title'))
 }
 
 onMounted(async () => {
