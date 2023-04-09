@@ -1,6 +1,5 @@
 
 export default function usePrint(styles: any) {
-  console.log('adad')
   const printDiv = (divId: string, title: string) => {
     const div = document.getElementById(divId);
     if (div) {

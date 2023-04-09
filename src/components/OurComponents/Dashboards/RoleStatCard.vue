@@ -33,7 +33,6 @@ const props = withDefaults(defineProps<RoleStatCard>(), {
     loading: true,
     roles: undefined
 })
-console.log(props.roles)
 </script>
 
 <template>

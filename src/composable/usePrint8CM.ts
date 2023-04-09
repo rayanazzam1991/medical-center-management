@@ -1,6 +1,5 @@
 
 export default function usePrint8CM(styles: any) {
-  console.log('asd');
 
   const printDiv8CM = (divId: string, title: string) => {
     const div = document.getElementById(divId);

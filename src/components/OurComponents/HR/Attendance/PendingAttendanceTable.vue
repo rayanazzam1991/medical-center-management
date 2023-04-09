@@ -14,19 +14,23 @@ import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VTag from '/@src/components/base/tags/VTag.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Attendance, AttendanceConsts, EmployeeAttendanceSearchFilter, JustificationRequestData, PendingAttendance, defaultAttendance, defaultEmployeeAttendanceSearchFilter, defaultPendingAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
-import { addJustificationProofFile, getPendingAttendancesList, justifyAttendance, unjustifyAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
+import { Attendance, AttendanceConsts, EmployeeAttendance, EmployeeAttendanceSearchFilter, JustificationRequestData, PendingAttendance, UpdateAttendance, defaultAttendance, defaultEmployeeAttendance, defaultEmployeeAttendanceSearchFilter, defaultPendingAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
+import { addJustificationProofFile, getPendingAttendancesList, justifyAttendance, unjustifyAttendance, updateAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
 import { useAttendance } from '/@src/stores/HR/Attendance/EmployeeAttendance/attendanceStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import PendingAttendanceDropdown from './PendingAttendanceDropdown.vue';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import sleep from '/@src/utils/sleep';
+import { useDarkmode } from '/@src/stores/darkmode';
+import { Employee, defaultEmployee } from '/@src/models/Employee/employee';
+import Datepicker from '@vuepic/vue-datepicker';
 
 
 
 const viewWrapper = useViewWrapper()
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const dark = useDarkmode()
 const notif = useNotyf() as Notyf
 const attendanceStore = useAttendance()
 const searchFilter = ref(defaultEmployeeAttendanceSearchFilter)
@@ -34,6 +38,8 @@ const selectedCell = ref<PendingAttendance>(defaultPendingAttendance)
 const keyIncement = ref(0)
 const justifyAttendancePopup = ref(false)
 const unjustifyAttendancePopup = ref(false)
+const markAttendancePopup = ref(false)
+
 const pendingAttendancesList = ref<Array<PendingAttendance>>([])
 const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
@@ -44,6 +50,7 @@ const selectedReason = ref('')
 const justificationProofFile = ref<File>()
 const selectedCheckInTime = ref({ hours: '00', minutes: '00' })
 const selectedCheckOutTime = ref({ hours: '00', minutes: '00' })
+const selectedEmployee = ref<Employee>(defaultEmployee)
 
 onMounted(async () => {
     const { pending_attendnaces, pagination } = await getPendingAttendancesList(searchFilter.value)
@@ -176,6 +183,105 @@ const formatTime = () => {
 
     }
 }
+const updateEmployeeAttendance = async () => {
+    let formatedCheckInMinute;
+    let formatedCheckInHour;
+    let formatedCheckOutMinute;
+    let formatedCheckOutHour;
+    if (Number(selectedCheckInTime.value.minutes) < 10 && Number(selectedCheckInTime.value.minutes) > 0)
+        formatedCheckInMinute = '0' + selectedCheckInTime.value.minutes
+    else
+        formatedCheckInMinute = selectedCheckInTime.value.minutes
+
+    if (Number(selectedCheckInTime.value.hours) < 10 && Number(selectedCheckInTime.value.hours) > 0)
+        formatedCheckInHour = '0' + selectedCheckInTime.value.hours
+    else
+        formatedCheckInHour = selectedCheckInTime.value.hours
+    if (Number(selectedCheckOutTime.value.minutes) < 10 && Number(selectedCheckOutTime.value.minutes) > 0)
+        formatedCheckOutMinute = '0' + selectedCheckOutTime.value.minutes
+    else
+        formatedCheckOutMinute = selectedCheckOutTime.value.minutes
+
+    if (Number(selectedCheckOutTime.value.hours) < 10 && Number(selectedCheckOutTime.value.hours) > 0)
+        formatedCheckOutHour = '0' + selectedCheckOutTime.value.hours
+    else
+        formatedCheckOutHour = selectedCheckOutTime.value.hours
+
+    if (Number(formatedCheckInHour) > Number(formatedCheckOutHour)) {
+        await sleep(200);
+
+
+        notif.error(t('toast.error.Attendance.time'))
+
+        return
+    }
+
+    else if (Number(formatedCheckInHour) == Number(formatedCheckOutHour)) {
+        if (Number(formatedCheckInMinute) >= Number(formatedCheckOutMinute)) {
+            await sleep(200);
+
+            notif.error(t('toast.error.Attendance.time'))
+
+            return
+        }
+
+    }
+    if (selectedCell.value.check_in != undefined) {
+        const checkInSpliter = selectedCell.value.check_in?.split(':')
+        if (Number(formatedCheckInHour) > Number(checkInSpliter[0])) {
+            await sleep(200);
+            notif.error(t('toast.error.Attendance.check_in'))
+            return
+
+        } else if (Number(formatedCheckInHour) == Number(checkInSpliter[0])) {
+            if (Number(formatedCheckInMinute) > Number(checkInSpliter[1])) {
+                await sleep(200);
+                notif.error(t('toast.error.Attendance.check_in'))
+                return
+
+            }
+        }
+    }
+    if (selectedCell.value.check_out != undefined) {
+        const checkOutSpliter = selectedCell.value.check_out?.split(':')
+        if (Number(formatedCheckOutHour) < Number(checkOutSpliter[0])) {
+            await sleep(200);
+            notif.error(t('toast.error.Attendance.check_out'))
+            return
+
+        } else if (Number(formatedCheckOutHour) == Number(checkOutSpliter[0])) {
+            if (Number(formatedCheckOutMinute) < Number(checkOutSpliter[1])) {
+                await sleep(200);
+                notif.error(t('toast.error.Attendance.check_out'))
+                return
+
+            }
+        }
+
+    }
+    const updateCheckIn = formatedCheckInHour + ':' + formatedCheckInMinute + ':00'
+    const updateCheckOut = formatedCheckOutHour + ':' + formatedCheckOutMinute + ':00'
+    const updateAttendanceVar: UpdateAttendance = { check_in: updateCheckIn, check_out: updateCheckOut }
+
+    loading.value.update = true
+    const { message, success, attendance } = await updateAttendance(selectedCell.value.id, updateAttendanceVar)
+    if (success) {
+        await search(searchFilter.value)
+        notif.dismissAll()
+        await sleep(200);
+        notif.success(t('toast.success.edit'))
+        selectedCell.value.check_in = attendance.check_in
+        selectedCell.value.check_out = attendance.check_out
+        selectedCell.value.status = attendance.status
+    } else {
+        await sleep(200);
+
+        notif.error(message)
+    }
+    keyIncement.value++
+    loading.value.update = false
+    markAttendancePopup.value = false
+}
 
 const onAddFile = async (event: any) => {
     const _file = event.target.files[0] as File
@@ -259,8 +365,10 @@ const columns = {
             h(PendingAttendanceDropdown, {
                 justifyPermission: Permissions.ATTENDANCE_EDIT,
                 unjustifyPermission: Permissions.ATTENDANCE_EDIT,
+                viewJustify: row.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE || row.status == AttendanceConsts.PENDING_ABSENCE,
+                viewUnjustify: row.status == AttendanceConsts.PENDING_PARTIAL_ABSENCE || row.status == AttendanceConsts.PENDING_ABSENCE,
+                viewMark: row.status == AttendanceConsts.MISSING_CHECK,
                 onJustifyAttendance: () => {
-                    console.log(row)
                     keyIncement.value++
                     selectedCell.value = row
                     justifyAttendancePopup.value = true
@@ -273,6 +381,14 @@ const columns = {
                     unjustifyAttendancePopup.value = true
                     formatTime()
                 },
+                onMarkAttendance: () => {
+                    keyIncement.value++
+                    selectedCell.value = row
+                    markAttendancePopup.value = true
+                    selectedEmployee.value = row.employee
+                    formatTime()
+
+                }
             }),
 
     },
@@ -387,9 +503,81 @@ const columns = {
             </VLoader>
         </template>
     </VModal>
+    <VModal :key="keyIncement" :title="t('employee_attendance.table.mark_attendance_modal.title')"
+        :open="markAttendancePopup" actions="right" @close="markAttendancePopup = false">
+        <template #content>
+            <div class="is-flex is-justify-content-space-between">
+                <div>
+                    <h2 class="is-size-6 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+                        selectedEmployee.user.last_name
+                    }}</h2>
+                    <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+                    <h2 class="is-size-7 mb-3">{{ t('employee_attendance.table.mark_attendance_modal.date') }}<span
+                            class="has-text-primary is-size-6"> {{
+                                t(`dates.days.${selectedCell.day.toLowerCase()}`)
+                            }} {{
+    selectedCell.date
+}}</span></h2>
+                    <h2 class="is-size-7 mb-3">{{ t('employee_attendance.table.mark_attendance_modal.status') }} <span
+                            class="has-text-primary is-size-6">{{
+                                t(`attendance_status.${AttendanceConsts
+                                    .getAttendanceStatusName(selectedCell.status).replaceAll(" ", "_").toLowerCase()
+                                    }`)
+                            }}</span></h2>
+                </div>
+            </div>
+            <div class="form-fieldset">
+                <div class="columns is-multiline">
+                    <div class="column is-12">
+                        <VCard elevated>
+                            <h3 class="title is-7 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_in') }}</h3>
+                            <div class="column is-12">
+                                <div class="columns">
+                                    <VField class="column is-12 pl-0">
+                                        <VControl>
+                                            <Datepicker v-model="selectedCheckInTime" :locale="locale" time-picker
+                                                :cancel-text="t('date_picker.cancel')"
+                                                :select-text="t('date_picker.select')" :dark="dark.isDark"
+                                                class="date-picker-dircetion" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                        </VCard>
+                        <VCard elevated class="mt-2">
+                            <h3 class="title is-7 mb-2">
+                                {{ t('employee_attendance.table.mark_attendance_modal.check_out') }}</h3>
+                            <div class="column is-12">
+                                <div class="columns">
+                                    <VField class="column is-12 pl-0">
+                                        <VControl>
+                                            <Datepicker v-model="selectedCheckOutTime" :locale="locale" time-picker
+                                                :cancel-text="t('date_picker.cancel')"
+                                                :select-text="t('date_picker.select')" :dark="dark.isDark"
+                                                class="date-picker-dircetion" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                        </VCard>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template #action="{ close }">
+            <VLoader size="small" :active="loading.update">
+                <VButton class="mr-2" color="primary" @click="updateEmployeeAttendance">
+                    {{ t('modal.buttons.update') }}</VButton>
+            </VLoader>
+        </template>
+    </VModal>
 </template>
         
 <style lang="scss">
+@import '@vuepic/vue-datepicker/dist/main.css';
+@import '/@src/scss/styles/customDatePicker.scss';
+
 .tooltip {
     position: relative;
     display: inline-block;

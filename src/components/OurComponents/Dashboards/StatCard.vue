@@ -53,7 +53,6 @@ const percentageIcon = computed(() => {
 const percentageColor = computed(() => {
     if (props.percentage_color_inverted) {
         if (props.increase === 'less') {
-            console.log('asd')
             return 'text-h-green'
         } else if (props.increase === 'more') {
             return 'text-h-red'
@@ -62,7 +61,6 @@ const percentageColor = computed(() => {
         }
     } else {
         if (props.increase === 'less') {
-            console.log('asd')
             return 'text-h-red'
         } else if (props.increase === 'more') {
             return 'text-h-green'

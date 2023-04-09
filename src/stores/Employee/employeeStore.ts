@@ -446,6 +446,9 @@ export const useEmployee = defineStore('employee', () => {
     employee.value = newEmployee
     loggedEmployee.value = JSON.stringify(newEmployee)
   }
+  function removeFromStorage() {
+    loggedEmployee.value = undefined
+  }
 
   function getEmployee(): Employee {
     return JSON.parse(loggedEmployee.value) as Employee;
@@ -530,6 +533,7 @@ export const useEmployee = defineStore('employee', () => {
     setEmployee,
     dismissEmployeeStore,
     getEmployeesHistoryListStore,
+    removeFromStorage,
     loggedEmployee,
     employee,
     success,

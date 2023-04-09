@@ -11,11 +11,15 @@ import { changePassword } from "/@src/services/Others/User/authService";
 import { useEmployee } from "/@src/stores/Employee/employeeStore";
 import { useAuth } from "/@src/stores/Others/User/authStore";
 import { Permissions } from "/@src/utils/consts/rolesPermissions";
+import { useCurrency } from "/@src/stores/Accounting/Currency/currencyStore";
+import { useSetting } from "/@src/stores/Others/Setting/settingStore";
 
 
 
 const notif = useNotyf() as Notyf
 const userAuth = useAuth();
+const currencyStore = useCurrency();
+const settingStore = useSetting();
 const employeeStore = useEmployee();
 const router = useRouter();
 const { t, locale } = useI18n();
@@ -49,6 +53,9 @@ const LR = locale.value == "ar" ? "left" : "right"
 const logoutUser = async () => {
   try {
     await userAuth.logoutUser();
+    employeeStore.removeFromStorage();
+    currencyStore.removeFromStorage();
+    settingStore.removeFromStorage();
     await router.push({
       name: '/auth/login'
     })

@@ -2736,7 +2736,7 @@
       "account_code": "رمز الحساب",
       "account_name": "اسم الحساب",
       "balance": "الرصيد",
-      "total_liabilities": "محموع الخصوم",
+      "total_liabilities": "مجموع الخصوم",
       "total_assets": "مجموع الأصول"
     },
     "income_statement": {
@@ -2840,7 +2840,8 @@
     },
     "drop_down": {
       "justify_attendance": "تبرير الغياب",
-      "unjustify_attendance": "عدم تبرير الغياب"
+      "unjustify_attendance": "عدم تبرير الغياب",
+      "mark_attendance": "تسجيل الحضور"
     }
   },
   "dashboards": {
