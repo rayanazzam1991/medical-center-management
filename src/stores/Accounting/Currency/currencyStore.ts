@@ -81,6 +81,9 @@ export const useCurrency = defineStore('currency', () => {
       loading.value = false
     }
   }
+  function removeFromStorage() {
+    currenciesStorage.value = undefined
+  }
 
   function setCurrenciesToStorage(currencies: Currency[]) {
     currenciesStorage.value = currencies as Currency[]
@@ -109,7 +112,8 @@ export const useCurrency = defineStore('currency', () => {
     updateCurrencyRateStore,
     getCurrenciesFromStorage,
     updateCurrencyInStorage,
-    setCurrenciesToStorage
+    setCurrenciesToStorage,
+    removeFromStorage
   } as const
 })
 

@@ -263,6 +263,7 @@ const updateEmployeeAttendance = async () => {
     selectedCell.value.status = attendance.status
   } else {
     await sleep(200);
+    const markAttendancePopup = ref(false)
 
     notif.error(message)
   }

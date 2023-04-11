@@ -24,8 +24,12 @@ export const useAuth = defineStore('userAuth', () => {
     userFullName.value = newUser?.first_name + " " + newUser?.last_name
   }
 
-  function getUser(): User {
-    return JSON.parse(loggedUser.value) as User;
+  function getUser(): User | undefined {
+    if (loggedUser.value) {
+      return JSON.parse(loggedUser.value) as User;
+    } else {
+      return undefined
+    }
     // let parsedUser = '';
     // try {
     //   parsedUser = JSON.parse(loggedUser.value) as User;
@@ -51,26 +55,35 @@ export const useAuth = defineStore('userAuth', () => {
     user.value = undefined
     loggedUser.value = ''
     userFullName.value = undefined
+
   }
   function getUserFulLName(): string {
     return userFullName.value;
   }
 
   async function signInAuthStore(credentials: SignInRequest) {
+    if (loading.value) return
+    loading.value = true
 
     try {
       const response = await signIn(api, credentials);
 
       token.value = response?.response?.data?.token as string;
       user.value = response?.response?.data as User;
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      if (success.value) {
+        setToken(token.value)
+        setUser(user.value)
+      }
 
-      setToken(token.value)
-      setUser(user.value)
-
-      return response.response.data
-    } catch (e: any) {
-      throw e
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
     } finally {
+      loading.value = false
 
     }
   }

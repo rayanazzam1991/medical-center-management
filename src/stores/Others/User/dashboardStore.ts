@@ -10,8 +10,8 @@ import sleep from "/@src/utils/sleep"
 export const useDashboard = defineStore('dashboard', () => {
 
     const api = useApi()
-  const inventoryDashboard = ref<InventoryDashboard>(defaultInventoryDashboard)
-  const adminDashboard = ref<AdminDashboard>(defaultAdminDashboard)
+    const inventoryDashboard = ref<InventoryDashboard>(defaultInventoryDashboard)
+    const adminDashboard = ref<AdminDashboard>(defaultAdminDashboard)
     const hrDashboard = ref<HRDashboard>(defaultHRDashboard)
     const analystDashboard = ref<AnalystDashboard>(defaultAnalystDashboard)
     const loading = ref(false)
@@ -20,26 +20,26 @@ export const useDashboard = defineStore('dashboard', () => {
     const message = ref<string>()
 
     async function getAdminDashboardStore() {
-      if (loading.value) return
-      loading.value = true
-      sleep(2000)
-      try {
-          const response = await getAdminDashboardApi(api)
-          adminDashboard.value = response.response.data
-          success.value = response.response.success
-          error_code.value = response.response.error_code
-          message.value = response.response.message
-      }
-      catch (error: any) {
-          success.value = error?.response.data.success
-          error_code.value = error?.response.data.error_code
-          message.value = error?.response.data.message
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await getAdminDashboardApi(api)
+            adminDashboard.value = response.response.data
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
 
-      }
-      finally {
-          loading.value = false
-      }
-  }
+        }
+        finally {
+            loading.value = false
+        }
+    }
     async function getInventoryDashboardStore() {
         if (loading.value) return
         loading.value = true
@@ -110,10 +110,10 @@ export const useDashboard = defineStore('dashboard', () => {
         message,
         loading,
         inventoryDashboard,
-      hrDashboard,
+        hrDashboard,
         analystDashboard,
-      adminDashboard,
-      getAdminDashboardStore,
+        adminDashboard,
+        getAdminDashboardStore,
         getInventoryDashboardStore,
         getHumanResourcesDashboardStore,
         getAnalystDashboardStore
