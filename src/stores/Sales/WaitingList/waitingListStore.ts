@@ -1,7 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
-import { getWaitingListByProviderIdApi, getWaitingListByTicketIdApi, getWaitingListsListApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
+import { ServiceCard, ServiceCardsListSearchFilter, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
+import { getServiceCardsListApi, getWaitingListByProviderIdApi, getWaitingListByTicketIdApi, getWaitingListsListApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
 export const useWaitingList = defineStore('waitingList', () => {
@@ -10,6 +11,8 @@ export const useWaitingList = defineStore('waitingList', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
+    const pagination = ref<Pagination>(defaultPagination)
+    const serviceCardsList = ref<ServiceCard[]>([])
 
     async function getWaitingListsStore(searchFilter: WaitingListSearchFilter) {
         if (loading.value) return
@@ -96,18 +99,45 @@ export const useWaitingList = defineStore('waitingList', () => {
             loading.value = false
         }
     }
+    async function getServiceCardsListStore(searchFilter: ServiceCardsListSearchFilter) {
+        if (loading.value) return
 
-    
-    
+        loading.value = true
+
+        try {
+            const returnedResponse = await getServiceCardsListApi(api, searchFilter)
+            serviceCardsList.value = returnedResponse.response.data
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
+
+
     return {
         success,
         error_code,
         message,
         loading,
+        pagination,
+        serviceCardsList,
         getWaitingListsStore,
         getWaitingListByProviderStore,
         serveNextTicketInProviderWaitingListStore,
-        getWaitingListByTicketIdStore
+        getWaitingListByTicketIdStore,
+        getServiceCardsListStore
     } as const
 })
 

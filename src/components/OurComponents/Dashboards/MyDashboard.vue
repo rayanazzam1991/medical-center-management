@@ -27,6 +27,9 @@ const props = withDefaults(defineProps<MyDashboardProps>(), {
     <div v-if="$props.role == 'Accountant'">
       <AccountantDashboard />
     </div>
+    <div v-if="$props.role == 'Receptionist'">
+      <ReceptionistDashboard />
+    </div>
 
   </div>
 </template>

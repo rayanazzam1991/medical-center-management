@@ -4,8 +4,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { AdminDashboard, defaultAdminDashboard, defaultAnalystDashboard } from '/@src/models/Others/User/dashboard';
-import { getAdminDashboardData } from '/@src/services/Others/User/dashboadService';
-import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { getAdminDashboardData } from '../../../services/Others/User/dashboardService';
 import { useDashboard } from '/@src/stores/Others/User/dashboardStore';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 

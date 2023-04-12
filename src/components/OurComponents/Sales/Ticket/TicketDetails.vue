@@ -315,7 +315,7 @@ const columns = {
 
   </div>
   <TicketPrint :key="keyIncrement" :ticket="currentTicket" />
-  <ClientServiceCardPrint :key="keyIncrement" :service-card="ticketCurrentWaitingList" />
+  <ClientServiceCardPrint :key="keyIncrement" :service-card-by-ticket-props="ticketCurrentWaitingList" />
 </template>
 
 <style scoped lang="scss">

@@ -26,11 +26,18 @@ import sleep from "/@src/utils/sleep"
 
 export interface ReminderTableProps {
     isForCustomer: boolean,
-    customerId: number | undefined
+    customerId: number | undefined,
+    todayOnly: boolean,
+    isForDashboard: boolean,
+    withTitle: boolean
+
 }
 const props = withDefaults(defineProps<ReminderTableProps>(), {
     isForCustomer: false,
-    customerId: undefined
+    customerId: undefined,
+    todayOnly: false,
+    isForDashboard: false,
+    withTitle: false
 })
 
 const viewWrapper = useViewWrapper()
@@ -40,6 +47,9 @@ const reminderStore = useReminder()
 const searchFilter = ref(defaultReminderSearchFilter)
 if (props.isForCustomer && props.customerId) {
     searchFilter.value.customer_id = props.customerId
+}
+if (props.todayOnly) {
+    searchFilter.value.today_only = true
 }
 
 const remindersList = ref<Array<Reminder>>([])
@@ -64,6 +74,9 @@ const search = async (newSearchFilter: ReminderSearchFilter) => {
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
     }
+    if (props.todayOnly) {
+        newSearchFilter.today_only = true
+    }
 
     const { reminders, pagination } = await getRemindersList(newSearchFilter)
     remindersList.value = reminders
@@ -75,8 +88,11 @@ const resetFilter = async (newSearchFilter: ReminderSearchFilter) => {
     if (props.isForCustomer && props.customerId) {
         newSearchFilter.customer_id = props.customerId
     }
+    if (props.todayOnly) {
+        newSearchFilter.today_only = true
+    }
     searchFilter.value = newSearchFilter
-    search(searchFilter.value)
+    await search(searchFilter.value)
 }
 
 const getRemindersPerPage = async (pageNum: number) => {
@@ -106,15 +122,12 @@ const changestatusReminder = async () => {
     const { message, success } = await changeReminderStatus(changeStatusData)
     if (success) {
 
-        // @ts-ignore
         notif.dismissAll()
         await sleep(200);
-        // @ts-ignore
         reminderChangeStatus.value.status = newStatus.value
         notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
-        // @ts-ignore
 
         notif.error(message)
     }
@@ -265,7 +278,8 @@ const customerRemindersColumns = {
 </script>
     
 <template>
-    <ReminderTableHeader :is_for_customer="$props.isForCustomer" :customer_id="$props.customerId" :key="keyIncrement"
+    <ReminderTableHeader :with_title="$props.withTitle" :is_for_dashboard="$props.isForDashboard"
+        :is_for_customer="$props.isForCustomer" :customer_id="$props.customerId" :key="keyIncrement"
         :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar" :default_per_page="default_per_page"
         @resetFilter="resetFilter" />
 

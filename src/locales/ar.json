@@ -2634,6 +2634,7 @@
     "add_button": "إضافة مذكرة",
     "table": {
       "title": "المذكرات",
+      "only_today_title": "مذكرات اليوم",
       "columns": {
         "customer": "الزبون",
         "customer_phone_number": "رقم الهاتف",
@@ -2832,6 +2833,21 @@
       "unjustify_attendance": "عدم تبرير الغياب"
     }
   },
+  "service_card": {
+    "table": {
+      "title": "بطاقات الخدمة",
+      "columns": {
+        "customer_name": "الزبون",
+        "provider_name": "المخدم",
+        "turn_number": "الدور",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "customer_name": "اسم الزبون...",
+      "provider_name": "اسم المخدم..."
+    }
+  },
   "dashboards": {
     "title": "Grand Samara Center",
     "inventory": {
@@ -2894,6 +2910,16 @@
       "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
       "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
+    },
+    "receptionist": {
+      "clients_in_center": "عدد الزبائن في المركز",
+      "active_clients_count": "عدد الزبائن الفعّالين",
+      "more_since_last_month": "أكثر من الشهر السابق",
+      "less_since_last_month": "أقل من الشهر السابق",
+      "served_services": "الخدمات المقدمة",
+      "add_customer": "إضافة زبون",
+      "add_ticket": "إضافة تذكرة",
+      "waiting_lists": "غرف الانتظار"
     }
   }
 }

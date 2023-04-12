@@ -111,7 +111,6 @@ export default defineComponent({
                 <h1 v-if="$props.with_title" class="title">
                     {{ t('list_inventory_movement.table.title') }}
                 </h1>
-
                 <div class="form-header-inner">
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
