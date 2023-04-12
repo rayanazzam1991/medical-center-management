@@ -25,6 +25,7 @@ import { defaultPagination } from '/@src/utils/response';
 import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintDropDown.vue'
 import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
+import usePrint8CM from '/@src/composable/usePrint8CM';
 
 export interface ClientsCashReceiptsTableProps {
   isForCustomer: boolean,
@@ -63,17 +64,17 @@ onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
   }
-  const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(searchFilter.value)
+  const { clients_cash_receipts, clientsPagination } = await getClientsCashReceiptsList(searchFilter.value)
   clientsCashReceiptsList.value = clients_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = clientsPagination
   keyIncrement.value = keyIncrement.value + 1
-  default_per_page.value = pagination.per_page
+  default_per_page.value = clientsPagination.per_page
 });
 
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const print = async () => {
   await sleep(500)
-  printDiv('printerable', t('customer_cash_receipt.table.print_title'))
+  printDiv8CM('printerable', t('customer_cash_receipt.table.print_title'))
 }
 const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
   paginationVar.value.per_page = newSearchFilter.per_page ?? paginationVar.value.per_page
@@ -86,9 +87,9 @@ const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
     newSearchFilter.isOnDay = Number(false)
   }
 
-  const { clients_cash_receipts, pagination } = await getClientsCashReceiptsList(newSearchFilter)
+  const { clients_cash_receipts, clientsPagination } = await getClientsCashReceiptsList(newSearchFilter)
   clientsCashReceiptsList.value = clients_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = clientsPagination
   searchFilter.value = newSearchFilter
 }
 

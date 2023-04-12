@@ -31,25 +31,24 @@ export default defineComponent({
 
 <template>
     <div class="is-hidden" id="printerable">
-        <div style="display: flex; justify-content: space-around;">
+        <div style="display: flex; justify-content: space-between;">
 
-            <h1 style="font-weight: normal; font-size: 1rem;text-align: center;">{{ t('print.date') }} {{ new
+            <h1 style="font-weight: normal; font-size: 10px;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="100">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="41" height="11">
 
         </div>
-        <h1 style="font-weight: 600;text-align: center; margin:20px; padding: 20px; font-size: 24px;">{{
+        <h1 style="font-weight: 600;text-align: center; margin:2px; padding: 2px; font-size: 12px;">{{
             t('customer_cash_receipt.table.print_title') }}
         </h1>
-        <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+        <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
             <thead>
                 <tr>
                 </tr>
             </thead>
             <tbody>
-                <td colspan="3"
-                    style="text-align: center; padding: 16px;text-decoration: underline; border: 2px solid #333;">
+                <td colspan="3" style="text-align: center; padding: 3px; border: 2px solid #333;">
                     <strong>{{ t('print.customer_cash_receipt.for_customer') }}
                         {{ cashReceipt.entries.find((entry) => entry.account.chart_account?.code ==
                             AccountConsts.SUPPLIER_CODE || entry.account.chart_account?.code ==
@@ -57,48 +56,48 @@ export default defineComponent({
                     </strong>
                 </td>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="width: 75%; padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.date }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('print.date') }}</strong>
+                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
+                        <strong>{{ t('print.customer_cash_receipt.date') }}</strong>
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.amount }} {{ addParenthesisToString(cashReceipt.currency.name) }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
                         <strong>{{ t('print.customer_cash_receipt.amount') }}</strong>
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.entries.find((entry) => entry.account.chart_account?.code ==
                             AccountConsts.CASH_CODE)?.account.name }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
                         <strong>{{ t('print.customer_cash_receipt.cash_account') }}</strong>
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.title }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
                         <strong>{{ t('print.customer_cash_receipt.for') }}</strong>
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 8px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.note ?? '-' }}
                     </td>
 
-                    <td colspan="2" style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">
+                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
                         <strong>{{ t('print.customer_cash_receipt.note') }}</strong>
                     </td>
                 </tr>
@@ -106,10 +105,10 @@ export default defineComponent({
             </tbody>
 
         </table>
-        <p style="font-weight: normal;text-align: right; font-size: 16px;">{{
+        <p style="font-weight: normal;text-align: right; font-size: 8px;">{{
             t('print.signature') }}
         </p>
-        <p style="font-weight: normal;text-align: right; font-size: 16px; border-buttoms: 1px solid #ddd;">
+        <p style="font-weight: normal;text-align: right; font-size: 8px;">
             ____________________</p>
 
     </div>

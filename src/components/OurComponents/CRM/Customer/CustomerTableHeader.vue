@@ -139,7 +139,7 @@ export default defineComponent({
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <h1 v-if="$props.with_title" class="title">
-                    {{ t('customer.table.title') }}
+                    {{ t('customer.table.search_for_customer_title') }}
                 </h1>
                 <div class="form-header-inner">
                     <div class="left my-4 mx-2 " :class="[$props.is_for_dashboard && 'bigger-width']">
@@ -153,6 +153,9 @@ export default defineComponent({
                                 icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                                 color="danger" />
+                            <div v-if="customerStore.loading && $props.is_for_dashboard"
+                                class="loader is-loading m-r-15 m-b-05-rem w35-h35">
+                            </div>
                         </div>
                     </div>
 
@@ -195,7 +198,7 @@ export default defineComponent({
 @import '/@src/scss/styles/tableHeader.scss';
 
 .bigger-width {
-    width: 60% !important;
+    width: 55% !important;
 }
 
 .title {
@@ -203,5 +206,9 @@ export default defineComponent({
     font-size: 1.25rem;
     margin-top: 1rem;
 
+}
+
+.loader {
+    padding: 1.25rem;
 }
 </style>

@@ -8,6 +8,7 @@ import { useService } from '/@src/stores/Others/Service/serviceStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -60,7 +61,9 @@ const toEdit = () => {
               <span> {{ currentService.description ? currentService.description : t('place_holder.none') }} </span>
             </div>
             <div class="column is-12">
-              <h4 class="margin-bottom">{{ t('service.details.estimated') }}:</h4>
+              <h4 class="margin-bottom">{{ t('service.details.estimated') }}{{
+                addParenthesisToString(t('service.minutes'))
+              }}:</h4>
               <span>{{ currentService.duration_minutes }}</span>
             </div>
             <div class="column is-12">

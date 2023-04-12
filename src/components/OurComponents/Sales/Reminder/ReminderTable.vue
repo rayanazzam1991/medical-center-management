@@ -290,7 +290,13 @@ const customerRemindersColumns = {
         <VFlexTable separators clickable>
             <template #body>
                 <div v-if="reminderStore?.loading" class="flex-list-inner">
-                    <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+                    <div v-if="!$props.isForDashboard" v-for="key in paginationVar.per_page" :key="key"
+                        class="flex-table-item">
+                        <VFlexTableCell>
+                            <VPlaceload />
+                        </VFlexTableCell>
+                    </div>
+                    <div v-else class="flex-table-item">
                         <VFlexTableCell>
                             <VPlaceload />
                         </VFlexTableCell>

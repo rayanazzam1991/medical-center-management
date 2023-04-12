@@ -101,9 +101,9 @@ export async function getClientsCashReceiptsList(searchFilter: ClientsCashReceip
   let clients_cash_receipts: Transaction[] = await transactionResponse.getClientsCashReceiptsListStore(searchFilter) ?? []
   let success: boolean = transactionResponse.success ?? false
   let error_code: string = transactionResponse.error_code ?? ''
-  let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  let clientsPagination: Pagination = transactionResponse.pagination ?? defaultPagination
   let message: string = transactionResponse.message ?? ''
-  return { success, error_code, message, clients_cash_receipts, pagination }
+  return { success, error_code, message, clients_cash_receipts, clientsPagination }
 
 }
 
@@ -112,9 +112,9 @@ export async function getSuppliersCashReceiptsList(searchFilter: SuppliersCashRe
   let suppliers_cash_receipts: Transaction[] = await transactionResponse.getSuppliersCashReceiptsListStore(searchFilter) ?? []
   let success: boolean = transactionResponse.success ?? false
   let error_code: string = transactionResponse.error_code ?? ''
-  let pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  let suppliersPagination: Pagination = transactionResponse.pagination ?? defaultPagination
   let message: string = transactionResponse.message ?? ''
-  return { success, error_code, message, suppliers_cash_receipts, pagination }
+  return { success, error_code, message, suppliers_cash_receipts, suppliersPagination }
 }
 
 export function resetClientsCashReceiptsSearchFilter() {

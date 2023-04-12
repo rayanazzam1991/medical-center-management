@@ -1,6 +1,7 @@
 
-export default function usePrint(styles: any) {
-  const printDiv = (divId: string, title: string) => {
+export default function usePrint8CM(styles: any) {
+
+  const printDiv8CM = (divId: string, title: string) => {
     const div = document.getElementById(divId);
     if (div) {
       const printContent = div.innerHTML;
@@ -10,7 +11,7 @@ export default function usePrint(styles: any) {
           <html>
             <head></title>
               <style>
-              @page { margin: 30px; }
+              @page { size: 8cm; margin: 0; }
               </style>
             </head>
             <body>
@@ -19,6 +20,7 @@ export default function usePrint(styles: any) {
             </body>
           </html>
         `);
+      // addStyles(popupWin, styles)
       popupWin?.document.close();
       popupWin?.focus();
       popupWin?.print();
@@ -26,6 +28,6 @@ export default function usePrint(styles: any) {
     }
   };
   return {
-    printDiv,
+    printDiv8CM,
   };
 }

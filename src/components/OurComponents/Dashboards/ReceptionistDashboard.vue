@@ -17,13 +17,13 @@ onMounted(async () => {
     keyIncrement.value = keyIncrement.value + 1
 });
 const toAddCustomer = () => {
-    router.push({ name: '/customer-add' })
+    router.push({ name: '/customer-add/' })
 }
 const toAddTicket = () => {
     router.push({ name: '/ticket/add' })
 }
 const toWaitingRooms = () => {
-    router.push({ name: '/waiting-list' })
+    router.push({ name: '/waiting-list/' })
 }
 </script>
 
@@ -58,7 +58,7 @@ const toWaitingRooms = () => {
                             <div @click="toAddCustomer" v-permission="Permissions.CUSTOMER_CREATE" class="category">
                                 <div class="asset">
                                     <div class="asset-logo">
-                                        <i aria-hidden="true" class="lnir lnir-arrow-down-circle"></i>
+                                        <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
                                     </div>
                                 </div>
                                 <div class="asset-name">{{ t('dashboards.receptionist.add_customer') }}</div>

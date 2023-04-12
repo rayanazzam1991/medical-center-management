@@ -179,12 +179,17 @@ const onAddFile = async (event: any) => {
   let _message = ''
   if (_file) {
 
-    if (_file.type != 'image/jpeg' && _file.type != 'image/png' && _file.type != 'image/webp') {
-      _message = t('toast.file.type')
-      await sleep(500);
-      notif.error(_message)
+    if (
+      _file.type != 'image/jpeg' &&
+      _file.type != 'image/png' &&
+      _file.type != 'image/webp' &&
+      _file.type != 'application/pdf'
 
-    } else if (_file.size > (2 * 1024 * 1024)) {
+    ) {
+      _message = t('toast.file.type')
+      await sleep(200)
+      notif.error(_message)
+    } else if (_file.size > 2 * 1024 * 1024) {
       _message = t('toast.file.size')
       await sleep(500);
       notif.error(_message)
@@ -363,7 +368,6 @@ watch(cashAccountId, (value) => {
                     </div>
                   </VLabel>
                   <VControl>
-                    <!-- <div class="select"> -->
                     <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
                       v-model="currentaddQuantity.item_id">
                       <VOption value=""> {{ t('add_quantity.form.select_item') }}</VOption>
@@ -372,7 +376,6 @@ watch(cashAccountId, (value) => {
                       </VOption>
                     </VSelect>
                     <ErrorMessage class="help is-danger" name="item_id" />
-                    <!-- </div> -->
                   </VControl>
                 </VField>
               </div>
@@ -550,7 +553,7 @@ watch(cashAccountId, (value) => {
                     </div>
                   </VControl>
                 </VField>
-                <h6 class="font ml-2 mt-2 help">{{ t('images.accepted_image_file') }}
+                <h6 class="font ml-2 mt-2 help">{{ t('images.accepted_file') }}
                 </h6>
               </div>
             </div>

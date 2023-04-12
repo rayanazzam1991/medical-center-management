@@ -213,7 +213,7 @@ export default defineComponent({
             const { success, message, screen } = await updateServiceHistoryScreen(serviceHistoryScreenId.value, currentServiceHistoryScreen.value)
             if (success) {
                 await sleep(200);
-                notif.success(t('toast.success.update'))
+                notif.success(t('toast.success.edit'))
                 currentServiceHistoryScreen.value.filters.rooms = []
                 currentServiceHistoryScreen.value.filters.departments = []
                 currentServiceHistoryScreen.value.filters.services = []

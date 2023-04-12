@@ -472,7 +472,6 @@ const columns = {
         }}</span>
       </h4>
       <form class=" form-layout" @submit.prevent="">
-        <!--Fieldset-->
         <div class="form-fieldset">
           <div class="columns is-multiline">
             <div class="column is-12">

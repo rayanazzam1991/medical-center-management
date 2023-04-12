@@ -248,7 +248,7 @@
       "requested_services": "الخدمات المطلوبة"
     },
     "reminder": {
-      "reminders": "المذكرات"
+      "reminders": "قائمة التذكيرات"
     },
     "service_history_screen": {
       "service_history_screens": "شاشات الانتظار",
@@ -612,6 +612,7 @@
   "customer": {
     "table": {
       "title": "الزبائن",
+      "search_for_customer_title": "البحث عن الزبائن",
       "columns": {
         "phone": "رقم الهاتف",
         "name": "الاسم",
@@ -640,7 +641,7 @@
         "files": "الملفات",
         "tickets": "التذاكر",
         "services": "الخدمات",
-        "reminders": "المذكرات",
+        "reminders": "قائمة التذكيرات",
         "cash_receipts": "الإيصالات النقدية"
       },
       "main_details": "المعلومات الرئيسية",
@@ -1073,9 +1074,9 @@
       },
       "modal": {
         "title": "تعديل جدول الموظف",
-        "day": "Day:",
-        "start_time": "تاريخ البدء",
-        "end_time": "تاريخ الانتهاء",
+        "day": "اليوم: ",
+        "start_time": "وقت البدء",
+        "end_time": "وقت الانتهاء",
         "make_vacation": "تحديد اجازة"
       }
     },
@@ -1338,6 +1339,7 @@
     "header_button": "إضافة غرفة"
   },
   "service": {
+    "minutes": "دقيقة",
     "table": {
       "title": "الخدمات",
       "columns": {
@@ -1375,7 +1377,7 @@
       "name": "الاسم",
       "desciption": "التوصيف",
       "price": "السعر",
-      "duration": "المدّة",
+      "duration": "المدّة المقدرة",
       "status": "الحالة",
       "hasItem": "يحتوي مواد",
       "donthasItem": "لا يحتوي مواد",
@@ -1645,9 +1647,9 @@
     "decrement": "خصم"
   },
   "employee_variable_payment_statuses": {
-    "pending": "معلق",
-    "approved": "موافق",
-    "waiting": "انتظار",
+    "pending": " بانتظار الموافقة",
+    "approved": "مستحق بتاريخ محدد",
+    "waiting": "تمت الموافقة",
     "released": "محرر",
     "inactive": "غير فعال"
   },
@@ -2614,7 +2616,7 @@
       }
     },
     "drop_down": {
-      "add_reminder": "إضافة مذكرة"
+      "add_reminder": "إضافة تذكير"
     },
     "search_filter": {
       "title": "تصفية الخدمات المطلوبة",
@@ -2631,10 +2633,10 @@
     }
   },
   "reminder": {
-    "add_button": "إضافة مذكرة",
+    "add_button": "إضافة تذكير",
     "table": {
-      "title": "المذكرات",
-      "only_today_title": "مذكرات اليوم",
+      "title": "قائمة التذكيرات",
+      "only_today_title": "تذكيرات اليوم",
       "columns": {
         "customer": "الزبون",
         "customer_phone_number": "رقم الهاتف",
@@ -2647,9 +2649,9 @@
       }
     },
     "form": {
-      "page_title": "المذكرات",
-      "add_reminder_title": "إضافة مذكرة",
-      "form_header": "{type} مذكرة",
+      "page_title": "التذكيرات",
+      "add_reminder_title": "إضافة تذكير",
+      "form_header": "{type} تذكير",
       "customer": "الزبون :",
       "service": "الخدمة المقدمة :",
       "note": "ملاحظات",
@@ -2737,7 +2739,7 @@
       "account_code": "رمز الحساب",
       "account_name": "اسم الحساب",
       "balance": "الرصيد",
-      "total_liabilities": "محموع الخصوم",
+      "total_liabilities": "مجموع الخصوم",
       "total_assets": "مجموع الأصول"
     },
     "income_statement": {
@@ -2752,19 +2754,30 @@
     },
     "customer_cash_receipt": {
       "for_customer": "للسيد/ة ",
-      "cash_account": "حساب النقد",
-      "amount": "المبلغ",
-      "note": "ملاحظات",
-      "for": "لقاء "
+      "cash_account": ":حساب النقد ",
+      "amount": ":المبلغ ",
+      "note": ":ملاحظات ",
+      "for": ":لقاء ",
+      "date": ":التاريخ "
     },
     "ticket": {
       "ticket": "التذكرة #",
-      "customer_name": "اسم الزبون :",
+      "customer_name": "اسم الزبون: ",
       "services": "الخدمات المطلوبة",
       "service": "الخدمة",
       "service_provider": "المخدم",
       "price": "السعر",
-      "total_price": "السعر الاجمالي"
+      "total_price": "السعر الاجمالي",
+      "turn_number": ":الدور ",
+      "current_service_provider": ":مقدم الخدمة الحالي "
+    },
+    "list_inventory_movement": {
+      "from": ":من ",
+      "to": ":إلى ",
+      "item": ":المادة ",
+      "quantity": ":الكميًة ",
+      "note": ":ملاحظات ",
+      "date": ":التاريخ "
     }
   },
   "inventories_by_item": {
@@ -2830,7 +2843,8 @@
     },
     "drop_down": {
       "justify_attendance": "تبرير الغياب",
-      "unjustify_attendance": "عدم تبرير الغياب"
+      "unjustify_attendance": "عدم تبرير الغياب",
+      "mark_attendance": "تسجيل الحضور"
     }
   },
   "service_card": {

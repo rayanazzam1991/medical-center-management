@@ -16,12 +16,13 @@ import { useI18n } from 'vue-i18n'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
 import { resetServiceCardsListSearchFilter } from '/@src/services/Sales/WaitingList/waitingListService'
-import { ServiceCard, ServiceCardsListSearchFilter, defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
+import { ServiceCard, ServiceCardsListSearchFilter, defaultServiceCard, defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
 import usePrint from '/@src/composable/usePrint'
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore'
 import { getServiceCardsList } from '/@src/services/Sales/WaitingList/waitingListService'
 import IconButton from '../../Warehouse/InventoryItemHistory/IconButton.vue'
 import sleep from '/@src/utils/sleep'
+import usePrint8CM from '/@src/composable/usePrint8CM'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 
@@ -30,14 +31,15 @@ const notif = useNotyf() as Notyf
 const searchFilter = ref(resetServiceCardsListSearchFilter())
 const serviceCardsList = ref<Array<ServiceCard>>([])
 const paginationVar = ref(defaultPagination)
+const serviceCardPrint = ref(defaultServiceCard)
 const router = useRouter()
 const waitingListStore = useWaitingList()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const printServiceCard = async () => {
     await sleep(500)
-    printDiv('printerable_service_card', t('ticket.table.title'))
+    printDiv8CM('printerable_service_card', t('ticket.table.title'))
 }
 
 onMounted(async () => {
@@ -103,9 +105,10 @@ const columns = {
         renderRow: (row: any) =>
             h(IconButton, {
                 icon: 'lnir lnir-printer',
-                onClick: () => {
-                    
-                    printServiceCard()
+                onClick: async () => {
+                    serviceCardPrint.value = row
+                    keyIncrement.value++
+                    await printServiceCard()
                 }
             })
     },
@@ -121,7 +124,7 @@ const columns = {
         <VFlexTable separators clickable>
             <template #body>
                 <div v-if="waitingListStore?.loading" class="flex-list-inner">
-                    <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
+                    <div class="flex-table-item">
                         <VFlexTableCell>
                             <VPlaceload />
                         </VFlexTableCell>
@@ -154,7 +157,7 @@ const columns = {
 
         <VPlaceloadText v-if="waitingListStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <!-- <ClientServiceCardPrint :key="keyIncrement" :service-card="ticketCurrentWaitingList" /> -->
+    <ClientServiceCardPrint :key="keyIncrement" :service-card-props="serviceCardPrint" is-service-card />
 </template>
 <style lang="scss"></style>
         

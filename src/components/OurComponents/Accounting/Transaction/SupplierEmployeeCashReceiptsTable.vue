@@ -27,6 +27,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
+import usePrint8CM from '/@src/composable/usePrint8CM';
 import { boolean } from 'zod';
 
 export interface SupplierEmployeeCashReceiptsTableProps {
@@ -65,19 +66,19 @@ onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
   }
-  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(searchFilter.value)
+  const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(searchFilter.value)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = suppliersPagination
   keyIncrement.value = keyIncrement.value + 1
-  default_per_page.value = pagination.per_page
+  default_per_page.value = suppliersPagination.per_page
 
 
 });
 
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const print = async () => {
   await sleep(500)
-  printDiv('printerable', t('supplier_cash_receipt.table.print_title'))
+  printDiv8CM('printerable', t('supplier_cash_receipt.table.print_title'))
 }
 
 const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
@@ -91,9 +92,9 @@ const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
     newSearchFilter.isOnDay = Number(false)
   }
 
-  const { suppliers_cash_receipts, pagination } = await getSuppliersCashReceiptsList(newSearchFilter)
+  const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(newSearchFilter)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
-  paginationVar.value = pagination
+  paginationVar.value = suppliersPagination
   searchFilter.value = newSearchFilter
 }
 

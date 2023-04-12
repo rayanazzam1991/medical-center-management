@@ -14,6 +14,7 @@ import { defaultItem, ItemSearchFilter } from '/@src/models/Warehouse/Item/item'
 import { ServiceItem } from '/@src/models/Others/Service/service';
 import { getItemsList } from '/@src/services/Warehouse/Item/itemService';
 import { Item } from "/@src/models/Warehouse/Item/item"
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
 export default defineComponent({
   props: {
@@ -230,7 +231,7 @@ export default defineComponent({
         notif.error(message)
       }
     });
-    return { t, pageTitle, onSubmit, removeItem, addItem, getItemsList, currentService, setItemIdValue, keyIncrement, serviceItems, viewWrapper, backRoute, ServiceConsts, serviceStore, itemsList, itemId, hasItem };
+    return { t, pageTitle, onSubmit, removeItem, addItem, addParenthesisToString, getItemsList, currentService, setItemIdValue, keyIncrement, serviceItems, viewWrapper, backRoute, ServiceConsts, serviceStore, itemsList, itemId, hasItem };
   },
   components: { ErrorMessage }
 })
@@ -379,7 +380,9 @@ export default defineComponent({
             <div class="columns is-multiline">
               <div class="column is-12">
                 <VField id="duration_minutes" v-slot="{ field }">
-                  <VLabel class="required">{{ t('service.form.duration') }}</VLabel>
+                  <VLabel class="required">{{ t('service.form.duration') }} {{
+                    addParenthesisToString(t('service.minutes'))
+                  }}</VLabel>
                   <VControl icon="feather:clock">
                     <VInput v-model="currentService.duration_minutes" type="number" />
                     <ErrorMessage name="duration_minutes" class="help is-danger" />

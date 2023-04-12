@@ -13,6 +13,7 @@ import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
+import usePrint8CM from '/@src/composable/usePrint8CM';
 
 const router = useRouter()
 const notif = useNotyf() as Notyf
@@ -35,13 +36,13 @@ viewWrapper.setPageTitle(t('ticket.details.title'))
 useHead({
   title: t('ticket.details.title'),
 })
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const print = async () => {
-  printDiv('printerable', t('ticket.table.title'))
+  printDiv8CM('printerable', t('ticket.table.title'))
 }
 const printServiceCard = async () => {
   await sleep(500)
-  printDiv('printerable_service_card', t('ticket.table.title'))
+  printDiv8CM('printerable_service_card', t('ticket.table.title'))
 }
 
 onMounted(async () => {

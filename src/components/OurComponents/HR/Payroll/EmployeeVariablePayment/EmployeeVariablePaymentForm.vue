@@ -18,6 +18,7 @@ import { addVariablePayment, editVariablePayment, getVariablePaymentsList } from
 import { useEmployeeVariablePayment } from '/@src/stores/HR/Payoll/EmployeeVariablePayment/employeeVariablePaymentStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from '/@src/utils/sleep';
+import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 
 
 
@@ -50,7 +51,7 @@ export default defineComponent({
         const requiredDueDate = ref('');
         const employeesList = ref<Employee[]>([])
         const variablePaymentsList =
-         ref<VariablePayment[]>([])
+            ref<VariablePayment[]>([])
         const originalEmployeeVariablePaymentStatus = ref<number>();
         const currencies = getCurrenciesFromStorage()
         const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
@@ -85,7 +86,8 @@ export default defineComponent({
             variablePaymentsList.value = variablePayments
             const employeesSearchFilter = {
                 per_page: 500,
-                is_salaries_related: true
+                is_salaries_related: true,
+                user_status_id: UserStatusConsts.ACTIVE,
             } as EmployeeSearchFilter
             const { employees } = await getEmployeesList(employeesSearchFilter)
             employeesList.value = employees
@@ -93,7 +95,7 @@ export default defineComponent({
         });
         onMounted(() => {
             getCurrentEmployeeVariablePayment();
-        });
+        }); 
 
         const validationSchema = employeeVariablePaymentValidationSchema
         const { handleSubmit } = useForm({

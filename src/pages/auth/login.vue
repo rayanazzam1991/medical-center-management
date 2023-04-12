@@ -36,41 +36,32 @@ onBeforeMount(() => {
 })
 
 const handleLogin = async () => {
-  if (!isLoading.value) {
-    isLoading.value = true
-    notif.dismissAll()
-    try {
+  isLoading.value = true
+  const { user, success, message } = await signIn(signRequest.value);
+  if (success && user && user.id != undefined) {
+    const { settings } = await getSettings();
+    const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter);
+    const { loggedEmployee } = await getEmployeeByUserId(user.id);
+    router.push({
+      name: '/dashboard/'
+    })
 
-      const loggedUser = await signIn(signRequest.value);
-      const { settings } = await getSettings();
-      const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter);
-      const { loggedEmployee } = await getEmployeeByUserId(loggedUser.id);
+    await sleep(200);
 
-      if (userAuth.isLoggedIn) {
+    notif.success(t('auth.success_login'))
 
-        router.push({
-          name: '/dashboard/'
-        })
-      }
-      await sleep(200);
-
-      notif.success(t('auth.success_login'))
-    } catch (err: any) {
-      if (err.response?.status !== undefined) {
-        if (err.response.status !== 401) throw err
-        {
-          notif.error({
-            message: err?.response?.data?.message,
-            duration: 5000,
-          })
-        }
-      }
-    } finally {
-      isLoading.value = false
-    }
+  } else {
+    notif.error({
+      message: message,
+      duration: 5000,
+    })
 
   }
+  isLoading.value = false
+
+
 }
+
 
 useHead({
   title: t('auth.login_title'),
