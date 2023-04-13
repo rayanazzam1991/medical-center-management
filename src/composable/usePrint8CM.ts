@@ -11,7 +11,7 @@ export default function usePrint8CM(styles: any) {
           <html>
             <head></title>
               <style>
-              @page { margin: 30px; size:8cm }
+              @page { size: 8cm; margin: 0; }
               </style>
             </head>
             <body>

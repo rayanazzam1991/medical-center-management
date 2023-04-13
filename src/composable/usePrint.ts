@@ -19,7 +19,6 @@ export default function usePrint(styles: any) {
             </body>
           </html>
         `);
-      // addStyles(popupWin, styles)
       popupWin?.document.close();
       popupWin?.focus();
       popupWin?.print();

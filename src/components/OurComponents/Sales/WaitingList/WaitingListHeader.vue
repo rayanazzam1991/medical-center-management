@@ -50,7 +50,7 @@ export default defineComponent({
         }
         onMounted(async () => {
             const employeeSearchFilter = {
-                status: UserStatusConsts.ACTIVE,
+                user_status_id: UserStatusConsts.ACTIVE,
                 per_page: 500
             } as EmployeeSearchFilter
             const { employees } = await getEmployeesList(employeeSearchFilter)

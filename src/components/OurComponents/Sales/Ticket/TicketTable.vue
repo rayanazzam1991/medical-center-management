@@ -612,7 +612,7 @@ const ticketServicesColumns = {
 
     </VModal>
     <TicketPrint :key="keyIncrement" :ticket="selectedTicketForPrint" />
-    <ClientServiceCardPrint :key="keyIncrement" :service-card="ticketCurrentWaitingList" />
+    <ClientServiceCardPrint :key="keyIncrement" :service-card-by-ticket-props="ticketCurrentWaitingList" />
 </template>
 <style lang="scss">
 .tooltip {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { HRDashboard, InventoryDashboard, defaultHRDashboard, defaultInventoryDashboard } from '/@src/models/Others/User/dashboard';
-import { getHumanResourcesDashboardData, getInventoryDashboardData } from '/@src/services/Others/User/dashboadService';
+import { getHumanResourcesDashboardData, getInventoryDashboardData } from '../../../services/Others/User/dashboardService';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { useDashboard } from '/@src/stores/Others/User/dashboardStore';
 

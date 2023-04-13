@@ -24,6 +24,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('service.table.title'))
@@ -108,7 +109,7 @@ const columns = {
   duration_minutes: {
     align: 'center',
     sortable: true,
-    label: t('service.table.columns.duration')
+    label: t('service.table.columns.duration') + addParenthesisToString(t('service.minutes'))
 
   },
   service_price: {

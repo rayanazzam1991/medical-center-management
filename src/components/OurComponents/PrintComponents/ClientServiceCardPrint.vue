@@ -1,21 +1,37 @@
 <script lang="ts">
 import { useI18n } from "vue-i18n"
 import { AccountConsts } from "/@src/models/Accounting/Account/account"
-import { defaultWaitingListByTicket } from "/@src/models/Sales/WaitingList/waitingList"
+import { defaultWaitingListByTicket, defaultServiceCard } from "/@src/models/Sales/WaitingList/waitingList"
+import { WaitingListByTicket } from "/@src/models/Sales/WaitingList/waitingList"
+import { ServiceCard } from "/@src/models/Sales/WaitingList/waitingList"
 
 
 export default defineComponent({
     props: {
-        serviceCard: {
+        serviceCardByTicketProps: {
             default: defaultWaitingListByTicket,
         },
+        serviceCardProps: {
+            default: defaultServiceCard,
+        },
+        isServiceCard: {
+            type: Boolean,
+            default: false
+        }
 
     },
 
     setup(props, context) {
         const { t } = useI18n()
-        const serviceCard = props.serviceCard
-        return { t, serviceCard, AccountConsts }
+        const serviceCardByTicket = ref<WaitingListByTicket>(defaultWaitingListByTicket)
+        const serviceCard = ref<ServiceCard>(defaultServiceCard)
+        if (props.serviceCardByTicketProps) {
+            serviceCardByTicket.value = props.serviceCardByTicketProps
+        }
+        if (props.serviceCardProps) {
+            serviceCard.value = props.serviceCardProps
+        }
+        return { t, serviceCardByTicket, serviceCard, AccountConsts }
     },
 
 
@@ -38,18 +54,25 @@ export default defineComponent({
 
         </div>
 
-        <div style=" font-size: 12px; width: 100%; display: flex; flex-direction: row-reverse;">
+        <div v-if="!$props.isServiceCard"
+            style=" font-size: 12px; width: 100%; display: flex; flex-direction: row-reverse;">
             <h2 style="font-weight: 600;text-align: center; font-size: 12px; width: 50%;">{{
-                t('print.ticket.customer_name') }}{{ serviceCard.ticket.customer.user.first_name }} {{
-        serviceCard.ticket.customer.user.last_name
+                t('print.ticket.customer_name') }}{{ serviceCardByTicket.ticket.customer.user.first_name }} {{
+        serviceCardByTicket.ticket.customer.user.last_name
     }}</h2>
-
         </div>
-        <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+        <div v-else style=" font-size: 12px; width: 100%; display: flex; flex-direction: row-reverse;">
+            <h2 style="font-weight: 600;text-align: center; font-size: 12px; width: 50%;">{{
+                t('print.ticket.customer_name') }}{{ serviceCard.customer.user.first_name }} {{
+        serviceCard.customer.user.last_name
+    }}</h2>
+        </div>
+        <table v-if="!$props.isServiceCard" style="width: 100%; font-size: 12px; border-collapse: collapse;">
             <tbody>
                 <tr>
 
-                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{ serviceCard.turn_number }}</td>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{ serviceCardByTicket.turn_number
+                    }}</td>
                     <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
                         t('print.ticket.turn_number')
                     }}</td>
@@ -58,8 +81,8 @@ export default defineComponent({
                 <tr>
 
                     <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
-                        serviceCard.current_provider.user.first_name
-                    }} {{ serviceCard.current_provider.user.last_name }}</td>
+                        serviceCardByTicket.current_provider.user.first_name
+                    }} {{ serviceCardByTicket.current_provider.user.last_name }}</td>
                     <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
                         t('print.ticket.current_service_provider')
                     }}</td>
@@ -67,6 +90,27 @@ export default defineComponent({
                 </tr>
             </tbody>
         </table>
+        <table v-else style="width: 100%; font-size: 12px; border-collapse: collapse;">
+            <tbody>
+                <tr>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{ serviceCard.turn_number
+                    }}</td>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{ t('ticket.details.turn_number')
+                    }}</td>
+
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
+                        serviceCard.provider.user.first_name
+                    }} {{ serviceCard.provider.user.last_name }}</td>
+                    <td style="text-align: center; padding: 3px; border: 1px solid #ddd;">{{
+                        t('print.ticket.current_service_provider')
+                    }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+
     </div>
 </template>
 

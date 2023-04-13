@@ -11,7 +11,7 @@ import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Ot
 import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
@@ -485,7 +485,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <VOption value="">{{ t('employee.form.status') }}</VOption>
                         <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
                           {{
-                            status.name
+                            UserStatusConsts.getStatusName(status.id)
                           }}
                         </VOption>
                       </VSelect>
@@ -493,10 +493,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                     </VControl>
                   </VField>
                 </div>
-
               </div>
             </div>
-            <!--Fieldset-->
           </div>
 
         </div>

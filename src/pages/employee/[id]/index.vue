@@ -1004,7 +1004,6 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
     @close="changeStatusPopup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
-        <!--Fieldset-->
         <div class="form-fieldset">
           <div class="columns is-multiline">
             <div class="column is-12">
@@ -1013,7 +1012,9 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
                 <VControl>
                   <VSelect v-if="currentEmployee.user.status" v-model="currentEmployee.user.status.id">
                     <VOption value="">{{ t('employee.details.select_employee_status') }}</VOption>
-                    <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{ status.name }}
+                    <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
+                      UserStatusConsts.getStatusName(status.id)
+                    }}
                     </VOption>
                   </VSelect>
                   <ErrorMessage name="user_status_id" />

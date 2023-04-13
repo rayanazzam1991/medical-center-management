@@ -156,3 +156,24 @@ export async function updateCustomerNotes(
     var message: string = customerResponse.message ?? ''
     return { success, error_code, message, customer }
 }
+
+export function resetCustomerSearchFilter() {
+    const blankSearchFilter: CustomerSearchFilter = {
+        order: undefined,
+        order_by: undefined,
+        page: undefined,
+        per_page: undefined,
+        customer_group_id: undefined,
+        date_between: undefined,
+        from: undefined,
+        is_completed: undefined,
+        user_status_id: undefined,
+        name: undefined,
+        phone_number: undefined,
+        quick_search: undefined,
+        to: undefined
+    }
+
+    return blankSearchFilter
+
+}

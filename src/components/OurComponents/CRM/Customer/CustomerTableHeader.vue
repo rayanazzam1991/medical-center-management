@@ -4,6 +4,7 @@ import { defaultCustomerSearchFilter, CustomerSearchFilter } from "/@src/models/
 import { defaultPagination } from "/@src/utils/response"
 import { isNumber } from "/@src/composable/helpers/isNumberCheck"
 import { Permissions } from "/@src/utils/consts/rolesPermissions"
+import { useCustomer } from "/@src/stores/CRM/Customer/customerStore"
 
 export default defineComponent({
     props: {
@@ -21,7 +22,16 @@ export default defineComponent({
         default_per_page: {
             type: Number,
             default: 1,
-        }
+        },
+        is_for_dashboard: {
+            type: Boolean,
+            default: false,
+        },
+        with_title: {
+            type: Boolean,
+            default: false,
+        },
+
 
     },
 
@@ -37,6 +47,7 @@ export default defineComponent({
         const popUpTrigger = (value: boolean) => {
             searchFilterPop.value = value
         }
+        const customerStore = useCustomer()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchFilterPop = ref(false)
@@ -112,7 +123,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return { t, Permissions, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
+        return { t, Permissions, customerStore, searchFilter, keyIncrement, is_reseted, default_per_page, onOpen, resetFilter_popup, search_filter, popUpTrigger, resetFilter, search, searchFilterPop, perPage, pagination, quickSearch, quickSearchField }
     },
 
 
@@ -127,24 +138,32 @@ export default defineComponent({
     <form class="form-layout" v-on:submit.prevent="quickSearch">
         <div class="form-outer">
             <div class="form-header stuck-header">
+                <h1 v-if="$props.with_title" class="title">
+                    {{ t('customer.table.search_for_customer_title') }}
+                </h1>
                 <div class="form-header-inner">
-                    <div class="left my-4 mx-2 ">
+                    <div class="left my-4 mx-2 " :class="[$props.is_for_dashboard && 'bigger-width']">
                         <div class="columns is-flex is-align-items-center">
-                            <VControl class="mr-2" icon="feather:search">
+                            <VControl :class="[$props.is_for_dashboard && 'bigger-width']" class="mr-2"
+                                icon="feather:search">
                                 <VInput v-model="quickSearchField" type="text"
                                     :placeholder="t('customer.search_filter.quick_search')" />
                             </VControl>
-                            <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
+                            <VIconButton v-if="!$props.is_for_dashboard" class="mr-2" @click.prevent="onOpen"
+                                icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
                                 color="danger" />
+                            <div v-if="customerStore.loading && $props.is_for_dashboard"
+                                class="loader is-loading m-r-15 m-b-05-rem w35-h35">
+                            </div>
                         </div>
                     </div>
 
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
-                            <VControl class="mr-2 ">
+                            <VControl class="mr-2 "
+                                v-if="(searchFilter.name && $props.is_for_dashboard && !customerStore.loading) || !$props.is_for_dashboard">
                                 <div class="select">
-
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page * 0.1 }}
                                         </VOption>
@@ -159,7 +178,7 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl>
+                            <VControl v-if="!$props.is_for_dashboard">
                                 <VButton v-permission="Permissions.CUSTOMER_CREATE" class="" to="/customer-add"
                                     color="primary">{{ button_name }}
                                 </VButton>
@@ -169,11 +188,27 @@ export default defineComponent({
                 </div>
             </div>
         </div>
-        <CustomerSearchFilterModal :key="keyIncrement" :search_filter_popup="searchFilterPop"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+        <CustomerSearchFilterModal v-if="!$props.is_for_dashboard" :key="keyIncrement"
+            :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger" @search="search_filter"
+            @resetFilter="resetFilter_popup" />
     </form>
 </template>
 
 <style  scoped lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.bigger-width {
+    width: 55% !important;
+}
+
+.title {
+    font-family: var(--font-alt);
+    font-size: 1.25rem;
+    margin-top: 1rem;
+
+}
+
+.loader {
+    padding: 1.25rem;
+}
 </style>

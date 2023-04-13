@@ -1,13 +1,13 @@
 import { useDashboard } from "/@src/stores/Others/User/dashboardStore"
 
 export async function getAdminDashboardData() {
-  const response = useDashboard()
-  await response.getAdminDashboardStore()
-  const dashboard_data = response.adminDashboard
-  const success: boolean = response.success ?? false
-  const error_code: string = response.error_code ?? ''
-  const message: string = response.message ?? ''
-  return { success, error_code, message, dashboard_data }
+    const response = useDashboard()
+    await response.getAdminDashboardStore()
+    const dashboard_data = response.adminDashboard
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message, dashboard_data }
 
 }
 export async function getInventoryDashboardData() {
@@ -38,5 +38,15 @@ export async function getAnalystDashboardData() {
     const error_code: string = response.error_code ?? ''
     const message: string = response.message ?? ''
     return { success, error_code, message, analyst_dashboard }
+
+}
+export async function getReceptionistDashboardData() {
+    const response = useDashboard()
+    await response.getReceptionistDashboardStore()
+    const receptionist_dashboard = response.receptionistDashboard
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message, receptionist_dashboard }
 
 }

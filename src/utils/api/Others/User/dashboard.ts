@@ -4,11 +4,11 @@ import { AxiosInstance } from "axios";
 
 
 export async function getAdminDashboardApi(
-  api: AxiosInstance,
+    api: AxiosInstance,
 ): Promise<{ response: CustomResponseSingle }> {
-  const { data: response, headers } = await api.get(`dashboard/getAdminDashboard`)
+    const { data: response, headers } = await api.get(`dashboard/getAdminDashboard`)
 
-  return { response }
+    return { response }
 }
 
 
@@ -30,6 +30,13 @@ export async function getAnalystDashboadApi(
     api: AxiosInstance,
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.get(`dashboard/getAnalystDashboard`)
+
+    return { response }
+}
+export async function getReceptionistDashboadApi(
+    api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`dashboard/getReceptionistDashboard`)
 
     return { response }
 }

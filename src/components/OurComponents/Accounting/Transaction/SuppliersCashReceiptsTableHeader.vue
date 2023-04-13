@@ -149,6 +149,13 @@ export default defineComponent({
   </form>
 </template>
 
-<style   lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.title {
+  font-family: var(--font-alt);
+  font-size: 1.25rem;
+  margin-top: 1rem;
+
+}
 </style>

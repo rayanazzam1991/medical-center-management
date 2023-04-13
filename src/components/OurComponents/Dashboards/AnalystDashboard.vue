@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { AnalystDashboard, defaultAnalystDashboard } from '/@src/models/Others/User/dashboard';
-import { getAnalystDashboardData } from '/@src/services/Others/User/dashboadService';
-import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { getAnalystDashboardData } from '../../../services/Others/User/dashboardService';
 import { useDashboard } from '/@src/stores/Others/User/dashboardStore';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 
