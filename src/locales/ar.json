@@ -1648,8 +1648,8 @@
   },
   "employee_variable_payment_statuses": {
     "pending": " بانتظار الموافقة",
-    "approved": "مستحق بتاريخ محدد",
-    "waiting": "تمت الموافقة",
+    "approved": "تمت الموافقة",
+    "waiting": "مستحق بتاريخ محدد",
     "released": "محرر",
     "inactive": "غير فعال"
   },
