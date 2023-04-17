@@ -17,6 +17,7 @@ export interface User {
     status: UserStatus
     roles?: Role[]
     token?: string
+    default_role?: Role
 }
 export interface CreateUpdateUser {
     id?: number
@@ -30,6 +31,7 @@ export interface CreateUpdateUser {
     city_id?: number
     room_id?: number
     user_status_id?: number
+    default_role_id?: number
     roles: string[]
 }
 export interface ChangeUserStatus {
@@ -58,6 +60,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
     city_id: undefined,
     room_id: undefined,
     user_status_id: undefined,
+    default_role_id: undefined,
     password: '0000000000',
     roles: []
 }
@@ -77,7 +80,8 @@ export const defaultUser: User = {
     status: defaultUserStatus,
     password: '',
     token: undefined,
-    room: defaultRoom
+    room: defaultRoom,
+    default_role: undefined
 }
 
 export const defaultUserSearchFilter: UserSearchFilter = {

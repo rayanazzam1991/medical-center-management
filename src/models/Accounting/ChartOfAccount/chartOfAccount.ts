@@ -1,4 +1,4 @@
-import { AccountConsts } from "../Account/account"
+import { Account, AccountConsts } from "../Account/account"
 
 export interface ChartOfAccount {
   id: number
@@ -7,6 +7,15 @@ export interface ChartOfAccount {
   has_dynamic_account: boolean
   parent?: ChartOfAccount
   account_type: number
+}
+export interface ChartOfAccountWithChildren {
+  id: number
+  code: string
+  name: string
+  has_dynamic_account: boolean
+  account_type: number
+  children?: ChartOfAccountWithChildren[]
+  accounts?: Account[]
 }
 
 export const defaultChartOfAccount: ChartOfAccount = {

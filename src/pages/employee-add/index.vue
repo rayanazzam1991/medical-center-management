@@ -74,6 +74,7 @@ const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
 const rolesList = ref<Role[]>([])
+const selectedRolesList = ref<Role[]>([])
 const keyIncrement = ref(0)
 const isUser = ref(false)
 onMounted(async () => {
@@ -189,12 +190,15 @@ const onSubmitAdd = handleSubmit(async (values) => {
     employeeForm.userForm.user_status_id = userData.user_status_id
     if (isUser.value == false) {
       employeeForm.userForm.roles.push('No_Access')
+      const no_access_id = rolesList.value.find((role) => role.name == 'No_Access')?.id
+      employeeForm.userForm.default_role_id = undefined
     } else if (isUser.value == true && userData.roles.length <= 0) {
       notif.error({ message: t('toast.error.employee.choose_role'), duration: 4000 })
       rolesError = true
       return
     } else {
       employeeForm.userForm.roles = userData.roles
+      employeeForm.userForm.default_role_id = userData.default_role_id
     }
     const { employee, success, message } = await addEmployee(employeeForm.data, employeeForm.userForm)
 
@@ -216,6 +220,20 @@ const onSubmitAdd = handleSubmit(async (values) => {
   }
 })
 
+const updateSelectedRoles = () => {
+  if (currentUser.value.roles) {
+    selectedRolesList.value = []
+    rolesList.value.forEach(role => {
+      const myRole = currentUser.value.roles.find((roleEl) => roleEl == role.name)
+      if (myRole) {
+        const roleVal = role
+        selectedRolesList.value.push(roleVal)
+      }
+    });
+    currentUser.value.default_role_id = selectedRolesList.value[0].id
+  }
+
+}
 </script>
 
 <template>
@@ -332,11 +350,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
             <!--Fieldset-->
             <div class="form-fieldset" :hidden="!isUser">
               <div class="columns is-multiline">
-                <div class="column is-12">
+                <div class="column is-6">
                   <VField>
                     <VLabel class="required">{{ t('employee.form.roles') }}</VLabel>
                     <VControl>
-                      <VSelect v-if="currentUser" v-model="currentUser.roles" multiple size="3">
+                      <VSelect @click="updateSelectedRoles" v-if="currentUser" v-model="currentUser.roles" multiple
+                        size="3">
                         <VOption v-for="role in rolesList" :key="role.name" :value="role.name">
                           {{
                             role.display_name
@@ -344,6 +363,20 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         </VOption>
                       </VSelect>
                       <p class="help is-info">{{ t('employee.form.roles_helper') }}</p>
+                    </VControl>
+                  </VField>
+                </div>
+                <div class="column is-6">
+                  <VField>
+                    <VLabel>{{ t('employee.form.default_role') }}</VLabel>
+                    <VControl>
+                      <VSelect v-if="currentUser" v-model="currentUser.default_role_id">
+                        <VOption v-for="role in selectedRolesList" :key="role.id" :value="role.id">
+                          {{
+                            role.display_name
+                          }}
+                        </VOption>
+                      </VSelect>
                     </VControl>
                   </VField>
                 </div>

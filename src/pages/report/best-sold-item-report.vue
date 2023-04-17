@@ -1,0 +1,145 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "best_sold_item_report"
+        ]
+    }
+}
+</route>        
+            
+<script setup lang="ts">
+import { useHead } from '@vueuse/head'
+import { useViewWrapper } from '/@src/stores/viewWrapper'
+import { useI18n } from 'vue-i18n'
+import { useReport } from '/@src/stores/Others/Report/reportStore'
+import { resetBestSoldItemFilter, getBestSoldItemReport } from '/@src/services/Others/Report/reportService'
+import { Category, CategorySearchFilter } from '/@src/models/Warehouse/Category/category'
+import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
+
+const { t } = useI18n()
+const viewWrapper = useViewWrapper()
+viewWrapper.setPageTitle(t('reports.best_sold_item.title'))
+useHead({
+    title: t('reports.best_sold_item.title'),
+})
+const reportStore = useReport()
+const reportFilter = ref(resetBestSoldItemFilter());
+const pageTitle = t('reports.best_sold_item.title');
+const mainCategoriesList = ref<Category[]>([])
+const subCategoriesList = ref<Category[]>([])
+const categoriesList = ref<Category[]>([])
+onMounted(async () => {
+
+    let categorySearchFilter = {} as CategorySearchFilter
+    categorySearchFilter.per_page = 500
+    const { categories } = await getCategoriesList(categorySearchFilter)
+    categoriesList.value = categories
+    categories.forEach((category) => {
+        if (!category.parent) {
+            mainCategoriesList.value.push(category)
+        }
+    });
+});
+
+const onSubmit = async () => {
+    const { report, success } = await getBestSoldItemReport(reportFilter.value);
+    if (success && report) {
+        const blob = new Blob([report], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = t('reports.best_sold_item.title') + ' ' + new Date().toISOString().slice(0, 10) + '.xlsx';
+        link.click();
+    }
+};
+
+const updateCategories = () => {
+    if (reportFilter.value.parent_category_id) {
+        subCategoriesList.value = []
+        categoriesList.value.forEach(category => {
+            if (category.parent?.id == reportFilter.value.parent_category_id)
+                subCategoriesList.value.push(category)
+        });
+    }
+
+}
+</script>
+        
+<template>
+    <div class="page-content-inner">
+        <FormHeader :title="pageTitle" :form_submit_name="'Export'" type="submit" @onSubmit="onSubmit"
+            :isLoading="reportStore?.loading" />
+        <form class="form-layout" @submit.prevent="onSubmit">
+            <div class="form-outer">
+                <div class="form-body">
+                    <div class="form-fieldset">
+                        <div class="fieldset-heading">
+                            <h4>{{ pageTitle }}</h4>
+                        </div>
+                        <div class="columns is-multiline">
+                            <div class="column is-6">
+                                <VField>
+                                    <VLabel>{{ t('reports.best_sold_item.date_from') }}</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="reportFilter.date_from" placeholder="" type="date" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-6">
+                                <VField>
+                                    <VLabel>{{ t('reports.best_sold_item.date_to') }}</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="reportFilter.date_to" placeholder="" type="date" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>{{ t('reports.best_sold_item.parent_category_id') }}</VLabel>
+                                    <VControl>
+                                        <VSelect @click="updateCategories" v-model="reportFilter.parent_category_id">
+                                            <VOption value="">{{ t('reports.best_sold_item.parent_category_id') }}</VOption>
+                                            <VOption v-for="mainCategory in mainCategoriesList" :key="mainCategory.id"
+                                                :value="mainCategory.id">{{ mainCategory.name }}
+                                            </VOption>
+                                        </VSelect>
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>{{ t('reports.best_sold_item.item_category_id') }}</VLabel>
+                                    <VControl>
+                                        <VSelect v-model="reportFilter.item_category_id">
+                                            <VOption value="">{{ t('reports.best_sold_item.item_category_id') }}</VOption>
+                                            <VOption v-for="subCategory in subCategoriesList" :key="subCategory.id"
+                                                :value="subCategory.id">{{ subCategory.name }}
+                                            </VOption>
+                                        </VSelect>
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>{{ t('reports.best_sold_item.count') }}</VLabel>
+                                    <VControl icon="feather:chevrons-right">
+                                        <VInput v-model="reportFilter.count" placeholder="" type="number" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</template>
+<style scoped lang="scss">
+@import '/@src/scss/styles/formPage.scss';
+</style>
+      

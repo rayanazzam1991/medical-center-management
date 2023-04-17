@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Customer, CustomerSearchFilter, defaultCustomer } from '/@src/models/CRM/Customer/customer';
 import { defaultCreateVariablePayment, defaultUpdateVariablePayment, defaultVariablePayment, VariablePayment, VariablePaymentConsts } from '/@src/models/HR/Payroll/VariablePayment/variablePayment';
-import { defaultCreateReminder } from '/@src/models/Sales/Reminder/reminder';
+import { defaultCreateReminder, defaultUpdateReminder } from '/@src/models/Sales/Reminder/reminder';
 import { defaultTicketService } from '/@src/models/Sales/TicketService/ticketService';
 import { variablePaymentValidationSchema } from '/@src/rules/HR/Payroll/VariablePayment/variablePaymentValidation';
 import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
@@ -19,8 +19,10 @@ import sleep from '/@src/utils/sleep';
 import Datepicker from '@vuepic/vue-datepicker';
 import { useDarkmode } from '/@src/stores/darkmode';
 import { reminderValidationSchema } from '/@src/rules/Sales/Reminder/reminderValidationSchema';
-import { createReminder } from '/@src/services/Sales/Reminder/reminderService';
+import { createReminder, getReminder, updateReminder } from '/@src/services/Sales/Reminder/reminderService';
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
+import { ReminderConsts } from '/@src/models/Sales/Reminder/reminder';
+import { UpdateReminder } from '/@src/models/Sales/Reminder/reminder';
 
 
 
@@ -33,6 +35,8 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
+        const route = useRoute();
+        const router = useRouter();
         const { t, locale } = useI18n()
         const dark = useDarkmode()
 
@@ -41,13 +45,15 @@ export default defineComponent({
         const head = useHead({
             title: t('reminder.form.page_title'),
         });
+        const reminderId = ref(0);
+        // @ts-ignore
+        reminderId.value = route.params?.id as number ?? 0;
+
         const reminderStore = useReminder()
         const isLoading = ref(false)
         const notif = useNotyf() as Notyf;
         const formType = ref("");
         formType.value = props.formType;
-        const route = useRoute();
-        const router = useRouter();
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
         const pageTitle = t('reminder.form.form_header', { type: formTypeName });
         const backRoute = "/reminder";
@@ -73,6 +79,22 @@ export default defineComponent({
             ticketServiceId.value = undefined
             currentReminder.value.ticket_service_id = undefined
         }
+        const getCurrentReminder = async () => {
+            if (reminderId.value === 0) {
+                return
+            }
+            const { reminder } = await getReminder(reminderId.value);
+            currentReminder.value.customer_id = reminder.customer?.id ?? 0
+            currentReminder.value.ticket_service_id = reminder.service?.id
+            currentReminder.value.date = reminder.date
+            currentReminder.value.time = reminder.time
+            currentReminder.value.status = reminder.status
+            currentReminder.value.note = reminder.note
+            date.value = reminder.date
+            const [hour, minutes] = reminder.time.split(':') as [string, string]
+            time.value.hours = hour
+            time.value.minutes = minutes
+        };
 
 
         onMounted(async () => {
@@ -84,7 +106,18 @@ export default defineComponent({
                     const { ticket_service } = await getTicketService(ticketServiceId.value)
                     sellectedTicketService.value = ticket_service
                 }
-
+            }
+            if (formType.value == 'Edit') {
+                await getCurrentReminder()
+                const { customer } = await getCustomer(currentReminder.value.customer_id)
+                sellectedCustomer.value = customer
+                if (currentReminder.value.ticket_service_id) {
+                    const { ticket_service } = await getTicketService(currentReminder.value.ticket_service_id)
+                    sellectedTicketService.value = ticket_service
+                }
+                enableSelectCustomer.value = false
+                ticketServiceId.value = currentReminder.value.ticket_service_id
+                setCustomerIdValue()
             }
             isLoading.value = false
 
@@ -97,16 +130,26 @@ export default defineComponent({
         const { handleSubmit, setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
+                customer_id: currentReminder?.value?.customer_id ?? 0,
+                date: currentReminder?.value?.date,
+                note: currentReminder?.value?.note,
+                time: currentReminder?.value?.time,
+                status: currentReminder?.value?.status,
+
             } : {
-                customer_id: currentReminder.value.customer_id,
-                name: "",
-                type: VariablePaymentConsts.INCREMENT_TYPE,
-                status: VariablePaymentConsts.ACTIVE,
+                customer_id: currentReminder?.value?.customer_id ?? 0,
+                note: "",
+                date: "",
+                time: "",
+                status: ReminderConsts.ACTIVE,
             },
         });
         const onSubmit = async (method: String) => {
             if (method == "Add") {
                 await onSubmitAdd();
+            } else if (method == "Edit") {
+                console.log('asd')
+                await onSubmitEdit();
             } else
                 return;
         };
@@ -133,7 +176,25 @@ export default defineComponent({
 
             }
         });
-        return { t, UserStatusConsts, getCustomersList, pageTitle, onSubmit, setCustomerIdValue, currentReminder, isLoading, viewWrapper, backRoute, sellectedTicketService, ticketServiceId, sellectedCustomer, reminderStore, time, date, locale, dark, enableSelectCustomer };
+        const onSubmitEdit = handleSubmit(async (values) => {
+            let updateReminderData: UpdateReminder = defaultUpdateReminder
+            updateReminderData.date = date.value
+            updateReminderData.time = time.value.hours + ':' + time.value.minutes
+            updateReminderData.note = currentReminder.value.note
+            updateReminderData.status = currentReminder.value.status
+            const { success, message } = await updateReminder(reminderId.value, updateReminderData);
+            if (success) {
+                notif.dismissAll();
+                await sleep(200);
+                notif.success(t('toast.success.edit'));
+                router.push({ path: `/reminder` });
+            } else {
+                await sleep(200);
+                notif.error(message)
+            }
+
+        });
+        return { t, UserStatusConsts, ReminderConsts, getCustomersList, pageTitle, onSubmit, setCustomerIdValue, currentReminder, isLoading, viewWrapper, backRoute, sellectedTicketService, ticketServiceId, sellectedCustomer, reminderStore, time, date, locale, dark, enableSelectCustomer };
     },
     components: { ErrorMessage, Datepicker }
 })
@@ -218,6 +279,23 @@ export default defineComponent({
                                             time-picker :select-text="t('date_picker.select')" :dark="dark.isDark"
                                             class="date-picker-dircetion" />
                                         <ErrorMessage class="help is-danger" name="time" />
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div v-if="formType == 'Edit'" class="column is-12">
+                                <VField id="status" v-slot="{ field }">
+                                    <VLabel class="required">{{ t('position.table.columns.status') }}</VLabel>
+                                    <VControl>
+                                        <VRadio v-model="currentReminder.status" :value="ReminderConsts.ACTIVE"
+                                            :label="ReminderConsts.getStatusName(ReminderConsts.ACTIVE)" name="status"
+                                            color="primary" />
+                                        <VRadio v-model="currentReminder.status" :value="ReminderConsts.INACTIVE"
+                                            :label="ReminderConsts.getStatusName(ReminderConsts.INACTIVE)" name="status"
+                                            color="success" />
+                                        <VRadio v-model="currentReminder.status" :value="ReminderConsts.DONE"
+                                            :label="ReminderConsts.getStatusName(ReminderConsts.DONE)" name="status"
+                                            color="success" />
+                                        <ErrorMessage class="help is-danger" name="status" />
                                     </VControl>
                                 </VField>
                             </div>

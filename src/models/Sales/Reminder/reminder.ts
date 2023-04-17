@@ -22,7 +22,15 @@ export interface CreateReminder {
     note: string
     date: string
     time: string
+    status: number
 }
+export interface UpdateReminder {
+    note: string
+    date: string
+    time: string
+    status: number
+}
+
 export interface Reminder {
     id: number
     customer: Customer
@@ -39,6 +47,13 @@ export const defaultCreateReminder: CreateReminder = {
     note: '',
     date: '',
     time: '',
+    status: 1
+}
+export const defaultUpdateReminder: UpdateReminder = {
+    date: '',
+    note: '',
+    status: 1,
+    time: ''
 }
 
 export const defaultReminder: Reminder = {

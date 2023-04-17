@@ -13,3 +13,9 @@ export async function getChartOfAccountsApi(
   })
   return { response }
 }
+export async function getChartOfAccountsTreeApi(
+  api: AxiosInstance,
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('chartOfAccount/getChartOfAccountsTree')
+  return { response }
+}

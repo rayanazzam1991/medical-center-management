@@ -232,9 +232,10 @@ const serveConfirmation = (requestedServiceId: number) => {
                                     <div v-else>
                                         <VField>
                                             <VControl>
-                                                <VInput :placeholder="t('employee.waiting_list.type_notes')"
-                                                    @input="() => updateTicketNotesHelper(requested_service.id)" type="text"
-                                                    v-model.number="requested_service.note" />
+                                                <VTextarea @input="() => updateTicketNotesHelper(requested_service.id)"
+                                                    v-model="requested_service.note" rows="1"
+                                                    :placeholder="t('employee.waiting_list.type_notes')">
+                                                </VTextarea>
                                             </VControl>
                                         </VField>
                                     </div>
@@ -309,7 +310,7 @@ const serveConfirmation = (requestedServiceId: number) => {
     </VModal>
 </template>
     
-<style lang="scss">
+<style  lang="scss">
 .header {
     background-color: var(--white);
     min-height: 50px;
@@ -330,7 +331,7 @@ const serveConfirmation = (requestedServiceId: number) => {
     flex: 1;
     display: inline-block;
     width: 100%;
-    height: 70vh;
+    height: 60vh;
     padding: 20px;
     background-color: var(--white);
     border-radius: var(--radius-large);
