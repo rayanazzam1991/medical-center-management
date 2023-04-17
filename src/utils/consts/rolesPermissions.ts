@@ -1,4 +1,4 @@
-import {defaultUser, User} from "/@src/models/Others/User/user"
+import { defaultUser, User } from "/@src/models/Others/User/user"
 
 export interface Role {
   id: number,
@@ -419,6 +419,16 @@ export enum Permissions {
   CRM_ACCESS = 'crm_access',
   TICKETING_ACCESS = 'ticketing_access',
   INVENTORY_SECTION_ACCESS = 'inventory_section_access',
+  REPORTING_ACCESS = 'reporting_access',
+
+  BEST_CLIENT_REPORT = 'best_client_report',
+  BEST_SERVICE_PROVIDER_REPORT = 'best_service_provider_report',
+  BEST_SOLD_ITEM_REPORT = 'best_sold_item_report',
+  MOST_CONSUMED_ITEM_REPORT = 'most_consumed_item_report',
+  SERVICE_PROVIDER_MONTHLY_REPORT = 'service_provider_monthly_report',
+  BEST_ATTENDING_EMPLOYEE_REPORT = 'best_attending_employee_report',
+  WORST_ATTENDING_EMPLOYEE_REPORT = 'worst_attending_employee_report',
+  ACCOUNT_HISTORY_REPORT = 'account_history_report'
 
 
 }

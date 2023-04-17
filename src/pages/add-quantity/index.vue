@@ -80,6 +80,7 @@ const supplierAccountId = ref<number>(0)
 const cashAccountId = ref<number>(0)
 const inventoryAccountId = ref<number>(0)
 const currencyId = ref<number>(0)
+const itemId = ref<number>(0)
 const currencyRate = ref<number>(1)
 const enableCurrencyRate = ref(false)
 const cashAmount = ref(0)
@@ -214,6 +215,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
   const selectedSupplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierAccountId.value)
   addQuantityForm.item_quantity = itemQuantity.value
   addQuantityForm.add_item_cost = itemCost.value
+  addQuantityForm.item_id = itemId.value
   addQuantityForm.causerable_account_id = selectedSupplierAccount?.id ?? 0
   addQuantityForm.record.amount = totalAmount.value
   addQuantityForm.record.currency_id = currencyId.value
@@ -274,6 +276,16 @@ watch(itemQuantity, (value) => {
   totalAmount.value = value * itemCost.value
 }
 )
+watch(itemId, (value) => {
+  if (value) {
+    const item = allItemsList.value.find((item) => item.id == value)
+    itemCost.value = item?.cost ?? 0
+  } else {
+    itemCost.value = 0
+  }
+}
+)
+
 watch(itemCost, (value) => {
   totalAmount.value = itemQuantity.value * value
 }
@@ -368,8 +380,7 @@ watch(cashAccountId, (value) => {
                     </div>
                   </VLabel>
                   <VControl>
-                    <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity"
-                      v-model="currentaddQuantity.item_id">
+                    <VSelect :disabled="itemsList.length <= 0" v-if="currentaddQuantity" v-model="itemId">
                       <VOption value=""> {{ t('add_quantity.form.select_item') }}</VOption>
                       <VOption v-for="item in itemsList" :key="item.id" :value="item.id">
                         {{ item.name }}

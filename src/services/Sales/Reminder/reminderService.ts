@@ -1,4 +1,4 @@
-import { ChangeReminderStatus, CreateReminder, defaultReminder, Reminder, ReminderSearchFilter } from "/@src/models/Sales/Reminder/reminder"
+import { ChangeReminderStatus, CreateReminder, defaultReminder, Reminder, ReminderSearchFilter, UpdateReminder } from "/@src/models/Sales/Reminder/reminder"
 import { useReminder } from "/@src/stores/Sales/Reminder/reminderStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -6,6 +6,24 @@ import { Pagination } from "/@src/utils/response"
 export async function createReminder(reminderData: CreateReminder) {
   const reponse = useReminder()
   let reminder: Reminder = await reponse.createReminderStore(reminderData) ?? defaultReminder
+  let success: boolean = reponse.success ?? false
+  let error_code: string = reponse.error_code ?? ''
+  let message: string = reponse.message ?? ''
+  return { success, error_code, message, reminder }
+
+}
+export async function updateReminder(reminderId: number, reminderData: UpdateReminder) {
+  const reponse = useReminder()
+  let reminder: Reminder = await reponse.updateReminderStore(reminderId, reminderData) ?? defaultReminder
+  let success: boolean = reponse.success ?? false
+  let error_code: string = reponse.error_code ?? ''
+  let message: string = reponse.message ?? ''
+  return { success, error_code, message, reminder }
+
+}
+export async function getReminder(reminderId: number) {
+  const reponse = useReminder()
+  let reminder: Reminder = await reponse.getReminderStore(reminderId) ?? defaultReminder
   let success: boolean = reponse.success ?? false
   let error_code: string = reponse.error_code ?? ''
   let message: string = reponse.message ?? ''

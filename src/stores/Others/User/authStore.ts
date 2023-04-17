@@ -30,16 +30,6 @@ export const useAuth = defineStore('userAuth', () => {
     } else {
       return undefined
     }
-    // let parsedUser = '';
-    // try {
-    //   parsedUser = JSON.parse(loggedUser.value) as User;
-
-    // } catch (error) {
-    //   console.log('Failed to parse JSON string:', error);
-    //   parsedUser = undefined
-    //   // Handle the error
-    // }
-    // return parsedUser;
 
   }
   function setToken(newToken: string) {

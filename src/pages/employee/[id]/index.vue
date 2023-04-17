@@ -190,6 +190,7 @@ const fetchEmployee = async () => {
   employeeForm.userForm.city_id = employee.user.city.id
   employeeForm.userForm.roles = employee.user.roles?.map(function (element) { return element.name }) ?? []
   employeeForm.userForm.user_status_id = employee.user.status.id
+  employeeForm.userForm.default_role_id = employee.user.default_role?.id
   employeeForm.dataUpdate.starting_date = employee.starting_date
   employeeForm.dataUpdate.basic_salary = employee.basic_salary
   employeeForm.dataUpdate.end_date = employee?.end_date

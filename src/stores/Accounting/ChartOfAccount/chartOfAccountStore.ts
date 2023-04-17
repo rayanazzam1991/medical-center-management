@@ -1,13 +1,14 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { ChartOfAccount, ChartOfAccountSearchFilter } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount"
-import { getChartOfAccountsApi } from "/@src/utils/api/Accounting/ChartOfAccount"
+import { ChartOfAccount, ChartOfAccountSearchFilter, ChartOfAccountWithChildren } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount"
+import { getChartOfAccountsApi, getChartOfAccountsTreeApi } from "/@src/utils/api/Accounting/ChartOfAccount"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
 export const useChartOfAccount = defineStore('chartOfAccount', () => {
   const api = useApi()
   const chartOfAccounts = ref<ChartOfAccount[]>([])
+  const chartOfAccountsWithchildren = ref<ChartOfAccountWithChildren[]>([])
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
   const success = ref<boolean>()
@@ -36,6 +37,27 @@ export const useChartOfAccount = defineStore('chartOfAccount', () => {
     }
   }
 
+  async function getChartOfAccountsTreeStore() {
+    if (loading.value) return
+    loading.value = true
+
+    try {
+      const returnedResponse = await getChartOfAccountsTreeApi(api)
+      chartOfAccountsWithchildren.value = returnedResponse.response.data
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
 
   return {
@@ -43,9 +65,11 @@ export const useChartOfAccount = defineStore('chartOfAccount', () => {
     error_code,
     message,
     chartOfAccounts,
+    chartOfAccountsWithchildren,
     pagination,
     loading,
-    getChartOfAccountsStore
+    getChartOfAccountsStore,
+    getChartOfAccountsTreeStore
   } as const
 })
 

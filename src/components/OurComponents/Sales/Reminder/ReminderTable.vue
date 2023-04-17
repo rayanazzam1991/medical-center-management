@@ -23,6 +23,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from "/@src/utils/sleep"
+import NoViewDropDown from '../../NoViewDropDown.vue';
 
 export interface ReminderTableProps {
     isForCustomer: boolean,
@@ -197,17 +198,19 @@ const allRemindersColumns = {
     actions: {
         align: 'center',
         label: t("reminder.table.columns.actions"),
-        renderRow: (row: any) =>
-            h(ChangeStatusDropDown, {
+        renderRow: (row: Reminder) =>
+            h(NoViewDropDown, {
                 changeStatusPermission: Permissions.REMINDER_EDIT,
+                editPermission: Permissions.REMINDER_EDIT,
                 onChangeStatus: () => {
                     reminderChangeStatus.value = row
                     newStatus.value = row.status
                     changeStatusPopup.value = true
+                },
+                onEdit: () => {
+                    router.push({ path: `/reminder/${row.id}/edit` })
                 }
-
             }),
-
     },
 
 } as const
@@ -261,13 +264,17 @@ const customerRemindersColumns = {
     actions: {
         align: 'center',
         label: t("reminder.table.columns.actions"),
-        renderRow: (row: any) =>
-            h(ChangeStatusDropDown, {
+        renderRow: (row: Reminder) =>
+            h(NoViewDropDown, {
                 changeStatusPermission: Permissions.REMINDER_EDIT,
+                editPermission: Permissions.REMINDER_EDIT,
                 onChangeStatus: () => {
                     reminderChangeStatus.value = row
                     newStatus.value = row.status
                     changeStatusPopup.value = true
+                },
+                onEdit: () => {
+                    router.push({ path: `/reminder/${row.id}/edit` })
                 }
 
             }),

@@ -89,6 +89,10 @@ const removeService = (service: CreateUpdateServicesHelper, index: number) => {
 const onSubmitAdd = handleSubmit(async () => {
   employeeForm.employeeServicesForm.splice(0, employeeForm.employeeServicesForm.length)
   let priceError: boolean = false
+  if (employeeServices.value.length < 1) {
+    notif.error(t('toast.error.employee.add_some_services'))
+    return
+  }
   employeeServices.value.forEach((service) => {
     if (service.price <= 0 || (Number.isNaN(service.price))) {
       const serviceName = servicesList.value.find((serviceEl) => serviceEl.id == service.service_id)?.name

@@ -176,6 +176,7 @@ declare module '@vue/runtime-core' {
     ReminderForm: typeof import('./src/components/OurComponents/Sales/Reminder/ReminderForm.vue')['default']
     ReminderTable: typeof import('./src/components/OurComponents/Sales/Reminder/ReminderTable.vue')['default']
     ReminderTableHeader: typeof import('./src/components/OurComponents/Sales/Reminder/ReminderTableHeader.vue')['default']
+    ReportingSubnav: typeof import('./src/layouts/navbar-items/ReportingSubnav.vue')['default']
     RoleDetails: typeof import('./src/components/OurComponents/Others/Role/RoleDetails.vue')['default']
     RoleForm: typeof import('./src/components/OurComponents/Others/Role/RoleForm.vue')['default']
     RoleHeader: typeof import('./src/components/OurComponents/Others/Role/RoleHeader.vue')['default']
