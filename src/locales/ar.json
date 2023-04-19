@@ -1439,6 +1439,7 @@
       "payroll_section": "تعديل إعدادات الراوتب",
       "contractor_section": "تعديل إعدادات الأخصّائي",
       "accounting_section": "تعديل إعدادات المالية",
+      "ticketing_section": "تعديل إعدادات التذاكر",
       "start_day": "يوم البدء",
       "end_day": "يوم الانتهاء",
       "start_time": "وقت البدء",
@@ -1450,7 +1451,8 @@
       "unjustified_hours_round": "تقريب الساعات الغير مبررة",
       "min_wallet_value": "الحد الأدنى لمحفظة الأخصّائي",
       "usd_currency_rate": "سعر الصرف",
-      "usd_currency_rate_helper": "كل واحد دولار أمريكي = X دينار عراقي"
+      "usd_currency_rate_helper": "كل واحد دولار أمريكي = X دينار عراقي",
+      "reservations_time_slot": "مدة المواعيد"
     }
   },
   "social_media": {
@@ -3034,5 +3036,8 @@
       "lvl2_chart": "المستوى 2",
       "account": "الحساب"
     }
+  },
+  "reservations_time_slot_options": {
+    "full_name": "{value} دقيقة"
   }
 }
