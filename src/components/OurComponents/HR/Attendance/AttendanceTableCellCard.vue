@@ -14,7 +14,7 @@ export type AttendanceTableCellCardColor =
     | 'white'
     | 'disabled'
 
-    export type AttendanceStatusColor =
+export type AttendanceStatusColor =
     | 'blue'
     | 'grey'
     | 'green'
@@ -32,9 +32,9 @@ export interface AttendanceTableCellCardProps {
     subtitle2?: string
     clickable?: boolean
     titleSize?: AttendanceTableCellTitleSize
-    isHeader?:boolean
-    isMainHeader?:boolean
-    headerTitle? : string
+    isHeader?: boolean
+    isMainHeader?: boolean
+    headerTitle?: string
 
 
 }
@@ -55,9 +55,9 @@ const props = withDefaults(defineProps<AttendanceTableCellCardProps>(), {
     subtitle: '',
     clickable: true,
     titleSize: 'small',
-    isHeader : false,
-    isMainHeader : false ,
-    headerTitle : '',
+    isHeader: false,
+    isMainHeader: false,
+    headerTitle: '',
 })
 
 const cardRadius = computed(() => {
@@ -167,9 +167,11 @@ const cardColor = computed(() => {
 </script>
 
 <template>
-    <div v-if="clickable && !isHeader" @click="() => emits('click')" :class="[cardRadius, cardColor]" class="card-size cursor ">
+    <div v-if="clickable && !isHeader" @click="() => emits('click')" :class="[cardRadius, cardColor]"
+        class="card-size cursor ">
         <div class="title-size center">
-            <h3 class=" mb-2 has-text-weight-semibold" :class="[titleSizeStyle, textColor , props.statusColor]" >{{ props.title }}</h3>
+            <h3 class=" mb-2 has-text-weight-semibold" :class="[titleSizeStyle, textColor, props.statusColor]">{{
+                props.title }}</h3>
             <p class="" v-if="props.subtitle != ''" :class="subtitleColor">{{ props.subtitle }} </p>
             <p class="" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
         </div>
@@ -183,44 +185,49 @@ const cardColor = computed(() => {
             <p class="is-size-7 mt-0 pt-0" v-if="props.subtitle2 != ''" :class="subtitleColor">{{ props.subtitle2 }} </p>
         </div>
     </div>
-    <div v-if="isHeader && isMainHeader" class="header"  >
-            <h1 class="mb-0 is-capitalized has-text-weight-light is-size-7 has-text-centered main-size" >{{ props.headerTitle }}</h1>
+    <div v-if="isHeader && isMainHeader" class="cell-header">
+        <h1 class="mb-0 is-capitalized has-text-weight-light is-size-7 has-text-centered main-size">{{ props.headerTitle }}
+        </h1>
     </div>
-    <div v-if="isHeader && !isMainHeader" class="header"  >
-            <h1 class="mb-0 is-capitalized has-text-weight-light is-size-7 has-text-centered header-size " >{{ props.headerTitle }}</h1>
+    <div v-if="isHeader && !isMainHeader" class="cell-header">
+        <h1 class="mb-0 is-capitalized has-text-weight-light is-size-7 has-text-centered header-size ">{{ props.headerTitle
+        }}</h1>
     </div>
-
-
 </template>
 
 <style scoped lang="scss">
-.header{
+.cell-header {
     padding-left: 10px;
     padding-right: 5px;
 
     width: 160px !important;
 
 }
+
 .header-size {
     width: 18px !important;
-        padding-left: 5px;
+    padding-left: 5px;
     padding-right: 5px;
 
 }
+
 .header-size:first-child {
     padding-left: 0;
 
 }
+
 .header-size:last-child {
     padding-right: 0;
 
 }
+
 .main-size {
     padding-left: px;
     padding-right: 5px;
 
     width: 120px !important;
 }
+
 .card-size {
     min-height: 100%;
     max-width: 1px !important;
@@ -232,9 +239,10 @@ const cardColor = computed(() => {
     background: none;
     padding: 0;
 }
+
 .main-card {
-    padding-right: 5px ;
-    padding-left: 5px ;
+    padding-right: 5px;
+    padding-left: 5px;
     padding-top: 0;
     padding-bottom: 0;
     width: 120px !important;
@@ -270,19 +278,24 @@ const cardColor = computed(() => {
     }
 
 }
-.blue{
+
+.blue {
     color: rgb(0, 0, 255) !important;
 }
-.red{
+
+.red {
     color: rgb(255, 0, 0) !important;
 }
-.grey{
+
+.grey {
     color: grey !important;
 }
-.yellow{
-    color: rgb(255, 208, 0) !important; 
+
+.yellow {
+    color: rgb(255, 208, 0) !important;
 }
-.green{
+
+.green {
     color: rgb(0, 255, 0) !important;
 }
 </style>

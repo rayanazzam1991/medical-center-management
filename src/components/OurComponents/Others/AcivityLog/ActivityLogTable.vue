@@ -154,7 +154,7 @@ const columns = {
     <VPlaceloadText v-if="activityLogStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
 </template>
-<style lang="scss">
+<style scoped lang="scss">
 .tooltip {
   position: relative;
   display: inline-block;
