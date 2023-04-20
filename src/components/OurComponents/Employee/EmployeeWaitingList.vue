@@ -41,6 +41,7 @@ const intialLoading = ref(false)
 const employeeName = ref('')
 const loggedEmployee = ref<Employee>()
 const employeeStore = useEmployee()
+const isFirstTicket = ref(false)
 loggedEmployee.value = employeeStore.getEmployee()
 
 if (props.employeeIdFromRoute) {
@@ -101,6 +102,7 @@ const ticketServingDone = async () => {
 
 
 const serveingServiceSetup = () => {
+
     ticketServicesNotesHelper.value = []
     const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.SERVING)?.ticket
     if (firstServingTicket && firstServingTicket.id != 0) {
@@ -114,6 +116,12 @@ const serveingServiceSetup = () => {
         });
     } else {
         isThereServingTicket.value = false
+        const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.WAITING)
+        if (firstServingTicket?.turn_number == 1) {
+            isFirstTicket.value = true
+        } else {
+            isFirstTicket.value = false
+        }
     }
 
 }
@@ -265,31 +273,20 @@ const serveConfirmation = (requestedServiceId: number) => {
                         </div>
                     </div>
                 </div>
-                <div v-else class="placeholder is-flex is-justify-content-center ">
-                    <div ref="markdownContainer" class="column doc-column is-12">
-                        <VPlaceholderPage class="placeholder" :title="t('employee.waiting_list.no_serving_client.title')"
-                            :subtitle="t('employee.waiting_list.no_serving_client.subtitle')" small>
-                            <template #image>
-                                <img class="light-image is-small"
-                                    src="/@src/assets/illustrations/placeholders/thinking-canvas.svg" alt="" />
-                                <img class="dark-image is-small"
-                                    src="/@src/assets/illustrations/placeholders/thinking-canvas-dark.svg" alt="" />
-                            </template>
-                        </VPlaceholderPage>
-                    </div>
+                <div v-else class="is-flex is-justify-content-center margin-center">
 
+                    <VButton class="center" v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
+                        :loading="waitingListStore.loading" @click="serveNext" color="primary" raised
+                        v-if="!isThereServingTicket" :disabled="employeeWaitingList.waiting_list.length == 0">
+                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first') }}
+                    </VButton>
                 </div>
-                <div class="ticket-footer">
+                <div v-if="isThereServingTicket" class="ticket-footer">
                     <div class="ticket-footer-inner">
                         <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                             :loading="waitingListStore.loading" @click="ticketServingDone" color="primary" raised
                             v-if="isThereServingTicket"> {{
                                 t(`employee.waiting_list.done`) }} </VButton>
-                        <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
-                            :loading="waitingListStore.loading" @click="serveNext" color="primary" raised v-else
-                            :disabled="employeeWaitingList.waiting_list.length == 0">
-                            {{ t('employee.waiting_list.serve_next') }}
-                        </VButton>
 
                     </div>
                 </div>
@@ -324,6 +321,12 @@ const serveConfirmation = (requestedServiceId: number) => {
         font-weight: 600;
         line-height: 1.3;
     }
+
+}
+
+.margin-center {
+
+    margin-top: 25vh;
 
 }
 

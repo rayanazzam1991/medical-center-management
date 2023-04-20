@@ -987,6 +987,7 @@
       "actions": "الاجراءات",
       "done": "تم",
       "serve_next": "التذكرة التالية",
+      "serve_first": "بدء التخديم",
       "type_notes": "ملاحظات...",
       "serve_confirmation": {
         "title": "تأكيد تخديم الزبون",
