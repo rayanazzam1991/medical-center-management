@@ -1,4 +1,4 @@
-import { Attendance, defaultAttendance, defaultJustificationResponseData, EmployeeAttendanceSearchFilter, JustificationRequestData, JustificationResponseData, PendingAttendance, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance";
+import { Attendance, CreateAttendance, defaultAttendance, defaultJustificationResponseData, EmployeeAttendanceSearchFilter, JustificationRequestData, JustificationResponseData, PendingAttendance, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance";
 import { MediaConsts } from "/@src/models/Others/Media/media";
 import { useAttendance } from "/@src/stores/HR/Attendance/EmployeeAttendance/attendanceStore";
 import { Pagination } from "/@src/utils/response";
@@ -12,6 +12,16 @@ export async function updateAttendance(attendance_id: number, data: UpdateAttend
     return { success, error_code, message, attendance }
 
 }
+export async function createAttendance(data: CreateAttendance) {
+    const attendanceResponse = useAttendance()
+    let attendance: Attendance = await attendanceResponse.createAttendanceStore(data) ?? defaultAttendance
+    let success: boolean = attendanceResponse.success ?? false
+    let error_code: string = attendanceResponse.error_code ?? ''
+    let message: string = attendanceResponse.message ?? ''
+    return { success, error_code, message, attendance }
+
+}
+
 export async function justifyAttendance(attendance_id: number, justificationRequestData: JustificationRequestData) {
     const attendanceResponse = useAttendance()
     let justificationResponseData: JustificationResponseData = await attendanceResponse.justifyAttendanceStore(attendance_id, justificationRequestData) ?? defaultJustificationResponseData

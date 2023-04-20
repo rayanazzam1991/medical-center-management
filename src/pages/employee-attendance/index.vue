@@ -16,11 +16,11 @@ import { useI18n } from 'vue-i18n';
 import AttendanceTableCellCard from '/@src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { DaysPerMonth, DaysNamePerMonth } from '/@src/models/HR/Attendance/Date/date';
-import { defaultEmployeeAttendanceSearchFilter, EmployeeAttendance, Attendance, defaultAttendance, defaultEmployeeAttendance, EmployeeAttendanceSearchFilter, UpdateAttendance, JustificationRequestData, AttendanceConsts } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
+import { defaultEmployeeAttendanceSearchFilter, EmployeeAttendance, Attendance, defaultAttendance, defaultEmployeeAttendance, EmployeeAttendanceSearchFilter, UpdateAttendance, JustificationRequestData, AttendanceConsts, defaultCreateAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
 import { GeneratedSalariesMonth } from '/@src/models/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonth';
 import { getEmployeesAttendance } from '/@src/services/Employee/employeeService';
 import { getDaysPerMonth, getDaysNamePerMonth } from '/@src/services/HR/Attendance/Date/dateService';
-import { updateAttendance, unjustifyAttendance, justifyAttendance, addJustificationProofFile } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
+import { updateAttendance, unjustifyAttendance, justifyAttendance, addJustificationProofFile, createAttendance } from '/@src/services/HR/Attendance/EmployeeAttendance/attendanceService';
 import { getGeneratedMonths } from '/@src/services/HR/Payroll/GeneratedSalariesMonth/generatedSalariesMonthService';
 import { useDarkmode } from '/@src/stores/darkmode';
 import { useEmployee } from '/@src/stores/Employee/employeeStore';
@@ -29,6 +29,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import Datepicker from '@vuepic/vue-datepicker';
+import { CreateAttendance } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance';
 
 
 
@@ -48,11 +49,15 @@ const employeeStore = useEmployee()
 const default_per_page = ref(1)
 const keyIncrement = ref(0)
 const tableCellPopup = ref(false)
+const createAttendancePopup = ref(false)
 const markAttendancePopup = ref(false)
 const justifyAttendancePopup = ref(false)
 const unjustifyAttendancePopup = ref(false)
 const canMarkAttendanceSelectedCell = ref(false)
+const addAttendanceCheckInCheck = ref(false)
+const addAttendanceCheckOutCheck = ref(false)
 const selectedCell = ref<Attendance>(defaultAttendance)
+const selectedCreateAttendance = ref<CreateAttendance>(defaultCreateAttendance)
 const selectedEmployee = ref<EmployeeAttendance>(defaultEmployeeAttendance)
 const selectedReason = ref('')
 const justificationProofFile = ref<File>()
@@ -263,8 +268,6 @@ const updateEmployeeAttendance = async () => {
     selectedCell.value.status = attendance.status
   } else {
     await sleep(200);
-    const markAttendancePopup = ref(false)
-
     notif.error(message)
   }
   keyIncement.value++
@@ -280,6 +283,68 @@ const updateEmployeeAttendance = async () => {
 
 
 }
+const addAttendanceToEmployee = async () => {
+  let formatedCheckInMinute;
+  let formatedCheckInHour;
+  let formatedCheckOutMinute;
+  let formatedCheckOutHour;
+  if (Number(selectedCheckInTime.value.minutes) < 10 && Number(selectedCheckInTime.value.minutes) >= 0)
+    formatedCheckInMinute = '0' + selectedCheckInTime.value.minutes
+  else
+    formatedCheckInMinute = selectedCheckInTime.value.minutes
+
+  if (Number(selectedCheckInTime.value.hours) < 10 && Number(selectedCheckInTime.value.hours) >= 0)
+    formatedCheckInHour = '0' + selectedCheckInTime.value.hours
+  else
+    formatedCheckInHour = selectedCheckInTime.value.hours
+  if (Number(selectedCheckOutTime.value.minutes) < 10 && Number(selectedCheckOutTime.value.minutes) >= 0)
+    formatedCheckOutMinute = '0' + selectedCheckOutTime.value.minutes
+  else
+    formatedCheckOutMinute = selectedCheckOutTime.value.minutes
+
+  if (Number(selectedCheckOutTime.value.hours) < 10 && Number(selectedCheckOutTime.value.hours) >= 0)
+    formatedCheckOutHour = '0' + selectedCheckOutTime.value.hours
+  else
+    formatedCheckOutHour = selectedCheckOutTime.value.hours
+
+  if (Number(formatedCheckInHour) > Number(formatedCheckOutHour) && addAttendanceCheckInCheck.value && addAttendanceCheckOutCheck.value) {
+    await sleep(200);
+    notif.error(t('toast.error.Attendance.time'))
+    return
+  }
+
+  else if (Number(formatedCheckInHour) == Number(formatedCheckOutHour) && addAttendanceCheckInCheck.value && addAttendanceCheckOutCheck.value) {
+    if (Number(formatedCheckInMinute) >= Number(formatedCheckOutMinute) && addAttendanceCheckInCheck.value && addAttendanceCheckOutCheck.value) {
+      await sleep(200);
+
+      notif.error(t('toast.error.Attendance.time'))
+
+      return
+    }
+
+  }
+  const createCheckIn = addAttendanceCheckInCheck.value ? formatedCheckInHour + ':' + formatedCheckInMinute + ':00' : undefined
+  const createCheckOut = addAttendanceCheckOutCheck.value ? formatedCheckOutHour + ':' + formatedCheckOutMinute + ':00' : undefined
+  selectedCreateAttendance.value.check_in = createCheckIn
+  selectedCreateAttendance.value.check_out = createCheckOut
+
+  loading.value.update = true
+  const { message, success, attendance } = await createAttendance(selectedCreateAttendance.value)
+  if (success) {
+    await search(searchFilter.value, selectedMonthDays.value)
+    notif.dismissAll()
+    await sleep(200);
+    notif.success(t('toast.success.edit'))
+  } else {
+    await sleep(200);
+    notif.error(message)
+  }
+  keyIncement.value++
+  loading.value.update = false
+
+  createAttendancePopup.value = false
+}
+
 const unjustifyEmployeeAttendance = async () => {
   loading.value.delete = true
 
@@ -378,6 +443,7 @@ const onAddFile = async (event: any) => {
   }
 }
 
+
 const canMarkAttendance = () => {
   let canMark = true
   const [sellectedYear, selectedMonth, selectedDay] = selectedCell.value.date.split("-")
@@ -392,6 +458,25 @@ const canMarkAttendance = () => {
     }
   });
 
+  return canMark;
+
+}
+const canCreateAttendanceThisDay = (date: string) => {
+  let canMark = true
+  const [sellectedYear, selectedMonth, selectedDay] = date.split("-")
+  generatedSalariesMonthsList.value.forEach(generatedMonth => {
+    let [generatedFromYear, generatedFromMonth, generatedFromDay] = generatedMonth.generated_from.split("-")
+    let [generatedToYear, generatedToMonth, generatedToDay] = generatedMonth.generated_to.split("-")
+    let generatedFromDate = new Date(Number(generatedFromYear), Number(generatedFromMonth) - 1, Number(generatedFromDay));
+    let generatedToDate = new Date(Number(generatedToYear), Number(generatedToMonth) - 1, Number(generatedToDay));
+    let selectedDate = new Date(Number(sellectedYear), Number(selectedMonth) - 1, Number(selectedDay));
+    if (new Date(date) > new Date() || new Date(date).toDateString() === new Date().toDateString() ) {
+      canMark = false
+    }
+    if ((selectedDate >= generatedFromDate && selectedDate <= generatedToDate)) {
+      canMark = false;
+    }
+  });
   return canMark;
 
 }
@@ -410,7 +495,6 @@ const columns28 = {
         radius: 'none',
         headerTitle: t('employee_attendance.table.columns.employee_name'),
       }
-
       ),
     renderRow: (row: any) =>
       h(
@@ -422,17 +506,13 @@ const columns28 = {
         color: 'primary',
         onClick: () => {
           router.push({ path: `/employee/${row?.id}` })
-
         }
       }
-
       ),
     searchable: true,
-
   },
   "first": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -441,9 +521,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[0].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[0].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -453,7 +531,6 @@ const columns28 = {
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-01`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-01`).status) : 'grey',
         color: 'disabled',
         onClick: async () => {
-
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-01`)) {
             keyIncement.value++
             selectedCell.value = row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-01`)
@@ -461,14 +538,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-01`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-01`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "second": {
     align: 'center',
@@ -481,9 +573,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -500,14 +590,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-02`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-02`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "third": {
     align: 'center',
@@ -520,10 +625,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[2].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[2].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -541,14 +643,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-03`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-03`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "fourth": {
     align: 'center',
@@ -561,10 +678,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[3].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[3].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -582,20 +696,32 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-04`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-04`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
-
-
   },
   "fifth": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -604,10 +730,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[4].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[4].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -625,15 +748,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-05`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-05`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "sixth": {
     align: 'center',
@@ -646,10 +783,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[5].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[5].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -658,7 +792,6 @@ const columns28 = {
         titleSize: 'small',
         color: 'disabled',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-06`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-06`).status) : 'grey',
-
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-06`)) {
             keyIncement.value++
@@ -667,14 +800,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-06`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-06`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "seventh": {
     align: 'center',
@@ -687,10 +835,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[6].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[6].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -708,14 +853,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-07`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-07`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "eighth": {
     align: 'center',
@@ -739,7 +899,6 @@ const columns28 = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-08`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-08`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-08`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-08`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-08`)) {
@@ -749,14 +908,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-08`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-08`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "ninth": {
     align: 'center',
@@ -769,10 +943,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[8].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[8].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -790,15 +961,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-09`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-09`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "tenth": {
     align: 'center',
@@ -810,10 +995,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[9].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[9].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -831,18 +1013,32 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-10`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-10`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d11": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -851,10 +1047,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[10].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[10].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -872,18 +1065,32 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-11`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-11`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d12": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -892,10 +1099,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[11].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[11].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -903,7 +1107,6 @@ const columns28 = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-12`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-12`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-12`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-12`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-12`)) {
@@ -913,14 +1116,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-12`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-12`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d13": {
     align: 'center',
@@ -932,10 +1150,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[12].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[12].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -953,18 +1168,32 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-13`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-13`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d14": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -973,10 +1202,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[13].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[13].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -994,18 +1220,32 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-14`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-14`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d15": {
     align: 'center',
-
     grow: false,
     renderHeader: () =>
       h(
@@ -1014,10 +1254,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[15 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[15 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1035,14 +1272,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-15`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-15`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d16": {
     align: 'center',
@@ -1054,10 +1306,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[16 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[16 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1075,14 +1324,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-16`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-16`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d17": {
     align: 'center',
@@ -1094,10 +1358,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[17 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[17 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1115,14 +1376,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-17`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-17`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d18": {
     align: 'center',
@@ -1134,10 +1410,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[18 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[18 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1155,14 +1428,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-18`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-18`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d19": {
     align: 'center',
@@ -1174,10 +1462,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[19 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[19 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1195,14 +1480,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-19`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-19`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d20": {
     align: 'center',
@@ -1214,10 +1514,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[20 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[20 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1225,7 +1522,6 @@ const columns28 = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-20`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-20`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-20`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-20`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-20`)) {
@@ -1235,14 +1531,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-20`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-20`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d21": {
     align: 'center',
@@ -1254,10 +1565,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[21 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[21 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1275,14 +1583,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-21`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-21`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d22": {
     align: 'center',
@@ -1294,10 +1617,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[22 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[22 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1315,15 +1635,31 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-22`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-22`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
-  }, "d23": {
+  },
+  "d23": {
     align: 'center',
     grow: false,
     renderHeader: () =>
@@ -1333,10 +1669,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[23 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[23 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1354,14 +1687,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-23`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-23`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d24": {
     align: 'center',
@@ -1373,10 +1721,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[24 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[24 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1385,7 +1730,6 @@ const columns28 = {
         titleSize: 'small',
         color: 'disabled',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-24`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-24`).status) : 'grey',
-
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-24`)) {
             keyIncement.value++
@@ -1394,14 +1738,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-24`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-24`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d25": {
     align: 'center',
@@ -1413,10 +1772,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[25 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[25 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1434,15 +1790,31 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-25`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-25`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
-  }, "d26": {
+  },
+  "d26": {
     align: 'center',
     grow: false,
     renderHeader: () =>
@@ -1452,10 +1824,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[26 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[26 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1463,7 +1832,6 @@ const columns28 = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-26`)) {
@@ -1473,13 +1841,29 @@ const columns28 = {
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
             tableCellPopup.value = true
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-26`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-26`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d27": {
     align: 'center',
@@ -1491,10 +1875,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[27 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[27 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1502,7 +1883,6 @@ const columns28 = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-27`)) {
@@ -1512,13 +1892,29 @@ const columns28 = {
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
             tableCellPopup.value = true
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-27`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-27`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d28": {
     align: 'center',
@@ -1530,10 +1926,7 @@ const columns28 = {
         radius: 'none',
         headerTitle: `${daysNamePerMonth.value[28 - 1].day} ${t(`dates.days_abbr.${daysNamePerMonth.value[28 - 1].day_name.toLowerCase()}`)}`,
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1551,14 +1944,29 @@ const columns28 = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-28`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-28`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
 }
 const columns29Sub = {
@@ -1572,10 +1980,7 @@ const columns29Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1583,7 +1988,6 @@ const columns29Sub = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-29`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-29`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-29`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-29`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-29`)) {
@@ -1593,14 +1997,29 @@ const columns29Sub = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-29`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-29`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
 }
 
@@ -1615,10 +2034,7 @@ const columns30Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1636,14 +2052,29 @@ const columns30Sub = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-29`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-29`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d30": {
     align: 'center',
@@ -1655,10 +2086,7 @@ const columns30Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1666,7 +2094,6 @@ const columns30Sub = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`)) {
@@ -1676,14 +2103,29 @@ const columns30Sub = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = await canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-30`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-30`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
 }
 const columns31Sub = {
@@ -1697,10 +2139,7 @@ const columns31Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[29 - 1] ? `${daysNamePerMonth.value[29 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[29 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1718,14 +2157,29 @@ const columns31Sub = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-29`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-29`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d30": {
     align: 'center',
@@ -1737,10 +2191,7 @@ const columns31Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[30 - 1] ? `${daysNamePerMonth.value[30 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[30 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1748,7 +2199,6 @@ const columns31Sub = {
         title: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`) ? AttendanceConsts.getAttendanceStatusIcon(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`).status) : '-',
         titleSize: 'small',
         statusColor: row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`) ? AttendanceConsts.getAttendanceStatusColor(row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`).status) : 'grey',
-
         color: 'disabled',
         onClick: async () => {
           if (row?.attendances?.find((element: any) => element.date == `${selectedYear.value}-${selectedMonth.value}-30`)) {
@@ -1758,13 +2208,29 @@ const columns31Sub = {
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
             tableCellPopup.value = true
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-30`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-30`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
   "d31": {
     align: 'center',
@@ -1776,10 +2242,7 @@ const columns31Sub = {
         radius: 'none',
         headerTitle: daysNamePerMonth.value[31 - 1] ? `${daysNamePerMonth.value[31 - 1]?.day} ${t(`dates.days_abbr.${daysNamePerMonth.value[31 - 1].day_name.toLowerCase()}`)}` : '',
       }
-
       ),
-
-
     renderRow: (row: any) =>
       h(
         AttendanceTableCellCard, {
@@ -1797,14 +2260,29 @@ const columns31Sub = {
             tableCellPopup.value = true
             formatTime()
             canMarkAttendanceSelectedCell.value = canMarkAttendance()
-
+          } else {
+            const canCreateAttendance = canCreateAttendanceThisDay(`${selectedYear.value}-${selectedMonth.value}-31`)
+            if (canCreateAttendance) {
+              keyIncement.value++
+              selectedCreateAttendance.value.employee_id = row.id
+              selectedCreateAttendance.value.date = `${selectedYear.value}-${selectedMonth.value}-31`
+              selectedCreateAttendance.value.check_in = undefined
+              selectedCreateAttendance.value.check_out = undefined
+              selectedCheckInTime.value.hours = '00'
+              selectedCheckInTime.value.minutes = '00'
+              selectedCheckOutTime.value.hours = '00'
+              selectedCheckOutTime.value.minutes = '00'
+              addAttendanceCheckInCheck.value = false
+              addAttendanceCheckOutCheck.value = false
+              createAttendancePopup.value = true
+              selectedEmployee.value = row
+            } else {
+              notif.error({ message: t('toast.error.Attendance.cannot_add_attendance'), duration: 3000 })
+            }
           }
-
         }
       }
-
       ),
-
   },
 }
 let columns31 = {};
@@ -2066,6 +2544,90 @@ Object.assign(columns29, columns28, columns29Sub)
 
         <VButton color="primary" raised @click="justifyEmployeeAttendance">{{ t('modal.buttons.confirm') }}
         </VButton>
+      </VLoader>
+    </template>
+  </VModal>
+  <VModal :key="keyIncement" :title="t('employee_attendance.table.create_attendance_modal.title')"
+    :open="createAttendancePopup" actions="right" @close="createAttendancePopup = false">
+    <template #content>
+      <div class="is-flex is-justify-content-space-between">
+        <div>
+          <h2 class="is-size-6 has-text-primary mb-0">{{ selectedEmployee.user.first_name }} {{
+            selectedEmployee.user.last_name
+          }}</h2>
+          <h4 class="mb-3 is-size-7"><span class=""> {{ selectedEmployee.position.name }}</span></h4>
+          <h2 class="is-size-7 mb-3">{{ t('employee_attendance.table.create_attendance_modal.date') }}<span
+              class="has-text-primary is-size-6"> {{
+                t(`dates.days_abbr.${daysNamePerMonth.find((day) =>
+                  day.day == Number(selectedCreateAttendance.date.split('-')[2]))?.day_name.toLowerCase()
+                  }`)
+              }} {{
+  selectedCreateAttendance.date
+}}</span></h2>
+        </div>
+      </div>
+      <div class="form-fieldset">
+        <div class="columns is-multiline">
+          <div class="column is-12">
+            <VCard elevated>
+              <h3 class="title is-7 mb-2">
+                {{ t('employee_attendance.table.create_attendance_modal.check_in') }}</h3>
+              <div class="column is-12">
+                <div class="columns">
+                  <VField>
+                    <VControl>
+                      <VCheckbox v-model="addAttendanceCheckInCheck"
+                        :label="t('employee_attendance.table.create_attendance_modal.add_check_in')" color="primary" />
+                    </VControl>
+                  </VField>
+                </div>
+              </div>
+              <div v-if="addAttendanceCheckInCheck" class="column is-12">
+                <div class="columns">
+                  <VField class="column is-12 pl-0">
+                    <VControl>
+                      <Datepicker v-model="selectedCheckInTime" :locale="locale" time-picker
+                        :cancel-text="t('date_picker.cancel')" :select-text="t('date_picker.select')" :dark="dark.isDark"
+                        class="date-picker-dircetion" />
+                    </VControl>
+                  </VField>
+                </div>
+              </div>
+            </VCard>
+            <VCard elevated class="mt-2">
+              <h3 class="title is-7 mb-2">
+                {{ t('employee_attendance.table.mark_attendance_modal.check_out') }}</h3>
+              <div class="column is-12">
+                <div class="columns">
+                  <VField>
+                    <VControl>
+                      <VCheckbox v-model="addAttendanceCheckOutCheck"
+                        :label="t('employee_attendance.table.create_attendance_modal.add_check_out')" color="primary" />
+                    </VControl>
+                  </VField>
+                </div>
+              </div>
+
+              <div v-if="addAttendanceCheckOutCheck" class="column is-12">
+                <div class="columns">
+                  <VField class="column is-12 pl-0">
+                    <VControl>
+                      <Datepicker v-model="selectedCheckOutTime" :locale="locale" time-picker
+                        :cancel-text="t('date_picker.cancel')" :select-text="t('date_picker.select')" :dark="dark.isDark"
+                        class="date-picker-dircetion" />
+                    </VControl>
+                  </VField>
+                </div>
+              </div>
+            </VCard>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template #action="{ close }">
+      <VLoader size="small" :active="loading.update">
+        <VButton class="mr-2" color="primary" @click="addAttendanceToEmployee">
+          {{ t('modal.buttons.confirm') }}</VButton>
       </VLoader>
     </template>
   </VModal>

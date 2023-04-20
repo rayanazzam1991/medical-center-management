@@ -21,6 +21,13 @@ export interface UpdateAttendance {
     check_in: string
     check_out: string
 }
+export interface CreateAttendance {
+    check_in?: string
+    check_out?: string
+    employee_id: number
+    date: string
+}
+
 export interface JustificationRequestData {
     reason: string
 }
@@ -53,6 +60,12 @@ export const defaultEmployeeAttendance: EmployeeAttendance = {
     user: defaultUser,
     position: defaultPosition,
     attendances: []
+}
+export const defaultCreateAttendance: CreateAttendance = {
+    date: '',
+    employee_id: 0,
+    check_in: undefined,
+    check_out: undefined
 }
 export const defaultAttendance: Attendance = {
     id: 0,
