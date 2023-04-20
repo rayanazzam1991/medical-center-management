@@ -41,3 +41,21 @@ class UnjustifiedHoursRoundConsts {
 }
 
 export { UnjustifiedHoursRoundConsts }
+class ReservationsTimeSlotsConsts {
+    static readonly TEN_MINS = '10';
+    static readonly FIFTEEN_MINS = '15';
+    static readonly TWENTY_MINS = '20';
+    static readonly THIRTY_MINS = '30';
+    static readonly FORTY_MINS = '40';
+    static readonly FIFTY_MINS = '50';
+    static readonly SIXTY_MINS = '60';
+
+    static readonly OPTIONS = [this.TEN_MINS, this.FIFTEEN_MINS, this.TWENTY_MINS, this.THIRTY_MINS, this.FORTY_MINS, this.FIFTY_MINS, this.SIXTY_MINS];
+
+
+    public static getOptionName(option: string) {
+        return i18n.global.t('reservations_time_slot_options.full_name', { value: option })
+    }
+}
+
+export { ReservationsTimeSlotsConsts }

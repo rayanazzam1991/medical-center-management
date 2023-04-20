@@ -15,7 +15,7 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import sleep from "/@src/utils/sleep";
-import { Setting, UnjustifiedHoursRoundConsts } from '/@src/models/Others/Setting/setting';
+import { ReservationsTimeSlotsConsts, Setting, UnjustifiedHoursRoundConsts } from '/@src/models/Others/Setting/setting';
 import { editSettings, getSettings } from '/@src/services/Others/Setting/settingService';
 import { getWeekDays } from '/@src/services/HR/Attendance/Date/dateService';
 import { useSetting } from '/@src/stores/Others/Setting/settingStore';
@@ -40,6 +40,7 @@ export default defineComponent({
       title: t('settings.form.page_title'),
     });
     const roundingOptions = UnjustifiedHoursRoundConsts.ROUNDING_OPTIONS
+    const reservationsTimeSlotsOptions = ReservationsTimeSlotsConsts.OPTIONS
     const notif = useNotyf() as Notyf;
     const formType = ref("Edit");
     const route = useRoute();
@@ -57,7 +58,7 @@ export default defineComponent({
     const deduction_factor = ref('')
     const hr_cycle_start_day = ref('')
     const unjustified_hours_round = ref('')
-    const min_wallet_value = ref('')
+    const reservations_time_slot = ref('')
     const new_usd_currency_rate = ref<number>(1)
     const usd_currency = ref<Currency>(defaultCurrency)
 
@@ -75,7 +76,7 @@ export default defineComponent({
       deduction_factor.value = settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value ?? ''
       hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
       unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
-      min_wallet_value.value = settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value ?? ''
+      reservations_time_slot.value = settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value ?? ''
       usd_currency.value = currency
       new_usd_currency_rate.value = currency.rate
 
@@ -134,12 +135,7 @@ export default defineComponent({
         notif.error(t('toast.error.payroll.deduction_factor'))
         return
       }
-      if ((Number(min_wallet_value.value) > 0) || !(Number.isInteger(Number(min_wallet_value.value)))) {
-        await sleep(500);
-        notif.error(t('toast.error.contractor.min_wallet_value'))
-        return
-      }
-      if ((Number(new_usd_currency_rate.value) < 1) || !(Number(min_wallet_value.value))) {
+      if ((Number(new_usd_currency_rate.value) < 1) || !(Number(new_usd_currency_rate.value))) {
         await sleep(500);
         notif.error(t('toast.error.accounting.new_usd_currency_rate'))
         return
@@ -174,8 +170,8 @@ export default defineComponent({
       if (unjustified_hours_round.value != settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value) {
         updateSettings.push({ key: 'unjustified_hours_round', value: unjustified_hours_round.value })
       }
-      if (min_wallet_value.value != settingsList.value.find((setting) => setting.key == 'min_wallet_value')?.value) {
-        updateSettings.push({ key: 'min_wallet_value', value: min_wallet_value.value })
+      if (reservations_time_slot.value != settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value) {
+        updateSettings.push({ key: 'reservations_time_slot', value: reservations_time_slot.value })
       }
       if (new_usd_currency_rate.value !== usd_currency.value.rate) {
         const { message, success } = await updateCurrencyRate(usd_currency.value.id, new_usd_currency_rate.value)
@@ -205,7 +201,7 @@ export default defineComponent({
 
       }
     };
-    return { t, locale, dark, daysName, roundingOptions, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, min_wallet_value, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+    return { t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
   },
   components: { ErrorMessage, Datepicker }
 })
@@ -354,24 +350,6 @@ export default defineComponent({
               </div>
             </div>
           </div>
-
-          <div class="form-fieldset">
-            <div class="fieldset-heading">
-              <h4>{{ t('settings.form.contractor_section') }}</h4>
-            </div>
-            <div class="columns is-multiline">
-              <div class="column is-6">
-                <h2 class="mb-3 required">{{ t('settings.form.min_wallet_value') }}</h2>
-                <VField id="min_wallet_value">
-                  <VControl>
-                    <VInput v-model="min_wallet_value" type="number" />
-                    <ErrorMessage class="help is-danger" name="min_wallet_value" />
-                  </VControl>
-                </VField>
-              </div>
-            </div>
-          </div>
-
           <div class="form-fieldset">
             <div class="fieldset-heading">
               <h4>{{ t('settings.form.accounting_section') }}</h4>
@@ -384,6 +362,27 @@ export default defineComponent({
                   <VControl>
                     <VInput v-model="new_usd_currency_rate" type="number" />
                     <ErrorMessage class="help is-danger" name="new_usd_currency_rate" />
+                  </VControl>
+                </VField>
+              </div>
+            </div>
+          </div>
+          <div class="form-fieldset">
+            <div class="fieldset-heading">
+              <h4>{{ t('settings.form.ticketing_section') }}</h4>
+            </div>
+            <div class="columns is-multiline">
+              <div class="column is-6">
+                <h2 class="mb-3 required">{{ t('settings.form.reservations_time_slot') }}</h2>
+                <VField id="reservations_time_slot">
+                  <VControl>
+                    <VSelect v-model="reservations_time_slot">
+                      <VOption v-for="option in reservationsTimeSlotsOptions" :key="option" :value="option">{{
+                        ReservationsTimeSlotsConsts.getOptionName(option)
+                      }}
+                      </VOption>
+                    </VSelect>
+                    <ErrorMessage class="help is-danger" name="reservations_time_slot" />
                   </VControl>
                 </VField>
               </div>
