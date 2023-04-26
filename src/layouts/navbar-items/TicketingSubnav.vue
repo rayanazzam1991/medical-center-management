@@ -111,6 +111,27 @@ const emits = defineEmits<{
                   </li>
 
                 </ul><br />
+                <h4 class="column-heading">{{
+                  t('ticketing_subnav.reservation.reservations') }}
+                </h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/reservation-calendar">
+                      <i class="fas fa-calendar-alt ml-2" aria-hidden="true"></i>
+                      <span>{{ t('ticketing_subnav.reservation.reservation_calendar')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/reservation">
+                      <i class="fas fa-clipboard-list ml-2" aria-hidden="true"></i>
+                      <span>{{ t('ticketing_subnav.reservation.reservatons_list')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul><br />
               </div>
             </div>
           </div>

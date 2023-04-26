@@ -25,6 +25,9 @@ const toAddTicket = () => {
 const toWaitingRooms = () => {
     router.push({ name: '/waiting-list/' })
 }
+const toReservationCalendar = () => {
+    router.push({ name: '/reservation-calendar/' })
+}
 </script>
 
 <template>
@@ -78,6 +81,15 @@ const toWaitingRooms = () => {
                                     </div>
                                 </div>
                                 <div class="asset-name">{{ t('dashboards.receptionist.waiting_lists') }}
+                                </div>
+                            </div>
+                            <div @click="toReservationCalendar" class="category">
+                                <div class="asset">
+                                    <div class="asset-logo">
+                                        <i aria-hidden="true" class="fas fa-calendar-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="asset-name">{{ t('dashboards.receptionist.reservation_calendar') }}
                                 </div>
                             </div>
                         </div>

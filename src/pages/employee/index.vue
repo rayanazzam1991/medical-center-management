@@ -248,13 +248,13 @@ const columns = {
     align: 'center',
     label: t('employee.table.columns.actions'),
 
-    renderRow: (row: any) =>
+    renderRow: (row: Employee) =>
       h(row.is_dismissed == true ? DismissEmployeeDropDown : EmployeeDropDown, {
         changeStatusPermission: Permissions.EMPLOYEE_EDIT,
         viewPermission: Permissions.EMPLOYEE_SHOW,
         viewMyWaitingListPermission: Permissions.SHOW_ALL_WAITING_LISTS,
         dismissEmployeePermission: Permissions.DISMISS_EMPLOYEE,
-
+        isServiceProvider: row.is_service_provider,
         onView: () => {
           router.push({ path: `/employee/${row?.id}` })
         },
@@ -270,6 +270,10 @@ const columns = {
           currentEmployee.value = row
           dismissEmployeePopup.value = true
         },
+        onViewReservationCalendar: () => {
+          router.push({ path: `/employee/${row?.id}/reservation-calendar` })
+
+        }
 
       }),
 

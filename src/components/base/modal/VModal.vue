@@ -17,6 +17,7 @@ export interface VModalProps {
   noclose?: boolean
   tabs?: boolean
   cancelLabel?: string
+  closeButton?: boolean
 }
 
 const emit = defineEmits<VModalEmits>()
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<VModalProps>(), {
   size: undefined,
   actions: undefined,
   cancelLabel: undefined,
+  closeButton: true
 })
 
 const { t } = useI18n()
@@ -70,7 +72,7 @@ onUnmounted(() => {
             actions === 'center' && 'is-centered',
             actions === 'right' && 'is-end',
           ]">
-            <slot name="cancel" :close="() => emit('close')">
+            <slot v-if="closeButton" name="cancel" :close="() => emit('close')">
               <a tabindex="0" class="button v-button v-modal-close" :class="[rounded && 'is-rounded']"
                 @keydown.space.prevent="emit('close')" @click="emit('close')">
                 {{ cancelLabel }}

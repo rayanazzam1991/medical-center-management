@@ -19,3 +19,10 @@ export async function getDaysNamePerMonthApi(
 
   return { response }
 }
+export async function getCurrentWeekStartAndEndApi(
+  api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`date/getCurrentWeekStartAndEnd`)
+
+  return { response }
+}
