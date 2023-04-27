@@ -30,10 +30,6 @@ const props = withDefaults(defineProps<CustomerTableProps>(), {
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
-viewWrapper.setPageTitle(t('customer.table.title'))
-useHead({
-    title: t('customer.table.title'),
-})
 const notif = useNotyf() as Notyf
 const searchFilter = ref(resetCustomerSearchFilter())
 const customersList = ref<Array<Customer>>([])

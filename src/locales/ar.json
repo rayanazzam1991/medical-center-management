@@ -254,6 +254,11 @@
     "service_history_screen": {
       "service_history_screens": "شاشات الانتظار",
       "create_service_history_screen": "انشاء شاشة انتظار"
+    },
+    "reservation": {
+      "reservations": "الحجوزرات",
+      "reservation_calendar": "جدول الحجوزات",
+      "reservatons_list": "قائمة الحجوزات"
     }
   },
   "reporting_subnav": {
@@ -331,7 +336,9 @@
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
-      "dismiss": "تمت عملية إقالة الموظف بنجاح"
+      "dismiss": "تمت عملية إقالة الموظف بنجاح",
+      "deactivate_reservation": "تم انهاء تفعيل الحجز بنجاح",
+      "cancel_reservation": "تم الغاء الحجز بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -345,7 +352,7 @@
         "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
         "required_reason": "حقل السبب مطلوب",
         "out_of_length_reason": "السبب لا يمكن أن يكون أكبر من 255 محرف",
-        "cannot_add_attendance" : "لا يمكنك إضافة حضور بهذا التاريخ"
+        "cannot_add_attendance": "لا يمكنك إضافة حضور بهذا التاريخ"
       },
       "payroll": {
         "deduction_factor": "معامل خصم التأخير يجب أن يكون رقم صحيح أكبر أو يساوي الواحد"
@@ -396,6 +403,11 @@
         "month_and_year_required": "حقل الشهر والسنة مطلوب",
         "employee_required": "يرجى تحديد الموظف المطلوب",
         "account_required": "يرجى تحديد الحساب المطلوب"
+      },
+      "reservation": {
+        "customer_is_required": "حقل الزبون مطلوب",
+        "service_is_required": "حقل الخدمة مطلوب",
+        "cancellation_reason_too_long": "سبب الالغاء يجب أن يكون أقل من 255 محرف"
       }
     },
     "file": {
@@ -414,7 +426,9 @@
       "filter": "تصفية",
       "cash_out": "سحب مبلغ",
       "bulk_cash_out": "سحب كلي",
-      "print": "طباعة"
+      "print": "طباعة",
+      "cancel_reservation": "الغاء الحجز",
+      "deactivate_reservation": "انهاء تفعيل الحجز"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
@@ -448,7 +462,8 @@
     "view_current_service_card": "عرض بطاقة الدور الحالي",
     "no_actions": "لا يوجد اجراءات",
     "print": "طباعة",
-    "dismiss_employee": "إقالة الموظف"
+    "dismiss_employee": "إقالة الموظف",
+    "view_reservation_calendar": "عرض الحجوزات"
   },
   "add_quantity": {
     "form": {
@@ -1651,6 +1666,15 @@
       "thu": "خميس",
       "fri": "جمعة",
       "sat": "سبت"
+    },
+    "days_abbr_2": {
+      "su": "أح",
+      "mo": "اث",
+      "tu": "ثل",
+      "we": "أر",
+      "th": "خم",
+      "fr": "جم",
+      "sa": "سب"
     },
     "months": {
       "january": "كانون الثاني",
@@ -2981,7 +3005,8 @@
       "served_services": "الخدمات المقدمة",
       "add_customer": "إضافة زبون",
       "add_ticket": "إضافة تذكرة",
-      "waiting_lists": "غرف الانتظار"
+      "waiting_lists": "غرف الانتظار",
+      "reservation_calendar": "جدول الحجوزات"
     }
   },
   "reports": {
@@ -3050,5 +3075,93 @@
   },
   "reservations_time_slot_options": {
     "full_name": "{value} دقيقة"
+  },
+  "reservation_statuses": {
+    "active": "فعّال",
+    "inactive": "غير فعال",
+    "cancelled": "ملغي",
+    "past": "حجز سابق"
+  },
+  "reservation": {
+    "calendar": {
+      "table": {
+        "title": "جدول الحجوزات",
+        "header_title": "حجوزات المخدم",
+        "columns": {
+          "time": "الوقت"
+        },
+        "placeholder": {
+          "title": "يرجى تحديد المخدم المطلوب"
+        },
+        "add_reservation_modal": {
+          "title": "حجز موعد",
+          "customer": "الزبون",
+          "service": "الخدمة",
+          "date": "التاريخ",
+          "time": "الوقت",
+          "from": "من",
+          "to": "الى",
+          "service_duration": "وقت الخدمة المتوقع",
+          "service_price": "سعر الخدمة",
+          "minutes": "دقيقة"
+        },
+        "reservation_details_modal": {
+          "title": "تفاصيل موعد",
+          "customer": "الزبون",
+          "service": "الخدمة",
+          "provider": "المخدم",
+          "date": "التاريخ",
+          "time": "الوقت",
+          "from": "من",
+          "to": "الى",
+          "service_price": "سعر الخدمة"
+        }
+      },
+      "search_filter": {
+        "provider": "المخدم",
+        "note": "ملاحظة:  ",
+        "archive": "أرشيف",
+        "vacation_or_out_of_sechdule": "إجازة/ خارج أوقات عمل المخدم",
+        "add_reservation": "إضافة حجز",
+        "active_reservation": "حجز فعال",
+        "past_reservation": "حجز سابق"
+      }
+    },
+    "table": {
+      "title": "قائمة الحجوزات",
+      "header_button": "إضافة حجز",
+      "columns": {
+        "customer_name": "الزبون",
+        "service_name": "الخدمة",
+        "provider_name": "المخدم",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "status": "الحالة",
+        "cancellation_reason": "سبب الالغاء",
+        "no_cancellation_reason": "لا يوجد",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": " بواسطة",
+        "actions": "الاجراءات"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية الحجوزات",
+      "customer_name": "اسم الزبون...",
+      "provider_name": "اسم المخدم...",
+      "service_name": "اسم الخدمة...",
+      "status": "الحالة",
+      "cancellation_reason": "سبب الالغاء..."
+    },
+    "cancel_reservation_modal": {
+      "title": "الغاء حجز",
+      "cancellation_reason": "سبب الالغاء",
+      "caution": "هل أنت متأكد؟",
+      "subtitle": "سيتم تغيير حالة الحجز الى ملغي",
+      "cancellation_reason_placeholder": "255 محرف كحد أقصى"
+    },
+    "drop_down": {
+      "cancel_reservation": "الغاء الحجز",
+      "deactivate_reservation": "انهاء تفعيل الحجز"
+    }
   }
 }

@@ -1,4 +1,12 @@
+import messages from "@intlify/vite-plugin-vue-i18n/messages"
+import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { BaseConsts } from "/@src/utils/consts/base"
+
+const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
+    locale: 'ar',
+    fallbackLocale: 'en',
+    messages: messages
+})
 
 export interface DaysPerMonth {
     year?: string
@@ -9,6 +17,10 @@ export interface DaysNamePerMonth {
     day: number
     day_name: string
 }
+export interface CurrentWeekStartAndEndDate {
+    start_date_of_week: string
+    end_date_of_week: string
+}
 export const defaultDaysPerMonth: DaysPerMonth = {
     year: undefined,
     month: undefined,
@@ -17,6 +29,11 @@ export const defaultDaysPerMonth: DaysPerMonth = {
 export const defaultDaysNamePerMonth: DaysNamePerMonth = {
     day: 1,
     day_name: '',
+}
+export const defaultCurrentWeekStartAndEndDate: CurrentWeekStartAndEndDate = {
+    end_date_of_week: '',
+    start_date_of_week: '',
+
 }
 
 class DateConsts extends BaseConsts {
@@ -28,6 +45,15 @@ class DateConsts extends BaseConsts {
     static readonly FRIDAY = 5;
     static readonly SATURDAY = 6;
     static readonly WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    static readonly WEEK_DAYS_NAMES_ABBR = [
+        i18n.global.t('dates.days_abbr_2.su'),
+        i18n.global.t('dates.days_abbr_2.mo'),
+        i18n.global.t('dates.days_abbr_2.tu'),
+        i18n.global.t('dates.days_abbr_2.we'),
+        i18n.global.t('dates.days_abbr_2.th'),
+        i18n.global.t('dates.days_abbr_2.fr'),
+        i18n.global.t('dates.days_abbr_2.sa'),
+    ]
     public static getDayOfWeekNumber(day_name: string) {
         const dayName = day_name.toUpperCase()
         if (dayName == 'SUNDAY')
@@ -44,7 +70,7 @@ class DateConsts extends BaseConsts {
             return 5;
         if (dayName == 'SATURDAY')
             return 6;
-        else return -1;
+        else return 0;
     }
 
     static readonly JANUARY = 1

@@ -1,4 +1,4 @@
-import { DateConsts, DaysNamePerMonth, DaysPerMonth, defaultDaysPerMonth } from "/@src/models/HR/Attendance/Date/date";
+import { CurrentWeekStartAndEndDate, DateConsts, DaysNamePerMonth, DaysPerMonth, defaultCurrentWeekStartAndEndDate, defaultDaysPerMonth } from "/@src/models/HR/Attendance/Date/date";
 import { Setting } from "/@src/models/Others/Setting/setting";
 import { getSettingsFromStorage, getSettings } from "/@src/services/Others/Setting/settingService";
 import { useDate } from "/@src/stores/HR/Attendance/Date/dateStore";
@@ -50,6 +50,17 @@ export async function getDaysNamePerMonth(year: number, month: number) {
     let error_code: string = dateResponse.error_code ?? ''
     let message: string = dateResponse.message ?? ''
     return { success, error_code, message, daysName }
+
+}
+
+
+export async function getCurrentWeekStartAndEnd() {
+    const dateResponse = useDate()
+    let current_week_start_and_end_date: CurrentWeekStartAndEndDate = await dateResponse.getCurrentWeekStartAndEndStore() ?? defaultCurrentWeekStartAndEndDate
+    let success: boolean = dateResponse.success ?? false
+    let error_code: string = dateResponse.error_code ?? ''
+    let message: string = dateResponse.message ?? ''
+    return { success, error_code, message, current_week_start_and_end_date }
 
 }
 

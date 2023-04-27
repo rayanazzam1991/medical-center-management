@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { DaysNamePerMonth, DaysPerMonth } from "/@src/models/HR/Attendance/Date/date"
-import { getDaysPerMonthApi, getDaysNamePerMonthApi } from "/@src/utils/api/HR/Attendance/Date"
+import { CurrentWeekStartAndEndDate, DaysNamePerMonth, DaysPerMonth } from "/@src/models/HR/Attendance/Date/date"
+import { getDaysPerMonthApi, getDaysNamePerMonthApi, getCurrentWeekStartAndEndApi } from "/@src/utils/api/HR/Attendance/Date"
 
 
 export const useDate = defineStore('date', () => {
@@ -56,6 +56,29 @@ export const useDate = defineStore('date', () => {
     }
   }
 
+  async function getCurrentWeekStartAndEndStore() {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await getCurrentWeekStartAndEndApi(api)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      return response.response.data as CurrentWeekStartAndEndDate
+
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
 
   return {
@@ -64,7 +87,8 @@ export const useDate = defineStore('date', () => {
     message,
     loading,
     getDaysPerMonthStore,
-    getDaysNamePerMonthStore
+    getDaysNamePerMonthStore,
+    getCurrentWeekStartAndEndStore
   } as const
 })
 

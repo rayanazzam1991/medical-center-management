@@ -5,7 +5,8 @@ export interface EmployeeDropDownProps {
   viewPermission: string,
   changeStatusPermission: string,
   viewMyWaitingListPermission: string,
-  dismissEmployeePermission: string
+  dismissEmployeePermission: string,
+  isServiceProvider: boolean
 }
 
 const { t } = useI18n()
@@ -19,12 +20,14 @@ const props = withDefaults(defineProps<EmployeeDropDownProps>(), {
   viewPermission: undefined,
   changeStatusPermission: undefined,
   viewMyWaitingListPermission: undefined,
-  dismissEmployeePermission: undefined
+  dismissEmployeePermission: undefined,
+  isServiceProvider: undefined
 })
 const viewPermission = props.viewPermission
 const changeStatusPermission = props.changeStatusPermission
 const viewMyWaitingListPermission = props.viewMyWaitingListPermission
 const dismissEmployeePermission = props.dismissEmployeePermission
+const isServiceProvider = props.isServiceProvider
 
 </script>
 
@@ -44,8 +47,8 @@ const dismissEmployeePermission = props.dismissEmployeePermission
           <span>{{ t('drop_down.view') }}</span>
         </div>
       </a>
-      <a v-permission="viewMyWaitingListPermission" role="menuitem" href="#" class="dropdown-item is-media"
-        @click.prevent="
+      <a v-if="isServiceProvider" v-permission="viewMyWaitingListPermission" role="menuitem" href="#"
+        class="dropdown-item is-media" @click.prevent="
           () => {
             emits('viewMyWaitingList')
             close()
@@ -58,7 +61,6 @@ const dismissEmployeePermission = props.dismissEmployeePermission
           <span>{{ t('drop_down.view_my_waiting_list') }}</span>
         </div>
       </a>
-
       <a v-permission="changeStatusPermission" role="menuitem" href="#" class="dropdown-item is-media" @click.prevent="
         () => {
           emits('changeStatus')
