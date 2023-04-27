@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
-import { CancelReservation, CreateReservation, ReservationCalendarSearchFilter, ReservationSearchFilter } from "/@src/models/Sales/Reservation/reservation"
+import { CancelReservation, CreateReservation, ReservationCalendarSearchFilter, ReservationSearchFilter, TodayCustomerReservationData } from "/@src/models/Sales/Reservation/reservation"
 
 export async function getReservationCalendarApi(
     api: AxiosInstance,
@@ -40,6 +40,14 @@ export async function deactivateReservationApi(
     reservationId: number
 ): Promise<{ response: CustomResponseSingle }> {
     const { data: response, headers } = await api.get(`reservation/${reservationId}/deactivateReservation`)
+
+    return { response }
+}
+export async function getTodayCustomerReservationApi(
+    api: AxiosInstance,
+    getTodayCustomerReservationData: TodayCustomerReservationData
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`reservation/getTodayCustomerReservation`, { params: getTodayCustomerReservationData })
 
     return { response }
 }

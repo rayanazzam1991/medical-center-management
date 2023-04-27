@@ -2502,11 +2502,20 @@
       "select_service": "تحديد الخدمة",
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
+      "emergency": "طارئ",
       "add_new_service": "إضافة خدمة جديدة",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
-      }
+      },
+      "reservation_exists": "يوجد حجوزات لدى الزبون اليوم",
+      "no_reservation_exists": "لا يوجد حجوزات لدى الزبون اليوم",
+      "no_reservations_placeholder": "لا يوجد حجوزات",
+      "to": "إلى",
+      "add_reservation": "إضافة",
+      "added_reservation": "الخدمة مضافة",
+      "service_is_reserved": "يوجد حجز للخدمة",
+      "service_is_not_reserved": "لا يوجد حجز للخدمة"
     },
     "header_button": "إضافة تذكرة",
     "back_button": "العودة للخلف",

@@ -71,7 +71,7 @@ const toggle = (key: number) => {
             <VIcon v-if="withChevron" icon="feather:chevron-down" />
             <VIcon v-else-if="!withChevron" icon="feather:plus" />
           </div>
-        </div>
+      </div>
       </summary>
       <div class="collapse-content">
         <slot name="trail-balance-lvl1-collapse-item-content1" :item="items" :index="0" :toggle="toggle">

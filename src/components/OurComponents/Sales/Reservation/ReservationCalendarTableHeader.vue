@@ -174,18 +174,18 @@ export default defineComponent({
                                     ref="customer_id" @select="search(true)" :filter-results="false" :min-chars="0"
                                     :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
                                     :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
-                                        let employeeSearchFilter = {
-                                            user_status_id: UserStatusConsts.ACTIVE,
-                                            name: query,
-                                            is_service_provider: true
-                                        } as EmployeeSearchFilter
-                                        //@ts-ignore
-                                        const data = await getEmployeesList(employeeSearchFilter)
-                                        //@ts-ignore
-                                        return data.employees.map((employee: Employee) => {
-                                            return { value: employee.id, label: employee.user.first_name + ' ' + employee.user.last_name }
-                                        })
-                                    }"
+                                            let employeeSearchFilter = {
+                                                user_status_id: UserStatusConsts.ACTIVE,
+                                                name: query,
+                                                is_service_provider: true
+                                            } as EmployeeSearchFilter
+                                            //@ts-ignore
+                                            const data = await getEmployeesList(employeeSearchFilter)
+                                            //@ts-ignore
+                                            return data.employees.map((employee: Employee) => {
+                                                return { value: employee.id, label: employee.user.first_name + ' ' + employee.user.last_name }
+                                            })
+                                        }"
                                     @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                             </VControl>
                         </div>

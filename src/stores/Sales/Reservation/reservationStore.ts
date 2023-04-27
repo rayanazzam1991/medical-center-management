@@ -1,8 +1,8 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { Pagination, defaultPagination } from "/@src/utils/response"
-import { CancelReservation, CreateReservation, Reservation, ReservationCalendar, ReservationCalendarSearchFilter, ReservationSearchFilter } from "/@src/models/Sales/Reservation/reservation"
-import { cancelReservationApi, createReservationApi, deactivateReservationApi, getReservationCalendarApi, getReservationsListApi } from "/@src/utils/api/Sales/Reservation"
+import { CancelReservation, CreateReservation, Reservation, ReservationCalendar, ReservationCalendarSearchFilter, ReservationSearchFilter, TodayCustomerReservationData } from "/@src/models/Sales/Reservation/reservation"
+import { cancelReservationApi, createReservationApi, deactivateReservationApi, getReservationCalendarApi, getReservationsListApi, getTodayCustomerReservationApi } from "/@src/utils/api/Sales/Reservation"
 
 
 export const useReservation = defineStore('reservation', () => {
@@ -13,6 +13,7 @@ export const useReservation = defineStore('reservation', () => {
     const message = ref<string>()
     const reservationsList = ref<Reservation[]>([])
     const reservationCalendar = ref<ReservationCalendar[]>([])
+    const todayCustomerReservation = ref<Reservation[]>([])
     const pagination = ref<Pagination>(defaultPagination)
 
     async function getReservationCalendarStore(filter: ReservationCalendarSearchFilter) {
@@ -114,6 +115,26 @@ export const useReservation = defineStore('reservation', () => {
             loading.value = false
         }
     }
+    async function getTodayCustomerReservationStore(data: TodayCustomerReservationData) {
+        if (loading.value) return
+        loading.value = true
+
+        try {
+            const returnedResponse = await getTodayCustomerReservationApi(api, data)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            todayCustomerReservation.value = returnedResponse.response.data
+
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
     return {
@@ -124,11 +145,13 @@ export const useReservation = defineStore('reservation', () => {
         pagination,
         reservationCalendar,
         reservationsList,
+        todayCustomerReservation,
         getReservationCalendarStore,
         createReservationStore,
         deactivateReservationStore,
         cancelReservationStore,
-        getReservationsListStore
+        getReservationsListStore,
+        getTodayCustomerReservationStore
     } as const
 })
 
