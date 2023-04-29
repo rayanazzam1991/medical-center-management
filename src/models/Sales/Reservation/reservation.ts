@@ -39,6 +39,20 @@ export interface Reservation {
     created_by: User
     can_decativate_cancel?: boolean
 }
+export interface ReservationTicketHelper {
+    id: number
+    customer: Customer
+    service_provider: ServiceProvider
+    date: string
+    time_from: string
+    time_to: string
+    status: number
+    cancellation_reason?: string
+    created_at: string
+    created_by: User
+    can_decativate_cancel?: boolean
+    is_added: boolean
+}
 
 
 export interface ReservationCalendarReservation {
@@ -78,6 +92,9 @@ export interface CreateReservation {
 export interface CancelReservation {
     cancellation_reason?: string
 }
+export interface TodayCustomerReservationData {
+    customer_id: number
+}
 
 export const defaultReservation: Reservation = {
     created_at: '',
@@ -91,6 +108,20 @@ export const defaultReservation: Reservation = {
     time_from: '',
     time_to: '',
     can_decativate_cancel: undefined
+}
+export const defaultReservationTicketHelper: ReservationTicketHelper = {
+    created_at: '',
+    created_by: defaultUser,
+    customer: defaultCustomer,
+    date: '',
+    id: 0,
+    service_provider: defaultServiceProvider,
+    status: 1,
+    cancellation_reason: undefined,
+    time_from: '',
+    time_to: '',
+    can_decativate_cancel: undefined,
+    is_added: false
 }
 export const defaultReservationCalendar = <ReservationCalendar>{
     time_from: "",
@@ -126,7 +157,9 @@ export const defaultReservationCalendarReservation = <ReservationCalendarReserva
 }
 export const defaultCancelReservation: CancelReservation = {
     cancellation_reason: undefined
-
+}
+export const defaultTodayCustomerReservationData: TodayCustomerReservationData = {
+    customer_id: 0
 }
 export const defaultReservationSearchFilter = <ReservationSearchFilter>{}
 export const defaultReservationCalendarSearchFilter = <ReservationCalendarSearchFilter>{}

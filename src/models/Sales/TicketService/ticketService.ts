@@ -3,6 +3,7 @@ import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { defaultEmployee, Employee } from "../../Employee/employee"
 import { defaultService, Service } from "../../Others/Service/service"
 import { Ticket } from "../Ticket/ticket"
+import { Reservation } from "../Reservation/reservation"
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
     locale: 'ar',
@@ -21,17 +22,22 @@ export interface TicketService {
     ticket?: Ticket
     created_at: string
     updated_at: string
+    is_emergency?: boolean
+    is_reserved?: boolean
 }
 
 export interface CreateUpdateTicketService {
     service_provider_id: number
     sell_price: number
+    is_emergency: boolean
 }
 export interface CreateTicketServiceHelper {
     service_id: number
     service_provider_id: number
     sell_price: number
     editable: boolean
+    with_reserve: boolean,
+    is_emergency: boolean
 }
 
 export interface TicketServiceSearchFilter {
@@ -62,7 +68,9 @@ export const defaultTicketService: TicketService = {
     service_provider_id: 0,
     status: 1,
     updated_at: '',
-    ticket: undefined
+    ticket: undefined,
+    is_emergency: undefined,
+    is_reserved: undefined
 }
 
 class TicketServiceConsts {

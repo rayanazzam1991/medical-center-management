@@ -148,7 +148,6 @@ export default defineComponent({
             if (method == "Add") {
                 await onSubmitAdd();
             } else if (method == "Edit") {
-                console.log('asd')
                 await onSubmitEdit();
             } else
                 return;

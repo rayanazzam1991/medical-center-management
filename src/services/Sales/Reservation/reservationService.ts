@@ -1,4 +1,4 @@
-import { CancelReservation, CreateReservation, Reservation, ReservationCalendarSearchFilter, ReservationSearchFilter } from "/@src/models/Sales/Reservation/reservation"
+import { CancelReservation, CreateReservation, Reservation, ReservationCalendarSearchFilter, ReservationSearchFilter, TodayCustomerReservationData } from "/@src/models/Sales/Reservation/reservation"
 import { useReservation } from "/@src/stores/Sales/Reservation/reservationStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -50,5 +50,16 @@ export async function getReservationsList(searchFilter: ReservationSearchFilter)
     let message: string = reponse.message ?? ''
 
     return { reservations, pagination, success, error_code, message }
+
+}
+export async function getTodayCustomerReservation(data: TodayCustomerReservationData) {
+    const reponse = useReservation()
+    await reponse.getTodayCustomerReservationStore(data)
+    let reservations: Reservation[] = reponse.todayCustomerReservation
+    let success: boolean = reponse.success ?? false
+    let error_code: string = reponse.error_code ?? ''
+    let message: string = reponse.message ?? ''
+
+    return { reservations, success, error_code, message }
 
 }

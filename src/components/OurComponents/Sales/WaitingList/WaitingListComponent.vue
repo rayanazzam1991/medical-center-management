@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { defaultEmployee, Employee } from '/@src/models/Employee/employee';
 import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { defaultWaitingList, EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
+import { TicketService, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 
 
 export interface WaitingListComponentProps {
@@ -22,6 +23,16 @@ waitingList.value = props.waiting_list
 provider.value = props.provider
 const currentTurnNumber = ref(0)
 currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? 0
+
+const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
+    let isEmergency = false
+    requestedServices.forEach(requestedService => {
+        if (requestedService.provider.id == provider.value?.id && requestedService.status == TicketServiceConsts.NOT_SERVED && requestedService.is_emergency) {
+            isEmergency = true
+        }
+    });
+    return isEmergency
+}
 </script>
 
 <template>
@@ -33,9 +44,11 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                 <div class="expanded-content">
                     <div class="column-title is-flex is-justify-content-center">
                         <h3>
-                            <span class="column-name">{{ provider.user.first_name }} {{
-                                provider.user.last_name }}</span>
-                            <span class="task-count">{{ waiting_list.length }}</span>
+                            <div class="has-text-centered">
+                                <span class="column-name">{{ provider.user.first_name }} {{
+                                    provider.user.last_name }}</span>
+                                <span class="task-count">{{ waiting_list.length }}</span>
+                            </div>
                             <p class="column-name has-text-centered">{{ provider.user.room.department?.name }} #{{
                                 provider.user.room.number }}</p>
                             <p class="column-name has-text-centered is-size-6 has-text-info">{{
@@ -55,7 +68,7 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                             <p class="empty-text">{{ t('waiting_list.no_tickets_place_holder') }}</p>
                         </div>
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
-                            class="kanban-card is-new p-2"
+                            class="kanban-card is-new p-3 is-flex is-justify-content-space-between "
                             :class="[ticket.ticket.status == TicketConsts.SERVING && 'ticket-wrapper is-info']">
                             <div class="card-inner ">
 
@@ -72,6 +85,10 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
 
                             </div>
+                            <i :class="[!(checkTicketIsEmergency(ticket.ticket.requested_services) && ticket.ticket.status != TicketConsts.SERVING) && 'is-hidden']"
+                                class="iconify emergency-icon" data-icon="material-symbols:e911-emergency-outline"
+                                aria-hidden="true"></i>
+
                         </div>
                     </div>
                 </div>
@@ -136,6 +153,11 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                 font-weight: 500;
                 text-transform: uppercase;
                 color: var(--light-text-dark-8);
+
+                div {
+                    color: var(--dark-text);
+
+                }
             }
 
             .input {
@@ -308,6 +330,10 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
         box-shadow: 0 5px 43px rgb(0 0 0 / 18%) !important;
     }
 
+    .emergency-icon {
+        font-size: 1.5rem;
+        color: var(--warning);
+    }
 
     &.ticket-wrapper {
         position: relative;
@@ -542,6 +568,12 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
         .column-title {
             h3 {
                 color: var(--body-color);
+
+                div {
+                    color: var(--white);
+
+                }
+
             }
 
             .is-trigger svg {

@@ -12,12 +12,15 @@ import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidatio
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+// @ts-ignore
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
 import { createTicket, getTicket, updateTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
+import { getTodayCustomerReservation } from '/@src/services/Sales/Reservation/reservationService';
+import { Reservation, ReservationTicketHelper, TodayCustomerReservationData } from '/@src/models/Sales/Reservation/reservation';
 
 export default defineComponent({
   props: {
@@ -51,28 +54,30 @@ export default defineComponent({
     const servicesWithProviders = ref<ServiceWithProvider[]>([]);
     const enableCurrencyRate = ref(false)
     const customersList = ref<Customer[]>([])
+    const customerTodayReservations = ref<ReservationTicketHelper[]>([])
     const isLoading = ref(false)
-
+    const selectCustomerLoading = ref(false)
+    const keyIncrement2 = ref(0)
+    const isExpanded = ref(false)
+    const selectedCustomerId = ref(0)
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
-
         const { ticket } = await getTicket(ticketId.value);
         currentTicket.value.customer_id = ticket.customer.id ?? 0
         currentTicket.value.total_amount = ticket.total_amount
 
         ticket.requested_services.forEach(service => {
-          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
+          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED, with_reserve: false, is_emergency: false })
         });
         updateTotalAmount()
       }
-
     }
 
     onMounted(async () => {
       isLoading.value = true
       getCurrentTicket();
       if (formType.value == 'Add')
-        addService({ sell_price: 0, service_provider_id: 0, service_id: 0, editable: true } as CreateTicketServiceHelper)
+        addService({ sell_price: 0, service_provider_id: 0, service_id: 0, editable: true, with_reserve: false, is_emergency: false })
 
       const customerSearchFilter = {
         user_status_id: UserStatusConsts.ACTIVE,
@@ -94,19 +99,44 @@ export default defineComponent({
       const provider = serviceWithProvider?.providers.find((serviceProvider) => serviceProvider.id == service.service_provider_id)
       service.sell_price = provider?.price ?? 0
       updateTotalAmount()
+      if (formType.value == 'Add') {
+        updateReservationServices(index)
+      }
     }
+    const updateReservationServices = (index: number) => {
+      const selectedService = requestedServicesHelper.value[index]
+      const serviceReservation = customerTodayReservations.value.find((reservationEl) => reservationEl.service_provider.id == selectedService.service_provider_id)
+      if (serviceReservation) {
+        serviceReservation.is_added = true
+        keyIncrement2.value++
+        selectedService.with_reserve = true
+      } else {
+        selectedService.with_reserve = false
 
+      }
+    }
     const removeService = (index: number) => {
       if (index !== -1) {
+        if (requestedServicesHelper.value[index].with_reserve && formType.value == 'Add') {
+          const reservationToRemove = customerTodayReservations.value.find((reservationEl) => reservationEl.service_provider.id == requestedServicesHelper.value[index].service_provider_id && reservationEl.service_provider.service?.id == requestedServicesHelper.value[index].service_id)
+          if (reservationToRemove) {
+            reservationToRemove.is_added = false
+            keyIncrement2.value++
+
+          }
+        }
+
         requestedServicesHelper.value.splice(index, 1);
         updateTotalAmount()
+        if (requestedServicesHelper.value.length < 1 && formType.value == 'Add') {
+          addService({ sell_price: 0, service_provider_id: 0, service_id: 0, editable: true, with_reserve: false } as CreateTicketServiceHelper)
+        }
       }
     }
 
     const updateTotalAmount = () => {
       debouncedTotalAmount();
     }
-
 
     const debouncedTotalAmount = debounce(() => {
       currentTicket.value.total_amount = 0
@@ -115,12 +145,84 @@ export default defineComponent({
       })
       context.emit('input-finished', currentTicket.value.total_amount);
     }, 1)
+    const toggleIsExpand = (isClose: boolean) => {
+      isExpanded.value = !isClose
+    }
 
-
+    const onSelectCustomer = async () => {
+      if (selectedCustomerId.value != currentTicket.value.customer_id) {
+        currentTicket.value.customer_id = selectedCustomerId.value
+        requestedServicesHelper.value = []
+        addService({ sell_price: 0, service_provider_id: 0, service_id: 0, editable: true, with_reserve: false, is_emergency: false })
+        updateTotalAmount()
+        if (selectedCustomerId.value == undefined)
+          currentTicket.value.customer_id = 0
+        if (currentTicket.value.customer_id != 0) {
+          selectCustomerLoading.value = true
+          if (currentTicket.value.customer_id != 0 && currentTicket.value.customer_id) {
+            const todayCustomerReservationData: TodayCustomerReservationData = {
+              customer_id: currentTicket.value.customer_id
+            }
+            const { reservations } = await getTodayCustomerReservation(todayCustomerReservationData)
+            customerTodayReservations.value = []
+            reservations.forEach(reservation => {
+              const reservationTemp: ReservationTicketHelper = {
+                id: reservation.id,
+                customer: reservation.customer,
+                service_provider: reservation.service_provider,
+                date: reservation.date,
+                time_from: reservation.time_from,
+                time_to: reservation.time_to,
+                status: reservation.status,
+                cancellation_reason: reservation.cancellation_reason,
+                created_at: reservation.created_at,
+                created_by: reservation.created_by,
+                can_decativate_cancel: reservation.can_decativate_cancel,
+                is_added: false,
+              }
+              customerTodayReservations.value.push(reservationTemp)
+            });
+            keyIncrement2.value++
+          }
+          setCustomerIdValue()
+          selectCustomerLoading.value = false
+        }
+      }
+    }
     const setCustomerIdValue = () => {
       setFieldValue('customer_id', currentTicket.value.customer_id)
     }
-
+    const addReservationService = (reservation: ReservationTicketHelper) => {
+      const reservationToAdd = customerTodayReservations.value.find((reservationEl) => reservationEl.id == reservation.id)
+      if (reservationToAdd) {
+        if (
+          requestedServicesHelper.value[0].editable == true &&
+          requestedServicesHelper.value[0].service_provider_id == 0 &&
+          requestedServicesHelper.value[0].service_id == 0 &&
+          requestedServicesHelper.value[0].sell_price == 0
+        ) {
+          requestedServicesHelper.value[0].editable = true
+          requestedServicesHelper.value[0].service_provider_id = reservation.service_provider.id
+          requestedServicesHelper.value[0].service_id = reservation.service_provider.service?.id ?? 0
+          requestedServicesHelper.value[0].sell_price = reservation.service_provider.price
+          requestedServicesHelper.value[0].with_reserve = true
+          requestedServicesHelper.value[0].is_emergency = false
+        } else {
+          requestedServicesHelper.value.push({
+            service_provider_id: reservation.service_provider.id,
+            sell_price: reservation.service_provider.price,
+            service_id: reservation.service_provider.service?.id ?? 0,
+            editable: true,
+            with_reserve: true,
+            is_emergency: false
+          })
+        }
+        updateTotalAmount()
+        reservationToAdd.is_added = true
+        isExpanded.value = true
+        keyIncrement2.value++
+      }
+    }
     const validationSchema = ticketValidationSchema
     const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
@@ -198,7 +300,7 @@ export default defineComponent({
       } as UpdateTicket
       updateTicket.requested_services = []
       requestedServicesHelper.value.forEach((service) => {
-        updateTicket.requested_services.push({ sell_price: service.sell_price, service_provider_id: service.service_provider_id })
+        updateTicket.requested_services.push({ sell_price: service.sell_price, service_provider_id: service.service_provider_id, is_emergency: service.is_emergency })
       });
       return updateTicket
     }
@@ -209,7 +311,7 @@ export default defineComponent({
       if (!isValid)
         return
       requestedServicesHelper.value.forEach((service) => {
-        currentTicket.value.requested_services.push({ sell_price: service.sell_price, service_provider_id: service.service_provider_id })
+        currentTicket.value.requested_services.push({ sell_price: service.sell_price, service_provider_id: service.service_provider_id, is_emergency: service.is_emergency })
       });
       const { success, message, ticket } = await createTicket(currentTicket.value)
       if (success) {
@@ -248,7 +350,8 @@ export default defineComponent({
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      servicesWithProviders, getCustomersList, requestedServicesHelper
+      servicesWithProviders, getCustomersList, requestedServicesHelper, selectCustomerLoading, onSelectCustomer, customerTodayReservations,
+      keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand
     };
   },
   components: { ErrorMessage }
@@ -278,22 +381,22 @@ export default defineComponent({
                 <VField id="customer_id">
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
-                    <Multiselect v-if="formType == 'Add'" v-model="currentTicket.customer_id" mode="single"
+                    <Multiselect v-if="formType == 'Add'" v-model="selectedCustomerId" mode="single"
                       :placeholder="t('ticket.form.select_customer')" :close-on-select="true" ref="customer_id"
-                      @select="setCustomerIdValue()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
+                      @click="onSelectCustomer()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                       :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                       :searchable="true" :canClear="false" :options="async (query: any) => {
-                        let customerSearchFilter = {
-                          user_status_id: UserStatusConsts.ACTIVE,
-                          name: query,
-                        } as CustomerSearchFilter
-                        //@ts-ignore
-                        const data = await getCustomersList(customerSearchFilter)
-                        //@ts-ignore
-                        return data.customers.map((customer: Customer) => {
-                          return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                        })
-                      }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                          let customerSearchFilter = {
+                            user_status_id: UserStatusConsts.ACTIVE,
+                            name: query,
+                          } as CustomerSearchFilter
+                          //@ts-ignore
+                          const data = await getCustomersList(customerSearchFilter)
+                          //@ts-ignore
+                          return data.customers.map((customer: Customer) => {
+                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                          })
+                        }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                     <VSelect disabled v-else v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
@@ -303,112 +406,264 @@ export default defineComponent({
                   <ErrorMessage class="help is-danger" name="customer_id" />
                 </VField>
               </div>
-              <div class="column is-12 pb-0 my-0">
-                <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
-                <div class="columns mb-0">
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <p class="label required">
-                        {{ t('ticket.form.select_service') }}</p>
-                    </div>
+              <div v-if="selectCustomerLoading" class="column is-12">
+                <VLoader v-if="formType == 'Add'" :hidden="!selectCustomerLoading" size="xl"
+                  :active="selectCustomerLoading">
+                  <div class="load">
                   </div>
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <p class="label required">
-                        {{ t('ticket.form.select_provider') }}</p>
+                </VLoader>
+              </div>
+              <div class="column is-12 columns is-multiline p-0 m-0"
+                :class="[selectCustomerLoading && 'is-hidden', currentTicket.customer_id == 0 && 'is-hidden']"
+                v-if="formType == 'Add'">
+                <div class="column is-12">
+                  <AvailableReservationsCollapse :key="keyIncrement2" :items="customerTodayReservations" with-chevron
+                    :is_expanded="isExpanded" @add-reservation-service="addReservationService"
+                    @close-open="toggleIsExpand" />
+                </div>
+                <div class="column is-12 pb-0 my-0">
+                  <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
+                  <div class="columns mb-0">
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.select_service') }}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <p class="label required">
-                        {{ t('ticket.form.sell_price') }}</p>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.select_provider') }}</p>
+                      </div>
+                    </div>
+                    <div class="column is-2">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.sell_price') }}</p>
+                      </div>
+                    </div>
+                    <div class="column is-1">
+                      <div class="mb-3">
+                        <p class="label">
+                          {{ t('ticket.form.emergency') }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="column is-12 py-0 my-0">
-                <div class="columns mb-0" v-for="(record, mainIndex) in requestedServicesHelper" :key="mainIndex">
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <VField>
-                        <VControl>
-                          <VSelect :disabled="!requestedServicesHelper[mainIndex].editable"
-                            v-model="requestedServicesHelper[mainIndex].service_id">
-                            <VOption :value="0"> {{ t('ticket.form.select_service')
-                            }}</VOption>
-                            <VOption v-for="service in servicesWithProviders" :value="service.id">
-                              {{ service.name }}
-                            </VOption>
-                          </VSelect>
-                        </VControl>
-                      </VField>
+                <div class="column is-12 py-0 my-0">
+                  <div class="columns is-multiline mb-0" v-for="(record, mainIndex) in requestedServicesHelper"
+                    :key="mainIndex">
+                    <div class="column is-4">
+                      <div>
+                        <VField>
+                          <VControl>
+                            <VSelect :disabled="!requestedServicesHelper[mainIndex].editable"
+                              v-model="requestedServicesHelper[mainIndex].service_id">
+                              <VOption :value="0"> {{ t('ticket.form.select_service')
+                              }}</VOption>
+                              <VOption v-for="service in servicesWithProviders" :value="service.id">
+                                {{ service.name }}
+                              </VOption>
+                            </VSelect>
+                          </VControl>
+                        </VField>
+                      </div>
+                      <div v-if="requestedServicesHelper[mainIndex].service_provider_id != 0" class="m-0 p-0 mb-3">
+                        <p class="help" :class="[
+                            requestedServicesHelper[mainIndex].with_reserve && 'is-success',
+                            !requestedServicesHelper[mainIndex].with_reserve && 'is-danger']">
+                          {{ requestedServicesHelper[mainIndex].with_reserve ? t('ticket.form.service_is_reserved') :
+                            t('ticket.form.service_is_not_reserved') }}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <VField>
-                        <VControl>
-                          <div class="select">
-                            <select :disabled="!requestedServicesHelper[mainIndex].editable"
-                              @change="updatePrice(record, mainIndex)"
-                              v-model="requestedServicesHelper[mainIndex].service_provider_id">
-                              <option :value="0"> {{ t('ticket.form.select_provider')
-                              }}</option>
-                              <option
-                                v-for="serviceProvider in servicesWithProviders.find((service) => service.id == requestedServicesHelper[mainIndex].service_id)?.providers"
-                                :value="serviceProvider.id">
-                                {{ serviceProvider.provider.user.first_name }} {{
-                                  serviceProvider.provider.user.last_name }}
-                              </option>
-                            </select>
-                          </div>
-                        </VControl>
-                      </VField>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <VField>
+                          <VControl>
+                            <div class="select">
+                              <select :disabled="!requestedServicesHelper[mainIndex].editable"
+                                @change="updatePrice(record, mainIndex)"
+                                v-model="requestedServicesHelper[mainIndex].service_provider_id">
+                                <option :value="0"> {{ t('ticket.form.select_provider')
+                                }}</option>
+                                <option
+                                  v-for="serviceProvider in servicesWithProviders.find((service) => service.id == requestedServicesHelper[mainIndex].service_id)?.providers"
+                                  :value="serviceProvider.id">
+                                  {{ serviceProvider.provider.user.first_name }} {{
+                                    serviceProvider.provider.user.last_name }}
+                                </option>
+                              </select>
+                            </div>
+                          </VControl>
+                        </VField>
+                      </div>
                     </div>
-                  </div>
-                  <div class="column is-4">
-                    <div class="mb-3">
-                      <VField>
-                        <VControl>
-                          <VInput :disabled="!requestedServicesHelper[mainIndex].editable"
-                            @input="() => updateTotalAmount()" type="number"
-                            v-model.number="requestedServicesHelper[mainIndex].sell_price" />
-                        </VControl>
-                      </VField>
+                    <div class="column is-2 ">
+                      <div class="mb-3">
+                        <VField>
+                          <VControl>
+                            <VInput :disabled="!requestedServicesHelper[mainIndex].editable"
+                              @input="() => updateTotalAmount()" type="number"
+                              v-model.number="requestedServicesHelper[mainIndex].sell_price" />
+                          </VControl>
+                        </VField>
+                      </div>
                     </div>
-                  </div>
-                  <div class="column is-1 columns is-flex is-align-items-center">
-                    <div class="mb-3 column is-6">
-                      <VField
-                        v-if="((mainIndex != 0 && formType == 'Add') || (formType == 'Edit' && requestedServicesHelper[mainIndex].editable))">
-                        <VControl>
-                          <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeService(mainIndex)"
-                            color="danger">
-                          </VIconButton>
-                        </VControl>
-                      </VField>
+                    <div class="column is-2 columns py-0 my-0 pl-0">
+                      <div class="column is-6 pr-4">
+                        <VField>
+                          <VControl>
+                            <VCheckbox v-model="requestedServicesHelper[mainIndex].is_emergency" paddingless
+                              color="warning" />
+                          </VControl>
+                        </VField>
+                      </div>
+                      <div class="column is-6">
+                        <VField v-if="formType == 'Add'">
+                          <VControl>
+                            <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeService(mainIndex)"
+                              color="danger">
+                            </VIconButton>
+                          </VControl>
+                        </VField>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div class="column is-12 pt-0">
+                  <VButton @click.prevent="addService({
+                      service_id: 0,
+                      sell_price: 0,
+                      service_provider_id: 0,
+                      editable: true,
+                      with_reserve: false,
+                      is_emergency: false
+                    })" color="primary">
+                    {{ t('ticket.form.add_new_service') }}
+                  </VButton>
+                </div>
+                <div class="column is-4">
+                  <VField id="total_amount">
+                    <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
+                    <VControl>
+                      <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
+                      <ErrorMessage class="help is-danger" name="total_amount" />
+                    </VControl>
+                  </VField>
+                </div>
               </div>
-              <div class="column is-12 pt-0">
-                <VButton @click.prevent="addService({
-                  service_id: 0,
-                  sell_price: 0,
-                  service_provider_id: 0,
-                  editable: true
-                })" color="primary">
-                  {{ t('ticket.form.add_new_service') }}
-                </VButton>
-              </div>
-              <div class="column is-6">
-                <VField id="total_amount">
-                  <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
-                  <VControl>
-                    <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
-                    <ErrorMessage class="help is-danger" name="total_amount" />
-                  </VControl>
-                </VField>
+              <div v-else-if="formType == 'Edit'">
+                <div class="column is-12 pb-0 my-0">
+                  <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
+                  <div class="columns mb-0">
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.select_service') }}</p>
+                      </div>
+                    </div>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.select_provider') }}</p>
+                      </div>
+                    </div>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <p class="label required">
+                          {{ t('ticket.form.sell_price') }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-12 py-0 my-0">
+                  <div class="columns mb-0" v-for="(record, mainIndex) in requestedServicesHelper" :key="mainIndex">
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <VField>
+                          <VControl>
+                            <VSelect :disabled="!requestedServicesHelper[mainIndex].editable"
+                              v-model="requestedServicesHelper[mainIndex].service_id">
+                              <VOption :value="0"> {{ t('ticket.form.select_service')
+                              }}</VOption>
+                              <VOption v-for="service in servicesWithProviders" :value="service.id">
+                                {{ service.name }}
+                              </VOption>
+                            </VSelect>
+                          </VControl>
+                        </VField>
+                      </div>
+                    </div>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <VField>
+                          <VControl>
+                            <div class="select">
+                              <select :disabled="!requestedServicesHelper[mainIndex].editable"
+                                @change="updatePrice(record, mainIndex)"
+                                v-model="requestedServicesHelper[mainIndex].service_provider_id">
+                                <option :value="0"> {{ t('ticket.form.select_provider')
+                                }}</option>
+                                <option
+                                  v-for="serviceProvider in servicesWithProviders.find((service) => service.id == requestedServicesHelper[mainIndex].service_id)?.providers"
+                                  :value="serviceProvider.id">
+                                  {{ serviceProvider.provider.user.first_name }} {{
+                                    serviceProvider.provider.user.last_name }}
+                                </option>
+                              </select>
+                            </div>
+                          </VControl>
+                        </VField>
+                      </div>
+                    </div>
+                    <div class="column is-4">
+                      <div class="mb-3">
+                        <VField>
+                          <VControl>
+                            <VInput :disabled="!requestedServicesHelper[mainIndex].editable"
+                              @input="() => updateTotalAmount()" type="number"
+                              v-model.number="requestedServicesHelper[mainIndex].sell_price" />
+                          </VControl>
+                        </VField>
+                      </div>
+                    </div>
+                    <div class="column is-1 columns is-flex is-align-items-center">
+                      <div class="mb-3 column is-6">
+                        <VField
+                          v-if="((mainIndex != 0) || (formType == 'Edit' && requestedServicesHelper[mainIndex].editable))">
+                          <VControl>
+                            <VIconButton icon="feather:trash-2" class="remove_btn" @click="removeService(mainIndex)"
+                              color="danger">
+                            </VIconButton>
+                          </VControl>
+                        </VField>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-12 pt-0">
+                  <VButton @click.prevent="addService({
+                      service_id: 0,
+                      sell_price: 0,
+                      service_provider_id: 0,
+                      editable: true,
+                      with_reserve: false,
+                      is_emergency: false
+                    })" color="primary">
+                    {{ t('ticket.form.add_new_service') }}
+                  </VButton>
+                </div>
+                <div class="column is-6">
+                  <VField id="total_amount">
+                    <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
+                    <VControl>
+                      <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
+                      <ErrorMessage class="help is-danger" name="total_amount" />
+                    </VControl>
+                  </VField>
+                </div>
+
               </div>
             </div>
           </div>
@@ -419,11 +674,11 @@ export default defineComponent({
 
   </div>
 </template>
-<style scoped lang="scss">
+<style lang="scss">
 @import '/@src/scss/styles/formPage.scss';
 
 .form-fieldset {
-  max-width: 60%;
+  max-width: 70%;
 }
 
 .label {
@@ -436,5 +691,12 @@ export default defineComponent({
 .load {
   height: 400px;
   width: 500px;
+}
+
+.checkbox {
+  span {
+    width: 40px !important;
+    height: 40px !important;
+  }
 }
 </style>

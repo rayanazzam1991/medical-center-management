@@ -27,6 +27,7 @@ declare module '@vue/runtime-core' {
     AttendanceJustificationTableHeader: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceJustificationTableHeader.vue')['default']
     AttendanceTableCellCard: typeof import('./src/components/OurComponents/HR/Attendance/AttendanceTableCellCard.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
+    AvailableReservationsCollapse: typeof import('./src/components/OurComponents/Sales/Ticket/AvailableReservationsCollapse.vue')['default']
     BalanceSheetAssetsLiabilitesCollapse: typeof import('./src/components/OurComponents/Accounting/Account/BalanceSheetAssetsLiabilitesCollapse.vue')['default']
     BalanceSheetReportPrint: typeof import('./src/components/OurComponents/PrintComponents/BalanceSheetReportPrint.vue')['default']
     BulkCashOutTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/BulkCashOutTableHeader.vue')['default']

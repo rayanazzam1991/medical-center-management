@@ -68,6 +68,7 @@ const serveNext = async () => {
     const { success, message } = await serveNextTicketInProviderWaitingList(employeeId.value)
     if (success) {
         await refreshWaitingList()
+
         keyIncrement.value++
     } else {
         notif.error({ message: message, duration: 3000 })
@@ -76,6 +77,7 @@ const serveNext = async () => {
 const refreshWaitingList = async () => {
     const { waiting_list } = await getWaitingListByProvider(employeeId.value)
     employeeWaitingList.value = waiting_list
+
     serveingServiceSetup()
 
 }
@@ -93,6 +95,7 @@ const ticketServingDone = async () => {
     const { success, message } = await moveTicketToNextWaitingList(servingTicket.value.id)
     if (success) {
         await refreshWaitingList()
+        keyIncrement.value++
     } else {
         notif.error({ message: message, duration: 3000 })
     }
@@ -102,7 +105,6 @@ const ticketServingDone = async () => {
 
 
 const serveingServiceSetup = () => {
-
     ticketServicesNotesHelper.value = []
     const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.SERVING)?.ticket
     if (firstServingTicket && firstServingTicket.id != 0) {
@@ -278,7 +280,8 @@ const serveConfirmation = (requestedServiceId: number) => {
                     <VButton class="center" v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                         :loading="waitingListStore.loading" @click="serveNext" color="primary" raised
                         v-if="!isThereServingTicket" :disabled="employeeWaitingList.waiting_list.length == 0">
-                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first') }}
+                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first')
+                        }}
                     </VButton>
                 </div>
                 <div v-if="isThereServingTicket" class="ticket-footer">
@@ -344,7 +347,7 @@ const serveConfirmation = (requestedServiceId: number) => {
     .ticket-details-layout {
         flex-grow: 1;
         height: 100%;
-        padding: 0.6rem;
+        padding: 0.6rem 0;
         padding-bottom: 1.1rem;
         overflow: auto;
 
