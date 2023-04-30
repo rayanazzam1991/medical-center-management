@@ -2,20 +2,87 @@
 import { useI18n } from 'vue-i18n';
 import { defaultEmployee, Employee } from '/@src/models/Employee/employee';
 import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
-import { defaultWaitingList, EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
-import { TicketService, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
+import { EmployeeWaitingList, ChangeWaitingListOrderingData } from '/@src/models/Sales/WaitingList/waitingList';
+import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
+import { changeWaitingListOrdering } from '/@src/services/Sales/WaitingList/waitingListService';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { Notyf } from 'notyf';
 
 
 export interface WaitingListComponentProps {
     waiting_list: EmployeeWaitingList[],
-    provider: Employee
+    provider: Employee,
+    draggable?: boolean
 }
 
 
 const props = withDefaults(defineProps<WaitingListComponentProps>(), {
     waiting_list: () => [],
     provider: () => defaultEmployee,
+    draggable: false
 })
+const emits = defineEmits<{
+    (e: 'refresh'): void
+}>()
+
+function onDragInvalid(el?: Element): boolean {
+    if (el) {
+        if (!props.draggable) {
+            return true
+        } else {
+            if (el.classList.contains('kanban-card')) {
+                const id = Number((el as HTMLElement).dataset.id)
+                if (id) {
+                    const ticket = waitingList.value.find((waitingListEl) => waitingListEl.ticket.id == id)?.ticket
+                    if (ticket) {
+                        return ticket.status !== TicketConsts.WAITING
+                    }
+                }
+            }
+            return el.classList.contains('kanban-empty')
+        }
+    }
+    return true
+}
+const onDrop = async (el: Element, target: Element, source: Element, sibling: Element) => {
+    if (el && provider.value?.id) {
+        let next_ticket_id: number | undefined = undefined
+        const ticket_id = Number((el as HTMLElement).dataset.id)
+        if (sibling) {
+            next_ticket_id = Number((sibling as HTMLElement).dataset.id)
+        }
+        const changeWaitingListOrderingData: ChangeWaitingListOrderingData = {
+            provider_id: provider.value?.id,
+            ticket_id: ticket_id,
+            next_ticket_id: next_ticket_id
+        }
+        const { success, message } = await changeWaitingListOrdering(changeWaitingListOrderingData)
+        if (success) {
+            notif.success(t('toast.success.change_waiting_list_order'))
+            emits('refresh')
+        } else {
+            notif.error({ message: message, duration: 3000 })
+            emits('refresh')
+        }
+    }
+
+}
+onMounted(() => {
+    ; (window as any).global = window
+    import('dragula').then((module) => {
+        if (
+            container.value
+        ) {
+            const dragula = module.default
+            const drake = dragula([container.value], {
+                invalid: onDragInvalid,
+            })
+            drake.on('drop', onDrop);
+        }
+    })
+})
+const notif = useNotyf() as Notyf
+const container = ref<Element>();
 const { t } = useI18n()
 const waitingList = ref<EmployeeWaitingList[]>([])
 const provider = ref<Employee>()
@@ -69,11 +136,10 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                                     == '-' ? '-' : currentTurnNumber }}
                                 </span>
                             </p>
-
                         </h3>
                     </div>
 
-                    <div>
+                    <div ref="container">
                         <div v-if="waiting_list.length === 0" class="kanban-empty">
                             <img class="empty-state theme-image light-image"
                                 src="/@src/assets/illustrations/projects/board/new.svg" alt="" />
@@ -82,11 +148,13 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                             <p class="empty-text">{{ t('waiting_list.no_tickets_place_holder') }}</p>
                         </div>
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
-                            class="kanban-card is-new p-3 is-flex is-justify-content-space-between " :class="[
+                            :data-turn_order="ticket.turn_order"
+                            class="kanban-card is-new p-3 is-flex is-justify-content-space-between" :class="[
                                     (ticket.ticket.status == TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-primary is-primary',
                                     (ticket.ticket.status != TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-primary is-primary',
                                     (ticket.ticket.status == TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-info is-info',
                                     (ticket.ticket.status != TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-info is-info',
+                                    (ticket.ticket.status != TicketConsts.SERVING && $props.draggable) && 'can-drag gelatine',
 
                                 ]">
                             <div class="card-inner ">
@@ -103,15 +171,13 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                                             ticket.turn_number }}
                                     </span>
                                 </p>
-
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
-
                             </div>
                             <i :class="[!(checkTicketIsEmergency(ticket.ticket.requested_services) && ticket.ticket.status != TicketConsts.SERVING) && 'is-hidden']"
                                 class="iconify emergency-icon" data-icon="material-symbols:e911-emergency-outline"
                                 aria-hidden="true"></i>
-
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -354,7 +420,7 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
 
     .emergency-icon {
         font-size: 1.5rem;
-        color: var(--warning);
+        color: var(--danger);
     }
 
     &.ticket-wrapper-wave-info,
@@ -554,17 +620,15 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
 ========================================================================== */
 
 .can-drag {
-    .kanban-card {
-        // fallback if grab cursor is unsupported
-        cursor: move;
-        cursor: grab;
-        cursor: grab;
-        cursor: grab;
+    // fallback if grab cursor is unsupported
+    cursor: move;
+    cursor: grab;
+    cursor: grab;
+    cursor: grab;
 
-        // (Optional) Apply a "closed-hand" cursor during drag operation.
-        &:active {
-            cursor: grabbing;
-        }
+    // (Optional) Apply a "closed-hand" cursor during drag operation.
+    &:active {
+        cursor: grabbing;
     }
 }
 

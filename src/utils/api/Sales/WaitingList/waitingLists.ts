@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { ServiceCardsListSearchFilter, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
+import { ServiceCardsListSearchFilter, WaitingListSearchFilter, ChangeWaitingListOrderingData } from "/@src/models/Sales/WaitingList/waitingList"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function getWaitingListsListApi(
@@ -43,6 +43,14 @@ export async function getServiceCardsListApi(
 ): Promise<{ response: CustomResponseCollection }> {
     const { data: response, headers } = await api.get(`waitingList/getServiceCardsList`, { params: filter })
 
+    return { response }
+}
+
+export async function changeWaitingListOrderingApi(
+    api: AxiosInstance,
+    data: ChangeWaitingListOrderingData
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.post(`waitingList/changeWaitingListOrdering`, data)
     return { response }
 }
 
