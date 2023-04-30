@@ -3042,6 +3042,8 @@
     "service_provider_monthly": {
       "title": "تقرير الموظف الشهري",
       "employee": "الموظف",
+      "room": "الغرفة",
+      "department": "القسم",
       "month": "الشهر والسنة"
     },
     "best_sold_item": {

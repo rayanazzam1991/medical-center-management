@@ -21,6 +21,14 @@ import { useDarkmode } from '/@src/stores/darkmode'
 import Datepicker from '@vuepic/vue-datepicker';
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
+import { Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { BaseConsts } from '/@src/utils/consts/base'
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { Room, RoomSearchFilter } from '/@src/models/Others/Room/room'
+import { getRoomsList } from '/@src/services/Others/Room/roomSevice'
+import { useEmployee } from '/@src/stores/Employee/employeeStore'
+import { useRoom } from '/@src/stores/Others/Room/roomStore'
+import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 
 const { t, locale } = useI18n()
 const dark = useDarkmode();
@@ -40,15 +48,42 @@ const reportStore = useReport()
 const reportFilter = ref(resetServiceProviderMonthlyReportData());
 const pageTitle = t('reports.service_provider_monthly.title');
 const employeesList = ref<Employee[]>([])
+const departmentsList = ref<Department[]>([])
+const roomsList = ref<Room[]>([])
+const employeeStore = useEmployee()
+const roomStore = useRoom()
+const departmentStore = useDepartment()
+
+const selectedDepartmentId = ref(0)
+const selectedRoomId = ref(0)
 
 onMounted(async () => {
+    let departmentSearchFilter = {} as DepartmentSearchFilter
+    departmentSearchFilter.status = BaseConsts.ACTIVE
+    departmentSearchFilter.per_page = 500
+    const { departments } = await getDepartmentsList(departmentSearchFilter)
+    departmentsList.value = departments
 
-    let employeeSearchFilter = {} as EmployeeSearchFilter
-    employeeSearchFilter.per_page = 500
-    const { employees } = await getEmployeesList(employeeSearchFilter)
-    employeesList.value = employees
+    // let employeeSearchFilter = {} as EmployeeSearchFilter
+    // employeeSearchFilter.per_page = 500
+    // const { employees } = await getEmployeesList(employeeSearchFilter)
+    // employeesList.value = employees
 
 });
+const getRoomsByDepartment = async () => {
+    let RoomsFilter = {} as RoomSearchFilter
+    RoomsFilter.department_id = selectedDepartmentId.value
+    RoomsFilter.per_page = 500
+    const { rooms } = await getRoomsList(RoomsFilter)
+    roomsList.value = rooms
+}
+const getEmployeesByRoom = async () => {
+    let employeesSearchFilter = {} as EmployeeSearchFilter
+    employeesSearchFilter.room_id = selectedRoomId.value
+    employeesSearchFilter.per_page = 500
+    const { employees } = await getEmployeesList(employeesSearchFilter)
+    employeesList.value = employees
+}
 
 const onSubmit = async () => {
     reportFilter.value.month = month.value.month + 1
@@ -113,14 +148,63 @@ const onSubmit = async () => {
                                         </template>
                                     </Datepicker>
                                 </VField>
-
                             </div>
                             <div class="column is-12">
                                 <VField>
-                                    <VLabel class="required">{{ t('reports.service_provider_monthly.employee') }}</VLabel>
+                                    <VLabel style="position:relative" class="required">{{
+                                        t('reports.service_provider_monthly.department') }}
+                                        <div v-if="departmentStore.loading"
+                                            class="loader is-loading mt-2 ml-4 w35-h35 custom-loader">
+                                        </div>
+                                    </VLabel>
+                                    <VControl>
+                                        <div class="select">
+                                            <select @change="getRoomsByDepartment" v-model="selectedDepartmentId">
+                                                <VOption :value="0">{{ t('reports.service_provider_monthly.department') }}
+                                                </VOption>
+                                                <VOption v-for="department in departmentsList" :key="department.id"
+                                                    :value="department.id">{{
+                                                        department.name }}
+                                                </VOption>
+                                            </select>
+                                        </div>
+                                    </VControl>
+                                </VField>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel style="position:relative" class="required">{{
+                                        t('reports.service_provider_monthly.room') }}
+                                        <div v-if="roomStore.loading"
+                                            class="loader is-loading mt-2 ml-4 w35-h35 custom-loader">
+                                        </div>
+                                    </VLabel>
+                                    <VControl>
+                                        <div class="select">
+                                            <select @change="getEmployeesByRoom" v-model="selectedRoomId">
+                                                <VOption :value="0">{{ t('reports.service_provider_monthly.room') }}
+                                                </VOption>
+                                                <VOption v-for="room in roomsList" :key="room.id" :value="room.id">{{
+                                                    room.number }}
+                                                </VOption>
+                                            </select>
+                                        </div>
+                                    </VControl>
+                                </VField>
+                            </div>
+
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel style="position:relative" class="required">{{
+                                        t('reports.service_provider_monthly.employee') }}
+                                        <div v-if="employeeStore.loading"
+                                            class="loader is-loading mt-2 ml-4 w35-h35 custom-loader">
+                                        </div>
+                                    </VLabel>
                                     <VControl>
                                         <VSelect v-model="reportFilter.employee_id">
-                                            <VOption value="">{{ t('reports.service_provider_monthly.employee') }}</VOption>
+                                            <VOption value="0">{{ t('reports.service_provider_monthly.employee') }}
+                                            </VOption>
                                             <VOption v-for="employee in employeesList" :key="employee.id"
                                                 :value="employee.id">{{ employee.user.first_name }} {{
                                                     employee.user.last_name }}
