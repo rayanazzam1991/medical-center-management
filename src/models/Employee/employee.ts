@@ -65,7 +65,8 @@ export interface EmployeeSearchFilter {
     order?: string
     quick_search?: boolean
     is_salaries_related?: boolean
-    is_service_provider? : boolean
+    is_service_provider?: boolean
+    room_id?: number
 }
 export interface EmployeeService {
     id: number

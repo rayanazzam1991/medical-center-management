@@ -578,10 +578,6 @@ watch(cashAccountId, (value) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 .font {
   font-size: xx-small;

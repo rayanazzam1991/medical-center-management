@@ -27,3 +27,9 @@
   width: 16px;
   height: 16px;
 }
+
+.required::after {
+  content:" *";
+  font-size: 1.25rem;
+  color: var(--danger);
+}

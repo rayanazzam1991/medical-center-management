@@ -18,6 +18,9 @@ import { ReservationCalendarDay } from '/@src/models/Sales/Reservation/reservati
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/customer';
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
+import { Service, ServiceWithProvider, defaultServiceWithProvider } from '/@src/models/Others/Service/service';
+import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
+import { ServiceProvider, defaultServiceProvider } from '/@src/models/Sales/ServiceProvider/serviceProvider';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -43,9 +46,11 @@ const defaultStartDateDay = ref()
 const defaultEndDateYear = ref()
 const defaultEndDateMonth = ref()
 const defaultEndDateDay = ref()
-const selectedEmployee = ref(defaultEmployee)
-const employeeServicesList = ref<EmployeeService[]>([])
-const employeesList = ref<Employee[]>([])
+const selectedServiceProvider = ref(defaultServiceProvider)
+const selectedServiceWithProviders = ref(defaultServiceWithProvider)
+// const employeeServicesList = ref<EmployeeService[]>([])
+const servicesWithProviders = ref<ServiceWithProvider[]>([]);
+// const employeesList = ref<Employee[]>([])
 const selectedReservationCalendar = ref<ReservationCalendar>(defaultReservationCalendar)
 const selectedReservationCalendarDay = ref<ReservationCalendarDay>(defaultReservationCalendarDay)
 const selectedReservation = ref<ReservationCalendarReservation>(defaultReservationCalendarReservation)
@@ -53,12 +58,15 @@ const createReservationData = ref(defaultCreateReservation)
 const cancelReservationData = ref(defaultCancelReservation)
 const selectedServiceDuration = ref(0)
 const selectedServicePrice = ref(0)
+// const selectedServiceId = ref(0)
 const createReservationTimeTo = ref('00:00')
 const isFirstTime = ref(true)
+// const selectedServiceProviderId = ref(0)
 searchFilter.value.employee_id = employeeId.value ?? 0
-const loading = ref({ fetch: false, add: false, cancel: false, deactivate: false })
+const loading = ref({ fetch: false, add: false, cancel: false, deactivate: false, header: false })
 
 onMounted(async () => {
+    loading.value.header = true
     const { current_week_start_and_end_date } = await getCurrentWeekStartAndEnd()
     const [yearStart, monthStart, dayStart] = current_week_start_and_end_date.start_date_of_week.split('-').map(Number);
     const [yearEnd, monthEnd, dayEnd] = current_week_start_and_end_date.end_date_of_week.split('-').map(Number);
@@ -70,27 +78,24 @@ onMounted(async () => {
     defaultEndDateYear.value = yearEnd
     defaultEndDateMonth.value = monthEnd
     defaultEndDateDay.value = dayEnd
-    let employeeSearchFilter = {
-        user_status_id: UserStatusConsts.ACTIVE,
-        is_service_provider: true,
-        per_page: 500
-    } as EmployeeSearchFilter
-    const { employees } = await getEmployeesList(employeeSearchFilter)
-    employeesList.value = employees
+    const { services } = await getServicesWithProviders()
+    servicesWithProviders.value = services
+    loading.value.header = true
     keyIncrement.value++
     isFirstTime.value = false
 })
 
 
 
-const search = async (newSearchFilter: ReservationCalendarSearchFilter, employee: Employee) => {
+const search = async (newSearchFilter: ReservationCalendarSearchFilter, serviceWithProvider: ServiceWithProvider, serviceProvider: ServiceProvider) => {
     loading.value.fetch = true
     const { reservations_calendar } = await getReservationCalendar(newSearchFilter)
     employeeId.value = newSearchFilter.employee_id
-    employeeServicesList.value = employee.services
-    selectedEmployee.value = employee
-    title.value = t('reservation.calendar.table.header_title') + ' : ' + selectedEmployee.value.user.first_name + ' ' + selectedEmployee.value.user.last_name
+
+    selectedServiceProvider.value = serviceProvider
+    selectedServiceWithProviders.value = serviceWithProvider
     reservationCalendarList.value = reservations_calendar
+    createReservationData.value.service_provider_id = serviceProvider.id
     keyIncrement.value++
     searchFilter.value = newSearchFilter
     loading.value.fetch = false
@@ -98,29 +103,26 @@ const search = async (newSearchFilter: ReservationCalendarSearchFilter, employee
 
 const resetFilter = async (newSearchFilter: ReservationCalendarSearchFilter) => {
     searchFilter.value = newSearchFilter
-    await search(searchFilter.value, selectedEmployee.value)
+    await search(searchFilter.value, selectedServiceWithProviders.value, selectedServiceProvider.value)
 }
-const updateSelectedService = () => {
-    if (createReservationData.value.service_provider_id != 0) {
-        const selectedService = employeeServicesList.value.find((service) => service.id == createReservationData.value.service_provider_id)
-        selectedServiceDuration.value = selectedService?.service.duration_minutes ?? 0
-        selectedServicePrice.value = selectedService?.price ?? 0
-    } else {
-        selectedServiceDuration.value = 0
-        selectedServicePrice.value = 0
-    }
-    updateTimeTo()
+const clearServiceProvider = () => {
+    reservationCalendarList.value = []
+
 }
 const updateTimeTo = () => {
     const settings = getSettingsFromStorage()
     const reservationTimeSlot = Number(settings.find((setting) => setting.key == 'reservations_time_slot')?.value ?? '1')
-    let timeSlotNumber = Math.floor(selectedServiceDuration.value / reservationTimeSlot)
-    if ((selectedServiceDuration.value % reservationTimeSlot) != 0) {
-        timeSlotNumber = timeSlotNumber + 1
+    if (selectedServiceWithProviders.value.duration_minutes) {
+        let timeSlotNumber = Math.floor(selectedServiceWithProviders.value.duration_minutes / reservationTimeSlot)
+        if ((selectedServiceWithProviders.value.duration_minutes % reservationTimeSlot) != 0) {
+            timeSlotNumber = timeSlotNumber + 1
+        }
+
+        let date: Date = new Date('1970-01-01T' + selectedReservationCalendar.value.time_from + 'Z')
+        date.setMinutes(date.getMinutes() + (timeSlotNumber * reservationTimeSlot));
+        createReservationTimeTo.value = date.toISOString().substr(11, 5);
     }
-    let date: Date = new Date('1970-01-01T' + selectedReservationCalendar.value.time_from + 'Z')
-    date.setMinutes(date.getMinutes() + (timeSlotNumber * reservationTimeSlot));
-    createReservationTimeTo.value = date.toISOString().substr(11, 5);
+
 
 }
 const formatCreateReservationDate = () => {
@@ -137,19 +139,15 @@ const addReservation = async () => {
         notif.error({ message: t('toast.error.reservation.customer_is_required'), duration: 3000 })
         return
     }
-    if (createReservationData.value.service_provider_id == 0) {
-        notif.error({ message: t('toast.error.reservation.service_is_required'), duration: 3000 })
-        return
-    }
     loading.value.add = true
-    updateSelectedService()
     createReservationData.value.date = formatCreateReservationDate()
     createReservationData.value.time_from = selectedReservationCalendar.value.time_from
     createReservationData.value.time_to = createReservationTimeTo.value
+    createReservationData.value.service_provider_id = selectedServiceProvider.value.id
     const { success, message } = await createReservation(createReservationData.value)
     if (success) {
         notif.success(t('toast.success.add'))
-        await search(searchFilter.value, selectedEmployee.value)
+        await search(searchFilter.value, selectedServiceWithProviders.value, selectedServiceProvider.value)
         addReservationPopup.value = false
     } else {
         notif.error({ message: message, duration: 3000 })
@@ -171,7 +169,7 @@ const deactivateReservationFunction = async () => {
     const { success, message } = await deactivateReservation(selectedReservation.value.id)
     if (success) {
         notif.success(t('toast.success.deactivate_reservation'))
-        await search(searchFilter.value, selectedEmployee.value)
+        await search(searchFilter.value, selectedServiceWithProviders.value, selectedServiceProvider.value)
         reservationDetailsPopup.value = false
     } else {
         notif.error({ message: message, duration: 3000 })
@@ -187,7 +185,7 @@ const cancelReservationFunction = async () => {
     const { success, message } = await cancelReservation(selectedReservation.value.id, cancelReservationData.value)
     if (success) {
         notif.success(t('toast.success.cancel_reservation'))
-        await search(searchFilter.value, selectedEmployee.value)
+        await search(searchFilter.value, selectedServiceWithProviders.value, selectedServiceProvider.value)
         cancelReservationPopup.value = false
     } else {
         notif.error({ message: message, duration: 3000 })
@@ -239,6 +237,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[0]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[0].reservation) {
                         reservationDetailsPopup.value = true
@@ -273,6 +272,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[1]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[1].reservation) {
                         reservationDetailsPopup.value = true
@@ -308,6 +308,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[2]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[2].reservation) {
                         reservationDetailsPopup.value = true
@@ -343,6 +344,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[3]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[3].reservation) {
                         reservationDetailsPopup.value = true
@@ -378,6 +380,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[4]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[4].reservation) {
                         reservationDetailsPopup.value = true
@@ -413,6 +416,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[5]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[5].reservation) {
                         reservationDetailsPopup.value = true
@@ -449,6 +453,7 @@ const columns = {
                         addReservationPopup.value = true
                         selectedReservationCalendar.value = row
                         selectedReservationCalendarDay.value = row.days[6]
+                        updateTimeTo()
                         keyIncrement2.value++
                     } else if (row.days[6].reservation) {
                         reservationDetailsPopup.value = true
@@ -465,12 +470,14 @@ const columns = {
 </script>
     
 <template>
-    <ReservationCalendarTableHeader :key="keyIncrement" :title="title" :employee_id="employeeId" @search="search"
+    <ReservationCalendarTableHeader :key="keyIncrement" :title="title" :employee_id="employeeId"
         :default_start_date_day="defaultStartDateDay" :default_start_date_month="defaultStartDateMonth"
         :default_start_date_year="defaultStartDateYear" :default_end_date_day="defaultEndDateDay"
-        :default_end_date_month="defaultEndDateMonth" :default_end_date_year="defaultEndDateYear" :employees="employeesList"
+        :default_end_date_month="defaultEndDateMonth" :default_end_date_year="defaultEndDateYear"
         :start_date="searchFilter.date_from" :end_date="searchFilter.date_to" :is_first_time="isFirstTime"
-        @resetFilter="resetFilter" />
+        :service_provider="selectedServiceProvider" :services-with-providers="servicesWithProviders"
+        :service="selectedServiceWithProviders" @resetFilter="resetFilter" @search="search"
+        @clearServiceProvider="clearServiceProvider" />
     <VFlexTableWrapper :key="keyIncrement" :columns="columns" :data="reservationCalendarList">
 
         <VFlexTable clickable>
@@ -506,44 +513,37 @@ const columns = {
                                     :close-on-select="true" ref="customer_id" :filter-results="false" :min-chars="0"
                                     :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
                                     :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
-                                        let customerSearchFilter: CustomerSearchFilter = {
-                                            user_status_id: UserStatusConsts.ACTIVE,
-                                            name: query,
-                                        }
-                                        // @ts-ignore
-                                        const data = await getCustomersList(customerSearchFilter)
-                                        // @ts-ignore
-                                        return data.customers.map((customer: Customer) => {
-                                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                                        })
-                                    }"
+                                            let customerSearchFilter: CustomerSearchFilter = {
+                                                user_status_id: UserStatusConsts.ACTIVE,
+                                                name: query,
+                                            }
+                                            // @ts-ignore
+                                            const data = await getCustomersList(customerSearchFilter)
+                                            // @ts-ignore
+                                            return data.customers.map((customer: Customer) => {
+                                                return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                                            })
+                                        }"
                                     @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                             </VControl>
                         </VField>
-                        <VField class="column">
-                            <VLabel class="required">{{ t('reservation.calendar.table.add_reservation_modal.service') }}
-                            </VLabel>
-                            <VControl>
-                                <VSelect @click="updateSelectedService" v-model="createReservationData.service_provider_id">
-                                    <VOption value="0">
-                                        {{ t('reservation.calendar.table.add_reservation_modal.service') }}
-                                    </VOption>
-                                    <VOption v-for="service in employeeServicesList" :value="service.id">
-                                        {{ service.service.name }}
-                                    </VOption>
-                                </VSelect>
-                            </VControl>
-                            <p v-if="selectedServiceDuration != 0" class="help is-info mt-3">
+                        <div class="column">
+                            <p> {{ t('reservation.calendar.table.add_reservation_modal.service') }} :
+                                <span class="has-text-primary">
+                                    {{ selectedServiceWithProviders.name }}
+                                </span>
+                            </p>
+                            <p class="help is-info mt-3">
                                 {{ t('reservation.calendar.table.add_reservation_modal.service_duration') }} :
-                                {{ selectedServiceDuration }}
+                                {{ selectedServiceWithProviders.duration_minutes }}
                                 {{ t('reservation.calendar.table.add_reservation_modal.minutes') }}
                             </p>
-                            <p v-if="selectedServicePrice != 0" class="help is-info mt-0">
+                            <p class="help is-info mt-0">
                                 {{ t('reservation.calendar.table.add_reservation_modal.service_price') }} :
-                                {{ selectedServicePrice }}
+                                {{ selectedServiceProvider.price }}
                             </p>
 
-                        </VField>
+                        </div>
                         <div class="column">
                             <p> {{ t('reservation.calendar.table.add_reservation_modal.date') }} :
                                 <span class="has-text-primary">
@@ -674,9 +674,5 @@ const columns = {
     cursor: default !important;
 }
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 </style>
     

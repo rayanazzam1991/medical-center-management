@@ -360,18 +360,18 @@ const calcCurrencyDifferences = debounce(() => {
                         ref="accountMultiselect" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                         :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                         :searchable="true" :canClear="false" @select="setAccountValue()" :options="async (query: any) => {
-                          let accountSearchFilter = {} as AccountSearchFilter
-                          accountSearchFilter.name = query
-                          const data = await getAllAccounts(accountSearchFilter)
-                          //@ts-ignore
-                          return data.accounts.map((item: any) => {
-                            return { value: item.id, label: `${item.code} - ${item.name}` }
-                          })
-                        }" @open="(select$: any) => {
-  if (select$.noOptions) {
-    select$.resolveOptions()
-  }
-}" />
+                            let accountSearchFilter = {} as AccountSearchFilter
+                            accountSearchFilter.name = query
+                            const data = await getAllAccounts(accountSearchFilter)
+                            //@ts-ignore
+                            return data.accounts.map((item: any) => {
+                              return { value: item.id, label: `${item.code} - ${item.name}` }
+                            })
+                          }" @open="(select$: any) => {
+      if (select$.noOptions) {
+        select$.resolveOptions()
+      }
+    }" />
 
                     </VControl>
                     <ErrorMessage class="help is-danger" :name="`account_id_${mainIndex}`" />
@@ -536,10 +536,6 @@ const calcCurrencyDifferences = debounce(() => {
   background-color: #444444;
 }
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

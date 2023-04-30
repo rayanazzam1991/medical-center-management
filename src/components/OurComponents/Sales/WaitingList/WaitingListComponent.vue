@@ -21,18 +21,30 @@ const waitingList = ref<EmployeeWaitingList[]>([])
 const provider = ref<Employee>()
 waitingList.value = props.waiting_list
 provider.value = props.provider
-const currentTurnNumber = ref(0)
-currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? 0
+const currentTurnNumber = ref('-')
+const currentIsReserve = ref(false)
 
 const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
     let isEmergency = false
     requestedServices.forEach(requestedService => {
-        if (requestedService.provider.id == provider.value?.id && requestedService.status == TicketServiceConsts.NOT_SERVED && requestedService.is_emergency) {
+        if (requestedService.provider.id == provider.value?.id && requestedService.is_emergency) {
             isEmergency = true
         }
     });
     return isEmergency
 }
+const checkTicketIsReserve = (requestedServices: TicketService[]) => {
+    let isReserve = false
+    requestedServices.forEach(requestedService => {
+        if (requestedService.provider.id == provider.value?.id && requestedService.is_reserve) {
+            isReserve = true
+        }
+    });
+    return isReserve
+}
+currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? '-'
+currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.ticket.requested_services ?? [])
+
 </script>
 
 <template>
@@ -51,9 +63,11 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
                             </div>
                             <p class="column-name has-text-centered">{{ provider.user.room.department?.name }} #{{
                                 provider.user.room.number }}</p>
-                            <p class="column-name has-text-centered is-size-6 has-text-info">{{
+                            <p class="column-name has-text-centered is-size-6">{{
                                 t('waiting_list.current_turn_number') }}
-                                {{ currentTurnNumber == 0 ? '-' : currentTurnNumber }}
+                                <span :class="currentIsReserve ? 'has-text-primary' : 'has-text-info'"> {{ currentTurnNumber
+                                    == '-' ? '-' : currentTurnNumber }}
+                                </span>
                             </p>
 
                         </h3>
@@ -68,8 +82,13 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
                             <p class="empty-text">{{ t('waiting_list.no_tickets_place_holder') }}</p>
                         </div>
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
-                            class="kanban-card is-new p-3 is-flex is-justify-content-space-between "
-                            :class="[ticket.ticket.status == TicketConsts.SERVING && 'ticket-wrapper is-info']">
+                            class="kanban-card is-new p-3 is-flex is-justify-content-space-between " :class="[
+                                    (ticket.ticket.status == TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-primary is-primary',
+                                    (ticket.ticket.status != TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-primary is-primary',
+                                    (ticket.ticket.status == TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-info is-info',
+                                    (ticket.ticket.status != TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-info is-info',
+
+                                ]">
                             <div class="card-inner ">
 
                                 <h4 class="card-title">
@@ -77,9 +96,12 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
                                         ticket.ticket.customer.user.last_name
                                     }} | {{ t('waiting_list.ticket_id', { ticket_id: ticket.ticket.id }) }}
                                 </h4>
-                                <p class="column-name is-size-6 has-text-info">{{
+                                <p class="column-name is-size-6">{{
                                     t('waiting_list.turn_number') }}
-                                    {{ ticket.turn_number }}
+                                    <span
+                                        :class="checkTicketIsReserve(ticket.ticket.requested_services) ? 'has-text-primary' : 'has-text-info'">{{
+                                            ticket.turn_number }}
+                                    </span>
                                 </p>
 
                                 <p class="column-name">{{ ticket.ticket.created_at }} </p>
@@ -335,7 +357,10 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
         color: var(--warning);
     }
 
-    &.ticket-wrapper {
+    &.ticket-wrapper-wave-info,
+    &.ticket-wrapper-wave-primary,
+    &.ticket-wrapper-info,
+    &.ticket-wrapper-primary {
         position: relative;
         display: flex;
         justify-content: center;
@@ -351,7 +376,6 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
             width: 100%;
             border-radius: var(--radius-large);
             background: var(--white);
-            animation: boxShadowWave 1.6s infinite;
             animation-duration: 2s;
             transform-origin: center center;
             z-index: 1;
@@ -407,41 +431,19 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
             align-items: baseline;
         }
 
-
-        &.is-warning {
-            border: 2px solid var(--warning);
-
-            &::after {
-                background: var(--warning);
-            }
-        }
-
         &.is-primary {
-            border: 2px solid var(--primary) !important;
+            border: 2px solid var(--primary);
+            border-right: 10px solid var(--primary);
 
             &::after {
-                background: var(--primary);
-            }
-        }
-
-        &.is-success {
-            border: 2px solid var(--success);
-
-            &::after {
-                background: var(--success);
-            }
-        }
-
-        &.is-danger {
-            border: 2px solid var(--danger);
-
-            &::after {
-                background: var(--danger);
+                box-shadow: 0 2px 20px var(--primary) !important;
+                opacity: 1;
             }
         }
 
         &.is-info {
             border: 2px solid var(--info);
+            border-right: 10px solid var(--info);
 
             &::after {
                 box-shadow: 0 2px 20px var(--info) !important;
@@ -449,6 +451,51 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
             }
         }
     }
+
+    &.ticket-wrapper-wave-info {
+        &::after {
+            content: '';
+            animation: boxShadowWaveInfo 1.6s infinite;
+        }
+
+    }
+
+    &.ticket-wrapper-wave-primary {
+        &::after {
+            content: '';
+            animation: boxShadowWavePrimary 1.6s infinite;
+        }
+
+    }
+
+    &.ticket-wrapper-info {
+
+        &.is-info {
+            border: 0;
+            border-right: 10px solid var(--info);
+
+            &::after {
+                opacity: 0;
+            }
+
+
+        }
+    }
+
+    &.ticket-wrapper-primary {
+
+        &.is-primary {
+            border: 0;
+            border-right: 10px solid var(--primary);
+
+            &::after {
+                opacity: 0;
+            }
+
+
+        }
+    }
+
 
     .card-body {
         padding: 20px;
@@ -622,56 +669,35 @@ const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
                 }
             }
 
-            &.ticket-wrapper {
+            &.ticket-wrapper-info,
+            &.ticket-wrapper-primary,
+            &.ticket-wrapper-wave-primary,
+            &.ticket-wrapper-wave-info {
 
                 &::after {
                     background: var(--dark-sidebar-light-6) !important;
                 }
 
-                &.is-warning {
-                    border: 2px solid var(--warning) !important;
-
-                    &::after {
-                        background: var(--warning) !important;
-                    }
-                }
-
-                &.is-primary {
-                    border: 2px solid var(--primary) !important;
-
-                    &::after {
-                        background: var(--primary) !important;
-                    }
-                }
-
-                &.is-success {
-                    border: 2px solid var(--success) !important;
-
-                    &::after {
-                        background: var(--success) !important;
-                    }
-                }
-
-                &.is-danger {
-                    border: 2px solid var(--danger) !important;
-
-                    &::after {
-                        background: var(--danger) !important;
-                    }
-                }
-
-                &.is-info {
-                    border: 2px solid var(--info) !important;
-
-                    &::after {
-                        box-shadow: 0 2px 20px var(--info) !important;
-                        opacity: 1;
-                    }
-                }
-
-
-
             }
+
+            &.ticket-wrapper-wave-info {
+                border: 2px solid var(--info) !important;
+                border-right: 10px solid var(--info) !important;
+            }
+
+            &.ticket-wrapper-wave-primary {
+                border: 2px solid var(--primary) !important;
+                border-right: 10px solid var(--primary) !important;
+            }
+
+            &.ticket-wrapper-info {
+                border-right: 10px solid var(--info) !important;
+            }
+
+            &.ticket-wrapper-primary {
+                border-right: 10px solid var(--primary) !important;
+            }
+
         }
     }
 }

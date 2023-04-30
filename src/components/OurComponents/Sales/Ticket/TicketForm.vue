@@ -514,7 +514,7 @@ export default defineComponent({
                       <div class="column is-6 pr-4">
                         <VField>
                           <VControl>
-                            <VCheckbox v-model="requestedServicesHelper[mainIndex].is_emergency" paddingless
+                            <VCheckbox v-model="requestedServicesHelper[mainIndex].is_emergency" paddingless bigger
                               color="warning" />
                           </VControl>
                         </VField>
@@ -674,7 +674,7 @@ export default defineComponent({
 
   </div>
 </template>
-<style lang="scss">
+<style scoped lang="scss">
 @import '/@src/scss/styles/formPage.scss';
 
 .form-fieldset {
@@ -691,12 +691,5 @@ export default defineComponent({
 .load {
   height: 400px;
   width: 500px;
-}
-
-.checkbox {
-  span {
-    width: 40px !important;
-    height: 40px !important;
-  }
 }
 </style>

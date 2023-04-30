@@ -16,7 +16,8 @@ export interface VCheckboxProps {
   circle?: boolean
   solid?: boolean
   paddingless?: boolean
-  wrapperClass?: string
+  wrapperClass?: string,
+  bigger?: boolean
 }
 
 const emits = defineEmits<VCheckboxEmits>()
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<VCheckboxProps>(), {
   solid: false,
   paddingless: false,
   wrapperClass: undefined,
+  bigger: false
 })
 
 const vFieldContext = reactive(useVFieldContext())
@@ -46,6 +48,8 @@ const classes = computed(() => {
     props.circle && 'is-circle',
     props.color && `is-${props.color}`,
     props.paddingless && 'is-paddingless',
+    props.bigger && 'is-bigger',
+
   ]
 })
 
@@ -139,159 +143,168 @@ watch(
     padding: 0 !important;
   }
 
-  &.is-circle {
-    input+span {
-      border-radius: var(--radius-rounded);
+  &.is-bigger {
+    span {
+      width: 40px !important;
+      height: 40px !important;
     }
-  }
+  
 
-  &.is-solid {
-    input+span {
-      background: var(--fade-grey-light-3);
-    }
+}
 
-    &.is-primary {
-      input+span {
-        border-color: var(--primary);
-        background: var(--primary);
-
-        &::after {
-          color: var(--white);
-        }
-      }
-    }
-
-    &.is-success {
-      input+span {
-        border-color: var(--success);
-        background: var(--success);
-
-        &::after {
-          color: var(--white);
-        }
-      }
-    }
-
-    &.is-info {
-      input+span {
-        border-color: var(--info);
-        background: var(--info);
-
-        &::after {
-          color: var(--white);
-        }
-      }
-    }
-
-    &.is-warning {
-      input+span {
-        border-color: var(--warning);
-        background: var(--warning);
-
-        &::after {
-          color: var(--white);
-        }
-      }
-    }
-
-    &.is-danger {
-      input+span {
-        border-color: var(--danger);
-        background: var(--danger);
-
-        &::after {
-          color: var(--white);
-        }
-      }
-    }
-  }
-
-  &.is-outlined {
-    &.is-primary {
-      input:checked+span {
-        border-color: var(--primary);
-      }
-
-      input+span {
-        &::after {
-          color: var(--primary);
-        }
-      }
-    }
-
-    &.is-success {
-      input:checked+span {
-        border-color: var(--success);
-      }
-
-      input+span {
-        &::after {
-          color: var(--success);
-        }
-      }
-    }
-
-    &.is-info {
-      input:checked+span {
-        border-color: var(--info);
-      }
-
-      input+span {
-        &::after {
-          color: var(--info);
-        }
-      }
-    }
-
-    &.is-warning {
-      input:checked+span {
-        border-color: var(--warning);
-      }
-
-      input+span {
-        &::after {
-          color: var(--warning);
-        }
-      }
-    }
-
-    &.is-danger {
-      input:checked+span {
-        border-color: var(--danger);
-      }
-
-      input+span {
-        &::after {
-          color: var(--danger);
-        }
-      }
-    }
-  }
-
+&.is-circle {
   input+span {
-    border-radius: var(--radius-small);
-    transition: all 0.3s; // transition-all test
+    border-radius: var(--radius-rounded);
+  }
+}
 
-    &::after {
-      background-size: contain;
-      position: absolute;
-      top: 48%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      content: '\f00c';
-      font-family: 'Font Awesome\ 5 Free';
-      font-weight: 900;
-      font-size: 0.7rem;
+&.is-solid {
+  input+span {
+    background: var(--fade-grey-light-3);
+  }
+
+  &.is-primary {
+    input+span {
+      border-color: var(--primary);
+      background: var(--primary);
+
+      &::after {
+        color: var(--white);
+      }
     }
   }
 
-  input:focus+span,
-  input:active+span {
-    outline-offset: var(--accessibility-focus-outline-offset);
-    outline-width: var(--accessibility-focus-outline-width);
-    outline-color: var(--accessibility-focus-outline-color);
-    outline-style: var(--accessibility-focus-outline-style);
+  &.is-success {
+    input+span {
+      border-color: var(--success);
+      background: var(--success);
+
+      &::after {
+        color: var(--white);
+      }
+    }
   }
+
+  &.is-info {
+    input+span {
+      border-color: var(--info);
+      background: var(--info);
+
+      &::after {
+        color: var(--white);
+      }
+    }
+  }
+
+  &.is-warning {
+    input+span {
+      border-color: var(--warning);
+      background: var(--warning);
+
+      &::after {
+        color: var(--white);
+      }
+    }
+  }
+
+  &.is-danger {
+    input+span {
+      border-color: var(--danger);
+      background: var(--danger);
+
+      &::after {
+        color: var(--white);
+      }
+    }
+  }
+}
+
+&.is-outlined {
+  &.is-primary {
+    input:checked+span {
+      border-color: var(--primary);
+    }
+
+    input+span {
+      &::after {
+        color: var(--primary);
+      }
+    }
+  }
+
+  &.is-success {
+    input:checked+span {
+      border-color: var(--success);
+    }
+
+    input+span {
+      &::after {
+        color: var(--success);
+      }
+    }
+  }
+
+  &.is-info {
+    input:checked+span {
+      border-color: var(--info);
+    }
+
+    input+span {
+      &::after {
+        color: var(--info);
+      }
+    }
+  }
+
+  &.is-warning {
+    input:checked+span {
+      border-color: var(--warning);
+    }
+
+    input+span {
+      &::after {
+        color: var(--warning);
+      }
+    }
+  }
+
+  &.is-danger {
+    input:checked+span {
+      border-color: var(--danger);
+    }
+
+    input+span {
+      &::after {
+        color: var(--danger);
+      }
+    }
+  }
+}
+
+input+span {
+  border-radius: var(--radius-small);
+  transition: all 0.3s; // transition-all test
+
+  &::after {
+    background-size: contain;
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    content: '\f00c';
+    font-family: 'Font Awesome\ 5 Free';
+    font-weight: 900;
+    font-size: 0.7rem;
+  }
+}
+
+input:focus+span,
+input:active+span {
+  outline-offset: var(--accessibility-focus-outline-offset);
+  outline-width: var(--accessibility-focus-outline-width);
+  outline-color: var(--accessibility-focus-outline-color);
+  outline-style: var(--accessibility-focus-outline-style);
+}
 }
 
 .is-dark {

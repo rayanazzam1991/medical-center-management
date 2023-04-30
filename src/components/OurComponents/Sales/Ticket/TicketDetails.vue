@@ -357,10 +357,6 @@ const columns = {
   margin-right: 12px;
 }
 
-.required::after {
-  content: ' *';
-  color: var(--danger);
-}
 
 .modal-header {
   margin: 0 0 2rem;
