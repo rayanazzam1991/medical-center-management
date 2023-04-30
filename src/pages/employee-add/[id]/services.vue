@@ -143,9 +143,9 @@ const onSubmitAdd = handleSubmit(async () => {
             <div v-if="servicesList.length != 0" class="columns px-3 py-2">
 
               <VButton @click.prevent="addService({
-                service_id: 0,
-                price: 0,
-              })" color="primary">
+                  service_id: 0,
+                  price: 0,
+                })" color="primary">
                 {{ t('employee.form.add_new_service') }}
               </VButton>
             </div>
@@ -181,20 +181,22 @@ const onSubmitAdd = handleSubmit(async () => {
                         :filter-results="false" :min-chars="0" :resolve-on-load="false" :infinite="true" :limit="20"
                         :rtl="true" :max="1" :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
                         @select="setServiceValue()" :options="async (query: any) => {
-                          let serviceSearchFilter = {} as ServiceSearchFilter
-                          //@ts-ignore
-                          serviceSearchFilter.name = query
-                          //@ts-ignore
-                          const data = await getServicesList(serviceSearchFilter)
-                          //@ts-ignore
-                          return data.services.map((service: any) => {
-                            return { value: service.id, label: `${service.name}` }
-                          })
-                        }" @open="(select$: any) => {
-  if (select$.noOptions) {
-    select$.resolveOptions()
-  }
-}" />
+                            let serviceSearchFilter = {} as ServiceSearchFilter
+                            //@ts-ignore
+                            serviceSearchFilter.name = query
+                            //@ts-ignore
+                            serviceSearchFilter.status = ServiceConsts.ACTIVE
+                            //@ts-ignore
+                            const data = await getServicesList(serviceSearchFilter)
+                            //@ts-ignore
+                            return data.services.map((service: any) => {
+                              return { value: service.id, label: `${service.name}` }
+                            })
+                          }" @open="(select$: any) => {
+      if (select$.noOptions) {
+        select$.resolveOptions()
+      }
+    }" />
                     </VControl>
                     <ErrorMessage class="help is-danger" :name="`service_id_${mainIndex}`" />
                   </VField>
@@ -234,10 +236,6 @@ const onSubmitAdd = handleSubmit(async () => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

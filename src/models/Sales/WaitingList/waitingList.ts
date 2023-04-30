@@ -17,12 +17,14 @@ export interface WaitingList {
 export interface ServiceCard {
     customer: Customer
     provider: Employee
-    turn_number: number
+    turn_number: string
+    turn_order: number
 }
 
 export interface EmployeeWaitingList {
     id: number
-    turn_number: number
+    turn_number: string
+    turn_order: number
     ticket: Ticket
 }
 
@@ -53,7 +55,8 @@ export const defaultWaitingList: WaitingList = {
 export const defaultServiceCard: ServiceCard = {
     provider: defaultEmployee,
     customer: defaultCustomer,
-    turn_number: 0
+    turn_number: '',
+    turn_order: 0
 }
 export const defaultWaitingListSearchFilter: WaitingListSearchFilter = {
     provider_id: undefined,
@@ -63,14 +66,16 @@ export const defaultWaitingListSearchFilter: WaitingListSearchFilter = {
 }
 export interface WaitingListByTicket {
     id: number
-    turn_number: number
+    turn_number: string
+    turn_order: number
     ticket: Ticket
     current_provider: Employee
     created_at: string
 }
 export const defaultWaitingListByTicket: WaitingListByTicket = {
     id: 0,
-    turn_number: 0,
+    turn_number: '',
+    turn_order: 0,
     ticket: defaultTicket,
     current_provider: defaultEmployee,
     created_at: ' '

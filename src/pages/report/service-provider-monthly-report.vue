@@ -51,7 +51,7 @@ onMounted(async () => {
 });
 
 const onSubmit = async () => {
-    reportFilter.value.month = month.value.month
+    reportFilter.value.month = month.value.month + 1
     reportFilter.value.year = month.value.year
     if (reportFilter.value.employee_id == 0) {
         notif.error({ message: t('toast.error.report.employee_required'), duration: 3000 })

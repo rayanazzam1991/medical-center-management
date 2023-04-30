@@ -21,7 +21,7 @@ export default defineComponent({
     },
     emits: ["onSubmit"],
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const viewWrapper = useViewWrapper();
         viewWrapper.setPageTitle(t('position.form.page_title'));
         const head = useHead({
@@ -34,7 +34,7 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
-    const pageTitle = t('position.form.form_header' , {type : formTypeName});
+        const pageTitle = t('position.form.form_header', { type: formTypeName });
         const backRoute = "/position";
         const currentPosition = ref(defaultPosition);
         const positionId = ref(0);
@@ -156,7 +156,8 @@ export default defineComponent({
                                 <VField id="description" v-slot="{ field }">
                                     <VLabel>{{ t('position.form.description') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentPosition.description" type="text" placeholder=""
+                                        <VInput v-model="currentPosition.description" type="text"
+                                            :placeholder="t('position.form.description_placeholder')"
                                             autocomplete="given-description" />
                                         <ErrorMessage class="help is-danger" name="description" />
 

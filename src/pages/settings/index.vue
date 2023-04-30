@@ -59,10 +59,13 @@ export default defineComponent({
     const hr_cycle_start_day = ref('')
     const unjustified_hours_round = ref('')
     const reservations_time_slot = ref('')
+    const reservations_have_priority = ref('false')
     const new_usd_currency_rate = ref<number>(1)
     const usd_currency = ref<Currency>(defaultCurrency)
+    const loading = ref(false)
 
     onMounted(async () => {
+      loading.value = true
       const { settings } = await getSettings()
       settingsList.value = settings
       const { currency } = await getCurrencyByCode(CurrencyConsts.USD_CODE)
@@ -77,6 +80,7 @@ export default defineComponent({
       hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
       unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
       reservations_time_slot.value = settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value ?? ''
+      reservations_have_priority.value = settingsList.value.find((setting) => setting.key == 'reservations_have_priority')?.value ?? ''
       usd_currency.value = currency
       new_usd_currency_rate.value = currency.rate
 
@@ -86,6 +90,7 @@ export default defineComponent({
       start_time.value = { hours: start_hour, minutes: start_minute }
       const [end_hour, end_minute, end_second] = settings_end_time.split(':')
       end_time.value = { hours: end_hour, minutes: end_minute }
+      loading.value = false
 
     });
 
@@ -173,6 +178,9 @@ export default defineComponent({
       if (reservations_time_slot.value != settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value) {
         updateSettings.push({ key: 'reservations_time_slot', value: reservations_time_slot.value })
       }
+      if (reservations_have_priority.value != settingsList.value.find((setting) => setting.key == 'reservations_have_priority')?.value) {
+        updateSettings.push({ key: 'reservations_have_priority', value: reservations_have_priority.value })
+      }
       if (new_usd_currency_rate.value !== usd_currency.value.rate) {
         const { message, success } = await updateCurrencyRate(usd_currency.value.id, new_usd_currency_rate.value)
         if (!success) {
@@ -201,7 +209,11 @@ export default defineComponent({
 
       }
     };
-    return { t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+    return {
+      t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate,
+      reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, reservations_have_priority,
+      pageTitle, settingsList, onSubmit, viewWrapper, formType, loading
+    };
   },
   components: { ErrorMessage, Datepicker }
 })
@@ -212,8 +224,13 @@ export default defineComponent({
 <template>
   <div class="page-content-inner">
     <FormHeader :title="pageTitle" :form_submit_name="formType" type="submit" @onSubmit="onSubmit()"
-      :isLoading="settingStore?.loading" />
-    <form class="form-layout" @submit.prevent="onSubmit()">
+      :isLoading="loading" />
+    <VLoader :hidden="!loading" size="xl" :active="loading">
+      <div class="load">
+      </div>
+    </VLoader>
+
+    <form :hidden="loading" class="form-layout" @submit.prevent="onSubmit()">
       <div class="form-outer">
         <div class="form-body">
           <!--Fieldset-->
@@ -386,6 +403,18 @@ export default defineComponent({
                   </VControl>
                 </VField>
               </div>
+              <div class="column is-6">
+                <h2 class="mb-3 required">{{ t('settings.form.reservations_have_priority') }}</h2>
+                <VField id="reservations_have_priority">
+                  <VControl>
+                    <VRadio v-model="reservations_have_priority" value="true" :label="t('boolean.true')"
+                      name="reservations_have_priority" color="success" />
+                    <VRadio v-model="reservations_have_priority" value="false" :label="t('boolean.false')"
+                      name="reservations_have_priority" color="danger" />
+                    <ErrorMessage class="help is-danger" name="reservations_have_priority" />
+                  </VControl>
+                </VField>
+              </div>
             </div>
           </div>
 
@@ -400,4 +429,9 @@ export default defineComponent({
 @import '/@src/scss/styles/formPage.scss';
 @import '@vuepic/vue-datepicker/dist/main.css';
 @import '/@src/scss/styles/customDatePicker.scss';
+
+.load {
+  height: 400px;
+  width: 500px;
+}
 </style>

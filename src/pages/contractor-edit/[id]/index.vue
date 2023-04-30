@@ -483,10 +483,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
     width: 28.5em;
 }
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 .form-layout .form-outer .form-body {
     padding: 20px 40px 40px;

@@ -119,7 +119,7 @@ const serveingServiceSetup = () => {
     } else {
         isThereServingTicket.value = false
         const firstServingTicket = employeeWaitingList.value.waiting_list.find((ticket) => ticket.ticket.status == TicketConsts.WAITING)
-        if (firstServingTicket?.turn_number == 1) {
+        if (firstServingTicket?.turn_order == 1) {
             isFirstTicket.value = true
         } else {
             isFirstTicket.value = false

@@ -403,10 +403,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

@@ -36,6 +36,10 @@ onBeforeMount(() => {
 })
 
 const handleLogin = async () => {
+  if (!signRequest.value.phone_number || !signRequest.value.password) {
+    notif.error({ message: t('toast.error.phone_number_and_password_required'), duration: 3000 })
+    return
+  }
   isLoading.value = true
   const { user, success, message } = await signIn(signRequest.value);
   if (success && user && user.id != undefined) {
@@ -45,21 +49,15 @@ const handleLogin = async () => {
     router.push({
       name: '/dashboard/'
     })
-
     await sleep(200);
-
     notif.success(t('auth.success_login'))
-
   } else {
     notif.error({
       message: message,
       duration: 5000,
     })
-
   }
   isLoading.value = false
-
-
 }
 
 

@@ -23,7 +23,7 @@ export interface TicketService {
     created_at: string
     updated_at: string
     is_emergency?: boolean
-    is_reserved?: boolean
+    is_reserve?: boolean
 }
 
 export interface CreateUpdateTicketService {
@@ -70,7 +70,7 @@ export const defaultTicketService: TicketService = {
     updated_at: '',
     ticket: undefined,
     is_emergency: undefined,
-    is_reserved: undefined
+    is_reserve: undefined
 }
 
 class TicketServiceConsts {

@@ -18,16 +18,16 @@ import { getSettingsFromStorage } from '/@src/services/Others/Setting/settingSer
 import { EmployeeSearchFilter } from '/@src/models/Employee/employee'
 import { getEmployeesList } from '/@src/services/Employee/employeeService'
 import { Employee } from '/@src/models/Employee/employee'
+import { defaultServiceWithProvider, ServiceWithProvider } from '/@src/models/Others/Service/service'
+import { defaultServiceProvider } from '/@src/models/Sales/ServiceProvider/serviceProvider'
 
 export default defineComponent({
     props: {
-        title: {
-            type: String,
-            default: '',
+        service_provider: {
+            default: defaultServiceProvider,
         },
-        employee_id: {
-            type: Number,
-            default: 0,
+        service: {
+            default: defaultServiceWithProvider
         },
         default_start_date_year: {
             type: Number,
@@ -57,6 +57,10 @@ export default defineComponent({
             type: Boolean,
             default: true
         },
+        // loading: {
+        //     type: Boolean,
+        //     default: true
+        // },
         start_date: {
             type: String,
             default: ''
@@ -65,8 +69,8 @@ export default defineComponent({
             type: String,
             default: ''
         },
-        employees: {
-            type: Array<Employee>,
+        servicesWithProviders: {
+            type: Array<ServiceWithProvider>,
             default: []
         }
 
@@ -74,6 +78,7 @@ export default defineComponent({
     },
     setup(props, context) {
         const dark = useDarkmode();
+        const loading = ref(false)
         const settings = getSettingsFromStorage()
         const start_of_week = DateConsts.getDayOfWeekNumber(settings.find((setting) => setting.key == 'start_of_week')?.value ?? '') as 0 | 1 | 2 | 3 | 4 | 5 | 6
         const firstDayOfWeek = new Date(props.default_start_date_year, props.default_start_date_month - 1, props.default_start_date_day)
@@ -81,8 +86,7 @@ export default defineComponent({
         const date = ref();
 
         if (props.is_first_time) {
-            const settings = getSettingsFromStorage()
-            const start_of_week = DateConsts.getDayOfWeekNumber(settings.find((setting) => setting.key == 'start_of_week')?.value ?? '') as 0 | 1 | 2 | 3 | 4 | 5 | 6
+            loading.value = true
             const firstDayOfWeek = new Date(props.default_start_date_year, props.default_start_date_month - 1, props.default_start_date_day)
             const lastDayOfWeek = new Date(props.default_end_date_year, props.default_end_date_month - 1, props.default_end_date_day)
             date.value = [firstDayOfWeek, lastDayOfWeek]
@@ -97,17 +101,22 @@ export default defineComponent({
         const iconArrow = locale.value == "ar" ? { left: "lnir lnir-chevron-right", right: "lnir lnir-chevron-left" } : { left: "lnir lnir-chevron-left", right: "lnir lnir-chevron-right" }
         const iconArrowForNote = locale.value == "ar" ? { left: "fas fa-long-arrow-alt-right", right: "fas fa-long-arrow-alt-left" } : { left: "fas fa-long-arrow-alt-left", right: "fas fa-long-arrow-alt-right" }
         const searchFilter = ref(defaultReservationCalendarSearchFilter)
-        const searchEmployeeId = ref(0)
-        const searchEmployeeIdField = ref(0)
-        searchFilter.value.employee_id = props.employee_id
-        searchEmployeeId.value = props.employee_id
-        searchEmployeeIdField.value = props.employee_id
+        const searchServiceId = ref(0)
+        const searchServiceProviderId = ref(0)
+        const searchServiceProviderIdField = ref(0)
+        searchServiceProviderId.value = props.service_provider.id
+        searchServiceProviderIdField.value = props.service_provider.id
+        searchServiceId.value = props.service.id
+        searchFilter.value.employee_id = props.service_provider.provider.id ?? 0
         const keyIncrement = ref(0)
         const search = async (forEmployee: boolean) => {
-            if (searchEmployeeIdField.value == searchEmployeeId.value && forEmployee)
+            if (searchServiceProviderIdField.value == searchServiceProviderId.value && forEmployee)
                 return
+            if (searchServiceProviderIdField.value == 0) {
+                clearServiceProvider()
+            }
             else {
-                searchEmployeeId.value = searchEmployeeIdField.value
+                searchServiceProviderId.value = searchServiceProviderIdField.value
                 const date_from_not_formatted = new Date(date.value[0])
                 const date_to_not_formatted = new Date(date.value[1])
                 const localeDateFrom = date_from_not_formatted.toLocaleString()
@@ -116,19 +125,30 @@ export default defineComponent({
                 const formattedDateFrom = `${yearFrom}-${monthFrom.padStart(2, '0')}-${dayFrom.padStart(2, '0')}`;
                 const [monthTo, dayTo, yearTo] = localeDateTo.split(',')[0].split('/');
                 const formattedDateTo = `${yearTo}-${monthTo.padStart(2, '0')}-${dayTo.padStart(2, '0')}`;
+                const selectedService = props.servicesWithProviders.find((service) => service.id == searchServiceId.value)
+                const selectedServiceProvider = selectedService?.providers.find((provider) => provider.id == searchServiceProviderId.value)
+                const selectedEmployee = selectedServiceProvider?.provider
                 searchFilter.value.date_from = formattedDateFrom
                 searchFilter.value.date_to = formattedDateTo
-                searchFilter.value.employee_id = searchEmployeeId.value
-                const selectedEmployee = props.employees.find((employee) => employee.id == searchEmployeeId.value)
-                context.emit('search', searchFilter.value, selectedEmployee)
+                searchFilter.value.employee_id = selectedEmployee?.id ?? 0
+                context.emit('search', searchFilter.value, selectedService, selectedServiceProvider)
             }
+
+        }
+        const clearServiceProvider = () => {
+            searchServiceProviderId.value = 0
+            searchServiceProviderIdField.value = 0
+            context.emit('clearServiceProvider')
 
         }
         const resetFilter = () => {
             date.value = [firstDayOfWeek, lastDayOfWeek];
-            searchFilter.value.date_from = firstDayOfWeek.toISOString()
-            searchFilter.value.date_to = lastDayOfWeek.toISOString()
-            searchFilter.value.employee_id = searchEmployeeId.value
+            const [firstMonth, firstDay, firstYear] = firstDayOfWeek.toLocaleDateString().split('/')
+            const [lastMonth, lastDay, lastYear] = lastDayOfWeek.toLocaleDateString().split('/')
+            const formattedFirst = `${firstYear}-${firstMonth.padStart(2, '0')}-${firstDay.padStart(2, '0')}`;
+            const formattedLast = `${lastYear}-${lastMonth.padStart(2, '0')}-${lastDay.padStart(2, '0')}`;
+            searchFilter.value.date_from = formattedFirst
+            searchFilter.value.date_to = formattedLast
             keyIncrement.value++
             context.emit('resetFilter', searchFilter.value)
 
@@ -138,8 +158,9 @@ export default defineComponent({
             iconArrow,
             start_of_week,
             iconArrowForNote,
-            searchEmployeeId,
-            searchEmployeeIdField,
+            searchServiceProviderId,
+            searchServiceProviderIdField,
+            searchServiceId,
             locale,
             t,
             ReservationConsts,
@@ -148,8 +169,10 @@ export default defineComponent({
             keyIncrement,
             resetFilter,
             getEmployeesList,
+            clearServiceProvider,
             search,
-            date
+            date,
+            loading
         }
 
     },
@@ -162,35 +185,43 @@ export default defineComponent({
         <div class="form-outer">
             <div class="form-header stuck-header">
                 <div class="is-flex is-justify-content-space-between">
-
-                    <h1 class="title">
-                        {{ $props.title }}
-                    </h1>
                     <div class="is-flex is-align-items-center">
-                        <div class="column date-pricker-width pl-0">
-                            <VControl>
-                                <Multiselect v-model="searchEmployeeIdField" mode="single"
-                                    :placeholder="t('reservation.calendar.search_filter.provider')" :close-on-select="true"
-                                    ref="customer_id" @select="search(true)" :filter-results="false" :min-chars="0"
-                                    :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
-                                    :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
-                                            let employeeSearchFilter = {
-                                                user_status_id: UserStatusConsts.ACTIVE,
-                                                name: query,
-                                                is_service_provider: true
-                                            } as EmployeeSearchFilter
-                                            //@ts-ignore
-                                            const data = await getEmployeesList(employeeSearchFilter)
-                                            //@ts-ignore
-                                            return data.employees.map((employee: Employee) => {
-                                                return { value: employee.id, label: employee.user.first_name + ' ' + employee.user.last_name }
-                                            })
-                                        }"
-                                    @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
-                            </VControl>
+                        <div class="column date-pricker-width py-4 pr-0">
+                            <VField>
+                                <VControl>
+                                    <div class="select">
+                                        <select v-model="searchServiceId" @change="clearServiceProvider">
+                                            <option :value="0"> {{ t('reservation.calendar.search_filter.select_service')
+                                            }}</option>
+                                            <option v-for="service in servicesWithProviders" :value="service.id">
+                                                {{ service.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </VControl>
+                            </VField>
+                        </div>
+                        <div class="column date-pricker-width px-0 py-4">
+                            <VField>
+                                <VControl>
+                                    <div class="select">
+                                        <select v-model="searchServiceProviderIdField" @change="search(true)">
+                                            <option :value="0"> {{ t('reservation.calendar.search_filter.select_provider')
+                                            }}</option>
+                                            <option
+                                                v-for="serviceProvider in servicesWithProviders.find((service) => service.id == searchServiceId)?.providers"
+                                                :value="serviceProvider.id">
+                                                {{ serviceProvider.provider.user.first_name }} {{
+                                                    serviceProvider.provider.user.last_name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </VControl>
+                            </VField>
                         </div>
 
-                        <div v-if="searchEmployeeId != 0" class="column date-pricker-width">
+                        <div class="column date-pricker-width">
                             <Datepicker v-model="date" :cancel-text="t('date_picker.cancel')" :locale="locale" week-picker
                                 :day-names="DateConsts.WEEK_DAYS_NAMES_ABBR" :clearable="false" :week-start="start_of_week"
                                 auto-apply :select-text="t('date_picker.select')" class="date-picker-dircetion"
@@ -203,8 +234,10 @@ export default defineComponent({
                                 </template>
                             </Datepicker>
                         </div>
-                        <VIconButton v-if="searchEmployeeId != 0" :raised="false" class="mr-2" color="danger"
-                            icon="feather:rotate-ccw" v-on:click="resetFilter" />
+                        <VIconButton :raised="false" class="mr-2" color="danger" icon="feather:rotate-ccw"
+                            v-on:click="resetFilter" />
+                        <div v-if="loading" class="loader is-loading mr-3 w35-h35">
+                        </div>
 
                     </div>
 
