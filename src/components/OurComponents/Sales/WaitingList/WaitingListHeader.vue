@@ -21,6 +21,10 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        loading: {
+            type: Boolean,
+            default: false,
+        },
 
     },
 
@@ -129,6 +133,9 @@ export default defineComponent({
                     </div>
                     <div class="left my-4 mx-2">
                         <div class="columns is-flex is-align-items-center">
+                            <div v-if="$props.loading" class="loader is-loading m-r-15 m-b-05-rem w35-h35">
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -137,6 +144,10 @@ export default defineComponent({
     </form>
 </template>
 
-<style   lang="scss">
+<style scoped  lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
+
+.loader {
+    padding: 1.25rem;
+}
 </style>

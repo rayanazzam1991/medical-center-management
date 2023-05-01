@@ -347,6 +347,7 @@ const serveConfirmation = (requestedServiceId: number) => {
     .ticket-details-layout {
         flex-grow: 1;
         height: 100%;
+        width: min-content;
         padding: 0.6rem 0;
         padding-bottom: 1.1rem;
         overflow: auto;

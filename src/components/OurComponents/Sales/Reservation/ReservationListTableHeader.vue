@@ -133,8 +133,8 @@ export default defineComponent({
                                     </select>
                                 </div>
                             </VControl>
-                            <VControl>
-                                <VButton class="" to="/reservation-calendar" color="primary">{{ button_name }}
+                            <VControl v-permission="Permissions.RESERVATION_LIST">
+                                <VButton to="/reservation-calendar" color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

@@ -60,6 +60,7 @@ export default defineComponent({
     const unjustified_hours_round = ref('')
     const reservations_time_slot = ref('')
     const reservations_have_priority = ref('false')
+    const reservations_delay_limit = ref('')
     const new_usd_currency_rate = ref<number>(1)
     const usd_currency = ref<Currency>(defaultCurrency)
     const loading = ref(false)
@@ -81,6 +82,7 @@ export default defineComponent({
       unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
       reservations_time_slot.value = settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value ?? ''
       reservations_have_priority.value = settingsList.value.find((setting) => setting.key == 'reservations_have_priority')?.value ?? ''
+      reservations_delay_limit.value = settingsList.value.find((setting) => setting.key == 'reservations_delay_limit')?.value ?? ''
       usd_currency.value = currency
       new_usd_currency_rate.value = currency.rate
 
@@ -145,6 +147,11 @@ export default defineComponent({
         notif.error(t('toast.error.accounting.new_usd_currency_rate'))
         return
       }
+      if ((Number(reservations_delay_limit.value) < 0) || !(Number.isInteger(Number(reservations_delay_limit.value)))) {
+        await sleep(500);
+        notif.error(t('toast.error.reservation.reservations_delay_limit'))
+        return
+      }
       const updateStartTime = formatedStartTimeHour + ':' + formatedStartTimeMinute
       const updateEndTime = formatedEndTimeHour + ':' + formatedEndTimeMinute
       if (updateStartTime != settingsList.value.find((setting) => setting.key == 'start_time')?.value || updateEndTime != settingsList.value.find((setting) => setting.key == 'end_time')?.value) {
@@ -181,6 +188,9 @@ export default defineComponent({
       if (reservations_have_priority.value != settingsList.value.find((setting) => setting.key == 'reservations_have_priority')?.value) {
         updateSettings.push({ key: 'reservations_have_priority', value: reservations_have_priority.value })
       }
+      if (reservations_delay_limit.value != settingsList.value.find((setting) => setting.key == 'reservations_delay_limit')?.value) {
+        updateSettings.push({ key: 'reservations_delay_limit', value: reservations_delay_limit.value })
+      }
       if (new_usd_currency_rate.value !== usd_currency.value.rate) {
         const { message, success } = await updateCurrencyRate(usd_currency.value.id, new_usd_currency_rate.value)
         if (!success) {
@@ -212,7 +222,7 @@ export default defineComponent({
     return {
       t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate,
       reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, reservations_have_priority,
-      pageTitle, settingsList, onSubmit, viewWrapper, formType, loading
+      pageTitle, settingsList, onSubmit, viewWrapper, formType, loading, reservations_delay_limit
     };
   },
   components: { ErrorMessage, Datepicker }
@@ -400,6 +410,15 @@ export default defineComponent({
                       </VOption>
                     </VSelect>
                     <ErrorMessage class="help is-danger" name="reservations_time_slot" />
+                  </VControl>
+                </VField>
+              </div>
+              <div class="column is-6">
+                <h2 class="mb-3 required">{{ t('settings.form.reservations_delay_limit') }}</h2>
+                <VField id="reservations_delay_limit">
+                  <VControl>
+                    <VInput v-model="reservations_delay_limit" type="number" />
+                    <ErrorMessage class="help is-danger" name="reservations_delay_limit" />
                   </VControl>
                 </VField>
               </div>

@@ -46,6 +46,11 @@ export interface ServiceCardsListSearchFilter {
     order_by?: string
     order?: string
 }
+export interface ChangeWaitingListOrderingData {
+    provider_id: number
+    ticket_id: number
+    next_ticket_id?: number
+}
 
 
 export const defaultWaitingList: WaitingList = {

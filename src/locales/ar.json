@@ -338,7 +338,8 @@
       "password_changed": "تم تعديل كلمة المرور بنجاح",
       "dismiss": "تمت عملية إقالة الموظف بنجاح",
       "deactivate_reservation": "تم انهاء تفعيل الحجز بنجاح",
-      "cancel_reservation": "تم الغاء الحجز بنجاح"
+      "cancel_reservation": "تم الغاء الحجز بنجاح",
+      "change_waiting_list_order": "تم تغيير الترتيب بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -408,7 +409,8 @@
       "reservation": {
         "customer_is_required": "حقل الزبون مطلوب",
         "service_is_required": "حقل الخدمة مطلوب",
-        "cancellation_reason_too_long": "سبب الالغاء يجب أن يكون أقل من 255 محرف"
+        "cancellation_reason_too_long": "سبب الالغاء يجب أن يكون أقل من 255 محرف",
+        "reservations_delay_limit": "سماحية التأخير عن موعد الحجز يجب أن يكون أكبر أو يساوي الصفر"
       }
     },
     "file": {
@@ -1481,7 +1483,8 @@
       "usd_currency_rate": "سعر الصرف",
       "usd_currency_rate_helper": "كل واحد دولار أمريكي = X دينار عراقي",
       "reservations_time_slot": "مدة الحجوزات",
-      "reservations_have_priority": "إعطاء أولوية للحجوزات"
+      "reservations_have_priority": "إعطاء أولوية للحجوزات",
+      "reservations_delay_limit": "سماحية التأخير عن موعد الحجز"
     }
   },
   "social_media": {

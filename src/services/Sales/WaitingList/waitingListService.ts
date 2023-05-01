@@ -1,4 +1,4 @@
-import { defaultWaitingList, defaultWaitingListByTicket, ServiceCard, ServiceCardsListSearchFilter, WaitingList, WaitingListByTicket, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
+import { ChangeWaitingListOrderingData, defaultWaitingList, defaultWaitingListByTicket, ServiceCard, ServiceCardsListSearchFilter, WaitingList, WaitingListByTicket, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
 import { useWaitingList } from "/@src/stores/Sales/WaitingList/waitingListStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -55,6 +55,16 @@ export async function getServiceCardsList(searchFilter: ServiceCardsListSearchFi
     let message: string = response.message ?? ''
 
     return { service_cards, pagination, success, error_code, message }
+
+}
+export async function changeWaitingListOrdering(data: ChangeWaitingListOrderingData) {
+    const response = useWaitingList()
+    await response.changeWaitingListOrderingStore(data)
+    let success: boolean = response.success ?? false
+    let error_code: string = response.error_code ?? ''
+    let message: string = response.message ?? ''
+
+    return { success, error_code, message }
 
 }
 export function resetServiceCardsListSearchFilter() {

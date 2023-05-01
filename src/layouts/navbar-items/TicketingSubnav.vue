@@ -87,7 +87,8 @@ const emits = defineEmits<{
                   </li>
                 </ul><br />
               </div>
-              <div class="column is-4" v-if="checkPermission(Permissions.SERVICE_HISTORY_SCREEN_ACCESS)">
+              <div class="column is-4"
+                v-if="checkPermission(Permissions.SERVICE_HISTORY_SCREEN_ACCESS) || checkPermission(Permissions.RESERVATION_ACCESS)">
                 <h4 v-permission="Permissions.SERVICE_HISTORY_SCREEN_ACCESS" class="column-heading">{{
                   t('ticketing_subnav.service_history_screen.service_history_screens') }}
                 </h4>
@@ -111,11 +112,11 @@ const emits = defineEmits<{
                   </li>
 
                 </ul><br />
-                <h4 class="column-heading">{{
+                <h4 v-permission="Permissions.RESERVATION_ACCESS" class="column-heading">{{
                   t('ticketing_subnav.reservation.reservations') }}
                 </h4>
                 <ul>
-                  <li>
+                  <li v-permission="Permissions.RESERVATION_LIST">
                     <RouterLink to="/reservation-calendar">
                       <i class="fas fa-calendar-alt ml-2" aria-hidden="true"></i>
                       <span>{{ t('ticketing_subnav.reservation.reservation_calendar')
@@ -123,7 +124,7 @@ const emits = defineEmits<{
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li>
+                  <li v-permission="Permissions.RESERVATION_LIST">
                     <RouterLink to="/reservation">
                       <i class="fas fa-clipboard-list ml-2" aria-hidden="true"></i>
                       <span>{{ t('ticketing_subnav.reservation.reservatons_list')

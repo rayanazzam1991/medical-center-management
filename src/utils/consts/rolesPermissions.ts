@@ -428,7 +428,16 @@ export enum Permissions {
   SERVICE_PROVIDER_MONTHLY_REPORT = 'service_provider_monthly_report',
   BEST_ATTENDING_EMPLOYEE_REPORT = 'best_attending_employee_report',
   WORST_ATTENDING_EMPLOYEE_REPORT = 'worst_attending_employee_report',
-  ACCOUNT_HISTORY_REPORT = 'account_history_report'
+  ACCOUNT_HISTORY_REPORT = 'account_history_report',
+
+  RESERVATION_ACCESS = 'reservation_access',
+  RESERVATION_SHOW = 'reservation_show',
+  RESERVATION_CREATE = 'reservation_create',
+  RESERVATION_DELETE = 'reservation_delete',
+  RESERVATION_EDIT = 'reservation_edit',
+  RESERVATION_LIST = 'reservation_list',
+  CHANGE_WAITING_LIST_ORDER = 'change_waiting_list_order',
+
 
 
 }

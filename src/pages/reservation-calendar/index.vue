@@ -1,4 +1,13 @@
-      
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "reservation_list"
+        ]
+    }
+}
+</route>     
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import ReservationTableCell from '/@src/components/OurComponents/Sales/Reservation/ReservationTableCell.vue';
@@ -21,6 +30,8 @@ import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { Service, ServiceWithProvider, defaultServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
 import { ServiceProvider, defaultServiceProvider } from '/@src/models/Sales/ServiceProvider/serviceProvider';
+import { checkPermission } from '/@src/composable/checkPermission';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -48,9 +59,7 @@ const defaultEndDateMonth = ref()
 const defaultEndDateDay = ref()
 const selectedServiceProvider = ref(defaultServiceProvider)
 const selectedServiceWithProviders = ref(defaultServiceWithProvider)
-// const employeeServicesList = ref<EmployeeService[]>([])
 const servicesWithProviders = ref<ServiceWithProvider[]>([]);
-// const employeesList = ref<Employee[]>([])
 const selectedReservationCalendar = ref<ReservationCalendar>(defaultReservationCalendar)
 const selectedReservationCalendarDay = ref<ReservationCalendarDay>(defaultReservationCalendarDay)
 const selectedReservation = ref<ReservationCalendarReservation>(defaultReservationCalendarReservation)
@@ -58,10 +67,8 @@ const createReservationData = ref(defaultCreateReservation)
 const cancelReservationData = ref(defaultCancelReservation)
 const selectedServiceDuration = ref(0)
 const selectedServicePrice = ref(0)
-// const selectedServiceId = ref(0)
 const createReservationTimeTo = ref('00:00')
 const isFirstTime = ref(true)
-// const selectedServiceProviderId = ref(0)
 searchFilter.value.employee_id = employeeId.value ?? 0
 const loading = ref({ fetch: false, add: false, cancel: false, deactivate: false, header: false })
 
@@ -224,7 +231,7 @@ const columns = {
         renderRow: (row: ReservationCalendar) =>
             h(
                 ReservationTableCell, {
-                clickable: row.days[0].reservation || row.days[0].can_reserve ? true : false,
+                clickable: (row.days[0].reservation || row.days[0].can_reserve) ? true : false,
                 titleSize: row.days[0].reservation ? 'normal' : 'medium',
                 customer_name: row.days[0].reservation ? row.days[0].reservation.customer.user.first_name + ' ' + row.days[0].reservation.customer.user.last_name : undefined,
                 service_name: row.days[0].reservation ? row.days[0].reservation.service_provider.service?.name : undefined,
@@ -268,17 +275,25 @@ const columns = {
                 color: ReservationConsts.getReservationColor(row.days[1].is_vacation_or_out_of_schedule, row.days[1].is_past, row.days[1].is_another_reservation, row.days[1].can_reserve, row.days[1].reservation?.status),
                 onClick: () => {
                     if (row.days[1].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[1]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[1]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[1].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[1].reservation
-                        selectedReservationCalendarDay.value = row.days[1]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[1].reservation
+                            selectedReservationCalendarDay.value = row.days[1]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
 
@@ -304,17 +319,25 @@ const columns = {
                 color: ReservationConsts.getReservationColor(row.days[2].is_vacation_or_out_of_schedule, row.days[2].is_past, row.days[2].is_another_reservation, row.days[2].can_reserve, row.days[2].reservation?.status),
                 onClick: () => {
                     if (row.days[2].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[2]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[2]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[2].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[2].reservation
-                        selectedReservationCalendarDay.value = row.days[2]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[2].reservation
+                            selectedReservationCalendarDay.value = row.days[2]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
 
@@ -340,17 +363,25 @@ const columns = {
                 color: ReservationConsts.getReservationColor(row.days[3].is_vacation_or_out_of_schedule, row.days[3].is_past, row.days[3].is_another_reservation, row.days[3].can_reserve, row.days[3].reservation?.status),
                 onClick: () => {
                     if (row.days[3].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[3]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[3]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[3].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[3].reservation
-                        selectedReservationCalendarDay.value = row.days[3]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[3].reservation
+                            selectedReservationCalendarDay.value = row.days[3]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
 
@@ -376,17 +407,25 @@ const columns = {
                 color: ReservationConsts.getReservationColor(row.days[4].is_vacation_or_out_of_schedule, row.days[4].is_past, row.days[4].is_another_reservation, row.days[4].can_reserve, row.days[4].reservation?.status),
                 onClick: () => {
                     if (row.days[4].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[4]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[4]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[4].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[4].reservation
-                        selectedReservationCalendarDay.value = row.days[4]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[4].reservation
+                            selectedReservationCalendarDay.value = row.days[4]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
 
@@ -412,17 +451,25 @@ const columns = {
                 color: ReservationConsts.getReservationColor(row.days[5].is_vacation_or_out_of_schedule, row.days[5].is_past, row.days[5].is_another_reservation, row.days[5].can_reserve, row.days[5].reservation?.status),
                 onClick: () => {
                     if (row.days[5].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[5]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[5]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[5].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[5].reservation
-                        selectedReservationCalendarDay.value = row.days[5]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[5].reservation
+                            selectedReservationCalendarDay.value = row.days[5]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
 
@@ -449,17 +496,25 @@ const columns = {
                 can_reserve: row.days[6].is_vacation_or_out_of_schedule,
                 onClick: () => {
                     if (row.days[6].can_reserve) {
-                        resetAddReservation()
-                        addReservationPopup.value = true
-                        selectedReservationCalendar.value = row
-                        selectedReservationCalendarDay.value = row.days[6]
-                        updateTimeTo()
-                        keyIncrement2.value++
+                        if (checkPermission(Permissions.RESERVATION_CREATE)) {
+                            resetAddReservation()
+                            addReservationPopup.value = true
+                            selectedReservationCalendar.value = row
+                            selectedReservationCalendarDay.value = row.days[6]
+                            updateTimeTo()
+                            keyIncrement2.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     } else if (row.days[6].reservation) {
-                        reservationDetailsPopup.value = true
-                        selectedReservation.value = row.days[6].reservation
-                        selectedReservationCalendarDay.value = row.days[6]
-                        keyIncrement3.value++
+                        if (checkPermission(Permissions.RESERVATION_SHOW)) {
+                            reservationDetailsPopup.value = true
+                            selectedReservation.value = row.days[6].reservation
+                            selectedReservationCalendarDay.value = row.days[6]
+                            keyIncrement3.value++
+                        } else {
+                            notif.error({ message: t('toast.error.no_permission'), duration: 3000 })
+                        }
                     }
                 }
             }
@@ -575,8 +630,8 @@ const columns = {
         </template>
     </VModal>
     <VModal :key="keyIncrement3" :title="t('reservation.calendar.table.reservation_details_modal.title')"
-        :close-button="selectedReservation.can_decativate_cancel ? false : true" :open="reservationDetailsPopup"
-        actions="right" @close="reservationDetailsPopup = false">
+        :close-button="selectedReservation.can_decativate_cancel && checkPermission(Permissions.RESERVATION_EDIT) ? false : true"
+        :open="reservationDetailsPopup" actions="right" @close="reservationDetailsPopup = false">
         <template #content>
             <div class="form-fieldset">
                 <div class="columns is-multiline">
@@ -637,12 +692,13 @@ const columns = {
             </div>
         </template>
         <template #action="{ close }">
-            <VButton v-if="selectedReservation.can_decativate_cancel" :disabled="loading.deactivate" color="danger" raised
-                @click="onCancelReservation">
+            <VButton v-permission="Permissions.RESERVATION_EDIT" v-if="selectedReservation.can_decativate_cancel"
+                :disabled="loading.deactivate" color="danger" raised @click="onCancelReservation">
                 {{ t('modal.buttons.cancel_reservation') }}
             </VButton>
-            <VIconButton v-if="selectedReservation.can_decativate_cancel" :disabled="loading.cancel" icon="fas fa-trash"
-                color="danger" outlined :loading="loading.deactivate" raised @click="deactivateReservationFunction()" />
+            <VIconButton v-permission="Permissions.RESERVATION_EDIT" v-if="selectedReservation.can_decativate_cancel"
+                :disabled="loading.cancel" icon="fas fa-trash" color="danger" outlined :loading="loading.deactivate" raised
+                @click="deactivateReservationFunction()" />
         </template>
     </VModal>
     <VModal :title="t('reservation.cancel_reservation_modal.title')" :open="cancelReservationPopup" actions="center"
@@ -673,6 +729,5 @@ const columns = {
 .is-clickable {
     cursor: default !important;
 }
-
 </style>
     
