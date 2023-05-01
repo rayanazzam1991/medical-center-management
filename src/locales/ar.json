@@ -338,7 +338,8 @@
       "password_changed": "تم تعديل كلمة المرور بنجاح",
       "dismiss": "تمت عملية إقالة الموظف بنجاح",
       "deactivate_reservation": "تم انهاء تفعيل الحجز بنجاح",
-      "cancel_reservation": "تم الغاء الحجز بنجاح"
+      "cancel_reservation": "تم الغاء الحجز بنجاح",
+      "change_waiting_list_order": "تم تغيير الترتيب بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
