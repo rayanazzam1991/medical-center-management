@@ -16,7 +16,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
-import { createTicket, getTicket, updateTicket } from '/@src/services/Sales/Ticket/ticketService';
+import { createTicket, getTicket, resetTicketForm, updateTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
 import { getTodayCustomerReservation } from '/@src/services/Sales/Reservation/reservationService';
@@ -49,7 +49,7 @@ export default defineComponent({
     const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
     const pageTitle = formType.value == 'Add' ? t('ticket.form.add_form_header') : t('ticket.form.edit_form_header', { ticket_id: ticketId.value });
     const backRoute = "/ticket";
-    const currentTicket = ref(defaultCreateTicket);
+    const currentTicket = ref(resetTicketForm());
     const requestedServicesHelper = ref<CreateTicketServiceHelper[]>([]);
     const servicesWithProviders = ref<ServiceWithProvider[]>([]);
     const enableCurrencyRate = ref(false)
@@ -60,12 +60,12 @@ export default defineComponent({
     const keyIncrement2 = ref(0)
     const isExpanded = ref(false)
     const selectedCustomerId = ref(0)
+    const headerLoading = ref(false)
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
         const { ticket } = await getTicket(ticketId.value);
         currentTicket.value.customer_id = ticket.customer.id ?? 0
         currentTicket.value.total_amount = ticket.total_amount
-
         ticket.requested_services.forEach(service => {
           requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED, with_reserve: false, is_emergency: false })
         });
@@ -313,6 +313,7 @@ export default defineComponent({
       requestedServicesHelper.value.forEach((service) => {
         currentTicket.value.requested_services.push({ sell_price: service.sell_price, service_provider_id: service.service_provider_id, is_emergency: service.is_emergency })
       });
+      headerLoading.value = true
       const { success, message, ticket } = await createTicket(currentTicket.value)
       if (success) {
         await sleep(200);
@@ -325,6 +326,7 @@ export default defineComponent({
         await sleep(200);
         notif.error(message)
       }
+      headerLoading.value = false
     })
 
     const onSubmitEdit = handleSubmit(async () => {
@@ -333,6 +335,7 @@ export default defineComponent({
       if (!isValid)
         return
       let updateTicketData: UpdateTicket = formatUpdateData()
+      headerLoading.value = true
       const { success, message, ticket } = await updateTicket(ticketId.value, updateTicketData)
       if (success) {
         await sleep(200);
@@ -345,13 +348,14 @@ export default defineComponent({
         await sleep(200);
         notif.error(message)
       }
+      headerLoading.value = false
     })
 
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
       servicesWithProviders, getCustomersList, requestedServicesHelper, selectCustomerLoading, onSelectCustomer, customerTodayReservations,
-      keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand
+      keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand, headerLoading
     };
   },
   components: { ErrorMessage }
@@ -363,7 +367,7 @@ export default defineComponent({
 <template>
   <div class="page-content-inner">
     <FormHeader :title="pageTitle" :form_submit_name="formType" :back_route="backRoute" type="submit"
-      @onSubmit="onSubmit(formType)" :isLoading="isLoading" />
+      @onSubmit="onSubmit(formType)" :isLoading="isLoading || headerLoading" />
     <form class="form-layout" @submit.prevent="onSubmit(formType)">
       <div class="form-outer">
         <div class="form-body">

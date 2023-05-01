@@ -97,3 +97,26 @@ export function resetTicketSearchFilter() {
   return blankSearchFilter
 
 }
+export function resetConfirmPaymentTicket() {
+  const blanckConfirmPaymentTicket: ConfirmPaymentTicket = {
+    cash_account_id: 0,
+    currency_id: 0,
+    currency_rate: 1,
+    paid_amount: 0,
+    remaining_amount: 0,
+    ticket_id: 0
+  }
+
+  return blanckConfirmPaymentTicket
+
+}
+export function resetTicketForm() {
+  const blanckCreateTicket: CreateTicket = {
+    customer_id: 0,
+    total_amount: 0,
+    requested_services: []
+  }
+
+  return blanckCreateTicket
+
+}
