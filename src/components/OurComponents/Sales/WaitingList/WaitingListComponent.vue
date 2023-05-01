@@ -7,6 +7,8 @@ import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 import { changeWaitingListOrdering } from '/@src/services/Sales/WaitingList/waitingListService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Notyf } from 'notyf';
+import { checkPermission } from '/@src/composable/checkPermission';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 export interface WaitingListComponentProps {
@@ -27,7 +29,7 @@ const emits = defineEmits<{
 
 function onDragInvalid(el?: Element): boolean {
     if (el) {
-        if (!props.draggable) {
+        if (!props.draggable || !checkPermission(Permissions.CHANGE_WAITING_LIST_ORDER)) {
             return true
         } else {
             if (el.classList.contains('kanban-card')) {
@@ -154,7 +156,7 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                                     (ticket.ticket.status != TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-primary is-primary',
                                     (ticket.ticket.status == TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-info is-info',
                                     (ticket.ticket.status != TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-info is-info',
-                                    (ticket.ticket.status != TicketConsts.SERVING && $props.draggable) && 'can-drag gelatine',
+                                    (ticket.ticket.status != TicketConsts.SERVING && $props.draggable && checkPermission(Permissions.CHANGE_WAITING_LIST_ORDER)) && 'can-drag gelatine',
 
                                 ]">
                             <div class="card-inner ">

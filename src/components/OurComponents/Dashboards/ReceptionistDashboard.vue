@@ -83,7 +83,8 @@ const toReservationCalendar = () => {
                                 <div class="asset-name">{{ t('dashboards.receptionist.waiting_lists') }}
                                 </div>
                             </div>
-                            <div @click="toReservationCalendar" class="category">
+                            <div @click="toReservationCalendar" v-permission="Permissions.RESERVATION_LIST"
+                                class="category">
                                 <div class="asset">
                                     <div class="asset-logo">
                                         <i aria-hidden="true" class="fas fa-calendar-alt"></i>

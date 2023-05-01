@@ -1,4 +1,13 @@
-      
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "reservation_list"
+        ]
+    }
+}
+</route>
 <script setup lang="ts">
 import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
@@ -182,8 +191,8 @@ const columns = {
         label: t("reservation.table.columns.actions"),
         renderRow: (row: Reservation) =>
             h(ReservationListDropDown, {
-                cancelPermission: Permissions.VARIABLE_PAYMENT_EDIT,
-                deactivatePermission: Permissions.VARIABLE_PAYMENT_EDIT,
+                cancelPermission: Permissions.RESERVATION_EDIT,
+                deactivatePermission: Permissions.RESERVATION_EDIT,
                 canCancelDeactivate: row.can_decativate_cancel,
                 onDeactivate: async () => {
                     await deactivateReservationFunction(row.id)
