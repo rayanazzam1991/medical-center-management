@@ -19,7 +19,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper';
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
-import { createTicket, getTicket, confirmPaymentTicket } from '/@src/services/Sales/Ticket/ticketService';
+import { createTicket, getTicket, confirmPaymentTicket, resetConfirmPaymentTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
 
@@ -51,7 +51,7 @@ export default defineComponent({
     const pageTitle = t('ticket.form.confirm_payment.edit_form_header', { ticket_id: ticketId.value });
     const backRoute = "/ticket";
     const currentTicket = ref(defaultCreateTicket);
-    const currentConfirmPayment = ref(defaultConfirmPaymentTicket);
+    const currentConfirmPayment = ref(resetConfirmPaymentTicket());
     const requestedServicesHelper = ref<CreateTicketServiceHelper[]>([]);
     const servicesWithProviders = ref<ServiceWithProvider[]>([]);
     const enableCurrencyRate = ref(false)
@@ -59,6 +59,7 @@ export default defineComponent({
     const currenciesList = ref<Currency[]>([])
     const cashAccountsList = ref<Account[]>([])
     const isLoading = ref(false)
+    const confirmPaymentLoading = ref(false)
 
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
@@ -69,7 +70,7 @@ export default defineComponent({
         currentTicket.value.total_amount = ticket.total_amount
 
         ticket.requested_services.forEach(service => {
-          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
+          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED, is_emergency: service.is_emergency ?? false, with_reserve: service.is_reserve ?? false })
         });
         updateTotalAmount()
 
@@ -158,6 +159,7 @@ export default defineComponent({
 
 
     const onSubmitEdit = handleSubmit(async () => {
+      confirmPaymentLoading.value = true
       currentConfirmPayment.value.ticket_id = ticketId.value
       const { success, message, ticket } = await confirmPaymentTicket(ticketId.value, currentConfirmPayment.value)
       if (success) {
@@ -169,11 +171,12 @@ export default defineComponent({
         await sleep(200);
         notif.error(message)
       }
+      confirmPaymentLoading.value = false
     })
 
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore, updateRemainingAmount,
-      enableCurrencyRate, UserStatusConsts, cashAccountsList, updateCurrencyRate, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment
+      enableCurrencyRate, UserStatusConsts, cashAccountsList, updateCurrencyRate, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment, confirmPaymentLoading
     };
   },
   components: { ErrorMessage }
@@ -183,7 +186,7 @@ export default defineComponent({
 <template>
   <div class="page-content-inner">
     <FormHeader :title="pageTitle" :form_submit_name="t('cofirm_payment')" :back_route="backRoute" type="submit"
-      @onSubmit="onSubmit(formType)" :isLoading="isLoading" />
+      @onSubmit="onSubmit(formType)" :isLoading="isLoading || confirmPaymentLoading" />
     <form class="form-layout" @submit.prevent="onSubmit(formType)">
       <div class="form-outer">
         <div class="form-body">
@@ -301,6 +304,8 @@ export default defineComponent({
                   <VLabel class="required">{{ t('ticket.form.currency') }}</VLabel>
                   <VControl>
                     <VSelect @change="updateCurrencyRate" v-model="currentConfirmPayment.currency_id">
+                      <VOption :value="0"> {{ t('ticket.form.currency')
+                      }}</VOption>
                       <VOption v-for="currency in currenciesList" :value="currency.id">
                         {{ currency.code }} - {{ currency.name }}
                       </VOption>
