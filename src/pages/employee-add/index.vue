@@ -158,7 +158,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     let rolesError = false
     if (employeeData.basic_salary == 0) {
       if (employeeData.payment_percentage == 0) {
-        notif.error(t('toast.error.basic_salary_payment_percentage_required'))
+        notif.error(t('toast.error.employee.basic_salary_payment_percentage_required'))
         return
       } else {
         selectedType = EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE
