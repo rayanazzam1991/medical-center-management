@@ -331,19 +331,6 @@ const updateSelectedRoles = () => {
                 </div>
               </div>
             </div>
-            <div class="columns is-multiline ">
-              <div class="form-fieldset">
-                <div class="columns">
-                  <div class="is-flex is-justify-content-center">
-                    <VControl class="ml-3">
-                      <VSwitchSegment :key="keyIncrement" v-model="isUser"
-                        :label-true="t('employee.form.have_permission')"
-                        :label-false="t('employee.form.haveNot_permission')" color="success" />
-                    </VControl>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="form-fieldset">
               <div class="columns is-multiline">
                 <div class="column is-12">
@@ -354,6 +341,16 @@ const updateSelectedRoles = () => {
                       <ErrorMessage class="help is-danger" name="address" />
                     </VControl>
                   </VField>
+                </div>
+              </div>
+            </div>
+            <div class="form-fieldset">
+              <div class="columns is-multiline">
+                <div class="column is-12 is-flex is-justify-content-center">
+                  <VControl class="ml-3">
+                    <VSwitchSegment :key="keyIncrement" v-model="isUser" :label-true="t('employee.form.have_permission')"
+                      :label-false="t('employee.form.haveNot_permission')" color="success" />
+                  </VControl>
                 </div>
               </div>
             </div>
