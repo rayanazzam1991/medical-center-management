@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultServiceSearchFilter, ServiceSearchFilter, ServiceConsts } from "/@src/models/Others/Service/service"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 export default defineComponent({
@@ -26,7 +26,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -102,7 +102,7 @@ export default defineComponent({
 
         }
 
-        return {t , searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts, quickSearch, quickSearchField }
+        return { t, Permissions, searchFilterPop, default_per_page, keyTest, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, searchStatus, searchDuration, searchPrice, perPage, pagination, ServiceConsts, quickSearch, quickSearchField }
     },
 
 
@@ -121,7 +121,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" :placeholder="t('service.search_filter.name')" />
+                                <VInput v-model="quickSearchField" type="text"
+                                    :placeholder="t('service.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -148,7 +149,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/service/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.SERVICE_CREATE" class="" to="/service/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>
@@ -157,8 +159,8 @@ export default defineComponent({
             </div>
         </div>
 
-        <ServiceSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop"
-            @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+        <ServiceSearchFilterModel :key="keyTest" :search_filter_popup="searchFilterPop" @search_filter_popup="popUpTrigger"
+            @search="search_filter" @resetFilter="resetFilter_popup" />
     </form>
 </template>
 

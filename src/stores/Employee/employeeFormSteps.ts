@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { CreateEmployee, defaultCreateEmployee, UpdateEmployee, defaultUpdateEmployee } from "/@src/models/Employee/employee"
+import { CreateEmployee, defaultCreateEmployee, UpdateEmployee, defaultUpdateEmployee, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { CreateUpdateUser, defaultCreateUpdateUser } from "/@src/models/Others/User/user"
 import ar from '/@src/locales/ar.json';
 import messages from '@intlify/vite-plugin-vue-i18n/messages';
@@ -31,10 +31,16 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   const data = ref<CreateEmployee>(defaultCreateEmployee)
   const dataUpdate = ref<UpdateEmployee>(defaultUpdateEmployee)
   const userForm = ref<CreateUpdateUser>(defaultCreateUpdateUser)
+  const employeeServicesForm = ref<Array<CreateUpdateServicesHelper>>([])
+  const originalServices = ref<Array<CreateUpdateServicesHelper>>([])
+
   const stepTitle = computed(() => {
     switch (step.value) {
       case 1:
         return i18n.global.t('employee.form.step_1_abbr_title')
+      case 2:
+        return i18n.global.t('employee.form.step_2_abbr_title')
+
       default:
         return i18n.global.t('employee.form.step_1_abbr_title')
     }
@@ -68,6 +74,7 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     data.value.user.city_id = 0
     data.value.user.room_id = 0
     data.value.user.user_status_id = 0
+    data.value.user.roles = []
     dataUpdate.value.basic_salary = 0
     dataUpdate.value.end_date = ''
     dataUpdate.value.nationality_id = 0
@@ -80,13 +87,10 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     dataUpdate.value.user.phone_number = ''
     dataUpdate.value.user.city_id = 0
     dataUpdate.value.user.room_id = 0
+    dataUpdate.value.user.roles = []
     dataUpdate.value.user.user_status_id = 0
-  }
-  async function save() {
-    loading.value = true
-
-
-    loading.value = false
+    employeeServicesForm.value.splice(0, employeeServicesForm.value.length)
+    originalServices.value.splice(0, originalServices.value.length)
   }
 
 
@@ -102,10 +106,11 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     data,
     dataUpdate,
     userForm,
+    employeeServicesForm,
+    originalServices,
     setLoading,
     setStep,
     getStep,
-    save,
     reset,
   } as const
 })

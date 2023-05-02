@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Service, ServiceSearchFilter } from "/@src/models/Others/Service/service"
-import { deleteServiceApi, getServiceApi, addServiceApi, editServiceApi, getServicesApi } from "/@src/utils/api/Others/Service"
+import { CreateService, Service, ServiceSearchFilter, ServiceWithProvider } from "/@src/models/Others/Service/service"
+import { deleteServiceApi, getServiceApi, addServiceApi, editServiceApi, getServicesApi, getServicesWithProvidersApi } from "/@src/utils/api/Others/Service"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -61,7 +61,7 @@ export const useService = defineStore('service', () => {
       loading.value = false
     }
   }
-  async function addServiceStore(service: Service) {
+  async function addServiceStore(service: CreateService) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
@@ -84,7 +84,7 @@ export const useService = defineStore('service', () => {
       loading.value = false
     }
   }
-  async function editServiceStore(service: Service) {
+  async function editServiceStore(service: CreateService) {
     if (loading.value) return
     loading.value = true
     sleep(2000)
@@ -133,6 +133,28 @@ export const useService = defineStore('service', () => {
       loading.value = false
     }
   }
+  async function getServicesWithProvidersStore() {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getServicesWithProvidersApi(api)
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data as ServiceWithProvider[]
+
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -145,7 +167,8 @@ export const useService = defineStore('service', () => {
     addServiceStore,
     editServiceStore,
     getServiceStore,
-    getServicesStore
+    getServicesStore,
+    getServicesWithProvidersStore
   } as const
 })
 

@@ -8,7 +8,7 @@
     "editor.rulers": [80]
   },
   "[vue]": {
-    "editor.defaultFormatter": "stylelint.vscode-stylelint",
+    "editor.defaultFormatter": "Vue.volar",
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
     }
@@ -20,5 +20,8 @@
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

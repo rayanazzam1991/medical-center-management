@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Item, ItemSearchFilter, ChangeItemStatus, CreateUpdateItem } from "/@src/models/Warehouse/Item/item"
-import { changeItemStatusApi, getItemApi, addItemApi, editItemApi, getItemsApi } from "/@src/utils/api/Warehouse/Item"
+import { Item, ItemSearchFilter, ChangeItemStatus, CreateUpdateItem, ItemsInInventorySearchFilter, ItemsInInventory } from "/@src/models/Warehouse/Item/item"
+import { changeItemStatusApi, getItemApi, addItemApi, editItemApi, getItemsApi, getItemsListByInventoryApi } from "/@src/utils/api/Warehouse/Item"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep";
 
@@ -25,7 +25,7 @@ export const useItem = defineStore('item', () => {
 
         try {
             const response = await getItemApi(api, itemId)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             success.value = response.response.success
             error_code.value = response.response.error_code
@@ -49,7 +49,7 @@ export const useItem = defineStore('item', () => {
         sleep(2000)
         try {
             const response = await addItemApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.push(returnedItem)
             success.value = response.response.success
@@ -74,7 +74,7 @@ export const useItem = defineStore('item', () => {
         sleep(2000)
         try {
             const response = await editItemApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.splice(
                 items.value.findIndex((itemElement) => (itemElement.id = item.id)),
@@ -126,7 +126,7 @@ export const useItem = defineStore('item', () => {
         loading.value = true
         try {
             const response = await changeItemStatusApi(api, item)
-            var returnedItem: Item
+            let returnedItem: Item
             returnedItem = response.response.data
             items.value.splice(
                 items.value.findIndex((itemElement) => (itemElement.id = item.id)),
@@ -147,6 +147,30 @@ export const useItem = defineStore('item', () => {
         }
     }
 
+    async function getItemsListByInventoryStore(inventory_id: number, searchFilter: ItemsInInventorySearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getItemsListByInventoryApi(api, inventory_id, searchFilter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as ItemsInInventory
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
     return {
@@ -160,7 +184,8 @@ export const useItem = defineStore('item', () => {
         editItemStore,
         getItemStore,
         getItemsStore,
-        changeItemStatusStore
+        changeItemStatusStore,
+        getItemsListByInventoryStore
     } as const
 })
 

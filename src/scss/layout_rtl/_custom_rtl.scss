@@ -44,6 +44,11 @@
     .tab-content {
       .tab-content-inner {
         .center {
+          .column:not(:last-child) {
+            border-right: none !important;
+            border-left: 1px solid var(--fade-grey-dark-3);
+          }
+
           ul {
             li {
               a {
@@ -58,18 +63,21 @@
     }
   }
 }
-.navbar-subnavbar {
-  .navbar-subnavbar-inner {
-    .tab-content {
-      .tab-content-inner {
-        .center {
-          ul {
-            li {
-              a {
-                .fas {
-                  margin-left: 10px;
-                }
+
+.is-dark {
+  .navbar-subnavbar {
+    .navbar-subnavbar-inner {
+      .tab-content {
+        .tab-content-inner {
+          .center {
+            .column {
+              &:not(:last-child) {
+                border-left: 1px solid var(--dark-sidebar-light-12) !important;
               }
+            }
+
+            .column-placeholder {
+              @include vuero-card--dark;
             }
           }
         }
@@ -157,6 +165,8 @@
 }
 
 .file-name {
+  border-radius: 0 !important;
+  border-left-width: 1px;
   margin-right: 0.5em;
 }
 
@@ -181,4 +191,22 @@
       }
     }
   }
+}
+
+.multiselect-option {
+  text-align: right !important;
+}
+.multiselect {
+  .multiselect-options {
+    .multiselect-option.is-selected {
+      &::after {
+        left: 15px !important;
+        right: auto !important;
+      }
+    }
+  }
+}
+.multiselect .multiselect-placeholder {
+  padding-right: 2rem;
+  padding-left: auto !important;
 }

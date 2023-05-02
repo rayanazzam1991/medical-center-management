@@ -1,4 +1,4 @@
-import { Employee } from "/@src/models/Employee/employee"
+import { defaultEmployee, Employee } from "/@src/models/Employee/employee"
 import { defaultPosition, Position } from "/@src/models/Others/Position/position"
 import { User, defaultUser } from "/@src/models/Others/User/user"
 import { BaseConsts } from "/@src/utils/consts/base"
@@ -21,12 +21,38 @@ export interface UpdateAttendance {
     check_in: string
     check_out: string
 }
+export interface CreateAttendance {
+    check_in?: string
+    check_out?: string
+    employee_id: number
+    date: string
+}
+
 export interface JustificationRequestData {
     reason: string
 }
 export interface JustificationResponseData {
     id: number
 }
+export interface PendingAttendance {
+    id: number
+    employee: Employee
+    date: string
+    day: string
+    check_in?: string
+    check_out?: string
+    status: number
+}
+export const defaultPendingAttendance: PendingAttendance = {
+    id: 0,
+    date: '',
+    day: '',
+    employee: defaultEmployee,
+    status: 1,
+    check_in: undefined,
+    check_out: undefined
+}
+
 
 
 export const defaultEmployeeAttendance: EmployeeAttendance = {
@@ -34,6 +60,12 @@ export const defaultEmployeeAttendance: EmployeeAttendance = {
     user: defaultUser,
     position: defaultPosition,
     attendances: []
+}
+export const defaultCreateAttendance: CreateAttendance = {
+    date: '',
+    employee_id: 0,
+    check_in: undefined,
+    check_out: undefined
 }
 export const defaultAttendance: Attendance = {
     id: 0,
@@ -95,71 +127,54 @@ class AttendanceConsts extends BaseConsts {
     static readonly VACATION = 9;
 
     public static getAttendanceStatusName(status: number) {
-        if (status == 1)
+        if (status == this.ATTEND)
             return 'Attend';
-        if (status == 2)
+        if (status == this.PENDING_ABSENCE)
             return 'Pending Absence';
-        if (status == 3)
+        if (status == this.JUSTIFIED_ABSENCE)
             return 'Justified Absence';
-        if (status == 4)
+        if (status == this.UNJUTIFIED_ABSENCE)
             return 'Unjustified Absence';
-        if (status == 5)
+        if (status == this.PENDING_PARTIAL_ABSENCE)
             return 'Pending Partial Absence';
-        if (status == 6)
+        if (status == this.JUSTIFIED_PARTIAL_ABSENCE)
             return 'Justified Partial Absence';
-        if (status == 7)
+        if (status == this.UNJUSTIFIED_PARTIAL_ABSENCE)
             return 'Unjustified Partial Absence';
-        if (status == 8)
+        if (status == this.MISSING_CHECK)
             return 'Missing Check';
-        if (status == 9)
+        if (status == this.VACATION)
             return 'Vacation';
         else return 'No Data';
     }
 
     public static getAttendanceStatusIcon(status: number) {
-        if (status == 1)
+        if (status == this.ATTEND)
             return '✓';
-        if (status == 2)
+        if (status == this.PENDING_ABSENCE || status == this.UNJUTIFIED_ABSENCE || status == this.JUSTIFIED_ABSENCE)
             return '✗';
-        if (status == 3)
-            return '✗';
-        if (status == 4)
-            return '✗';
-        if (status == 5)
+        if (status == this.PENDING_PARTIAL_ABSENCE || status == this.JUSTIFIED_PARTIAL_ABSENCE || status == this.UNJUSTIFIED_PARTIAL_ABSENCE)
             return '/';
-        if (status == 6)
-            return '/';
-        if (status == 7)
-            return '/';
-        if (status == 8)
+        if (status == this.MISSING_CHECK)
             return '!';
-        if (status == 9)
+        if (status == this.VACATION)
             return '◯';
         else return '-';
     }
+
     public static getAttendanceStatusColor(status: number) {
-        if (status == 1)
+        if (status == this.ATTEND || status == this.VACATION)
             return 'blue';
-        if (status == 2)
+        if (status == this.PENDING_ABSENCE || status == this.PENDING_PARTIAL_ABSENCE)
             return 'grey';
-        if (status == 3)
+        if (status == this.JUSTIFIED_ABSENCE || status == this.JUSTIFIED_PARTIAL_ABSENCE)
             return 'green';
-        if (status == 4)
+        if (status == this.UNJUSTIFIED_PARTIAL_ABSENCE || status == this.UNJUTIFIED_ABSENCE)
             return 'red';
-        if (status == 5)
-            return 'grey';
-        if (status == 6)
-            return 'green';
-        if (status == 7)
-            return 'red';
-        if (status == 8)
+        if (status == this.MISSING_CHECK)
             return 'yellow';
-        if (status == 9)
-            return 'blue';
         else return 'grey';
     }
-
-
 }
 
 export { AttendanceConsts }

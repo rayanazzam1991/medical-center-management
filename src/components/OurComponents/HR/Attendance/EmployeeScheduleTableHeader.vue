@@ -5,6 +5,7 @@ import { UserStatus, defaultUserStatusSearchFilter } from '/@src/models/Others/U
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
 import { defaultPagination } from '/@src/utils/response'
 import { useI18n } from 'vue-i18n'
+import { isNumber } from '/@src/composable/helpers/isNumberCheck'
 
 
 
@@ -63,17 +64,6 @@ export default defineComponent({
             searchFilter.value.per_page = perPage.value
 
             search()
-        }
-        function isNumber(str: string): boolean {
-            if (typeof str !== 'string') {
-                return false;
-            }
-
-            if (str.trim() === '') {
-                return false;
-            }
-
-            return !Number.isNaN(Number(str));
         }
 
         const search = () => {

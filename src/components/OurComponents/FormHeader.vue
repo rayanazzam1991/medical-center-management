@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useI18n } from 'vue-i18n'
-
+import { string } from 'zod'
 
 
 
@@ -21,18 +21,24 @@ export default defineComponent({
     isLoading: {
       type: Boolean,
       default: false
+    },
+    permission: {
+      type: String,
+      default: undefined
     }
   },
 
   emits: ['onSubmit'],
   setup(props, context) {
-    const {t,locale} = useI18n()
-    const iconArrow = locale.value =="ar" ? "lnir-arrow-right":"lnir-arrow-left"
+    const { t, locale } = useI18n()
+    const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
+    const permission = props.permission
     var submited = false
     const onSubmit = () => {
       context.emit('onSubmit', submited)
     }
-    return { onSubmit , t,iconArrow }
+
+    return { onSubmit, t, iconArrow, permission }
   },
 
 
@@ -50,16 +56,16 @@ export default defineComponent({
         <div class="form-header-inner">
           <div class="left">
             <h3>{{ title }}</h3>
-
           </div>
           <div class="right">
             <div class="buttons">
-              <div v-if="isLoading" class="loader is-loading m-r-15 m-b-05-rem w35-h35"></div>
+              <!-- <div v-if="isLoading" class="loader is-loading m-r-15 m-b-05-rem w35-h35"></div> -->
               <VButton v-if="back_route != ''" :icon="`lnir ${iconArrow} rem-100`" :to="`${back_route}`" light
                 dark-outlined>
-                {{ t('forms.back_button')}}
+                {{ t('forms.back_button') }}
               </VButton>
-              <VButton @click="onSubmit" color="primary" raised> {{ form_submit_name == "Add" ? t('forms.type.add') : t('forms.type.edit') }} </VButton>
+              <VButton v-permission="permission" :loading="isLoading" @click="onSubmit" color="primary" raised> {{
+                t(`forms.type.${form_submit_name.toLowerCase()}`) }} </VButton>
             </div>
           </div>
         </div>

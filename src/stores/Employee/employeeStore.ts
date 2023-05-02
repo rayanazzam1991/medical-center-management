@@ -1,18 +1,20 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getEmployeesHistoryApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "/@src/models/Employee/employeeHistory"
 
 
 export const useEmployee = defineStore('employee', () => {
   const api = useApi()
   const employees = ref<Employee[]>([])
+  const employeesHistory = ref<EmployeeHistory[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
   const employeesAttendance = ref<EmployeeAttendance[]>([])
   const pagination = ref<Pagination>(defaultPagination)
@@ -20,6 +22,9 @@ export const useEmployee = defineStore('employee', () => {
   const error_code = ref<string>()
   const message = ref<string>()
   const loading = ref(false)
+  const loggedEmployee = useStorage('employee', '')
+  const employee = ref<Employee>()
+
 
   async function addEmployeeStore(employee: CreateEmployee) {
     if (loading.value) return
@@ -106,6 +111,31 @@ export const useEmployee = defineStore('employee', () => {
       success.value = returnedResponse.response.success
       error_code.value = returnedResponse.response.error_code
       message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function addServicesStore(employee_id: number, services: Array<CreateUpdateServicesHelper>) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await addServicesApi(api, employee_id, services)
+      let returnedEmployee: Employee
+      returnedEmployee = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+
+      return returnedEmployee
 
     }
     catch (error: any) {
@@ -386,10 +416,99 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
+  async function getEmployeeByUserIdStore(user_id: number) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getEmployeeByUserIdApi(api, user_id)
+      setEmployee(returnedResponse.response.data)
+
+      employeesAttendance.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  function setEmployee(newEmployee: Employee) {
+    employee.value = newEmployee
+    loggedEmployee.value = JSON.stringify(newEmployee)
+  }
+  function removeFromStorage() {
+    loggedEmployee.value = undefined
+  }
+
+  function getEmployee(): Employee {
+    return JSON.parse(loggedEmployee.value) as Employee;
+  }
+
+  async function dismissEmployeeStore(dismissedEmployee: DismissedEmployee) {
+    if (loading.value) return
+    loading.value = true
+    sleep(2000)
+    try {
+      const response = await dismissEmployeeApi(api, dismissedEmployee)
+      var returnedDismissedEmployee: EmployeeHistory
+      returnedDismissedEmployee = response.response.data
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      employeesHistory.value.push(returnedDismissedEmployee)
+
+      return returnedDismissedEmployee
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getEmployeesHistoryListStore(searchFilter: EmployeeHistorySearchFilter) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getEmployeesHistoryApi(api, searchFilter)
+      employeesHistory.value = returnedResponse.response.data
+      pagination.value = returnedResponse.response.pagination
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
 
 
   return {
     employees,
+    employeesHistory,
     employeesSchedule,
     employeesAttendance,
     pagination,
@@ -408,6 +527,15 @@ export const useEmployee = defineStore('employee', () => {
     getMaxEmployeeNumberStore,
     updateEmployeeNumberStore,
     getEmployeesAttendanceStore,
+    addServicesStore,
+    getEmployeeByUserIdStore,
+    getEmployee,
+    setEmployee,
+    dismissEmployeeStore,
+    getEmployeesHistoryListStore,
+    removeFromStorage,
+    loggedEmployee,
+    employee,
     success,
     error_code,
     message,

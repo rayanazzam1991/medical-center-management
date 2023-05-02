@@ -32,6 +32,7 @@ export default defineComponent({
         const searchParent = ref()
         const searchSubCategory = ref()
         const searchStatus = ref()
+        const searchIsForSale = ref()
         const searchFilter = ref(defaultItemSearchFilter)
         const allCategoriesList = ref<Category[]>([])
         const mainCategoriesList = ref<Category[]>([])
@@ -49,6 +50,7 @@ export default defineComponent({
                 category_id: searchParent.value,
                 sub_category_id: searchSubCategory.value,
                 status: searchStatus.value,
+                is_for_sale:searchIsForSale.value
             }
             context.emit('search', searchFilter.value)
             search_filter_popup.value = false
@@ -62,6 +64,7 @@ export default defineComponent({
             searchFilter.value.sub_category_id = undefined
             searchFilter.value.category_id = undefined
             searchFilter.value.status = undefined
+            searchFilter.value.is_for_sale = undefined
             context.emit('resetFilter', searchFilter.value)
         }
         onMounted(async () => {
@@ -75,7 +78,7 @@ export default defineComponent({
             const SubCategory = allCategoriesList.value.filter((category) => category.parent?.id == categoriesFilter.parent_id)
             subCategoriesList.value = SubCategory
         }
-        return {t , subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
+        return {t ,searchIsForSale, subCategoriesList, getSubCategory, mainCategoriesList, ItemConsts, search, resetFilter, search_filter_popup, searchName, searchParent, searchStatus, searchSubCategory }
     },
 })
 
@@ -89,6 +92,16 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl icon="feather:search">
                         <input v-model="searchName" type="text" class="input " :placeholder="t('item.search_filter.name')" />
+                    </VControl>
+                </VField>
+                <VField class="column filter">
+                    <VControl>
+                        <VSelect 
+                            v-model="searchIsForSale" class="">
+                            <VOption value="">{{t('item.form.for_sale')}}</VOption>
+                            <VOption value="1">{{t('item.form.yes')}}</VOption>
+                            <VOption value="0">{{t('item.form.no')}}</VOption>
+                        </VSelect>
                     </VControl>
                 </VField>
                 <VField class="column filter">

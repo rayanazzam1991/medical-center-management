@@ -7,7 +7,7 @@ import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { useNationality } from "/@src/stores/Others/Nationality/nationalityStore"
 import sleep from "/@src/utils/sleep"
 import { useI18n } from "vue-i18n"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -42,19 +42,19 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/nationality'" @onSubmit="toEdit"
-        :isLoading="nationalityStore?.loading" />
+        :permission="Permissions.NATIONALITY_EDIT" :isLoading="nationalityStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
                 <!--Fieldset-->
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('nationality.details.name')}}:</h4>
+                        <div class="column is-6">
+                            <h4 class="margin-bottom">{{ t('nationality.details.name') }}:</h4>
                             <span>{{ currentNationality.name }}</span>
                         </div>
-                        <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('nationality.details.status')}}:</h4>
+                        <div class="column is-6">
+                            <h4 class="margin-bottom">{{ t('nationality.details.status') }}:</h4>
                             <span>
                                 <VTag
                                     :color="currentNationality.status === NationalityConsts.INACTIVE ? 'danger' : 'success'">
@@ -67,8 +67,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

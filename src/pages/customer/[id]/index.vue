@@ -1,4 +1,14 @@
-
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "customer_show"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
@@ -15,6 +25,7 @@ import { defaultChangeStatusUser } from '/@src/models/Others/User/user'
 import {
   UserStatus,
   defaultUserStatusSearchFilter,
+  UserStatusConsts,
 } from '/@src/models/Others/UserStatus/userStatus'
 import {
   getCustomer,
@@ -36,6 +47,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import { checkPermission } from '/@src/composable/checkPermission'
 
 const route = useRoute()
 const router = useRouter()
@@ -77,7 +90,7 @@ useHead({
 const customerStore = useCustomer()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files'
+    activeTab?: 'Details' | 'Medical Info' | 'Social Media' | 'Files' | 'Tickets' | 'Services' | 'Cash Receipts' | 'Reminders' | 'Balances'
   }>(),
   {
     activeTab: 'Details',
@@ -128,7 +141,7 @@ const changestatusUser = async () => {
   await sleep(200)
 
   // @ts-ignore
-  notif.success( t('toast.success.edit') )
+  notif.success(t('toast.success.edit'))
   changeStatusPopup.value = false
 }
 
@@ -205,8 +218,8 @@ const fetchCustomer = async () => {
     customerForm.medicalInfoForm.id = customer.medical_info.id
   }
   for (let i = 0; i < customer.social_medias.length; i++) {
-    // @ts-ignore
     customerForm.customerSocialMediaForm.push({
+      // @ts-ignore
       social_media_id: customer.social_medias[i].id,
       url: customer.social_medias[i].url,
     })
@@ -231,23 +244,25 @@ const fetchCustomerFiles = async () => {
 }
 
 const onAddFile = async (event: any) => {
-  const _file = event.target.files[0] as File
+  const file = event.target.files[0] as File
   let _message = ''
-  if (_file) {
+  if (file) {
     if (
-      _file.type != 'image/jpeg' &&
-      _file.type != 'image/png' &&
-      _file.type != 'image/webp'
+      file.type != 'image/jpeg' &&
+      file.type != 'image/png' &&
+      file.type != 'image/webp' &&
+      file.type != 'application/pdf'
+
     ) {
       _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
-    } else if (_file.size > 2 * 1024 * 1024) {
+    } else if (file.size > 2 * 1024 * 1024) {
       _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
-      filesToUpload.value = _file
+      filesToUpload.value = file
     }
   }
 }
@@ -326,23 +341,23 @@ const onEditProfilePicture = async (error: any, fileInfo: any) => {
   }
 
   let _message = ''
-  const _file = fileInfo.file as File
+  const file = fileInfo.file as File
 
-  if (_file) {
+  if (file) {
     if (
-      _file.type != 'image/jpeg' &&
-      _file.type != 'image/png' &&
-      _file.type != 'image/webp'
+      file.type != 'image/jpeg' &&
+      file.type != 'image/png' &&
+      file.type != 'image/webp'
     ) {
       _message = t('toast.file.type')
       await sleep(200)
       notif.error(_message)
-    } else if (_file.size > 2 * 1024 * 1024) {
+    } else if (file.size > 2 * 1024 * 1024) {
       _message = t('toast.file.size')
       await sleep(200)
       notif.error(_message)
     } else {
-      profilePictureToUpload.value = _file
+      profilePictureToUpload.value = file
     }
   }
 }
@@ -433,90 +448,119 @@ const RemoveProfilePicture = async () => {
     deleteLoading.value = false
   }
 }
+const permissionCheck = async () => {
+  if (tab.value == 'Tickets' && !checkPermission(Permissions.TICKET_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Services' && !checkPermission(Permissions.TICKET_SERVICE_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Cash Receipts' && !checkPermission(Permissions.CLIENT_CASH_RECEIPT_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Reminders' && !checkPermission(Permissions.REMINDER_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Details' && !checkPermission(Permissions.CUSTOMER_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Medical Info' && !checkPermission(Permissions.MEDICAL_INFO_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Social Media' && !checkPermission(Permissions.CUSTOMER_SOCIAL_MEDIA_SHOW)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Files' && !checkPermission(Permissions.MEDIA_ACCESS)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+  if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
+
+
+}
+
 </script>
 <template>
   <div class="profile-wrapper">
     <VLoader size="large" :active="loading">
       <div class="profile-header has-text-centered">
-        <VAvatar
-          v-if="customerProfilePicture.id == undefined"
-          size="xl"
+        <VAvatar v-if="customerProfilePicture.id == undefined" size="xl"
           :picture="MediaConsts.getAvatarIcon(currentCustomer.user.gender)"
-          edit
-          @edit="editProfilePicture"
-        />
-        <VAvatar
-          v-else
-          size="xl"
-          :picture="customerProfilePicture.relative_path"
-          edit
-          @edit="editProfilePicture"
-        />
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
+        <VAvatar v-else size="xl" :picture="customerProfilePicture.relative_path"
+          :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
         <h3 class="title is-4 is-narrow is-thin">
           {{ currentCustomer.user.first_name }}
           {{ currentCustomer.user.last_name }}
         </h3>
         <div class="profile-stats">
           <div class="profile-stat">
-            <i aria-hidden="true" class="lnil lnil-p"></i>
-            <span>{{ currentCustomer.user?.city?.name }}</span>
+            <i aria-hidden="true" class="fas fa-city"></i>
+            <span>{{ currentCustomer.user?.city?.name ?? t('place_holder.none') }}</span>
           </div>
           <div class="separator"></div>
           <div class="profile-stat">
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
-            <span
-              >{{t('customer.details.status')}}:
-              <span
-                :class="
-                  currentCustomer.user.status.name == 'Pending'
-                    ? 'has-text-warning'
-                    : 'has-text-primary'
-                "
-                >{{ currentCustomer.user.status.name }}</span
-              ></span
-            >
+            <span>{{ t('customer.details.status') }}:
+              <span :class="`has-text-${UserStatusConsts.getStatusColor(currentCustomer.user.status.id)}`
+              ">{{ UserStatusConsts.getStatusName(currentCustomer.user.status.id) }}</span></span>
           </div>
         </div>
       </div>
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-quad-slider">
+      <div class="tabs-wrapper is-9-slider">
         <div class="tabs-inner" :hidden="loading">
           <div class="tabs tabs-width">
             <ul>
-              <li :class="[tab === 'Details' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Details'"
-                  @click="tab = 'Details'"
-                  ><span>{{t('customer.details.tabs.details')}}</span></a
-                >
+              <li @click="permissionCheck()" :class="[tab === 'Details' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Details'" @click="tab = 'Details'"><span>{{
+                  t('customer.details.tabs.details')
+                }}</span></a>
               </li>
-              <li :class="[tab === 'Medical Info' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Medical Info'"
-                  @click="tab = 'Medical Info'"
-                  ><span>{{t('customer.details.tabs.medical_info')}}</span></a
-                >
+              <li @click="permissionCheck()" :class="[tab === 'Medical Info' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Medical Info'" @click="tab = 'Medical Info'"><span>{{
+                  t('customer.details.tabs.medical_info')
+                }}</span></a>
               </li>
-              <li :class="[tab === 'Social Media' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Social Media'"
-                  @click="tab = 'Social Media'"
-                  ><span>{{t('customer.details.tabs.social_media')}}</span></a
-                >
+              <li @click="permissionCheck()" :class="[tab === 'Social Media' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Social Media'" @click="tab = 'Social Media'"><span>{{
+                  t('customer.details.tabs.social_media')
+                }}</span></a>
               </li>
-              <li :class="[tab === 'Files' && 'is-active']">
-                <a
-                  tabindex="0"
-                  @keydown.space.prevent="tab = 'Files'"
-                  @click="tab = 'Files'"
-                  ><span>{{t('customer.details.tabs.files')}}</span></a
-                >
+              <li @click="permissionCheck()" :class="[tab === 'Files' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Files'" @click="tab = 'Files'"><span>{{
+                  t('customer.details.tabs.files')
+                }}</span></a>
               </li>
+              <li @click="permissionCheck()" :class="[tab === 'Tickets' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Tickets'" @click="tab = 'Tickets'"><span>{{
+                  t('customer.details.tabs.tickets')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Services' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Services'" @click="tab = 'Services'"><span>{{
+                  t('customer.details.tabs.services')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Cash Receipts' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Cash Receipts'" @click="tab = 'Cash Receipts'"><span>{{
+                  t('customer.details.tabs.cash_receipts')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Reminders' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Reminders'" @click="tab = 'Reminders'"><span>{{
+                  t('customer.details.tabs.reminders')
+                }}</span></a>
+              </li>
+              <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
+                  t('employee.details.tabs.balances')
+                }} </span></a>
+              </li>
+
               <li class="tab-naver"></li>
             </ul>
           </div>
@@ -527,62 +571,55 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>{{t('customer.details.main_details')}}</h3>
+                    <h3>{{ t('customer.details.main_details') }}</h3>
                   </div>
                   <div class="buttons">
-                    <VButton @click.prevent="onOpen" color="dark">
-                      {{t('customer.table.modal_title.status')}}
+                    <VButton v-permission="Permissions.CUSTOMER_EDIT" @click.prevent="onOpen" color="dark">
+                      {{ t('customer.table.modal_title.status') }}
                     </VButton>
-                    <VIconButton
-                      size="small"
-                      icon="feather:edit-3"
-                      tabindex="0"
-                      @click="onClickEditMainInfo"
-                    />
+                    <VIconButton v-permission="Permissions.CUSTOMER_EDIT" size="small" icon="feather:edit-3" tabindex="0"
+                      @click="onClickEditMainInfo" />
                   </div>
                 </div>
 
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>{{t('customer.details.name',{title :viewWrapper.pageTitle  })}}</h4>
+                    <h4>{{ t('customer.details.name', { title: viewWrapper.pageTitle }) }}</h4>
                     <p>
                       {{ currentCustomer.user.first_name }}
-                      {{ currentCustomer.user.last_name }}.
+                      {{ currentCustomer.user.last_name }}
                     </p>
                   </div>
                   <div class="project-feature">
-                    <i
-                      aria-hidden="true"
-                      :class="
-                        currentCustomer.user.gender == 'Male'
-                          ? 'lnir lnir-male'
-                          : 'lnir lnir-female'
-                      "
-                    ></i>
+                    <i aria-hidden="true" :class="
+                      currentCustomer.user.gender == 'Male'
+                        ? 'lnir lnir-male'
+                        : 'lnir lnir-female'
+                    "></i>
                     <h4>{{ t('customer.details.gender') }}</h4>
                     <p>
                       {{
                         currentCustomer.user.gender == 'Not_Selected'
-                          ? t('gender.not_selected')
-                          : t(`gender.${currentCustomer.user.gender.toLowerCase()}`)
-                      }}.
+                        ? t('gender.not_selected')
+                        : t(`gender.${currentCustomer.user.gender.toLowerCase()}`)
+                      }}
                     </p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-calendar"></i>
                     <h4>{{ t('customer.details.birth_date') }}</h4>
-                    <p>{{ currentCustomer.user.birth_date }}.</p>
+                    <p>{{ currentCustomer.user.birth_date ?? t('place_holder.none') }}</p>
                   </div>
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-phone"></i>
                     <h4>{{ t('customer.details.phone_number') }}</h4>
-                    <p>{{ currentCustomer.user.phone_number }}.</p>
+                    <p>{{ currentCustomer.user.phone_number }}</p>
                   </div>
                 </div>
 
                 <div class="project-files">
-                  <h4>{{ t('customer.details.more_info')}}</h4>
+                  <h4>{{ t('customer.details.more_info') }}</h4>
                   <div class="columns is-multiline">
                     <div class="column is-12">
                       <div class="file-box">
@@ -599,7 +636,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.address') }}</span>
                           <span>
-                            {{ currentCustomer.user.address }}
+                            {{ currentCustomer.user.address ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -609,7 +646,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.emergency_contact_name') }}</span>
                           <span>
-                            {{ currentCustomer.emergency_contact_name }}
+                            {{ currentCustomer.emergency_contact_name ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -619,7 +656,7 @@ const RemoveProfilePicture = async () => {
                         <div class="meta">
                           <span>{{ t('customer.details.emergency_contact_phone') }}</span>
                           <span>
-                            {{ currentCustomer.emergency_contact_phone }}
+                            {{ currentCustomer.emergency_contact_phone ?? t('place_holder.none') }}
                           </span>
                         </div>
                       </div>
@@ -629,29 +666,20 @@ const RemoveProfilePicture = async () => {
                         <div class="meta full-width">
                           <div
                             class="
-                              is-justify-content-space-between
-                              is-align-items-center
-                              is-flex
-                              mt-2
-                            "
-                          >
+                                                                                                                                                                                                                                                        is-justify-content-space-between
+                                                                                                                                                                                                                                                        is-align-items-center
+                                                                                                                                                                                                                                                        is-flex
+                                                                                                                                                                                                                                                        mt-2
+                                                                                                                                                                                                                                                      ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
-                            <VIconButton
-                              class="mb-3"
-                              size="small"
-                              icon="feather:edit-3"
-                              tabindex="0"
-                              @click="openNotesEditor"
-                            />
+                            <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
+                              icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
                           </div>
                           <VFlex class="mb-3">
                             <!-- use any components inside --->
                             <VCard>
-                              <div v-html="currentCustomer.notes" class="ml-3 mb-3"></div>
-                              <div
-                                v-if="currentCustomer.notes != undefined"
-                                class="has-text-primary"
-                              >
+                              <div v-html="currentCustomer.notes ?? t('place_holder.none')" class="ml-3 mb-3"></div>
+                              <div v-if="currentCustomer.notes != undefined" class="has-text-primary">
                                 -{{ t('customer.details.last_update') }}: {{ currentCustomer.notes_timestamp }} |
                                 {{ t('customer.details.by') }}: {{ currentCustomer.notes_by?.first_name }}
                                 {{ currentCustomer.notes_by?.last_name }}
@@ -662,19 +690,10 @@ const RemoveProfilePicture = async () => {
                       </div>
                     </div>
                     <div v-else class="column is-12 editor-wrapper">
-                      <CKEditor
-                        :config="config"
-                        class="editor"
-                        v-model="editorData"
-                        :editor="ClassicEditor"
-                      >
+                      <CKEditor :config="config" class="editor" v-model="editorData" :editor="ClassicEditor">
                       </CKEditor>
-                      <VButton
-                        class="mt-4 editor-button"
-                        @click.prevent="editNotes"
-                        color="dark"
-                      >
-                        {{t('modal.buttons.save')}}
+                      <VButton class="mt-4 editor-button" @click.prevent="editNotes" color="dark">
+                        {{ t('modal.buttons.save') }}
                       </VButton>
                     </div>
                   </div>
@@ -692,84 +711,87 @@ const RemoveProfilePicture = async () => {
                   <div class="title-wrap">
                     <h3>{{ t('customer.details.medical_info') }}</h3>
                   </div>
-                  <VIconButton
-                    size="small"
-                    icon="feather:edit-3"
-                    tabindex="0"
-                    @click="onClickEditMedicalInfo"
-                  />
+                  <VIconButton v-permission="Permissions.MEDICAL_INFO_EDIT" size="small" icon="feather:edit-3"
+                    tabindex="0" @click="onClickEditMedicalInfo" />
                 </div>
-
-                <div v-if="currentCustomer.medical_info" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
-                    <h4>{{t('customer.details.blood_type')}}</h4>
-                    <p>
-                      {{ currentCustomer?.medical_info?.blood_type }}
-                    </p>
+                <div v-if="checkPermission(Permissions.MEDICAL_INFO_SHOW)">
+                  <div v-if="currentCustomer.medical_info" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnir lnir-drop-alt"></i>
+                      <h4>{{ t('customer.details.blood_type') }}</h4>
+                      <p>
+                        {{ currentCustomer?.medical_info?.blood_type ?? t('place_holder.none') }}
+                      </p>
+                    </div>
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnir lnir-grow"></i>
+                      <h4>{{ t('customer.details.smooke') }}</h4>
+                      <p>
+                        {{
+                          MedicalInfoConsts.showBoolean(
+                            currentCustomer?.medical_info?.smoking
+                          )
+                        }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnir lnir-grow"></i>
-                    <h4>{{t('customer.details.smooke')}}</h4>
-                    <p>
-                      {{
-                        MedicalInfoConsts.showBoolean(
-                          currentCustomer?.medical_info?.smoking
-                        )
-                      }}.
-                    </p>
+                  <div v-else class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('customer.details.tabs_content_placeholder.medical_info') }}</h4>
+                    </div>
+                  </div>
+
+                  <div v-if="currentCustomer.medical_info" class="project-files">
+                    <h4>{{ t('customer.details.more_info') }}</h4>
+                    <div class="columns is-multiline">
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.allergic') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.allergic ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.chronic_diseases') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.chronic_diseases ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.infectious_diseases') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.infectious_diseases ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="column is-12">
+                        <div class="file-box">
+                          <div class="meta">
+                            <span>{{ t('customer.details.other_medical_info') }}</span>
+                            <span>
+                              {{ currentCustomer?.medical_info?.any_other_info ?? t('place_holder.none') }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div v-else class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{ t('customer.details.tabs_content_placeholder.medical_info') }}</h4>
-                  </div>
-                </div>
-
-                <div v-if="currentCustomer.medical_info" class="project-files">
-                  <h4>{{t('customer.details.more_info')}}</h4>
-                  <div class="columns is-multiline">
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{t('customer.details.allergic')}}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.allergic }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{t('customer.details.chronic_diseases')}}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.chronic_diseases }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{t('customer.details.infectious_diseases')}}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.infectious_diseases }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column is-12">
-                      <div class="file-box">
-                        <div class="meta">
-                          <span>{{t('customer.details.other_medical_info')}}</span>
-                          <span>
-                            {{ currentCustomer?.medical_info?.any_other_info }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
                   </div>
                 </div>
               </div>
@@ -782,37 +804,32 @@ const RemoveProfilePicture = async () => {
               <div class="project-details-card">
                 <div class="card-head">
                   <div class="title-wrap">
-                    <h3>{{t('customer.details.customer_social_media')}}</h3>
+                    <h3>{{ t('customer.details.customer_social_media') }}</h3>
                   </div>
 
-                  <VIconButton
-                    size="small"
-                    icon="feather:edit-3"
-                    tabindex="0"
-                    @click="onClickEditSocialMedia"
-                  />
+                  <VIconButton v-permission="Permissions.CUSTOMER_SOCIAL_MEDIA_EDIT" size="small" icon="feather:edit-3"
+                    tabindex="0" @click="onClickEditSocialMedia" />
                 </div>
 
-                <div class="project-features">
-                  <div
-                    v-for="socialMedia in currentCustomer.social_medias"
-                    class="project-feature"
-                  >
+                <div v-if="checkPermission(Permissions.CUSTOMER_SOCIAL_MEDIA_SHOW)" class="project-features">
+                  <div v-for="socialMedia in currentCustomer.social_medias" class="project-feature">
                     <i aria-hidden="true" :class="socialMedia.icon"></i>
                     <h4>{{ socialMedia.name }}</h4>
                     <p class="has-text-centered">
-                      {{t('customer.details.customer_URL')}}:
+                      {{ t('customer.details.customer_URL') }}:
                       <a target="_blank" class="has-text-primary" :href="socialMedia.url">
-                        {{ socialMedia.url }}</a
-                      >
+                        {{ socialMedia.url }}</a>
                     </p>
                   </div>
-                  <div
-                    v-if="currentCustomer.social_medias.length == 0"
-                    class="project-feature"
-                  >
+                  <div v-if="currentCustomer.social_medias.length == 0" class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
                     <h4>{{ t('customer.details.tabs_content_placeholder.social_modia') }}</h4>
+                  </div>
+                </div>
+                <div v-else class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
                   </div>
                 </div>
               </div>
@@ -828,119 +845,145 @@ const RemoveProfilePicture = async () => {
                     <h3>{{ t('customer.details.customer_files') }}</h3>
                   </div>
                 </div>
-                <div v-if="customerFiles.length == 0" class="project-features">
-                  <div class="project-feature">
-                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
-                    <h4>{{t('customer.details.tabs_content_placeholder.files')}}</h4>
+                <div v-if="checkPermission(Permissions.MEDIA_ACCESS)">
+                  <div v-if="customerFiles.length == 0" class="project-features">
+                    <div class="project-feature">
+                      <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                      <h4>{{ t('customer.details.tabs_content_placeholder.files') }}</h4>
+                    </div>
                   </div>
-                </div>
-
-                <div class="project-files project-section">
-                  <h4>{{t('customer.details.upload_file')}}</h4>
-                  <div class="is-flex is-justify-content-space-between">
-                    <VField class="mr-6" grouped>
-                      <VControl>
-                        <div class="file has-name">
-                          <label class="file-label">
-                            <input
-                              class="file-input"
-                              type="file"
-                              v-on:change="onAddFile"
-                            />
-                            <span class="file-cta">
-                              <span class="file-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                  <div v-permission="Permissions.MEDIA_CREATE" class="project-files project-section">
+                    <h4>{{ t('customer.details.upload_file') }}</h4>
+                    <div class="is-flex is-justify-content-space-between">
+                      <VField class="mr-6" grouped>
+                        <VControl>
+                          <div class="file has-name">
+                            <label class="file-label">
+                              <input class="file-input" type="file" v-on:change="onAddFile" />
+                              <span class="file-cta">
+                                <span class="file-icon">
+                                  <i class="fas fa-cloud-upload-alt"></i>
+                                </span>
+                                <span class="file-label">{{ t('images.image_name_placeholder') }}</span>
                               </span>
-                              <span class="file-label">{{t('images.image_name_placeholder')}}</span>
-                            </span>
-                            <span class="file-name light-text">
-                              {{ filesToUpload?.name ?? t('images.image_select_file') }}
-                            </span>
-                          </label>
-                        </div>
-                      </VControl>
-                    </VField>
-                    <VLoader size="small" :active="uploadLoading">
-                      <VButton
-                        v-if="filesToUpload != undefined"
-                        @click="UploadFile"
-                        class=""
-                        icon="lnir lnir-add-files rem-100"
-                        light
-                        dark-outlined
-                      >
-                        {{t('customer.details.upload')}}
-                      </VButton>
-                    </VLoader>
-                  </div>
-                  <h6 class="ml-2 mt-2 help">
-                    {{t('images.accepted_file')}}
-                  </h6>
-                </div>
-                <div
-                  v-if="customerFiles.length != 0"
-                  class="project-files project-section"
-                >
-                  <div>
-                    <h4>{{t('customer.details.tabs.files')}}</h4>
-                    <div class="columns is-multiline">
-                      <div v-for="file in customerFiles" class="column is-6">
-                        <div class="file-box">
-                          <img
-                            :src="MediaConsts.getMediaIcon(file.mime_type ?? '')"
-                            alt=""
-                          />
-                          <div class="meta">
-                            <span class="file-link">
-                              <a
-                                target="_blank"
-                                class="file-link"
-                                :href="file.relative_path"
-                              >
-                                {{ file.file_name }}</a
-                              >
-                            </span>
-                            <span>
-                              {{
-                                file.size != undefined
-                                  ? (file.size / (1024 * 1024)).toFixed(2)
-                                  : 'Unknown'
-                              }}
-                              {{ file.size != undefined ? 'MB' : '' }}
-                              <i aria-hidden="true" class="fas fa-circle"></i>
-                              {{ file.created_at }}
-                              <i aria-hidden="true" class="fas fa-circle"></i>
-                              {{t('images.by')}} {{ file.uploaded_by?.first_name
-                              }}{{ file.uploaded_by?.last_name }}
-                            </span>
+                              <span class="file-name light-text">
+                                {{ filesToUpload?.name ?? t('images.image_select_file') }}
+                              </span>
+                            </label>
                           </div>
-                          <VIconButton
-                            v-if="file.id"
-                            class="is-right is-dots is-spaced dropdown end-action mr-2"
-                            size="small"
-                            icon="feather:trash"
-                            tabindex="0"
-                            color="danger"
-                            @click="onDeleteFile(file.id ?? 0)"
-                          />
+                        </VControl>
+                      </VField>
+                      <VLoader size="small" :active="uploadLoading">
+                        <VButton v-if="filesToUpload != undefined" @click="UploadFile" class=""
+                          icon="lnir lnir-add-files rem-100" light dark-outlined>
+                          {{ t('customer.details.upload') }}
+                        </VButton>
+                      </VLoader>
+                    </div>
+                    <h6 class="ml-2 mt-2 help">
+                      {{ t('images.accepted_file') }}
+                    </h6>
+                  </div>
+                  <div v-if="customerFiles.length != 0" class="project-files project-section">
+                    <div>
+                      <h4>{{ t('customer.details.tabs.files') }}</h4>
+                      <div class="columns is-multiline">
+                        <div v-for="(file, index) in customerFiles" class="column is-6">
+                          <div class="file-box is-flex is-justify-content-space-between">
+                            <div class="file-box">
+                              <img :src="MediaConsts.getMediaIcon(file.mime_type ?? '')" alt="" />
+                              <div class="meta">
+                                <span class="file-link">
+                                  <a target="_blank" class="file-link" :href="file.relative_path">
+                                    {{ (index + 1) + ' ' + (file.mime_type ?? '') }}</a>
+                                </span>
+                                <span>
+                                  {{
+                                    file.size != undefined
+                                    ? (file.size / (1024 * 1024)).toFixed(2)
+                                    : 'Unknown'
+                                  }}
+                                  {{ file.size != undefined ? t('images.megabyte') : '' }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ file.created_at }}
+                                  <i aria-hidden="true" class="fas fa-circle"></i>
+                                  {{ t('images.by') }} {{
+                                    file.uploaded_by?.first_name
+                                  }}{{ file.uploaded_by?.last_name }}
+                                </span>
+                              </div>
+                            </div>
+                            <VIconButton v-if="file.id" class="is-right is-dots is-spaced dropdown end-action mr-2"
+                              size="small" icon="feather:trash" tabindex="0" color="danger"
+                              @click="onDeleteFile(file.id ?? 0)" />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div v-else class="project-features">
+                  <div class="project-feature">
+                    <i aria-hidden="true" class="lnil lnil-emoji-sad"></i>
+                    <h4>{{ t('toast.error.no_permission') }}</h4>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
+        <div v-if="tab === 'Tickets'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Services'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <TicketServiceTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Cash Receipts'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <ClientsCashReceiptsTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Reminders'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <ReminderTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="tab === 'Balances'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <JournalEntryTable is-for-customer :customer-id="customerId" />
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-  <VModal
-    :title="t('customer.table.modal_title.status')"
-    :open="changeStatusPopup"
-    actions="center"
-    @close="changeStatusPopup = false"
-  >
+  <VModal :title="t('customer.table.modal_title.status')" :open="changeStatusPopup" actions="center"
+    @close="changeStatusPopup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
         <!--Fieldset-->
@@ -948,18 +991,11 @@ const RemoveProfilePicture = async () => {
           <div class="columns is-multiline">
             <div class="column is-12">
               <VField class="column" id="user_status_id">
-                <VLabel>{{t('customer.details.customer_status')}}</VLabel>
+                <VLabel>{{ t('customer.details.customer_status') }}</VLabel>
                 <VControl>
-                  <VSelect
-                    v-if="currentCustomer.user.status"
-                    v-model="currentCustomer.user.status.id"
-                  >
-                    <VOption value="">{{t('customer.details.select_customer_status')}}</VOption>
-                    <VOption
-                      v-for="status in statusesList"
-                      :key="status.id"
-                      :value="status.id"
-                      >{{ status.name }}
+                  <VSelect v-if="currentCustomer.user.status" v-model="currentCustomer.user.status.id">
+                    <VOption value="">{{ t('customer.details.select_customer_status') }}</VOption>
+                    <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{ status.name }}
                     </VOption>
                   </VSelect>
                   <ErrorMessage name="user_status_id" />
@@ -971,73 +1007,45 @@ const RemoveProfilePicture = async () => {
       </form>
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="changestatusUser()">{{t('modal.buttons.confirm')}}</VButton>
+      <VButton color="primary" raised @click="changestatusUser()">{{ t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
-  <VModal
-    :title="t('customer.table.modal_title.delete_file')"
-    :open="deleteFilePopup"
-    actions="center"
-    @close="deleteFilePopup = false"
-  >
+  <VModal :title="t('customer.table.modal_title.delete_file')" :open="deleteFilePopup" actions="center"
+    @close="deleteFilePopup = false">
     <template #content>
-      <VPlaceholderSection
-        :title="t('customer.table.modal_title.placeholderSection.title')"
-        :subtitle="t('customer.table.modal_title.placeholderSection.subtitle')"
-      />
+      <VPlaceholderSection :title="t('customer.table.modal_title.placeholderSection.title')"
+        :subtitle="t('customer.table.modal_title.placeholderSection.subtitle')" />
     </template>
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton color="primary" raised @click="removefile()">{{t('modal.buttons.confirm')}}</VButton>
+        <VButton color="primary" raised @click="removefile()">{{ t('modal.buttons.confirm') }}</VButton>
       </VLoader>
     </template>
   </VModal>
-  <VModal
-    :key="keyIncrement"
-    :title="t('customer.table.modal_title.profile_picture')"
-    :open="updateProfilePicturePopup"
-    actions="center"
-    @close="updateProfilePicturePopup = false"
-  >
+  <VModal :key="keyIncrement" :title="t('customer.table.modal_title.profile_picture')" :open="updateProfilePicturePopup"
+    actions="center" @close="updateProfilePicturePopup = false">
     <template #content>
       <VField class="is-flex is-justify-content-center">
         <VControl>
-          <VFilePond
-            size="large"
-            class="profile-filepond"
-            name="profile_filepond"
-            :chunk-retry-delays="[500, 1000, 3000]"
+          <VFilePond size="large" class="profile-filepond" name="profile_filepond" :chunk-retry-delays="[500, 1000, 3000]"
             label-idle="<i class='lnil lnil-cloud-upload'></i>"
-            :accepted-file-types="['image/png', 'image/jpeg', 'image/gif']"
-            :image-preview-height="140"
-            :image-resize-target-width="140"
-            :image-resize-target-height="140"
-            image-crop-aspect-ratio="1:1"
-            style-panel-layout="compact circle"
-            style-load-indicator-position="center bottom"
-            style-progress-indicator-position="right bottom"
-            style-button-remove-item-position="left bottom"
-            style-button-process-item-position="right bottom"
-            @addfile="onEditProfilePicture"
-          />
+            :accepted-file-types="['image/png', 'image/jpeg', 'image/webp']" :image-preview-height="140"
+            :image-resize-target-width="140" :image-resize-target-height="140" image-crop-aspect-ratio="1:1"
+            style-panel-layout="compact circle" style-load-indicator-position="center bottom"
+            style-progress-indicator-position="right bottom" style-button-remove-item-position="left bottom"
+            style-button-process-item-position="right bottom" @addfile="onEditProfilePicture" />
         </VControl>
       </VField>
       <h6 class="is-flex is-justify-content-center help">
-        {{t('images.accepted_file')}}
+        {{ t('images.accepted_image_file') }}
       </h6>
     </template>
 
     <template #action="{ close }">
       <VLoader size="small" :active="deleteLoading">
-        <VButton
-          v-if="customerProfilePicture.id != undefined"
-          color="danger"
-          outlined
-          class="mr-2"
-          @click="RemoveProfilePicture"
-        >
-          {{t('modal.buttons.delete')}}</VButton
-        >
+        <VButton v-if="customerProfilePicture.id != undefined" color="danger" outlined class="mr-2"
+          @click="RemoveProfilePicture">
+          {{ t('modal.buttons.delete') }}</VButton>
       </VLoader>
 
       <VLoader size="small" :active="uploadLoading">
@@ -1050,8 +1058,12 @@ const RemoveProfilePicture = async () => {
 <style scoped lang="scss">
 @import '/@src/scss/styles/multiTapedDetailsPage.scss';
 
+.profile-wrapper {
+  max-width: 100%;
+}
+
 .tabs-width {
-  min-width: 700px;
+  min-width: 1300px;
   min-height: 40px;
 
   .is-active {
@@ -1059,8 +1071,8 @@ const RemoveProfilePicture = async () => {
   }
 }
 
-.tabs-wrapper.is-quad-slider .tabs li a,
-.tabs-wrapper-alt.is-quad-slider .tabs li a {
+.tabs-wrapper.is-9-slider .tabs li a,
+.tabs-wrapper-alt.is-9-slider .tabs li a {
   height: 40px;
 }
 

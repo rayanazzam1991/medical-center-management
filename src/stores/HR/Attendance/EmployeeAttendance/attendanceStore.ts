@@ -1,10 +1,11 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Attendance, JustificationRequestData, JustificationResponseData, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { Attendance, CreateAttendance, EmployeeAttendanceSearchFilter, JustificationRequestData, JustificationResponseData, PendingAttendance, UpdateAttendance } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
 import { Media } from "/@src/models/Others/Media/media"
-import { justifyAttendanceApi, unjustifyAttendanceApi, updateAttendanceApi } from "/@src/utils/api/HR/Attendance/EmployeeAttendance"
+import { createAttendanceApi, getPendingAttendanceListApi, justifyAttendanceApi, unjustifyAttendanceApi, updateAttendanceApi } from "/@src/utils/api/HR/Attendance/EmployeeAttendance"
 import { uploadMediaApi } from "/@src/utils/api/Others/Media"
 import sleep from "/@src/utils/sleep"
+import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
 export const useAttendance = defineStore('attendance', () => {
@@ -13,7 +14,8 @@ export const useAttendance = defineStore('attendance', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
-
+    const pagination = ref<Pagination>(defaultPagination)
+    const pendingAttendances = ref<PendingAttendance[]>([])
     async function updateAttendanceStore(attendance_id: number, data: UpdateAttendance) {
         if (loading.value) return
 
@@ -21,6 +23,26 @@ export const useAttendance = defineStore('attendance', () => {
 
         try {
             const returnedResponse = await updateAttendanceApi(api, attendance_id, data)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            return returnedResponse.response.data as Attendance
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
+    async function createAttendanceStore(data: CreateAttendance) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await createAttendanceApi(api, data)
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
             message.value = returnedResponse.response.message
@@ -100,16 +122,46 @@ export const useAttendance = defineStore('attendance', () => {
             loading.value = false
         }
     }
+    async function getPendingAttendanceStore(searchFilter: EmployeeAttendanceSearchFilter) {
+        if (loading.value) return
+
+        loading.value = true
+
+        try {
+            const returnedResponse = await getPendingAttendanceListApi(api, searchFilter)
+            pagination.value = returnedResponse.response.pagination
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+            pendingAttendances.value = returnedResponse.response.data
+
+
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
+
 
     return {
         success,
         error_code,
         message,
         loading,
+        pendingAttendances,
+        pagination,
         updateAttendanceStore,
         justifyAttendanceStore,
         unjustifyAttendanceStore,
-        addJustificationProofFileStore
+        addJustificationProofFileStore,
+        getPendingAttendanceStore,
+        createAttendanceStore
     } as const
 })
 

@@ -1,4 +1,16 @@
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "social_media_list"
+    ]
+  }
+}
+</route>
+  
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import VAvatar from '/@src/components/base/avatar/VAvatar.vue';
@@ -10,9 +22,10 @@ import { defaultSocialMediaSearchFilter, SocialMediaSearchFilter, SocialMediaCon
 import { getSocialMediasList, deleteSocialMedia } from '/@src/services/CRM/SocialMedia/socialMediaService';
 import { useSocialMedia } from '/@src/stores/CRM/SocialMedia/socialMediaStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('social_media.table.title'))
 useHead({
@@ -96,19 +109,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
-    label : t('social_media.table.columns.id')
+    label: t('social_media.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
-    label : t('social_media.table.columns.name')
+    label: t('social_media.table.columns.name')
 
 
   },
   icon: {
     align: 'center',
-    label : t('social_media.table.columns.icon'),
+    label: t('social_media.table.columns.icon'),
 
     renderRow: (row: any) =>
       h(
@@ -126,7 +139,7 @@ const columns = {
   },
   status: {
     align: 'center',
-    label : t('social_media.table.columns.status'),
+    label: t('social_media.table.columns.status'),
     renderRow: (row: any) =>
       h(
         VTag,
@@ -149,11 +162,13 @@ const columns = {
   },
   actions: {
     align: 'center',
-    label : t('social_media.table.columns.actions'),
+    label: t('social_media.table.columns.actions'),
 
     renderRow: (row: any) =>
       h(MyDropDown, {
-
+        editPermission: Permissions.SOCIAL_MEDIA_EDIT,
+        viewPermission: Permissions.SOCIAL_MEDIA_SHOW,
+        removePermission: Permissions.SOCIAL_MEDIA_DELETE,
         onRemove: () => {
           deleteSocialMediaPopup.value = true
           deleteSocialMediaId.value = row?.id
@@ -186,8 +201,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="socialMediasList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')" 
-          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
@@ -196,18 +211,19 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getSocialMediasPerPage" />
-    <h6 v-if="socialMediasList.length != 0 && !socialMediaStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="socialMediasList.length != 0 && !socialMediaStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
 
     <VPlaceloadText v-if="socialMediaStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
@@ -215,12 +231,12 @@ const columns = {
     @close="deleteSocialMediaPopup = false">
     <template #content>
       <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.title' , {title : viewWrapper.pageTitle})" />
+        :subtitle="t('modal.delete_modal.title', { title: viewWrapper.pageTitle })" />
     </template>
     <template #action="{ close }">
-      <VButton color="primary" raised @click="removeSocialMedia(deleteSocialMediaId)">{{t('modal.buttons.confirm')}}</VButton>
+      <VButton color="primary" raised @click="removeSocialMedia(deleteSocialMediaId)">{{ t('modal.buttons.confirm') }}
+      </VButton>
     </template>
   </VModal>
-
 </template>
 

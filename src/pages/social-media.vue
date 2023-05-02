@@ -1,11 +1,14 @@
 <route lang="json">
 {
   "meta": {
-    "requiresAuth": true
+    "requiresAuth": true,
+    "permissions": [
+      "social_media_access"
+    ]
   }
 }
 </route>
-
+  
 <script setup lang="ts">
 const route = useRoute()
 

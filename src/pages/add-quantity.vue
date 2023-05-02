@@ -1,19 +1,24 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "inventory_item_history_create"
+        ]
     }
 }
 </route>
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { useI18n } from 'vue-i18n';
 import { RouterView } from 'vue-router';
 import { useItemHistoryForm } from '../stores/Warehouse/ItemHistory/itemHistoryFormSteps';
-import { useitemHistory } from '../stores/Warehouse/ItemHistory/itemHistoryStore';
 
-const itemHistoryStore = useitemHistory()
+import { useinventoryItemHistory } from '../stores/Warehouse/ItemHistory/inventoryItemHistoryStore';
+
+const itemHistoryStore = useinventoryItemHistory()
 const itemHistoryForm = useItemHistoryForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => t('add_quantity.form.title')),
 })
@@ -31,12 +36,11 @@ useHead({
 
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(itemHistoryForm.canNavigate && 'is-active')]">
-                <div class="columns">
-                    <div class="column is-one-quarter"></div>
-                    <div class="wizard-buttons-inner">
+                <div class="columns buttons-width">
+                    <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="itemHistoryStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{t('add_quantity.form.submit')}}
+                                {{ t('add_quantity.form.submit') }}
                             </VButton>
                         </VLoader>
                     </div>
@@ -48,4 +52,8 @@ useHead({
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/wizardForm.scss';
+
+.buttons-width {
+    max-width: 45%;
+}
 </style>

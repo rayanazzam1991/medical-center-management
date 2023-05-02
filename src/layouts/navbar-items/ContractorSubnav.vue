@@ -19,7 +19,7 @@ const {t} = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-3">
+              <div class="column is-4">
                 <h4 class="column-heading">{{ t('contractor_subnav.contractor.contractors') }}</h4>
                 <ul>
                   <li>
@@ -36,7 +36,7 @@ const {t} = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul>
+                </ul><br />
                 <h4 class="column-heading">{{t('contractor_subnav.speciality.specialities')}}</h4>
                 <ul>
                   <li>
@@ -54,6 +54,32 @@ const {t} = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+              </div>
+              <div class="column is-4">
+                <h4 class="column-heading">{{ t('contractor_subnav.wallet.wallet') }}</h4>
+                <ul>
+                  <li>
+                    <RouterLink to="/contractor/cash-out">
+                      <i class="lnir lnir-file-name" aria-hidden="true"></i>
+                      <span>{{ t('contractor_subnav.wallet.list_cash_out') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/contractor/cash-out/add">
+                      <i class="lnil lnil-add-files" aria-hidden="true"></i>
+                      <span>{{ t('contractor_subnav.wallet.cash_out') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li>
+                    <RouterLink to="/bulk-cash-out">
+                      <i class="lnil lnil-add-files" aria-hidden="true"></i>
+                      <span>{{ t('walletMovement.table.bulk_cash_out.title') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul><br />
               </div>
             </div>
           </div>

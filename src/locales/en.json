@@ -1,8 +1,8 @@
 {
   "select-language": "Select Language",
   "cancel-label": "Cancel",
-  "main_dashboar": "Main Dashboard",
   "auth": {
+    "login_title": "Login",
     "success_login": "Welcome back",
     "success_signUp": "Welcome",
     "title": "Join Us Now.",
@@ -45,6 +45,12 @@
         "password": "Password"
       },
       "sign_in_button": "Sign In"
+    },
+    "no_permission": {
+      "title": "No Permission",
+      "you_have_no_permission": "Sorry, You do not have permission to access this page.",
+      "content": "Your account does not have permission to access page, If you think this is a mistake, please contact site administrator.",
+      "back_to_previous_page": "Back to previous page"
     }
   },
   "validation": {
@@ -52,8 +58,9 @@
     "number": {
       "price": "Please enter a valid price",
       "invalid_type_error": "Please enter a valid number",
-      "payment_percentage": "Please enter a number from 1-100",
-      "phone_number": "Please enter a valid phone number"
+      "payment_percentage": "Please enter a number from 0-100",
+      "phone_number": "Please enter a valid phone number",
+      "larger_thar_zero": "Must be greater than zero"
     },
     "redio": {
       "required": "Please choose one"
@@ -75,7 +82,9 @@
     "crm": "CRM",
     "contractor": "Contractor",
     "human_resources": "Human Resources",
-    "warehouse": "Warehouse"
+    "warehouse": "Warehouse",
+    "accounting": "Accounting",
+    "ticketing": "Ticketing"
   },
   "others_subnav": {
     "nationality": {
@@ -129,6 +138,11 @@
     "speciality": {
       "specialities": "Specialities",
       "create_speciality": "Create Speciality"
+    },
+    "wallet": {
+      "wallet": "wallet",
+      "list_cash_out": "list cash out",
+      "cash_out": "cash out"
     }
   },
   "human_resources_subnav": {
@@ -140,8 +154,17 @@
       "positions": "Positions",
       "create_position": "Create Position"
     },
+    "variable_payment": {
+      "variable_payments": "Variable Payments",
+      "create_variable_payment": "Create Variable Payment"
+    },
+    "employee_variable_payment": {
+      "employee_variable_payments": "Employees Variable Payments",
+      "create_employee_variable_payment": "Create Employee Variable Payment"
+    },
     "employees_schedule": "Employees Schedule",
-    "employees_attendance": "Employees Attendance"
+    "employees_attendance": "Employees Attendance",
+    "generate_salaries": "Generate Salaries"
   },
   "warehouse_subnav": {
     "category": {
@@ -155,11 +178,55 @@
     "quantity": {
       "quantity": "Quantity",
       "add_quantity": "Add Quantity",
-      "withdraw_quantity": "Withdray Quantity"
+      "withdraw_quantity": "Withdray Quantity",
+      "from_main_inventory": "Withdraw Quantity From Main Inventory To Contractor Custody",
+      "to_main_inventory": "Return Quantity From Contractor Custody To Main Inventory"
     },
-    "item_history": {
-      "item_history": "Item History",
-      "list_stock_movement": "List Stock Movement"
+    "inventory_item_history": {
+      "inventory_item_history": "Inventory Item History",
+      "list_inventory_movement": "List Inventory Movements"
+    },
+    "inventory": {
+      "inventory": "inventory",
+      "inventory_table": " list inventory table"
+    }
+  },
+  "accounting_subnav": {
+    "salary": {
+      "salaries": "Salaries",
+      "salaries_history": "Salaries History",
+      "deliver_salaries": "Deliver Salaries",
+      "onhold_salaries": "On-Hold Salaries"
+    },
+    "account": {
+      "accounts": "Accounts",
+      "add_account": "Add Account",
+      "add_cash_account": "Add Cash Account"
+    },
+    "reports": {
+      "reports": "Accounting Reports",
+      "trial_balance_report": "Trial Balance Report",
+      "balance_sheet_report": "Balance Sheet Report"
+    },
+    "records": {
+      "transactions": "Financial Records",
+      "customer_cash_receipts": "Customer Cash Receipts",
+      "records": "Financial Records & Transfers",
+      "transfer_cash_money": "Transfer Cash Money",
+      "add_record": "Add Financial Record",
+      "add_custom_revenue": "Add Custom Revenue",
+      "add_custom_expense": "Add Custom Expense",
+      "create_customer_cash_receipt": "Create Cash Receipt For A Customer",
+      "create_supplier_cash_receipt": "Create Cash Reciept For A Supplier"
+    }
+  },
+  "ticketing_subnav": {
+    "ticket": {
+      "tickets": "Tickets",
+      "create_ticket": "Create Ticket"
+    },
+    "waiting_list": {
+      "waiting_lists": "Waiting Rooms"
     }
   },
   "user_profile_dropdown": {
@@ -171,9 +238,14 @@
       "edit": "Edited successfully",
       "remove": "Removed successfully",
       "customer_note": "Customer notes was edited successfully",
-      "justified": "justified successfully",
+      "justified": "Justified successfully",
       "unjustified": "Unjustified successfully",
-      "withdraw": "Withdrawed successfully"
+      "withdraw": "Withdrawed successfully",
+      "generate_salaries": "Salaries was generated successfully",
+      "salaries_to_onhold": "ٍSalaries was moved to On-Hold list successfully",
+      "pay_salary": "Salary status changed to paid successfully",
+      "return_salary": "Salary status changed to returned successfully",
+      "transfer": "Transfered successfully"
     },
     "error": {
       "steps_error": "Please add some data or skip this step",
@@ -183,6 +255,26 @@
         "check_out": "New check out can't be before original check out",
         "required_reason": "Reason field is required",
         "out_of_length_reason": "Reason cannot be longer than 255 characters"
+      },
+      "payroll": {
+        "deduction_factor": "Deduction Factor must be a valid positive number and greater than or equal 1"
+      },
+      "contractor": {
+        "min_wallet_value": "Minimum Wallet Value must be a valid negative number"
+      },
+      "generate_salaries": "There are some negative net salaries. Please fix this issue and try again.",
+      "employee_variable_payment": {
+        "cant_edit": "Released and Inactive variable payments can't be edited"
+      },
+      "accounting": {
+        "new_usd_currency_rate": "USD Currency rate must be a number greater than or equal 1",
+        "change_account_currency": "Currency rate must be greater than or equal 1 when selecting non main currency"
+      },
+      "employee": {
+        "basic_salary_payment_percentage_required": "Basic Salary or Payment Percentage is required"
+      },
+      "item": {
+        "item_service_is_duplicated": "Some Items is duplicated"
       }
     },
     "file": {
@@ -198,7 +290,9 @@
       "update": "Update",
       "delete": "Delete",
       "save": "Save",
-      "filter": "Filter"
+      "filter": "Filter",
+      "cash_out": "cash out",
+      "bulk_cash_out": "bulk cash out "
     },
     "delete_modal": {
       "title": "Are you sure?",
@@ -213,10 +307,12 @@
     "pagination_footer": "Showing {from_number} to {to_number} of {all_number} entries"
   },
   "images": {
-    "image_name_placeholder": "Choose an image",
+    "image_name_placeholder": "Choose an image/file",
     "image_select_file": "Select File",
-    "accepted_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp",
-    "by": "By:"
+    "accepted_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp, pdf",
+    "accepted_image_file": "Max size: 2 MB | Accepted image… types: png, jpg, webp",
+    "by": "By:",
+    "megabyte": "MB"
   },
   "gender": {
     "male": "Male",
@@ -226,7 +322,8 @@
   "forms": {
     "type": {
       "add": "Add",
-      "edit": "Edit"
+      "edit": "Edit",
+      "withdraw": "Withdraw"
     },
     "back_button": "Back"
   },
@@ -234,7 +331,8 @@
     "view": "View",
     "edit": "Edit",
     "remove": "Remove",
-    "change_status": "Change Status"
+    "change_status": "Change Status",
+    "view_my_waiting_list": "View Waiting Room"
   },
   "add_quantity": {
     "form": {
@@ -263,12 +361,12 @@
         "parent": "Parent",
         "created_by": "Created By",
         "created_at": "Created At",
+        "category_type": " category type",
         "status": "Status",
         "actions": "Actions"
       },
       "modal_title": "Change Category Status"
     },
-
     "form": {
       "page_title": "Category",
       "form_header": "{type} Category",
@@ -278,13 +376,17 @@
       "level_1": "Level 1",
       "level_2": "Level 2",
       "parent": "Parent",
+      "category_type": "type",
+      "for_sale": "for sale",
+      "to_consume": "to consume",
       "status": "Status"
     },
     "search_filter": {
       "title": "Filter Category",
       "name": "Name...",
       "parent": "Parent",
-      "status": "Status"
+      "status": "Status",
+      "type": "Type"
     },
     "header_button": "Add Category"
   },
@@ -346,7 +448,8 @@
       "tabs": {
         "details": "Details",
         "services": "Sevices",
-        "files": "Files"
+        "files": "Files",
+        "wallet": "wallet"
       },
       "main_details": "Main Details",
       "more_info": "More Info",
@@ -370,6 +473,10 @@
       "upload_file": "Upload File",
       "choose_file": "Choose a file…",
       "upload": "Upload",
+      "wallet": "Contractor wallet",
+      "amount": "amount",
+      "wallet_status": "wallet status",
+      "created_at": "creation date",
       "accepted_file": "Max size: 2 MB | Accepted file types :png, jpg, webp",
       "tabs_content_placeholder": {
         "service": "Contractor have no services for now...",
@@ -639,6 +746,7 @@
       "nationality": "Nationality",
       "position": "Position",
       "phone_number": "Phone Number",
+      "basic_salary": "Basic Salary",
       "address": "Address",
       "employee_number": "Employee Number",
       "last_employee_number": "Last Employee Number",
@@ -675,7 +783,10 @@
       "position": "Position",
       "status": "Status",
       "edit_step_1_title": "Edit Employee Main Info",
-      "edit_submit": "Submit"
+      "edit_submit": "Submit",
+      "type": "Type",
+      "payment_percentage": "Payment Percentage",
+      "submit_and_next_button": "Submit & Next"
     },
     "search_filter": {
       "title": "Filter Employee",
@@ -688,7 +799,42 @@
       "to": "To: ",
       "quick_search": "Name/Number..."
     },
-    "header_button": "Add Employee"
+    "header_button": "Add Employee",
+    "waiting_list": {
+      "header_title": "Waiting Room For Provider",
+      "title": "Waiting Room",
+      "place_holder": {
+        "title": "The Room Is Being Loaded..",
+        "subtitle": "This might take a few seconds/minutes"
+      },
+      "no_data": {
+        "title": "There is no tickets in waiting room",
+        "subtitle": " "
+      },
+      "no_serving_client": {
+        "title": "No Ticket",
+        "subtitle": "There is no serving ticket for now"
+      },
+      "ticket_id": "Ticket # :",
+      "customer_name": "Customer name :",
+      "requested_services": "Requested services :",
+      "service_items_quantity": "Qty :",
+      "service_items": "Items:",
+      "make_served": "Mark as served",
+      "service_name": "Service",
+      "service_provider": "Provider",
+      "notes": "Notes ",
+      "status": "Status",
+      "actions": "Actions",
+      "done": "Done",
+      "serve_next": "Next ticket",
+      "type_notes": "Notes...",
+      "serve_confirmation": {
+        "title": "Mark As Served Confirmation",
+        "caution": "Are You Sure?",
+        "subtitle": "Requested service will be served with written notes"
+      }
+    }
   },
   "employee_attendance": {
     "table": {
@@ -713,16 +859,6 @@
         "status": "Status:",
         "check_in": "Check In",
         "check_out": "Check Out"
-      },
-      "unjustify_attendance": {
-        "title": "Unjustify Attendance",
-        "confirmation": "Are you sure?",
-        "caution": "This will change employee attendance to unjustified"
-      },
-      "justify_attendance": {
-        "title": "Justify Attendance",
-        "reason": "Reason",
-        "proof": "Proof"
       }
     },
     "search_filter": {
@@ -847,37 +983,46 @@
     },
     "header_button": "Add Item"
   },
-  "list_stock_movement": {
+  "list_inventory_movement": {
     "table": {
-      "title": "List Stock Movement",
+      "title": "List Inventory Movements",
       "columns": {
-        "item": "Item",
-        "type": "Type",
-        "quantity": "Quantity",
-        "price": "Price",
-        "cost": "Cost",
-        "requester": "Requester",
-        "note": "Note",
-        "created_at": "Created At",
-        "created_by": "Created By"
+        "item": "item",
+        "type": "type",
+        "quantity": "quantity",
+        "from": "from",
+        "to": "to",
+        "note": "note",
+        "created_at": "created at",
+        "action_by": "action by",
+        "action": "Action Type",
+        "movement_type": "Movement Type"
+      },
+      "action_types": {
+        "add_quantity": "Add Quantity",
+        "withdraw_quantity": "Withdray Quantity",
+        "sell": "Sell",
+        "return_to_main_inventory": "Return To Main Inventory",
+        "withdraw_from_main_inventory": "Withdraw From FaMin Inventory"
+      },
+      "movement_types": {
+        "internal": "Internal",
+        "external": "External"
       }
     },
     "search_filter": {
-      "title": "Filter Item",
-      "select_level_1": "Select Level 1",
-      "select_level_2": "Select Level 2",
-      "select_item": "Select Item",
-      "select_type": "Select Type",
-      "in": "In",
-      "out": "Out",
-      "level_1": "Level 1",
-      "level_2": "Level 2",
+      "title": "Filter Inventory Movements",
+      "select_from_inventory": "From Inventory",
+      "select_to_inventory": "To Inventory",
+      "select_movement_type": "Select Movement Type",
+      "select_action_by": "Action By",
+      "select_requester_name": "Requester Name",
+      "select_action": "Select Action",
+      "select_item": " Select Item",
       "create_date": "Create Date: ",
       "from": "From: ",
       "to": "To: "
-    },
-    "add_quantity_button": "Add Quantity",
-    "withdraw_quantity_button": "Withdraw Quantity"
+    }
   },
   "nationality": {
     "table": {
@@ -1000,7 +1145,11 @@
       "price": "Service Price",
       "description": "Service Description",
       "estimated": "Estimated Duration",
-      "status": "Service Status"
+      "status": "Service Status",
+      "item": {
+        "name": "Name",
+        "quantity": "Quantity"
+      }
     },
     "form": {
       "page_title": "Service",
@@ -1011,7 +1160,10 @@
       "desciption": "Desciption",
       "price": "Price",
       "duration": "Duration",
-      "status": "Status"
+      "status": "Status",
+      "select_item": "Select Item",
+      "yes": "Yes",
+      "no": "No"
     },
     "search_filter": {
       "title": "Filter Service",
@@ -1026,12 +1178,21 @@
     "form": {
       "page_title": "Edit Settings",
       "hr_section": "Edit HR/Attendance Settings",
+      "payroll_section": "Edit HR/Payroll Settings",
+      "contractor_section": "Edit Contractor Settings",
+      "accounting_section": "Edit Accounting Serttings",
       "start_day": "Start Day",
       "end_day": "End Day",
       "start_time": "Starting Time",
       "end_time": "End Time",
       "start_of_week": "Start of Week",
-      "late_tolerance": "Late Tolerance"
+      "late_tolerance": "Late Tolerance",
+      "deduction_factor": "Deduction Factor",
+      "hr_cycle_start_day": "HR Cycle Starting Day",
+      "unjustified_hours_round": "Unjustified Hours Rounding",
+      "min_wallet_value": "Minimum Wallet Value",
+      "usd_currency_rate": "USD Currency Rate",
+      "usd_currency_rate_helper": "ُEvery 1 USD = X IQD"
     }
   },
   "social_media": {
@@ -1191,6 +1352,7 @@
       "select_item": "Select Item",
       "item_quantity": "Item Quantity",
       "item_price": "Item Price",
+      "item_cost": "Item Cost",
       "status": "Status",
       "requester_type": "Requester Type",
       "employee": "Employee",
@@ -1256,6 +1418,563 @@
     "true": "Yes",
     "false": "No"
   },
+  "variable_payment_types": {
+    "increment": "Increment",
+    "decrement": "Decrement"
+  },
+  "Wallet_movement_types": {
+    "out": "out",
+    "in": "in"
+  },
+  "Wallet_movement_actions": {
+    "cash_out": "cash_out"
+  },
+  "walletMovement": {
+    "table": {
+      "title": "  wallet Movement ",
+      "columns": {
+        "contractor_name": "contractor name ",
+        "total": "  total cash out",
+        "created_at": "creation date",
+        "created_by": "Created By",
+        "note": "note"
+      },
+      "bulk_cash_out": {
+        "title": "bulk cash out list  ",
+        "header_button": "withdraw"
+      }
+    },
+    "cash_out_form": {
+      "page_title": "chash_out",
+      "form_header": " chash_out ",
+      "contarctor": " contarctor",
+      "cash_out_total": "The amount to be withdrawn",
+      "my_total": "the amount I have",
+      "note": "note"
+    },
+    "search_filter": {
+      "title": " filter cash out  ",
+      "contractor_name": "contractor name",
+      "created_by": "created by ",
+      "date": "date",
+      "from": "from ",
+      "to": "to"
+    },
+    "header_button": "cash out"
+  },
+  "employee_variable_payment_statuses": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "waiting": "Waiting",
+    "released": "Released",
+    "inactive": "Inactive"
+  },
+  "variable_payment": {
+    "table": {
+      "title": "Variable Payment",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "type": "Type",
+        "status": "Status",
+        "created_at": "Created At",
+        "actions": "Actions"
+      }
+    },
+    "form": {
+      "page_title": "Variable Payment",
+      "form_header": "{type} Variable Payment",
+      "add_variable_payment_title": "Add Variable Payment",
+      "edit_variable_payment_title": "Edit Variable Payment",
+      "name": "Name",
+      "status": "Status",
+      "type": "Type"
+    },
+    "search_filter": {
+      "title": "Filter Variable Payment",
+      "type": "Type",
+      "name": "Name...",
+      "status": "Status"
+    },
+    "header_button": "Add Variable Payment"
+  },
+  "employee_variable_payment": {
+    "table": {
+      "title": "Employee Variable Payments",
+      "columns": {
+        "employee_name": "Employee Name",
+        "variable_payment": "Variable Payment",
+        "amount": "Amount",
+        "type": "Type",
+        "status": "Status",
+        "created_at": "Created At",
+        "release_date": "Released At",
+        "due_date": "Due At",
+        "created_by": "Created By",
+        "actions": "Actions",
+        "note": "Note"
+      },
+      "modal_title": "Change Employee Payment Variable Status",
+      "deactivate_caution": "Note: This variable payment cannot be modified after making it inactive"
+    },
+    "form": {
+      "page_title": "Employee Variable Payments",
+      "form_header": "{type} Variable Payment",
+      "add_variable_payment_title": "Add Employee Variable Payment",
+      "edit_variable_payment_title": "Edit Employee Variable Payment",
+      "employee_name": "Employee Name",
+      "variable_payment": "Variable Payment",
+      "amount": "Amount",
+      "status": "Status",
+      "due_at": "Due At",
+      "note": "Note"
+    },
+    "search_filter": {
+      "title": "Filter Variable Payment",
+      "name": "ُEmployee Name...",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date:",
+      "from": "From: ",
+      "to": "To: "
+    },
+    "header_button": "Add Employee Variable Payment"
+  },
+  "generate_salaries": {
+    "table": {
+      "title": "Generate Salaries",
+      "columns": {
+        "employee_name": "Employee Name",
+        "basic_salary": "Basic Salary",
+        "unjustified_hours": "Unjustified Hours",
+        "attendance_deduction": "Attendance Deduction",
+        "variable_payments": "Variable Payments",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "select_month_title": "Select required month for preview",
+        "select_month_subtitle": "Select required month for preview",
+        "no_month_title": "No Data",
+        "no_month_subtitle": "There are no months for preview"
+      },
+      "footer": {
+        "salaries_sum": "Sum of net salaries",
+        "generate": "Generate Salaries"
+      },
+      "approve_modal": {
+        "title": "ِApprove Employee Variable Payment",
+        "caution": "Are You Sure?",
+        "subtitle": "Employee variable payment will be approved"
+      }
+    },
+    "header_button": "Preview Salaries"
+  },
+  "salary_statuses": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "onhold": "On-Hold",
+    "returned": "Returned"
+  },
+  "deliver_salaries": {
+    "table": {
+      "title": "Deliver Salaries",
+      "columns": {
+        "employee_name": "Employee Name",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "There are no salaries to deliver"
+      },
+      "approve_modal": {
+        "title": "Close Payroll Fund",
+        "caution": "Are You Sure?",
+        "subtitle": "All pending salaries will be moved to On-Hold list"
+      }
+    },
+    "drop_down": {
+      "pay": "Pay"
+    },
+    "header_button": "Close Payroll Fund"
+  },
+  "onhold_salaries": {
+    "table": {
+      "title": "On-Hold List",
+      "columns": {
+        "employee_name": "Employee Name",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "There are no salaries in on-hold list"
+      }
+    },
+    "drop_down": {
+      "pay": "Pay",
+      "return": "Return"
+    }
+  },
+  "salary": {
+    "table": {
+      "title": "ٍSalaries History",
+      "columns": {
+        "employee_name": "Employee Name",
+        "basic_salary": "Basic Salary",
+        "earnings": "Earnings",
+        "variable_deductions": "Variable Deductions",
+        "attendance_deduction": "Attendance Deduction",
+        "status": "Status",
+        "updated_at": "Updated At",
+        "actions": "Actions",
+        "net_salary": "Net Salary"
+      },
+      "placeholder": {
+        "title": "No Data",
+        "subtitle": "Select month & year to view its salaries "
+      }
+    },
+    "search_filter": {
+      "name": "ُEmployee Name...",
+      "department": "Department"
+    },
+    "header_button": "View Salaries",
+    "drop_down": {
+      "view_payslip": "View Payslip"
+    },
+    "payslip": {
+      "title": "Salary Payslip",
+      "header": "Employee Salary Payslip",
+      "salary_month": "Salary's month:",
+      "salary_month_duration": "Salary duration:",
+      "created_at": "Salary generation date:",
+      "updated_at": "Status's last update date:",
+      "unjustified_hours": "Unjustified Hours",
+      "status": "Status",
+      "hour": "Hour/s",
+      "basic_salary": "Basic Salary",
+      "attendance_deduction": "Attendance Deduction",
+      "earnings": "Earnings",
+      "deductions": "Deductions",
+      "table": {
+        "earnings": {
+          "columns": {
+            "name": "Variable Payment",
+            "amount": "Amount",
+            "basic_salary": "Basic Salary",
+            "total_variable_payments_earnings": "Total variable payments earnings",
+            "total_earnings": "Total earnings"
+          }
+        },
+        "deductions": {
+          "columns": {
+            "name": "Variable Payment",
+            "amount": "Amount",
+            "attendance_deduction": "Attendance Deduction",
+            "total_variable_payments_deductions": "Total variable payments deductions",
+            "total_deductions": "Total deductions"
+          }
+        },
+        "total": {
+          "columns": {
+            "total": "Net Salary"
+          }
+        }
+      }
+    }
+  },
+  "supplier": {
+    "table": {
+      "title": " الموردين  ",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم",
+        "phone": "رقم الهاتف",
+        "address": "العنوان ",
+        "notes": "ملاحظات ",
+        "city": "المدينة",
+        "created_by": " بواسطة",
+        "created_at": "تاريخ الإنشاء",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "expense_related_account": "Related Expense"
+      }
+    },
+    "search_filter": {
+      "name": " الاسم ",
+      "status": "الحالة",
+      "phone_number": "Phone Number"
+    },
+    "form": {
+      "page_title": "Supplier",
+      "form_header": "Add Supplier ",
+      "name": " Name ",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "notes": "Notes ",
+      "city": "City",
+      "status": "Status",
+      "expense_related_account": "Related Expense"
+    },
+    "details": {
+      "title": " Supplier  ",
+      "name": "Name",
+      "phone_number": "Phone Number",
+      "address": "Address",
+      "city": "City",
+      "notes": "Notes ",
+      "status": "Status",
+      "created_by": "Created By",
+      "created_at": "Created At"
+    },
+    "model": {
+      "title": " Change Supplier Status ",
+      "status": " Supplier Status"
+    },
+    "header_button": "Add Supplier",
+    "supplier_subnav": {
+      "suppliers": "suppliers",
+      "create_supplier": "create_supplier"
+    }
+  },
+  "unjustified_hours_rounding_options": {
+    "no_round": "No Rounding",
+    "nearest_15": "To Nearest 15 Min",
+    "nearest_30": "To Nearest 30 Min",
+    "nearest_60": "To Nearest 60 Min"
+  },
+  "inventory": {
+    "table": {
+      "title": "list sub inventories",
+      "columns": {
+        "name": "inventory name ",
+        "items_count": "items count",
+        "created_at": "created at",
+        "updated_at": "updated at",
+        "action_by": "action by",
+        "status": "status",
+        "actions": "Actions"
+      }
+    },
+    "search_filter": {
+      "title": "filter sub inventories",
+      "name": " inventory name",
+      "status": "status",
+      "action_by": "action by",
+      "date": "date:",
+      "from": "from: ",
+      "to": "to: "
+    },
+    "details": {
+      "title": "Inventories",
+      "table": {
+        "name": "Item",
+        "level_1": "Level 1",
+        "level_2": "Level 2",
+        "quantity": "Quantity",
+        "price": "Price",
+        "cost": "Cost"
+      },
+      "search_filter": {
+        "title": "Filter Items",
+        "item": "Item...",
+        "level_1": "Level 1",
+        "level_2": "Level 2"
+      }
+    }
+  },
+  "inventoryItem": {
+    "fromMainInventoryForm": {
+      "title": "Withdraw Quantity From Main Inventory To Contractor Custody",
+      "from_inventory": "From Main Inventory",
+      "to_inventory": "To Contractor Custody",
+      "level_1": "Level 1",
+      "level_2": "Level 2",
+      "select_level_1": "Select Level 1",
+      "select_level_2": "Select Level 2",
+      "select_item": "Select Item",
+      "select_inventory": "Select Contractor Custody",
+      "item": "Item",
+      "note": "Note",
+      "quantity": "Quantity"
+    },
+    "toMainInventoryForm": {
+      "title": "Return Quantity From Contractor Custody To Main Inventory",
+      "to_inventory": " To Main Inventory",
+      "from_inventory": " From Contractor Custody",
+      "select_item": "Select Item",
+      "select_inventory": "Select Contractor Custody",
+      "item": "Item",
+      "note": "Note",
+      "quantity": "Quantity"
+    },
+    "back_button": "Back To Inventory Movements List"
+  },
+  "user_statuses": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "date_picker": {
+    "select": "Select",
+    "cancel": "Cancel"
+  },
+  "trial_balance_report": {
+    "title": "Trial Balance Report",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "credit": "Credit",
+    "debit": "Debit",
+    "final_total": "Final Total",
+    "total": "Total",
+    "lvl1_total": "{chart_name} Total",
+    "account_code": "Account Code",
+    "account_name": "Account Name",
+    "no_accounts_place_holder": "There is no accounts under this level."
+  },
+  "balance_sheet_report": {
+    "title": "Balance Sheet Report",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "total_balances": "Balance",
+    "total_assets_balances": "Total Assets",
+    "total_liabilites_balances": "Total Liabilites",
+    "no_accounts_place_holder": "There is no accounts under this level."
+  },
+  "account_types": {
+    "credit": "Credit",
+    "debit": "Debit"
+  },
+  "account": {
+    "header_button": "Add Account",
+    "header_button2": "Add Cash Account  ",
+    "accounts": "Accounts",
+    "sun_navbar_heading": "قائمة الحسابات",
+    "form": {
+      "name": "Name",
+      "balance": "Balance",
+      "currency": "Currency",
+      "parent_code": "Account Type",
+      "description": "Description ",
+      "status": "Status",
+      "form_header": "Add Account",
+      "page_title": "Add Account",
+      "currency_rate": "Currency Rate"
+    },
+    "table": {
+      "title": " Accounts  ",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "description": "Description ",
+        "created_at": "Created At",
+        "status": "Status",
+        "code": "Code",
+        "currency_rate": "Currency Rate",
+        "balance": "Balance",
+        "chart_account_type_level1": "Account Type Level 1",
+        "chart_account_type_level2": "Account Type Level 2",
+        "chart_account_type": "Credit/Debit",
+        "currency_type": "currency ",
+        "actions": "Actions"
+      },
+      "change_currency": {
+        "title": "Change Account Currency",
+        "currency": "Currency",
+        "currency_rate": "Currency Rate"
+      }
+    },
+    "search_filter": {
+      "title": " Filter Account",
+      "name": " Name ",
+      "status": "Status",
+      "code": "Code"
+    },
+    "drop_down": {
+      "change_currency": "Change Account Currency",
+      "change_status": "Change Status"
+    },
+    "cash": {
+      "form": {
+        "form_header": "Add Cash Account",
+        "page_title": "Add Cash Account  "
+      }
+    },
+    "model": {
+      "title": "Account Status",
+      "status": "Change Account Status"
+    }
+  },
+  "transfer_cash_money": {
+    "form": {
+      "title": "Transfer Cash Money",
+      "button": "Transfer",
+      "from_account": "From account",
+      "select_from_account": "Choose account",
+      "to_account": "To account",
+      "select_to_account": "Choose account",
+      "amount": "Amount in IQD",
+      "currency_rate": "Currency Rate",
+      "date": "Date"
+    }
+  },
+  "add_custom_revenue": {
+    "form": {
+      "title": "Add Custom Revenue",
+      "button": "Add",
+      "client_account": "Client account",
+      "revenue_account": "Revenue account",
+      "cash_account": "Cash account",
+      "select_account": "Select account",
+      "revenue_amount": "Revenue amount in IQD",
+      "cash_amount": "Cash amount in IQD",
+      "remain_amount": "Remaining amount in IQD",
+      "currency": "Currency",
+      "select_currency": "Select currency",
+      "currency_rate": "Currency Rate",
+      "date": "Date",
+      "note": "Note"
+    }
+  },
+  "transaction": {
+    "add_record_button": "Add Financial Record",
+    "table": {
+      "title": "Financial Records",
+      "columns": {
+        "title": "Title",
+        "amount": "Amount",
+        "currency": "Currency",
+        "currency_rate": "Currency Rate",
+        "note": "Notes",
+        "action_date": "Action Date",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      },
+      "entries": {
+        "columns": {
+          "account": "Account",
+          "credit": "Credit",
+          "debit": "Debit"
+        },
+        "place_holder_title": "Financial Record Details",
+        "cancel_label": "Close"
+      }
+    },
+    "search_filter": {
+      "title": "Title...",
+      "note": "Notes..."
+    }
+  },
   "attendance_justification": {
     "table": {
       "title": "Attendance Justifications",
@@ -1273,5 +1992,131 @@
       "name": "Employee Name...",
       "creator_name": "Created By..."
     }
+  },
+  "income_statment_report": {
+    "title": "Income Statment Report",
+    "total_balances": "Balance",
+    "expand_collapse_button": "Expand/Collapse All",
+    "place_holder": {
+      "title": "The Report Is Being Generated..",
+      "subtitle": "This might take a few seconds/minutes"
+    },
+    "no_accounts_place_holder": "There is no accounts under this level.",
+    "gross_profit": "Gross Profit ",
+    "net_income": "Net Income "
+  },
+  "customer_cash_receipt": {
+    "form": {
+      "title": "Customer Cash Receipt",
+      "button": "Add",
+      "client_account": "Client account",
+      "cash_account": "Cash account",
+      "select_account": "Select account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "select_currency": "Select currency",
+      "currency_rate": "Currency Rate",
+      "date": "Date",
+      "note": "Note"
+    }
+  },
+  "employee_types": {
+    "salaried": "Salaried Employee",
+    "commission_based": "Commission Based Employee",
+    "hybrid": "Hybrid Employee"
+  },
+  "ticket_statuses": {
+    "pending": "Pending",
+    "waiting": "Waiting",
+    "serving": "Serving",
+    "services_are_done": "Services Are Done",
+    "closed": "Closed"
+  },
+  "ticket_service_statuses": {
+    "served": "Servied",
+    "not_served": "Not Served"
+  },
+  "ticket": {
+    "form": {
+      "page_title": "المتابعات",
+      "add_form_header": "إضافة متابعة",
+      "edit_form_header": "تعديل المتابعة رقم #{ticket_id}",
+      "add_ticket_title": "إضافة متابعة",
+      "customer": "اسم الزبون",
+      "select_customer": "تحديد الزبون",
+      "total_amount": "المبلغ الإجمالي",
+      "cash_account": "حساب النقد",
+      "select_cash_account": "تحديد حساب النقد",
+      "currency": "العملة",
+      "select_currency": "تحديد العملة",
+      "currency_rate": "سعر الصرف",
+      "paid_amount": "المبلغ المدفوع",
+      "remaining_amount": "المبلغ المتبقي",
+      "services": "الخدمات المطلوبة",
+      "select_service": "تحديد الخدمة",
+      "select_provider": "تحديد المخدم",
+      "sell_price": "سعر المبيع",
+      "add_new_service": "إضافة خدمة جديدة"
+    },
+    "header_button": "إضافة تذكرة",
+    "back_button": "العودة للخلف",
+    "table": {
+      "title": "التذاكر",
+      "columns": {
+        "id": "رقم المعرّف",
+        "services_count": "عدد الخدمات",
+        "current_service_provider": "مقدم الخدمة",
+        "customer_name": "الاسم",
+        "total_amount": "المبلغ الإجمالي",
+        "status": "الحالة",
+        "created_at": "تاريخ الإنشاء ",
+        "created_by": " بواسطة",
+        "actions": "الإجراءات"
+      }
+    },
+    "search_filter": {
+      "customer_name": "Name",
+      "status": "Status"
+    },
+    "details": {
+      "ticket": "Ticket",
+      "status": " Ticket Status",
+      "title": " Ticket Details",
+      "services": "Requested Services",
+      "name": " Service Name ",
+      "service_provider_name": "Service Provider ",
+      "sell_price": "Sell Price ",
+      "quantity_item": "Quantity Item ",
+      "items_list": " Items",
+      "ticket_details": " Ticket Details",
+      "id": "ID",
+      "customer_name": "Customer Name ",
+      "total_amount": "Total Amount ",
+      "currency_rate": "Currency Rate ",
+      "currency": "Currency",
+      "paid_amount": "Paid Amount ",
+      "remaining_amount": "Remaining Amount ",
+      "created_at": " Created At ",
+      "created_by": " Created By"
+    }
+  },
+  "service_history_screen": {
+    "form": {
+      "page_title": "ًWaiting Screen",
+      "add_service_history_screen_title": "Add Waiting Screen",
+      "edit_service_history_screen_title": "Edit Waiting Screen",
+      "form_header": "{type} Waiting Screen",
+      "name": "Name",
+      "filters": "Filters",
+      "select_filter_type": "Filter type",
+      "select_filter_id": "Filter",
+      "room": "Room",
+      "department": "Department",
+      "service": "Service",
+      "add_new_filter": "Add new filter"
+    }
+  },
+  "place_holder": {
+    "none": "No Data"
   }
 }

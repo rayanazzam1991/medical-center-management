@@ -58,6 +58,18 @@ export async function getUsersList(searchFilter: UserSearchFilter) {
   return { success, error_code, message, users, pagination }
 
 }
+export async function getUsersWithoutCustomerList(searchFilter: UserSearchFilter) {
+  const userResponse = useUser()
+  await userResponse.getUsersWithoutCustomerStore(searchFilter)
+  var success: boolean = userResponse.success ?? false
+  var error_code: string = userResponse.error_code ?? ''
+  var message: string = userResponse.message ?? ''
+  var users: User[] = userResponse.users
+  var pagination: Pagination = userResponse.pagination
+
+  return { success, error_code, message, users, pagination }
+
+}
 export async function phoneExistsCheck(phone_number: string) {
   const userResponse = useUser()
   var result = await userResponse.phoneExistsCheckStore(phone_number)

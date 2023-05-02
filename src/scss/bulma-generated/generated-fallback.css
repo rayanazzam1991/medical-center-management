@@ -3570,6 +3570,66 @@ code {
   background: rgb(65, 185, 131);
 }
 
+.tabs-wrapper.is-8-slider.is-inverted .tabs,
+.tabs-wrapper-alt.is-8-slider.is-inverted .tabs {
+  background: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-8-slider .tabs li.is-active a,
+.tabs-wrapper-alt.is-8-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-8-slider .tab-naver,
+.tabs-wrapper-alt.is-8-slider .tab-naver {
+  background: rgb(65, 185, 131);
+}
+
+.tabs-wrapper.is-6-slider.is-inverted .tabs,
+.tabs-wrapper-alt.is-6-slider.is-inverted .tabs {
+  background: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-6-slider .tabs li.is-active a,
+.tabs-wrapper-alt.is-6-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-6-slider .tab-naver,
+.tabs-wrapper-alt.is-6-slider .tab-naver {
+  background: rgb(65, 185, 131);
+}
+
+.tabs-wrapper.is-7-slider.is-inverted .tabs,
+.tabs-wrapper-alt.is-7-slider.is-inverted .tabs {
+  background: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-7-slider .tabs li.is-active a,
+.tabs-wrapper-alt.is-7-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-7-slider .tab-naver,
+.tabs-wrapper-alt.is-7-slider .tab-naver {
+  background: rgb(65, 185, 131);
+}
+
+.tabs-wrapper.is-9-slider.is-inverted .tabs,
+.tabs-wrapper-alt.is-9-slider.is-inverted .tabs {
+  background: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-9-slider .tabs li.is-active a,
+.tabs-wrapper-alt.is-9-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.tabs-wrapper.is-9-slider .tab-naver,
+.tabs-wrapper-alt.is-9-slider .tab-naver {
+  background: rgb(65, 185, 131);
+}
+
 .is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
 .is-dark .tabs-wrapper.is-triple-slider .tabs li.is-active a {
   color: rgb(255, 255, 255);
@@ -3577,6 +3637,26 @@ code {
 
 .is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
 .is-dark .tabs-wrapper.is-quad-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
+.is-dark .tabs-wrapper.is-8-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
+.is-dark .tabs-wrapper.is-6-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
+.is-dark .tabs-wrapper.is-9-slider .tabs li.is-active a {
+  color: rgb(255, 255, 255);
+}
+
+.is-dark .tabs-wrapper.is-slider .tabs li.is-active a,
+.is-dark .tabs-wrapper.is-7-slider .tabs li.is-active a {
   color: rgb(255, 255, 255);
 }
 

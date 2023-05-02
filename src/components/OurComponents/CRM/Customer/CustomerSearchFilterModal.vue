@@ -31,7 +31,7 @@ export default defineComponent({
     },
     emits: ['search_filter_popup', 'search', 'resetFilter'],
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const searchName = ref()
         const searchPhoneNumber = ref()
         const searchDateBetween = ref()
@@ -112,7 +112,7 @@ export default defineComponent({
         })
 
 
-        return {t, search, resetFilter, customerGroupsList, citiesList, search_filter_popup, statusesList, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo, searchCustomerGroup, searchComplete }
+        return { t, search, resetFilter, customerGroupsList, citiesList, search_filter_popup, statusesList, searchName, searchPhoneNumber, searchStatus, searchDateBetween, searchFrom, searchTo, searchCustomerGroup, searchComplete }
 
 
 
@@ -128,25 +128,28 @@ export default defineComponent({
 </script>
 
 <template>
-    <VModal :title="t('customer.search_filter.title')" :open="search_filter_popup" actions="center" @close="search_filter_popup = false">
+    <VModal :title="t('customer.search_filter.title')" :open="search_filter_popup" actions="center"
+        @close="search_filter_popup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <VField class="column filter">
                     <VControl icon="feather:user">
-                        <input v-model="searchName" type="text" class="input " :placeholder="t('customer.search_filter.name')" />
+                        <input v-model="searchName" type="text" class="input "
+                            :placeholder="t('customer.search_filter.name')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl icon="feather:phone">
-                        <input v-model="searchPhoneNumber" type="text" class="input " :placeholder="t('customer.search_filter.phone_number')" />
+                        <input v-model="searchPhoneNumber" type="text" class="input "
+                            :placeholder="t('customer.search_filter.phone_number')" />
                     </VControl>
                 </VField>
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchStatus" class="">
-                            <VOption value="">{{t('customer.search_filter.status')}}</VOption>
+                            <VOption value="">{{ t('customer.search_filter.status') }}</VOption>
                             <VOption v-for="status in statusesList" :key="status.id" :value="status.id">{{
-                                    status.name
+                                status.name
                             }}
                             </VOption>
                         </VSelect>
@@ -155,33 +158,24 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <VSelect v-model="searchCustomerGroup" class="">
-                            <VOption value="">{{t('customer.search_filter.group')}}</VOption>
+                            <VOption value="">{{ t('customer.search_filter.group') }}</VOption>
                             <VOption v-for="customerGroup in customerGroupsList" :key="customerGroup.id"
                                 :value="customerGroup.id">{{ customerGroup.name }}
                             </VOption>
                         </VSelect>
                     </VControl>
                 </VField>
-                <!-- <VField class="column filter">
-                    <VControl>
-                        <VSelect v-model="searchComplete" class="">
-                            <VOption value="">Completed</VOption>
-                            <VOption value="1">Yes</VOption>
-                            <VOption value="0">No</VOption>
-                        </VSelect>
-                    </VControl>
-                </VField> -->
                 <div class="column filter columns-is-multiliine">
-                    <h1 class="column-is-12">{{t('customer.search_filter.create_date')}}</h1>
+                    <h1 class="column-is-12">{{ t('customer.search_filter.create_date') }}</h1>
                     <VField class="column-is-6 filter">
-                        <VLabel>{{t('customer.search_filter.from')}} </VLabel>
+                        <VLabel>{{ t('customer.search_filter.from') }} </VLabel>
 
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchFrom" type="date" />
                         </VControl>
                     </VField>
                     <VField class="column-is-6 filter">
-                        <VLabel>{{t('customer.search_filter.to')}}</VLabel>
+                        <VLabel>{{ t('customer.search_filter.to') }}</VLabel>
                         <VControl icon="feather:chevrons-right">
                             <VInput v-model="searchTo" type="date" />
                         </VControl>
@@ -191,7 +185,7 @@ export default defineComponent({
             </form>
         </template>
         <template #action="{ close }">
-            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{t('modal.buttons.filter')}}</VButton>
+            <VButton icon="fas fa-filter" color="primary" raised @click="search">{{ t('modal.buttons.filter') }}</VButton>
         </template>
 
 

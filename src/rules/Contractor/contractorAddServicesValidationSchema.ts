@@ -12,6 +12,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 })
 
 const contractorAddServicesValidationSchema = toFormValidator(
+    //@ts-ignore
     zod.record(
         zod.string().startsWith('service_price_'),
         zod
@@ -25,7 +26,6 @@ const contractorAddServicesValidationSchema = toFormValidator(
                     .min(1, i18n.global.t('validation.number.price')),
 
             )))
-
 
 export {
     contractorAddServicesValidationSchema

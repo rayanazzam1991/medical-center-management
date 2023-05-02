@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "category_list"
+        ]
+    }
+}
+</route>
+  
 <script setup lang="ts">
 import NoViewDropDownVue from '/@src/components/OurComponents/NoViewDropDown.vue';
 import VTag from '/@src/components/base/tags/VTag.vue'
@@ -14,13 +25,15 @@ import VButtonVue from '/@src/components/base/button/VButton.vue'
 import VIconButtonVue from '/@src/components/base/button/VIconButton.vue'
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('category.table.title'))
 useHead({
     title: t('category.table.title'),
 })
+
+const categoryStore = useCategory()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultCategorySearchFilter)
 const categoriesList = ref<Array<Category>>([])
@@ -29,16 +42,24 @@ const categoryChangeStatus = ref<Category>(defaultCategory)
 const currentChangeStatusCategory = ref(defaultChangeCategoryStatus)
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
-const categoryStore = useCategory()
+
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
+const originalSelectedStatus = ref(0)
 
-const { categories, pagination } = await getCategoriesList(searchFilter.value)
-categoriesList.value = categories
-paginationVar.value = pagination
-keyIncrement.value = keyIncrement.value + 1
-default_per_page.value = pagination.per_page
+
+onMounted(async () => {
+
+    const { categories, pagination } = await getCategoriesList(searchFilter.value)
+    searchFilter.value = defaultCategorySearchFilter
+    categoriesList.value = categories
+    paginationVar.value = pagination
+    keyIncrement.value = keyIncrement.value + 1
+    default_per_page.value = pagination.per_page
+
+});
+
 
 const search = async (searchFilter2: CategorySearchFilter) => {
     paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -81,6 +102,7 @@ const changestatusCategory = async () => {
         // @ts-ignore
         notif.success(t('toast.success.add'))
     } else {
+        currentChangeStatusCategory.value.status = originalSelectedStatus.value
         await sleep(200);
         notif.error(message)
     }
@@ -151,10 +173,13 @@ const columns = {
         label: t('category.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoViewDropDownVue, {
+                editPermission: Permissions.CATEGORY_EDIT,
+                changeStatusPermission: Permissions.CATEGORY_EDIT,
                 onEdit: () => {
                     router.push({ path: `/category/${row.id}/edit` })
                 },
                 onChangeStatus: () => {
+                    originalSelectedStatus.value = row?.status
                     currentChangeStatusCategory.value = row
                     selectedStatus.value = row?.status
                     changeStatusPopup.value = true
@@ -165,8 +190,9 @@ const columns = {
 </script>
 
 <template>
-    <CategoryTableHeader :title="viewWrapper.pageTitle" :button_name="t('category.header_button')" @search="search"
-        :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    <CategoryTableHeader :key="keyIncrement" v-if="categoriesList" :title="viewWrapper.pageTitle"
+        :button_name="t('category.header_button')" @search="search" :pagination="paginationVar"
+        :default_per_page="default_per_page" @resetFilter="resetFilter" :categoriesList="categoriesList" />
     <VFlexTableWrapper :columns="columns" :data="categoriesList" @update:sort="categorySort">
         <VFlexTable separators clickable>
             <template #body>
@@ -178,8 +204,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="categoriesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')"
-                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+                        class="my-6">
                     </VPlaceholderSection>
                 </div>
             </template>
@@ -188,18 +214,19 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getCategoriesPerPage" />
-        <h6 v-if="categoriesList.length != 0 && !categoryStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="categoriesList.length != 0 && !categoryStore?.loading">
             {{
-                t('tables.pagination_footer', { from_number: paginationVar.page !=
-                    paginationVar.max_page
-                    ?
-                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-                , to_number: paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-            })}}
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}
         </h6>
         <VPlaceloadText v-if="categoryStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
@@ -227,7 +254,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusCategory()">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusCategory()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
 </template>

@@ -33,6 +33,6 @@
     "src/**/*.js",
     "src/**/*.ts",
     "src/**/*.vue"
-  ],
+, "src/components/partials/dropdowns/.vue.ts"  ],
   "exclude": ["bulma-colors.ts"]
 }

@@ -1,10 +1,21 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "item_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import NoDeleteDropDownVue from '/@src/components/OurComponents/NoDeleteDropDown.vue'
 import { changeItemStatus, getItemsList } from '/@src/services/Warehouse/Item/itemService'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts, Item } from '/@src/models/Warehouse/Item/item'
+import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts, Item, ChangeItemStatus } from '/@src/models/Warehouse/Item/item'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useItem } from '/@src/stores/Warehouse/Item/itemStore'
@@ -12,8 +23,12 @@ import sleep from '/@src/utils/sleep'
 import { defaultChangeItemStatus, defaultItem } from '/@src/models/Warehouse/Item/item'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency'
+import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('item.table.title'))
 useHead({
     title: t('item.table.title'),
@@ -30,6 +45,8 @@ const itemStore = useItem()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedStatus = ref(0)
+const currencies = getCurrenciesFromStorage()
+const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
 
 onMounted(async () => {
     const { items, pagination } = await getItemsList(searchFilter.value)
@@ -41,15 +58,15 @@ onMounted(async () => {
 });
 
 const changestatusItem = async () => {
-    currentChangeStatusItem.value.id = currentChangeStatusItem.value.id
-    currentChangeStatusItem.value.status = selectedStatus.value
-    const { message, success } = await changeItemStatus(currentChangeStatusItem.value)
+    const changeItemStatusData: ChangeItemStatus = {
+        id: currentChangeStatusItem.value.id,
+        status: selectedStatus.value
+    }
+    const { message, success } = await changeItemStatus(changeItemStatusData)
     if (success) {
-        await search(searchFilter.value)
-        // @ts-ignore
+        currentChangeStatusItem.value.status = selectedStatus.value
         notif.dismissAll()
         await sleep(200);
-        // @ts-ignore
         notif.success(t('toast.success.edit'))
     } else {
         await sleep(200);
@@ -90,71 +107,82 @@ const columns = {
     name: {
         sortable: true,
         align: 'center',
-        grow: true,
         searchable: true,
-        label : t('item.table.columns.name')
+        label: t('item.table.columns.name')
     },
     Level1: {
         sortable: true,
         searchable: true,
-        grow: true,
         align: 'center',
-        label : t('item.table.columns.level_1'),
+        label: t('item.table.columns.level_1'),
         renderRow: (row: any) =>
             h('span', row?.category?.parent?.name)
     },
     Level2: {
         sortable: true,
         searchable: true,
-        grow: true,
         align: 'center',
-        label : t('item.table.columns.level_2'),
+        label: t('item.table.columns.level_2'),
         renderRow: (row: any) =>
             h('span', row?.category?.name)
-    },
-    quantity: {
-        sortable: true,
-        align: 'center',
-        searchable: true,
-        grow: true,
-        label : t('item.table.columns.quantity')
-
     },
     price: {
         sortable: true,
         align: 'center',
         searchable: true,
-        label : t('item.table.columns.price')
+        grow: true,
+        label: t('item.table.columns.price') + addParenthesisToString(mainCurrency.name)
 
     },
     cost: {
         sortable: true,
         align: 'center',
         searchable: true,
-        label : t('item.table.columns.cost')
+        label: t('item.table.columns.cost')
 
     },
     created_by: {
         sortable: true,
         searchable: true,
-        grow: true,
         align: 'center',
-        label : t('item.table.columns.created_by'),
+        label: t('item.table.columns.created_by'),
         renderRow: (row: any) =>
             h('span', row?.created_by?.first_name)
     },
     created_at: {
         align: 'center',
-        label : t('item.table.columns.created_at'),
-        grow: true,
+        label: t('item.table.columns.created_at'),
         renderRow: (row: any) =>
             h('span', row?.created_at),
         searchable: true,
         sortable: true,
     },
+    is_for_sale: {
+        align: 'center',
+        searchable: true,
+        label: t('item.table.columns.for_sale'),
+        renderRow: (row: any) =>
+            h(
+                VTag,
+                {
+                    rounded: true,
+                    color:
+                        row?.is_for_sale === ItemConsts.IS_NOT_FORE_SALE
+                            ? 'warning'
+                            : row?.is_for_sale === ItemConsts.IS_FORE_SALE
+                                ? 'success'
+                                : undefined,
+                },
+                {
+                    default() {
+                        return ItemConsts.showForSale(row?.is_for_sale)
+                    },
+                }
+            ),
+    },
     status: {
         align: 'center',
-        label : t('item.table.columns.status'),
+        label: t('item.table.columns.status'),
         renderRow: (row: any) =>
             h(
                 VTag,
@@ -177,9 +205,12 @@ const columns = {
 
     actions: {
         align: 'center',
-        label : t('item.table.columns.actions'),
+        label: t('item.table.columns.actions'),
         renderRow: (row: any) =>
             h(NoDeleteDropDownVue, {
+                changeStatusPermission: Permissions.ITEM_EDIT,
+                editPermission: Permissions.ITEM_EDIT,
+                viewPermission: Permissions.ITEM_SHOW,
                 onChangeStatus: () => {
                     currentChangeStatusItem.value = row
                     selectedStatus.value = row?.status
@@ -210,33 +241,33 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="itemsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitle')"
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
             </template>
         </VFlexTable>
-        <VFlexPagination v-if="(itemsList.length != 0 && paginationVar.max_page != 1)"
-            :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
-            :total-items="paginationVar.total" :max-links-displayed="3" no-router
-            @update:current-page="getItemsPerPage" />
-        <h6 v-if="itemsList.length != 0 && !itemStore?.loading">
+        <VFlexPagination v-if="(itemsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
+            class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
+            no-router @update:current-page="getItemsPerPage" />
+        <h6 class="pt-2 is-size-7" v-if="itemsList.length != 0 && !itemStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
 
         <VPlaceloadText v-if="itemStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
-    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center" @close="changeStatusPopup = false">
+    <VModal :title="t('item.table.modal_title.item')" :open="changeStatusPopup" actions="center"
+        @close="changeStatusPopup = false">
         <template #content>
             <form class="form-layout" @submit.prevent="">
                 <!--Fieldset-->
@@ -259,7 +290,7 @@ const columns = {
             </form>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="changestatusItem()">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="changestatusItem()">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
     </VModal>
 </template>
