@@ -345,7 +345,7 @@
         "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
         "required_reason": "حقل السبب مطلوب",
         "out_of_length_reason": "السبب لا يمكن أن يكون أكبر من 255 محرف",
-        "cannot_add_attendance" : "لا يمكنك إضافة حضور بهذا التاريخ"
+        "cannot_add_attendance": "لا يمكنك إضافة حضور بهذا التاريخ"
       },
       "payroll": {
         "deduction_factor": "معامل خصم التأخير يجب أن يكون رقم صحيح أكبر أو يساوي الواحد"
@@ -582,7 +582,7 @@
       "end_date": "تاريخ الانتهاء",
       "department": "القسم",
       "room_number": "رقم الغرفة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "price": "سعر الخدمة",
       "service_ammount": "نسبة الأخصائي من الخدمة",
       "gender": "الجنس",
@@ -611,7 +611,7 @@
       "birth_date": "تاريخ الميلاد",
       "gender": "الجنس",
       "city": "المدينة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "department": "القسم",
       "room": "الغرفة",
       "starting_date": "تاريخ البدء",
@@ -689,7 +689,7 @@
       "phone_number": "رقم الهاتف",
       "emergency_contact_name": "اسم شخص للطوارئ",
       "emergency_contact_phone": "اسم شخص للطوارئ",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "is_completed": "منتهية",
       "status": "الحالة",
       "birth_date": "تاريخ الميلاد",
@@ -732,7 +732,7 @@
       "birth_date": "تاريخ الميلاد",
       "gender": "الجنس",
       "city": "المدينة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "status": "الحالة",
       "customer_group": "مجموعة الزبون",
       "emergency_contract_name": "اسم شخص للطوارئ",
@@ -879,7 +879,7 @@
       "phone_number": "رقم الهاتف",
       "basic_salary": "الراتب الأساسي",
       "payment_percentage": "نسبة العمولة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
       "status": "الحالة",
@@ -906,7 +906,7 @@
     "form": {
       "page_title": "الموظف",
       "step_1_title": "المعلومات الرئيسية للموظف",
-      "step_1_subtitle": "Step 1: المعلومات الرئيسية للموظف",
+      "step_1_subtitle": "الخطوة 1: معلومات الموظف الرئيسية",
       "step_1_abbr_title": "المعلومات الرئيسية",
       "step_2_abbr_title": "الخدمات",
       "step_2_subtitle": "الخطوة 2: خدمات الموظف",
@@ -917,7 +917,7 @@
       "birth_date": "تاريخ الميلاد",
       "gender": "الجنس",
       "city": "المدينة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "department": "القسم",
       "room": "الغرفة",
       "starting_date": "تاريخ البدء",
@@ -1026,7 +1026,7 @@
       "phone_number": "رقم الهاتف",
       "basic_salary": "الراتب الأساسي",
       "payment_percentage": "نسبة العمولة",
-      "address": "العنوان",
+      "address": "عنوان السكن",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
       "status": "الحالة",
@@ -1337,6 +1337,7 @@
       "edit_position_title": "تعديل منصب",
       "name": "الاسم",
       "description": "التوصيف",
+      "description_placeholder": "اكتب وصف حول المنصب...",
       "status": "الحالة"
     },
     "search_filter": {

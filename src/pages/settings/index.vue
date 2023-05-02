@@ -58,7 +58,6 @@ export default defineComponent({
     const deduction_factor = ref('')
     const hr_cycle_start_day = ref('')
     const unjustified_hours_round = ref('')
-    const reservations_time_slot = ref('')
     const new_usd_currency_rate = ref<number>(1)
     const usd_currency = ref<Currency>(defaultCurrency)
 
@@ -76,7 +75,6 @@ export default defineComponent({
       deduction_factor.value = settingsList.value.find((setting) => setting.key == 'deduction_factor')?.value ?? ''
       hr_cycle_start_day.value = settingsList.value.find((setting) => setting.key == 'hr_cycle_start_day')?.value ?? ''
       unjustified_hours_round.value = settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value ?? ''
-      reservations_time_slot.value = settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value ?? ''
       usd_currency.value = currency
       new_usd_currency_rate.value = currency.rate
 
@@ -170,9 +168,6 @@ export default defineComponent({
       if (unjustified_hours_round.value != settingsList.value.find((setting) => setting.key == 'unjustified_hours_round')?.value) {
         updateSettings.push({ key: 'unjustified_hours_round', value: unjustified_hours_round.value })
       }
-      if (reservations_time_slot.value != settingsList.value.find((setting) => setting.key == 'reservations_time_slot')?.value) {
-        updateSettings.push({ key: 'reservations_time_slot', value: reservations_time_slot.value })
-      }
       if (new_usd_currency_rate.value !== usd_currency.value.rate) {
         const { message, success } = await updateCurrencyRate(usd_currency.value.id, new_usd_currency_rate.value)
         if (!success) {
@@ -201,7 +196,7 @@ export default defineComponent({
 
       }
     };
-    return { t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
+    return { t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, pageTitle, settingsList, onSubmit, viewWrapper, formType };
   },
   components: { ErrorMessage, Datepicker }
 })
@@ -367,28 +362,6 @@ export default defineComponent({
               </div>
             </div>
           </div>
-          <div class="form-fieldset">
-            <div class="fieldset-heading">
-              <h4>{{ t('settings.form.ticketing_section') }}</h4>
-            </div>
-            <div class="columns is-multiline">
-              <div class="column is-6">
-                <h2 class="mb-3 required">{{ t('settings.form.reservations_time_slot') }}</h2>
-                <VField id="reservations_time_slot">
-                  <VControl>
-                    <VSelect v-model="reservations_time_slot">
-                      <VOption v-for="option in reservationsTimeSlotsOptions" :key="option" :value="option">{{
-                        ReservationsTimeSlotsConsts.getOptionName(option)
-                      }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="reservations_time_slot" />
-                  </VControl>
-                </VField>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </form>

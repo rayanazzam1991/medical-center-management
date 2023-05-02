@@ -230,10 +230,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
 
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 .font {
     font-size: xx-small;
