@@ -345,7 +345,7 @@
         "check_out": "لا يمكن أن يكون تسجيل المغادرة الجديد قبل تسجيل المغادرة الاصلي",
         "required_reason": "حقل السبب مطلوب",
         "out_of_length_reason": "السبب لا يمكن أن يكون أكبر من 255 محرف",
-        "cannot_add_attendance" : "لا يمكنك إضافة حضور بهذا التاريخ"
+        "cannot_add_attendance": "لا يمكنك إضافة حضور بهذا التاريخ"
       },
       "payroll": {
         "deduction_factor": "معامل خصم التأخير يجب أن يكون رقم صحيح أكبر أو يساوي الواحد"
@@ -448,7 +448,9 @@
     "view_current_service_card": "عرض بطاقة الدور الحالي",
     "no_actions": "لا يوجد اجراءات",
     "print": "طباعة",
-    "dismiss_employee": "إقالة الموظف"
+    "dismiss_employee": "إقالة الموظف",
+    "add_ticket": "إضافة تذكرة",
+    "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي"
   },
   "add_quantity": {
     "form": {
@@ -1751,10 +1753,16 @@
         "due_date": "تاريخ الاستحقاق",
         "created_by": "بواسطة",
         "actions": "الإجراءات",
+        "is_repeatable": "   مكرر شهرياً ",
         "note": "ملاحظة"
       },
       "modal_title": "تغيير حالة متغير مالي",
-      "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
+      "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال",
+      "deactivate_modal": {
+        "title": "الغاء تفعيل المتغير المالي",
+        "confirmation": "هل أنت متأكد؟",
+        "caution": "لا يمكنك تعديل هذا المتغير المالي بعد جعله غير فعّال"
+      }
     },
     "form": {
       "page_title": "المتغيرات المالية ",
@@ -1766,6 +1774,7 @@
       "amount": "القيمة",
       "status": "الحالة",
       "due_at": "تاريخ الاستحقاق",
+      "is_repeatable": "   مكرر شهرياً ",
       "note": "ملاحظة"
     },
     "search_filter": {

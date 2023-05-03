@@ -4,12 +4,12 @@ import { Notyf } from 'notyf';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/customer';
+import { Customer, CustomerSearchFilter, defaultCustomer } from '/@src/models/CRM/Customer/customer';
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidationSchema';
-import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
+import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import debounce from 'lodash.debounce';
@@ -52,6 +52,15 @@ export default defineComponent({
     const enableCurrencyRate = ref(false)
     const customersList = ref<Customer[]>([])
     const isLoading = ref(false)
+    const enableSelectCustomer = ref(false);
+    const selectedCustomer = ref(defaultCustomer);
+
+    if (Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id)) && formType.value == 'Add') {
+      currentTicket.value.customer_id = Number(route.query.customer_id)
+    } else {
+      currentTicket.value.customer_id = 0
+      enableSelectCustomer.value = true
+    }
 
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
@@ -80,6 +89,10 @@ export default defineComponent({
       } as CustomerSearchFilter
       const { customers } = await getCustomersList(customerSearchFilter)
       customersList.value = customers
+      if (currentTicket.value.customer_id != 0) {
+        const { customer } = await getCustomer(currentTicket.value.customer_id)
+        selectedCustomer.value = customer
+      }
       const { services } = await getServicesWithProviders()
       servicesWithProviders.value = services
       isLoading.value = false
@@ -248,7 +261,7 @@ export default defineComponent({
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      servicesWithProviders, getCustomersList, requestedServicesHelper
+      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer
     };
   },
   components: { ErrorMessage }
@@ -274,7 +287,15 @@ export default defineComponent({
               <h4>{{ pageTitle }}</h4>
             </div>
             <div class="columns is-multiline">
-              <div class="column is-12">
+              <div v-if="!enableSelectCustomer" class="column is-12">
+                <h4 class="label"> {{ t('ticket.form.customer') }} :
+                  <span class="is-size-5 has-text-primary">
+                    {{ selectedCustomer.user.first_name }}
+                    {{ selectedCustomer.user.last_name }}
+                  </span>
+                </h4>
+              </div>
+              <div v-else class="column is-12">
                 <VField id="customer_id">
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
@@ -283,17 +304,17 @@ export default defineComponent({
                       @select="setCustomerIdValue()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                       :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                       :searchable="true" :canClear="false" :options="async (query: any) => {
-                        let customerSearchFilter = {
-                          user_status_id: UserStatusConsts.ACTIVE,
-                          name: query,
-                        } as CustomerSearchFilter
-                        //@ts-ignore
-                        const data = await getCustomersList(customerSearchFilter)
-                        //@ts-ignore
-                        return data.customers.map((customer: Customer) => {
-                          return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                        })
-                      }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                          let customerSearchFilter = {
+                            user_status_id: UserStatusConsts.ACTIVE,
+                            name: query,
+                          } as CustomerSearchFilter
+                          //@ts-ignore
+                          const data = await getCustomersList(customerSearchFilter)
+                          //@ts-ignore
+                          return data.customers.map((customer: Customer) => {
+                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                          })
+                        }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                     <VSelect disabled v-else v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
@@ -393,11 +414,11 @@ export default defineComponent({
               </div>
               <div class="column is-12 pt-0">
                 <VButton @click.prevent="addService({
-                  service_id: 0,
-                  sell_price: 0,
-                  service_provider_id: 0,
-                  editable: true
-                })" color="primary">
+                    service_id: 0,
+                    sell_price: 0,
+                    service_provider_id: 0,
+                    editable: true
+                  })" color="primary">
                   {{ t('ticket.form.add_new_service') }}
                 </VButton>
               </div>

@@ -44,12 +44,12 @@ const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
                         :class="employeeVariablePayment.variable_payment.type == VariablePaymentConsts.INCREMENT_TYPE ? 'has-text-primary' : 'has-text-danger'">
                         {{ numberFormat(employeeVariablePayment.amount) }}</h3>
                 </div>
-                <div class="column is-3 field is-flex is-justify-content-center is-align-items-center">
+                <div class="column is-4 field is-flex is-justify-content-center is-align-items-center">
                     <VTag :color="EmployeeVariablePaymentConsts.getStatusColor(employeeVariablePayment.status)"
                         :label="EmployeeVariablePaymentConsts.getStatusName(employeeVariablePayment.status)" rounded />
                 </div>
                 <div v-if="employeeVariablePayment.status == EmployeeVariablePaymentConsts.PENDING"
-                    class="column is-3 field is-flex is-justify-content-center is-align-items-center">
+                    class="column is-2 field is-flex is-justify-content-center is-align-items-center">
                     <VIconButton @click="approvePopup(employeeVariablePayment)" color="primary" outlined
                         icon="feather:check-circle" />
                 </div>
@@ -57,7 +57,6 @@ const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped lang="scss">
@@ -70,7 +69,7 @@ const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
     width: 100%;
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-top: 0.5rem;
+    padding-top: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--fade-grey-dark-3);
 }
@@ -99,10 +98,11 @@ const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
         border-left: 1px dashed var(--fade-grey-dark-3);
 
     }
-    .field:nth-child(4) {
-    border: 0;
 
-}
+    .field:nth-child(4) {
+        border: 0;
+
+    }
 
 }
 
@@ -130,17 +130,18 @@ const approvePopup = (employeeVariablePayment: EmployeeVariablePayment) => {
 
 
 }
+
 .is-dark.rtl {
     .field {
         border: none;
         border-left: 1px dashed var(--dark-sidebar-light-12);
 
     }
+
     .field:nth-child(4) {
-    border: 0;
+        border: 0;
+
+    }
 
 }
-
-}
-
 </style>
