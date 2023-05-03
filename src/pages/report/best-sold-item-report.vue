@@ -17,6 +17,8 @@ import { useReport } from '/@src/stores/Others/Report/reportStore'
 import { resetBestSoldItemFilter, getBestSoldItemReport } from '/@src/services/Others/Report/reportService'
 import { Category, CategorySearchFilter } from '/@src/models/Warehouse/Category/category'
 import { getCategoriesList } from '/@src/services/Warehouse/Category/CategoryService'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { Notyf } from 'notyf'
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -24,12 +26,14 @@ viewWrapper.setPageTitle(t('reports.best_sold_item.title'))
 useHead({
     title: t('reports.best_sold_item.title'),
 })
+const notif = useNotyf() as Notyf
 const reportStore = useReport()
 const reportFilter = ref(resetBestSoldItemFilter());
 const pageTitle = t('reports.best_sold_item.title');
 const mainCategoriesList = ref<Category[]>([])
 const subCategoriesList = ref<Category[]>([])
 const categoriesList = ref<Category[]>([])
+const isAllResults = ref(false)
 onMounted(async () => {
 
     let categorySearchFilter = {} as CategorySearchFilter
@@ -44,6 +48,10 @@ onMounted(async () => {
 });
 
 const onSubmit = async () => {
+    if (reportFilter.value.count && (reportFilter.value.count < 0 || !Number.isInteger(reportFilter.value.count))) {
+        notif.error({ message: t('toast.error.report.count_must_be_integer_positive'), duration: 3000 })
+        return
+    }
     const { report, success } = await getBestSoldItemReport(reportFilter.value);
     if (success && report) {
         const blob = new Blob([report], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -54,6 +62,13 @@ const onSubmit = async () => {
         link.click();
     }
 };
+watch(isAllResults, (value) => {
+    if (value) {
+        reportFilter.value.count = undefined
+    } else {
+        reportFilter.value.count = 0
+    }
+})
 
 const updateCategories = () => {
     if (reportFilter.value.parent_category_id) {
@@ -121,15 +136,26 @@ const updateCategories = () => {
                                     </VControl>
                                 </VField>
                             </div>
-                            <div class="column is-12">
-                                <VField>
-                                    <VLabel>{{ t('reports.best_sold_item.count') }}</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="reportFilter.count" placeholder="" type="number" />
-                                    </VControl>
-                                </VField>
+                            <div class="p-0 m-0 is-flex is-align-items-end column is-12 columns">
+                                <div class="column is-9">
+                                    <VField>
+                                        <VLabel>{{ t('reports.best_sold_item.count') }}</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput :disabled="isAllResults" v-model="reportFilter.count" placeholder=""
+                                                type="number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-3">
+                                    <VField>
+                                        <VControl>
+                                            <VCheckbox class="is-flex-row" v-model="isAllResults"
+                                                :label="t('reports.best_sold_item.all')" paddingless bigger
+                                                color="primary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
