@@ -1,3 +1,14 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "user_status_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
 import { useHead } from "@vueuse/head"
 import MyDropDown from "/@src/components/OurComponents/MyDropDown.vue"
@@ -10,6 +21,7 @@ import { useUserStatus } from "/@src/stores/Others/UserStatus/userStatusStore"
 import sleep from "/@src/utils/sleep"
 import { Notyf } from "notyf"
 import { useI18n } from "vue-i18n"
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -110,7 +122,9 @@ const columns = {
 
         renderRow: (row: any) =>
             h(MyDropDown, {
-
+                editPermission: Permissions.USER_STATUS_EDIT,
+                viewPermission: Permissions.USER_STATUS_SHOW,
+                removePermission: Permissions.USER_STATUS_DELETE,
                 onRemove: () => {
                     deleteUserStatusPopup.value = true
                     deleteUserStatusId.value = row.id
@@ -142,8 +156,7 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="userstatusesList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')" 
-                    :subtitle="t('tables.placeholder.subtitle')"
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
                         class="my-6">
                     </VPlaceholderSection>
                 </div>
@@ -154,18 +167,19 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getUserStatusPerPage" />
-        <h6 v-if="userstatusesList.length != 0 && !userStatusStore?.loading">
+        <h6 class="pt-2 is-size-7" v-if="userstatusesList.length != 0 && !userStatusStore?.loading">
             {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
 
         <VPlaceloadText v-if="userStatusStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
     </VFlexTableWrapper>
@@ -173,10 +187,11 @@ const columns = {
         @close="deleteUserStatusPopup = false">
         <template #content>
             <VPlaceholderSection :title="t('modal.delete_modal.title')"
-                :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
+                :subtitle="t('modal.delete_modal.subtitle', { title: viewWrapper.pageTitle })" />
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="removeUserStatus(deleteUserStatusId)">{{t('modal.buttons.confirm')}}</VButton>
+            <VButton color="primary" raised @click="removeUserStatus(deleteUserStatusId)">{{ t('modal.buttons.confirm') }}
+            </VButton>
         </template>
     </VModal>
 </template>

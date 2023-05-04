@@ -1,7 +1,17 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "room_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import { deleteRoom, getRoomsList } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultRoomSearchFilter, RoomSearchFilter, RoomConsts, Room } from '/@src/models/Others/Room/room'
@@ -11,8 +21,10 @@ import { useRoom } from '/@src/stores/Others/Room/roomStore'
 import sleep from '/@src/utils/sleep'
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('room.table.title'))
 useHead({
   title: t('room.table.title'),
@@ -20,8 +32,6 @@ useHead({
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultRoomSearchFilter)
 const roomsList = ref<Array<Room>>([])
-const deleteRoomPopup = ref(false)
-const deleteRoomId = ref()
 const paginationVar = ref(defaultPagination)
 const router = useRouter()
 const roomStore = useRoom()
@@ -36,25 +46,6 @@ onMounted(async () => {
 
 });
 
-const removeRoom = async (roomId: number) => {
-
-  const { message, success } = await deleteRoom(roomId)
-  await search(searchFilter.value)
-  deleteRoomPopup.value = false
-  if (success) {
-
-    // @ts-ignore
-    await sleep(200);
-
-    notif.success(t('toast.success.remove'))
-  }
-  else {
-    await sleep(200);
-    notif.error(message)
-
-  }
-
-}
 const search = async (searchFilter2: RoomSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
 
@@ -95,14 +86,14 @@ const columns = {
     searchable: true,
     sortable: true,
     align: 'center',
-    label : t('room.table.columns.id')
-    
+    label: t('room.table.columns.id')
+
   },
   number: {
     sortable: true,
     align: 'center',
     searchable: true,
-    label : t('room.table.columns.number')
+    label: t('room.table.columns.number')
 
 
   },
@@ -110,20 +101,20 @@ const columns = {
     sortable: true,
     align: 'center',
     searchable: true,
-    label : t('room.table.columns.floor')
+    label: t('room.table.columns.floor')
 
   },
   department: {
     sortable: true,
     searchable: true,
     align: 'center',
-    label : t('room.table.columns.department'),
+    label: t('room.table.columns.department'),
     renderRow: (row: any) =>
       h('span', row?.department?.name)
   },
   status: {
     align: 'center',
-    label : t('room.table.columns.status'),
+    label: t('room.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -148,15 +139,12 @@ const columns = {
 
   actions: {
     align: 'center',
-    label : t('room.table.columns.actions'),
+    label: t('room.table.columns.actions'),
 
     renderRow: (row: any) =>
-      h(MyDropDown, {
-
-        onRemove: () => {
-          deleteRoomPopup.value = true
-          deleteRoomId.value = row.id
-        },
+      h(ViewEditDropDown, {
+        editPermission: Permissions.ROOM_EDIT,
+        viewPermission: Permissions.ROOM_SHOW,
         onEdit: () => {
           router.push({ path: `/room/${row.id}/edit` })
         },
@@ -184,8 +172,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="roomsList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')" 
-          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
       </template>
@@ -193,29 +181,20 @@ const columns = {
     <VFlexPagination v-if="(roomsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getRoomsPerPage" />
-    <h6 v-if="roomsList.length != 0 && !roomStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="roomsList.length != 0 && !roomStore?.loading">
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
 
     <VPlaceloadText v-if="roomStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
-  <VModal :title="t('room.table.modal_title')" :open="deleteRoomPopup" actions="center" @close="deleteRoomPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title : viewWrapper.pageTitle})" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="removeRoom(deleteRoomId)">{{t('modal.buttons.confirm')}}</VButton>
-    </template>
-  </VModal>
-
 </template>

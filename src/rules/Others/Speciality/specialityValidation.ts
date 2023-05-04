@@ -6,21 +6,21 @@ import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
-    locale: 'ar',
-    fallbackLocale: 'en',
-    messages: messages
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
 })
 
 const specialityvalidationSchema = toFormValidator(zod
-    .object({
-        name: zod
-            .string({
-                required_error: i18n.global.t('validation.required'),
-            })
-            .min(1, i18n.global.t('validation.required')),
-        status: zod
-            .number({ required_error: i18n.global.t('validation.redio.required') }),
-    }));
+  .object({
+    name: zod
+      .string({
+        required_error: i18n.global.t('validation.required'),
+      })
+      .min(1, i18n.global.t('validation.required')),
+    status: zod
+      .number({ required_error: i18n.global.t('validation.redio.required') }),
+  }));
 export {
-    specialityvalidationSchema
+  specialityvalidationSchema
 }

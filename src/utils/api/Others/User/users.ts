@@ -52,21 +52,24 @@ export async function getUsersApi(
   })
   return { response }
 }
+
+
+
+export async function getUsersWithoutCustomerApi(
+  api: AxiosInstance,
+  searchFilter: UserSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('user/getUserListWithoutCustomer', {
+    params: searchFilter,
+  })
+  return { response }
+}
 export async function phoneExistsCheckApi(
   api: AxiosInstance,
   phone_number: string
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.post(`user/phoneCheck`, {
     phone_number: phone_number,
-  })
-  return { response }
-}
-export async function getRolesApi(
-  api: AxiosInstance,
-  searchFilter: UserSearchFilter
-): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.get('user/getUserList', {
-    params: searchFilter,
   })
   return { response }
 }

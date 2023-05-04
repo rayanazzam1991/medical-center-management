@@ -8,7 +8,7 @@ import { PositionConsts } from '/@src/models/Others/Position/position'
 import { usePosition } from '/@src/stores/Others/Position/positionStore'
 import sleep from '/@src/utils/sleep'
 import { useI18n } from 'vue-i18n'
-
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -45,7 +45,7 @@ const toEdit = () => {
 
 <template>
     <FormHeader :title="pageTitle" :form_submit_name="'Edit'" :back_route="'/position'" @onSubmit="toEdit"
-        :isLoading="positionStore?.loading" />
+        :permission="Permissions.POSITION_EDIT" :isLoading="positionStore?.loading" />
     <section class="form-layout">
         <div class="form-outer">
             <div class="form-body">
@@ -53,18 +53,17 @@ const toEdit = () => {
                 <div class="form-fieldset">
                     <div class="columns is-multiline">
                         <div class="column is-12">
-                            <h4 class="margin-bottom">{{t('position.details.name')}}:</h4>
+                            <h4 class="margin-bottom">{{ t('position.details.name') }}:</h4>
                             <span>{{ currentPosition.name }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('position.details.description')}}:</h4>
-                            <span>{{ currentPosition?.description }}</span>
+                            <h4 class="margin-bottom"> {{ t('position.details.description') }}:</h4>
+                            <span>{{ currentPosition?.description ?? t('place_holder.none') }}</span>
                         </div>
                         <div class="column is-12">
-                            <h4 class="margin-bottom"> {{t('position.details.status')}}:</h4>
+                            <h4 class="margin-bottom"> {{ t('position.details.status') }}:</h4>
                             <span>
-                                <VTag
-                                    :color="currentPosition.status === PositionConsts.INACTIVE ? 'danger' : 'success'">
+                                <VTag :color="currentPosition.status === PositionConsts.INACTIVE ? 'danger' : 'success'">
                                     {{ PositionConsts.showStatusName(currentPosition.status) }}</VTag>
                             </span>
                         </div>
@@ -74,8 +73,6 @@ const toEdit = () => {
             </div>
         </div>
     </section>
-
-
 </template>
 
 <style scoped lang="scss">

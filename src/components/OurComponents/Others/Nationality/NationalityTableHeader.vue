@@ -4,7 +4,7 @@ import { number } from "zod"
 import { NationalityConsts } from "/@src/models/Others/Nationality/nationality"
 import { defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 export default defineComponent({
     props: {
         title: {
@@ -25,7 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const pagination = props.pagination
         const searchName = ref('')
         const perPage = ref(pagination.per_page)
@@ -51,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {t , resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, NationalityConsts }
+        return { t, Permissions, resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, NationalityConsts }
     },
 
 
@@ -70,11 +70,12 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchName" type="text" :placeholder="t('nationality.search_filter.name')" />
+                                <VInput v-model="searchName" type="text"
+                                    :placeholder="t('nationality.search_filter.name')" />
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">{{t('nationality.search_filter.status')}}</VOption>
+                                    <VOption value="">{{ t('nationality.search_filter.status') }}</VOption>
                                     <VOption value="0">{{ NationalityConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ NationalityConsts.showStatusName(1) }}</VOption>
                                 </VSelect>
@@ -104,7 +105,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/nationality/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.NATIONALITY_CREATE" class="" to="/nationality/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
 

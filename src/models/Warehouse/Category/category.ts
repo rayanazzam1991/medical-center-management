@@ -1,3 +1,4 @@
+import { type } from "node:os"
 import { User } from "../../Others/User/user"
 import { BaseConsts } from "/@src/utils/consts/base"
 
@@ -66,7 +67,7 @@ export const defaultMainCategorySearchFilter: CategorySearchFilter = {
     sub_category_id: undefined,
     status: undefined,
     created_by: undefined,
-    is_main_category: true,
+    is_main_category: undefined,
     page: undefined,
     order: undefined,
     order_by: undefined,
@@ -88,5 +89,8 @@ export const defaultChangeCategoryStatus: ChangeCategoryStatus = {
     id: undefined,
     status: undefined
 }
+
+
+
 const CategoryConsts = BaseConsts
 export { CategoryConsts }

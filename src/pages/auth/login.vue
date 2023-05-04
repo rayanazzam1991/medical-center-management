@@ -8,8 +8,11 @@ import { signIn } from "/@src/composable/Others/User/Auth/signIn";
 import { defaultSignInRequest } from '/@src/models/Others/User/auth'
 import { useAuth } from '/@src/stores/Others/User/authStore'
 import { getSettings } from '/@src/services/Others/Setting/settingService'
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { Notyf } from 'notyf'
+import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
+import { defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
+import { getEmployeeByUserId } from '/@src/services/Employee/employeeService'
 
 const isLoading = ref(false)
 const darkmode = useDarkmode()
@@ -24,6 +27,7 @@ const userAuth = useAuth();
 
 
 onBeforeMount(() => {
+
   if (userAuth.isLoggedIn) {
     router.push({
       name: "/dashboard/"
@@ -32,42 +36,35 @@ onBeforeMount(() => {
 })
 
 const handleLogin = async () => {
-  if (!isLoading.value) {
-    isLoading.value = true
-    notif.dismissAll()
-    try {
+  isLoading.value = true
+  const { user, success, message } = await signIn(signRequest.value);
+  if (success && user && user.id != undefined) {
+    const { settings } = await getSettings();
+    const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter);
+    const { loggedEmployee } = await getEmployeeByUserId(user.id);
+    router.push({
+      name: '/dashboard/'
+    })
 
-      const loggedUser = await signIn(signRequest.value);
-      const { settings } = await getSettings();
+    await sleep(200);
 
-      if (userAuth.isLoggedIn) {
+    notif.success(t('auth.success_login'))
 
-        router.push({
-          name: '/dashboard/'
-        })
-      }
-      await sleep(200);
-
-      notif.success(t('auth.success_login'))
-    } catch (err: any) {
-      if (err.response?.status !== undefined) {
-        if (err.response.status !== 401) throw err
-        {
-          notif.error({
-            message: err?.response?.data?.message,
-            duration: 5000,
-          })
-        }
-      }
-    } finally {
-      isLoading.value = false
-    }
+  } else {
+    notif.error({
+      message: message,
+      duration: 5000,
+    })
 
   }
+  isLoading.value = false
+
+
 }
 
+
 useHead({
-  title: 'Auth Login - Vuero',
+  title: t('auth.login_title'),
 })
 </script>
 
@@ -99,8 +96,8 @@ useHead({
           </label>
           <div class="auth-logo">
             <RouterLink to="/">
-             <img v-if="darkmode.isDark" src ="/images/logos/logo/logo_light.png"/>
-             <img v-else src ="/images/logos/logo/logo.png"/>
+              <img v-if="darkmode.isDark" src="/images/logos/logo/logo_light.png" />
+              <img v-else src="/images/logos/logo/logo.png" />
             </RouterLink>
           </div>
         </div>
@@ -110,7 +107,7 @@ useHead({
               <div class="column is-12">
                 <div class="auth-content">
                   <h2>{{ t('auth.form.welcome_back') }}</h2>
-                  <p>{{ t('auth.form.sign_in')}}</p>
+                  <p>{{ t('auth.form.sign_in') }}</p>
                   <!--                  <RouterLink to="/auth/signup-2">-->
                   <!--                    I do not have an account yet-->
                   <!--                  </RouterLink>-->
@@ -122,16 +119,16 @@ useHead({
                       <!-- Username -->
                       <VField>
                         <VControl icon="feather:user">
-                          <VInput v-model="signRequest.phone_number" type="text" :placeholder="t('auth.form.placeholders.phone')"
-                            autocomplete="username" />
+                          <VInput v-model="signRequest.phone_number" type="text"
+                            :placeholder="t('auth.form.placeholders.phone')" autocomplete="username" />
                         </VControl>
                       </VField>
 
                       <!-- Password -->
                       <VField>
                         <VControl icon="feather:lock">
-                          <VInput v-model="signRequest.password" type="password" :placeholder="t('auth.form.placeholders.password')"
-                            autocomplete="current-password" />
+                          <VInput v-model="signRequest.password" type="password"
+                            :placeholder="t('auth.form.placeholders.password')" autocomplete="current-password" />
                         </VControl>
                       </VField>
 
@@ -145,7 +142,7 @@ useHead({
                       <!-- Submit -->
                       <div class="login">
                         <VButton :loading="isLoading" color="primary" type="submit" bold fullwidth raised>
-                          {{t('auth.form.sign_in_button')}}
+                          {{ t('auth.form.sign_in_button') }}
                         </VButton>
                       </div>
 
@@ -164,7 +161,7 @@ useHead({
   </div>
 </template>
 <style lang="scss">
-.login-bg{
+.login-bg {
   background: url("/images/photo/banners/login_banner.jpg") !important;
   background-position: top !important;
   background-size: cover !important;

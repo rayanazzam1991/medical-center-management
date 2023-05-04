@@ -4,33 +4,32 @@ import messages from '@intlify/vite-plugin-vue-i18n/messages';
 
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
-    locale: 'ar',
-    fallbackLocale: 'en',
-    messages: messages
+  locale: 'ar',
+  fallbackLocale: 'en',
+  messages: messages
 })
 export class BaseConsts {
-    static readonly ACTIVE = 1
-    static readonly INACTIVE = 0
-    static readonly TRUE = 1
-    static readonly FALSE = 0
+  static readonly ACTIVE = 1
+  static readonly INACTIVE = 0
+  static readonly TRUE = 1
+  static readonly FALSE = 0
 
-    public static showStatusName(status: number): string {
-        if (status === BaseConsts.ACTIVE)
-            return i18n.global.t('status.active')
+  public static showStatusName(status: number): string {
+    if (status === BaseConsts.ACTIVE)
+      return i18n.global.t('status.active')
+    if (status === BaseConsts.INACTIVE)
+      return i18n.global.t('status.inactive')
+    return ''
+  }
+  public static showBoolean(value: number | undefined): string {
+    if (value === BaseConsts.TRUE)
+      return i18n.global.t('boolean.true')
 
-        if (status === BaseConsts.INACTIVE)
-            return i18n.global.t('status.inactive')
-        return ''
-    }
-    public static showBoolean(boolean: number | undefined): string {
-        if (boolean === BaseConsts.TRUE)
-            return i18n.global.t('boolean.true')
+    if (value === BaseConsts.FALSE)
+      return i18n.global.t('boolean.false')
+    if (value === undefined)
+      return i18n.global.t('place_holder.none') 
 
-            if (boolean === BaseConsts.FALSE)
-            return i18n.global.t('boolean.false')
-            if (boolean === undefined)
-            return ''
-            
-        return ''
-    }
+    return i18n.global.t('place_holder.none') 
+  }
 }

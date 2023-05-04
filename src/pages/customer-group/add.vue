@@ -1,13 +1,24 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "customer_group_create"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n';
 
 import { useViewWrapper } from '/@src/stores/viewWrapper'
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('customer_group.form.page_title'))
 
-const head =useHead({
+const head = useHead({
   title: t('customer_group.form.add_customer_group_title'),
 })
 
@@ -15,5 +26,5 @@ const head =useHead({
 </script>
 
 <template>
-  <CustomerGroupForm Form :formType="'Add'"/>
+  <CustomerGroupForm Form :formType="'Add'" />
 </template>

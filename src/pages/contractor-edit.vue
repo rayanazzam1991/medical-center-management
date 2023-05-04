@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "contractor_edit"
+        ]
     }
 }
 </route>
@@ -15,7 +18,7 @@ import { useContractor } from '/@src/stores/Contractor/contractorStore';
 const contractorStore = useContractor()
 
 const contractorForm = useContractorForm()
-const {t} = useI18n()
+const { t } = useI18n()
 useHead({
     title: computed(() => `${contractorForm.stepTitle} - Contractor`),
 })
@@ -31,12 +34,11 @@ useHead({
 
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(contractorForm.canNavigate && 'is-active')]">
-                <div class="columns">
-                    <div class="column is-one-quarter"></div>
-                    <div class="wizard-buttons-inner">
+                <div class="columns buttons-width">
+                    <div class="wizard-buttons-inner-padding">
                         <VLoader size="small" :active="contractorStore.loading">
                             <VButton type="submit" class="wizard-button-previous" :color="'primary'" bold elevated>
-                                {{ t('contractor.form.edit_submit')}}
+                                {{ t('contractor.form.edit_submit') }}
                             </VButton>
                         </VLoader>
                     </div>

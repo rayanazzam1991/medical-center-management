@@ -1,8 +1,9 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
-import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter } from "/@src/models/Employee/employee"
+import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "../../../models/Employee/employeeHistory"
 
 
 export async function addEmployeeApi(
@@ -27,7 +28,17 @@ export async function getEmployeeApi(
   const { data: response, headers } = await api.get(`employee/${employee_id}`)
   return { response }
 }
-
+export async function addServicesApi(
+  api: AxiosInstance,
+  employee_id: number,
+  services: Array<CreateUpdateServicesHelper>
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(
+    `employee/${employee_id}/addServices`,
+    { services: services }
+  )
+  return { response }
+}
 export async function getEmployeesApi(
   api: AxiosInstance,
   searchFilter: EmployeeSearchFilter
@@ -61,7 +72,6 @@ export async function maxEmployeeNumberApi(
   const { data: response, headers } = await api.get(`employee/maxEmployeeNumber`)
   return { response }
 }
-
 export async function updateEmployeeNumberApi(
   api: AxiosInstance,
   employee_id: number,
@@ -70,7 +80,6 @@ export async function updateEmployeeNumberApi(
   const { data: response, headers } = await api.put(`employee/${employee_id}/updateEmployeeNumber`, { "employee_number": employee_number })
   return { response }
 }
-
 export async function getEmployeesAttendanceApi(
   api: AxiosInstance,
   searchFilter: EmployeeAttendanceSearchFilter
@@ -80,3 +89,32 @@ export async function getEmployeesAttendanceApi(
   })
   return { response }
 }
+export async function getEmployeeByUserIdApi(
+  api: AxiosInstance,
+  user_id: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(`employee/getEmployeeByUserId/${user_id}`)
+  return { response }
+}
+export async function dismissEmployeeApi(
+  api: AxiosInstance,
+  dismissedEmployee: DismissedEmployee
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post('employeeHistory/dismissEmployee', dismissedEmployee)
+  return { response }
+}
+
+
+export async function getEmployeesHistoryApi(
+  api: AxiosInstance,
+  searchFilter: EmployeeHistorySearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get('employeeHistory/getEmployeeHistoryList', {
+    params: searchFilter,
+  })
+  return { response }
+}
+
+
+
+

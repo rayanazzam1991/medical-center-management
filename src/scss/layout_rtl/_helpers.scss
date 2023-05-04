@@ -112,6 +112,13 @@ $sides: top, bottom, left, right;
     vertical-align: -1px;
   }
 }
+.required::after {
+  content: " *";
+  font-size : 1.25rem;
+  color: var(--danger);
+}
+
+
 
 /* ==========================================================================
 2. Color helpers

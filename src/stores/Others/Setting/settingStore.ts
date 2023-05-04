@@ -45,6 +45,9 @@ export const useSetting = defineStore('setting', () => {
     function getSettings(): Setting[] {
         return settingsStorage.value;
     }
+    function removeFromStorage () {
+        settingsStorage.value = undefined
+    }
     async function editSettingsStore(newSettings: Setting[]) {
         if (loading.value) return
         loading.value = true
@@ -81,7 +84,8 @@ export const useSetting = defineStore('setting', () => {
         getSettingsStore,
         getSettings,
         setSettings,
-        editSettingsStore
+        editSettingsStore,
+        removeFromStorage
     } as const
 })
 

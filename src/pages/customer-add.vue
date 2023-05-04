@@ -1,7 +1,10 @@
 <route lang="json">
 {
     "meta": {
-        "requiresAuth": true
+        "requiresAuth": true,
+        "permissions": [
+            "customer_create"
+        ]
     }
 }
 </route>
@@ -13,7 +16,7 @@ import { useI18n } from 'vue-i18n';
 
 const customerStore = useCustomer()
 const customerForm = useCustomerForm()
-const {t} = useI18n()
+const { t } = useI18n()
 
 useHead({
     title: computed(() => `${customerForm.stepTitle} - Customer`),
@@ -35,21 +38,22 @@ useHead({
 
             <!--Wizard Navigation Buttons-->
             <div class="wizard-buttons" :class="[(customerForm.canNavigate && 'is-active')]">
-                <div class="columns">
-                    <div class="column is-one-quarter"></div>
-                    <div class="wizard-buttons-inner">
+                <div class="columns buttons-width">
+                    <div class="wizard-buttons-inner-padding is-flex is-justify-content-start">
                         <VLoader size="small" :active="customerStore.loading">
-                            <VButton type="submit" class="wizard-button-previous"
+                            <VButton type="submit" class="wizard-button-previous mr-2"
                                 :disabled="customerForm.validateStepFn === null"
                                 :color="customerForm.validateStepFn === null ? 'light' : 'primary'" bold elevated>
-                                {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') : t('customer.form.submit_and_next_button')
+                                {{ customerForm.getStep() == 2 ? t('customer.form.submit_and_finish_button') :
+                                    t('customer.form.submit_and_next_button')
                                 }}
                             </VButton>
                         </VLoader>
                         <VButton v-if="customerForm.skipable === true" class="wizard-button-previous"
                             :color="customerForm.skipable === true ? 'dark' : 'dark'"
                             @click="() => customerForm?.skipStepFn?.()">
-                            {{ customerForm.getStep() == 2 ? t('customer.form.skip_and_finish_button') : t('customer.form.skip_button')
+                            {{ customerForm.getStep() == 2 ? t('customer.form.skip_and_finish_button') :
+                                t('customer.form.skip_button')
                             }}
                         </VButton>
                     </div>

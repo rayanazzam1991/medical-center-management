@@ -15,23 +15,29 @@ const medicalinfoAddValidationSchema = toFormValidator(zod
     .object({
         blood_type:
             zod
-                .string({
-                }).optional(),
+                .preprocess(
+                    val => val === undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
+
         allergic:
             zod
-                .string({
-                })
-                .optional(),
+                .preprocess(
+                    val => val === undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
         chronic_diseases:
             zod
-                .string({
-                })
-                .optional(),
+                .preprocess(
+                    val => val === undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
         infectious_diseases:
             zod
-                .string({
-                })
-                .optional(),
+                .preprocess(
+                    val => val === undefined ? "" : val,
+                    zod.string({})
+                        .optional()),
         smoking: zod.number().optional(),
         any_other_info: zod.string({
             invalid_type_error: i18n.global.t('validation.text.invalid_type_error'),

@@ -8,17 +8,9 @@ const dropdown = useDropdown(dropdownElement)
 
 <template>
   <div class="toolbar-notifications is-hidden-mobile">
-    <div
-      ref="dropdownElement"
-      class="dropdown is-spaced is-dots is-right dropdown-trigger"
-    >
-      <div
-        tabindex="0"
-        class="is-trigger"
-        aria-haspopup="true"
-        @click="dropdown.toggle"
-        @keydown.space.prevent="dropdown.toggle"
-      >
+    <div ref="dropdownElement" class="dropdown is-spaced is-dots is-right dropdown-trigger">
+      <div tabindex="0" class="is-trigger" aria-haspopup="true" @click="dropdown.toggle"
+        @keydown.space.prevent="dropdown.toggle">
         <i aria-hidden="true" class="iconify" data-icon="feather:bell"></i>
         <span class="new-indicator pulsate"></span>
       </div>
@@ -29,10 +21,7 @@ const dropdown = useDropdown(dropdownElement)
               <h6 class="heading-title">Notifications</h6>
             </div>
             <div class="heading-right">
-              <RouterLink
-                class="notification-link"
-                to="/sidebar/layouts/profile-notifications"
-              >
+              <RouterLink class="notification-link" to="/sidebar/layouts/profile-notifications">
                 See all
               </RouterLink>
             </div>
@@ -41,12 +30,7 @@ const dropdown = useDropdown(dropdownElement)
             <li>
               <a class="notification-item">
                 <div class="img-left">
-                  <img
-                    class="user-photo"
-                    alt=""
-                    src="/demo/avatars/7.jpg"
-                    @error.once="onceImageErrored(150)"
-                  />
+                  <img class="user-photo" alt="" src="/demo/avatars/7.jpg" @error.once="onceImageErrored(150)" />
                 </div>
                 <div class="user-content">
                   <p class="user-info">
@@ -59,12 +43,7 @@ const dropdown = useDropdown(dropdownElement)
             <li>
               <a class="notification-item">
                 <div class="img-left">
-                  <img
-                    class="user-photo"
-                    alt=""
-                    src="/demo/avatars/12.jpg"
-                    @error.once="onceImageErrored(150)"
-                  />
+                  <img class="user-photo" alt="" src="/demo/avatars/12.jpg" @error.once="onceImageErrored(150)" />
                 </div>
                 <div class="user-content">
                   <p class="user-info">
@@ -77,12 +56,7 @@ const dropdown = useDropdown(dropdownElement)
             <li>
               <a class="notification-item">
                 <div class="img-left">
-                  <img
-                    class="user-photo"
-                    alt=""
-                    src="/demo/avatars/13.jpg"
-                    @error.once="onceImageErrored(150)"
-                  />
+                  <img class="user-photo" alt="" src="/demo/avatars/13.jpg" @error.once="onceImageErrored(150)" />
                 </div>
                 <div class="user-content">
                   <p class="user-info">
@@ -95,12 +69,7 @@ const dropdown = useDropdown(dropdownElement)
             <li>
               <a class="notification-item">
                 <div class="img-left">
-                  <img
-                    class="user-photo"
-                    alt=""
-                    src="/demo/avatars/25.jpg"
-                    @error.once="onceImageErrored(150)"
-                  />
+                  <img class="user-photo" alt="" src="/demo/avatars/25.jpg" @error.once="onceImageErrored(150)" />
                 </div>
                 <div class="user-content">
                   <p class="user-info">

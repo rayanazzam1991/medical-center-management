@@ -18,16 +18,6 @@ const withdrawQuantityvalidationSchema = toFormValidator(zod
                 val => val == undefined ? "" : val,
                 zod.string({})
                     .optional()),
-        withdraw_item_price:
-            zod.preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
-            ),
         item_quantity:
             zod.preprocess(
                 (input) => {

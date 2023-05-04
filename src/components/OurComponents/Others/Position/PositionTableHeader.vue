@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultPositionSearchFilter, PositionConsts } from "/@src/models/Others/Position/position"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 export default defineComponent({
     props: {
@@ -25,7 +25,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const default_per_page = props.default_per_page
         const pagination = props.pagination
         const searchName = ref('')
@@ -51,7 +51,7 @@ export default defineComponent({
             context.emit('resetFilter', searchFilter.value)
 
         }
-        return {  t, resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, PositionConsts }
+        return { t, Permissions, resetFilter, search, default_per_page, searchName, searchStatus, perPage, pagination, PositionConsts }
     },
 
 
@@ -74,7 +74,7 @@ export default defineComponent({
                             </VControl>
                             <VControl class="mr-2 status-input">
                                 <VSelect v-model="searchStatus">
-                                    <VOption value="">{{t('position.search_filter.status')}}</VOption>
+                                    <VOption value="">{{ t('position.search_filter.status') }}</VOption>
                                     <VOption value="0">{{ PositionConsts.showStatusName(0) }}</VOption>
                                     <VOption value="1">{{ PositionConsts.showStatusName(1) }}</VOption>
                                 </VSelect>
@@ -91,7 +91,7 @@ export default defineComponent({
 
                                     <select v-model="perPage" @change="search">
                                         <VOption :value="default_per_page * 0.1">{{ default_per_page *
-                                                0.1
+                                            0.1
                                         }}
                                         </VOption>
                                         <VOption :value="default_per_page * 0.5">{{ default_per_page * 0.5 }}
@@ -106,7 +106,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/position/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.POSITION_CREATE" class="" to="/position/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>

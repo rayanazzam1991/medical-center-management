@@ -1,0 +1,2 @@
+const trialBalancePrintStyle = ""
+export { trialBalancePrintStyle }

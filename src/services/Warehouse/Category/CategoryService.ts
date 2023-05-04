@@ -5,10 +5,10 @@ import { Pagination } from "/@src/utils/response"
 
 export async function addCategory(categoryData: CreateUpdateCategory) {
     const categoryResponse = useCategory()
-    var category: Category = await categoryResponse.addCategoryStore(categoryData) ?? defaultCategory
-    var success: boolean = categoryResponse.success ?? false
-    var error_code: string = categoryResponse.error_code ?? ''
-    var message: string = categoryResponse.message ?? ''
+    let category: Category = await categoryResponse.addCategoryStore(categoryData) ?? defaultCategory
+    let success: boolean = categoryResponse.success ?? false
+    let error_code: string = categoryResponse.error_code ?? ''
+    let message: string = categoryResponse.message ?? ''
     return { success, error_code, message, category }
 
 }
@@ -16,48 +16,48 @@ export async function addCategory(categoryData: CreateUpdateCategory) {
 export async function changeCategoryStatus(categoryData: ChangeCategoryStatus) {
     const categoryResponse = useCategory()
     await categoryResponse.changeCategoryStatusStore(categoryData)
-    var success: boolean = categoryResponse.success ?? false
-    var error_code: string = categoryResponse.error_code ?? ''
-    var message: string = categoryResponse.message ?? ''
+    let success: boolean = categoryResponse.success ?? false
+    let error_code: string = categoryResponse.error_code ?? ''
+    let message: string = categoryResponse.message ?? ''
     return { success, error_code, message }
 }
 export async function editCategory(categoryData: CreateUpdateCategory) {
     const categoryResponse = useCategory()
     await categoryResponse.editCategoryStore(categoryData)
     await categoryResponse.editCategoryStore(categoryData)
-    var success: boolean = categoryResponse.success ?? false
-    var error_code: string = categoryResponse.error_code ?? ''
-    var message: string = categoryResponse.message ?? ''
+    let success: boolean = categoryResponse.success ?? false
+    let error_code: string = categoryResponse.error_code ?? ''
+    let message: string = categoryResponse.message ?? ''
     return { success, error_code, message }
 
 }
 export async function getCategoriesList(searchFilter: CategorySearchFilter) {
     const category = useCategory()
     await category.getCategoriesStore(searchFilter)
-    var categories: Category[] = category.categories
-    var pagination: Pagination = category.pagination
-    var success: boolean = category.success ?? false
-    var error_code: string = category.error_code ?? ''
-    var message: string = category.message ?? ''
+    let categories: Category[] = category.categories
+    let pagination: Pagination = category.pagination
+    let success: boolean = category.success ?? false
+    let error_code: string = category.error_code ?? ''
+    let message: string = category.message ?? ''
     return { categories, pagination, success, error_code, message }
 
 }
 export async function getFilterCategoriesList(searchFilter: CategorySearchFilter) {
     const category = useCategory()
     const categories = await category.getFilterCategoriesStore(searchFilter) as Category[]
-    var pagination: Pagination = category.pagination
-    var success: boolean = category.success ?? false
-    var error_code: string = category.error_code ?? ''
-    var message: string = category.message ?? ''
+    let pagination: Pagination = category.pagination
+    let success: boolean = category.success ?? false
+    let error_code: string = category.error_code ?? ''
+    let message: string = category.message ?? ''
     return { categories, pagination, success, error_code, message }
 
 }
 export async function getCategory(categoryId: number) {
     const categoryResponse = useCategory()
-    var category: Category = await categoryResponse.getCategoryStore(categoryId) ?? defaultCategory
-    var success: boolean = categoryResponse.success ?? false
-    var error_code: string = categoryResponse.error_code ?? ''
-    var message: string = categoryResponse.message ?? ''
+    let category: Category = await categoryResponse.getCategoryStore(categoryId) ?? defaultCategory
+    let success: boolean = categoryResponse.success ?? false
+    let error_code: string = categoryResponse.error_code ?? ''
+    let message: string = categoryResponse.message ?? ''
     return { success, error_code, message, category }
 
 }

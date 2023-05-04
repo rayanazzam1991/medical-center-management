@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CustomResponseSingle, CustomResponseCollection } from "../../response"
-import { CreateContractor, UpdateContractor, CreateUpdateServicesHelper, ContractorSearchFilter } from "/@src/models/Contractor/contractor"
+import { CreateContractor, UpdateContractor, CreateUpdateServicesHelper, ContractorSearchFilter, ChangeContractorStatus } from "/@src/models/Contractor/contractor"
 
 
 
@@ -46,6 +46,7 @@ export async function getContractorApi(
   return { response }
 }
 
+
 export async function getContractorsApi(
   api: AxiosInstance,
   searchFilter: ContractorSearchFilter
@@ -53,5 +54,15 @@ export async function getContractorsApi(
   const { data: response, headers } = await api.get('contractor/getContractorsList', {
     params: searchFilter,
   })
+  return { response }
+}
+export async function changeContractorStatusApi(
+  api: AxiosInstance,
+  contractor: ChangeContractorStatus
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.put(
+    `contractor/${contractor.id}/changeContractorStatus`,
+    contractor
+  )
   return { response }
 }

@@ -7,39 +7,59 @@ import {
   EmployeeSearchFilter,
   Employee,
   UpdateEmployee,
-  defaultEmployee
+  defaultEmployee,
+  CreateUpdateServicesHelper
 } from '/@src/models/Employee/employee'
 import { CreateUpdateUser } from '/@src/models/Others/User/user'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, defaultEmployeeHistory } from '/@src/models/Employee/employeeHistory'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
   userData: CreateUpdateUser
 ) {
-  userData.password = '1231313'
-  const newEmployeeData: CreateEmployee = {
-    starting_date: employeeData.starting_date,
-    end_date: employeeData.end_date,
-    basic_salary: employeeData.basic_salary,
-    nationality_id: employeeData.nationality_id,
-    position_id: employeeData.position_id,
-    user: userData,
-  }
+  employeeData.user = userData
   const employeeResponse = useEmployee()
   var employee: Employee =
-    (await employeeResponse.addEmployeeStore(newEmployeeData)) ?? defaultEmployee
+    (await employeeResponse.addEmployeeStore(employeeData)) ?? defaultEmployee
   var success: boolean = employeeResponse.success ?? false
   var error_code: string = employeeResponse.error_code ?? ''
   var message: string = employeeResponse.message ?? ''
   return { success, error_code, message, employee }
 }
+
+export async function dismissEmployeeHistory(
+  dismissedEmployeeData: DismissedEmployee,
+) {
+
+  const employeeHistoriesResponse = useEmployee()
+  var dismissedEmployee: EmployeeHistory =
+    (await employeeHistoriesResponse.dismissEmployeeStore(dismissedEmployeeData)) ?? defaultEmployeeHistory
+  var success: boolean = employeeHistoriesResponse.success ?? false
+  var error_code: string = employeeHistoriesResponse.error_code ?? ''
+  var message: string = employeeHistoriesResponse.message ?? ''
+  return { success, error_code, message, dismissedEmployee }
+}
+
+export async function getEmployeesHistoryList(searchFilter: EmployeeHistorySearchFilter) {
+  const employee = useEmployee()
+  await employee.getEmployeesHistoryListStore(searchFilter)
+  var dismissedEmployees: EmployeeHistory[] = employee.employeesHistory
+  var pagination: Pagination = employee.pagination
+  return { dismissedEmployees, pagination }
+}
+
+
 export async function updateEmployee(
   employee_id: number,
   employeeData: UpdateEmployee,
-  userData: CreateUpdateUser
+  userData: CreateUpdateUser,
+  employeeServices: Array<CreateUpdateServicesHelper>
+
+
 ) {
   const newEmployeeData: UpdateEmployee = {
     starting_date: employeeData.starting_date,
@@ -48,6 +68,9 @@ export async function updateEmployee(
     nationality_id: employeeData.nationality_id,
     position_id: employeeData.position_id,
     user: userData,
+    payment_percentage: employeeData.payment_percentage,
+    type: employeeData.type,
+    services: employeeServices
   }
   const employeeResponse = useEmployee()
   var employee: Employee =
@@ -57,6 +80,14 @@ export async function updateEmployee(
   var success: boolean = employeeResponse.success ?? false
   var error_code: string = employeeResponse.error_code ?? ''
   var message: string = employeeResponse.message ?? ''
+  return { success, error_code, message, employee }
+}
+export async function addServicesToEmployee(employee_id: number, services: Array<CreateUpdateServicesHelper>) {
+  const employeeResponse = useEmployee()
+  let employee: Employee = await employeeResponse.addServicesStore(employee_id, services) ?? defaultEmployee
+  let success: boolean = employeeResponse.success ?? false
+  let error_code: string = employeeResponse.error_code ?? ''
+  let message: string = employeeResponse.message ?? ''
   return { success, error_code, message, employee }
 }
 
@@ -91,7 +122,11 @@ export async function getEmployeesList(searchFilter: EmployeeSearchFilter) {
   await employee.getEmployeesStore(searchFilter)
   var employees: Employee[] = employee.employees
   var pagination: Pagination = employee.pagination
-  return { employees, pagination }
+  let success: boolean = employee.success ?? false
+  let error_code: string = employee.error_code ?? ''
+  let message: string = employee.message ?? ''
+
+  return { employees, pagination, success, message, error_code }
 }
 
 
@@ -196,5 +231,29 @@ export async function getEmployeesAttendance(searchFilter: EmployeeAttendanceSea
 
   return { employeesAttendance, pagination, success, message, error_code }
 }
+export async function getEmployeeByUserId(user_id: number) {
+  const employee = useEmployee()
+  await employee.getEmployeeByUserIdStore(user_id)
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+  const loggedEmployee = employee.getEmployee()
+  return { loggedEmployee, success, message, error_code }
+}
 
+export function resetEmployeeHistorySearchFilter() {
+  const blankSearchFilter: EmployeeHistorySearchFilter = {
+    employee_name: undefined,
+    employee_id: undefined,
+    notes: undefined,
+    order: undefined,
+    order_by: undefined,
+    page: undefined,
+    per_page: undefined,
+
+  }
+
+  return blankSearchFilter
+
+}
 

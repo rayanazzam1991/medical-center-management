@@ -36,6 +36,7 @@ customerForm.setStep({
             router.push({
                 path: `/customer/${customerId.value}`,
             })
+            customerForm.reset()
         }
 
     },
@@ -91,12 +92,12 @@ const onSubmitAdd = handleSubmit(async (values) => {
     customerForm.medicalInfoForm.infectious_diseases = medicalInfoData.infectious_diseases
     customerForm.medicalInfoForm.smoking = medicalInfoData.smoking
     customerForm.medicalInfoForm.any_other_info = medicalInfoData.any_other_info
-    if (medicalInfoData.allergic == undefined &&
-        medicalInfoData.blood_type == undefined &&
-        medicalInfoData.chronic_diseases == undefined &&
-        medicalInfoData.infectious_diseases == undefined &&
-        medicalInfoData.smoking == undefined &&
-        medicalInfoData.any_other_info == undefined) {
+    if ((medicalInfoData.allergic == undefined || medicalInfoData.allergic == "") &&
+        (medicalInfoData.blood_type == undefined || medicalInfoData.blood_type == "") &&
+        (medicalInfoData.chronic_diseases == undefined || medicalInfoData.chronic_diseases == "") &&
+        (medicalInfoData.infectious_diseases == undefined || medicalInfoData.infectious_diseases == "") &&
+        (medicalInfoData.smoking == undefined) &&
+        (medicalInfoData.any_other_info == undefined || medicalInfoData.any_other_info == "")) {
         await sleep(200);
 
         notif.error(t('toast.error.steps_error'))
@@ -135,7 +136,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     <div class="page-content-inner">
         <form class="form-layout" @submit.prevent="onSubmitAdd()">
             <div class="form-outer">
-                <div class="form-body">
+                <div class="form-body mb-6">
                     <!--Fieldset-->
                     <div class="form-fieldset">
                         <div class="fieldset-heading">
@@ -148,8 +149,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                     <VControl>
                                         <VSelect v-if="currentMedicalInfo" v-model="currentMedicalInfo.blood_type">
                                             <VOption value="">{{}}</VOption>
-                                            <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES"
-                                                :key="blood_type" :value="blood_type">{{ blood_type }}
+                                            <VOption v-for="blood_type in MedicalInfoConsts.BLOOD_TYPES" :key="blood_type"
+                                                :value="blood_type">{{ blood_type }}
                                             </VOption>
                                         </VSelect>
                                         <ErrorMessage class="help is-danger" name="blood_type" />
@@ -176,8 +177,8 @@ const onSubmitAdd = handleSubmit(async (values) => {
                                 <VField id="infectious_diseases">
                                     <VLabel class="optional">{{ t('customer.form.infectious_diseases') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="currentMedicalInfo.infectious_diseases" type="text"
-                                            placeholder="" autocomplete="" />
+                                        <VInput v-model="currentMedicalInfo.infectious_diseases" type="text" placeholder=""
+                                            autocomplete="" />
                                         <ErrorMessage class="help is-danger" name="infectious_diseases" />
                                     </VControl>
                                 </VField>
@@ -185,7 +186,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
 
                             <div class="column is-6">
                                 <VField id="chronic_diseases">
-                                    <VLabel class="optional">{{t('customer.form.chronic_diseases')}}</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.chronic_diseases') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentMedicalInfo.chronic_diseases" type="text" placeholder=""
                                             autocomplete="" />
@@ -199,16 +200,16 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="smooking">
-                                    <VLabel class="optional">{{t('customer.form.smoke')}}</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.smoke') }}</VLabel>
 
                                     <VControl>
                                         <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.FALSE"
-                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.FALSE)"
-                                            name="smooking" color="warning" />
+                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.FALSE)" name="smooking"
+                                            color="warning" />
 
                                         <VRadio v-model="currentMedicalInfo.smoking" :value="MedicalInfoConsts.TRUE"
-                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.TRUE)"
-                                            name="smooking" color="success" />
+                                            :label="MedicalInfoConsts.showBoolean(MedicalInfoConsts.TRUE)" name="smooking"
+                                            color="success" />
                                         <ErrorMessage class="help is-danger" name="smooking" />
                                     </VControl>
                                 </VField>
@@ -219,7 +220,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="any_other_info">
-                                    <VLabel class="optional">{{t('customer.form.other_info')}}</VLabel>
+                                    <VLabel class="optional">{{ t('customer.form.other_info') }}</VLabel>
                                     <VControl>
                                         <VTextarea v-model="currentMedicalInfo.any_other_info" />
                                         <ErrorMessage class="help is-danger" name="any_other_info" />
@@ -240,10 +241,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

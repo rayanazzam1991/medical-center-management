@@ -17,6 +17,7 @@ export interface VCheckboxProps {
   solid?: boolean
   paddingless?: boolean
   wrapperClass?: string
+  bigger?: boolean
 }
 
 const emits = defineEmits<VCheckboxEmits>()
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<VCheckboxProps>(), {
   solid: false,
   paddingless: false,
   wrapperClass: undefined,
+  bigger: false
 })
 
 const vFieldContext = reactive(useVFieldContext())
@@ -46,6 +48,7 @@ const classes = computed(() => {
     props.circle && 'is-circle',
     props.color && `is-${props.color}`,
     props.paddingless && 'is-paddingless',
+    props.bigger && 'is-bigger',
   ]
 })
 
@@ -62,16 +65,9 @@ watch(
 
 <template>
   <VLabel raw :class="classes">
-    <input
-      :id="vFieldContext.id"
-      v-model="$value"
-      v-bind="$attrs"
-      :true-value="props.trueValue"
-      :false-value="props.falseValue"
-      :value="props.value"
-      type="checkbox"
-    />
-    <span></span>
+    <input :id="vFieldContext.id" v-model="$value" v-bind="$attrs" :true-value="props.trueValue"
+      :false-value="props.falseValue" :value="props.value" type="checkbox" />
+    <span class="m-0"></span>
     <slot v-bind="vFieldContext">{{ props.label }}</slot>
   </VLabel>
 </template>
@@ -87,7 +83,7 @@ watch(
     background: transparent;
   }
 
-  input + span {
+  input+span {
     position: relative;
     top: -1px;
     background: var(--white);
@@ -111,16 +107,16 @@ watch(
   }
 
   @media screen and (min-width: 768px) {
-    &:hover input + span {
+    &:hover input+span {
       box-shadow: 0 2px 4px rgba(#000, 0.15);
     }
   }
 
-  input:active + span {
+  input:active+span {
     box-shadow: 0 4px 8px rgba(#000, 0.15);
   }
 
-  input:checked + span::after {
+  input:checked+span::after {
     transform: translate(-50%, -50%) scale(1) !important;
   }
 
@@ -146,19 +142,26 @@ watch(
     padding: 0 !important;
   }
 
+  &.is-bigger {
+    span {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+
   &.is-circle {
-    input + span {
+    input+span {
       border-radius: var(--radius-rounded);
     }
   }
 
   &.is-solid {
-    input + span {
+    input+span {
       background: var(--fade-grey-light-3);
     }
 
     &.is-primary {
-      input + span {
+      input+span {
         border-color: var(--primary);
         background: var(--primary);
 
@@ -169,7 +172,7 @@ watch(
     }
 
     &.is-success {
-      input + span {
+      input+span {
         border-color: var(--success);
         background: var(--success);
 
@@ -180,7 +183,7 @@ watch(
     }
 
     &.is-info {
-      input + span {
+      input+span {
         border-color: var(--info);
         background: var(--info);
 
@@ -191,7 +194,7 @@ watch(
     }
 
     &.is-warning {
-      input + span {
+      input+span {
         border-color: var(--warning);
         background: var(--warning);
 
@@ -202,7 +205,7 @@ watch(
     }
 
     &.is-danger {
-      input + span {
+      input+span {
         border-color: var(--danger);
         background: var(--danger);
 
@@ -215,11 +218,11 @@ watch(
 
   &.is-outlined {
     &.is-primary {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--primary);
       }
 
-      input + span {
+      input+span {
         &::after {
           color: var(--primary);
         }
@@ -227,11 +230,11 @@ watch(
     }
 
     &.is-success {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--success);
       }
 
-      input + span {
+      input+span {
         &::after {
           color: var(--success);
         }
@@ -239,11 +242,11 @@ watch(
     }
 
     &.is-info {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--info);
       }
 
-      input + span {
+      input+span {
         &::after {
           color: var(--info);
         }
@@ -251,11 +254,11 @@ watch(
     }
 
     &.is-warning {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--warning);
       }
 
-      input + span {
+      input+span {
         &::after {
           color: var(--warning);
         }
@@ -263,11 +266,11 @@ watch(
     }
 
     &.is-danger {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--danger);
       }
 
-      input + span {
+      input+span {
         &::after {
           color: var(--danger);
         }
@@ -275,7 +278,7 @@ watch(
     }
   }
 
-  input + span {
+  input+span {
     border-radius: var(--radius-small);
     transition: all 0.3s; // transition-all test
 
@@ -292,8 +295,8 @@ watch(
     }
   }
 
-  input:focus + span,
-  input:active + span {
+  input:focus+span,
+  input:active+span {
     outline-offset: var(--accessibility-focus-outline-offset);
     outline-width: var(--accessibility-focus-outline-width);
     outline-color: var(--accessibility-focus-outline-color);
@@ -303,7 +306,7 @@ watch(
 
 .is-dark {
   %controller {
-    input + span {
+    input+span {
       background-color: var(--dark-sidebar-light-2);
       border-color: var(--dark-sidebar-light-4);
 
@@ -312,21 +315,21 @@ watch(
       }
     }
 
-    input + span {
+    input+span {
       border-color: var(--dark-sidebar-light-16);
     }
   }
 
   .checkbox {
     &.is-solid.is-primary {
-      input + span {
+      input+span {
         background-color: var(--primary) !important;
         border-color: var(--primary) !important;
       }
     }
 
     &.is-outlined.is-primary {
-      input:checked + span {
+      input:checked+span {
         border-color: var(--primary) !important;
 
         &::after {

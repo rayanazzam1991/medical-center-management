@@ -1,8 +1,18 @@
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "permissions": [
+      "department_list"
+    ]
+  }
+}
+</route>
+  
 <script setup lang="ts">
-import MyDropDown from '/@src/components/OurComponents/MyDropDown.vue'
 import VTag from '/@src/components/base/tags/VTag.vue'
 import { useHead } from '@vueuse/head'
-import { deleteDepartment, getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts, Department } from '/@src/models/Others/Department/department'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -11,9 +21,11 @@ import { useDepartment } from '/@src/stores/Others/Department/departmentStore'
 import sleep from "/@src/utils/sleep"
 import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
+import ViewEditDropDown from '/@src/components/OurComponents/ViewEditDropDown.vue'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 const viewWrapper = useViewWrapper()
-const {t} = useI18n()
+const { t } = useI18n()
 viewWrapper.setPageTitle(t('department.table.title'))
 useHead({
   title: t('department.table.title'),
@@ -21,8 +33,6 @@ useHead({
 const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultDepartmentSearchFilter)
 const departmentsList = ref<Array<Department>>([])
-const deleteDepartmentPopup = ref(false)
-const deleteDepartmentId = ref()
 const paginationVar = ref(defaultPagination)
 const departmentStore = useDepartment()
 
@@ -39,17 +49,6 @@ onMounted(async () => {
 
 });
 
-const removeDepartment = async (departmentId: number) => {
-
-  await deleteDepartment(departmentId)
-  await search(searchFilter.value)
-  deleteDepartmentPopup.value = false
-  // @ts-ignore
-  await sleep(200);
-
-  notif.success(t('toast.success.remove'))
-
-}
 
 const search = async (searchFilter2: DepartmentSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -90,19 +89,19 @@ const columns = {
   id: {
     align: 'center',
     sortable: true,
-    label : t('department.table.columns.id')
+    label: t('department.table.columns.id')
 
   },
   name: {
     align: 'center',
     sortable: true,
-    label : t('department.table.columns.name')
+    label: t('department.table.columns.name')
 
 
   },
   status: {
     align: 'center',
-    label : t('department.table.columns.status'),
+    label: t('department.table.columns.status'),
 
     renderRow: (row: any) =>
       h(
@@ -126,14 +125,11 @@ const columns = {
   },
   actions: {
     align: 'center',
-    label : t('department.table.columns.status'),
+    label: t('department.table.columns.status'),
     renderRow: (row: any) =>
-      h(MyDropDown, {
-
-        onRemove: () => {
-          deleteDepartmentPopup.value = true
-          deleteDepartmentId.value = row.id
-        },
+      h(ViewEditDropDown, {
+        editPermission: Permissions.DEPARTMENT_EDIT,
+        viewPermission: Permissions.DEPARTMENT_SHOW,
         onEdit: () => {
           router.push({ path: `/department/${row.id}/edit` })
         },
@@ -148,9 +144,8 @@ const columns = {
 </script>
 
 <template>
-  <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle"
-    :button_name="t('department.header_button')" @search="search" :pagination="paginationVar"
-    :default_per_page="default_per_page" @resetFilter="resetFilter" />
+  <DepartmentTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('department.header_button')"
+    @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="departmentsList" @update:sort="departmentSort">
 
     <VFlexTable separators clickable>
@@ -164,8 +159,8 @@ const columns = {
           </div>
         </div>
         <div v-else-if="departmentsList.length === 0" class="flex-list-inner">
-          <VPlaceholderSection :title="t('tables.placeholder.title')" 
-          :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+          <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+            class="my-6">
           </VPlaceholderSection>
         </div>
 
@@ -175,32 +170,22 @@ const columns = {
       :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
       :total-items="paginationVar.total" :max-links-displayed="3" no-router
       @update:current-page="getDepartmentsPerPage" />
-    <h6 v-if="departmentsList.length != 0 && !departmentStore?.loading">
-    
+    <h6 class="pt-2 is-size-7" v-if="departmentsList.length != 0 && !departmentStore?.loading">
+
       {{
-        t('tables.pagination_footer', { from_number: paginationVar.page !=
-          paginationVar.max_page
-          ?
-          (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-        , to_number: paginationVar.page !=
-          paginationVar.max_page ?
-          paginationVar.page *
-          paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-      })}}</h6>
+        t('tables.pagination_footer', {
+          from_number: paginationVar.page !=
+            paginationVar.max_page
+            ?
+            (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+              ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+          , to_number: paginationVar.page !=
+            paginationVar.max_page ?
+            paginationVar.page *
+            paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+        }) }}</h6>
     <VPlaceloadText v-if="departmentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
-  <VModal :title="t('department.table.modal_title')" :open="deleteDepartmentPopup" actions="center"
-    @close="deleteDepartmentPopup = false">
-    <template #content>
-      <VPlaceholderSection :title="t('modal.delete_modal.title')"
-        :subtitle="t('modal.delete_modal.subtitle',{title: viewWrapper.pageTitle})" />
-    </template>
-    <template #action="{ close }">
-      <VButton color="primary" raised @click="removeDepartment(deleteDepartmentId)">{{ t('modal.buttons.confirm') }}</VButton>
-    </template>
-  </VModal>
-
 </template>
 

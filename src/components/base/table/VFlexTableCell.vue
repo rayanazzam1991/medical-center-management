@@ -11,23 +11,19 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
 </script>
 
 <template>
-  <div
-    class="flex-table-cell is-relative"
-    :class="[
-      props.column.bold && 'is-bold',
-      props.column.media && 'is-media',
-      props.column.grow === true && 'is-grow',
-      props.column.grow === 'lg' && 'is-grow-lg',
-      props.column.grow === 'xl' && 'is-grow-xl',
-      props.column.scrollX && !props.column.scrollY && 'has-slimscroll-x',
-      !props.column.scrollX && props.column.scrollY && 'has-slimscroll',
-      props.column.scrollX && props.column.scrollY && 'has-slimscroll-all',
-      props.column.align === 'end' && 'cell-end',
-      props.column.align === 'center' && 'cell-center',
-      props.column.cellClass,
-    ]"
-    :data-th="props.column.label || undefined"
-  >
+  <div class="flex-table-cell is-relative" :class="[
+    props.column.bold && 'is-bold',
+    props.column.media && 'is-media',
+    props.column.grow === true && 'is-grow',
+    props.column.grow === 'lg' && 'is-grow-lg',
+    props.column.grow === 'xl' && 'is-grow-xl',
+    props.column.scrollX && !props.column.scrollY && 'has-slimscroll-x',
+    !props.column.scrollX && props.column.scrollY && 'has-slimscroll',
+    props.column.scrollX && props.column.scrollY && 'has-slimscroll-all',
+    props.column.align === 'end' && 'cell-end',
+    props.column.align === 'center' && 'cell-center',
+    props.column.cellClass,
+  ]" :data-th="props.column.label || undefined">
     <slot></slot>
   </div>
 </template>
@@ -40,8 +36,8 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
   padding: 0 10px;
   font-family: var(--font);
   word-break: keep-all;
-    white-space: normal;
-    text-align: center;
+  white-space: normal;
+  text-align: center;
 
   &.is-scrollable-x {
     overflow-x: auto;
@@ -79,7 +75,7 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
   }
 
   &.is-bold {
-    > span {
+    >span {
       font-family: var(--font-alt);
       font-size: 0.9rem;
       font-weight: 600;
@@ -115,12 +111,12 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
   &.is-media {
     padding-left: 0;
 
-    > div span:not(.avatar) {
+    >div span:not(.avatar) {
       display: block;
       margin-left: 10px;
     }
 
-    > div {
+    >div {
       line-height: 1.2;
 
       .item-name {
@@ -176,13 +172,14 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
       margin-left: 0 !important;
 
       .avatar.is-fake {
+
         span,
         .text {
           margin: 0;
         }
       }
 
-      + div {
+      +div {
         margin-left: 0.5rem !important;
       }
     }
@@ -276,6 +273,7 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
 
 .is-dark {
   .flex-table-cell {
+
     &.is-user,
     &.is-media {
       .v-avatar {
@@ -288,6 +286,7 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
     &.cell-end {
       .button {
         &.dark-outlined {
+
           &:hover,
           &:focus-within {
             border-color: var(--primary) !important;
@@ -355,6 +354,7 @@ const props = withDefaults(defineProps<VFlexTableCellProps>(), {
     }
   }
 }
+
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   .flex-table-cell {
     &.is-user {

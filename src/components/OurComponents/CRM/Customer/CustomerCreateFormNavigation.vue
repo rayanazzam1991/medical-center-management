@@ -39,7 +39,3 @@ const customerForm = useCustomerForm()
         </div>
     </nav>
 </template>
-
-<style lang="scss" scoped>
-@import '/@src/scss/styles/wizardFormNavigation.scss';
-</style>

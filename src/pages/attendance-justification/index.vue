@@ -1,7 +1,18 @@
+<route lang="json">
+    {
+      "meta": {
+        "requiresAuth": true,
+        "permissions": [
+          "attendance_justification_list"
+        ]
+      }
+    }
+    </route>
+  
 <script setup lang="ts">import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
-import IconButton from '/@src/components/OurComponents/Warehouse/ItemHistory/IconButton.vue';
+import IconButton from '/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultAttendanceJustificationSearchFilter, AttendanceJustification, AttendanceJustificationSearchFilter } from '/@src/models/HR/Attendance/AttendanceJustification/attendanceJustification';
 import { getAttendanceJustificationsList } from '/@src/services/HR/Attendance/AttendanceJustification/attendanceJustificationService';

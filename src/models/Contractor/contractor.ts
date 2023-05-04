@@ -1,9 +1,21 @@
 import { Media, MediaConsts } from "../Others/Media/media"
 import { defaultSpeciality, Speciality } from "../Others/Speciality/speciality"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
+import { defaultWallet, Wallet } from "./wallet"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Contractor {
+    id?: number
+    starting_date: string
+    end_date: string
+    speciality: Speciality
+    payment_percentage: number
+    user: User
+    wallet: Wallet,
+    services: Array<CreateUpdateServicesHelper>
+    is_completed?: boolean
+}
+export interface ContractorWithOutWallet {
     id?: number
     starting_date: string
     end_date: string
@@ -22,6 +34,10 @@ export interface CreateContractor {
     user: CreateUpdateUser
     services: Array<CreateUpdateServicesHelper>
     is_completed?: boolean
+}
+export interface ChangeContractorStatus {
+    id?: number
+    user_status_id: number
 }
 export interface UpdateContractor {
     id?: number
@@ -75,7 +91,7 @@ export const defaultUpdateContractor: UpdateContractor = {
     speciality_id: 0
 
 }
-export const defaultContractor: Contractor = {
+export const defaultContractorWithOutWallet: ContractorWithOutWallet = {
     id: 0,
     starting_date: '',
     payment_percentage: 0,
@@ -84,8 +100,25 @@ export const defaultContractor: Contractor = {
     is_completed: false,
     end_date: '',
     speciality: defaultSpeciality,
-
 }
+
+export const defaultContractor: Contractor = {
+    id: 0,
+    starting_date: '',
+    payment_percentage: 0,
+    user: defaultUser,
+    services: [],
+    is_completed: false,
+    end_date: '',
+    wallet: defaultWallet,
+    speciality: defaultSpeciality,
+}
+export const defaultChangeContractorStatus: ChangeContractorStatus = {
+    id: 0,
+    user_status_id: 0,
+}
+
+
 
 export const defaultContractorSearchFilter: ContractorSearchFilter = {
     name: undefined,

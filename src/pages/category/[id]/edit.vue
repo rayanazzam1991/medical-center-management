@@ -1,10 +1,21 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "category_edit"
+        ]
+    }
+}
+</route>
+  
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n';
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
 const route = useRoute()
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('category.form.page_title'))
 useHead({
@@ -15,5 +26,4 @@ useHead({
 
 <template>
     <CategoryForm :key="route.path" :formType="'Edit'" />
-
 </template>

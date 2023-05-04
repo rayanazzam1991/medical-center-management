@@ -7,18 +7,17 @@
     }
 }
 
-.required::after {
-    content:" *";
-    color: var(--danger);
-  }
-
-// .optional::after {
-// }
 
 .filter {
     margin: 1rem;
 }
 
+.lable-text {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--light-text) !important;
+  font-weight: 400;
+}
 .justify-content {
     display: flex;
     align-items: baseline;

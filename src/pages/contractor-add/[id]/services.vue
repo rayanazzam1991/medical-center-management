@@ -15,7 +15,7 @@ import { BaseConsts } from '/@src/utils/consts/base';
 import { useI18n } from 'vue-i18n';
 import { Notyf } from 'notyf';
 
-const {t} = useI18n()
+const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 const route = useRoute()
 const router = useRouter()
@@ -36,18 +36,20 @@ contractorForm.setStep({
     validateStepFn: async () => {
         var isValid = await onSubmitAdd()
         if (isValid) {
-            contractorForm.reset()
             router.push({
                 path: `/contractor/${contractorId.value}`,
             })
+            contractorForm.reset()
+
         }
 
     },
     skipStepFn: async () => {
-        contractorForm.reset()
         router.push({
             path: `/contractor/${contractorId.value}`,
         })
+        contractorForm.reset()
+
     }
 
 })
@@ -86,7 +88,7 @@ const onSubmitAdd = handleSubmit(async () => {
 
     for (let i = 0; i < servicesChecked.value.length; i++) {
         if (servicesChecked.value[i].checked == true) {
-            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: contractorForm.data.payment_percentage!= undefined ? servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) :  0 })
+            contractorForm.contractorServicesForm.push({ service_id: servicesChecked.value[i].service.id as number, price: servicesChecked.value[i].price, contractor_service_amount: contractorForm.data.payment_percentage != undefined ? servicesChecked.value[i].price * (contractorForm.data.payment_percentage / 100) : 0 })
 
         }
         else {
@@ -142,7 +144,7 @@ const onSubmitAdd = handleSubmit(async () => {
                             </div>
                         </div>
                         <div v-else class="fieldset-heading mt-6">
-                            <h4 class="has-text-centered ">{{t('contractor.form.no_services_placeholder')}}</h4>
+                            <h4 class="has-text-centered ">{{ t('contractor.form.no_services_placeholder') }}</h4>
                         </div>
                     </div>
                     <!--Fieldset-->
@@ -154,7 +156,7 @@ const onSubmitAdd = handleSubmit(async () => {
                                         :id="`service_price_${service.service.id}`">
 
                                         <VLabel class="required" v-if="service.checked">
-                                        {{ t('contractor.form.service_price' , {service : service.service.name}) }}
+                                            {{ t('contractor.form.service_price' , { service: service.service.name }) }}
                                         </VLabel>
                                         <VControl v-if="service.checked" icon="feather:chevrons-right">
                                             <VInput type="number" placeholder="" autocomplete="" v-model="service.price"
@@ -174,12 +176,13 @@ const onSubmitAdd = handleSubmit(async () => {
                                 <div :class="service.checked == true ? 'field' : ''" v-for="service in servicesChecked"
                                     :id="service.service.name" :key="service.service.id">
                                     <span class="label custom-label" v-if="service.checked">
-                                    {{  t('contractor.form.service_amount', {service : service.service.name}) }}
-                             </span>
+                                        {{ t('contractor.form.service_amount', { service: service.service.name }) }}
+                                    </span>
                                     <div v-if="service.checked" class="control">
                                         <div class="input">
-                                            {{ contractorForm.data.payment_percentage != undefined ? (service.price *
-        (contractorForm.data.payment_percentage / 100 )) : 0
+                                            {{
+    contractorForm.data.payment_percentage != undefined ? (service.price *
+        (contractorForm.data.payment_percentage / 100)) : 0
                                             }}
 
                                         </div>
@@ -222,10 +225,6 @@ const onSubmitAdd = handleSubmit(async () => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

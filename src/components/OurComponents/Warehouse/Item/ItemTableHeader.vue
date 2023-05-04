@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 import { defaultItemSearchFilter, ItemSearchFilter, ItemConsts } from "/@src/models/Warehouse/Item/item"
 import { defaultPagination } from "/@src/utils/response"
-
+import { Permissions } from "/@src/utils/consts/rolesPermissions"
 
 
 export default defineComponent({
@@ -26,7 +26,7 @@ export default defineComponent({
     },
 
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const onOpen = () => {
             searchFilterPop.value = !searchFilterPop.value
             quickSearchField.value = ''
@@ -70,6 +70,7 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.category_id = undefined
             searchFilter.value.sub_category_id = undefined
+            searchFilter.value.is_for_sale = undefined
             quickSearchField.value = ''
             is_reseted.value = true
             keyIncrement.value++
@@ -80,10 +81,11 @@ export default defineComponent({
             searchFilter.value.status = undefined
             searchFilter.value.category_id = undefined
             searchFilter.value.sub_category_id = undefined
+            searchFilter.value.is_for_sale = undefined
             context.emit('resetFilter', searchFilter.value)
         }
 
-        return {t , searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
+        return { t, Permissions, searchFilterPop, default_per_page, keyIncrement, search_filter, resetFilter_popup, onOpen, popUpTrigger, resetFilter, search, searchName, perPage, pagination, ItemConsts, quickSearch, quickSearchField }
     },
 
 
@@ -97,7 +99,8 @@ export default defineComponent({
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="quickSearchField" type="text" :placeholder="t('item.search_filter.name')" />
+                                <VInput v-model="quickSearchField" type="text"
+                                    :placeholder="t('item.search_filter.name')" />
                             </VControl>
                             <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
                             <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"
@@ -124,7 +127,8 @@ export default defineComponent({
                                 </div>
                             </VControl>
                             <VControl>
-                                <VButton class="" to="/item/add" color="primary">{{ button_name }}
+                                <VButton v-permission="Permissions.ITEM_CREATE" class="" to="/item/add"
+                                    color="primary">{{ button_name }}
                                 </VButton>
                             </VControl>
                         </div>
