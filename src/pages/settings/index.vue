@@ -221,8 +221,8 @@ export default defineComponent({
     };
     return {
       t, locale, dark, daysName, roundingOptions, reservationsTimeSlotsOptions, ReservationsTimeSlotsConsts, UnjustifiedHoursRoundConsts, settingStore, new_usd_currency_rate,
-      reservations_time_slot, start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, reservations_have_priority,
-      pageTitle, settingsList, onSubmit, viewWrapper, formType, loading, reservations_delay_limit
+      start_of_week, late_tolerance, start_time, end_time, start_day, end_day, unjustified_hours_round, hr_cycle_start_day, deduction_factor, reservations_have_priority,
+      pageTitle, settingsList, onSubmit, viewWrapper, formType, loading, reservations_delay_limit, reservations_time_slot
     };
   },
   components: { ErrorMessage, Datepicker }

@@ -16,7 +16,7 @@ export interface VCheckboxProps {
   circle?: boolean
   solid?: boolean
   paddingless?: boolean
-  wrapperClass?: string,
+  wrapperClass?: string
   bigger?: boolean
 }
 
@@ -49,7 +49,6 @@ const classes = computed(() => {
     props.color && `is-${props.color}`,
     props.paddingless && 'is-paddingless',
     props.bigger && 'is-bigger',
-
   ]
 })
 
@@ -148,9 +147,7 @@ watch(
       width: 40px !important;
       height: 40px !important;
     }
-  
-
-}
+  }
 
 &.is-circle {
   input+span {

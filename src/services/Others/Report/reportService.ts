@@ -16,7 +16,7 @@ export async function getBestClientReport(filter: BestClientReportFilter) {
 }
 export function resetBestClientFilter() {
     const blankSearchFilter: BestClientReportFilter = {
-        count: 99999,
+        count: 0,
         customer_group_id: undefined,
         date_from: undefined,
         date_to: undefined,
@@ -36,7 +36,7 @@ export async function getBestServiceProviderReport(filter: BestServiceProviderFi
 }
 export function resetBestServiceProviderFilter() {
     const blankSearchFilter: BestServiceProviderFilter = {
-        count: 99999,
+        count: 0,
         department_id: undefined,
         room_id: undefined,
         date_from: undefined,
@@ -75,7 +75,7 @@ export async function getBestSoldItemReport(filter: BestSoldItemFilter) {
 }
 export function resetBestSoldItemFilter() {
     const blankSearchFilter: BestSoldItemFilter = {
-        count: 99999,
+        count: 0,
         item_category_id: undefined,
         parent_category_id: undefined,
         date_from: undefined,
@@ -95,7 +95,7 @@ export async function getMostConsumedItemReport(filter: MostConsumedItemFilter) 
 }
 export function resetMostConsumedItemFilter() {
     const blankSearchFilter: MostConsumedItemFilter = {
-        count: 99999,
+        count: 0,
         item_category_id: undefined,
         parent_category_id: undefined,
         date_from: undefined,
@@ -115,7 +115,7 @@ export async function getBestAttendingEmployeeReport(filter: BestAttendingEmploy
 }
 export function resetBestAttendingEmployeeFilter() {
     const blankSearchFilter: BestAttendingEmployeeFilter = {
-        count: 99999,
+        count: 0,
         department_id: undefined,
         room_id: undefined,
         date_from: undefined,
@@ -134,7 +134,7 @@ export async function getWorstAttendingEmployeeReport(filter: WorstAttendingEmpl
 }
 export function resetWorstAttendingEmployeeFilter() {
     const blankSearchFilter: WorstAttendingEmployeeFilter = {
-        count: 99999,
+        count: 0,
         department_id: undefined,
         room_id: undefined,
         date_from: undefined,

@@ -25,7 +25,6 @@ export const useEmployeeVariablePayment = defineStore('employeeVariablePayment',
             success.value = returnedResponse.response.success
             error_code.value = returnedResponse.response.error_code
             message.value = returnedResponse.response.message
-            return returnedResponse.response.data as EmployeeVariablePayment
         } catch (error: any) {
             success.value = error?.response.data.success
             error_code.value = error?.response.data.error_code

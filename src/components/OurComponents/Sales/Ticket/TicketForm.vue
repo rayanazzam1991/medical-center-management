@@ -4,12 +4,12 @@ import { Notyf } from 'notyf';
 import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/customer';
+import { Customer, CustomerSearchFilter, defaultCustomer } from '/@src/models/CRM/Customer/customer';
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidationSchema';
-import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
+import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 // @ts-ignore
@@ -56,10 +56,20 @@ export default defineComponent({
     const customersList = ref<Customer[]>([])
     const customerTodayReservations = ref<ReservationTicketHelper[]>([])
     const isLoading = ref(false)
+    const enableSelectCustomer = ref(false);
+    const selectedCustomer = ref(defaultCustomer);
+    const selectedCustomerId = ref(0)
+
+    if (Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id)) && formType.value == 'Add') {
+      selectedCustomerId.value = Number(route.query.customer_id)
+    } else {
+      selectedCustomerId.value = 0
+      currentTicket.value.customer_id = 0
+      enableSelectCustomer.value = true
+    }
     const selectCustomerLoading = ref(false)
     const keyIncrement2 = ref(0)
     const isExpanded = ref(false)
-    const selectedCustomerId = ref(0)
     const headerLoading = ref(false)
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
@@ -85,6 +95,11 @@ export default defineComponent({
       } as CustomerSearchFilter
       const { customers } = await getCustomersList(customerSearchFilter)
       customersList.value = customers
+      if (selectedCustomerId.value != 0 && formType.value == 'Add') {
+        const { customer } = await getCustomer(selectedCustomerId.value)
+        selectedCustomer.value = customer
+        await onSelectCustomer()
+      }
       const { services } = await getServicesWithProviders()
       servicesWithProviders.value = services
       isLoading.value = false
@@ -157,6 +172,7 @@ export default defineComponent({
         updateTotalAmount()
         if (selectedCustomerId.value == undefined)
           currentTicket.value.customer_id = 0
+
         if (currentTicket.value.customer_id != 0) {
           selectCustomerLoading.value = true
           if (currentTicket.value.customer_id != 0 && currentTicket.value.customer_id) {
@@ -354,7 +370,7 @@ export default defineComponent({
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      servicesWithProviders, getCustomersList, requestedServicesHelper, selectCustomerLoading, onSelectCustomer, customerTodayReservations,
+      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer, selectCustomerLoading, onSelectCustomer, customerTodayReservations,
       keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand, headerLoading
     };
   },
@@ -381,7 +397,15 @@ export default defineComponent({
               <h4>{{ pageTitle }}</h4>
             </div>
             <div class="columns is-multiline">
-              <div class="column is-12">
+              <div v-if="!enableSelectCustomer" class="column is-12">
+                <h4 class="label"> {{ t('ticket.form.customer') }} :
+                  <span class="is-size-5 has-text-primary">
+                    {{ selectedCustomer.user.first_name }}
+                    {{ selectedCustomer.user.last_name }}
+                  </span>
+                </h4>
+              </div>
+              <div v-else class="column is-12">
                 <VField id="customer_id">
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
@@ -390,17 +414,17 @@ export default defineComponent({
                       @click="onSelectCustomer()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                       :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                       :searchable="true" :canClear="false" :options="async (query: any) => {
-                          let customerSearchFilter = {
-                            user_status_id: UserStatusConsts.ACTIVE,
-                            name: query,
-                          } as CustomerSearchFilter
-                          //@ts-ignore
-                          const data = await getCustomersList(customerSearchFilter)
-                          //@ts-ignore
-                          return data.customers.map((customer: Customer) => {
-                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                          })
-                        }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                        let customerSearchFilter = {
+                          user_status_id: UserStatusConsts.ACTIVE,
+                          name: query,
+                        } as CustomerSearchFilter
+                        //@ts-ignore
+                        const data = await getCustomersList(customerSearchFilter)
+                        //@ts-ignore
+                        return data.customers.map((customer: Customer) => {
+                          return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                        })
+                      }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                     <VSelect disabled v-else v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
@@ -474,8 +498,8 @@ export default defineComponent({
                       </div>
                       <div v-if="requestedServicesHelper[mainIndex].service_provider_id != 0" class="m-0 p-0 mb-3">
                         <p class="help" :class="[
-                            requestedServicesHelper[mainIndex].with_reserve && 'is-success',
-                            !requestedServicesHelper[mainIndex].with_reserve && 'is-danger']">
+                          requestedServicesHelper[mainIndex].with_reserve && 'is-success',
+                          !requestedServicesHelper[mainIndex].with_reserve && 'is-danger']">
                           {{ requestedServicesHelper[mainIndex].with_reserve ? t('ticket.form.service_is_reserved') :
                             t('ticket.form.service_is_not_reserved') }}
                         </p>
@@ -537,13 +561,13 @@ export default defineComponent({
                 </div>
                 <div class="column is-12 pt-0">
                   <VButton @click.prevent="addService({
-                      service_id: 0,
-                      sell_price: 0,
-                      service_provider_id: 0,
-                      editable: true,
-                      with_reserve: false,
-                      is_emergency: false
-                    })" color="primary">
+                    service_id: 0,
+                    sell_price: 0,
+                    service_provider_id: 0,
+                    editable: true,
+                    with_reserve: false,
+                    is_emergency: false
+                  })" color="primary">
                     {{ t('ticket.form.add_new_service') }}
                   </VButton>
                 </div>
@@ -648,13 +672,13 @@ export default defineComponent({
                 </div>
                 <div class="column is-12 pt-0">
                   <VButton @click.prevent="addService({
-                      service_id: 0,
-                      sell_price: 0,
-                      service_provider_id: 0,
-                      editable: true,
-                      with_reserve: false,
-                      is_emergency: false
-                    })" color="primary">
+                    service_id: 0,
+                    sell_price: 0,
+                    service_provider_id: 0,
+                    editable: true,
+                    with_reserve: false,
+                    is_emergency: false
+                  })" color="primary">
                     {{ t('ticket.form.add_new_service') }}
                   </VButton>
                 </div>

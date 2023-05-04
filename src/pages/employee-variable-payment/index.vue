@@ -30,6 +30,8 @@ import { addParenthesisToString, stringTrim } from '/@src/composable/helpers/str
 import { Currency, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { getCurrenciesFromStorage } from '/@src/services/Accounting/Currency/currencyService';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import VIconWrap from '/@src/components/base/icon/VIconWrap.vue';
+import EmployeeVariablePaymentDropDown from '/@src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentDropDown.vue';
 
 
 const viewWrapper = useViewWrapper()
@@ -47,6 +49,7 @@ const keyIncrement = ref(0)
 const router = useRouter()
 const default_per_page = ref(1)
 const changeStatusPopUp = ref(false)
+const deactivatePopup = ref(false)
 const selectedEmployeeVariablePayment = ref(defaultEmployeeVariablePayment)
 const newStatus = ref<number>()
 const requiredDueDate = ref('');
@@ -127,7 +130,11 @@ const changeStatus = async () => {
     }
 
   }
-
+}
+const deactivateEmployeeVariablePayment = async () => {
+  newStatus.value = EmployeeVariablePaymentConsts.INACTIVE
+  await changeStatus()
+  deactivatePopup.value = false
 }
 
 const columns = {
@@ -176,10 +183,11 @@ const columns = {
   },
   status: {
     align: 'center',
+    grow: true,
     label: t("employee_variable_payment.table.columns.status"),
-    renderRow: (row: any) => {
+    renderRow: (row: EmployeeVariablePayment) => {
 
-      if (row?.status !== EmployeeVariablePaymentConsts.WAITING) {
+      if (row?.status !== EmployeeVariablePaymentConsts.WAITING && row?.status !== EmployeeVariablePaymentConsts.RELEASED) {
         return h(
           VTag,
           {
@@ -198,7 +206,7 @@ const columns = {
           {
             rounded: true,
             tag_color: EmployeeVariablePaymentConsts.getStatusColor(row?.status),
-            tippy_content: t("employee_variable_payment.table.columns.due_date") + " : " + row?.due_date
+            tippy_content: row.status == EmployeeVariablePaymentConsts.WAITING ? t("employee_variable_payment.table.columns.due_date") + " : " + row?.due_date : t("employee_variable_payment.table.columns.release_date") + " : " + row?.release_date
           },
           {
             default() {
@@ -222,13 +230,25 @@ const columns = {
       }),
 
   },
-  "release_date": {
+  "is_repeatable": {
     align: 'center',
-    sortable: true,
-    label: t("employee_variable_payment.table.columns.release_date"),
-    renderRow: (row: any) =>
-      h('span', row?.release_date ? row?.release_date : '-'),
-
+    label: t("employee_variable_payment.table.columns.is_repeatable"),
+    renderRow: (row: EmployeeVariablePayment) => {
+      if (row.is_repeatable) {
+        return h(
+          VIconWrap,
+          {
+            icon: 'feather:check',
+            size: 'small',
+            dark: '6',
+            darkCardBordered: false
+          },
+        );
+      } else {
+        return h(
+          'span', '-');
+      }
+    }
   },
   "created_at": {
     align: 'center',
@@ -242,14 +262,16 @@ const columns = {
       h('span', row?.created_by?.first_name + ' ' + row?.created_by?.last_name),
 
   },
-
   actions: {
     align: 'center',
     label: t("variable_payment.table.columns.actions"),
-    renderRow: (row: any) =>
-      h(NoViewDropDown, {
+    renderRow: (row: EmployeeVariablePayment) =>
+      h(EmployeeVariablePaymentDropDown, {
         changeStatusPermission: Permissions.VARIABLE_PAYMENT_EDIT,
         editPermission: Permissions.VARIABLE_PAYMENT_EDIT,
+        deactivatePermission: Permissions.VARIABLE_PAYMENT_EDIT,
+        editable: row?.status != EmployeeVariablePaymentConsts.RELEASED && row?.status != EmployeeVariablePaymentConsts.INACTIVE,
+        is_repeatable: row.is_repeatable,
         onEdit: () => {
           (row?.status != EmployeeVariablePaymentConsts.RELEASED && row?.status != EmployeeVariablePaymentConsts.INACTIVE) ?
             router.push({ path: `/employee-variable-payment/${row?.id}/edit` }) :
@@ -272,8 +294,12 @@ const columns = {
               duration: 5000,
             })
           }
+        },
+        onDeactivate: () => {
+          keyIncrement.value++
+          deactivatePopup.value = true
+          selectedEmployeeVariablePayment.value = row
         }
-
       }),
 
   },
@@ -376,6 +402,19 @@ const columns = {
     </template>
     <template #action="{ close }">
       <VButton color="primary" raised @click="changeStatus()">{{ t('modal.buttons.confirm') }}</VButton>
+    </template>
+  </VModal>
+  <VModal :title="t('employee_variable_payment.table.deactivate_modal.title')" :open="deactivatePopup" actions="center"
+    @close="deactivatePopup = false">
+    <template #content>
+      <VPlaceholderSection :title="t('employee_variable_payment.table.deactivate_modal.confirmation')"
+        :subtitle="t('employee_variable_payment.table.deactivate_modal.caution')" />
+    </template>
+    <template #action="{ close }">
+      <VLoader size="small" :active="employeeVariablePaymentStore?.loading">
+        <VButton color="primary" raised @click="deactivateEmployeeVariablePayment">{{ t('modal.buttons.confirm') }}
+        </VButton>
+      </VLoader>
     </template>
   </VModal>
 </template>
