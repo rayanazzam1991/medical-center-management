@@ -23,5 +23,6 @@
   "i18n-ally.keystyle": "nested",
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  },
+  "vue.codeActions.enabled": false
 }

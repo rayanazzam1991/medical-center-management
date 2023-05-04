@@ -149,7 +149,7 @@ const columns = {
     },
     variable_payments: {
         align: 'center',
-        grow: true,
+        grow: 'lg',
         label: t("generate_salaries.table.columns.variable_payments") + addParenthesisToString(mainCurrency.name),
         renderRow: (row: any) => {
             if (row?.variable_payments.length != 0) {

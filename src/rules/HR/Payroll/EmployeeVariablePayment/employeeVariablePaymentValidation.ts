@@ -13,16 +13,6 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 
 const employeeVariablePaymentValidationSchema = toFormValidator(zod
     .object({
-        employee_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
-            ),
         variable_payment_id: zod
             .preprocess(
                 (input) => {

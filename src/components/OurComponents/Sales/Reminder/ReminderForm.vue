@@ -232,17 +232,17 @@ export default defineComponent({
                                     @select="setCustomerIdValue()" :filter-results="false" :min-chars="0"
                                     :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
                                     :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
-                                        let customerSearchFilter = {
-                                            user_status_id: UserStatusConsts.ACTIVE,
-                                            name: query,
-                                        } as CustomerSearchFilter
-                                        //@ts-ignore
-                                        const data = await getCustomersList(customerSearchFilter)
-                                        //@ts-ignore
-                                        return data.customers.map((customer: Customer) => {
-                                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                                        })
-                                    }"
+                                            let customerSearchFilter = {
+                                                user_status_id: UserStatusConsts.ACTIVE,
+                                                name: query,
+                                            } as CustomerSearchFilter
+                                            //@ts-ignore
+                                            const data = await getCustomersList(customerSearchFilter)
+                                            //@ts-ignore
+                                            return data.customers.map((customer: Customer) => {
+                                                return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                                            })
+                                        }"
                                     @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                             </div>
                             <div v-if="ticketServiceId" class="column is-12">
