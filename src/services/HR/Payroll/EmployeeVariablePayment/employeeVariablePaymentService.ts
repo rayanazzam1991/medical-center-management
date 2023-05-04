@@ -5,11 +5,11 @@ import { Pagination } from "/@src/utils/response"
 
 export async function addEmployeeVariablePayment(employeeVariablePaymentData: CreateEmployeeVariablePayment) {
     const employeeVariablePaymentRespone = useEmployeeVariablePayment()
-    let employeeVariablePayment: EmployeeVariablePayment = await employeeVariablePaymentRespone.createEmployeeVariablePaymentStore(employeeVariablePaymentData) ?? defaultEmployeeVariablePayment
+    await employeeVariablePaymentRespone.createEmployeeVariablePaymentStore(employeeVariablePaymentData)
     let success: boolean = employeeVariablePaymentRespone.success ?? false
     let error_code: string = employeeVariablePaymentRespone.error_code ?? ''
     let message: string = employeeVariablePaymentRespone.message ?? ''
-    return { success, error_code, message, employeeVariablePayment }
+    return { success, error_code, message }
 
 }
 

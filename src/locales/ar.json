@@ -271,7 +271,7 @@
       "service_provider_monthly_report": "تقرير الموظف الشهري",
       "best_attending_employee_report": "تقرير أفضل الموظفين حضوراً",
       "worst_attending_employee_report": "تقرير أسوء الموظفين حضوراً",
-      "account_history_report": "تقرير حساب مالي"
+      "account_history_report": "تقرير كشف حساب"
     },
     "waiting_list": {
       "waiting_lists": "غرف الانتظار"
@@ -404,7 +404,8 @@
       "report": {
         "month_and_year_required": "حقل الشهر والسنة مطلوب",
         "employee_required": "يرجى تحديد الموظف المطلوب",
-        "account_required": "يرجى تحديد الحساب المطلوب"
+        "account_required": "يرجى تحديد الحساب المطلوب",
+        "count_must_be_integer_positive": "حقل عدد النتائج يجب أن يكون رقم صحيح أكبر أو يساوي الصفر"
       },
       "reservation": {
         "customer_is_required": "حقل الزبون مطلوب",
@@ -466,6 +467,8 @@
     "no_actions": "لا يوجد اجراءات",
     "print": "طباعة",
     "dismiss_employee": "إقالة الموظف",
+    "add_ticket": "إضافة تذكرة",
+    "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي",
     "view_reservation_calendar": "عرض الحجوزات"
   },
   "add_quantity": {
@@ -1781,10 +1784,16 @@
         "due_date": "تاريخ الاستحقاق",
         "created_by": "بواسطة",
         "actions": "الإجراءات",
+        "is_repeatable": "   مكرر شهرياً ",
         "note": "ملاحظة"
       },
       "modal_title": "تغيير حالة متغير مالي",
-      "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال"
+      "deactivate_caution": "ملاحظة : لا يمكن تعديل هذا المتغير المالي بعد جعله غير فعّال",
+      "deactivate_modal": {
+        "title": "الغاء تفعيل المتغير المالي",
+        "confirmation": "هل أنت متأكد؟",
+        "caution": "لا يمكنك تعديل هذا المتغير المالي بعد جعله غير فعّال"
+      }
     },
     "form": {
       "page_title": "المتغيرات المالية ",
@@ -1796,6 +1805,7 @@
       "amount": "القيمة",
       "status": "الحالة",
       "due_at": "تاريخ الاستحقاق",
+      "is_repeatable": "   مكرر شهرياً ",
       "note": "ملاحظة"
     },
     "search_filter": {
@@ -3031,7 +3041,8 @@
       "date_to": "إلى تاريخ",
       "customer_group": "مجموعة الزبائن",
       "service": "الخدمة",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "best_service_provider": {
       "title": "تقرير أفضل المخدمين",
@@ -3040,7 +3051,8 @@
       "department": "القسم",
       "room": "الغرفة ",
       "service": "الخدمة",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "service_provider_monthly": {
       "title": "تقرير الموظف الشهري",
@@ -3055,7 +3067,8 @@
       "date_to": "إلى تاريخ",
       "parent_category_id": "المستوى الأول",
       "item_category_id": "المستوى الثاني",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "most_consumed_item": {
       "title": "تقرير أكثر المواد المستهلكة",
@@ -3063,7 +3076,8 @@
       "date_to": "إلى تاريخ",
       "parent_category_id": "المستوى الأول",
       "item_category_id": "المستوى الثاني",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "best_attending_employee": {
       "title": "تقرير أفضل الموظفين حضوراً",
@@ -3071,7 +3085,8 @@
       "date_to": "إلى تاريخ",
       "department": "القسم",
       "room": "الغرفة ",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "worst_attending_employee": {
       "title": "تقرير أسوء الموظفين حضوراً",
@@ -3079,10 +3094,11 @@
       "date_to": "إلى تاريخ",
       "department": "القسم",
       "room": "الغرفة ",
-      "count": "عدد النتائج"
+      "count": "عدد النتائج",
+      "all": "الكل"
     },
     "account_history": {
-      "title": "تقرير حساب مالي",
+      "title": "تقرير كشف حساب",
       "date_from": "من تاريخ",
       "date_to": "إلى تاريخ",
       "parent_chart": "المستوى 1",

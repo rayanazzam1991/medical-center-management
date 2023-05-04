@@ -24,6 +24,7 @@ export interface EmployeeVariablePayment {
     status: number
     created_at: string
     created_by: User
+    is_repeatable: boolean
 }
 export interface UpdateEmployeeVariablePayment {
     employee_id?: number
@@ -34,12 +35,13 @@ export interface UpdateEmployeeVariablePayment {
     status?: number
 }
 export interface CreateEmployeeVariablePayment {
-    employee_id: number
+    employees_id: number[]
     variable_payment_id: number
     amount: number
     note?: string
     due_date?: string
     status: number
+    is_repeatable: boolean
 }
 export interface EmployeeVariablePaymentSearchFilter {
     name?: string
@@ -63,7 +65,8 @@ export const defaultEmployeeVariablePayment: EmployeeVariablePayment = {
     release_date: undefined,
     status: 1,
     created_at: '',
-    created_by: defaultUser
+    created_by: defaultUser,
+    is_repeatable: false
 
 }
 export const defaultUpdateEmployeeVariablePayment = <UpdateEmployeeVariablePayment>{}

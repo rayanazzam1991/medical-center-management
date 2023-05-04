@@ -91,6 +91,7 @@ declare module '@vue/runtime-core' {
     EmployeesHistoryTableHeader: typeof import('./src/components/OurComponents/Employee/EmployeesHistoryTableHeader.vue')['default']
     EmployeeSubnav: typeof import('./src/layouts/navbar-items/EmployeeSubnav.vue')['default']
     EmployeeTableHeader: typeof import('./src/components/OurComponents/Employee/EmployeeTableHeader.vue')['default']
+    EmployeeVariablePaymentDropDown: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentDropDown.vue')['default']
     EmployeeVariablePaymentForm: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentForm.vue')['default']
     EmployeeVariablePaymentSearchFilterModal: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentSearchFilterModal.vue')['default']
     EmployeeVariablePaymentTableHeader: typeof import('./src/components/OurComponents/HR/Payroll/EmployeeVariablePayment/EmployeeVariablePaymentTableHeader.vue')['default']

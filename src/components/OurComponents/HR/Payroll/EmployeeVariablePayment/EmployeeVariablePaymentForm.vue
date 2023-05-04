@@ -49,13 +49,14 @@ export default defineComponent({
         const currentEmployeeVariablePayment = ref(defaultEmployeeVariablePayment);
         const employeeVariablePaymentId = ref(0);
         const requiredDueDate = ref('');
+        const requiredEmployeesId = ref();
+        const canChangeStatus = ref(true);
         const employeesList = ref<Employee[]>([])
-        const variablePaymentsList =
-            ref<VariablePayment[]>([])
+        const variablePaymentsList = ref<VariablePayment[]>([])
         const originalEmployeeVariablePaymentStatus = ref<number>();
         const currencies = getCurrenciesFromStorage()
         const mainCurrency: Currency = currencies.find((currency) => currency.is_main) ?? defaultCurrency
-
+        const employeesId = ref<number[]>([])
         //@ts-ignore
         employeeVariablePaymentId.value = route.params?.id as number ?? 0;
 
@@ -67,6 +68,7 @@ export default defineComponent({
                 currentEmployeeVariablePayment.value.variable_payment = defaultVariablePayment
                 currentEmployeeVariablePayment.value.amount = 0
                 currentEmployeeVariablePayment.value.note = undefined
+                currentEmployeeVariablePayment.value.is_repeatable = false
                 currentEmployeeVariablePayment.value.due_date = undefined
                 currentEmployeeVariablePayment.value.status = EmployeeVariablePaymentConsts.PENDING
                 return
@@ -77,11 +79,18 @@ export default defineComponent({
 
 
         };
-
+        const checkIsRepeatable = () => {
+            if (currentEmployeeVariablePayment.value.is_repeatable) {
+                currentEmployeeVariablePayment.value.status = EmployeeVariablePaymentConsts.APPROVED
+                canChangeStatus.value = false
+            } else {
+                canChangeStatus.value = true
+            }
+        }
         onMounted(async () => {
             let variablePaymentSearchFilter = {} as VariablePaymentSearchFilter
             variablePaymentSearchFilter.per_page = 500
-            variablePaymentSearchFilter.status = EmployeeVariablePaymentConsts.PENDING
+            variablePaymentSearchFilter.status = VariablePaymentConsts.ACTIVE
             const { variablePayments } = await getVariablePaymentsList(variablePaymentSearchFilter)
             variablePaymentsList.value = variablePayments
             const employeesSearchFilter = {
@@ -95,20 +104,19 @@ export default defineComponent({
         });
         onMounted(() => {
             getCurrentEmployeeVariablePayment();
-        }); 
+        });
 
         const validationSchema = employeeVariablePaymentValidationSchema
-        const { handleSubmit } = useForm({
+        const { handleSubmit, setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
-                employee_id: currentEmployeeVariablePayment?.value?.employee.id ?? 0,
                 variable_payment_id: currentEmployeeVariablePayment?.value?.variable_payment.id ?? 0,
                 amount: currentEmployeeVariablePayment?.value?.amount ?? 0,
                 note: currentEmployeeVariablePayment?.value?.note ?? '',
                 due_date: currentEmployeeVariablePayment?.value?.due_date ?? '',
                 status: currentEmployeeVariablePayment?.value?.status ?? EmployeeVariablePaymentConsts.PENDING,
             } : {
-                employee_id: 0,
+                employees_id: [] as number[],
                 variable_payment_id: 0,
                 amount: 0,
                 note: '',
@@ -126,37 +134,37 @@ export default defineComponent({
         };
         const onSubmitAdd = handleSubmit(async (values) => {
             let employeeVariablePaymentData = defaultCreateEmployeeVariablePayment
-            employeeVariablePaymentData.employee_id = currentEmployeeVariablePayment.value.employee.id ?? 0
+            employeeVariablePaymentData.employees_id = employeesId.value
             employeeVariablePaymentData.variable_payment_id = currentEmployeeVariablePayment.value.variable_payment.id
             employeeVariablePaymentData.amount = currentEmployeeVariablePayment.value.amount
             employeeVariablePaymentData.due_date = currentEmployeeVariablePayment.value.due_date
             employeeVariablePaymentData.note = currentEmployeeVariablePayment.value.note
             employeeVariablePaymentData.status = currentEmployeeVariablePayment.value.status
+            employeeVariablePaymentData.is_repeatable = currentEmployeeVariablePayment.value.is_repeatable
             if (employeeVariablePaymentData.status == EmployeeVariablePaymentConsts.WAITING) {
                 employeeVariablePaymentData.due_date = currentEmployeeVariablePayment.value.due_date
-
             } else {
                 employeeVariablePaymentData.due_date = undefined
-
             }
-
             if (employeeVariablePaymentData.status == EmployeeVariablePaymentConsts.WAITING && employeeVariablePaymentData.due_date == undefined) {
                 requiredDueDate.value = t('validation.date.required_error')
                 return
             }
-            const { success, message, employeeVariablePayment } = await addEmployeeVariablePayment(employeeVariablePaymentData);
+            if (employeeVariablePaymentData.employees_id.length < 1) {
+                requiredEmployeesId.value = t('validation.required')
+                return
+            } else {
+                requiredEmployeesId.value = undefined
+            }
+
+            const { success, message } = await addEmployeeVariablePayment(employeeVariablePaymentData);
             if (success) {
-
-
                 notif.dismissAll();
                 await sleep(200);
-
-
                 notif.success(t('toast.success.add'));
                 router.push({ path: `/employee-variable-payment` });
             } else {
                 await sleep(200);
-
                 notif.error(message)
             }
         });
@@ -170,29 +178,22 @@ export default defineComponent({
             let employeeVariablePaymentData = defaultUpdateEmployeeVariablePayment
             employeeVariablePaymentData.employee_id = currentEmployeeVariablePayment.value.employee.id ?? 0
             employeeVariablePaymentData.variable_payment_id = currentEmployeeVariablePayment.value.variable_payment.id ?? 0
+            employeeVariablePaymentData.note = currentEmployeeVariablePayment.value.note
             employeeVariablePaymentData.amount = currentEmployeeVariablePayment.value.amount
             employeeVariablePaymentData.due_date = currentEmployeeVariablePayment.value.due_date
             employeeVariablePaymentData.status = currentEmployeeVariablePayment.value.status
             if (employeeVariablePaymentData.status == EmployeeVariablePaymentConsts.WAITING) {
                 employeeVariablePaymentData.due_date = currentEmployeeVariablePayment.value.due_date
-
             } else {
                 employeeVariablePaymentData.due_date = undefined
-
             }
-
             if (employeeVariablePaymentData.status == EmployeeVariablePaymentConsts.WAITING && employeeVariablePaymentData.due_date == undefined) {
                 return
             }
-
             const { message, success } = await editEmployeeVariablePayment(employeeVariablePaymentId.value, employeeVariablePaymentData);
             if (success) {
-
-
                 notif.dismissAll();
                 await sleep(200);
-
-
                 notif.success(t('toast.success.edit'));
                 router.push({ path: `/employee-variable-payment` });
             } else {
@@ -201,7 +202,10 @@ export default defineComponent({
             }
         };
 
-        return { t, pageTitle, onSubmit, currentEmployeeVariablePayment, requiredDueDate, viewWrapper, backRoute, employeesList, variablePaymentsList, EmployeeVariablePaymentConsts, employeeVariablePaymentStore, mainCurrency, addParenthesisToString };
+        return {
+            t, pageTitle, onSubmit, currentEmployeeVariablePayment, requiredDueDate, viewWrapper, backRoute, employeesList, variablePaymentsList, EmployeeVariablePaymentConsts,
+            employeeVariablePaymentStore, mainCurrency, addParenthesisToString, employeesId, UserStatusConsts, getEmployeesList, requiredEmployeesId, checkIsRepeatable, canChangeStatus
+        };
     },
     components: { ErrorMessage }
 })
@@ -223,11 +227,11 @@ export default defineComponent({
                         </div>
                         <div class="columns is-multiline">
                             <div class="column is-12">
-                                <VField id="employee_id">
+                                <VField v-if="formType == 'Edit'">
                                     <VLabel class="required">{{ t('employee_variable_payment.form.employee_name') }}
                                     </VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentEmployeeVariablePayment.employee"
+                                        <VSelect v-if="currentEmployeeVariablePayment.employee" disabled
                                             v-model="currentEmployeeVariablePayment.employee.id">
                                             <VOption value="">{{ t('employee_variable_payment.form.employee_name') }}
                                             </VOption>
@@ -237,9 +241,31 @@ export default defineComponent({
                                                 }}
                                             </VOption>
                                         </VSelect>
-                                        <ErrorMessage class="help is-danger" name="employee_id" />
                                     </VControl>
                                 </VField>
+                                <Multiselect v-else v-model="employeesId" mode="multiple"
+                                    :placeholder="t('employee_variable_payment.form.employee_name')" :can-clear="false"
+                                    :close-on-select="false" :filter-results="false" :min-chars="0" :resolve-on-load="false"
+                                    :infinite="true" :rtl="true" :clear-on-search="true" :delay="0" :searchable="true"
+                                    :hide-selected="false" :limit="20" :options="async (query: any) => {
+                                                let employeeSearchFilter = {
+                                                    is_salaries_related: true,
+                                                    per_page: 100,
+                                                    user_status_id: UserStatusConsts.ACTIVE,
+                                                    name: query,
+                                                } as EmployeeSearchFilter
+                                                //@ts-ignore
+                                                const data = await getEmployeesList(employeeSearchFilter)
+                                                //@ts-ignore
+                                                return data.employees.map((employee: Employee) => {
+                                                    return { value: employee.id, label: employee.user.first_name + ' ' + employee.user.last_name }
+                                                })
+                                            }"
+                                    @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                                <p class="help is-danger" v-if="requiredEmployeesId">
+                                    {{ requiredEmployeesId }}</p>
+
+
                             </div>
                         </div>
                     </div>
@@ -251,6 +277,7 @@ export default defineComponent({
                                     </VLabel>
                                     <VControl>
                                         <VSelect v-if="currentEmployeeVariablePayment.variable_payment"
+                                            :disabled="formType == 'Edit'"
                                             v-model="currentEmployeeVariablePayment.variable_payment.id">
                                             <VOption value="">{{ t('employee_variable_payment.form.variable_payment') }}
                                             </VOption>
@@ -282,6 +309,17 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
+                    <div v-if="formType == 'Add'" class="form-fieldset">
+                        <div class="columns is-multiline">
+                            <div class="column is-12">
+                                <VField>
+                                    <VCheckbox v-model="currentEmployeeVariablePayment.is_repeatable" paddingless
+                                        @update:modelValue="checkIsRepeatable"
+                                        :label="t('employee_variable_payment.form.is_repeatable')" color="primary" />
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
@@ -297,23 +335,20 @@ export default defineComponent({
                             </div>
                         </div>
                     </div>
-                    <div class="form-fieldset">
+                    <div v-if="formType == 'Add'" class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
                                     <VLabel class="required">{{ t('employee_variable_payment.form.status') }}
                                     </VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentEmployeeVariablePayment.status"
+                                        <VSelect v-if="currentEmployeeVariablePayment.status" :disabled="!canChangeStatus"
                                             v-model="currentEmployeeVariablePayment.status">
                                             <VOption :value="EmployeeVariablePaymentConsts.PENDING">{{
                                                 EmployeeVariablePaymentConsts.getStatusName(EmployeeVariablePaymentConsts.PENDING)
                                             }}</VOption>
                                             <VOption :value="EmployeeVariablePaymentConsts.APPROVED">{{
                                                 EmployeeVariablePaymentConsts.getStatusName(EmployeeVariablePaymentConsts.APPROVED)
-                                            }}</VOption>
-                                            <VOption :value="EmployeeVariablePaymentConsts.INACTIVE">{{
-                                                EmployeeVariablePaymentConsts.getStatusName(EmployeeVariablePaymentConsts.INACTIVE)
                                             }}</VOption>
                                             <VOption :value="EmployeeVariablePaymentConsts.WAITING">{{
                                                 EmployeeVariablePaymentConsts.getStatusName(EmployeeVariablePaymentConsts.WAITING)
@@ -323,13 +358,13 @@ export default defineComponent({
                                         <p class="help is-danger mt-2"
                                             v-if="currentEmployeeVariablePayment.status == EmployeeVariablePaymentConsts.INACTIVE">
                                             {{ t('employee_variable_payment.table.deactivate_caution') }}</p>
-
                                     </VControl>
                                 </VField>
                             </div>
                         </div>
                     </div>
-                    <div :hidden="currentEmployeeVariablePayment.status != EmployeeVariablePaymentConsts.WAITING"
+                    <div v-if="formType == 'Add'"
+                        :hidden="currentEmployeeVariablePayment.status != EmployeeVariablePaymentConsts.WAITING"
                         class="form-fieldset">
                         <div class="columns is-multiline">
                             <div class="column is-12">

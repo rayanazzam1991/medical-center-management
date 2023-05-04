@@ -21,6 +21,8 @@ import { Room, RoomSearchFilter } from '/@src/models/Others/Room/room'
 import { Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { Notyf } from 'notyf'
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -28,12 +30,14 @@ viewWrapper.setPageTitle(t('reports.best_service_provider.title'))
 useHead({
     title: t('reports.best_service_provider.title'),
 })
+const notif = useNotyf() as Notyf
 const reportStore = useReport()
 const reportFilter = ref(resetBestServiceProviderFilter());
 const pageTitle = t('reports.best_service_provider.title');
 const roomsList = ref<Room[]>([])
 const departmentsList = ref<Department[]>([])
 const servicesList = ref<Service[]>([])
+const isAllResults = ref(false)
 
 onMounted(async () => {
 
@@ -55,6 +59,10 @@ onMounted(async () => {
 });
 
 const onSubmit = async () => {
+    if (reportFilter.value.count && (reportFilter.value.count < 0 || !Number.isInteger(reportFilter.value.count))) {
+        notif.error({ message: t('toast.error.report.count_must_be_integer_positive'), duration: 3000 })
+        return
+    }
     const { report, success } = await getBestServiceProviderReport(reportFilter.value);
     if (success && report) {
         const blob = new Blob([report], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -65,6 +73,14 @@ const onSubmit = async () => {
         link.click();
     }
 };
+watch(isAllResults, (value) => {
+    if (value) {
+        reportFilter.value.count = undefined
+    } else {
+        reportFilter.value.count = 0
+    }
+})
+
 </script>
     
 <template>
@@ -134,15 +150,26 @@ const onSubmit = async () => {
                                     </VControl>
                                 </VField>
                             </div>
-                            <div class="column is-12">
-                                <VField>
-                                    <VLabel>{{ t('reports.best_service_provider.count') }}</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="reportFilter.count" placeholder="" type="number" />
-                                    </VControl>
-                                </VField>
+                            <div class="p-0 m-0 is-flex is-align-items-end column is-12 columns">
+                                <div class="column is-9">
+                                    <VField>
+                                        <VLabel>{{ t('reports.best_service_provider.count') }}</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput :disabled="isAllResults" v-model="reportFilter.count" placeholder=""
+                                                type="number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-3">
+                                    <VField>
+                                        <VControl>
+                                            <VCheckbox class="is-flex-row" v-model="isAllResults"
+                                                :label="t('reports.best_service_provider.all')" paddingless bigger
+                                                color="primary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

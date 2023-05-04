@@ -19,6 +19,8 @@ import { Department, DepartmentSearchFilter } from '/@src/models/Others/Departme
 import { Room, RoomSearchFilter } from '/@src/models/Others/Room/room'
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { Notyf } from 'notyf'
 
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
@@ -26,11 +28,13 @@ viewWrapper.setPageTitle(t('reports.worst_attending_employee.title'))
 useHead({
     title: t('reports.worst_attending_employee.title'),
 })
+const notif = useNotyf() as Notyf
 const reportStore = useReport()
 const reportFilter = ref(resetWorstAttendingEmployeeFilter());
 const pageTitle = t('reports.worst_attending_employee.title');
 const departmentsList = ref<Department[]>([])
 const roomsList = ref<Room[]>([])
+const isAllResults = ref(false)
 onMounted(async () => {
 
     let roomSearchFilter = {} as RoomSearchFilter
@@ -45,6 +49,10 @@ onMounted(async () => {
 });
 
 const onSubmit = async () => {
+    if (reportFilter.value.count && (reportFilter.value.count < 0 || !Number.isInteger(reportFilter.value.count))) {
+        notif.error({ message: t('toast.error.report.count_must_be_integer_positive'), duration: 3000 })
+        return
+    }
     const { report, success } = await getWorstAttendingEmployeeReport(reportFilter.value);
     if (success && report) {
         const blob = new Blob([report], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -55,6 +63,14 @@ const onSubmit = async () => {
         link.click();
     }
 };
+watch(isAllResults, (value) => {
+    if (value) {
+        reportFilter.value.count = undefined
+    } else {
+        reportFilter.value.count = 0
+    }
+})
+
 </script>
         
 <template>
@@ -112,15 +128,26 @@ const onSubmit = async () => {
                                     </VControl>
                                 </VField>
                             </div>
-                            <div class="column is-12">
-                                <VField>
-                                    <VLabel>{{ t('reports.worst_attending_employee.count') }}</VLabel>
-                                    <VControl icon="feather:chevrons-right">
-                                        <VInput v-model="reportFilter.count" placeholder="" type="number" />
-                                    </VControl>
-                                </VField>
+                            <div class="p-0 m-0 is-flex is-align-items-end column is-12 columns">
+                                <div class="column is-9">
+                                    <VField>
+                                        <VLabel>{{ t('reports.worst_attending_employee.count') }}</VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput :disabled="isAllResults" v-model="reportFilter.count" placeholder=""
+                                                type="number" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                                <div class="column is-3">
+                                    <VField>
+                                        <VControl>
+                                            <VCheckbox class="is-flex-row" v-model="isAllResults"
+                                                :label="t('reports.worst_attending_employee.all')" paddingless bigger
+                                                color="primary" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

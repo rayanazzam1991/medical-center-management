@@ -190,12 +190,13 @@ const columns = {
     actions: {
         align: 'center',
         label: t('customer.table.columns.actions'),
-
         renderRow: (row: Customer) =>
             h(CustomerDropDown, {
                 viewPermission: Permissions.CUSTOMER_SHOW,
                 changeStatusPermission: Permissions.CUSTOMER_EDIT,
                 addReminderPermission: Permissions.REMINDER_CREATE,
+                addTicketPermission: Permissions.TICKET_CREATE,
+                isActive: row.user.status.id == UserStatusConsts.ACTIVE,
                 onView: () => {
                     router.push({ path: `/customer/${row?.id}` })
                 },
@@ -205,6 +206,9 @@ const columns = {
                 },
                 onAddReminder: () => {
                     router.push({ path: `/reminder/add`, query: { customer_id: row.id } })
+                },
+                onAddTicket: () => {
+                    router.push({ path: `/ticket/add`, query: { customer_id: row.id } })
                 }
 
 

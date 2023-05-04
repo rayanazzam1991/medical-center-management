@@ -394,7 +394,7 @@ const updateSelectedRoles = () => {
                                     </VField>
                                 </div>
                             </div>
-                            <div class="column is-12">
+                            <div class="column is-12 px-0">
                                 <VField id="address">
                                     <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
                                     <VControl>
