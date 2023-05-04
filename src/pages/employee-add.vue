@@ -28,7 +28,7 @@ useHead({
 
         <!--Wizard Progress Bar-->
         <VProgress id="wizard-progress" class="wizard-progress" color="primary" size="smaller"
-            :value="(employeeForm.step / 1) * 100" :max="100" />
+            :value="(employeeForm.step / 2) * 100" :max="100" />
 
         <!--Main Wrapper-->
         <form class="wizard-v1-wrapper" @submit.prevent="() => employeeForm?.validateStepFn?.()">
