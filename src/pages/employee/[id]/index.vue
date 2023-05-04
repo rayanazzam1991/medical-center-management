@@ -1129,8 +1129,4 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
   margin-right: 12px;
 }
 
-.required::after {
-  content: ' *';
-  color: var(--danger);
-}
 </style>

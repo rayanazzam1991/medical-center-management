@@ -196,7 +196,7 @@ const onSubmitEdit = handleSubmit(async (values) => {
 
     if (employeeData.basic_salary == 0) {
         if (employeeData.payment_percentage == 0) {
-            notif.error(t('toast.error.basic_salary_payment_percentage_required'))
+            notif.error(t('toast.error.employee.basic_salary_payment_percentage_required'))
             return
         } else {
             selectedType = EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE
@@ -308,7 +308,6 @@ const updateSelectedRoles = () => {
                         </div>
                     </VLoader>
                     <div :hidden="isLoading">
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
@@ -361,7 +360,6 @@ const updateSelectedRoles = () => {
                                 </div>
                             </div>
                         </div>
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline ">
                                 <div class="column is-half">
@@ -395,10 +393,18 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
+                            <div class="column is-12 px-0">
+                                <VField id="address">
+                                    <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
+                                    <VControl>
+                                        <VTextarea v-model="currentUser.address" />
+                                        <ErrorMessage class="help is-danger" name="address" />
+                                    </VControl>
+                                </VField>
+                            </div>
+
                         </div>
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
@@ -431,21 +437,8 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
-                                <div class="column is-12">
-                                    <VField id="address">
-                                        <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
-                                        <VControl>
-                                            <VTextarea v-model="currentUser.address" />
-                                            <ErrorMessage class="help is-danger" name="address" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-
                             </div>
                         </div>
-                        <!--Fieldset-->
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
@@ -467,7 +460,6 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                                 <div class="column is-6">
                                     <VField id="room_id">
                                         <VLabel class="required">{{ t('employee.form.room') }}</VLabel>
@@ -486,9 +478,6 @@ const updateSelectedRoles = () => {
                                 </div>
                             </div>
                         </div>
-
-
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
@@ -513,7 +502,6 @@ const updateSelectedRoles = () => {
                                 </div>
                             </div>
                         </div>
-                        <!--Fieldset-->
                         <div class="form-fieldset">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
@@ -592,10 +580,6 @@ const updateSelectedRoles = () => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 .layout {
     min-width: 50%;

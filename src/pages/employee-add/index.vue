@@ -158,7 +158,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     let rolesError = false
     if (employeeData.basic_salary == 0) {
       if (employeeData.payment_percentage == 0) {
-        notif.error(t('toast.error.basic_salary_payment_percentage_required'))
+        notif.error(t('toast.error.employee.basic_salary_payment_percentage_required'))
         return
       } else {
         selectedType = EmployeeConsts.TYPE_COMMISSION_BASED_EMPLOYEE
@@ -243,7 +243,6 @@ const updateSelectedRoles = () => {
         <div class="form-body">
           <div class="layout">
 
-            <!--Fieldset-->
             <div class="form-fieldset">
               <div class="fieldset-heading">
                 <h4>{{ pageTitle }}</h4>
@@ -300,7 +299,6 @@ const updateSelectedRoles = () => {
                 </div>
               </div>
             </div>
-            <!--Fieldset-->
             <div class="form-fieldset">
               <div class="columns is-multiline ">
                 <div class="column is-half">
@@ -333,21 +331,29 @@ const updateSelectedRoles = () => {
                 </div>
               </div>
             </div>
-            <div class="columns is-multiline ">
-              <div class="form-fieldset">
-                <div class="columns">
-                  <div class="is-flex is-justify-content-center">
-                    <VControl class="ml-3">
-                      <VSwitchSegment :key="keyIncrement" v-model="isUser"
-                        :label-true="t('employee.form.have_permission')"
-                        :label-false="t('employee.form.haveNot_permission')" color="success" />
+            <div class="form-fieldset">
+              <div class="columns is-multiline">
+                <div class="column is-12">
+                  <VField id="address">
+                    <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
+                    <VControl>
+                      <VTextarea v-model="currentUser.address" />
+                      <ErrorMessage class="help is-danger" name="address" />
                     </VControl>
-                  </div>
+                  </VField>
                 </div>
               </div>
             </div>
-
-            <!--Fieldset-->
+            <div class="form-fieldset">
+              <div class="columns is-multiline">
+                <div class="column is-12 is-flex is-justify-content-center">
+                  <VControl class="ml-3">
+                    <VSwitchSegment :key="keyIncrement" v-model="isUser" :label-true="t('employee.form.have_permission')"
+                      :label-false="t('employee.form.haveNot_permission')" color="success" />
+                  </VControl>
+                </div>
+              </div>
+            </div>
             <div class="form-fieldset" :hidden="!isUser">
               <div class="columns is-multiline">
                 <div class="column is-6">
@@ -380,25 +386,8 @@ const updateSelectedRoles = () => {
                     </VControl>
                   </VField>
                 </div>
-
               </div>
             </div>
-            <!--Fieldset-->
-            <div class="form-fieldset">
-              <div class="columns is-multiline">
-                <div class="column is-12">
-                  <VField id="address">
-                    <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
-                    <VControl>
-                      <VTextarea v-model="currentUser.address" />
-                      <ErrorMessage class="help is-danger" name="address" />
-                    </VControl>
-                  </VField>
-                </div>
-              </div>
-            </div>
-
-            <!--Fieldset-->
             <div class="form-fieldset">
               <div class="columns is-multiline">
                 <div class="column is-6">
@@ -434,7 +423,6 @@ const updateSelectedRoles = () => {
                 </div>
               </div>
             </div>
-            <!--Fieldset-->
             <div class="form-fieldset">
               <div class="columns is-multiline">
                 <div class="column is-6">
@@ -459,7 +447,6 @@ const updateSelectedRoles = () => {
                 </div>
               </div>
             </div>
-            <!--Fieldset-->
             <div class="form-fieldset">
               <div class="columns is-multiline">
                 <div class="column is-6">
@@ -539,10 +526,6 @@ const updateSelectedRoles = () => {
 @import '/@src/scss/abstracts/all';
 @import '/@src/scss/components/forms-outer';
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 
 .Vi {

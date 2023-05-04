@@ -536,10 +536,6 @@ const calcCurrencyDifferences = debounce(() => {
   background-color: #444444;
 }
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 
 .form-layout .form-outer .form-body {

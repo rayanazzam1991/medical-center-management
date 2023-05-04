@@ -317,10 +317,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
 @import '/@src/scss/components/forms-outer';
 
 
-.required::after {
-    content: " *";
-    color: var(--danger);
-}
 
 .font {
     font-size: xx-small;

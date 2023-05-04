@@ -7,13 +7,6 @@
     }
 }
 
-.required::after {
-    content:" *";
-    color: var(--danger);
-  }
-
-// .optional::after {
-// }
 
 .filter {
     margin: 1rem;

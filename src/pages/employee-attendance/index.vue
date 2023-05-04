@@ -2637,10 +2637,6 @@ Object.assign(columns29, columns28, columns29Sub)
   cursor: default !important;
 }
 
-.required::after {
-  content: " *";
-  color: var(--danger);
-}
 
 .file-name {
 
