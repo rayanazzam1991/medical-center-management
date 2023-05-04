@@ -17,6 +17,7 @@ export interface VCheckboxProps {
   solid?: boolean
   paddingless?: boolean
   wrapperClass?: string
+  bigger?: boolean
 }
 
 const emits = defineEmits<VCheckboxEmits>()
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<VCheckboxProps>(), {
   solid: false,
   paddingless: false,
   wrapperClass: undefined,
+  bigger: false
 })
 
 const vFieldContext = reactive(useVFieldContext())
@@ -46,6 +48,7 @@ const classes = computed(() => {
     props.circle && 'is-circle',
     props.color && `is-${props.color}`,
     props.paddingless && 'is-paddingless',
+    props.bigger && 'is-bigger',
   ]
 })
 
@@ -137,6 +140,13 @@ watch(
 
   &.is-paddingless {
     padding: 0 !important;
+  }
+
+  &.is-bigger {
+    span {
+      width: 40px !important;
+      height: 40px !important;
+    }
   }
 
   &.is-circle {
