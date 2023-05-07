@@ -42,7 +42,7 @@
       "welcome_back": "أهلاً بعودتك.",
       "sign_in": "من فضلك قم بتسجيل الدخول الى حسابك",
       "placeholders": {
-        "phone": "رقم الهاتف",
+        "phone_username": "اسم المستخدم/رقم الهاتف",
         "password": "كلمة المرور"
       },
       "sign_in_button": "تسجيل الدخول"
@@ -287,6 +287,7 @@
     "change_password": "تعديل كلمة المرور",
     "view_my_waiting_list": "عرض غرفة الانتظار الخاصة بي",
     "name": "الاسم:",
+    "username": "اسم امستخدم:",
     "roles": "الأدوار:",
     "change_password_popup": {
       "title": "تغيير كلمة المرور",
@@ -916,6 +917,7 @@
       "back_button": "الرجوع إلى واجهة الموظفين",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
+      "username": "اسم المستخدم",
       "phone_number": "رقم الهاتف",
       "birth_date": "تاريخ الميلاد",
       "gender": "الجنس",

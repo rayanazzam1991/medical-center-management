@@ -7,6 +7,7 @@ export interface User {
     id?: number
     first_name: string
     last_name: string
+    username?: string
     password: string
     gender: string
     birth_date?: string
@@ -19,6 +20,11 @@ export interface User {
     token?: string
     default_role?: Role
 }
+export interface GenerateUniqueUsernameData {
+    first_name: string
+    last_name: string
+}
+
 export interface CreateUpdateUser {
     id?: number
     first_name: string
@@ -30,6 +36,7 @@ export interface CreateUpdateUser {
     address?: string
     city_id?: number
     room_id?: number
+    username?: string
     user_status_id?: number
     default_role_id?: number
     roles: string[]
@@ -62,6 +69,7 @@ export const defaultCreateUpdateUser: CreateUpdateUser = {
     user_status_id: undefined,
     default_role_id: undefined,
     password: '0000000000',
+    username: undefined,
     roles: []
 }
 export const defaultChangeStatusUser: ChangeUserStatus = {
@@ -81,6 +89,7 @@ export const defaultUser: User = {
     password: '',
     token: undefined,
     room: defaultRoom,
+    username: undefined,
     default_role: undefined
 }
 
