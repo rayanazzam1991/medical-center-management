@@ -234,7 +234,7 @@ export default defineComponent({
       if (success) {
         await sleep(200);
         notif.success(t('toast.success.add_ticket', { ticket_id: ticket.id }))
-        currentTicket.value.requested_services = []
+        currentTicket.zvalue.requested_services = []
         router.push({ path: `/ticket/${ticket.id}` });
       }
       else {

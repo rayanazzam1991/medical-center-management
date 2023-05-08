@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
-import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi, getUsersWithoutCustomerApi } from "/@src/utils/api/Others/User"
+import { User, CreateUpdateUser, ChangeUserStatus, UserSearchFilter, GenerateUniqueUsernameData } from "/@src/models/Others/User/user"
+import { deleteUserApi, getUserApi, addUserApi, editUserApi, changeUserStatusApi, getUsersApi, phoneExistsCheckApi, getUsersWithoutCustomerApi, generateUniqueUsernameApi } from "/@src/utils/api/Others/User"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -203,6 +203,24 @@ export const useUser = defineStore('user', () => {
       loading.value = false
     }
   }
+  async function generateUniqueUsernameStore(data: GenerateUniqueUsernameData) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const returnedResponse = await generateUniqueUsernameApi(api, data)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+      return returnedResponse.response.data
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -218,7 +236,8 @@ export const useUser = defineStore('user', () => {
     getUsersStore,
     phoneExistsCheckStore,
     changeUserStatusStore,
-    getUsersWithoutCustomerStore
+    getUsersWithoutCustomerStore,
+    generateUniqueUsernameStore
   } as const
 })
 

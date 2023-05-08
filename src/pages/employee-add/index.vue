@@ -3,14 +3,14 @@ import { useHead } from '@vueuse/head';
 import { ErrorMessage, useForm } from 'vee-validate';
 import { addEmployee } from '/@src/services/Employee/employeeService';
 import { getRoomsList } from '/@src/services/Others/Room/roomSevice';
-import { phoneExistsCheck } from '/@src/services/Others/User/userService';
+import { phoneExistsCheck, generateUniqueUsername } from '/@src/services/Others/User/userService';
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
 import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
 import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
-import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
+import { GenerateUniqueUsernameData, defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
@@ -18,9 +18,9 @@ import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
 import sleep from "/@src/utils/sleep"
-import { Position, defaultPositionSearchFilter, PositionSearchFilter } from '/@src/models/Others/Position/position';
+import { Position, PositionSearchFilter } from '/@src/models/Others/Position/position';
 import { getPositionsList } from '/@src/services/Others/Position/positionService';
-import { defaultDepartmentSearchFilter, Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
+import { Department, DepartmentSearchFilter } from '/@src/models/Others/Department/department';
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService';
 import { BaseConsts } from '/@src/utils/consts/base';
 import { Notyf } from 'notyf';
@@ -31,6 +31,8 @@ import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
 import { EmployeeConsts } from '/@src/models/Employee/employee';
 import { Role } from '/@src/utils/consts/rolesPermissions';
 import { getRolesList } from '/@src/services/Others/Role/roleService';
+import debounce from 'lodash.debounce';
+
 const { t } = useI18n()
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle(t('employee.form.step_1_title'))
@@ -77,6 +79,10 @@ const rolesList = ref<Role[]>([])
 const selectedRolesList = ref<Role[]>([])
 const keyIncrement = ref(0)
 const isUser = ref(false)
+const firstName = ref('')
+const lastName = ref('')
+const userNameLoading = ref(false)
+const userName = ref<string | undefined>(undefined)
 onMounted(async () => {
 
   let citySearchFilter = {} as CitySearchFilter
@@ -122,6 +128,21 @@ const getRoomsByDepartment = async () => {
   roomsList.value = rooms
 
 }
+const debouncedUserName = debounce(async () => {
+  const uniqueUserName: GenerateUniqueUsernameData = {
+    first_name: firstName.value,
+    last_name: lastName.value
+  }
+  userNameLoading.value = true
+  const { username, success, message } = await generateUniqueUsername(uniqueUserName)
+  if (success) {
+    userName.value = username
+  } else {
+    userName.value = undefined
+    notif.error({ message: message, duration: 3000 })
+  }
+  userNameLoading.value = false
+}, 1000)
 
 const validationSchema = employeeAddvalidationSchema
 
@@ -130,6 +151,7 @@ const { handleSubmit } = useForm({
   initialValues: {
     first_name: "",
     last_name: "",
+    username: "",
     gender: "",
     birth_date: "",
     phone_number: "",
@@ -150,6 +172,9 @@ const { handleSubmit } = useForm({
 const onSubmitAdd = handleSubmit(async (values) => {
 
   let userData = currentUser.value
+  userData.first_name = firstName.value
+  userData.last_name = lastName.value
+  userData.username = userName.value
   const { result } = await phoneExistsCheck('964' + userData.phone_number)
   phoneCheck.value = result as string
   if (phoneCheck.value === 'false') {
@@ -184,6 +209,7 @@ const onSubmitAdd = handleSubmit(async (values) => {
     employeeForm.userForm.birth_date = userData.birth_date
     employeeForm.userForm.phone_number = userData.phone_number
     employeeForm.userForm.address = userData.address
+    employeeForm.userForm.username = userData.username
     if (currentUser.value.room_id != undefined)
       employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
@@ -232,8 +258,15 @@ const updateSelectedRoles = () => {
     });
     currentUser.value.default_role_id = selectedRolesList.value[0].id
   }
-
 }
+watch([firstName, lastName], async () => {
+  if (firstName.value != '' && lastName.value != '') {
+    await debouncedUserName()
+  } else {
+    userName.value = undefined
+  }
+})
+
 </script>
 
 <template>
@@ -252,8 +285,7 @@ const updateSelectedRoles = () => {
                   <VField id="first_name">
                     <VLabel class="required">{{ t('employee.form.first_name') }}</VLabel>
                     <VControl icon="feather:chevrons-right">
-                      <VInput v-model="currentUser.first_name" type="text" placeholder=""
-                        autocomplete="given-first_name" />
+                      <VInput v-model="firstName" type="text" placeholder="" autocomplete="given-first_name" />
                       <ErrorMessage class="help is-danger" name="first_name" />
                     </VControl>
                   </VField>
@@ -262,7 +294,7 @@ const updateSelectedRoles = () => {
                   <VField id="last_name">
                     <VLabel class="required">{{ t('employee.form.last_name') }}</VLabel>
                     <VControl icon="feather:chevrons-right">
-                      <VInput v-model="currentUser.last_name" type="text" placeholder="" autocomplete="given-last_name" />
+                      <VInput v-model="lastName" type="text" placeholder="" autocomplete="given-last_name" />
                       <ErrorMessage class="help is-danger" name="last_name" />
                     </VControl>
                   </VField>
@@ -288,6 +320,18 @@ const updateSelectedRoles = () => {
                   </VField>
                 </div>
                 <div class="column is-6">
+                  <VField id="username">
+                    <VLabel style="position:relative" class="required">{{ t('employee.form.username') }}
+                      <div v-if="userNameLoading" class="loader is-loading mr-2 mt-2 custom-loader">
+                      </div>
+                    </VLabel>
+                    <VControl icon="feather:chevrons-right">
+                      <VInput disabled v-model="userName" type="text" placeholder="" />
+                      <ErrorMessage class="help is-danger" name="username" />
+                    </VControl>
+                  </VField>
+                </div>
+                <div class="column is-6">
                   <VField id="birth_date">
                     <VLabel class="required">{{ t('employee.form.birth_date') }} </VLabel>
                     <VControl icon="feather:chevrons-right">
@@ -297,13 +341,9 @@ const updateSelectedRoles = () => {
                     </VControl>
                   </VField>
                 </div>
-              </div>
-            </div>
-            <div class="form-fieldset">
-              <div class="columns is-multiline ">
-                <div class="column is-half">
+                <div class="column is-6">
                   <VField id="gender">
-                    <VLabel class="required ml-3">{{ t('employee.form.gender') }}</VLabel>
+                    <VLabel class="required">{{ t('employee.form.gender') }}</VLabel>
                     <VControl>
                       <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')" name="gender"
                         color="success" />
@@ -311,6 +351,20 @@ const updateSelectedRoles = () => {
                       <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')" name="gender"
                         color="success" />
                       <ErrorMessage class="help is-danger" name="gender" />
+                    </VControl>
+                  </VField>
+                </div>
+                <div class="column is-6">
+                  <VField id="nationality_id">
+                    <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
+                    <VControl>
+                      <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                        <VOption value="">{{ t('employee.form.nationality') }}</VOption>
+                        <VOption v-for="nationality in nationalitiesList" :key="nationality.id" :value="nationality.id">{{
+                          nationality.name }}
+                        </VOption>
+                      </VSelect>
+                      <ErrorMessage class="help is-danger" name="nationality_id" />
                     </VControl>
                   </VField>
                 </div>
@@ -466,20 +520,6 @@ const updateSelectedRoles = () => {
                     <VControl icon="feather:percent">
                       <VInput v-model="currentEmployee.payment_percentage" type="number" />
                       <ErrorMessage class="help is-danger" name="payment_percentage" />
-                    </VControl>
-                  </VField>
-                </div>
-                <div class="column is-6">
-                  <VField id="nationality_id">
-                    <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
-                    <VControl>
-                      <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                        <VOption value="">{{ t('employee.form.nationality') }}</VOption>
-                        <VOption v-for="nationality in nationalitiesList" :key="nationality.id" :value="nationality.id">{{
-                          nationality.name }}
-                        </VOption>
-                      </VSelect>
-                      <ErrorMessage class="help is-danger" name="nationality_id" />
                     </VControl>
                   </VField>
                 </div>
