@@ -4,17 +4,20 @@ import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import { checkPermission } from '/@src/composable/checkPermission';
 import { useNotyf } from '/@src/composable/useNotyf';
-import { Employee } from '/@src/models/Employee/employee';
+import { Employee, EmployeeService, defaultEmployeeService } from '/@src/models/Employee/employee';
 import { defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/ticket';
-import { TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
+import { CreateTicketService, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { WaitingList, defaultWaitingList, TicketServicesNotesHelper } from '/@src/models/Sales/WaitingList/waitingList';
 import { moveTicketToNextWaitingList } from '/@src/services/Sales/Ticket/ticketService';
-import { serveTicketService } from '/@src/services/Sales/TicketService/ticketServiceService';
+import { createTicketService, deleteTicketService, serveTicketService } from '/@src/services/Sales/TicketService/ticketServiceService';
 import { getWaitingListByProvider, serveNextTicketInProviderWaitingList } from '/@src/services/Sales/WaitingList/waitingListService';
 import { useEmployee } from '/@src/stores/Employee/employeeStore';
 import { useTicketService } from '/@src/stores/Sales/TicketService/ticketServiceStore';
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { ServiceProvider, defaultServiceProvider } from '/@src/models/Sales/ServiceProvider/serviceProvider';
+import { getEmployee } from '/@src/services/Employee/employeeService';
+import { defaultService } from '/@src/models/Others/Service/service';
 export interface EmployeeWaitingListProps {
     employeeIdFromRoute: boolean,
     employeeId: number | undefined
@@ -30,13 +33,20 @@ const waitingListStore = useWaitingList()
 const ticketServiceStore = useTicketService()
 const employeeWaitingList = ref<WaitingList>(defaultWaitingList)
 const keyIncrement = ref(0)
+const keyIncrementAddServiceModal = ref(0)
 const employeeId = ref(0)
 const route = useRoute();
 const servingTicket = ref(defaultTicket)
 const ticketServicesNotesHelper = ref<TicketServicesNotesHelper[]>([])
+const serviceProviderServices = ref<EmployeeService[]>([])
 const isThereServingTicket = ref(false)
 const selectedServeServiceId = ref(0)
+const selectedTicketId = ref(0)
+const selectedServiceProviderId = ref(0)
+const selectedServiceProviderPrice = ref(0)
 const serveServiceConfirmationPopup = ref(false)
+const deleteServiceConfirmationPopup = ref(false)
+const addServicePopup = ref(false)
 const intialLoading = ref(false)
 const employeeName = ref('')
 const loggedEmployee = ref<Employee>()
@@ -58,6 +68,7 @@ onMounted(async () => {
         const { waiting_list } = await getWaitingListByProvider(employeeId.value)
         employeeWaitingList.value = waiting_list
         employeeName.value = employeeWaitingList.value.provider.user.first_name + ' ' + employeeWaitingList.value.provider.user.last_name
+        serviceProviderServices.value = employeeWaitingList.value.provider.services
         serveingServiceSetup()
         intialLoading.value = false
     }
@@ -89,6 +100,36 @@ const markServiceAsServed = async () => {
     }
     serveServiceConfirmationPopup.value = false
 }
+const deleteService = async () => {
+    const { success, message } = await deleteTicketService(selectedServeServiceId.value)
+    if (success) {
+        notif.success(t('toast.success.remove'))
+        await refreshWaitingList()
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+    deleteServiceConfirmationPopup.value = false
+}
+const createNewTicketService = async () => {
+    if (selectedServiceProviderId.value == 0) {
+        notif.error({ message: t('toast.error.ticket.ticket_service_is_required'), duration: 3000 })
+        return
+    }
+    const createTicketServiceData: CreateTicketService = {
+        ticket_id: selectedTicketId.value,
+        service_provider_id: selectedServiceProviderId.value,
+        sell_price: selectedServiceProviderPrice.value
+    }
+    const { success, message } = await createTicketService(createTicketServiceData)
+    if (success) {
+        notif.success(t('toast.success.add'))
+        await refreshWaitingList()
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+    addServicePopup.value = false
+}
+
 const ticketServingDone = async () => {
     const { success, message } = await moveTicketToNextWaitingList(servingTicket.value.id)
     if (success) {
@@ -138,7 +179,23 @@ const serveConfirmation = (requestedServiceId: number) => {
     serveServiceConfirmationPopup.value = true
 
 }
-
+const removeService = (requestedServiceId: number) => {
+    selectedServeServiceId.value = requestedServiceId
+    deleteServiceConfirmationPopup.value = true
+}
+const addNewService = () => {
+    selectedTicketId.value = servingTicket.value.id
+    selectedServiceProviderId.value = 0
+    selectedServiceProviderPrice.value = 0
+    keyIncrementAddServiceModal.value++
+    addServicePopup.value = true
+}
+watch(selectedServiceProviderId, (value) => {
+    let selectedService = serviceProviderServices.value.find((service) => service.id == value)
+    if (selectedService) {
+        selectedServiceProviderPrice.value = selectedService.price
+    }
+})
 </script>
     
 <template>
@@ -225,7 +282,7 @@ const serveConfirmation = (requestedServiceId: number) => {
 
                             <div v-for="requested_service in servingTicket.requested_services" :key="requested_service.id"
                                 class="columns is-multiline pr-2 service-row">
-                                <div class="service-details column is-2">
+                                <div class="service-details column is-2 mb-0 pb-0">
                                     <p>{{ requested_service.service.name }}</p>
                                 </div>
                                 <div class="service-details column is-2">
@@ -233,7 +290,7 @@ const serveConfirmation = (requestedServiceId: number) => {
                                         {{ requested_service.provider.user.first_name }}
                                         {{ requested_service.provider.user.last_name }}</p>
                                 </div>
-                                <div class="service-details column is-4">
+                                <div class="service-details column is-4  mb-0 pb-0">
                                     <p
                                         v-if="requested_service.provider.id != employeeId || requested_service.status == TicketServiceConsts.SERVED">
                                         {{ requested_service.note ?? '-' }}</p>
@@ -248,25 +305,36 @@ const serveConfirmation = (requestedServiceId: number) => {
                                         </VField>
                                     </div>
                                 </div>
-                                <div class="service-details column is-2">
+                                <div class="service-details column is-2  mb-0 pb-0">
                                     <p> {{ TicketServiceConsts.getStatusName(requested_service.status) }}</p>
                                 </div>
-                                <div class="service-details column is-1">
+                                <div class="service-details column is-2  mb-0 pb-0">
                                     <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                                         @click="serveConfirmation(requested_service.id)" color="primary" raised
                                         v-if="requested_service.provider.id == employeeId && requested_service.status == TicketServiceConsts.NOT_SERVED">
                                         {{ t('employee.waiting_list.make_served') }}
                                     </VButton>
                                 </div>
-                                <p class="column is-12 pt-0" v-if="requested_service.service.has_item">
-                                    {{ t('employee.waiting_list.service_items') }}
-                                    <span v-for="(item, index) in requested_service.service.service_items">
-                                        {{ item.item.name }} ({{ t('employee.waiting_list.service_items_quantity') }}
-                                        {{ item.quantity }})
-                                        {{ index !== requested_service.service.service_items.length - 1 ? '|' : '' }}
-                                    </span>
-                                </p>
 
+
+                                <div class="service-details column is-10 pt-0">
+                                    <p class="pt-0" v-if="requested_service.service.has_item">
+                                        {{ t('employee.waiting_list.service_items') }}
+                                        <span v-for="(item, index) in requested_service.service.service_items">
+                                            {{ item.item.name }} ({{ t('employee.waiting_list.service_items_quantity')
+                                            }}
+                                            {{ item.quantity }})
+                                            {{ index !== requested_service.service.service_items.length - 1 ? '|' : ''
+                                            }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="service-details column is-2 pt-0">
+                                    <VIconButton v-permission="Permissions.TICKET_SERVICE_DELETE"
+                                        v-if="requested_service.provider.id == employeeId && requested_service.status == TicketServiceConsts.NOT_SERVED"
+                                        icon="feather:trash-2" @click="removeService(requested_service.id)" color="danger">
+                                    </VIconButton>
+                                </div>
                             </div>
 
 
@@ -278,16 +346,20 @@ const serveConfirmation = (requestedServiceId: number) => {
                     <VButton class="center" v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                         :loading="waitingListStore.loading" @click="serveNext" color="primary" raised
                         v-if="!isThereServingTicket" :disabled="employeeWaitingList.waiting_list.length == 0">
-                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first') }}
+                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first')
+                        }}
                     </VButton>
                 </div>
                 <div v-if="isThereServingTicket" class="ticket-footer">
                     <div class="ticket-footer-inner">
+                        <VButton v-permission="Permissions.TICKET_SERVICE_CREATE" outlined
+                            :loading="waitingListStore.loading" @click="addNewService" color="primary"
+                            v-if="isThereServingTicket"> {{
+                                t(`employee.waiting_list.add_new_service`) }} </VButton>
                         <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                             :loading="waitingListStore.loading" @click="ticketServingDone" color="primary" raised
                             v-if="isThereServingTicket"> {{
                                 t(`employee.waiting_list.done`) }} </VButton>
-
                     </div>
                 </div>
             </div>
@@ -303,6 +375,52 @@ const serveConfirmation = (requestedServiceId: number) => {
             <VButton :loading="ticketServiceStore.loading" color="primary" raised @click="markServiceAsServed">{{
                 t('modal.buttons.confirm')
             }}</VButton>
+        </template>
+    </VModal>
+    <VModal :title="t('employee.waiting_list.delete_confirmation.title')" :open="deleteServiceConfirmationPopup"
+        actions="center" @close="deleteServiceConfirmationPopup = false">
+        <template #content>
+            <VPlaceholderSection :title="t('employee.waiting_list.delete_confirmation.caution')"
+                :subtitle="t('employee.waiting_list.delete_confirmation.subtitle')" />
+        </template>
+        <template #action="{ close }">
+            <VButton :loading="ticketServiceStore.loading" color="primary" raised @click="deleteService">{{
+                t('modal.buttons.confirm')
+            }}</VButton>
+        </template>
+    </VModal>
+    <VModal :key="keyIncrementAddServiceModal" :title="t('employee.waiting_list.add_service_modal.title')"
+        :open="addServicePopup" actions="center" @close="addServicePopup = false">
+        <template #content>
+            <div class="form-fieldset">
+                <div class="columns is-multiline">
+                    <div class="column is-12 columns">
+                        <VField class="column is-9" id="user_status_id">
+                            <VLabel>{{ t('employee.waiting_list.add_service_modal.service') }}</VLabel>
+                            <VControl>
+                                <VSelect v-model="selectedServiceProviderId">
+                                    <VOption v-for="service in serviceProviderServices" :key="service.id"
+                                        :value="service.id">
+                                        {{
+                                            service.service.name
+                                        }}
+                                    </VOption>
+                                </VSelect>
+                            </VControl>
+                        </VField>
+                        <VField class="column is-3" id="user_status_id">
+                            <VLabel>{{ t('employee.waiting_list.add_service_modal.service_price') }}</VLabel>
+                            <VControl>
+                                <VInput disabled v-model="selectedServiceProviderPrice" type="number" />
+                            </VControl>
+                        </VField>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template #action="{ close }">
+            <VButton :loading="ticketServiceStore.loading" color="primary" raised @click="createNewTicketService">{{
+                t('modal.buttons.add') }}</VButton>
         </template>
     </VModal>
 </template>
@@ -344,6 +462,7 @@ const serveConfirmation = (requestedServiceId: number) => {
     .ticket-details-layout {
         flex-grow: 1;
         height: 100%;
+        width: 0;
         padding: 0.6rem;
         padding-bottom: 1.1rem;
         overflow: auto;

@@ -22,6 +22,11 @@ export interface TicketService {
     created_at: string
     updated_at: string
 }
+export interface CreateTicketService {
+    ticket_id: number
+    service_provider_id: number
+    sell_price: number
+}
 
 export interface CreateUpdateTicketService {
     service_provider_id: number
@@ -63,6 +68,11 @@ export const defaultTicketService: TicketService = {
     status: 1,
     updated_at: '',
     ticket: undefined
+}
+export const defaultCreateTicketService: CreateTicketService = {
+    sell_price: 0,
+    service_provider_id: 0,
+    ticket_id: 0
 }
 
 class TicketServiceConsts {
