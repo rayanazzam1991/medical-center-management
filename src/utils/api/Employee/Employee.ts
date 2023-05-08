@@ -3,7 +3,7 @@ import { CustomResponseSingle, CustomResponseCollection } from "../../response"
 import { CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
 import { EmployeeScheduleSearchFilter, UpdateSchedule } from "../../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
-import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "../../../models/Employee/employeeHistory"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, EmployeesAvailabilitySearchFilter } from "../../../models/Employee/employeeHistory"
 
 
 export async function addEmployeeApi(
@@ -112,6 +112,22 @@ export async function getEmployeesHistoryApi(
   const { data: response, headers } = await api.get('employeeHistory/getEmployeeHistoryList', {
     params: searchFilter,
   })
+  return { response }
+}
+
+export async function toggleEmployeeAvailabilityApi(
+  api: AxiosInstance,
+  employeeId: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(`employee/${employeeId}/toggleEmployeeAvailability`)
+  return { response }
+}
+
+export async function getEmployeesAvailabilityApi(
+  api: AxiosInstance,
+  searchFilter: EmployeesAvailabilitySearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`employee/getEmployeesAvailability`, { params: searchFilter })
   return { response }
 }
 

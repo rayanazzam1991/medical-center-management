@@ -15,6 +15,7 @@ import { useEmployee } from '/@src/stores/Employee/employeeStore';
 import { useTicketService } from '/@src/stores/Sales/TicketService/ticketServiceStore';
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { toggleEmployeeAvailability } from '/@src/services/Employee/employeeService';
 export interface EmployeeWaitingListProps {
     employeeIdFromRoute: boolean,
     employeeId: number | undefined
@@ -42,6 +43,9 @@ const employeeName = ref('')
 const loggedEmployee = ref<Employee>()
 const employeeStore = useEmployee()
 const isFirstTicket = ref(false)
+const isAvailable = ref()
+const isMounting = ref(false)
+const disableAvailabilitySwitch = ref(true)
 loggedEmployee.value = employeeStore.getEmployee()
 
 if (props.employeeIdFromRoute) {
@@ -58,9 +62,11 @@ onMounted(async () => {
         const { waiting_list } = await getWaitingListByProvider(employeeId.value)
         employeeWaitingList.value = waiting_list
         employeeName.value = employeeWaitingList.value.provider.user.first_name + ' ' + employeeWaitingList.value.provider.user.last_name
+        isAvailable.value = Boolean(employeeWaitingList.value.provider.is_available) ?? false
         serveingServiceSetup()
         intialLoading.value = false
     }
+    disableAvailabilitySwitch.value = false
 
 });
 
@@ -76,6 +82,7 @@ const serveNext = async () => {
 const refreshWaitingList = async () => {
     const { waiting_list } = await getWaitingListByProvider(employeeId.value)
     employeeWaitingList.value = waiting_list
+    isAvailable.value = Boolean(employeeWaitingList.value.provider.is_available) ?? false
     serveingServiceSetup()
 
 }
@@ -136,14 +143,43 @@ const updateTicketNotesHelper = (requestedServiceId: number) => {
 const serveConfirmation = (requestedServiceId: number) => {
     selectedServeServiceId.value = requestedServiceId
     serveServiceConfirmationPopup.value = true
-
 }
+watch(isAvailable, async (value) => {
+    disableAvailabilitySwitch.value = true
+    if (isMounting.value && !employeeStore.loading && !waitingListStore.loading) {
+        const { message, success } = await toggleEmployeeAvailability(employeeWaitingList.value.provider.id ?? 0)
+        if (success) {
+            notif.success(t('toast.success.edit'))
+            await refreshWaitingList()
+            keyIncrement.value++
+        } else {
+            isAvailable.value = Boolean(employeeWaitingList.value.provider.is_available) ?? false
+            notif.error({ message: message, duration: 3000 })
+        }
+    }
+    isMounting.value = true
+    disableAvailabilitySwitch.value = false
 
+})
+const checkIsThereServingTicket = () => {
+    if (isThereServingTicket.value) {
+        notif.dismissAll()
+        notif.error({ message: t('toast.error.employee.cannot_change_avaiability'), duration: 3000 })
+    }
+}
 </script>
-    
 <template>
     <div class="header is-flex is-justify-content-space-between is-align-items-center">
         <h1>{{ t('employee.waiting_list.header_title') }} {{ employeeName }}</h1>
+        <VField>
+            <VControl>
+                <VSwitchSegment :disabled="waitingListStore.loading || isThereServingTicket || disableAvailabilitySwitch"
+                    color="success" @click="checkIsThereServingTicket"
+                    :label-false="t('employee.waiting_list.is_not_available')"
+                    :label-true="t('employee.waiting_list.is_available')" v-model="isAvailable" />
+            </VControl>
+        </VField>
+
     </div>
 
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
@@ -277,8 +313,10 @@ const serveConfirmation = (requestedServiceId: number) => {
 
                     <VButton class="center" v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT"
                         :loading="waitingListStore.loading" @click="serveNext" color="primary" raised
-                        v-if="!isThereServingTicket" :disabled="employeeWaitingList.waiting_list.length == 0">
-                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first') }}
+                        v-if="!isThereServingTicket"
+                        :disabled="employeeWaitingList.waiting_list.length == 0 || !employeeWaitingList.provider.is_available">
+                        {{ !isFirstTicket ? t('employee.waiting_list.serve_next') : t('employee.waiting_list.serve_first')
+                        }}
                     </VButton>
                 </div>
                 <div v-if="isThereServingTicket" class="ticket-footer">

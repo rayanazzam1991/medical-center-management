@@ -23,9 +23,10 @@ export interface Employee {
     position: Position
     payment_percentage: number
     type: number,
-    is_dismissed:boolean
+    is_dismissed: boolean
     services: EmployeeService[],
-    media?: Media[]
+    media?: Media[],
+    is_available?: boolean
 }
 export interface CreateEmployee {
     id?: number
@@ -64,11 +65,36 @@ export interface EmployeeSearchFilter {
     order?: string
     quick_search?: boolean
     is_salaries_related?: boolean
+    is_service_provider?: boolean
 }
 export interface EmployeeService {
     service: Service
     price: number
 }
+export interface EmployeesWithAvailabilityDepartment {
+    id: number
+    name: string
+    status: number
+    rooms: EmployeesWithAvailabilityRoom[]
+}
+export interface EmployeesWithAvailabilityRoom {
+    id: number
+    number: number
+    floor: number
+    status: number
+    employees: EmployeesWithAvailabilityEmployee[]
+}
+export interface EmployeesWithAvailabilityEmployee {
+    id: number
+    is_available: boolean
+    user: EmployeesWithAvailabilityUser
+}
+export interface EmployeesWithAvailabilityUser {
+    id: number
+    first_name: string
+    last_name: string
+}
+
 export const defaultCreateEmployee: CreateEmployee = {
     id: 0,
     starting_date: '',
@@ -108,9 +134,10 @@ export const defaultEmployee: Employee = {
     employee_number: undefined,
     payment_percentage: 0,
     type: 1,
-  services: [],
-    is_dismissed:false,
-    media: undefined
+    services: [],
+    is_dismissed: false,
+    media: undefined,
+    is_available: undefined
 }
 export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
 

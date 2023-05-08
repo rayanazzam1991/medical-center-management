@@ -19,7 +19,6 @@ viewWrapper.setPageTitle(t('dashboards.title'))
 const user = ref<User>(defaultUser)
 const userAuth = useAuth();
 user.value = userAuth.getUser() ?? defaultUser
-console.log(user.value)
 const userRole = ref()
 if (user.value.default_role) {
   userRole.value = user.value.default_role.name

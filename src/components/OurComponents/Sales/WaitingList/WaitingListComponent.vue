@@ -37,7 +37,11 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                                 provider.user.last_name }}</span>
                             <span class="task-count">{{ waiting_list.length }}</span>
                             <p class="column-name has-text-centered">{{ provider.user.room.department?.name }} #{{
-                                provider.user.room.number }}</p>
+                                provider.user.room.number }} |
+                                <span :class="provider.is_available ? 'has-text-success' : 'has-text-danger'">{{
+                                    provider.is_available ? t('waiting_list.is_available')
+                                    : t('waiting_list.is_not_available') }}</span>
+                            </p>
                             <p class="column-name has-text-centered is-size-6 has-text-info">{{
                                 t('waiting_list.current_turn_number') }}
                                 {{ currentTurnNumber == 0 ? '-' : currentTurnNumber }}

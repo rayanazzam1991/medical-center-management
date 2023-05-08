@@ -331,7 +331,7 @@
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
-      "dismiss": "تمت عملية إقالة الموظف بنجاح"
+      "dismiss": "تمت عملية إقالة الموظف بنجاح",
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -367,7 +367,8 @@
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
         "add_some_services": "يرجى إضافة بعض الخدمات أو تخطي هذه الخطوة",
         "cannot_combine_no_access": "لا يمكن اختيار الدور 'لا يوجد وصول' مع أدوار أخرى",
-        "choose_role": "يرجى اختيار دور"
+        "choose_role": "يرجى اختيار دور",
+        "cannot_change_avaiability": "لا يمكنك القيام بهذا الاجراء بسبب وجود تذكرة بحالة التخديم حالياً."
       },
       "ticket": {
         "service_is_required": "يرجى تحديد الخدمات المطلوبة",
@@ -964,6 +965,8 @@
     "header_button": "إضافة موظف",
     "waiting_list": {
       "header_title": "غرفة انتظار المخدم",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد",
       "title": "غرفة الانتظار",
       "place_holder": {
         "title": "جاري تحميل غرفة الانتظار...",
@@ -2490,6 +2493,8 @@
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
       "add_new_service": "إضافة خدمة جديدة",
+      "provider_available": "المخدم متواجد حالياً",
+      "provider_not_available": "المخدم غير متواجد حالياً",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
@@ -2640,6 +2645,8 @@
   "waiting_list": {
     "title": "غرف الانتظار",
     "turn_number": "الدور : ",
+    "is_available": " متواجد ",
+    "is_not_available": "غير متواجد",
     "current_turn_number": "الدور الحالي : ",
     "no_tickets_place_holder": "لا يوجد أية تذاكر في غرفة الانتظار.",
     "place_holder": {
@@ -3067,5 +3074,18 @@
   },
   "reservations_time_slot_options": {
     "full_name": "{value} دقيقة"
+  },
+  "employee_availability": {
+    "title": "تواجد مقدميّ الخدمة",
+    "no_employees_in_this_room_placeholder": "لا يوجد موظفين في هذه الغرفة.",
+    "room": "الغرفة ",
+    "search_filter": {
+      "title": "تصفية تواجد مقدميً الخدمة",
+      "employee": "الموظف",
+      "department": "القسم",
+      "room": "الغرفة ",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد"
+    }
   }
 }

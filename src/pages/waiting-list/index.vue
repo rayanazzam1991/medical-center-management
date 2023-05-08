@@ -45,6 +45,7 @@ const search = async (newSearchFilter: WaitingListSearchFilter) => {
 const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     searchFilter.value = newSearchFilter
     await search(searchFilter.value)
+    keyIncrement.value++
 }
 
 </script>
@@ -67,7 +68,7 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
             </div>
         </div>
         <div v-else-if="waitingListLists.length > 0" class="waiting-list-inner">
-            <div class="waiting-lists-container is-flex has-slimscroll">
+            <div :key="keyIncrement" class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent v-for="(waitingList, index) in waitingListLists" :key="index"
                     :waiting_list="waitingList.waiting_list" :provider="waitingList.provider" />
             </div>
