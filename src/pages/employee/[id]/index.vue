@@ -32,6 +32,7 @@ import {
   addProfilePicture,
   getMaxEmployeeNumber,
   updateEmployeeNumber,
+  toggleEmployeeAvailability,
 } from '/@src/services/Employee/employeeService'
 import { changeUserStatus } from '/@src/services/Others/User/userService'
 import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatusService'
@@ -93,7 +94,7 @@ useHead({
 const employeeStore = useEmployee()
 const props = withDefaults(
   defineProps<{
-    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances' | 'History Record'
+    activeTab?: 'Details' | 'Services' | 'Files' | 'Tickets' | 'Ticket Services' | 'Cash Receipts' | 'Balances' | 'History Record' | 'Availability History'
   }>(),
   {
     activeTab: 'Details',
@@ -498,12 +499,28 @@ const permissionCheck = async () => {
   if (tab.value == 'History Record' && !checkPermission(Permissions.EMPLOYEE_RECORD_LIST)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
+  if (tab.value == 'Availability History' && !checkPermission(Permissions.EMPLOYEES_AVAILABILITY_HISTORY_LIST)) {
+    notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
+  }
 
 }
 const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
   employeeAccountCurrentBalance.value = accountBalance
   employeeAccountCurrency.value = accountCurrency
 }
+const toggleAvailability = async () => {
+  const { message, success } = await toggleEmployeeAvailability(currentEmployee.value.id ?? 0)
+  if (success) {
+    notif.success(t('toast.success.edit'))
+    currentEmployee.value.is_available = !currentEmployee.value.is_available
+    keyIncrement.value++
+
+  } else {
+    notif.error({ message: message, duration: 3000 })
+  }
+
+}
+
 </script>
 <template>
   <div class="profile-wrapper">
@@ -516,6 +533,10 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
           :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
 
         <h3 class="title is-4 is-narrow is-thin">
+          <span v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" v-if="currentEmployee.services.length > 0" @dblclick="toggleAvailability" class="clickable-cursor">
+            <i class="fas fa-circle ml-0" :class="currentEmployee.is_available ? 'has-text-success' : 'has-text-danger'"
+              aria-hidden="true"></i>
+          </span>
           {{ currentEmployee.user.first_name }} {{ currentEmployee.user.last_name }}
         </h3>
         <div class="profile-stats">
@@ -551,7 +572,7 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
     </VLoader>
 
     <div class="project-details">
-      <div class="tabs-wrapper is-8-slider">
+      <div class="tabs-wrapper is-9-slider">
         <div :hidden="loading" class="tabs-inner">
           <div class="tabs tabs-width">
             <ul>
@@ -596,6 +617,12 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
                   t('employee.details.tabs.history_record')
                 }} </span></a>
               </li>
+              <li @click="permissionCheck()" :class="[tab === 'Availability History' && 'is-active']">
+                <a tabindex="0" @keydown.space.prevent="tab = 'Availability History'"
+                  @click="tab = 'Availability History'"><span>{{
+                    t('employee.details.tabs.availability_history')
+                  }} </span></a>
+              </li>
               <li class="tab-naver"></li>
             </ul>
           </div>
@@ -631,11 +658,10 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
                     </p>
                   </div>
                   <div class="project-feature">
-                    <i aria-hidden="true" :class="
-                      currentEmployee.user.gender == 'Male'
-                        ? 'lnir lnir-male'
-                        : 'lnir lnir-female'
-                    "></i>
+                    <i aria-hidden="true" :class="currentEmployee.user.gender == 'Male'
+                      ? 'lnir lnir-male'
+                      : 'lnir lnir-female'
+                      "></i>
                     <h4>{{ t('employee.details.gender') }}</h4>
                     <p>{{ t(`gender.${currentEmployee.user.gender.toLowerCase()}`) }}</p>
                   </div>
@@ -997,7 +1023,15 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
             </div>
           </div>
         </div>
-
+        <div v-if="tab === 'Availability History'" class="tab-content is-active">
+          <div class="columns project-details-inner">
+            <div class="column is-12">
+              <div class="project-details-card">
+                <EmployeeAvailabilityHistoryTable is-for-employee :employee-id="employeeId" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1104,8 +1138,8 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
   }
 }
 
-.tabs-wrapper.is-8-slider .tabs li a,
-.tabs-wrapper-alt.is-8-slider .tabs li a {
+.tabs-wrapper.is-9-slider .tabs li a,
+.tabs-wrapper-alt.is-9-slider .tabs li a {
   height: 40px;
 
 }
@@ -1129,4 +1163,13 @@ const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
   margin-right: 12px;
 }
 
+.availability-pointer {
+  position: fixed;
+  top: 30px;
+  right: 0;
+}
+
+.clickable-cursor {
+  cursor: pointer;
+}
 </style>

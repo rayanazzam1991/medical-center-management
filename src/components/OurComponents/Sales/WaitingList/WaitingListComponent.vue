@@ -3,17 +3,23 @@ import { useI18n } from 'vue-i18n';
 import { defaultEmployee, Employee } from '/@src/models/Employee/employee';
 import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 import { defaultWaitingList, EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 
 export interface WaitingListComponentProps {
     waiting_list: EmployeeWaitingList[],
-    provider: Employee
+    provider: Employee,
+    withChangeAvailability: boolean
 }
+const emits = defineEmits<{
+    (e: 'toggleAvailability', employeeId: number): void
+}>()
 
 
 const props = withDefaults(defineProps<WaitingListComponentProps>(), {
     waiting_list: () => [],
     provider: () => defaultEmployee,
+    withChangeAvailability: false
 })
 const { t } = useI18n()
 const waitingList = ref<EmployeeWaitingList[]>([])
@@ -22,6 +28,10 @@ waitingList.value = props.waiting_list
 provider.value = props.provider
 const currentTurnNumber = ref(0)
 currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? 0
+
+const toggleAvailability = () => {
+    emits('toggleAvailability', provider.value?.id ?? 0)
+}
 </script>
 
 <template>
@@ -46,8 +56,13 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                                 t('waiting_list.current_turn_number') }}
                                 {{ currentTurnNumber == 0 ? '-' : currentTurnNumber }}
                             </p>
-
                         </h3>
+                        <div v-if="$props.withChangeAvailability" class="dropdown">
+                            <WaitingListDropDown @change-availability="toggleAvailability"
+                                :employee-availability="provider.is_available"
+                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" />
+
+                        </div>
                     </div>
 
                     <div>
@@ -132,6 +147,7 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-align: center;
 
             h3 {
                 margin-bottom: 0;
@@ -140,6 +156,12 @@ currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListE
                 font-weight: 500;
                 text-transform: uppercase;
                 color: var(--light-text-dark-8);
+            }
+
+            .dropdown {
+                position: absolute;
+                top: 5px;
+                left: 5px;
             }
 
             .input {

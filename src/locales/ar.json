@@ -161,7 +161,8 @@
     "employee": {
       "employees": "الموظفين",
       "create_employee": "انشاء موظف",
-      "employee_history": "سجل نشاط الموظفين"
+      "employee_history": "سجل نشاط الموظفين",
+      "employee_availability_history": "سجل تواجد مقدميّ الخدمة"
     },
     "position": {
       "positions": "المناصب",
@@ -332,7 +333,7 @@
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
-      "dismiss": "تمت عملية إقالة الموظف بنجاح",
+      "dismiss": "تمت عملية إقالة الموظف بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -453,7 +454,10 @@
     "print": "طباعة",
     "dismiss_employee": "إقالة الموظف",
     "add_ticket": "إضافة تذكرة",
-    "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي"
+    "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي",
+    "change_provider_availability": "تعديل الحالة إلى  ",
+    "is_available": " متواجد ",
+    "is_not_available": "غير متواجد"
   },
   "add_quantity": {
     "form": {
@@ -867,7 +871,8 @@
         "tickets": "التذاكر",
         "ticket_services": "الخدمات المقدمة",
         "balances": "الأرصدة",
-        "history_record": "سجل تاريخ الموظف"
+        "history_record": "سجل الموظف",
+        "availability_history": "سجل التواجد"
       },
       "main_details": "المعلومات الأساسية",
       "current_balance": "الرصيد الحالي : ",
@@ -3079,13 +3084,33 @@
   },
   "employee_availability": {
     "title": "تواجد مقدميّ الخدمة",
-    "no_employees_in_this_room_placeholder": "لا يوجد موظفين في هذه الغرفة.",
+    "no_employees_in_this_room_placeholder": "لا يوجد مخدمين في هذه الغرفة.",
     "room": "الغرفة ",
     "search_filter": {
       "title": "تصفية تواجد مقدميً الخدمة",
-      "employee": "الموظف",
+      "provider": "المخدم",
       "department": "القسم",
       "room": "الغرفة ",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد"
+    }
+  },
+  "employee_availability_history": {
+    "table": {
+      "title": "سجل تواجد مقدّمي الخدمة",
+      "columns": {
+        "employee_name": "المخدم",
+        "action": "النشاط",
+        "is_available": " متواجد ",
+        "is_not_available": "غير متواجد",
+        "creation_date": "تاريخ الانشاء",
+        "creation_time": "وقت الانشاء",
+        "created_by": "بواسطة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية سجل تواجد مقدميّ الخدمة",
+      "provider": "المخدم",
       "is_available": " متواجد ",
       "is_not_available": "غير متواجد"
     }

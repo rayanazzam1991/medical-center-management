@@ -1,8 +1,6 @@
 <script lang="ts">
-import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
 import { getUsersList, getUsersWithoutCustomerList } from "/@src/services/Others/User/userService"
-import { User, UserSearchFilter } from "/@src/models/Others/User/user"
 import { defaultEmployeeHistorySearchFilter, EmployeeHistorySearchFilter, EmployeesAvailabilitySearchFilter } from "../../../models/Employee/employeeHistory"
 import { getEmployeesList, resetEmployeesAvailabilitySearchFilter } from "/@src/services/Employee/employeeService"
 import { UserStatusConsts } from "/@src/models/Others/UserStatus/userStatus"
@@ -94,7 +92,7 @@ export default defineComponent({
                         <div class="columns is-flex is-align-items-center">
                             <VControl class="mr-2 width">
                                 <Multiselect :key="keyIncrement" v-model="searchEmployeesId" mode="multiple"
-                                    :placeholder="t('employee_availability.search_filter.employee')" :can-clear="true"
+                                    :placeholder="t('employee_availability.search_filter.provider')" :can-clear="true"
                                     :close-on-select="false" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                                     :infinite="true" :rtl="true" :clear-on-search="true" :delay="0" :searchable="true"
                                     :hide-selected="false" :limit="20" :options="async (query: any) => {

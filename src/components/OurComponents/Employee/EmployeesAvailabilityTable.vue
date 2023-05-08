@@ -1,5 +1,15 @@
+<route lang="json">
+{
+    "meta": {
+        "requiresAuth": true,
+        "permissions": [
+            "employees_current_availability_list"
+        ]
+    }
+}
+</route>
+    
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
@@ -8,16 +18,16 @@ import { getEmployeesAvailability, resetEmployeesAvailabilitySearchFilter, toggl
 import { EmployeesWithAvailabilityDepartment } from '/@src/models/Employee/employee'
 import { useEmployee } from '/@src/stores/Employee/employeeStore'
 import { EmployeesAvailabilitySearchFilter } from '/@src/models/Employee/employeeHistory'
+import { checkPermission } from '/@src/composable/checkPermission'
+import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const searchFilter = ref(resetEmployeesAvailabilitySearchFilter())
 const availabilityList = ref<Array<EmployeesWithAvailabilityDepartment>>([])
-const employeeStore = useEmployee()
 const keyIncrement = ref(0)
 const keyIncrement2 = ref(0)
-const router = useRouter()
 const isExpanded = ref(false)
 const isLoading = ref(false)
 const toggleExpand = () => {
@@ -66,7 +76,8 @@ const toggleAvailability = async (employeeId: number) => {
         <div class="loader-layout">
         </div>
     </VLoader>
-    <div v-if="availabilityList.length != 0" :class="[isLoading && 'is-hidden']" class="layout">
+    <div v-if="availabilityList.length != 0 && checkPermission(Permissions.EMPLOYEES_CURRENT_AVAILABILITY_LIST)"
+        :class="[isLoading && 'is-hidden']" class="layout">
         <EmployeeAvailabilityDepartmentCollapse :items="availabilityList" with-chevron :key="keyIncrement2"
             @toggleAvailability="toggleAvailability" :is_expanded="isExpanded" />
     </div>

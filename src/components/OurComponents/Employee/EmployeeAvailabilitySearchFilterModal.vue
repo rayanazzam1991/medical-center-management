@@ -90,7 +90,7 @@ export default defineComponent({
                 <VField class="column filter">
                     <VControl>
                         <Multiselect v-model="searchEmployeesId" mode="multiple"
-                            :placeholder="t('employee_availability.search_filter.employee')" :can-clear="true"
+                            :placeholder="t('employee_availability.search_filter.provider')" :can-clear="true"
                             :close-on-select="false" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                             :infinite="true" :rtl="true" :clear-on-search="true" :delay="0" :searchable="true"
                             :hide-selected="false" :limit="20" :options="async (query: any) => {

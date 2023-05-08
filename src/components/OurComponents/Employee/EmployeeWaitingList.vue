@@ -171,7 +171,7 @@ const checkIsThereServingTicket = () => {
 <template>
     <div class="header is-flex is-justify-content-space-between is-align-items-center">
         <h1>{{ t('employee.waiting_list.header_title') }} {{ employeeName }}</h1>
-        <VField>
+        <VField v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE">
             <VControl>
                 <VSwitchSegment :disabled="waitingListStore.loading || isThereServingTicket || disableAvailabilitySwitch"
                     color="success" @click="checkIsThereServingTicket"
