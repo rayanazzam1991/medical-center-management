@@ -17,7 +17,7 @@ import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore'
 import { useI18n } from 'vue-i18n'
-import { getPendingTicketsList } from '/@src/services/Sales/Ticket/ticketService'
+import { getPendingTicketsList, resetTicketSearchFilter } from '/@src/services/Sales/Ticket/ticketService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Notyf } from 'notyf'
 import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList'
@@ -31,7 +31,7 @@ useHead({
   title: t('pending_ticket.table.title'),
 })
 const notif = useNotyf() as Notyf
-const searchFilter = ref(defaultTicketSearchFilter)
+const searchFilter = ref(resetTicketSearchFilter())
 const ticketsList = ref<Array<Ticket>>([])
 const paginationVar = ref(defaultPagination)
 const router = useRouter()

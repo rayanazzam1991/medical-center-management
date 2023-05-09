@@ -180,7 +180,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
   if (phoneCheck.value === 'false') {
     let employeeData = currentEmployee.value
     let selectedType
-    let rolesError = false
     if (employeeData.basic_salary == 0) {
       if (employeeData.payment_percentage == 0) {
         notif.error(t('toast.error.employee.basic_salary_payment_percentage_required'))
@@ -216,11 +215,9 @@ const onSubmitAdd = handleSubmit(async (values) => {
     employeeForm.userForm.user_status_id = userData.user_status_id
     if (isUser.value == false) {
       employeeForm.userForm.roles.push('No_Access')
-      const no_access_id = rolesList.value.find((role) => role.name == 'No_Access')?.id
       employeeForm.userForm.default_role_id = undefined
     } else if (isUser.value == true && userData.roles.length <= 0) {
       notif.error({ message: t('toast.error.employee.choose_role'), duration: 4000 })
-      rolesError = true
       return
     } else {
       employeeForm.userForm.roles = userData.roles
@@ -556,7 +553,6 @@ watch([firstName, lastName], async () => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </form>
