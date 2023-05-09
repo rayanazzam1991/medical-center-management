@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Echo from 'laravel-echo'
 import Socket from 'socket.io-client'
@@ -65,4 +65,4 @@ onMounted(() => {
             </div>
         </div>
     </div>
-</template>
+</template> -->

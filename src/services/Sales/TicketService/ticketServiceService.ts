@@ -1,4 +1,4 @@
-import { defaultTicketService, TicketService, TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
+import { CreateTicketService, defaultTicketService, TicketService, TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
 import { useTicketService } from "/@src/stores/Sales/TicketService/ticketServiceStore"
 import { Pagination } from "/@src/utils/response"
 
@@ -31,9 +31,23 @@ export async function getTicktServicesList(searchFilter: TicketServiceSearchFilt
     let success: boolean = response.success ?? false
     let error_code: string = response.error_code ?? ''
     let message: string = response.message ?? ''
-
     return { ticket_services, pagination, success, error_code, message }
-
+}
+export async function createTicketService(data: CreateTicketService) {
+    const response = useTicketService()
+    await response.createTicketServiceStore(data)
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message }
+}
+export async function deleteTicketService(ticketServiceId: number) {
+    const response = useTicketService()
+    await response.deleteTicketServiceStore(ticketServiceId)
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message }
 }
 
 export function resetTicketServiceSearchFilter() {

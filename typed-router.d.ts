@@ -112,6 +112,8 @@ declare module 'vue-router/auto/routes' {
     '/employee-add/[id]/services': RouteRecordInfo<'/employee-add/[id]/services', '/employee-add/:id/services', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/employee-attendance': RouteRecordInfo<'/employee-attendance', '/employee-attendance', Record<never, never>, Record<never, never>>,
     '/employee-attendance/': RouteRecordInfo<'/employee-attendance/', '/employee-attendance/', Record<never, never>, Record<never, never>>,
+    '/employee-availability-history': RouteRecordInfo<'/employee-availability-history', '/employee-availability-history', Record<never, never>, Record<never, never>>,
+    '/employee-availability-history/': RouteRecordInfo<'/employee-availability-history/', '/employee-availability-history/', Record<never, never>, Record<never, never>>,
     '/employee-edit': RouteRecordInfo<'/employee-edit', '/employee-edit', Record<never, never>, Record<never, never>>,
     '/employee-edit/[id]/': RouteRecordInfo<'/employee-edit/[id]/', '/employee-edit/:id/', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/employee-edit/[id]/services': RouteRecordInfo<'/employee-edit/[id]/services', '/employee-edit/:id/services', { id: ParamValue<true> }, { id: ParamValue<false> }>,

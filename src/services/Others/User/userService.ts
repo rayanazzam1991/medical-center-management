@@ -1,5 +1,5 @@
 import { useUser } from '/@src/stores/Others/User/userStore'
-import { CreateUpdateUser, ChangeUserStatus, User, UserSearchFilter, defaultUser } from '/@src/models/Others/User/user'
+import { CreateUpdateUser, ChangeUserStatus, User, UserSearchFilter, defaultUser, GenerateUniqueUsernameData } from '/@src/models/Others/User/user'
 import { Pagination } from '/@src/utils/response'
 
 export async function addUser(userData: CreateUpdateUser) {
@@ -77,5 +77,14 @@ export async function phoneExistsCheck(phone_number: string) {
   var error_code: string = userResponse.error_code ?? ''
   var message: string = userResponse.message ?? ''
   return { success, error_code, message, result }
+
+}
+export async function generateUniqueUsername(data: GenerateUniqueUsernameData) {
+  const userResponse = useUser()
+  const username : string = await userResponse.generateUniqueUsernameStore(data)
+  const success: boolean = userResponse.success ?? false
+  const error_code: string = userResponse.error_code ?? ''
+  const message: string = userResponse.message ?? ''
+  return { success, error_code, message, username }
 
 }

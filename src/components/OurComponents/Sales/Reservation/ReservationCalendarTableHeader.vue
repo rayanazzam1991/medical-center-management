@@ -57,10 +57,6 @@ export default defineComponent({
             type: Boolean,
             default: true
         },
-        // loading: {
-        //     type: Boolean,
-        //     default: true
-        // },
         start_date: {
             type: String,
             default: ''

@@ -14,17 +14,20 @@ import { Permissions } from '/@src/utils/consts/rolesPermissions';
 export interface WaitingListComponentProps {
     waiting_list: EmployeeWaitingList[],
     provider: Employee,
-    draggable?: boolean
+    draggable?: boolean,
+    withChangeAvailability: boolean
 }
-
 
 const props = withDefaults(defineProps<WaitingListComponentProps>(), {
     waiting_list: () => [],
     provider: () => defaultEmployee,
-    draggable: false
+    draggable: false,
+    withChangeAvailability: false
 })
 const emits = defineEmits<{
     (e: 'refresh'): void
+    (e: 'toggleAvailability', employeeId: number): void
+
 }>()
 
 function onDragInvalid(el?: Element): boolean {
@@ -114,6 +117,10 @@ const checkTicketIsReserve = (requestedServices: TicketService[]) => {
 currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? '-'
 currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.ticket.requested_services ?? [])
 
+
+const toggleAvailability = () => {
+    emits('toggleAvailability', provider.value?.id ?? 0)
+}
 </script>
 
 <template>
@@ -131,7 +138,11 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                                 <span class="task-count">{{ waiting_list.length }}</span>
                             </div>
                             <p class="column-name has-text-centered">{{ provider.user.room.department?.name }} #{{
-                                provider.user.room.number }}</p>
+                                provider.user.room.number }} |
+                                <span :class="provider.is_available ? 'has-text-success' : 'has-text-danger'">{{
+                                    provider.is_available ? t('waiting_list.is_available')
+                                    : t('waiting_list.is_not_available') }}</span>
+                            </p>
                             <p class="column-name has-text-centered is-size-6">{{
                                 t('waiting_list.current_turn_number') }}
                                 <span :class="currentIsReserve ? 'has-text-primary' : 'has-text-info'"> {{ currentTurnNumber
@@ -139,6 +150,12 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                                 </span>
                             </p>
                         </h3>
+                        <div v-if="$props.withChangeAvailability" class="dropdown">
+                            <WaitingListDropDown @change-availability="toggleAvailability"
+                                :employee-availability="provider.is_available"
+                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" />
+
+                        </div>
                     </div>
 
                     <div ref="container">
@@ -152,13 +169,13 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                         <div v-for="ticket in waiting_list" :key="ticket.ticket.id" :data-id="ticket.ticket.id"
                             :data-turn_order="ticket.turn_order"
                             class="kanban-card is-new p-3 is-flex is-justify-content-space-between" :class="[
-                                    (ticket.ticket.status == TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-primary is-primary',
-                                    (ticket.ticket.status != TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-primary is-primary',
-                                    (ticket.ticket.status == TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-info is-info',
-                                    (ticket.ticket.status != TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-info is-info',
-                                    (ticket.ticket.status != TicketConsts.SERVING && $props.draggable && checkPermission(Permissions.CHANGE_WAITING_LIST_ORDER)) && 'can-drag gelatine',
+                                (ticket.ticket.status == TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-primary is-primary',
+                                (ticket.ticket.status != TicketConsts.SERVING && checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-primary is-primary',
+                                (ticket.ticket.status == TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-wave-info is-info',
+                                (ticket.ticket.status != TicketConsts.SERVING && !checkTicketIsReserve(ticket.ticket.requested_services)) && 'ticket-wrapper-info is-info',
+                                (ticket.ticket.status != TicketConsts.SERVING && $props.draggable && checkPermission(Permissions.CHANGE_WAITING_LIST_ORDER)) && 'can-drag gelatine',
 
-                                ]">
+                            ]">
                             <div class="card-inner ">
 
                                 <h4 class="card-title">
@@ -235,6 +252,7 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-align: center;
 
             h3 {
                 margin-bottom: 0;
@@ -248,6 +266,12 @@ currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingLis
                     color: var(--dark-text);
 
                 }
+            }
+
+            .dropdown {
+                position: absolute;
+                top: 5px;
+                left: 5px;
             }
 
             .input {

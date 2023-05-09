@@ -102,8 +102,14 @@ const toReservationCalendar = () => {
                 <div class="my-4">
                     <ReminderTable is-for-dashboard today-only with-title />
                 </div>
-                <div class="my-4">
-                    <ServicesCardTable />
+                <div class="columns is-multiline">
+                    <div class="column is-6">
+                        <EmployeesAvailabilityTable />
+                    </div>
+                    <div class="column is-6">
+                        <ServicesCardTable />
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -41,6 +41,7 @@ const handleLogin = async () => {
     return
   }
   isLoading.value = true
+  signRequest.value.username = signRequest.value.phone_number
   const { user, success, message } = await signIn(signRequest.value);
   if (success && user && user.id != undefined) {
     const { settings } = await getSettings();
@@ -118,7 +119,7 @@ useHead({
                       <VField>
                         <VControl icon="feather:user">
                           <VInput v-model="signRequest.phone_number" type="text"
-                            :placeholder="t('auth.form.placeholders.phone')" autocomplete="username" />
+                            :placeholder="t('auth.form.placeholders.phone_username')" autocomplete="username" />
                         </VControl>
                       </VField>
 

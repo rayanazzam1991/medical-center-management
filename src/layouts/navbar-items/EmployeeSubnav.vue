@@ -47,6 +47,13 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li>
+                    <RouterLink v-permission="Permissions.EMPLOYEE_RECORD_LIST" to="/employee-availability-history">
+                      <i class="lnil lnil-switch" aria-hidden="true"></i>
+                      <span>{{ t('human_resources_subnav.employee.employee_availability_history') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul><br />
                 <h4 v-permission="Permissions.POSITION_ACCESS" class="column-heading">{{
                   t('human_resources_subnav.position.positions') }}</h4>
