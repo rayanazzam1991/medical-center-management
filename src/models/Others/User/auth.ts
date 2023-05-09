@@ -1,10 +1,12 @@
 export interface SignInRequest {
     phone_number?: string,
-    password?: string
+    password?: string,
+    username?: string
 }
 export const defaultSignInRequest: SignInRequest = {
     phone_number: undefined,
-    password: undefined
+    password: undefined,
+    username: undefined
 }
 export interface ChangePassword {
     current_password: string,

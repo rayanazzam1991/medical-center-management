@@ -1,14 +1,14 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper } from "/@src/models/Employee/employee"
+import { Employee, CreateEmployee, UpdateEmployee, EmployeeSearchFilter, CreateUpdateServicesHelper, EmployeesWithAvailabilityDepartment } from "/@src/models/Employee/employee"
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from "../../models/HR/Attendance/EmployeeSchedule/employeeSchedule"
 import { Media } from "/@src/models/Others/Media/media"
-import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getEmployeesHistoryApi } from "/@src/utils/api/Employee"
+import { addEmployeeApi, getEmployeeApi, updateEmployeeApi, getEmployeesApi, getEmployeesScheduleApi, updateEmployeeScheduleApi, maxEmployeeNumberApi, updateEmployeeNumberApi, getEmployeesAttendanceApi, addServicesApi, getEmployeeByUserIdApi, dismissEmployeeApi, getEmployeesHistoryApi, toggleEmployeeAvailabilityApi, getEmployeesAvailabilityApi } from "/@src/utils/api/Employee"
 import { uploadMediaApi, getMediaApi, deleteMediaApi } from "/@src/utils/api/Others/Media"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from "/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance"
-import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter } from "/@src/models/Employee/employeeHistory"
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, EmployeesAvailabilitySearchFilter } from "/@src/models/Employee/employeeHistory"
 
 
 export const useEmployee = defineStore('employee', () => {
@@ -17,8 +17,9 @@ export const useEmployee = defineStore('employee', () => {
   const employeesHistory = ref<EmployeeHistory[]>([])
   const employeesSchedule = ref<EmployeeSchedule[]>([])
   const employeesAttendance = ref<EmployeeAttendance[]>([])
+  const employeesWithAvaialability = ref<EmployeesWithAvailabilityDepartment[]>([])
   const pagination = ref<Pagination>(defaultPagination)
-  const success = ref<boolean>()
+  const success = ref<boolean>(true)
   const error_code = ref<string>()
   const message = ref<string>()
   const loading = ref(false)
@@ -503,6 +504,47 @@ export const useEmployee = defineStore('employee', () => {
       loading.value = false
     }
   }
+  async function toggleEmployeeAvailabilityStore(employeeId: number) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const returnedResponse = await toggleEmployeeAvailabilityApi(api, employeeId)
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getEmployeesAvailabilityStore(searchFilter: EmployeesAvailabilitySearchFilter) {
+    if (loading.value) return
+
+    loading.value = true
+
+    try {
+      const returnedResponse = await getEmployeesAvailabilityApi(api, searchFilter)
+      employeesWithAvaialability.value = returnedResponse.response.data
+      success.value = returnedResponse.response.success
+      error_code.value = returnedResponse.response.error_code
+      message.value = returnedResponse.response.message
+
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
 
 
@@ -533,8 +575,11 @@ export const useEmployee = defineStore('employee', () => {
     setEmployee,
     dismissEmployeeStore,
     getEmployeesHistoryListStore,
+    toggleEmployeeAvailabilityStore,
+    getEmployeesAvailabilityStore,
     removeFromStorage,
     loggedEmployee,
+    employeesWithAvaialability,
     employee,
     success,
     error_code,

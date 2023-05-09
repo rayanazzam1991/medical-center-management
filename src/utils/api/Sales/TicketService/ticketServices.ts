@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios"
 import { CreateTicket, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
-import { TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
+import { CreateTicketService, TicketServiceSearchFilter } from "/@src/models/Sales/TicketService/ticketService"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function serveTicketServiceApi(
@@ -28,6 +28,22 @@ export async function getTicktServicesListApi(
     const { data: response, headers } = await api.get('ticketService/getTicketsServicesList', {
         params: searchFilter,
     })
+    return { response }
+}
+
+export async function createTicketServiceApi(
+    api: AxiosInstance,
+    data: CreateTicketService
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.post('ticketService', data)
+    return { response }
+}
+
+export async function deleteTicketServiceApi(
+    api: AxiosInstance,
+    ticketServiceId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.delete(`ticketService/${ticketServiceId}`)
     return { response }
 }
 

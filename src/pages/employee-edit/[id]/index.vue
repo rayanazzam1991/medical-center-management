@@ -10,7 +10,7 @@ import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Ot
 import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
@@ -347,7 +347,16 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
+                                <div class="column is-6">
+                                    <VField id="username">
+                                        <VLabel class="required">{{ t('employee.form.username') }}
+                                        </VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput disabled v-model="currentUser.username" type="text" placeholder="" />
+                                            <ErrorMessage class="help is-danger" name="username" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                                 <div class="column is-6">
                                     <VField id="birth_date">
                                         <VLabel class="required">{{ t('employee.form.birth_date') }} </VLabel>
@@ -358,26 +367,22 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField id="gender">
+                                        <VLabel class="required">{{ t('employee.form.gender') }}</VLabel>
+                                        <VControl>
+                                            <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')"
+                                                name="gender" color="success" />
+                                            <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')"
+                                                name="gender" color="success" />
+                                            <ErrorMessage class="help is-danger" name="gender" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                             </div>
                         </div>
                         <div class="form-fieldset">
                             <div class="columns is-multiline ">
-                                <div class="column is-half">
-
-                                    <VField id="gender">
-                                        <VLabel class="required ml-3">{{ t('employee.form.gender') }}</VLabel>
-
-                                        <VControl>
-                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                                color="success" />
-
-                                            <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
-                                                color="success" />
-                                            <ErrorMessage class="help is-danger" name="gender" />
-                                        </VControl>
-                                    </VField>
-
-                                </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
                                         <VLabel class="required">{{ t('employee.form.city') }}</VLabel>
@@ -393,6 +398,21 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
+                                <div class="column is-6">
+                                    <VField id="nationality_id">
+                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
+                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
+                                                    :value="nationality.id">{{ nationality.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+
                             </div>
                             <div class="column is-12 px-0">
                                 <VField id="address">
@@ -524,20 +544,6 @@ const updateSelectedRoles = () => {
                                     </VField>
                                 </div>
                                 <div class="column is-6">
-                                    <VField id="nationality_id">
-                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
-                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
-                                                    :value="nationality.id">{{ nationality.name }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="nationality_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                                <div class="column is-6">
                                     <VField id="position_id">
                                         <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
                                         <VControl>
@@ -559,7 +565,7 @@ const updateSelectedRoles = () => {
                                                 <VOption value="">{{ t('employee.form.status') }}</VOption>
                                                 <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
                                                     {{
-                                                        status.name
+                                                        UserStatusConsts.getStatusName(status.id)
                                                     }}
                                                 </VOption>
                                             </VSelect>

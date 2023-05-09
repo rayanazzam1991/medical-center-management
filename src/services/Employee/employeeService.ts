@@ -8,14 +8,15 @@ import {
   Employee,
   UpdateEmployee,
   defaultEmployee,
-  CreateUpdateServicesHelper
+  CreateUpdateServicesHelper,
+  EmployeesWithAvailabilityDepartment
 } from '/@src/models/Employee/employee'
 import { CreateUpdateUser } from '/@src/models/Others/User/user'
 import { Media, MediaConsts } from '/@src/models/Others/Media/media'
 import { Pagination } from '/@src/utils/response'
 import { EmployeeSchedule, EmployeeScheduleSearchFilter, UpdateSchedule } from '../../models/HR/Attendance/EmployeeSchedule/employeeSchedule'
 import { EmployeeAttendance, EmployeeAttendanceSearchFilter } from '/@src/models/HR/Attendance/EmployeeAttendance/employeeAttendance'
-import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, defaultEmployeeHistory } from '/@src/models/Employee/employeeHistory'
+import { DismissedEmployee, EmployeeHistory, EmployeeHistorySearchFilter, EmployeesAvailabilitySearchFilter, defaultEmployeeHistory } from '/@src/models/Employee/employeeHistory'
 
 export async function addEmployee(
   employeeData: CreateEmployee,
@@ -240,6 +241,24 @@ export async function getEmployeeByUserId(user_id: number) {
   const loggedEmployee = employee.getEmployee()
   return { loggedEmployee, success, message, error_code }
 }
+export async function toggleEmployeeAvailability(employeeId: number) {
+  const employee = useEmployee()
+  await employee.toggleEmployeeAvailabilityStore(employeeId)
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+  return { success, message, error_code }
+}
+export async function getEmployeesAvailability(searchFilter: EmployeesAvailabilitySearchFilter) {
+  const employee = useEmployee()
+  await employee.getEmployeesAvailabilityStore(searchFilter)
+  const employees_avaiability: EmployeesWithAvailabilityDepartment[] = employee.employeesWithAvaialability
+  const success: boolean = employee.success ?? false
+  const error_code: string = employee.error_code ?? ''
+  const message: string = employee.message ?? ''
+  return { success, message, error_code, employees_avaiability }
+}
+
 
 export function resetEmployeeHistorySearchFilter() {
   const blankSearchFilter: EmployeeHistorySearchFilter = {
@@ -251,6 +270,18 @@ export function resetEmployeeHistorySearchFilter() {
     page: undefined,
     per_page: undefined,
 
+  }
+
+  return blankSearchFilter
+
+}
+
+export function resetEmployeesAvailabilitySearchFilter() {
+  const blankSearchFilter: EmployeesAvailabilitySearchFilter = {
+    department_id: undefined,
+    employees_id: undefined,
+    is_available: undefined,
+    room_id: undefined
   }
 
   return blankSearchFilter
