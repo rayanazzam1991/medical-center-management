@@ -86,7 +86,6 @@ declare module '@vue/runtime-core' {
     EmployeeAvailabilityHistoryTableHeader: typeof import('./src/components/OurComponents/Employee/EmployeeAvailabilityHistoryTableHeader.vue')['default']
     EmployeeAvailabilityRoomCollapse: typeof import('./src/components/OurComponents/Employee/EmployeeAvailabilityRoomCollapse.vue')['default']
     EmployeeAvailabilitySearchFilterModal: typeof import('./src/components/OurComponents/Employee/EmployeeAvailabilitySearchFilterModal.vue')['default']
-    EmployeeAvailabilitySearchFilterModel: typeof import('./src/components/OurComponents/Employee/EmployeeAvailabilitySearchFilterModel.vue')['default']
     EmployeeDropDown: typeof import('./src/components/OurComponents/Employee/EmployeeDropDown.vue')['default']
     EmployeeFormNavigation: typeof import('./src/components/OurComponents/Employee/EmployeeFormNavigation.vue')['default']
     EmployeeNameCellWithAvailability: typeof import('./src/components/OurComponents/Employee/EmployeeNameCellWithAvailability.vue')['default']

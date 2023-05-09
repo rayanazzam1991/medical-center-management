@@ -3,7 +3,7 @@ import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { Media, MediaConsts } from "../Others/Media/media"
 import { Nationality, defaultNationality } from "../Others/Nationality/nationality"
 import { defaultPosition, Position } from "../Others/Position/position"
-import { Service } from "../Others/Service/service"
+import { defaultService, Service } from "../Others/Service/service"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -68,6 +68,7 @@ export interface EmployeeSearchFilter {
     is_service_provider?: boolean
 }
 export interface EmployeeService {
+    id: number
     service: Service
     price: number
 }
@@ -122,6 +123,11 @@ export const defaultUpdateEmployee: UpdateEmployee = {
     type: 1,
     payment_percentage: 1,
     services: []
+}
+export const defaultEmployeeService: EmployeeService = {
+    id: 0,
+    price: 0,
+    service: defaultService
 }
 export const defaultEmployee: Employee = {
     id: 0,

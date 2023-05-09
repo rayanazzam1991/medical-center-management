@@ -379,7 +379,8 @@
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
         "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر",
         "no_waiting_list": "لا يوجد دور حالي للتذكرة.",
-        "cannot_edit_closed_ticket": "لا يمكنك تعديل تذكرة مغلقة."
+        "cannot_edit_closed_ticket": "لا يمكنك تعديل تذكرة مغلقة.",
+        "ticket_service_is_required": "يرجى تحديد الخدمة المطلوبة"
       },
       "item": {
         "item_service_is_duplicated": "يوجد بعض المواد المكررة",
@@ -418,7 +419,8 @@
       "filter": "تصفية",
       "cash_out": "سحب مبلغ",
       "bulk_cash_out": "سحب كلي",
-      "print": "طباعة"
+      "print": "طباعة",
+      "add": "إضافة"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
@@ -999,6 +1001,7 @@
       "status": "الحالة",
       "actions": "الاجراءات",
       "done": "تم",
+      "add_new_service": "إضافة خدمة جديدة",
       "serve_next": "التذكرة التالية",
       "serve_first": "بدء التخديم",
       "type_notes": "ملاحظات...",
@@ -1006,6 +1009,16 @@
         "title": "تأكيد تخديم الزبون",
         "caution": "هل أنت متأكد؟",
         "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
+      },
+      "delete_confirmation": {
+        "title": "تأكيد ازالة الخدمة",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم ازالة هذه الخدمة بشكل نهائي"
+      },
+      "add_service_modal": {
+        "title": "إضافة خدمة جديدة للتذكرة",
+        "service": "الخدمة",
+        "service_price": "سعر الخدمة"
       }
     },
     "employee_statuses": {
