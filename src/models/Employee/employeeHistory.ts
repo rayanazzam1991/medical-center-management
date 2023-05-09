@@ -27,7 +27,7 @@ export const defaultDismissedEmployee: DismissedEmployee = {
 }
 
 export const defaultEmployeeHistory: EmployeeHistory = {
-  employee_id:0,
+  employee_id: 0,
   notes: undefined,
   status: undefined,
   created_at: undefined,
@@ -37,13 +37,21 @@ export interface EmployeeHistorySearchFilter {
   employee_name?: string
   employee_id?: number
   notes?: string
-  status?:number
+  status?: number
   page?: number
   per_page?: number
   order_by?: string
   order?: string
 }
+export interface EmployeesAvailabilitySearchFilter {
+  room_id?: number
+  employees_id?: number[]
+  department_id?: number
+  is_available?: boolean
+}
+
 export const defaultEmployeeHistorySearchFilter = <EmployeeHistorySearchFilter>{}
+export const defaultEmployeesAvailabilitySearchFilter = <EmployeesAvailabilitySearchFilter>{}
 
 
 class EmployeeStatusConsts {

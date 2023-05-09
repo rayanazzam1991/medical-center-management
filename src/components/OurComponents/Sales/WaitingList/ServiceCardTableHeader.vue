@@ -65,11 +65,11 @@ export default defineComponent({
                 <div class="form-header-inner">
                     <div class="left my-4 mx-2 ">
                         <div class="columns is-flex is-align-items-center">
-                            <VControl class="mr-2" icon="feather:search">
+                            <VControl class="mr-2 width" icon="feather:search">
                                 <VInput v-model="searchCustomerName" type="text"
                                     :placeholder="t('service_card.search_filter.customer_name')" />
                             </VControl>
-                            <VControl class="mr-2" icon="feather:search">
+                            <VControl class="mr-2 width" icon="feather:search">
                                 <VInput v-model="searchProviderName" type="text"
                                     :placeholder="t('service_card.search_filter.provider_name')" />
                             </VControl>
@@ -114,5 +114,9 @@ export default defineComponent({
     font-size: 1.25rem;
     margin-top: 1rem;
 
+}
+
+.width {
+    width: 200px;
 }
 </style>

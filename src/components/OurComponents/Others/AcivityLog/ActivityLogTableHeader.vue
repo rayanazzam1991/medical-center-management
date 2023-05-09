@@ -90,7 +90,7 @@ export default defineComponent({
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
 
-              <VControl class="mr-2" icon="feather:search">
+              <VControl class="width mr-2" icon="feather:search">
                 <VInput v-model="searchSubjectTypeView" type="text"
                   :placeholder="t('activityLog.search_filter.class_name')" />
               </VControl>
@@ -102,6 +102,7 @@ export default defineComponent({
                     let userSearchFilter = {
                       name: query,
                     } as UserSearchFilter
+                    //@ts-ignore
                     const data = await getUsersWithoutCustomerList(userSearchFilter)
                     //@ts-ignore
                     return data.users.map((user: User) => {
@@ -143,11 +144,18 @@ export default defineComponent({
   </form>
 </template>
 
-<style   lang="scss">
+<style scoped  lang="scss">
 @import '/@src/scss/styles/tableHeader.scss';
 
 .width {
   width: 200px;
+}
+
+.title {
+  font-family: var(--font-alt);
+  font-size: 1.25rem;
+  margin-top: 1rem;
+
 }
 </style>
 

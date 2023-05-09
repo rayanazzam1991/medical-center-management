@@ -25,7 +25,7 @@ onMounted(async () => {
   <div class="finance-dashboard dashboard">
     <div class="columns">
       <div class="column is-12">
-        <div class="columns is-multiline">
+        <div class="columns is-multiline mb-0">
           <div class="column is-3">
             <StatCard :key="keyIncrement" :title="t('dashboards.admin.clients_in_center')" color="primary"
               icon="feather:user" :stat="adminDashboardData.clients_in_center" rounded
@@ -59,7 +59,7 @@ onMounted(async () => {
                 :loading="dashboardStore.loading" />
 
             </div>
-            <div class="column is-12 px-0">
+            <div class="column is-12 px-0 mb-0">
               <RoleStatCard :key="keyIncrement" :title="t('dashboards.admin.roles')" color="info"
                 icon="material-symbols:badge-outline" :roles="adminDashboardData.roles_stats" rounded
                 :loading="dashboardStore.loading" />
@@ -85,8 +85,13 @@ addParenthesisToString(t('dashboards.admin.total_amount'))]"
           </div>
 
         </div>
-        <div>
-          <ActivityLogTable with-title />
+        <div class="columns is-multiline pt-0">
+          <div class="column is-6">
+            <EmployeesAvailabilityTable />
+          </div>
+          <div class="column is-6">
+            <ActivityLogTable with-title />
+          </div>
         </div>
       </div>
     </div>

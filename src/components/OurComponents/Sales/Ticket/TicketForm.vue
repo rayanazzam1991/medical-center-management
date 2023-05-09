@@ -18,6 +18,7 @@ import { getServicesWithProviders } from '/@src/services/Others/Service/serviceS
 import { createTicket, getTicket, updateTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
+import { Employee } from '/@src/models/Employee/employee';
 
 export default defineComponent({
   props: {
@@ -109,6 +110,11 @@ export default defineComponent({
       updateTotalAmount()
     }
 
+    const checkProviderAvailability = (service: CreateTicketServiceHelper, index: number) => {
+      const serviceWithProvider = servicesWithProviders.value.find((serviceElm) => serviceElm.id == service.service_id)
+      const provider = serviceWithProvider?.providers.find((serviceProvider) => serviceProvider.id == service.service_provider_id)
+      return provider?.provider.is_available
+    }
     const removeService = (index: number) => {
       if (index !== -1) {
         requestedServicesHelper.value.splice(index, 1);
@@ -228,7 +234,7 @@ export default defineComponent({
       if (success) {
         await sleep(200);
         notif.success(t('toast.success.add_ticket', { ticket_id: ticket.id }))
-        currentTicket.zvalue.requested_services = []
+        currentTicket.value.requested_services = []
         router.push({ path: `/ticket/${ticket.id}` });
       }
       else {
@@ -261,7 +267,7 @@ export default defineComponent({
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer
+      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer, checkProviderAvailability
     };
   },
   components: { ErrorMessage }
@@ -304,17 +310,17 @@ export default defineComponent({
                       @select="setCustomerIdValue()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
                       :infinite="true" :limit="20" :rtl="true" :max="1" :clear-on-search="true" :delay="0"
                       :searchable="true" :canClear="false" :options="async (query: any) => {
-                          let customerSearchFilter = {
-                            user_status_id: UserStatusConsts.ACTIVE,
-                            name: query,
-                          } as CustomerSearchFilter
-                          //@ts-ignore
-                          const data = await getCustomersList(customerSearchFilter)
-                          //@ts-ignore
-                          return data.customers.map((customer: Customer) => {
-                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                          })
-                        }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
+                        let customerSearchFilter = {
+                          user_status_id: UserStatusConsts.ACTIVE,
+                          name: query,
+                        } as CustomerSearchFilter
+                        //@ts-ignore
+                        const data = await getCustomersList(customerSearchFilter)
+                        //@ts-ignore
+                        return data.customers.map((customer: Customer) => {
+                          return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                        })
+                      }" @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                     <VSelect disabled v-else v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
@@ -367,7 +373,7 @@ export default defineComponent({
                   </div>
                   <div class="column is-4">
                     <div class="mb-3">
-                      <VField>
+                      <VField class="mb-1">
                         <VControl>
                           <div class="select">
                             <select :disabled="!requestedServicesHelper[mainIndex].editable"
@@ -385,6 +391,12 @@ export default defineComponent({
                           </div>
                         </VControl>
                       </VField>
+                      <p v-if="requestedServicesHelper[mainIndex].service_provider_id !== 0 && requestedServicesHelper[mainIndex].service_provider_id !== undefined"
+                        class="help mt-0 pt-0" :class="[checkProviderAvailability(record, mainIndex) && 'has-text-success',
+                        !checkProviderAvailability(record, mainIndex) && 'has-text-warning']">
+                        {{ checkProviderAvailability(record, mainIndex) ? t('ticket.form.provider_available') :
+                          t('ticket.form.provider_not_available') }}
+                      </p>
                     </div>
                   </div>
                   <div class="column is-4">
@@ -414,11 +426,11 @@ export default defineComponent({
               </div>
               <div class="column is-12 pt-0">
                 <VButton @click.prevent="addService({
-                    service_id: 0,
-                    sell_price: 0,
-                    service_provider_id: 0,
-                    editable: true
-                  })" color="primary">
+                  service_id: 0,
+                  sell_price: 0,
+                  service_provider_id: 0,
+                  editable: true
+                })" color="primary">
                   {{ t('ticket.form.add_new_service') }}
                 </VButton>
               </div>
