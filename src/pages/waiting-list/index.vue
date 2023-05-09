@@ -18,6 +18,7 @@ import { WaitingList, defaultWaitingListSearchFilter, WaitingListSearchFilter } 
 import { getWaitingLists } from '/@src/services/Sales/WaitingList/waitingListService';
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import { toggleEmployeeAvailability } from '/@src/services/Employee/employeeService';
 
 
 
@@ -30,7 +31,6 @@ const notif = useNotyf() as Notyf
 const waitingListLists = ref<WaitingList[]>([])
 const searchFilter = ref(defaultWaitingListSearchFilter)
 const keyIncrement = ref(0)
-const keyIncrement2 = ref(0)
 const loading = ref({ fetch: false, refresh: false })
 onMounted(async () => {
     loading.value.fetch = true
@@ -52,6 +52,19 @@ const resetFilter = async (newSearchFilter: WaitingListSearchFilter) => {
     loading.value.fetch = false
     searchFilter.value = newSearchFilter
     await search(searchFilter.value)
+    keyIncrement.value++
+}
+const toggleAvailability = async (employeeId: number) => {
+    const { message, success } = await toggleEmployeeAvailability(employeeId)
+    if (success) {
+        notif.success(t('toast.success.edit'))
+        await search(searchFilter.value)
+        keyIncrement.value++
+
+    } else {
+        notif.error({ message: message, duration: 3000 })
+    }
+
     loading.value.fetch = false
 
 }
@@ -61,7 +74,7 @@ const refresh = async () => {
 
     const { waiting_lists } = await getWaitingLists(searchFilter.value)
     waitingListLists.value = waiting_lists
-    keyIncrement2.value++
+    keyIncrement.value++
     loading.value.refresh = false
 
 }
@@ -87,9 +100,10 @@ const refresh = async () => {
             </div>
         </div>
         <div v-else-if="waitingListLists.length > 0" class="waiting-list-inner">
-            <div class="waiting-lists-container is-flex has-slimscroll" :key="keyIncrement2">
+            <div :key="keyIncrement" class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent v-for="(waitingList, index) in waitingListLists" :key="index" draggable
-                    @refresh="refresh" :waiting_list="waitingList.waiting_list" :provider="waitingList.provider" />
+                    withChangeAvailability @refresh="refresh" @toggleAvailability="toggleAvailability"
+                    :waiting_list="waitingList.waiting_list" :provider="waitingList.provider" />
             </div>
         </div>
         <div v-else>

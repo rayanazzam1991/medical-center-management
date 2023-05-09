@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import VTag from '/@src/components/base/tags/VTag.vue'
-import { getEmployeesList } from '/@src/services/Employee/employeeService'
+import { getEmployeesList, toggleEmployeeAvailability } from '/@src/services/Employee/employeeService'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { defaultEmployee, defaultEmployeeSearchFilter, Employee, EmployeeSearchFilter } from '/@src/models/Employee/employee'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
@@ -33,6 +33,7 @@ import { Permissions } from '/@src/utils/consts/rolesPermissions'
 import { DismissedEmployee, EmployeeStatusConsts } from '../../models/Employee/employeeHistory'
 
 import { dismissEmployeevalidationSchema } from '/@src/rules/Employee/dismissEmployeeValidation';
+import EmployeeNameCellWithAvailability from '/@src/components/OurComponents/Employee/EmployeeNameCellWithAvailability.vue'
 
 
 const viewWrapper = useViewWrapper()
@@ -152,6 +153,19 @@ const employeeSort = async (value: string) => {
   await search(searchFilter.value)
 
 }
+const toggleAvailability = async (employeeId: number) => {
+  const { message, success } = await toggleEmployeeAvailability(employeeId)
+  if (success) {
+    notif.success(t('toast.success.edit'))
+    await search(searchFilter.value)
+    keyIncrement.value++
+
+  } else {
+    notif.error({ message: message, duration: 3000 })
+  }
+
+}
+
 
 
 const columns = {
@@ -160,8 +174,15 @@ const columns = {
 
     label: t('employee.table.columns.name'),
     grow: 'lg',
-    renderRow: (row: any) =>
-      h('span', row?.user?.first_name + ' ' + row?.user?.last_name),
+    renderRow: (row: Employee) =>
+      h(EmployeeNameCellWithAvailability, {
+        employeeName: row.user.first_name + ' ' + row.user.last_name,
+        employeeAvailability: row.is_available,
+        showAvailability: row.services.length > 0,
+        onChangeAvailability: async () => {
+          await toggleAvailability(row.id ?? 0)
+        },
+      }),
 
     sortable: true,
     searchable: true,
@@ -280,7 +301,6 @@ const columns = {
   },
 } as const
 </script>
-
 <template>
   <EmployeeTableHeader :key="keyIncrement" :title="viewWrapper.pageTitle" :button_name="t('employee.header_button')"
     @search="search" :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />

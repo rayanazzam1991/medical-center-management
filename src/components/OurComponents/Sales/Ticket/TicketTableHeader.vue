@@ -92,7 +92,7 @@ export default defineComponent({
           <div class="left my-4 mx-2 ">
             <div class="columns is-flex is-align-items-center">
               <VControl class="mr-2" icon="feather:search">
-                <VInput v-model="searchId" type="text" :placeholder="t('ticket.search_filter.id')" />
+                <VInput v-model="searchId" type="number" :placeholder="t('ticket.search_filter.id')" />
               </VControl>
               <VIconButton class="mr-2" @click.prevent="onOpen" icon="fas fa-filter" />
               <VIconButton class="mr-2" v-on:click="resetFilter" icon="feather:rotate-ccw" :raised="false"

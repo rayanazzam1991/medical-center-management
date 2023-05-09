@@ -412,6 +412,9 @@ export enum Permissions {
   SHOW_WAITING_LIST_SERVE_CLIENT = 'show_waiting_list_serve_client',
   SHOW_ALL_WAITING_LISTS = 'show_all_waiting_lists',
 
+  EMPLOYEE_AVAILABILITY_TOGGLE = 'employee_availability_toggle',
+  EMPLOYEES_CURRENT_AVAILABILITY_LIST = 'employees_current_availability_list',
+  EMPLOYEES_AVAILABILITY_HISTORY_LIST = 'employees_availability_history_list',
 
   ACCOUNTING_ACCESS = 'accounting_access',
   HR_ACCESS = 'hr_access',

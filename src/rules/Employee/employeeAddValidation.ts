@@ -23,6 +23,10 @@ const employeeAddvalidationSchema = toFormValidator(zod
             zod
                 .string({})
                 .min(1, i18n.global.t('validation.required')),
+        username:
+            zod
+                .string({})
+                .min(1, i18n.global.t('validation.required')),
         birth_date:
             zod
                 .preprocess(

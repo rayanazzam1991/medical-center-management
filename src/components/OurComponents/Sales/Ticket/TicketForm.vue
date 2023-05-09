@@ -12,7 +12,7 @@ import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidatio
 import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
-// @ts-ignore
+//@ts-ignore
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
@@ -21,6 +21,7 @@ import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
 import { getTodayCustomerReservation } from '/@src/services/Sales/Reservation/reservationService';
 import { Reservation, ReservationTicketHelper, TodayCustomerReservationData } from '/@src/models/Sales/Reservation/reservation';
+import { Employee } from '/@src/models/Employee/employee';
 
 export default defineComponent({
   props: {
@@ -39,7 +40,7 @@ export default defineComponent({
     })
     const route = useRoute();
     const ticketId = ref(0);
-    // @ts-ignore
+    //@ts-ignore
     ticketId.value = route.params?.id as number ?? 0;
     const ticketStore = useTicket()
     const notif = useNotyf() as Notyf;
@@ -127,9 +128,19 @@ export default defineComponent({
         selectedService.with_reserve = true
       } else {
         selectedService.with_reserve = false
-
       }
     }
+
+    const checkProviderAvailability = (service: CreateTicketServiceHelper, index: number) => {
+      const serviceWithProvider = servicesWithProviders.value.find((serviceElm) => serviceElm.id == service.service_id)
+      const provider = serviceWithProvider?.providers.find((serviceProvider) => serviceProvider.id == service.service_provider_id)
+      return provider?.provider.is_available
+    }
+    const getServiceCost = (service: CreateTicketServiceHelper, index: number) => {
+      const serviceWithProvider = servicesWithProviders.value.find((serviceElm) => serviceElm.id == service.service_id)
+      return serviceWithProvider?.service_cost ?? 0
+    }
+
     const removeService = (index: number) => {
       if (index !== -1) {
         if (requestedServicesHelper.value[index].with_reserve && formType.value == 'Add') {
@@ -371,7 +382,7 @@ export default defineComponent({
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
       servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer, selectCustomerLoading, onSelectCustomer, customerTodayReservations,
-      keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand, headerLoading
+      keyIncrement2, addReservationService, isExpanded, selectedCustomerId, toggleIsExpand, headerLoading, checkProviderAvailability, getServiceCost
     };
   },
   components: { ErrorMessage }
@@ -409,6 +420,7 @@ export default defineComponent({
                 <VField id="customer_id">
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
+
                     <Multiselect v-if="formType == 'Add'" v-model="selectedCustomerId" mode="single"
                       :placeholder="t('ticket.form.select_customer')" :close-on-select="true" ref="customer_id"
                       @click="onSelectCustomer()" :filter-results="false" :min-chars="0" :resolve-on-load="false"
@@ -430,8 +442,11 @@ export default defineComponent({
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
                       </VOption>
                     </VSelect>
+
                   </VControl>
+
                   <ErrorMessage class="help is-danger" name="customer_id" />
+
                 </VField>
               </div>
               <div v-if="selectCustomerLoading" class="column is-12">
@@ -445,9 +460,11 @@ export default defineComponent({
                 :class="[selectCustomerLoading && 'is-hidden', currentTicket.customer_id == 0 && 'is-hidden']"
                 v-if="formType == 'Add'">
                 <div class="column is-12">
+
                   <AvailableReservationsCollapse :key="keyIncrement2" :items="customerTodayReservations" with-chevron
                     :is_expanded="isExpanded" @add-reservation-service="addReservationService"
                     @close-open="toggleIsExpand" />
+
                 </div>
                 <div class="column is-12 pb-0 my-0">
                   <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
@@ -482,20 +499,18 @@ export default defineComponent({
                   <div class="columns is-multiline mb-0" v-for="(record, mainIndex) in requestedServicesHelper"
                     :key="mainIndex">
                     <div class="column is-4">
-                      <div>
-                        <VField>
-                          <VControl>
-                            <VSelect :disabled="!requestedServicesHelper[mainIndex].editable"
-                              v-model="requestedServicesHelper[mainIndex].service_id">
-                              <VOption :value="0"> {{ t('ticket.form.select_service')
-                              }}</VOption>
-                              <VOption v-for="service in servicesWithProviders" :value="service.id">
-                                {{ service.name }}
-                              </VOption>
-                            </VSelect>
-                          </VControl>
-                        </VField>
-                      </div>
+                      <VField>
+                        <VControl>
+                          <VSelect :disabled="!requestedServicesHelper[mainIndex].editable"
+                            v-model="requestedServicesHelper[mainIndex].service_id">
+                            <VOption :value="0"> {{ t('ticket.form.select_service')
+                            }}</VOption>
+                            <VOption v-for="service in servicesWithProviders" :value="service.id">
+                              {{ service.name }}
+                            </VOption>
+                          </VSelect>
+                        </VControl>
+                      </VField>
                       <div v-if="requestedServicesHelper[mainIndex].service_provider_id != 0" class="m-0 p-0 mb-3">
                         <p class="help" :class="[
                           requestedServicesHelper[mainIndex].with_reserve && 'is-success',
@@ -525,6 +540,13 @@ export default defineComponent({
                             </div>
                           </VControl>
                         </VField>
+                        <p v-if="requestedServicesHelper[mainIndex].service_provider_id !== 0 && requestedServicesHelper[mainIndex].service_provider_id !== undefined"
+                          class="help mt-0 pt-0" :class="[checkProviderAvailability(record, mainIndex) && 'has-text-success',
+                          !checkProviderAvailability(record, mainIndex) && 'has-text-warning']">
+                          {{ checkProviderAvailability(record, mainIndex) ? t('ticket.form.provider_available') :
+                            t('ticket.form.provider_not_available') }}
+                        </p>
+
                       </div>
                     </div>
                     <div class="column is-2 ">
@@ -536,14 +558,21 @@ export default defineComponent({
                               v-model.number="requestedServicesHelper[mainIndex].sell_price" />
                           </VControl>
                         </VField>
+                        <p v-if="requestedServicesHelper[mainIndex].service_id !== 0 && requestedServicesHelper[mainIndex].service_id !== undefined"
+                          class="help mt-0 pt-0">
+                          {{ t('ticket.form.service_cost') }} {{ getServiceCost(record, mainIndex) }}
+                        </p>
+
                       </div>
                     </div>
                     <div class="column is-2 columns py-0 my-0 pl-0">
                       <div class="column is-6 pr-4">
                         <VField>
                           <VControl>
+
                             <VCheckbox v-model="requestedServicesHelper[mainIndex].is_emergency" paddingless bigger
                               color="warning" />
+
                           </VControl>
                         </VField>
                       </div>
@@ -575,8 +604,11 @@ export default defineComponent({
                   <VField id="total_amount">
                     <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
                     <VControl>
+
                       <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
+
                       <ErrorMessage class="help is-danger" name="total_amount" />
+
                     </VControl>
                   </VField>
                 </div>
@@ -625,7 +657,7 @@ export default defineComponent({
                     </div>
                     <div class="column is-4">
                       <div class="mb-3">
-                        <VField>
+                        <VField class="mb-1">
                           <VControl>
                             <div class="select">
                               <select :disabled="!requestedServicesHelper[mainIndex].editable"
@@ -643,17 +675,27 @@ export default defineComponent({
                             </div>
                           </VControl>
                         </VField>
+                        <p v-if="requestedServicesHelper[mainIndex].service_provider_id !== 0 && requestedServicesHelper[mainIndex].service_provider_id !== undefined"
+                          class="help mt-0 pt-0" :class="[checkProviderAvailability(record, mainIndex) && 'has-text-success',
+                          !checkProviderAvailability(record, mainIndex) && 'has-text-warning']">
+                          {{ checkProviderAvailability(record, mainIndex) ? t('ticket.form.provider_available') :
+                            t('ticket.form.provider_not_available') }}
+                        </p>
                       </div>
                     </div>
                     <div class="column is-4">
                       <div class="mb-3">
-                        <VField>
+                        <VField class="mb-1">
                           <VControl>
                             <VInput :disabled="!requestedServicesHelper[mainIndex].editable"
                               @input="() => updateTotalAmount()" type="number"
                               v-model.number="requestedServicesHelper[mainIndex].sell_price" />
                           </VControl>
                         </VField>
+                        <p v-if="requestedServicesHelper[mainIndex].service_id !== 0 && requestedServicesHelper[mainIndex].service_id !== undefined"
+                          class="help mt-0 pt-0">
+                          {{ t('ticket.form.service_cost') }} {{ getServiceCost(record, mainIndex) }}
+                        </p>
                       </div>
                     </div>
                     <div class="column is-1 columns is-flex is-align-items-center">
@@ -686,8 +728,11 @@ export default defineComponent({
                   <VField id="total_amount">
                     <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
                     <VControl>
+
                       <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
+
                       <ErrorMessage class="help is-danger" name="total_amount" />
+
                     </VControl>
                   </VField>
                 </div>
@@ -698,6 +743,7 @@ export default defineComponent({
         </div>
       </div>
     </form>
+
 
 
   </div>

@@ -7,6 +7,8 @@ import { usePanels } from '/@src/stores/panels'
 import { useI18n } from 'vue-i18n'
 import { useDarkmode } from '../stores/darkmode'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import TicketingSubnav from './navbar-items/TicketingSubnav.vue'
+import ReportingSubnav from './navbar-items/ReportingSubnav.vue'
 
 export type NavbarTheme = 'default' | 'colored' | 'fade'
 export type SubnavId =

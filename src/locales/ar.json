@@ -42,7 +42,7 @@
       "welcome_back": "أهلاً بعودتك.",
       "sign_in": "من فضلك قم بتسجيل الدخول الى حسابك",
       "placeholders": {
-        "phone": "رقم الهاتف",
+        "phone_username": "اسم المستخدم/رقم الهاتف",
         "password": "كلمة المرور"
       },
       "sign_in_button": "تسجيل الدخول"
@@ -161,7 +161,8 @@
     "employee": {
       "employees": "الموظفين",
       "create_employee": "انشاء موظف",
-      "employee_history": "سجل نشاط الموظفين"
+      "employee_history": "سجل نشاط الموظفين",
+      "employee_availability_history": "سجل تواجد مقدميّ الخدمة"
     },
     "position": {
       "positions": "المناصب",
@@ -292,6 +293,7 @@
     "change_password": "تعديل كلمة المرور",
     "view_my_waiting_list": "عرض غرفة الانتظار الخاصة بي",
     "name": "الاسم:",
+    "username": "اسم امستخدم:",
     "roles": "الأدوار:",
     "change_password_popup": {
       "title": "تغيير كلمة المرور",
@@ -376,7 +378,8 @@
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
         "add_some_services": "يرجى إضافة بعض الخدمات أو تخطي هذه الخطوة",
         "cannot_combine_no_access": "لا يمكن اختيار الدور 'لا يوجد وصول' مع أدوار أخرى",
-        "choose_role": "يرجى اختيار دور"
+        "choose_role": "يرجى اختيار دور",
+        "cannot_change_avaiability": "لا يمكنك القيام بهذا الاجراء بسبب وجود تذكرة بحالة التخديم حالياً."
       },
       "ticket": {
         "service_is_required": "يرجى تحديد الخدمات المطلوبة",
@@ -385,7 +388,8 @@
         "services_is_duplicated": "بعض الخدمات المختارة مكررة, يرجى التحقق من ذلك.",
         "service_price_is_invalid": "سعر الخدمة {service_name} يجب أن يكون أكبر من الصفر",
         "no_waiting_list": "لا يوجد دور حالي للتذكرة.",
-        "cannot_edit_closed_ticket": "لا يمكنك تعديل تذكرة مغلقة."
+        "cannot_edit_closed_ticket": "لا يمكنك تعديل تذكرة مغلقة.",
+        "ticket_service_is_required": "يرجى تحديد الخدمة المطلوبة"
       },
       "item": {
         "item_service_is_duplicated": "يوجد بعض المواد المكررة",
@@ -432,7 +436,8 @@
       "bulk_cash_out": "سحب كلي",
       "print": "طباعة",
       "cancel_reservation": "الغاء الحجز",
-      "deactivate_reservation": "انهاء تفعيل الحجز"
+      "deactivate_reservation": "انهاء تفعيل الحجز",
+      "add": "إضافة"
     },
     "delete_modal": {
       "title": "هل أنت متأكد؟",
@@ -469,7 +474,10 @@
     "dismiss_employee": "إقالة الموظف",
     "add_ticket": "إضافة تذكرة",
     "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي",
-    "view_reservation_calendar": "عرض الحجوزات"
+    "view_reservation_calendar": "عرض الحجوزات",
+    "change_provider_availability": "تعديل الحالة إلى  ",
+    "is_available": " متواجد ",
+    "is_not_available": "غير متواجد"
   },
   "add_quantity": {
     "form": {
@@ -883,7 +891,8 @@
         "tickets": "التذاكر",
         "ticket_services": "الخدمات المقدمة",
         "balances": "الأرصدة",
-        "history_record": "سجل تاريخ الموظف"
+        "history_record": "سجل الموظف",
+        "availability_history": "سجل التواجد"
       },
       "main_details": "المعلومات الأساسية",
       "current_balance": "الرصيد الحالي : ",
@@ -934,6 +943,7 @@
       "back_button": "الرجوع إلى واجهة الموظفين",
       "first_name": "الاسم الأول",
       "last_name": "الاسم الأخير",
+      "username": "اسم المستخدم",
       "phone_number": "رقم الهاتف",
       "birth_date": "تاريخ الميلاد",
       "gender": "الجنس",
@@ -982,6 +992,8 @@
     "header_button": "إضافة موظف",
     "waiting_list": {
       "header_title": "غرفة انتظار المخدم",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد",
       "title": "غرفة الانتظار",
       "place_holder": {
         "title": "جاري تحميل غرفة الانتظار...",
@@ -1007,6 +1019,7 @@
       "status": "الحالة",
       "actions": "الاجراءات",
       "done": "تم",
+      "add_new_service": "إضافة خدمة جديدة",
       "serve_next": "التذكرة التالية",
       "serve_first": "بدء التخديم",
       "type_notes": "ملاحظات...",
@@ -1014,6 +1027,16 @@
         "title": "تأكيد تخديم الزبون",
         "caution": "هل أنت متأكد؟",
         "subtitle": "سيتم تعديل حالة الخدمة المطلوبة إلى مخدمة مع الملاحظات المسجلة"
+      },
+      "delete_confirmation": {
+        "title": "تأكيد ازالة الخدمة",
+        "caution": "هل أنت متأكد؟",
+        "subtitle": "سيتم ازالة هذه الخدمة بشكل نهائي"
+      },
+      "add_service_modal": {
+        "title": "إضافة خدمة جديدة للتذكرة",
+        "service": "الخدمة",
+        "service_price": "سعر الخدمة"
       }
     },
     "employee_statuses": {
@@ -2519,7 +2542,10 @@
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
       "emergency": "طارئ",
+      "service_cost": "تكلفة الخدمة : ",
       "add_new_service": "إضافة خدمة جديدة",
+      "provider_available": "المخدم متواجد حالياً",
+      "provider_not_available": "المخدم غير متواجد حالياً",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
@@ -2678,6 +2704,8 @@
   "waiting_list": {
     "title": "غرف الانتظار",
     "turn_number": "الدور : ",
+    "is_available": " متواجد ",
+    "is_not_available": "غير متواجد",
     "current_turn_number": "الدور الحالي : ",
     "no_tickets_place_holder": "لا يوجد أية تذاكر في غرفة الانتظار.",
     "place_holder": {
@@ -3197,6 +3225,39 @@
     "drop_down": {
       "cancel_reservation": "الغاء الحجز",
       "deactivate_reservation": "انهاء تفعيل الحجز"
+    }
+  },
+  "employee_availability": {
+    "title": "تواجد مقدميّ الخدمة",
+    "no_employees_in_this_room_placeholder": "لا يوجد مخدمين في هذه الغرفة.",
+    "room": "الغرفة ",
+    "search_filter": {
+      "title": "تصفية تواجد مقدميً الخدمة",
+      "provider": "المخدم",
+      "department": "القسم",
+      "room": "الغرفة ",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد"
+    }
+  },
+  "employee_availability_history": {
+    "table": {
+      "title": "سجل تواجد مقدّمي الخدمة",
+      "columns": {
+        "employee_name": "المخدم",
+        "action": "النشاط",
+        "is_available": " متواجد ",
+        "is_not_available": "غير متواجد",
+        "creation_date": "تاريخ الانشاء",
+        "creation_time": "وقت الانشاء",
+        "created_by": "بواسطة"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية سجل تواجد مقدميّ الخدمة",
+      "provider": "المخدم",
+      "is_available": " متواجد ",
+      "is_not_available": "غير متواجد"
     }
   }
 }

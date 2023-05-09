@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { CreateUpdateUser, ChangeUserStatus, UserSearchFilter } from "/@src/models/Others/User/user"
+import { CreateUpdateUser, ChangeUserStatus, UserSearchFilter, GenerateUniqueUsernameData } from "/@src/models/Others/User/user"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function deleteUserApi(
@@ -53,8 +53,6 @@ export async function getUsersApi(
   return { response }
 }
 
-
-
 export async function getUsersWithoutCustomerApi(
   api: AxiosInstance,
   searchFilter: UserSearchFilter
@@ -71,5 +69,12 @@ export async function phoneExistsCheckApi(
   const { data: response, headers } = await api.post(`user/phoneCheck`, {
     phone_number: phone_number,
   })
+  return { response }
+}
+export async function generateUniqueUsernameApi(
+  api: AxiosInstance,
+  data: GenerateUniqueUsernameData
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(`user/generateUniqueUsername`, data)
   return { response }
 }

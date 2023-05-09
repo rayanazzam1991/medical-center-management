@@ -52,6 +52,7 @@ export interface ServiceWithProvider {
   status: number
   description?: string
   service_price?: number
+  service_cost?: number
   duration_minutes?: number
   providers: ServiceProvider[]
 }

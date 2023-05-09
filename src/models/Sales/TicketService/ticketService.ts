@@ -25,6 +25,11 @@ export interface TicketService {
     is_emergency?: boolean
     is_reserve?: boolean
 }
+export interface CreateTicketService {
+    ticket_id: number
+    service_provider_id: number
+    sell_price: number
+}
 
 export interface CreateUpdateTicketService {
     service_provider_id: number
@@ -71,6 +76,11 @@ export const defaultTicketService: TicketService = {
     ticket: undefined,
     is_emergency: undefined,
     is_reserve: undefined
+}
+export const defaultCreateTicketService: CreateTicketService = {
+    sell_price: 0,
+    service_provider_id: 0,
+    ticket_id: 0
 }
 
 class TicketServiceConsts {

@@ -3,7 +3,7 @@ import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { Media, MediaConsts } from "../Others/Media/media"
 import { Nationality, defaultNationality } from "../Others/Nationality/nationality"
 import { defaultPosition, Position } from "../Others/Position/position"
-import { Service } from "../Others/Service/service"
+import { defaultService, Service } from "../Others/Service/service"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
@@ -26,6 +26,7 @@ export interface Employee {
     is_dismissed: boolean
     services: EmployeeService[],
     media?: Media[],
+    is_available?: boolean,
     is_service_provider?: boolean
 }
 export interface CreateEmployee {
@@ -73,6 +74,30 @@ export interface EmployeeService {
     service: Service
     price: number
 }
+export interface EmployeesWithAvailabilityDepartment {
+    id: number
+    name: string
+    status: number
+    rooms: EmployeesWithAvailabilityRoom[]
+}
+export interface EmployeesWithAvailabilityRoom {
+    id: number
+    number: number
+    floor: number
+    status: number
+    employees: EmployeesWithAvailabilityEmployee[]
+}
+export interface EmployeesWithAvailabilityEmployee {
+    id: number
+    is_available: boolean
+    user: EmployeesWithAvailabilityUser
+}
+export interface EmployeesWithAvailabilityUser {
+    id: number
+    first_name: string
+    last_name: string
+}
+
 export const defaultCreateEmployee: CreateEmployee = {
     id: 0,
     starting_date: '',
@@ -101,6 +126,11 @@ export const defaultUpdateEmployee: UpdateEmployee = {
     payment_percentage: 1,
     services: []
 }
+export const defaultEmployeeService: EmployeeService = {
+    id: 0,
+    price: 0,
+    service: defaultService
+}
 export const defaultEmployee: Employee = {
     id: 0,
     starting_date: '',
@@ -112,10 +142,11 @@ export const defaultEmployee: Employee = {
     employee_number: undefined,
     payment_percentage: 0,
     type: 1,
-    services: [],
-    is_dismissed: false,
+      services: [],
+    is_dismissed:  false,
     media: undefined,
-    is_service_provider: undefined
+    is_service_provider: undefined,
+    is_available: undefined
 }
 export const defaultEmployeeSearchFilter = <Partial<EmployeeSearchFilter>>{}
 

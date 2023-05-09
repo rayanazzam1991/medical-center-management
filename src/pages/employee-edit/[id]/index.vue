@@ -10,7 +10,7 @@ import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Ot
 import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
-import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from '/@src/models/Others/UserStatus/userStatus';
+import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
 import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
@@ -56,6 +56,7 @@ const currentEmployee = ref(defaultCreateEmployee)
 const employeeId = ref(0)
 const selectedDepartmentId = ref(0)
 const selectedType = ref<number>(0)
+const isUser = ref(false)
 
 // @ts-ignore
 employeeId.value = route.params.id
@@ -103,6 +104,8 @@ const fetchEmployee = async () => {
     selectedDepartmentId.value = employee.user.room.department?.id ?? 0
     selectedType.value = employee.type
 
+    const haveNoAccess = employee.user.roles?.find((role) => role.name == 'No_Access')
+    isUser.value = haveNoAccess ? false : true
     setupSelectedRoles()
 
 }
@@ -182,6 +185,7 @@ const { handleSubmit } = useForm({
         end_date: currentEmployee.value.end_date,
         basic_salary: currentEmployee.value.basic_salary,
         nationality_id: currentEmployee.value.nationality_id,
+        position_id: currentEmployee.value.position_id,
         payment_percentage: currentEmployee.value.payment_percentage
     },
 })
@@ -192,7 +196,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
     var userData = currentUser.value
     var employeeData = currentEmployee.value
     let selectedType
-    let rolesError = false
 
     if (employeeData.basic_salary == 0) {
         if (employeeData.payment_percentage == 0) {
@@ -208,14 +211,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
             selectedType = EmployeeConsts.TYPE_HYBRID_EMPLOYEE
         }
     }
-    userData.roles.forEach((role) => {
-        if (role == 'No_Access' && userData.roles.length > 1) {
-            notif.error({ message: t('toast.error.employee.cannot_combine_no_access'), duration: 4000 })
-            rolesError = true
-        }
-    });
-    if (rolesError) return
-
     employeeForm.dataUpdate.starting_date = employeeData.starting_date
     employeeForm.dataUpdate.end_date = employeeData.end_date
     employeeForm.dataUpdate.basic_salary = employeeData.basic_salary
@@ -232,33 +227,28 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.userForm.room_id = userData.room_id
     employeeForm.userForm.city_id = userData.city_id
     employeeForm.userForm.user_status_id = userData.user_status_id
-    if (userData.roles.length <= 0) {
+    if (isUser.value == false) {
+        employeeForm.userForm.roles = []
         employeeForm.userForm.roles.push('No_Access')
         employeeForm.userForm.default_role_id = undefined
-
+    } else if (isUser.value == true && userData.roles.length <= 0) {
+        notif.error({ message: t('toast.error.employee.choose_role'), duration: 4000 })
+        return
     } else {
         employeeForm.userForm.roles = userData.roles
         employeeForm.userForm.default_role_id = userData.default_role_id
     }
-
     const { employee, success, message } = await updateEmployee(employeeId.value, employeeForm.dataUpdate, employeeForm.userForm, [])
     if (success) {
         employeeForm.dataUpdate.id = employee.id
-        // @ts-ignore
         await sleep(200);
-
         notif.success(t('toast.success.edit'))
-
         return true
     }
     else {
-        // @ts-ignore
         await sleep(200);
-
         notif.error(message)
         return false
-
-
     }
 
 
@@ -287,7 +277,8 @@ const updateSelectedRoles = () => {
                 selectedRolesList.value.push(roleVal)
             }
         });
-        currentUser.value.default_role_id = selectedRolesList.value[0].id
+        if (currentUser.value.roles.length > 0)
+            currentUser.value.default_role_id = selectedRolesList.value[0].id
     }
 
 }
@@ -347,7 +338,16 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
+                                <div class="column is-6">
+                                    <VField id="username">
+                                        <VLabel class="required">{{ t('employee.form.username') }}
+                                        </VLabel>
+                                        <VControl icon="feather:chevrons-right">
+                                            <VInput disabled v-model="currentUser.username" type="text" placeholder="" />
+                                            <ErrorMessage class="help is-danger" name="username" />
+                                        </VControl>
+                                    </VField>
+                                </div>
                                 <div class="column is-6">
                                     <VField id="birth_date">
                                         <VLabel class="required">{{ t('employee.form.birth_date') }} </VLabel>
@@ -358,25 +358,31 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-fieldset">
-                            <div class="columns is-multiline ">
-                                <div class="column is-half">
-
+                                <div class="column is-6">
                                     <VField id="gender">
-                                        <VLabel class="required ml-3">{{ t('employee.form.gender') }}</VLabel>
-
+                                        <VLabel class="required">{{ t('employee.form.gender') }}</VLabel>
                                         <VControl>
-                                            <VRadio v-model="currentUser.gender" value="Male" label="Male" name="gender"
-                                                color="success" />
-
-                                            <VRadio v-model="currentUser.gender" value="Female" label="Female" name="gender"
-                                                color="success" />
+                                            <VRadio v-model="currentUser.gender" value="Male" :label="t('gender.male')"
+                                                name="gender" color="success" />
+                                            <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')"
+                                                name="gender" color="success" />
                                             <ErrorMessage class="help is-danger" name="gender" />
                                         </VControl>
                                     </VField>
-
+                                </div>
+                                <div class="column is-6">
+                                    <VField id="nationality_id">
+                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
+                                        <VControl>
+                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
+                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
+                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
+                                                    :value="nationality.id">{{ nationality.name }}
+                                                </VOption>
+                                            </VSelect>
+                                            <ErrorMessage class="help is-danger" name="nationality_id" />
+                                        </VControl>
+                                    </VField>
                                 </div>
                                 <div class="column is-6">
                                     <VField id="city_id">
@@ -394,18 +400,33 @@ const updateSelectedRoles = () => {
                                     </VField>
                                 </div>
                             </div>
-                            <div class="column is-12 px-0">
-                                <VField id="address">
-                                    <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
-                                    <VControl>
-                                        <VTextarea v-model="currentUser.address" />
-                                        <ErrorMessage class="help is-danger" name="address" />
-                                    </VControl>
-                                </VField>
-                            </div>
-
                         </div>
                         <div class="form-fieldset">
+                            <div class="columns is-multiline ">
+                                <div class="column is-12">
+                                    <VField id="address">
+                                        <VLabel class="required">{{ t('employee.form.address') }} </VLabel>
+                                        <VControl>
+                                            <VTextarea v-model="currentUser.address" />
+                                            <ErrorMessage class="help is-danger" name="address" />
+                                        </VControl>
+                                    </VField>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-fieldset">
+                            <div class="columns is-multiline">
+                                <div class="column is-12 is-flex is-justify-content-center">
+                                    <VControl class="ml-3">
+                                        <VSwitchSegment v-model="isUser" :label-true="t('employee.form.have_permission')"
+                                            :label-false="t('employee.form.haveNot_permission')" color="success" />
+                                    </VControl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-fieldset" :hidden="!isUser">
                             <div class="columns is-multiline">
                                 <div class="column is-6">
                                     <VField>
@@ -524,20 +545,6 @@ const updateSelectedRoles = () => {
                                     </VField>
                                 </div>
                                 <div class="column is-6">
-                                    <VField id="nationality_id">
-                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
-                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
-                                                    :value="nationality.id">{{ nationality.name }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="nationality_id" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                                <div class="column is-6">
                                     <VField id="position_id">
                                         <VLabel class="required">{{ t('employee.form.position') }}</VLabel>
                                         <VControl>
@@ -559,7 +566,7 @@ const updateSelectedRoles = () => {
                                                 <VOption value="">{{ t('employee.form.status') }}</VOption>
                                                 <VOption v-for="status in statusesList" :key="status.id" :value="status.id">
                                                     {{
-                                                        status.name
+                                                        UserStatusConsts.getStatusName(status.id)
                                                     }}
                                                 </VOption>
                                             </VSelect>
@@ -567,7 +574,6 @@ const updateSelectedRoles = () => {
                                         </VControl>
                                     </VField>
                                 </div>
-
                             </div>
                         </div>
                     </div>

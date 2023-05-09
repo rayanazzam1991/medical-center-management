@@ -154,6 +154,10 @@ const toggleShowCurrentPassword = () => {
             <span class="is-size-7">{{ t('user_profile_dropdown.name') }}</span>
             <span class="is-size-5">{{ userFullName }}</span>
           </div>
+          <div class="pt-2">
+            <span class="is-size-7">{{ t('user_profile_dropdown.username') }}</span>
+            <span class="is-size-5 username-remove-transform">{{ user.username }}</span>
+          </div>
         </div>
       </div>
 
@@ -168,7 +172,8 @@ const toggleShowCurrentPassword = () => {
         </div>
       </a>
       <div class="dropdown-item is-button mt-2">
-        <VButton v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT" class=" logout-button mb-2" icon="feather:list"
+        <VButton v-if="loggedEmployee && loggedEmployee?.services.length != 0"
+          v-permission="Permissions.SHOW_WAITING_LIST_SERVE_CLIENT" class=" logout-button mb-2" icon="feather:list"
           color="info" role="menuitem" @click="onClickViewMyWaitingList" raised fullwidth>
           {{ t('user_profile_dropdown.view_my_waiting_list') }}
         </VButton>
@@ -278,6 +283,10 @@ const toggleShowCurrentPassword = () => {
 <style lang="scss" scoped>
 .no-cursor {
   cursor: default;
+}
+
+.username-remove-transform {
+  text-transform: none !important;
 }
 
 .meta {
