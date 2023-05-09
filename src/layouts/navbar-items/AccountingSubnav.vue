@@ -156,7 +156,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CASH_MONEY_TRANSFER">
                     <RouterLink to="/transfer-cash-money">
                       <i class="lnir lnir-investment" aria-hidden="true"></i>
                       <span>{{
@@ -175,7 +175,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CUSTOM_REVENUE_CREATE">
                     <RouterLink to="/add-custom-revenue">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
@@ -184,7 +184,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CUSTOM_EXPENSE_CREATE">
                     <RouterLink to="/add-custom-expense">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
