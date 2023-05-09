@@ -79,7 +79,7 @@ export default defineComponent({
                                     :placeholder="t('role.search_filter.group_name')" />
                             </VControl>
                             <VControl class="mr-2" icon="feather:search">
-                                <VInput v-model="searchId" type="text" :placeholder="t('role.search_filter.group_id')" />
+                                <VInput v-model="searchId" type="number" :placeholder="t('role.search_filter.group_id')" />
                             </VControl>
                             <VControl class="mr-2" icon="feather:search">
                                 <VInput v-model="searchPermissionName" type="text"
