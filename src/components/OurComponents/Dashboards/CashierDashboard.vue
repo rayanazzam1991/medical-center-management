@@ -33,7 +33,7 @@ const toCreateClientCashReceipt = () => {
                                         <i class="lnir lnir-ticket-alt-1" aria-hidden="true"></i>
                                     </div>
                                 </div>
-                                <div class="asset-name">{{ t('dashboards.accountant.supplier_cash_receipt') }}</div>
+                                <div class="asset-name">{{ t('dashboards.cashier.supplier_cash_receipt') }}</div>
                             </div>
                             <div @click="toCreateClientCashReceipt" v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE"
                                 class="category">
@@ -42,7 +42,7 @@ const toCreateClientCashReceipt = () => {
                                         <i class="lnir lnir-ticket-alt-2" aria-hidden="true"></i>
                                     </div>
                                 </div>
-                                <div class="asset-name">{{ t('dashboards.accountant.client_cash_receipt') }}</div>
+                                <div class="asset-name">{{ t('dashboards.cashier.client_cash_receipt') }}</div>
                             </div>
                         </div>
                     </div>
