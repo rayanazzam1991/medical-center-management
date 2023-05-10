@@ -83,26 +83,6 @@ const goToAddReminder = (ticketServiceId: number) => {
   router.push({ path: `/reminder/add`, query: { customer_id: currentTicket.value.customer.id, ticket_service_id: ticketServiceId } })
 }
 
-const columns = {
-  service_name: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.service_name"),
-    renderRow: (row: TicketService) =>
-      h('span', row?.service.name),
-  },
-  service_price: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.service_price"),
-    renderRow: (row: TicketService) =>
-      h('span', row?.sell_price),
-  },
-  currency: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.currency"),
-    renderRow: (row: TicketService) =>
-      h('span', currentTicket.value.currency?.name ?? t('place_holder.none')),
-  },
-} as const
 </script>
 <template>
   <div class="profile-wrapper">
@@ -173,17 +153,18 @@ const columns = {
                   <h4>{{ t('ticket.details.items_list') }}</h4>
                 </div>
                 <div class="project-feature">
+                  <h4>{{ t('ticket.details.emergency') }}</h4>
+                </div>
+                <div class="project-feature">
                 </div>
               </div>
               <div class="project-features" v-for="(service, index) in currentTicket.requested_services" :key="index">
                 <div class="project-feature">
-
                   <p>
                     {{ service.service.name }}
                   </p>
                 </div>
                 <div class="project-feature">
-
                   <p> {{ service.provider.user.first_name + ' ' + service.provider.user.last_name }}</p>
                 </div>
                 <div class="project-feature">
@@ -202,10 +183,19 @@ const columns = {
                   <p> 0 </p>
                 </div>
                 <div class="project-feature">
+                  <div v-if="service.is_emergency">
+                    <VIconWrap icon="feather:check" size="small" dark="6" :dark-card-bordered="false" />
+                  </div>
+                  <div v-else>
+                    <p>
+                      -
+                    </p>
+                  </div>
+                </div>
+                <div class="project-feature">
                   <VButton @click="goToAddReminder(service.id)" color="primary" outlined icon="lnir lnir-alarm-2">{{
                     t('reminder.add_button') }}</VButton>
                 </div>
-
               </div>
               <div class="project-details">
                 <div class="tabs-wrapper is-triple-slider">

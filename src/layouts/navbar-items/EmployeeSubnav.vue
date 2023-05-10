@@ -48,7 +48,8 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                   <li>
-                    <RouterLink v-permission="Permissions.EMPLOYEE_RECORD_LIST" to="/employee-availability-history">
+                    <RouterLink v-permission="Permissions.EMPLOYEES_AVAILABILITY_HISTORY_LIST"
+                      to="/employee-availability-history">
                       <i class="lnil lnil-switch" aria-hidden="true"></i>
                       <span>{{ t('human_resources_subnav.employee.employee_availability_history') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
