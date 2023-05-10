@@ -2512,6 +2512,7 @@
       "select_service": "تحديد الخدمة",
       "select_provider": "تحديد المخدم",
       "sell_price": "سعر المبيع",
+      "service_cost": "تكلفة الخدمة : ",
       "add_new_service": "إضافة خدمة جديدة",
       "provider_available": "المخدم متواجد حالياً",
       "provider_not_available": "المخدم غير متواجد حالياً",

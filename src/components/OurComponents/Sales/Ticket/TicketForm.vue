@@ -115,6 +115,11 @@ export default defineComponent({
       const provider = serviceWithProvider?.providers.find((serviceProvider) => serviceProvider.id == service.service_provider_id)
       return provider?.provider.is_available
     }
+    const getServiceCost = (service: CreateTicketServiceHelper, index: number) => {
+      const serviceWithProvider = servicesWithProviders.value.find((serviceElm) => serviceElm.id == service.service_id)
+      return serviceWithProvider?.service_cost ?? 0
+    }
+
     const removeService = (index: number) => {
       if (index !== -1) {
         requestedServicesHelper.value.splice(index, 1);
@@ -267,7 +272,7 @@ export default defineComponent({
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore,
       enableCurrencyRate, setCustomerIdValue, addService, removeService, updatePrice, UserStatusConsts, updateTotalAmount,
-      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer, checkProviderAvailability
+      servicesWithProviders, getCustomersList, requestedServicesHelper, enableSelectCustomer, selectedCustomer, checkProviderAvailability, getServiceCost
     };
   },
   components: { ErrorMessage }
@@ -401,13 +406,19 @@ export default defineComponent({
                   </div>
                   <div class="column is-4">
                     <div class="mb-3">
-                      <VField>
+                      <VField class="mb-1">
                         <VControl>
                           <VInput :disabled="!requestedServicesHelper[mainIndex].editable"
                             @input="() => updateTotalAmount()" type="number"
                             v-model.number="requestedServicesHelper[mainIndex].sell_price" />
                         </VControl>
                       </VField>
+                      <p v-if="requestedServicesHelper[mainIndex].service_id !== 0 && requestedServicesHelper[mainIndex].service_id !== undefined"
+                        class="help mt-0 pt-0">
+                        {{ t('ticket.form.service_cost') }} {{ getServiceCost(record, mainIndex) }}
+                      </p>
+
+
                     </div>
                   </div>
                   <div class="column is-1 columns is-flex is-align-items-center">
