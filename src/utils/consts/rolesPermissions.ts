@@ -324,7 +324,7 @@ export enum Permissions {
 
   TICKET_LIST = 'ticket_list',
   CONFIRM_PAYMENT_TICKET = 'confirm_payment_ticket',
-  PNDING_TICKET_LIST = 'pending_ticket_list',
+  PENDING_TICKET_LIST = 'pending_ticket_list',
   TICKET_SERVICE_ACCESS = 'ticket_service_access',
   TICKET_SERVICE_SHOW = 'ticket_service_show',
   TICKET_SERVICE_CREATE = 'ticket_service_create',
@@ -420,7 +420,6 @@ export enum Permissions {
   HR_ACCESS = 'hr_access',
   OTHERS_ACCESS = 'others_access',
   CRM_ACCESS = 'crm_access',
-  TICKETING_ACCESS = 'ticketing_access',
   INVENTORY_SECTION_ACCESS = 'inventory_section_access',
   REPORTING_ACCESS = 'reporting_access',
 
