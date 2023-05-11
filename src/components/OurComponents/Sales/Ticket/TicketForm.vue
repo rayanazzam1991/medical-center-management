@@ -421,7 +421,7 @@ export default defineComponent({
 
                     </div>
                   </div>
-                  <div class="column is-1 columns is-flex is-align-items-center">
+                  <div class="column is-1 columns is-flex is-align-items-start delete-column-margin">
                     <div class="mb-3 column is-6">
                       <VField
                         v-if="((mainIndex != 0 && formType == 'Add') || (formType == 'Edit' && requestedServicesHelper[mainIndex].editable))">
@@ -480,5 +480,9 @@ export default defineComponent({
 .load {
   height: 400px;
   width: 500px;
+}
+
+.delete-column-margin {
+  margin-top: -7px;
 }
 </style>

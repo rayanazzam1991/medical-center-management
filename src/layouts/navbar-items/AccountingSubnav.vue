@@ -178,7 +178,9 @@ const { t } = useI18n()
                 checkPermission(Permissions.TRANSACTION_CREATE)">
                 <h4 v-if="checkPermission(Permissions.TRANSACTION_CREATE) ||
                   checkPermission(Permissions.TRANSACTION_LIST) ||
-                  checkPermission(Permissions.TRANSACTION_CREATE)" class="column-heading">{{
+                  checkPermission(Permissions.CUSTOM_REVENUE_CREATE) ||
+                  checkPermission(Permissions.CUSTOM_EXPENSE_CREATE) ||
+                  checkPermission(Permissions.CASH_MONEY_TRANSFER)" class="column-heading">{{
     t('accounting_subnav.records.records') }}</h4>
                 <ul>
                   <li v-permission="Permissions.TRANSACTION_CREATE">
@@ -200,7 +202,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CUSTOM_REVENUE_CREATE">
                     <RouterLink to="/add-custom-revenue">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
@@ -209,7 +211,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CUSTOM_EXPENSE_CREATE">
                     <RouterLink to="/add-custom-expense">
                       <i class="lnir lnir-circle-plus" aria-hidden="true"></i>
                       <span>{{
@@ -218,7 +220,7 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                  <li v-permission="Permissions.TRANSACTION_CREATE">
+                  <li v-permission="Permissions.CASH_MONEY_TRANSFER">
                     <RouterLink to="/transfer-cash-money">
                       <i class="lnir lnir-investment" aria-hidden="true"></i>
                       <span>{{
@@ -227,11 +229,12 @@ const { t } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-
                 </ul>
                 <br v-if="checkPermission(Permissions.TRANSACTION_CREATE) ||
                     checkPermission(Permissions.TRANSACTION_LIST) ||
-                    checkPermission(Permissions.TRANSACTION_CREATE)" />
+                    checkPermission(Permissions.CUSTOM_REVENUE_CREATE) ||
+                    checkPermission(Permissions.CUSTOM_EXPENSE_CREATE) ||
+                    checkPermission(Permissions.CASH_MONEY_TRANSFER)" />
                 <h4 v-permission="Permissions.PENDING_TICKET_LIST" class="column-heading">{{
                   t('accounting_subnav.confirm_payment_for_tickets.confirm_payment_for_tickets') }}</h4>
                 <ul>
@@ -244,7 +247,6 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
-
               </div>
             </div>
           </div>

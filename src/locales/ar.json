@@ -3014,7 +3014,13 @@
       "add_customer": "إضافة زبون",
       "add_ticket": "إضافة تذكرة",
       "waiting_lists": "غرف الانتظار"
-    }
+    },
+    "cashier": {
+      "supplier_cash_receipt": "إنشاء إيصال نقدي لمورد/موظف",
+      "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
+      "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
+      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
+    },
   },
   "reports": {
     "best_client": {
