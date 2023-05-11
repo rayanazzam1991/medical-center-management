@@ -21,7 +21,7 @@ useHead({
 
         <div class="error-wrapper">
             <div class="error-inner has-text-centered">
-                <div class="bg-number dark-inverted"> 402</div>
+                <div class="bg-number dark-inverted"> 403</div>
                 <img class="light-image" src="/@src/assets/illustrations/placeholders/error-5.svg" alt="" />
                 <img class="dark-image" src="/@src/assets/illustrations/placeholders/error-5-dark.svg" alt="" />
                 <h3 class="dark-inverted">{{ t('auth.no_permission.you_have_no_permission') }}</h3>

@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     BalanceSheetReportPrint: typeof import('./src/components/OurComponents/PrintComponents/BalanceSheetReportPrint.vue')['default']
     BulkCashOutTableHeader: typeof import('./src/components/OurComponents/Contractor/WalletMovement/BulkCashOutTableHeader.vue')['default']
     CashAmountStatCard: typeof import('./src/components/OurComponents/Dashboards/CashAmountStatCard.vue')['default']
+    CashierDashboard: typeof import('./src/components/OurComponents/Dashboards/CashierDashboard.vue')['default']
     CashOutForm: typeof import('./src/components/OurComponents/Contractor/WalletMovement/CashOutForm.vue')['default']
     CashReceiptsTables: typeof import('./src/components/OurComponents/Accounting/Transaction/CashReceiptsTables.vue')['default']
     CategoryForm: typeof import('./src/components/OurComponents/Warehouse/Category/CategoryForm.vue')['default']
