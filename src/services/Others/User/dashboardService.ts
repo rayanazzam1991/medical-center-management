@@ -50,3 +50,13 @@ export async function getReceptionistDashboardData() {
     return { success, error_code, message, receptionist_dashboard }
 
 }
+export async function getCashierDashboardData() {
+    const response = useDashboard()
+    await response.getCashierDashboadStore()
+    const cashier_dashboard = response.cashierDashboard
+    const success: boolean = response.success ?? false
+    const error_code: string = response.error_code ?? ''
+    const message: string = response.message ?? ''
+    return { success, error_code, message, cashier_dashboard }
+
+}

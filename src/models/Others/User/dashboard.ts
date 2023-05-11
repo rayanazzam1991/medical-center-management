@@ -1,3 +1,5 @@
+import { Account, defaultAccount } from "../../Accounting/Account/account"
+
 export interface InventoryDashboard {
   active_items_count: string
   withdraw_stats: InventoryStatDashboard
@@ -178,3 +180,12 @@ export const defaultReceptionistDashboard: ReceptionistDashboard = {
   active_clients_count: '0',
   served_services_stat: defaultReceptionistDashboardStats,
 }
+export interface CashierDashboard {
+  iqd_account: Account
+  usd_account: Account
+}
+export const defaultCashierDashboard: CashierDashboard = {
+  iqd_account: defaultAccount,
+  usd_account: defaultAccount
+}
+
