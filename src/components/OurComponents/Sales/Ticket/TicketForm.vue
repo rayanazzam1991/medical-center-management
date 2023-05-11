@@ -78,8 +78,9 @@ export default defineComponent({
         currentTicket.value.customer_id = ticket.customer.id ?? 0
         currentTicket.value.total_amount = ticket.total_amount
         ticket.requested_services.forEach(service => {
-          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED, with_reserve: false, is_emergency: false })
+          requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED, with_reserve: service.is_reserve ? true : false, is_emergency: service.is_emergency ? true : false })
         });
+        console.log(requestedServicesHelper.value)
         updateTotalAmount()
       }
     }
@@ -456,9 +457,8 @@ export default defineComponent({
                   </div>
                 </VLoader>
               </div>
-              <div class="column is-12 columns is-multiline p-0 m-0"
-                :class="[selectCustomerLoading && 'is-hidden', currentTicket.customer_id == 0 && 'is-hidden']"
-                v-if="formType == 'Add'">
+              <div v-if="formType == 'Add'" class="column is-12 columns is-multiline p-0 m-0"
+                :class="[selectCustomerLoading && 'is-hidden', currentTicket.customer_id == 0 && 'is-hidden']">
                 <div class="column is-12">
 
                   <AvailableReservationsCollapse :key="keyIncrement2" :items="customerTodayReservations" with-chevron
@@ -546,7 +546,6 @@ export default defineComponent({
                           {{ checkProviderAvailability(record, mainIndex) ? t('ticket.form.provider_available') :
                             t('ticket.form.provider_not_available') }}
                         </p>
-
                       </div>
                     </div>
                     <div class="column is-2 ">
@@ -562,7 +561,6 @@ export default defineComponent({
                           class="help mt-0 pt-0">
                           {{ t('ticket.form.service_cost') }} {{ getServiceCost(record, mainIndex) }}
                         </p>
-
                       </div>
                     </div>
                     <div class="column is-2 columns py-0 my-0 pl-0">
@@ -613,7 +611,7 @@ export default defineComponent({
                   </VField>
                 </div>
               </div>
-              <div v-else-if="formType == 'Edit'">
+              <div v-else-if="formType == 'Edit'" class="column is-12 columns is-multiline p-0 m-0">
                 <div class="column is-12 pb-0 my-0">
                   <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
                   <div class="columns mb-0">
@@ -629,12 +627,19 @@ export default defineComponent({
                           {{ t('ticket.form.select_provider') }}</p>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-2">
                       <div class="mb-3">
                         <p class="label required">
                           {{ t('ticket.form.sell_price') }}</p>
                       </div>
                     </div>
+                    <div class="column is-1">
+                      <div class="mb-3">
+                        <p class="label">
+                          {{ t('ticket.form.emergency') }}</p>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
                 <div class="column is-12 py-0 my-0">
@@ -683,7 +688,7 @@ export default defineComponent({
                         </p>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-2">
                       <div class="mb-3">
                         <VField class="mb-1">
                           <VControl>
@@ -698,8 +703,16 @@ export default defineComponent({
                         </p>
                       </div>
                     </div>
-                    <div class="column is-1 columns is-flex is-align-items-center">
-                      <div class="mb-3 column is-6">
+                    <div class="column is-2 columns py-0 my-0 pl-0">
+                      <div class="column is-6 pr-4">
+                        <VField>
+                          <VControl>
+                            <VCheckbox v-model="requestedServicesHelper[mainIndex].is_emergency" paddingless bigger
+                              color="warning" />
+                          </VControl>
+                        </VField>
+                      </div>
+                      <div class="column is-6">
                         <VField
                           v-if="((mainIndex != 0) || (formType == 'Edit' && requestedServicesHelper[mainIndex].editable))">
                           <VControl>
@@ -724,7 +737,7 @@ export default defineComponent({
                     {{ t('ticket.form.add_new_service') }}
                   </VButton>
                 </div>
-                <div class="column is-6">
+                <div class="column is-4">
                   <VField id="total_amount">
                     <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
                     <VControl>
