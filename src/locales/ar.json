@@ -885,6 +885,7 @@
       "basic_salary": "الراتب الأساسي",
       "payment_percentage": "نسبة العمولة",
       "address": "عنوان السكن",
+      "username": "اسم المستخدم",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
       "status": "الحالة",

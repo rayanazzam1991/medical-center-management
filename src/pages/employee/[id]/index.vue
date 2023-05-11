@@ -186,6 +186,7 @@ const fetchEmployee = async () => {
   employeeForm.userForm.gender = employee.user.gender
   employeeForm.userForm.birth_date = employee.user.birth_date
   employeeForm.userForm.phone_number = employee.user.phone_number
+  employeeForm.userForm.username = employee.user.username
   employeeForm.userForm.address = employee.user.address
   employeeForm.userForm.room_id = employee.user.room.id
   employeeForm.userForm.city_id = employee.user.city.id
@@ -533,7 +534,8 @@ const toggleAvailability = async () => {
           :edit="checkPermission(Permissions.MEDIA_CREATE)" @edit="editProfilePicture" />
 
         <h3 class="title is-4 is-narrow is-thin">
-          <span v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" v-if="currentEmployee.services.length > 0" @dblclick="toggleAvailability" class="clickable-cursor">
+          <span v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" v-if="currentEmployee.services.length > 0"
+            @dblclick="toggleAvailability" class="clickable-cursor">
             <i class="fas fa-circle ml-0" :class="currentEmployee.is_available ? 'has-text-success' : 'has-text-danger'"
               aria-hidden="true"></i>
           </span>
@@ -651,10 +653,9 @@ const toggleAvailability = async () => {
                 <div class="project-features">
                   <div class="project-feature">
                     <i aria-hidden="true" class="lnil lnil-user"></i>
-                    <h4>{{ t('employee.details.name', { title: viewWrapper.pageTitle }) }}</h4>
+                    <h4>{{ t('employee.details.username') }}</h4>
                     <p>
-                      {{ currentEmployee.user.first_name }}
-                      {{ currentEmployee.user.last_name }}
+                      {{ currentEmployee.user.username ?? '-' }}
                     </p>
                   </div>
                   <div class="project-feature">
