@@ -169,7 +169,7 @@
       "employees": "الموظفين",
       "create_employee": "إضافة موظف",
       "employee_history": "سجل نشاط الموظفين",
-      "employee_availability_history": "سجل تواجد مقدميّ الخدمة"
+      "employee_availability_history": "سجل تواجد مقدمي الخدمة"
     },
     "position": {
       "positions": "المناصب",
@@ -3096,11 +3096,11 @@
     "full_name": "{value} دقيقة"
   },
   "employee_availability": {
-    "title": "تواجد مقدميّ الخدمة",
+    "title": "تواجد مقدمي الخدمة",
     "no_employees_in_this_room_placeholder": "لا يوجد مخدمين في هذه الغرفة.",
     "room": "الغرفة ",
     "search_filter": {
-      "title": "تصفية تواجد مقدميً الخدمة",
+      "title": "تصفية تواجد مقدمي الخدمة",
       "provider": "المخدم",
       "department": "القسم",
       "room": "الغرفة ",
@@ -3122,7 +3122,7 @@
       }
     },
     "search_filter": {
-      "title": "تصفية سجل تواجد مقدميّ الخدمة",
+      "title": "تصفية سجل تواجد مقدمي الخدمة",
       "provider": "المخدم",
       "is_available": " متواجد ",
       "is_not_available": "غير متواجد"
