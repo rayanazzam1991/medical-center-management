@@ -49,7 +49,7 @@ export default defineComponent({
     const router = useRouter();
     const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
     const pageTitle = t('ticket.form.confirm_payment.edit_form_header', { ticket_id: ticketId.value });
-    const backRoute = "/ticket";
+    const backRoute = "/pending-ticket";
     const currentTicket = ref(defaultCreateTicket);
     const currentConfirmPayment = ref(resetConfirmPaymentTicket());
     const requestedServicesHelper = ref<CreateTicketServiceHelper[]>([]);

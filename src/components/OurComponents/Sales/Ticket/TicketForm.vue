@@ -779,4 +779,8 @@ export default defineComponent({
   height: 400px;
   width: 500px;
 }
+
+.delete-column-margin {
+  margin-top: -7px;
+}
 </style>

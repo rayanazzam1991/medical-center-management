@@ -126,7 +126,7 @@ const goToAddReminder = (ticketServiceId: number) => {
                 </div>
                 <div class="buttons">
 
-                  <VButton :icon="iconArrow" to="/ticket">
+                  <VButton :icon="iconArrow" @click="$router.go(-1)">
                     {{ t('ticket.back_button') }}
                   </VButton>
                   <VButton :loading="isLoading"

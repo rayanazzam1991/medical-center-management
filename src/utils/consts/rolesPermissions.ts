@@ -324,7 +324,7 @@ export enum Permissions {
 
   TICKET_LIST = 'ticket_list',
   CONFIRM_PAYMENT_TICKET = 'confirm_payment_ticket',
-  PNDING_TICKET_LIST = 'pending_ticket_list',
+  PENDING_TICKET_LIST = 'pending_ticket_list',
   TICKET_SERVICE_ACCESS = 'ticket_service_access',
   TICKET_SERVICE_SHOW = 'ticket_service_show',
   TICKET_SERVICE_CREATE = 'ticket_service_create',
@@ -405,6 +405,9 @@ export enum Permissions {
   SALARY_PAY = 'salary_pay',
   SALARY_RETURN = 'salary_return',
   SALARY_MOVE_TO_ONHOLD = 'salary_move_to_onhold',
+  CASH_MONEY_TRANSFER = 'cash_money_transfer',
+  CUSTOM_REVENUE_CREATE = 'custom_revenue_create',
+  CUSTOM_EXPENSE_CREATE = 'custom_expense_create',
   TICKET_CLOSE = 'ticket_close',
   ACTIVITY_LOG_LIST = 'activity_log_list',
   RESET_PASSWORD = 'reset_password',
@@ -420,7 +423,6 @@ export enum Permissions {
   HR_ACCESS = 'hr_access',
   OTHERS_ACCESS = 'others_access',
   CRM_ACCESS = 'crm_access',
-  TICKETING_ACCESS = 'ticketing_access',
   INVENTORY_SECTION_ACCESS = 'inventory_section_access',
   REPORTING_ACCESS = 'reporting_access',
 
