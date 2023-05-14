@@ -2371,7 +2371,13 @@
       "select_currency": "اختيار العملة",
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
-      "note": "ملاحظات"
+      "note": "ملاحظات",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "iqd_currency_rate": "سعر الصرف",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "usd_currency_rate": "سعر الصرف"
     },
     "table": {
       "title": "الإيصالات النقدية للزبائن",
