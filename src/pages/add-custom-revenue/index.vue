@@ -3,7 +3,7 @@
     "meta": {
         "requiresAuth": true,
         "permissions": [
-            "transaction_create"
+            "custom_revenue_create"
         ]
     }
 }
@@ -111,8 +111,7 @@ const onSubmit = handleSubmit(async () => {
     const { success, message } = await createRecords(createRecord.value)
     if (success) {
         notif.success(t('toast.success.add'));
-        router.push({ path: `/transaction` });
-
+        router.go(-1)
     } else {
         notif.error({ message: message, duration: 3000 })
 

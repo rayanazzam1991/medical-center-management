@@ -86,8 +86,7 @@
   },
   "navbar": {
     "others": "الإعدادات العامة",
-    "crm": "الزبائن",
-    "contractor": "الأخصائيون",
+    "crm": "خدمة الزبائن",
     "human_resources": "الموارد البشرية",
     "warehouse": "المستودع",
     "accounting": "المالية",
@@ -95,28 +94,30 @@
     "reporting": "التقارير"
   },
   "others_subnav": {
+    "cities_and_nationalities": "المدن والجنسيات",
+    "departments_and_rooms": "الأقسام والغرف",
     "nationality": {
       "nationalities": "الجنسيات",
-      "create_nationality": "انشاء جنسية"
+      "create_nationality": "إضافة جنسية"
     },
     "service": {
       "services": "الخدمات",
-      "create_service": "انشاء خدمة"
+      "create_service": "إضافة خدمة"
     },
     "department": {
       "departments": "الأقسام",
-      "create_department": "انشاء قسم"
+      "create_department": "إضافة قسم"
     },
     "room": {
       "rooms": "الغرف",
-      "create_room": "انشاء غرفة"
+      "create_room": "إضافة غرفة"
     },
     "role": {
       "roles": "الأدوار"
     },
     "city": {
       "cities": "المدن",
-      "create_city": "انشاء مدينة"
+      "create_city": "إضافة مدينة"
     },
     "setting": {
       "settings": "الاعدادات",
@@ -125,56 +126,62 @@
     },
     "user_status": {
       "user_statuses": "حالات المستخدم",
-      "create_user_status": "انشاء حالة للمستخدم"
+      "create_user_status": "إضافة حالة للمستخدم"
     }
   },
   "crm_subnav": {
     "customer": {
       "customers": "الزبائن",
-      "create_customer": "انشاء زبون"
+      "create_customer": "إضافة زبون"
     },
     "customer_group": {
       "customer_groups": "مجموعات الزبون",
-      "create_customer_group": "انشاء مجموعة زبون"
+      "create_customer_group": "إضافة مجموعة زبون"
     },
     "social_media": {
       "social_medias": "وسائل التواصل الاجتماعي",
-      "create_social_media": "انشاء وسائل تواصل اجتماعي"
-    }
-  },
-  "contractor_subnav": {
-    "contractor": {
-      "contractors": "الاخصائيون",
-      "create_contractor": "انشاء اخصائي"
+      "create_social_media": "إضافة وسائل تواصل اجتماعي"
     },
-    "speciality": {
-      "specialities": "التخصصات",
-      "create_speciality": "انشاء تخصص"
+    "ticket": {
+      "tickets": "التذاكر",
+      "pending_tickets": "التذاكر المعلّقة",
+      "create_ticket": "إضافة تذكرة"
     },
-    "wallet": {
-      "wallet": "المحفظة",
-      "list_cash_out": "قائمة المسحوبات",
-      "cash_out": "سحب مبلغ"
+    "waiting_list": {
+      "waiting_lists": "غرف الانتظار"
+    },
+    "requested_services": {
+      "requested_services": "الخدمات المطلوبة"
+    },
+    "reminder": {
+      "reminders": "قائمة التذكيرات",
+      "create_reminder": "إضافة تذكير"
+    },
+    "service_history_screen": {
+      "service_history_screens": "شاشات الانتظار",
+      "create_service_history_screen": "إضافة شاشة انتظار"
     }
   },
   "human_resources_subnav": {
+    "attendance_and_schedule": "الدوام والحضور",
+    "salaries": "الراوتب",
     "employee": {
       "employees": "الموظفين",
-      "create_employee": "انشاء موظف",
+      "create_employee": "إضافة موظف",
       "employee_history": "سجل نشاط الموظفين",
-      "employee_availability_history": "سجل تواجد مقدميّ الخدمة"
+      "employee_availability_history": "سجل تواجد مقدمي الخدمة"
     },
     "position": {
       "positions": "المناصب",
-      "create_position": "انشاء منصب"
+      "create_position": "إضافة منصب"
     },
     "variable_payment": {
       "variable_payments": "أنواع المتغيرات المالية ",
-      "create_variable_payment": "انشاء نوع متغير مالي"
+      "create_variable_payment": "إضافة نوع متغير مالي"
     },
     "employee_variable_payment": {
       "employee_variable_payments": "المتغيرات المالية ",
-      "create_employee_variable_payment": "اضافة متغير مالي "
+      "create_employee_variable_payment": "إضافة متغير مالي "
     },
     "attendance_justifications": "تبريرات الغياب",
     "employees_schedule": "جدول الدوام",
@@ -182,13 +189,14 @@
     "generate_salaries": "توليد الراوتب"
   },
   "warehouse_subnav": {
+    "categories_and_items": "الفئات والمواد",
     "category": {
       "categories": "الفئات",
-      "create_category": "انشاء فئة"
+      "create_category": "إضافة فئة"
     },
     "item": {
       "items": "المواد",
-      "create_item": "انشاء مادة"
+      "create_item": "إضافة مادة"
     },
     "quantity": {
       "quantity": "الكميّات",
@@ -202,11 +210,12 @@
       "list_inventory_movement": "حركات المخزون"
     },
     "inventory": {
-      "inventory": "المستودعات",
+      "inventories": "المستودعات",
       "inventory_table": "قائمة المستودعات الفرعية"
     }
   },
   "accounting_subnav": {
+    "cash_receipts": "الإيصالات النقدية",
     "salary": {
       "salaries": "الراوتب",
       "salaries_history": "سجل الراوتب",
@@ -215,8 +224,8 @@
     },
     "account": {
       "accounts": "الحسابات",
-      "add_account": "انشاء حساب",
-      "add_cash_account": "انشاء حساب نقد"
+      "add_account": "إضافة حساب",
+      "add_cash_account": "إضافة حساب نقد"
     },
     "reports": {
       "reports": "التقارير المالية",
@@ -233,28 +242,12 @@
       "add_record": "إضافة قيد مالي",
       "add_custom_revenue": "إضافة عوائد",
       "add_custom_expense": "إضافة نفقات",
-      "create_customer_cash_receipt": "انشاء إيصال نقدي لزبون",
-      "create_supplier_employee_cash_receipt": "انشاء إيصال نقدي لمورد / موظف"
-    }
-  },
-  "ticketing_subnav": {
-    "ticket": {
-      "tickets": "التذاكر",
-      "pending_tickets": "التذاكر المعلّقة",
-      "create_ticket": "انشاء تذكرة"
+      "create_customer_cash_receipt": "إضافة إيصال نقدي لزبون",
+      "create_supplier_employee_cash_receipt": "إضافة إيصال نقدي لمورد / موظف"
     },
-    "waiting_list": {
-      "waiting_lists": "غرف الانتظار"
-    },
-    "requested_services": {
-      "requested_services": "الخدمات المطلوبة"
-    },
-    "reminder": {
-      "reminders": "قائمة التذكيرات"
-    },
-    "service_history_screen": {
-      "service_history_screens": "شاشات الانتظار",
-      "create_service_history_screen": "انشاء شاشة انتظار"
+    "confirm_payment_for_tickets": {
+      "confirm_payment_for_tickets": "تأكيد عملية الدفع للتذاكر",
+      "pending_tickets": "التذاكر المعلّقة"
     }
   },
   "reporting_subnav": {
@@ -280,7 +273,7 @@
     },
     "service_history_screen": {
       "service_history_screens": "شاشات الانتظار",
-      "create_service_history_screen": "انشاء شاشة انتظار"
+      "create_service_history_screen": "إضافة شاشة انتظار"
     }
   },
   "user_profile_dropdown": {
@@ -892,6 +885,7 @@
       "basic_salary": "الراتب الأساسي",
       "payment_percentage": "نسبة العمولة",
       "address": "عنوان السكن",
+      "username": "اسم المستخدم",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
       "status": "الحالة",
@@ -1996,7 +1990,7 @@
   },
   "supplier": {
     "table": {
-      "title": " الموردين  ",
+      "title": " الموردون",
       "columns": {
         "id": "رقم المعرّف",
         "name": "الاسم",
@@ -2045,8 +2039,8 @@
     },
     "header_button": "إضافة مورد  ",
     "supplier_subnav": {
-      "suppliers": "الموردين",
-      "create_supplier": "إنشاء مورد"
+      "suppliers": "الموردون",
+      "create_supplier": "إضافة مورد"
     }
   },
   "activityLog": {
@@ -2396,7 +2390,7 @@
         "actions": "الإجراءات"
       }
     },
-    "add_customer_cash_receipts_button": "انشاء إيصال نقدي لزبون",
+    "add_customer_cash_receipts_button": "إضافة إيصال نقدي لزبون",
     "search_filter": {
       "title": "تصفية الايصالات النقدية للزبائن",
       "note": "ملاحظات...",
@@ -2407,7 +2401,7 @@
   },
   "supplier_cash_receipt": {
     "form": {
-      "title": "انشاء إيصال نقدي لمورد / موظف",
+      "title": "إضافة إيصال نقدي لمورد / موظف",
       "button": "إضافة",
       "supplier_account": "حساب المورد",
       "employee_account": "حساب الموظف",
@@ -2425,7 +2419,7 @@
       "total_amount": "المبلغ الإجمالي",
       "remaining_amount": "المبلغ المتبقي",
       "confirm_popup": {
-        "title": "انشاء إيصال نقدي لمورد/ موظف",
+        "title": "إضافة إيصال نقدي لمورد/ موظف",
         "confirmation": "هل أنت متأكد؟",
         "currency_difference": "سيتم إضافة مبلغ {currency_difference} دينار عراقي إلى حساب فروقات العملة"
       }
@@ -2449,7 +2443,7 @@
         }
       }
     },
-    "add_supplier_employee_cash_receipts_button": "انشاء إيصال نقدي لمورد / موظف ",
+    "add_supplier_employee_cash_receipts_button": "إضافة إيصال نقدي لمورد / موظف ",
     "search_filter": {
       "title": "تصفية الايصالات النقدية للموردين والموظفين",
       "note": "ملاحظات...",
@@ -3007,8 +3001,8 @@
       "roles": "عدد مستخدميّ الأدوار"
     },
     "accountant": {
-      "supplier_cash_receipt": "إنشاء إيصال نقدي لمورد/موظف",
-      "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
+      "supplier_cash_receipt": "إضافة إيصال نقدي لمورد/موظف",
+      "client_cash_receipt": "إضافة إيصال نقدي لزبون",
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
       "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
     },
@@ -3021,6 +3015,17 @@
       "add_customer": "إضافة زبون",
       "add_ticket": "إضافة تذكرة",
       "waiting_lists": "غرف الانتظار"
+    },
+    "cashier": {
+      "supplier_cash_receipt": "إنشاء إيصال نقدي لمورد/موظف",
+      "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
+      "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
+      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم",
+      "iqd_account": "حساب الدينار العراقي",
+      "usd_account": "حساب الدولار الأمريكي",
+      "code": "الرمز : ",
+      "balance": "الرصيد : ",
+      "currency_rate": "سعر الصرف : "
     }
   },
   "reports": {
@@ -3097,11 +3102,11 @@
     "full_name": "{value} دقيقة"
   },
   "employee_availability": {
-    "title": "تواجد مقدميّ الخدمة",
+    "title": "تواجد مقدمي الخدمة",
     "no_employees_in_this_room_placeholder": "لا يوجد مخدمين في هذه الغرفة.",
     "room": "الغرفة ",
     "search_filter": {
-      "title": "تصفية تواجد مقدميً الخدمة",
+      "title": "تصفية تواجد مقدمي الخدمة",
       "provider": "المخدم",
       "department": "القسم",
       "room": "الغرفة ",
@@ -3123,7 +3128,7 @@
       }
     },
     "search_filter": {
-      "title": "تصفية سجل تواجد مقدميّ الخدمة",
+      "title": "تصفية سجل تواجد مقدمي الخدمة",
       "provider": "المخدم",
       "is_available": " متواجد ",
       "is_not_available": "غير متواجد"
