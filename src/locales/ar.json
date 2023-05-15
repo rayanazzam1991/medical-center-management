@@ -885,6 +885,7 @@
       "basic_salary": "الراتب الأساسي",
       "payment_percentage": "نسبة العمولة",
       "address": "عنوان السكن",
+      "username": "اسم المستخدم",
       "employee_number": "رقم الموظف",
       "last_employee_number": "الرقم الأخير للموظف",
       "status": "الحالة",
@@ -3021,7 +3022,12 @@
       "supplier_cash_receipt": "إنشاء إيصال نقدي لمورد/موظف",
       "client_cash_receipt": "إنشاء إيصال نقدي لزبون",
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
-      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
+      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم",
+      "iqd_account": "حساب الدينار العراقي",
+      "usd_account": "حساب الدولار الأمريكي",
+      "code": "الرمز : ",
+      "balance": "الرصيد : ",
+      "currency_rate": "سعر الصرف : "
     }
   },
   "reports": {

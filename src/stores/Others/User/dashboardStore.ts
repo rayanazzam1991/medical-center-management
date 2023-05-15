@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { AnalystDashboard, AdminDashboard, HRDashboard, InventoryDashboard, defaultAnalystDashboard, defaultAdminDashboard, defaultHRDashboard, defaultInventoryDashboard, ReceptionistDashboard, defaultReceptionistDashboard } from "/@src/models/Others/User/dashboard"
-import { getAnalystDashboadApi, getAdminDashboardApi, getHumanResourcesDashboadApi, getInventoryDashboardApi, getReceptionistDashboadApi } from "/@src/utils/api/Others/User"
+import { AnalystDashboard, AdminDashboard, HRDashboard, InventoryDashboard, defaultAnalystDashboard, defaultAdminDashboard, defaultHRDashboard, defaultInventoryDashboard, ReceptionistDashboard, defaultReceptionistDashboard, CashierDashboard, defaultCashierDashboard } from "/@src/models/Others/User/dashboard"
+import { getAnalystDashboadApi, getAdminDashboardApi, getHumanResourcesDashboadApi, getInventoryDashboardApi, getReceptionistDashboadApi, getCashierDashboadApi } from "/@src/utils/api/Others/User"
 import sleep from "/@src/utils/sleep"
 
 
@@ -15,6 +15,7 @@ export const useDashboard = defineStore('dashboard', () => {
     const hrDashboard = ref<HRDashboard>(defaultHRDashboard)
     const analystDashboard = ref<AnalystDashboard>(defaultAnalystDashboard)
     const receptionistDashboard = ref<ReceptionistDashboard>(defaultReceptionistDashboard)
+    const cashierDashboard = ref<CashierDashboard>(defaultCashierDashboard)
     const loading = ref(false)
     const success = ref<boolean>()
     const error_code = ref<string>()
@@ -125,6 +126,27 @@ export const useDashboard = defineStore('dashboard', () => {
             loading.value = false
         }
     }
+    async function getCashierDashboadStore() {
+        if (loading.value) return
+        loading.value = true
+        sleep(2000)
+        try {
+            const response = await getCashierDashboadApi(api)
+            cashierDashboard.value = response.response.data
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
     return {
         success,
@@ -136,11 +158,13 @@ export const useDashboard = defineStore('dashboard', () => {
         analystDashboard,
         adminDashboard,
         receptionistDashboard,
+        cashierDashboard,
         getAdminDashboardStore,
         getInventoryDashboardStore,
         getHumanResourcesDashboardStore,
         getAnalystDashboardStore,
-        getReceptionistDashboardStore
+        getReceptionistDashboardStore,
+        getCashierDashboadStore
     } as const
 })
 
