@@ -2,6 +2,8 @@
 import { useI18n } from "vue-i18n"
 import { AccountConsts } from "/@src/models/Accounting/Account/account"
 import { defaultTicket } from "/@src/models/Sales/Ticket/ticket"
+import JsBarcode from 'jsbarcode';
+
 
 
 export default defineComponent({
@@ -15,7 +17,15 @@ export default defineComponent({
     setup(props, context) {
         const { t } = useI18n()
         const ticket = props.ticket
-        return { t, ticket, AccountConsts }
+        const barcode = ref(null);
+        onMounted(() => {
+            JsBarcode(barcode.value, ticket.barcode.toString(), {
+                width: 1.5,
+                height: 30,
+            });
+        });
+
+        return { t, ticket, AccountConsts, barcode }
     },
 
 
@@ -34,7 +44,7 @@ export default defineComponent({
             <h1 style="font-weight: normal; font-size: 10px;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="41" height="11">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="123" height="33">
 
         </div>
 
@@ -88,16 +98,20 @@ export default defineComponent({
                 </tr>
             </tfoot>
         </table>
-        <p style="font-weight: normal;text-align: right; font-size: 12px;">{{
-            t('print.signature') }}
-        </p>
-        <p style="font-weight: normal;text-align: right; font-size: 12px;">
-            ____________________</p>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div>
+                <p style="font-weight: normal;text-align: right; font-size: 12px;">{{
+                    t('print.signature') }}
+                </p>
+                <p style="font-weight: normal;text-align: right; font-size: 12px;">
+                    ____________________</p>
+            </div>
+            <div style="margin-top: 3px;">
+                <svg ref="barcode" style="width: 50px; height: 50px;" viewBox="0 0 100 25"></svg>
+            </div>
+        </div>
 
 
     </div>
 </template>
 
-<style   lang="scss">
-@import '/@src/scss/styles/tableHeader.scss';
-</style>

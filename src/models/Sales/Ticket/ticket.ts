@@ -29,6 +29,7 @@ export interface Ticket {
   services_count?: number
   current_service_provider?: string
   requested_services: TicketService[]
+  barcode: number
 }
 
 
@@ -83,7 +84,8 @@ export const defaultTicket: Ticket = {
   status: 1,
   total_amount: 0,
   services_count: undefined,
-  current_service_provider: undefined
+  current_service_provider: undefined,
+  barcode: 0
 }
 
 export interface TicketSearchFilter {
