@@ -4,7 +4,7 @@ import { ErrorMessage, useForm } from 'vee-validate'
 import { getDepartmentsList } from '/@src/services/Others/Department/departmentService'
 import { addRoom, editRoom, getRoom } from '/@src/services/Others/Room/roomSevice'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { defaultDepartment, Department, defaultDepartmentSearchFilter, DepartmentSearchFilter } from '/@src/models/Others/Department/department'
+import { defaultDepartment, Department, defaultDepartmentSearchFilter, DepartmentSearchFilter, DepartmentConsts } from '/@src/models/Others/Department/department'
 import { defaultRoom, defaultCreateUpdateRoom, Room, RoomConsts, RoomSearchFilter, defaultRoomSearchFilter } from '/@src/models/Others/Room/room'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { roomvalidationSchema } from '/@src/rules/Others/Room/roomValidation'
@@ -26,7 +26,7 @@ export default defineComponent({
 
     emits: ['onSubmit'],
     setup(props, context) {
-        const {t} = useI18n()
+        const { t } = useI18n()
         const viewWrapper = useViewWrapper()
         viewWrapper.setPageTitle(t('room.form.page_title'))
         const head = useHead({
@@ -39,7 +39,7 @@ export default defineComponent({
         const route = useRoute()
         const router = useRouter()
         const formTypeName = t(`forms.type.${formType.value.toLowerCase()}`)
-    const pageTitle = t('room.form.form_header' , {type : formTypeName});
+        const pageTitle = t('room.form.form_header', { type: formTypeName });
         const backRoute = '/room'
         const currentRoom = ref(defaultRoom)
         const currentCreateUpdateRoom = ref(defaultCreateUpdateRoom)
@@ -56,10 +56,11 @@ export default defineComponent({
             }
             const { room } = await getRoom(roomId.value)
             currentRoom.value = room != undefined ? room : defaultRoom
+            setDepartmentId()
         }
         const departmentsList = ref<Department[]>([])
         onMounted(async () => {
-            let departmentSearchFilter  = {} as DepartmentSearchFilter
+            let departmentSearchFilter = {} as DepartmentSearchFilter
             departmentSearchFilter.status = BaseConsts.ACTIVE
             const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
@@ -69,7 +70,7 @@ export default defineComponent({
         })
         const validationSchema = roomvalidationSchema
 
-        const { handleSubmit } = useForm({
+        const { handleSubmit, setFieldValue } = useForm({
             validationSchema,
             initialValues: formType.value == "Edit" ? {
                 number: currentRoom.value.number ?? undefined,
@@ -94,6 +95,10 @@ export default defineComponent({
             }
             else return
         }
+        const setDepartmentId = () => {
+            setFieldValue('department_id', currentRoom.value.department?.id ?? 0)
+        }
+
         const onSubmitAdd = handleSubmit(async (values) => {
 
             var roomData = currentRoom.value
@@ -151,7 +156,7 @@ export default defineComponent({
 
         }
 
-        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore }
+        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore, setDepartmentId, DepartmentConsts, getDepartmentsList }
     },
 
 
@@ -176,7 +181,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="number">
-                                    <VLabel class="required">{{t('room.form.number')}}</VLabel>
+                                    <VLabel class="required">{{ t('room.form.number') }}</VLabel>
                                     <VControl icon="feather:chevrons-right">
                                         <VInput v-model="currentRoom.number" type="number" placeholder=""
                                             autocomplete="given-number" />
@@ -206,14 +211,33 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="department_id">
-                                    <VLabel class="required">{{t('room.form.department')}}</VLabel>
+                                    <VLabel class="required">{{ t('room.form.department') }}</VLabel>
                                     <VControl>
-                                        <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
-                                            <VOption value="">{{t('room.form.department')}}</VOption>
+                                        <!-- <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
+                                            <VOption value="">{{ t('room.form.department') }}</VOption>
                                             <VOption v-for="department in departmentsList" :key="department.id"
                                                 :value="department.id">{{ department.name }}
                                             </VOption>
-                                        </VSelect>
+                                        </VSelect> -->
+                                        <Multiselect v-if="currentRoom.department" v-model="currentRoom.department.id"
+                                            mode="single" :placeholder="t('room.form.department')" :close-on-select="true"
+                                            ref="department_id" @select="setDepartmentId()" :filter-results="false"
+                                            :min-chars="0" :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true"
+                                            :max="1" :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
+                                            :options="async (query: any) => {
+                                                let departmentSearchFilter = {
+                                                    name: query,
+                                                    status: DepartmentConsts.ACTIVE,
+                                                    per_page: 500
+                                                } as DepartmentSearchFilter
+                                                //@ts-ignore
+                                                const data = await getDepartmentsList(departmentSearchFilter)
+                                                //@ts-ignore
+                                                return data.departments.map((department: Department) => {
+                                                    return { value: department.id, label: department.name }
+                                                })
+                                            }"
+                                            @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                                         <ErrorMessage class="help is-danger" name="department_id" />
                                     </VControl>
                                 </VField>
@@ -225,8 +249,7 @@ export default defineComponent({
                         <div class="columns is-multiline">
                             <div class="column is-12">
                                 <VField id="status">
-                                    <VLabel class="required">{{t('room.form.status')}}</VLabel>
-
+                                    <VLabel class="required">{{ t('room.form.status') }}</VLabel>
                                     <VControl>
                                         <VRadio v-model="currentRoom.status" :value="RoomConsts.INACTIVE"
                                             :label="RoomConsts.showStatusName(0)" name="status" color="danger" />
