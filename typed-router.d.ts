@@ -339,9 +339,3 @@ declare module 'vue-router' {
     RouterLink: RouterLinkTyped<RouteNamedMap>
   }
 }
-of RouteNamedMap]
-    $router: _RouterTyped<RouteNamedMap>
-
-    RouterLink: RouterLinkTyped<RouteNamedMap>
-  }
-}

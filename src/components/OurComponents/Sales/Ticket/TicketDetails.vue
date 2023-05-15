@@ -6,12 +6,9 @@ import { Ticket, defaultTicket, TicketConsts } from '/@src/models/Sales/Ticket/t
 import { getTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { getWaitingListByTicketId } from '/@src/services/Sales/WaitingList/waitingListService';
 import { defaultWaitingListByTicket } from '/@src/models/Sales/WaitingList/waitingList';
-import { notifications } from '/@src/data/widgets/ui/notificationList';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Notyf } from 'notyf';
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
-import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
-import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
 

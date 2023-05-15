@@ -81,6 +81,15 @@ export async function closeTicket(ticketId: number) {
   var message: string = ticketResponse.message ?? ''
   return { success, error_code, message }
 }
+export async function getPendingTicketByBarcode(ticketBarcode: number) {
+  const ticketResponse = useTicket()
+  await ticketResponse.getPendingTicketByBarcodeStore(ticketBarcode)
+  const ticket = ticketResponse.ticketByBarcode
+  const success: boolean = ticketResponse.success ?? false
+  const error_code: string = ticketResponse.error_code ?? ''
+  const message: string = ticketResponse.message ?? ''
+  return { success, error_code, message, ticket }
+}
 export function resetTicketSearchFilter() {
   const blankSearchFilter: TicketSearchFilter = {
     customer_name: undefined,
