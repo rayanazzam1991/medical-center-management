@@ -213,12 +213,6 @@ export default defineComponent({
                                 <VField id="department_id">
                                     <VLabel class="required">{{ t('room.form.department') }}</VLabel>
                                     <VControl>
-                                        <!-- <VSelect v-if="currentRoom.department" v-model="currentRoom.department.id">
-                                            <VOption value="">{{ t('room.form.department') }}</VOption>
-                                            <VOption v-for="department in departmentsList" :key="department.id"
-                                                :value="department.id">{{ department.name }}
-                                            </VOption>
-                                        </VSelect> -->
                                         <Multiselect v-if="currentRoom.department" v-model="currentRoom.department.id"
                                             mode="single" :placeholder="t('room.form.department')" :close-on-select="true"
                                             ref="department_id" @select="setDepartmentId()" :filter-results="false"
