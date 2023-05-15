@@ -1,4 +1,4 @@
-import { Department } from "../Department/department"
+import { Department, defaultDepartment } from "../Department/department"
 import { BaseConsts } from "/@src/utils/consts/base"
 
 export interface Room {
@@ -30,7 +30,7 @@ export const defaultRoom: Room = {
     id: 0,
     number: 0,
     floor: 0,
-    department: undefined,
+    department: defaultDepartment,
     status: 0,
 }
 
