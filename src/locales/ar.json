@@ -3004,7 +3004,9 @@
       "supplier_cash_receipt": "إضافة إيصال نقدي لمورد/موظف",
       "client_cash_receipt": "إضافة إيصال نقدي لزبون",
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
-      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم"
+      "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم",
+      "confirm_ticket_payment": "تأكيد الدفع لتذكرة",
+      "scan_barcode_helper": "يرجى مسح الباركود الموجود على إيصال التذكرة للانتقال إلى صفحة تأكيد دفع التذكرة"
     },
     "receptionist": {
       "clients_in_center": "عدد الزبائن في المركز",

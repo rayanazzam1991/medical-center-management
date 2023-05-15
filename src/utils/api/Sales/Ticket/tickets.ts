@@ -11,9 +11,9 @@ export async function createTicketApi(
   return { response }
 }
 export async function updateTicketApi(
-    api: AxiosInstance,
-    ticketId: number,
-    ticket: UpdateTicket
+  api: AxiosInstance,
+  ticketId: number,
+  ticket: UpdateTicket
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`ticket/${ticketId}`, ticket)
 
@@ -24,9 +24,9 @@ export async function confirmPaymentTicketApi(
   ticketId: number,
   ticket: ConfirmPaymentTicket
 ): Promise<{ response: CustomResponseSingle }> {
-const { data: response, headers } = await api.put(`ticket/confirmPaymentTicket/${ticketId}`, ticket)
+  const { data: response, headers } = await api.put(`ticket/confirmPaymentTicket/${ticketId}`, ticket)
 
-return { response }
+  return { response }
 }
 export async function getTicketApi(
   api: AxiosInstance,
@@ -37,12 +37,12 @@ export async function getTicketApi(
   return { response }
 }
 export async function moveTicketToNextWaitingListApi(
-    api: AxiosInstance,
-    ticketId: number
+  api: AxiosInstance,
+  ticketId: number
 ): Promise<{ response: CustomResponseSingle }> {
-    const { data: response, headers } = await api.post(`ticket/moveTicketToNextWaitingList/${ticketId}`)
+  const { data: response, headers } = await api.post(`ticket/moveTicketToNextWaitingList/${ticketId}`)
 
-    return { response }
+  return { response }
 }
 
 export async function getTicketsListApi(
@@ -71,6 +71,15 @@ export async function closeTicketApi(
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(
     `ticket/closeTicket/${ticketId}`
+  )
+  return { response }
+}
+export async function getPendingTicketByBarcodeApi(
+  api: AxiosInstance,
+  barcode: number
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.get(
+    `ticket/getPendingTicketByBarcode`, { params: { barcode: barcode } }
   )
   return { response }
 }
