@@ -12,6 +12,7 @@ import { ticketValidationSchema } from '/@src/rules/Sales/Ticket/ticketValidatio
 import { getCustomer, getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+//@ts-ignore
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';

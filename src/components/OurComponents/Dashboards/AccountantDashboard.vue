@@ -4,14 +4,20 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { getPendingTicketByBarcode } from '/@src/services/Sales/Ticket/ticketService';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { Notyf } from 'notyf';
+//@ts-ignore
+import debounce from 'lodash.debounce';
 
 
 const { t } = useI18n()
+const notif = useNotyf() as Notyf
 const router = useRouter()
 const showScanTicketBarcode = ref(false)
-const keyIncement = ref(0)
 const ticketBarcode = ref<number | undefined>(undefined)
 const input = ref<HTMLInputElement>()
+const barcodeSearchLoading = ref(false)
 
 const toCreateSupplierCashReceipt = () => {
   router.push({ name: '/transaction/supplier-employee-cash-receipt/add' })
@@ -25,10 +31,29 @@ const onClickScanBarcode = () => {
   ticketBarcode.value = undefined
   showScanTicketBarcode.value = !showScanTicketBarcode.value
   if (showScanTicketBarcode.value) {
-    console.log('asd')
     input.value && input.value.focus()
   }
 }
+watch(ticketBarcode, async (value) => {
+  if (value) {
+    await debouncedTotalAmount()
+  }
+})
+const debouncedTotalAmount = debounce(async () => {
+  if (ticketBarcode.value) {
+    barcodeSearchLoading.value = true
+    const { ticket, success, message } = await getPendingTicketByBarcode(ticketBarcode.value)
+    if (success) {
+      router.push({ path: `/pending-ticket/${ticket.id}/edit` });
+      barcodeSearchLoading.value = false
+    } else {
+      notif.error({ message: message, duration: 3000 })
+      ticketBarcode.value = undefined
+      input.value && input.value.focus()
+      barcodeSearchLoading.value = false
+    }
+  }
+}, 100)
 
 </script>
 
@@ -74,10 +99,14 @@ const onClickScanBarcode = () => {
               <VPlaceholderSection :title="t('dashboards.accountant.scan_barcode_helper')" />
               <div class="form-fieldset">
                 <div class="columns is-multiline">
-                  <div class="column is-12">
+                  <div class="column is-12" style="position: relative;">
+                    <div v-if="barcodeSearchLoading" class="loader is-loading custom-loader">
+                    </div>
+
                     <VField class="column">
                       <VControl class="control">
-                        <input class="input" v-model="ticketBarcode" type="number" ref="input" />
+                        <input class="input" :disabled="barcodeSearchLoading" v-model="ticketBarcode" type="number"
+                          ref="input" />
                       </VControl>
                     </VField>
                   </div>
@@ -99,6 +128,12 @@ const onClickScanBarcode = () => {
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/Dashboards/accountantDashboard.scss';
+
+.custom-loader {
+  padding: 1rem;
+  margin: -1.5rem;
+  margin-top: 1rem;
+}
 
 .input-hidden-position {
   position: absolute;
