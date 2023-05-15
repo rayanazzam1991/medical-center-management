@@ -31,7 +31,7 @@ const cutomerCashReceiptValidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
+                    .min(0, i18n.global.t('validation.required')),
             ),
         usd_cash_account: zod
             .preprocess(
@@ -41,7 +41,7 @@ const cutomerCashReceiptValidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
-                    .min(1, i18n.global.t('validation.required')),
+                    .min(0, i18n.global.t('validation.required')),
             ),
         iqd_amount:
             zod.preprocess(
@@ -51,7 +51,7 @@ const cutomerCashReceiptValidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
 
             ),
         usd_amount:
@@ -62,7 +62,7 @@ const cutomerCashReceiptValidationSchema = toFormValidator(zod
                 },
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
-                    .min(1, i18n.global.t('validation.number.invalid_type_error')),
+                    .min(0, i18n.global.t('validation.number.invalid_type_error')),
 
             ),
         iqd_currency_rate:
@@ -74,7 +74,6 @@ const cutomerCashReceiptValidationSchema = toFormValidator(zod
                 zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
                     .min(1, i18n.global.t('validation.number.invalid_type_error')),
-
             ),
         usd_currency_rate:
             zod.preprocess(

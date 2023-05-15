@@ -18,6 +18,7 @@ import {
   generateTrailBalanceReportApi,
   getAccountsListApi,
   getAllAccountsApi,
+  getAuthenticatedCashierAccountsApi,
   updateAccountCurrencyApi
 } from "/@src/utils/api/Accounting/Account"
 import { defaultPagination, Pagination } from "/@src/utils/response"
@@ -29,6 +30,7 @@ export const useAccount = defineStore('account', () => {
 
   const api = useApi()
   const accounts = ref<Account[]>([])
+  const cashierAccounts = ref<Account[]>([])
   const accountStorage = useStorage('accounts', <Account[]>([]))
   const pagination = ref<Pagination>(defaultPagination)
   const loading = ref(false)
@@ -208,6 +210,24 @@ export const useAccount = defineStore('account', () => {
       loading.value = false
     }
   }
+  async function getAuthenticatedCashierAccountsStore() {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await getAuthenticatedCashierAccountsApi(api)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      cashierAccounts.value = response.response.data
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -216,6 +236,7 @@ export const useAccount = defineStore('account', () => {
     accounts,
     pagination,
     loading,
+    cashierAccounts,
     getAccountsListStore,
     getAllAccountsStore,
     addAccountStore,
@@ -223,7 +244,8 @@ export const useAccount = defineStore('account', () => {
     generateBalanceSheetReportStore,
     generateIncomeStatmentReportStore,
     updateAccountCurrencyStore,
-    changeAccountStatusStore
+    changeAccountStatusStore,
+    getAuthenticatedCashierAccountsStore
 
   } as const
 })
