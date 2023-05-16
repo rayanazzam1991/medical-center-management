@@ -211,7 +211,7 @@ const clientsColumns = {
     label: t('customer_cash_receipt.table.columns.actions'),
     renderRow: (row: Transaction) =>
       h(PrintDropDown, {
-        printPermission: Permissions.TRANSACTION_SHOW,
+        printPermission: Permissions.CLIENT_CASH_RECEIPT_SHOW,
         onPrint: async () => {
           selectedReceiptForPrint.value = row
           clientsKeyIncrement.value++
@@ -348,7 +348,7 @@ const suppliersColumns = {
     label: t('customer_cash_receipt.table.columns.actions'),
     renderRow: (row: Transaction) =>
       h(PrintDropDown, {
-        printPermission: Permissions.TRANSACTION_SHOW,
+        printPermission: Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_SHOW,
         onPrint: async () => {
           selectedReceiptForPrint.value = row
           suppliersKeyIncrement.value++

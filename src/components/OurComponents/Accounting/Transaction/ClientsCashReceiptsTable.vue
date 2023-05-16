@@ -26,6 +26,7 @@ import PrintDropDown from '/@src/components/OurComponents/PrintComponents/PrintD
 import usePrint from '/@src/composable/usePrint';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 export interface ClientsCashReceiptsTableProps {
   isForCustomer: boolean,
@@ -59,7 +60,6 @@ const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedReceiptForPrint = ref(defaultTransaction)
-
 onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
@@ -86,7 +86,6 @@ const search = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
   } else {
     newSearchFilter.isOnDay = Number(false)
   }
-
   const { clients_cash_receipts, clientsPagination } = await getClientsCashReceiptsList(newSearchFilter)
   clientsCashReceiptsList.value = clients_cash_receipts
   paginationVar.value = clientsPagination

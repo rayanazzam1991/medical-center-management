@@ -29,6 +29,7 @@ import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
 import { boolean } from 'zod';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 export interface SupplierEmployeeCashReceiptsTableProps {
   isForEmployee: boolean,
@@ -61,11 +62,15 @@ const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedReceiptForPrint = ref(defaultTransaction)
+const userAuth = useAuth();
+const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
+const isCashier = haveCashierRole ? true : false
 
 onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
   }
+
   const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(searchFilter.value)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
   paginationVar.value = suppliersPagination

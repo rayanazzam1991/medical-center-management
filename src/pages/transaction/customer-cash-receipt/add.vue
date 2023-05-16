@@ -26,7 +26,6 @@ import { createRecords } from '/@src/services/Accounting/Transaction/transaction
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { useAuth } from '/@src/stores/Others/User/authStore';
-import { defaultUser } from '/@src/models/Others/User/user';
 
 
 
@@ -50,7 +49,6 @@ const availableCurrenciesList = ref<Currency[]>([])
 const clientAccountId = ref<number>(0)
 const USDcashAccountId = ref<number>(0)
 const IQDcashAccountId = ref<number>(0)
-const currencyId = ref<number>(0)
 const USDcurrencyRate = ref<number>(1)
 const IQDcurrencyRate = ref<number>(1)
 const IQDcashAmount = ref(0)
@@ -109,12 +107,6 @@ onMounted(async () => {
         USDcurrencyRate.value = usdCurrency.rate
     }
     createRecord.value.date = new Date().toISOString().substring(0, 10)
-    if (isCashier) {
-        console.log(IQDcashAccountsList.value)
-        console.log(USDcashAccountsList.value)
-        // IQDcashAccountId.value = IQDcashAccountsList.value[0].id ?? 0
-        // USDcashAccountId.value = USDcashAccountsList.value[0].id ?? 0
-    }
 })
 
 const validationSchema = cutomerCashReceiptValidationSchema
@@ -122,8 +114,8 @@ const { handleSubmit } = useForm({
     validationSchema,
     initialValues: {
         client_account: 0,
-        iqd_cash_account: 0,
-        usd_cash_account: 0,
+        iqd_cash_account: IQDcashAccountId.value,
+        usd_cash_account: USDcashAccountId.value,
         iqd_amount: 0,
         usd_amount: 0,
         iqd_currency_rate: 1,
@@ -137,9 +129,18 @@ const onSubmit = handleSubmit(async () => {
         notif.error({ message: t('toast.error.please_select_at_least_iqd_or_usd') })
         return
     }
+    if (IQDcashAmount.value != 0 && IQDcashAccountId.value == 0) {
+        notif.error({ message: t('toast.error.please_select_cash_account') })
+        return
+
+    }
+    if (USDcashAmount.value != 0 && USDcashAccountId.value == 0) {
+        notif.error({ message: t('toast.error.please_select_cash_account') })
+        return
+
+    }
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
     if (!clientAccount.currency?.is_main) {
-
         currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(USDcashAmount.value) - (Number(IQDcashAmount.value) + Number(USDcashAmount.value) * clientAccount.currency_rate / USDcurrencyRate.value)
     } else {
         currencyDifferencesAmount.value = 0
