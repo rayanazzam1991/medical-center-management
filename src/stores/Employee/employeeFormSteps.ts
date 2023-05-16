@@ -63,7 +63,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
   function reset() {
     data.value.basic_salary = 0
     data.value.end_date = ''
-    data.value.nationality_id = 0
     data.value.starting_date = ''
     data.value.user.first_name = ''
     data.value.user.last_name = ''
@@ -77,7 +76,6 @@ export const useEmployeeForm = defineStore('EmployeeForm', () => {
     data.value.user.roles = []
     dataUpdate.value.basic_salary = 0
     dataUpdate.value.end_date = ''
-    dataUpdate.value.nationality_id = 0
     dataUpdate.value.starting_date = ''
     dataUpdate.value.user.first_name = ''
     dataUpdate.value.user.last_name = ''

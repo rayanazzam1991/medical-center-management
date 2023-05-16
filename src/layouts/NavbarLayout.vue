@@ -95,9 +95,9 @@ watch(
       <template #brand>
         <RouterLink to="/" class="navbar-item is-brand">
           <AnimatedLogo width="38px" height="38px" />
-      </RouterLink>
+        </RouterLink>
 
-      <div class="brand-end">
+        <div class="brand-end">
           <NotificationsMobileDropdown />
           <UserProfileDropdown />
         </div>
@@ -140,17 +140,17 @@ watch(
 
       <template #bottom-links>
         <li>
-        <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
-          <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
-        </a>
-      </li>
-      <li>
-        <a href="#">
-          <i aria-hidden="true" class="iconify" data-icon="feather:settings"></i>
-        </a>
-      </li>
-    </template>
-  </MobileSidebar>
+          <a tabindex="0" @keydown.space.prevent="panels.setActive('search')" @click="panels.setActive('search')">
+            <i aria-hidden="true" class="iconify" data-icon="feather:search"></i>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i aria-hidden="true" class="iconify" data-icon="feather:settings"></i>
+          </a>
+        </li>
+      </template>
+    </MobileSidebar>
 
     <!-- Mobile subsidebar links -->
     <Transition name="slide-x">
@@ -195,7 +195,7 @@ watch(
         <div class="centered-links" :class="''">
           <a v-permission="Permissions.OTHERS_ACCESS" :class="[
             ((activeSubnav === 'others') && 'is-active is-secondary'),
-            (route.path.startsWith('/nationality') ||
+            (
               route.path.startsWith('/department') ||
               route.path.startsWith('/city') ||
               route.path.startsWith('/userStatus') ||
@@ -265,14 +265,14 @@ watch(
           ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('HR')" @click="toggleSubnav('HR')">
             <i class="iconify" data-icon="feather:briefcase" aria-hidden="true"></i>
-          <span>{{ t('navbar.human_resources') }}</span>
-        </a>
-        <a v-permission="Permissions.INVENTORY_SECTION_ACCESS" :class="[(activeSubnav === 'warehouse' && 'is-active is-secondary'),
-        (route.path.startsWith('/category') ||
-          route.path.startsWith('/item') ||
-          route.path.startsWith('/inventory') ||
-          route.path.startsWith('/list-inventory-movement')
-        ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
+            <span>{{ t('navbar.human_resources') }}</span>
+          </a>
+          <a v-permission="Permissions.INVENTORY_SECTION_ACCESS" :class="[(activeSubnav === 'warehouse' && 'is-active is-secondary'),
+          (route.path.startsWith('/category') ||
+            route.path.startsWith('/item') ||
+            route.path.startsWith('/inventory') ||
+            route.path.startsWith('/list-inventory-movement')
+          ) && 'is-active ']" class="centered-link centered-link-toggle" tabindex="0"
             @keydown.space.prevent="toggleSubnav('warehouse')" @click="toggleSubnav('warehouse')">
             <i class="iconify" data-icon="feather:grid" aria-hidden="true"></i>
             <span>{{ t('navbar.warehouse') }}</span>

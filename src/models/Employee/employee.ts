@@ -1,7 +1,6 @@
 import messages from "@intlify/vite-plugin-vue-i18n/messages"
 import { createI18n, DefaultLocaleMessageSchema } from "vue-i18n"
 import { Media, MediaConsts } from "../Others/Media/media"
-import { Nationality, defaultNationality } from "../Others/Nationality/nationality"
 import { defaultPosition, Position } from "../Others/Position/position"
 import { defaultService, Service } from "../Others/Service/service"
 import { User, CreateUpdateUser, defaultCreateUpdateUser, defaultUser } from "../Others/User/user"
@@ -19,7 +18,6 @@ export interface Employee {
     end_date: string
     basic_salary: number
     user: User
-    nationality: Nationality
     position: Position
     payment_percentage: number
     type: number,
@@ -35,7 +33,6 @@ export interface CreateEmployee {
     end_date?: string
     user: CreateUpdateUser
     basic_salary?: number
-    nationality_id?: number
     position_id?: number
     type: number
     payment_percentage: number
@@ -46,7 +43,6 @@ export interface UpdateEmployee {
     end_date?: string
     user: CreateUpdateUser
     basic_salary?: number
-    nationality_id?: number
     position_id?: number
     type: number
     payment_percentage: number,
@@ -103,7 +99,6 @@ export const defaultCreateEmployee: CreateEmployee = {
     starting_date: '',
     end_date: '',
     user: defaultCreateUpdateUser,
-    nationality_id: 0,
     position_id: 0,
     basic_salary: 0,
     type: 1,
@@ -119,7 +114,6 @@ export const defaultUpdateEmployee: UpdateEmployee = {
     starting_date: '',
     end_date: '',
     user: defaultCreateUpdateUser,
-    nationality_id: 0,
     position_id: 0,
     basic_salary: 0,
     type: 1,
@@ -135,7 +129,6 @@ export const defaultEmployee: Employee = {
     id: 0,
     starting_date: '',
     end_date: '',
-    nationality: defaultNationality,
     position: defaultPosition,
     basic_salary: 0,
     user: defaultUser,

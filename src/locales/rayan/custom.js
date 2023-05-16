@@ -85,10 +85,6 @@ export default {
       accounting: 'المالية',
     },
     others_subnav: {
-      nationality: {
-        nationalities: 'الجنسيات',
-        create_nationality: 'انشاء جنسية',
-      },
       service: {
         services: 'الخدمات',
         create_service: 'انشاء خدمة',
@@ -683,7 +679,6 @@ export default {
         gender: 'الجنس',
         department: 'القسم',
         room_number: 'رقم الغرفة',
-        nationality: 'الجنسية',
         position: 'المنصب',
         phone_number: 'رقم الهاتف',
         basic_salary: 'الراتب الأساسي',
@@ -719,7 +714,6 @@ export default {
         starting_date: 'تاريخ البدء',
         end_date: 'تاريخ الانتهاء',
         basic_salary: 'الراتب الأساسي',
-        nationality: 'الجنسية',
         position: 'المنصب',
         status: 'الحالة',
         edit_step_1_title: 'تعديل المعلومات الرئيسية للموظف',
@@ -920,36 +914,6 @@ export default {
       },
       add_quantity_button: 'إضافة كميًة',
       withdraw_quantity_button: ' سحب كميًة',
-    },
-    nationality: {
-      table: {
-        title: 'الجنسيات',
-        columns: {
-          id: 'رقم المعرّف',
-          name: 'الاسم',
-          status: 'الحالة',
-          actions: 'الاجراءات',
-        },
-        modal_title: 'إزالة جنسية',
-      },
-      details: {
-        title: 'الجنسيات',
-        name: 'اسم الجنسية',
-        status: 'حالة الجنسية',
-      },
-      form: {
-        page_title: 'الجنسيات',
-        form_header: '{type} الجنسية',
-        add_nationality_title: 'إضافة جنسية',
-        edit_nationality_title: 'تعديل جنسية',
-        name: 'الاسم',
-        status: 'الحالة',
-      },
-      search_filter: {
-        name: 'الاسم...',
-        status: 'الحالة',
-      },
-      header_button: 'إضافة جنسية',
     },
     position: {
       table: {

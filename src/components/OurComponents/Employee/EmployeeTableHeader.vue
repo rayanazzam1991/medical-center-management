@@ -2,9 +2,7 @@
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultEmployeeSearchFilter, EmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
-import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
 import { UserStatus, defaultUserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
-import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
 import { defaultPagination } from "/@src/utils/response"
 import { useI18n } from "vue-i18n"
 import { isNumber } from "/@src/composable/helpers/isNumberCheck"
@@ -115,14 +113,11 @@ export default defineComponent({
     }
     const cities2 = ref<City[]>([])
     const statuses2 = ref<UserStatus[]>([])
-    const nationalities2 = ref<Nationality[]>([])
     onMounted(async () => {
       const { userstatuses } = await getUserStatusesList(defaultUserStatusSearchFilter)
       statuses2.value = userstatuses
-      const { nationalities } = await getNationalitiesList(defaultNationalitySearchFilter)
-      nationalities2.value = nationalities
     })
-    return { keyIncrement, Permissions, quickSearch, quickSearchField, is_reseted, default_per_page, t, onOpen, resetFilter_popup, cities2, search_filter, popUpTrigger, nationalities2, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
+    return { keyIncrement, Permissions, quickSearch, quickSearchField, is_reseted, default_per_page, t, onOpen, resetFilter_popup, cities2, search_filter, popUpTrigger, statuses2, resetFilter, search, searchFilterPop, searchFirstName, searchLastName, searchRoom, searchStatus, searchGender, searchPhoneNumber, perPage, pagination }
   },
 })
 </script>

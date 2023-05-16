@@ -8,12 +8,10 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
 import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { GenerateUniqueUsernameData, defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
-import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeAddvalidationSchema } from '/@src/rules/Employee/employeeAddValidation';
@@ -72,7 +70,6 @@ const getCurrentEmployee = () => {
 const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
-const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
 const rolesList = ref<Role[]>([])
@@ -95,11 +92,6 @@ onMounted(async () => {
   const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
   statusesList.value = userstatuses
 
-  let nationalitySearchFilter = {} as NationalitySearchFilter
-  nationalitySearchFilter.status = BaseConsts.ACTIVE
-  nationalitySearchFilter.per_page = 500
-  const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
-  nationalitiesList.value = nationalities
 
   let positionSearchFilter = {} as PositionSearchFilter
   positionSearchFilter.per_page = 500
@@ -162,7 +154,6 @@ const { handleSubmit } = useForm({
     starting_date: "",
     end_date: "",
     basic_salary: 0,
-    nationality_id: "",
     position_id: "",
     payment_percentage: 0
   },
@@ -196,7 +187,6 @@ const onSubmitAdd = handleSubmit(async (values) => {
     }
     employeeForm.data.starting_date = employeeData.starting_date
     employeeForm.data.end_date = employeeData.end_date
-    employeeForm.data.nationality_id = employeeData.nationality_id
     employeeForm.data.position_id = employeeData.position_id
     employeeForm.data.payment_percentage = employeeData.payment_percentage
     employeeForm.data.basic_salary = employeeData.basic_salary
@@ -348,20 +338,6 @@ watch([firstName, lastName], async () => {
                       <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')" name="gender"
                         color="success" />
                       <ErrorMessage class="help is-danger" name="gender" />
-                    </VControl>
-                  </VField>
-                </div>
-                <div class="column is-6">
-                  <VField id="nationality_id">
-                    <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
-                    <VControl>
-                      <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                        <VOption value="">{{ t('employee.form.nationality') }}</VOption>
-                        <VOption v-for="nationality in nationalitiesList" :key="nationality.id" :value="nationality.id">{{
-                          nationality.name }}
-                        </VOption>
-                      </VSelect>
-                      <ErrorMessage class="help is-danger" name="nationality_id" />
                     </VControl>
                   </VField>
                 </div>

@@ -87,10 +87,6 @@
     "ticketing": "Ticketing"
   },
   "others_subnav": {
-    "nationality": {
-      "nationalities": "Nationalities",
-      "create_nationality": "Create Nationality"
-    },
     "service": {
       "services": "Services",
       "create_service": "Create Service"
@@ -743,7 +739,6 @@
       "gender": "Gender",
       "department": "Department",
       "room_number": "Room Number",
-      "nationality": "Nationality",
       "position": "Position",
       "phone_number": "Phone Number",
       "basic_salary": "Basic Salary",
@@ -779,7 +774,6 @@
       "starting_date": "Starting date",
       "end_date": "End date",
       "basic_salary": "Basic Salary",
-      "nationality": "Nationality",
       "position": "Position",
       "status": "Status",
       "edit_step_1_title": "Edit Employee Main Info",
@@ -1023,36 +1017,6 @@
       "from": "From: ",
       "to": "To: "
     }
-  },
-  "nationality": {
-    "table": {
-      "title": "Nationality",
-      "columns": {
-        "id": "ID",
-        "name": "Name",
-        "status": "Status",
-        "actions": "Actions"
-      },
-      "modal_title": "Remove Nationality"
-    },
-    "details": {
-      "title": "Nationality",
-      "name": "Nationality Name",
-      "status": "Nationality Status"
-    },
-    "form": {
-      "page_title": "Nationality",
-      "form_header": "{type} Nationality",
-      "add_nationality_title": "Add Nationality",
-      "edit_nationality_title": "Edit Nationality",
-      "name": "Name",
-      "status": "Status"
-    },
-    "search_filter": {
-      "name": "Name...",
-      "status": "Status"
-    },
-    "header_button": "Add Nationality"
   },
   "position": {
     "table": {

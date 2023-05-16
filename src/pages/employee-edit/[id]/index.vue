@@ -7,12 +7,10 @@ import { getUserStatusesList } from '/@src/services/Others/UserStatus/userstatus
 import { useNotyf } from '/@src/composable/useNotyf';
 import { defaultCreateEmployee } from '/@src/models/Employee/employee';
 import { City, CitySearchFilter, defaultCitySearchFilter } from '/@src/models/Others/City/city';
-import { Nationality, defaultNationalitySearchFilter, NationalitySearchFilter } from '/@src/models/Others/Nationality/nationality';
 import { Room, defaultRoomSearchFilter, RoomSearchFilter } from '/@src/models/Others/Room/room';
 import { defaultCreateUpdateUser } from '/@src/models/Others/User/user';
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter, UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { getCitiesList } from '/@src/services/Others/City/cityService';
-import { getNationalitiesList } from '/@src/services/Others/Nationality/nationalityService';
 import { useEmployeeForm } from '/@src/stores/Employee/employeeFormSteps';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { employeeEditvalidationSchema } from '/@src/rules/Employee/employeeEditValidation';
@@ -73,7 +71,6 @@ const fetchEmployee = async () => {
     currentUser.value.user_status_id = employee.user.status.id
     currentUser.value.roles = employee.user.roles?.map(function (element) { return element.name }) ?? []
     currentUser.value.default_role_id = employee.user.default_role?.id
-    currentEmployee.value.nationality_id = employee.nationality.id
     currentEmployee.value.position_id = employee.position.id
     currentEmployee.value.starting_date = employee.starting_date
     currentEmployee.value.end_date = employee.end_date
@@ -95,7 +92,6 @@ const fetchEmployee = async () => {
     employeeForm.dataUpdate.starting_date = currentEmployee.value.starting_date
     employeeForm.dataUpdate.end_date = currentEmployee.value.end_date
     employeeForm.dataUpdate.basic_salary = currentEmployee.value.basic_salary
-    employeeForm.dataUpdate.nationality_id = currentEmployee.value.nationality_id
     employeeForm.dataUpdate.position_id = currentEmployee.value.position_id
     employeeForm.dataUpdate.id = currentEmployee.value.id
 
@@ -113,7 +109,6 @@ const fetchEmployee = async () => {
 const citiesList = ref<City[]>([])
 const roomsList = ref<Room[]>([])
 const statusesList = ref<UserStatus[]>([])
-const nationalitiesList = ref<Nationality[]>([])
 const positionsList = ref<Position[]>([])
 const departmentsList = ref<Department[]>([])
 const rolesList = ref<Role[]>([])
@@ -131,10 +126,6 @@ onMounted(async () => {
         userStatusSearchFilter.per_page = 500
         const { userstatuses } = await getUserStatusesList(userStatusSearchFilter)
         statusesList.value = userstatuses
-        let nationalitySearchFilter = {} as NationalitySearchFilter
-        nationalitySearchFilter.per_page = 500
-        const { nationalities } = await getNationalitiesList(nationalitySearchFilter)
-        nationalitiesList.value = nationalities
         let positionSearchFilter = {} as PositionSearchFilter
         positionSearchFilter.per_page = 500
         const { positions } = await getPositionsList(positionSearchFilter)
@@ -184,7 +175,6 @@ const { handleSubmit } = useForm({
         starting_date: currentEmployee.value.starting_date,
         end_date: currentEmployee.value.end_date,
         basic_salary: currentEmployee.value.basic_salary,
-        nationality_id: currentEmployee.value.nationality_id,
         position_id: currentEmployee.value.position_id,
         payment_percentage: currentEmployee.value.payment_percentage
     },
@@ -214,7 +204,6 @@ const onSubmitEdit = handleSubmit(async (values) => {
     employeeForm.dataUpdate.starting_date = employeeData.starting_date
     employeeForm.dataUpdate.end_date = employeeData.end_date
     employeeForm.dataUpdate.basic_salary = employeeData.basic_salary
-    employeeForm.dataUpdate.nationality_id = employeeData.nationality_id
     employeeForm.dataUpdate.payment_percentage = employeeData.payment_percentage
     employeeForm.dataUpdate.type = selectedType
     employeeForm.userForm.first_name = userData.first_name
@@ -367,20 +356,6 @@ const updateSelectedRoles = () => {
                                             <VRadio v-model="currentUser.gender" value="Female" :label="t('gender.female')"
                                                 name="gender" color="success" />
                                             <ErrorMessage class="help is-danger" name="gender" />
-                                        </VControl>
-                                    </VField>
-                                </div>
-                                <div class="column is-6">
-                                    <VField id="nationality_id">
-                                        <VLabel class="required">{{ t('employee.form.nationality') }}</VLabel>
-                                        <VControl>
-                                            <VSelect v-if="currentEmployee" v-model="currentEmployee.nationality_id">
-                                                <VOption value="">{{ t('employee.form.nationality') }}</VOption>
-                                                <VOption v-for="nationality in nationalitiesList" :key="nationality.id"
-                                                    :value="nationality.id">{{ nationality.name }}
-                                                </VOption>
-                                            </VSelect>
-                                            <ErrorMessage class="help is-danger" name="nationality_id" />
                                         </VControl>
                                     </VField>
                                 </div>

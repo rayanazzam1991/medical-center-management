@@ -2,9 +2,7 @@
 import { getUserStatusesList } from "/@src/services/Others/UserStatus/userstatusService"
 import { defaultEmployeeSearchFilter } from "/@src/models/Employee/employee"
 import { City } from "/@src/models/Others/City/city"
-import { Nationality, defaultNationalitySearchFilter } from "/@src/models/Others/Nationality/nationality"
 import { UserStatus, defaultUserStatusSearchFilter, UserStatusSearchFilter } from "/@src/models/Others/UserStatus/userStatus"
-import { getNationalitiesList } from "/@src/services/Others/Nationality/nationalityService"
 import { useI18n } from "vue-i18n"
 
 export default defineComponent({

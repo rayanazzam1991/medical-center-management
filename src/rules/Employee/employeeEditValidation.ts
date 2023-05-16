@@ -114,14 +114,6 @@ const employeeEditvalidationSchema = toFormValidator(zod
                     .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.number.invalid_type_error') })
                     .min(0, i18n.global.t('validation.number.invalid_type_error')),
             ),
-        nationality_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod.number(),
-            ),
         payment_percentage:
             zod
                 .preprocess(

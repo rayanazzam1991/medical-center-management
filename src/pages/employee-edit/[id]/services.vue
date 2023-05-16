@@ -73,7 +73,6 @@ const fetchEmployee = async () => {
   employeeForm.userForm.user_status_id = employee.user.status.id
   employeeForm.dataUpdate.starting_date = employee.starting_date
   employeeForm.dataUpdate.end_date = employee.end_date
-  employeeForm.dataUpdate.nationality_id = employee.nationality.id ?? 0
   employeeForm.dataUpdate.payment_percentage = employee.payment_percentage
   employeeForm.dataUpdate.basic_salary = employee.basic_salary
   employeeForm.dataUpdate.id = employeeId.value

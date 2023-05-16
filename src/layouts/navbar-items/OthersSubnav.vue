@@ -21,26 +21,8 @@ const emits = defineEmits<{
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4" v-if="checkPermission(Permissions.NATIONALITY_ACCESS) || checkPermission(Permissions.SERVICE_ACCESS)
+              <div class="column is-4" v-if="checkPermission(Permissions.SERVICE_ACCESS)
                 || checkPermission(Permissions.SUPPLIER_ACCESS)">
-                <h4 v-permission="Permissions.NATIONALITY_ACCESS" class="column-heading">{{
-                  t('others_subnav.nationality.nationalities') }}</h4>
-                <ul>
-                  <li v-permission="Permissions.NATIONALITY_LIST">
-                    <RouterLink to="/nationality">
-                      <i class="lnir lnir-flag-alt" aria-hidden="true"></i>
-                      <span>{{ t('others_subnav.nationality.nationalities') }}</span>
-                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                    </RouterLink>
-                  </li>
-                  <li v-permission="Permissions.NATIONALITY_CREATE">
-                    <RouterLink to="/nationality/add">
-                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
-                      <span>{{ t('others_subnav.nationality.create_nationality') }}</span>
-                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                    </RouterLink>
-                  </li>
-                </ul><br />
                 <h4 v-permission="Permissions.SERVICE_ACCESS" class="column-heading">{{
                   t('others_subnav.service.services') }}</h4>
                 <ul>

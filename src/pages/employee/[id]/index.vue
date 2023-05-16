@@ -195,7 +195,6 @@ const fetchEmployee = async () => {
   employeeForm.dataUpdate.starting_date = employee.starting_date
   employeeForm.dataUpdate.basic_salary = employee.basic_salary
   employeeForm.dataUpdate.end_date = employee?.end_date
-  employeeForm.dataUpdate.nationality_id = employee.nationality.id
   employeeForm.dataUpdate.position_id = employee.position.id
   employeeForm.dataUpdate.type = employee.type
   employeeForm.dataUpdate.id = employeeId.value
@@ -748,12 +747,6 @@ const toggleAvailability = async () => {
                     </div>
                     <div class="column is-6">
                       <div class="file-box">
-                        <div class="meta">
-                          <span>{{ t('employee.details.nationality') }}</span>
-                          <span>
-                            {{ currentEmployee.nationality?.name }}
-                          </span>
-                        </div>
                       </div>
                     </div>
                     <div class="column is-6">

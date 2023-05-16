@@ -66,7 +66,6 @@ export async function updateEmployee(
     starting_date: employeeData.starting_date,
     end_date: employeeData.end_date,
     basic_salary: employeeData.basic_salary,
-    nationality_id: employeeData.nationality_id,
     position_id: employeeData.position_id,
     user: userData,
     payment_percentage: employeeData.payment_percentage,
