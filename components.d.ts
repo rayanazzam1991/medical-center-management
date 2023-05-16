@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     AccountForm: typeof import('./src/components/OurComponents/Accounting/AccountForm.vue')['default']
     AccountingSubnav: typeof import('./src/layouts/navbar-items/AccountingSubnav.vue')['default']
     AccountSearchFilterModel: typeof import('./src/components/OurComponents/Accounting/AccountSearchFilterModel.vue')['default']
+    AccountStatCard: typeof import('./src/components/OurComponents/Dashboards/AccountStatCard.vue')['default']
     AccountTableHeader: typeof import('./src/components/OurComponents/Accounting/AccountTableHeader.vue')['default']
     ActivityLogTable: typeof import('./src/components/OurComponents/Others/AcivityLog/ActivityLogTable.vue')['default']
     ActivityLogTableHeader: typeof import('./src/components/OurComponents/Others/AcivityLog/ActivityLogTableHeader.vue')['default']

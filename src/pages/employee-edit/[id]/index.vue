@@ -70,6 +70,7 @@ const fetchEmployee = async () => {
     currentUser.value.address = employee.user.address
     currentUser.value.city_id = employee.user.city.id
     currentUser.value.room_id = employee.user.room.id
+    currentUser.value.username = employee.user.username
     currentUser.value.user_status_id = employee.user.status.id
     currentUser.value.roles = employee.user.roles?.map(function (element) { return element.name }) ?? []
     currentUser.value.default_role_id = employee.user.default_role?.id
@@ -90,6 +91,7 @@ const fetchEmployee = async () => {
     employeeForm.userForm.address = currentUser.value.address
     employeeForm.userForm.room_id = currentUser.value.room_id
     employeeForm.userForm.city_id = currentUser.value.city_id
+    employeeForm.userForm.username = currentUser.value.username
     employeeForm.userForm.user_status_id = currentUser.value.user_status_id
     employeeForm.userForm.default_role_id = currentUser.value.default_role_id
     employeeForm.dataUpdate.starting_date = currentEmployee.value.starting_date

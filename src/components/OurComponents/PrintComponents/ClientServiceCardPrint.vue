@@ -50,7 +50,7 @@ export default defineComponent({
             <h1 style="font-weight: normal; font-size: 10px;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="41" height="11">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="123" height="33">
 
         </div>
 
