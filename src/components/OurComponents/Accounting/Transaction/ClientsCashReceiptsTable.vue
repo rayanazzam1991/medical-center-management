@@ -206,8 +206,8 @@ const columns = {
 <template>
   <ClientsCashReceiptsTableHeader :is_on_day="$props.is_on_day" :with_title="$props.withTitle"
     :is_for_customer="props.isForCustomer" :is_for_show="$props.is_for_show" :key="keyIncrement"
-    :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar" :default_per_page="default_per_page"
-    @resetFilter="resetFilter" />
+    :customer_id="$props.customerId" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="clientsCashReceiptsList" :limit="searchFilter.per_page"
     @update:sort="clientReceiptSort">
     <VFlexTable separators clickable>

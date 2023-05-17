@@ -15,6 +15,11 @@ export default defineComponent({
     is_reseted: {
       type: Boolean,
       default: false,
+    },
+    is_for_employee: {
+      type: Boolean,
+      default: false,
+
     }
 
   },
@@ -93,7 +98,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <VModal :title="t('customer_cash_receipt.search_filter.title')" :open="search_filter_popup" actions="center"
+  <VModal :title="t('supplier_cash_receipt.search_filter.title')" :open="search_filter_popup" actions="center"
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
@@ -103,7 +108,7 @@ export default defineComponent({
               :placeholder="t('customer_cash_receipt.search_filter.note')" />
           </VControl>
         </VField>
-        <VField class="column filter">
+        <VField v-if="!$props.is_for_employee" class="column filter">
           <VControl icon="feather:search">
             <input v-model="searchSupplierName" type="text" class="input"
               :placeholder="t('supplier_cash_receipt.search_filter.supplier_name')" />

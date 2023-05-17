@@ -1,5 +1,6 @@
 
 import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultIncomeStatment, defaultTrialBalance, IncomeStatment, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { GetAccountIdByContactIdRequestData } from "/@src/models/Accounting/AccountContact/accountContact"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
 import { defaultPagination, Pagination } from "/@src/utils/response"
 
@@ -93,6 +94,16 @@ export async function getAuthenticatedCashierAccounts() {
     const error_code: string = accountResponse.error_code ?? ''
     const message: string = accountResponse.message ?? ''
     return { success, error_code, message, cashierAccounts }
+}
+
+export async function getAccountIdByContactId(data: GetAccountIdByContactIdRequestData) {
+    const accountResponse = useAccount()
+    await accountResponse.getAccountIdByContactIdStore(data)
+    const account_id = accountResponse.accountIdByContactId
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, account_id }
 }
 
 

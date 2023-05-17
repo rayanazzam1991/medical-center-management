@@ -18,7 +18,7 @@ import { Account, AccountSearchFilter, AccountConsts, defaultAccount } from '/@s
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { Currency, CurrencyConsts, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
-import { getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
+import { getAccountsList, getAuthenticatedCashierAccounts, getAccountIdByContactId } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -27,7 +27,7 @@ import { createRecords } from '/@src/services/Accounting/Transaction/transaction
 import { supplierCashReceiptValidationSchema } from '/@src/rules/Accounting/Transaction/supplierCashReceiptValidation';
 import { onMounted } from 'vue';
 import { useAuth } from '/@src/stores/Others/User/authStore';
-
+import { GetAccountIdByContactIdRequestData } from '/@src/models/Accounting/AccountContact/accountContact';
 
 
 const { t } = useI18n()
@@ -36,6 +36,7 @@ viewWrapper.setPageTitle(t('supplier_cash_receipt.form.title'));
 const head = useHead({
   title: t('supplier_cash_receipt.form.title'),
 });
+const route = useRoute()
 const notif = useNotyf() as Notyf
 const router = useRouter()
 const transactionStore = useTransaction()
@@ -51,7 +52,8 @@ const USDcashAccountId = ref<number>(0)
 const IQDcashAccountId = ref<number>(0)
 const USDcurrencyRate = ref<number>(1)
 const IQDcurrencyRate = ref<number>(1)
-const enableCurrencyRate = ref(false)
+const enableSelectSupplierEmployee = ref(false)
+const enableSelectIsEmployee = ref(false)
 const IQDcashAmount = ref(0)
 const USDcashAmount = ref(0)
 const USDcashAmountInUSD = ref(0)
@@ -64,10 +66,21 @@ const confirmPopup = ref<boolean>(false)
 const keyIncrement = ref(0)
 const isEmployee = ref(false)
 const userAuth = useAuth();
+const employeeId = ref(0)
 const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
 const isCashier = haveCashierRole ? true : false
+if (Number.isInteger(Number(route.query.employee_id)) && !Number.isNaN(Number(route.query.employee_id))) {
+  employeeId.value = Number(route.query.employee_id)
+  isEmployee.value = true
+} else {
+  employeeId.value = 0
+  enableSelectSupplierEmployee.value = true
+  enableSelectIsEmployee.value = true
+  isEmployee.value = false
+}
 
 onMounted(async () => {
+
   if (isCashier) {
     const { cashierAccounts } = await getAuthenticatedCashierAccounts()
     cashierAccounts.forEach((account) => {
@@ -114,6 +127,18 @@ onMounted(async () => {
     USDcurrencyRate.value = usdCurrency.rate
   }
   createRecord.value.date = new Date().toISOString().substring(0, 10)
+  if (employeeId.value != 0) {
+    const data: GetAccountIdByContactIdRequestData = {
+      contact_id: employeeId.value,
+      contact_type: 'Employee'
+    }
+    const { account_id, success, message } = await getAccountIdByContactId(data)
+    if (success) {
+      supplierEmployeeAccountId.value = account_id
+    } else {
+      notif.error({ message: message, duration: 3000 })
+    }
+  }
 
 })
 
@@ -133,7 +158,7 @@ const { handleSubmit, setFieldValue } = useForm({
     note: undefined
   }
 });
-const onSubmitConfirmation = handleSubmit(() => {
+const onSubmitConfirmation = handleSubmit(async () => {
   if (IQDcashAmount.value == 0 && USDcashAmount.value == 0) {
     notif.error({ message: t('toast.error.please_select_at_least_iqd_or_usd') })
     return
@@ -168,7 +193,11 @@ const onSubmitConfirmation = handleSubmit(() => {
   }
 
   currencyDifferencesAmount.value = currencyDifferencesCashAmount.value - currencyDifferencesSupplierAmount.value
-  confirmPopup.value = true
+  if (currencyDifferencesAmount.value == 0) {
+    await onSubmit()
+  } else {
+    confirmPopup.value = true
+  }
 
 })
 const onSubmit = async () => {
@@ -387,7 +416,7 @@ watch(USDcashAmountInUSD, (value) => {
                 <div class="columns is-multiline">
                   <div class="is-flex is-justify-content-center">
                     <VControl class="ml-3">
-                      <VSwitchSegment :key="keyIncrement" v-model="isEmployee"
+                      <VSwitchSegment :key="keyIncrement" v-model="isEmployee" :disabled="!enableSelectIsEmployee"
                         :label-true="t('supplier_cash_receipt.form.employee')"
                         :label-false="t('supplier_cash_receipt.form.supplier')" color="success" />
                     </VControl>
@@ -398,7 +427,7 @@ watch(USDcashAmountInUSD, (value) => {
                 <VField id="supplier_employee_account">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.supplier_account') }}</VLabel>
                   <VControl>
-                    <VSelect v-model="supplierEmployeeAccountId">
+                    <VSelect v-model="supplierEmployeeAccountId" :disabled="!enableSelectSupplierEmployee">
                       <VOption :value="0"> {{
                         t('supplier_cash_receipt.form.select_account') }}</VOption>
                       <VOption v-for="account in suppliersAccountsList" :value="account.id" :key="account.id">
@@ -413,7 +442,7 @@ watch(USDcashAmountInUSD, (value) => {
                 <VField id="supplier_employee_account">
                   <VLabel class="required">{{ t('supplier_cash_receipt.form.employee_account') }}</VLabel>
                   <VControl>
-                    <VSelect v-model="supplierEmployeeAccountId">
+                    <VSelect v-model="supplierEmployeeAccountId" :disabled="!enableSelectSupplierEmployee">
                       <VOption :value="0"> {{
                         t('supplier_cash_receipt.form.select_account') }}</VOption>
                       <VOption v-for="account in employeesAccountsList" :value="account.id" :key="account.id">
@@ -424,54 +453,6 @@ watch(USDcashAmountInUSD, (value) => {
                   </VControl>
                 </VField>
               </div>
-              <!-- <div class="column is-12">
-                <VField id="amount">
-                  <VLabel class="required">{{ t('supplier_cash_receipt.form.amount') }}</VLabel>
-                  <VControl>
-                    <VInput v-model="cashAmount" placeholder="" type="number" />
-                    <ErrorMessage class="help is-danger" name="amount" />
-                  </VControl>
-                </VField>
-              </div> -->
-              <!-- <div class="column is-12">
-                <VField id="cash_account">
-                  <VLabel class="required">{{ t('supplier_cash_receipt.form.cash_account') }}</VLabel>
-                  <VControl>
-                    <VSelect v-model="cashAccountId">
-                      <VOption :value="0"> {{ t('supplier_cash_receipt.form.select_account')
-                      }}</VOption>
-                      <VOption v-for="account in cashAccountsList" :value="account.id">
-                        {{ account.code }} - {{ account.name }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="cash_account" />
-                  </VControl>
-                </VField>
-              </div> -->
-              <!-- <div class="column is-12">
-                <VField id="currency_id">
-                  <VLabel class="required">{{ t('supplier_cash_receipt.form.currency') }}</VLabel>
-                  <VControl>
-                    <VSelect v-model="currencyId">
-                      <VOption :value="0"> {{ t('supplier_cash_receipt.form.select_currency')
-                      }}</VOption>
-                      <VOption v-for="currency in availableCurrenciesList" :value="currency.id">
-                        {{ currency.code }} - {{ currency.name }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="currency_id" />
-                  </VControl>
-                </VField>
-              </div> -->
-              <!-- <div class="column is-12">
-                <VField id="currency_rate">
-                  <VLabel class="required">{{ t('supplier_cash_receipt.form.currency_rate') }}</VLabel>
-                  <VControl icon="feather:dollar-sign">
-                    <VInput :disabled="!enableCurrencyRate" v-model="currencyRate" placeholder="" type="number" />
-                    <ErrorMessage class="help is-danger" name="currency_rate" />
-                  </VControl>
-                </VField>
-              </div> -->
               <div class="column is-12 columns p-0 m-0 py-2">
                 <div class="column is-6 columns is-multiline m-0 p-0 my-2 split-border">
                   <div class="column is-12">

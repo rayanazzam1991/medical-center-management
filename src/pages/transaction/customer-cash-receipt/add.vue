@@ -20,12 +20,13 @@ import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/cha
 import { Currency, CurrencyConsts, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
 import { cutomerCashReceiptValidationSchema } from '/@src/rules/Accounting/Transaction/customerCashReceiptValidation';
-import { getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
+import { getAccountIdByContactId, getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { useAuth } from '/@src/stores/Others/User/authStore';
+import { GetAccountIdByContactIdRequestData } from '/@src/models/Accounting/AccountContact/accountContact';
 
 
 
@@ -39,6 +40,7 @@ const head = useHead({
 });
 const notif = useNotyf() as Notyf
 const router = useRouter()
+const route = useRoute()
 const transactionStore = useTransaction()
 const pageTitle = t('customer_cash_receipt.form.title');
 const IQDcashAccountsList = ref<Account[]>([])
@@ -60,9 +62,16 @@ const currencyDifferencesAmount = ref<number>(0)
 const userAuth = useAuth();
 const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
 const isCashier = haveCashierRole ? true : false
-
+const customerId = ref(0)
+const enableSelectCustomer = ref(false)
 
 const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
+if (Number.isInteger(Number(route.query.customer_id)) && !Number.isNaN(Number(route.query.customer_id))) {
+    customerId.value = Number(route.query.customer_id)
+} else {
+    customerId.value = 0
+    enableSelectCustomer.value = true
+}
 
 onMounted(async () => {
     if (isCashier) {
@@ -107,6 +116,19 @@ onMounted(async () => {
         USDcurrencyRate.value = usdCurrency.rate
     }
     createRecord.value.date = new Date().toISOString().substring(0, 10)
+    if (customerId.value != 0) {
+        const data: GetAccountIdByContactIdRequestData = {
+            contact_id: customerId.value,
+            contact_type: 'Customer'
+        }
+        const { account_id, success, message } = await getAccountIdByContactId(data)
+        if (success) {
+            clientAccountId.value = account_id
+        } else {
+            notif.error({ message: message, duration: 3000 })
+        }
+    }
+
 })
 
 const validationSchema = cutomerCashReceiptValidationSchema
@@ -262,7 +284,7 @@ watch(USDcashAmountInUSD, (value) => {
                                 <VField id="client_account">
                                     <VLabel class="required">{{ t('customer_cash_receipt.form.client_account') }}</VLabel>
                                     <VControl>
-                                        <VSelect v-model="clientAccountId">
+                                        <VSelect v-model="clientAccountId" :disabled="!enableSelectCustomer">
                                             <VOption :value="0"> {{
                                                 t('customer_cash_receipt.form.select_account') }}</VOption>
                                             <VOption v-for="account in clientsAccountsList" :value="account.id">

@@ -2452,6 +2452,7 @@
       }
     },
     "add_supplier_employee_cash_receipts_button": "إضافة إيصال نقدي لمورد / موظف ",
+    "add_employee_cash_receipts_button": "إضافة إيصال نقدي للموظف ",
     "search_filter": {
       "title": "تصفية الايصالات النقدية للموردين والموظفين",
       "note": "ملاحظات...",
