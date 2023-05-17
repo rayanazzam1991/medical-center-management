@@ -36,15 +36,16 @@ const roomvalidationSchema = toFormValidator(zod
                         .min(0, i18n.global.t('validation.number.invalid_type_error')),
                 ),
         department_id: zod
-            .preprocess(
-                (input) => {
-                    const processed = zod.string({}).regex(/\d+/).transform(Number).safeParse(input);
-                    return processed.success ? processed.data : input;
-                },
-                zod
-                    .number({ required_error: i18n.global.t('validation.required'), invalid_type_error: i18n.global.t('validation.required') })
+            .object({
+                value: zod
+                    .number()
                     .min(1, i18n.global.t('validation.required')),
-            ),
+                label: zod.string(),
+            })
+            .refine((val) => val.value > 0, {
+                message: i18n.global.t('validation.required'),
+                path: ['department_id', 'value'],
+            }),
         status: zod
             .number({ required_error: i18n.global.t('validation.redio.required') }),
     }));
