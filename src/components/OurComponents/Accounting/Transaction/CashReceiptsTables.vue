@@ -22,6 +22,8 @@ import { defaultSuppliersCashReceiptsSearchFilter, SuppliersCashReceiptsSearchFi
 import { getSuppliersCashReceiptsList, resetEmployeeSuppliersCashReceiptsSearchFilter } from '/@src/services/Accounting/Transaction/transactionService';
 
 import { boolean } from 'zod';
+import usePrint8CM from '/@src/composable/usePrint8CM';
+import ReceiptsDropDown from './ReceiptsDropDown.vue';
 
 export interface ClientsSuppliersEmployeesCashReceiptsTableProps {
   isForCustomer: boolean,
@@ -69,7 +71,12 @@ const clients_default_per_page = ref(1)
 const suppliersKeyIncrement = ref(0)
 const suppliers_default_per_page = ref(1)
 const selectedReceiptForPrint = ref(defaultTransaction)
-
+const selectedClientReceiptsForDetails = ref(defaultTransaction)
+const selectedSupplierEmployeeReceiptsForDetails = ref(defaultTransaction)
+const clientReceiptDetailsPopup = ref(false)
+const supplierEmployeeReceiptDetailsPopup = ref(false)
+const keyIncrementClientDetailsModal = ref(0)
+const keyIncrementSupplierEmployeeDetailsModal = ref(0)
 onMounted(async () => {
   if (props.is_on_day == true) {
     clientsSearchFilter.value.isOnDay = true
@@ -90,10 +97,10 @@ onMounted(async () => {
   suppliers_default_per_page.value = clientsPagination.per_page
 });
 
-const { printDiv } = usePrint('');
+const { printDiv8CM } = usePrint8CM('');
 const clientsPrint = async () => {
   await sleep(500)
-  printDiv('printerable', t('customer_cash_receipt.table.print_title'))
+  printDiv8CM('printerable', t('customer_cash_receipt.table.print_title'))
 }
 const clientsSearch = async (newSearchFilter: ClientsCashReceiptsSearchFilter) => {
   clientsaginationVar.value.per_page = newSearchFilter.per_page ?? clientsaginationVar.value.per_page
@@ -142,6 +149,9 @@ const clientReceiptSort = async (value: string) => {
   await clientsSearch(clientsSearchFilter.value)
 
 }
+const clientPopUpTrigger = (value: boolean) => {
+  clientReceiptDetailsPopup.value = value
+}
 
 const clientsColumns = {
   client_name: {
@@ -156,25 +166,6 @@ const clientsColumns = {
     label: t('customer_cash_receipt.table.columns.amount'),
     renderRow: (row: Transaction) =>
       h('span', row.amount),
-  },
-  currency: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency.name),
-  },
-  currency_rate: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency_rate'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency_rate),
-  },
-  cash_account: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.cash_account'),
-    renderRow: (row: Transaction) =>
-      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.CASH_CODE)?.account.name),
-    grow: true,
   },
   note: {
     align: 'center',
@@ -210,12 +201,18 @@ const clientsColumns = {
     align: 'center',
     label: t('customer_cash_receipt.table.columns.actions'),
     renderRow: (row: Transaction) =>
-      h(PrintDropDown, {
+      h(ReceiptsDropDown, {
         printPermission: Permissions.CLIENT_CASH_RECEIPT_SHOW,
+        detailsPermission: Permissions.CLIENT_CASH_RECEIPT_SHOW,
         onPrint: async () => {
           selectedReceiptForPrint.value = row
           clientsKeyIncrement.value++
           await clientsPrint()
+        },
+        onShow: async () => {
+          selectedClientReceiptsForDetails.value = row
+          clientReceiptDetailsPopup.value = !clientReceiptDetailsPopup.value
+          keyIncrementClientDetailsModal.value++
         },
       }),
   },
@@ -224,7 +221,7 @@ const clientsColumns = {
 
 const suppliersPrint = async () => {
   await sleep(500)
-  printDiv('printerable', t('supplier_cash_receipt.table.print_title'))
+  printDiv8CM('printerable_supplier', t('supplier_cash_receipt.table.print_title'))
 }
 
 const suppliersSearch = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
@@ -273,6 +270,9 @@ const suppliersReceiptSort = async (value: string) => {
   await suppliersSearch(suppliersSearchFilter.value)
 
 }
+const supplierEmployeePopUpTrigger = (value: boolean) => {
+  supplierEmployeeReceiptDetailsPopup.value = value
+}
 
 const suppliersColumns = {
   name: {
@@ -293,25 +293,6 @@ const suppliersColumns = {
     label: t('customer_cash_receipt.table.columns.amount'),
     renderRow: (row: Transaction) =>
       h('span', row.amount),
-  },
-  currency: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency.name),
-  },
-  currency_rate: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency_rate'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency_rate),
-  },
-  cash_account: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.cash_account'),
-    renderRow: (row: Transaction) =>
-      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.CASH_CODE)?.account.name),
-    grow: true,
   },
   note: {
     align: 'center',
@@ -347,12 +328,18 @@ const suppliersColumns = {
     align: 'center',
     label: t('customer_cash_receipt.table.columns.actions'),
     renderRow: (row: Transaction) =>
-      h(PrintDropDown, {
+      h(ReceiptsDropDown, {
         printPermission: Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_SHOW,
+        detailsPermission: Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_SHOW,
         onPrint: async () => {
           selectedReceiptForPrint.value = row
           suppliersKeyIncrement.value++
           await suppliersPrint()
+        },
+        onShow: async () => {
+          selectedSupplierEmployeeReceiptsForDetails.value = row
+          supplierEmployeeReceiptDetailsPopup.value = !supplierEmployeeReceiptDetailsPopup.value
+          keyIncrementSupplierEmployeeDetailsModal.value++
         },
       }),
   },
@@ -404,6 +391,9 @@ const suppliersColumns = {
         }) }}</h6>
     <VPlaceloadText v-if="transactionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
+  <ClientsCashReceiptsDetailsModal :key="keyIncrementClientDetailsModal" :openModal="clientReceiptDetailsPopup"
+    @openModal="clientPopUpTrigger" :receipt="selectedClientReceiptsForDetails" />
+
   <CustomerCashReceiptPrint :key="clientsKeyIncrement" :customer-cash-receipt="selectedReceiptForPrint" />
 
 
@@ -451,6 +441,10 @@ const suppliersColumns = {
         }) }}</h6>
     <VPlaceloadText v-if="transactionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
+  <ClientsCashReceiptsDetailsModal :key="keyIncrementSupplierEmployeeDetailsModal"
+    :openModal="supplierEmployeeReceiptDetailsPopup" @openModal="supplierEmployeePopUpTrigger"
+    :receipt="selectedSupplierEmployeeReceiptsForDetails" />
+
   <SupplierEmployeeCashReceiptPrint :key="suppliersKeyIncrement" :cash-receipt="selectedReceiptForPrint" />
 </template>
 <style lang="scss">

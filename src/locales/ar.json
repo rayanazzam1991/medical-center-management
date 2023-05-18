@@ -2395,7 +2395,12 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "account": "الحساب",
+        "cash_amount": "المبلغ",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "currency_difference": "فروقات العملة"
       }
     },
     "add_customer_cash_receipts_button": "إضافة إيصال نقدي لزبون",
@@ -2444,6 +2449,13 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
+        "supplier_name": "المورد",
+        "employee_name": "الموظف",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "cash_amount": "المبلغ",
+        "account": "الحساب",
+        "currency_difference": "فروقات العملة",
         "type": {
           "title": "النوع",
           "supplier": "مورد",
@@ -2844,11 +2856,14 @@
     },
     "customer_cash_receipt": {
       "for_customer": "للسيد/ة ",
+      "from_customer": "من السيد/ة",
       "cash_account": ":حساب النقد ",
       "amount": ":المبلغ ",
       "note": ":ملاحظات ",
       "for": ":لقاء ",
-      "date": ":التاريخ "
+      "date": ":التاريخ ",
+      "iqd_amount": ":مبلغ الدينار العراقي ",
+      "usd_amount": ":مبلغ الدولار الأمريكي "
     },
     "ticket": {
       "ticket": "التذكرة #",
