@@ -681,7 +681,8 @@
         "tickets": "التذاكر",
         "services": "الخدمات",
         "reminders": "قائمة التذكيرات",
-        "cash_receipts": "الإيصالات النقدية"
+        "cash_receipts": "الإيصالات النقدية",
+        "balances": "الأرصدة"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "الاسم",
@@ -695,6 +696,7 @@
       "emergency_contact_phone": "اسم شخص للطوارئ",
       "address": "عنوان السكن",
       "is_completed": "منتهية",
+      "current_balance": "الرصيد الحالي : ",
       "status": "الحالة",
       "birth_date": "تاريخ الميلاد",
       "medical_info": "المعلومات الطبية",
