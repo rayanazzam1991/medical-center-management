@@ -3,6 +3,7 @@ import { useI18n } from "vue-i18n"
 import { defaultSuppliersCashReceiptsSearchFilter, SuppliersCashReceiptsSearchFilter } from "/@src/models/Accounting/Transaction/record"
 import { defaultPagination } from "/@src/utils/response"
 import { Permissions } from "/@src/utils/consts/rolesPermissions"
+import { routerKey } from "vue-router"
 
 export default defineComponent({
   props: {
@@ -25,10 +26,19 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    is_for_employee: {
+      type: Boolean,
+      default: false
+    },
+    employee_id: {
+      type: Number,
+      default: 0
+    }
   },
 
   setup(props, context) {
     const { t } = useI18n()
+    const router = useRouter()
     const onOpen = () => {
       searchFilterPop.value = !searchFilterPop.value
       searchNote.value = ''
@@ -82,8 +92,14 @@ export default defineComponent({
       searchFilter.value.supplier_name = undefined
       context.emit('resetFilter', searchFilter.value)
     }
-
-    return { t, Permissions, resetFilter, search, default_per_page, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
+    const goToSupplierEmployeeCashReceipts = () => {
+      if (props.is_for_employee) {
+        router.push({ path: "/transaction/supplier-employee-cash-receipt/add", query: { employee_id: props.employee_id } })
+      } else {
+        router.push({ path: "/transaction/supplier-employee-cash-receipt/add" })
+      }
+    }
+    return { t, Permissions, resetFilter, goToSupplierEmployeeCashReceipts, search, default_per_page, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
   },
 
 
@@ -134,7 +150,8 @@ export default defineComponent({
               </VControl>
               <VControl v-if="$props.is_for_show">
                 <VButton v-permission="Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_CREATE" class=""
-                  to="/transaction/supplier-employee-cash-receipt/add" color="primary"> {{
+                  @click="goToSupplierEmployeeCashReceipts" color="primary"> {{
+                    $props.is_for_employee ? t('supplier_cash_receipt.add_employee_cash_receipts_button') :
                     t('supplier_cash_receipt.add_supplier_employee_cash_receipts_button') }}
                 </VButton>
               </VControl>
@@ -144,7 +161,8 @@ export default defineComponent({
       </div>
     </div>
     <SuppliersCashReceiptsSearchFilterModel :key="keyIncrement" :search_filter_popup="searchFilterPop"
-      @search_filter_popup="popUpTrigger" @search="search_filter" @resetFilter="resetFilter_popup" />
+      :is_for_employee="$props.is_for_employee" @search_filter_popup="popUpTrigger" @search="search_filter"
+      @resetFilter="resetFilter_popup" />
 
   </form>
 </template>

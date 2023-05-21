@@ -5,17 +5,18 @@ import { useForm, ErrorMessage } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import { useNotyf } from '/@src/composable/useNotyf';
 import { Account, AccountSearchFilter, AccountConsts } from '/@src/models/Accounting/Account/account';
-import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
+import { Currency, CurrencyConsts, CurrencySearchFilter, defaultCurrency } from '/@src/models/Accounting/Currency/currency';
 import { Customer, CustomerSearchFilter } from '/@src/models/CRM/Customer/customer';
 import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultConfirmPaymentTicket, ConfirmPaymentTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { confirmPaymentTicketValidationSchema } from '/@src/rules/Sales/Ticket/confirmPaymentTicketValidationSchema';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { getAccountIdByContactId, getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+//@ts-ignore
 import debounce from 'lodash.debounce';
 import { ServiceWithProvider } from '/@src/models/Others/Service/service';
 import { getServicesWithProviders } from '/@src/services/Others/Service/serviceService';
@@ -61,21 +62,22 @@ export default defineComponent({
     const currenciesList = ref<Currency[]>([])
     const IQDcashAccountsList = ref<Account[]>([])
     const USDcashAccountsList = ref<Account[]>([])
-    const isLoading = ref(false)
+    const USDcashAccountId = ref<number>(0)
+    const IQDcashAccountId = ref<number>(0)
     const IQDcashAmount = ref(0)
     const USDcashAmount = ref(0)
+    const USDcashAmountInUSD = ref(0)
+    const isLoading = ref(false)
     const userAuth = useAuth();
     const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
     const isCashier = haveCashierRole ? true : false
-
+    const currencyRate = ref(1)
+    const customerAccountCurrency = ref(defaultCurrency)
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
-
         const { ticket } = await getTicket(ticketId.value);
-
         currentTicket.value.customer_id = ticket.customer.id ?? 0
         currentTicket.value.total_amount = ticket.total_amount
-
         ticket.requested_services.forEach(service => {
           requestedServicesHelper.value.push({ sell_price: service.sell_price, service_id: service.service.id ?? 0, service_provider_id: service.service_provider_id, editable: service.status == TicketServiceConsts.NOT_SERVED })
         });
@@ -84,6 +86,9 @@ export default defineComponent({
       }
     }
     onMounted(async () => {
+
+
+      isLoading.value = true
       if (isCashier) {
         const { cashierAccounts } = await getAuthenticatedCashierAccounts()
         cashierAccounts.forEach((account) => {
@@ -98,8 +103,6 @@ export default defineComponent({
           }
         });
       }
-
-      isLoading.value = true
       getCurrentTicket();
       const customerSearchFilter = {
         user_status_id: UserStatusConsts.ACTIVE,
@@ -114,25 +117,27 @@ export default defineComponent({
       } as CurrencySearchFilter
       const { currencies } = await getCurrenciesList(currencySearchFilter)
       currenciesList.value = currencies
-
+      const usdCurrency = currenciesList.value.find((currency) => !currency.is_main)
+      if (usdCurrency) {
+        currencyRate.value = usdCurrency.rate
+      }
+      const { account_id } = await getAccountIdByContactId({ contact_id: currentTicket.value.customer_id, contact_type: 'Customer' })
       const accountSearchFilter = {
         per_page: 500
       } as AccountSearchFilter
       const { accounts } = await getAccountsList(accountSearchFilter)
       accounts.forEach((account) => {
-        if (account.chart_account?.code == AccountConsts.CASH_CODE) {
-          if (!isCashier) {
-            if (account.currency?.code == CurrencyConsts.IQD_CODE) {
-              IQDcashAccountsList.value.push(account)
-            } else {
-              USDcashAccountsList.value.push(account)
-            }
+        if (account.id == account_id) {
+          customerAccountCurrency.value = account.currency!
+        }
+        if (account.chart_account?.code == AccountConsts.CASH_CODE && !isCashier) {
+          if (account.currency?.code == CurrencyConsts.IQD_CODE) {
+            IQDcashAccountsList.value.push(account)
+          } else {
+            USDcashAccountsList.value.push(account)
           }
-
-          // cashAccountsList.value.push(account)
         }
       });
-
       const { services } = await getServicesWithProviders()
       servicesWithProviders.value = services
       isLoading.value = false
@@ -150,18 +155,8 @@ export default defineComponent({
       context.emit('input-finished', currentTicket.value.total_amount);
     }, 1)
 
-
-    const updateCurrencyRate = () => {
-      const currency = currenciesList.value.find((currencyElm) => currencyElm.id == currentConfirmPayment.value.currency_id)
-      currentConfirmPayment.value.currency_rate = currency?.rate ?? 1
-      if (!currency?.is_main)
-        enableCurrencyRate.value = true
-      else enableCurrencyRate.value = false
-    }
-
-
     const updateRemainingAmount = debounce(() => {
-      currentConfirmPayment.value.remaining_amount = currentTicket.value.total_amount - currentConfirmPayment.value.paid_amount
+      currentConfirmPayment.value.remaining_amount = currentTicket.value.total_amount - (IQDcashAmount.value + USDcashAmount.value)
     }, 1)
 
 
@@ -169,14 +164,12 @@ export default defineComponent({
     const { handleSubmit, setFieldValue } = useForm({
       validationSchema,
       initialValues: {
-        customer_id: currentTicket.value.customer_id,
-        total_amount: currentTicket.value.total_amount,
-        ticket_id: currentConfirmPayment.value.ticket_id,
-        currency_rate: currentConfirmPayment.value.currency_rate,
+        iqd_amount: 0,
+        usd_amount: 0,
+        currency_rate: currencyRate.value,
         remaining_amount: currentConfirmPayment.value.remaining_amount,
-        currency_id: currentConfirmPayment.value.currency_id,
-        paid_amount: currentConfirmPayment.value.paid_amount,
-        cash_account_id: currentConfirmPayment.value.cash_account_id
+        iqd_cash_account: 0,
+        usd_cash_account: 0
       }
     })
 
@@ -189,6 +182,50 @@ export default defineComponent({
 
 
     const onSubmitEdit = handleSubmit(async () => {
+      if (IQDcashAmount.value == 0 && USDcashAmount.value == 0) {
+        notif.error({ message: t('toast.error.please_select_at_least_iqd_or_usd') })
+        return
+      }
+      if (IQDcashAmount.value != 0 && IQDcashAccountId.value == 0) {
+        notif.error({ message: t('toast.error.please_select_cash_account') })
+        return
+
+      }
+      if (USDcashAmount.value != 0 && USDcashAccountId.value == 0) {
+        notif.error({ message: t('toast.error.please_select_cash_account') })
+        return
+
+      }
+      if (USDcashAmount.value == 0 && customerAccountCurrency.value.code == CurrencyConsts.IQD_CODE) {
+        currencyRate.value = 1
+        const notyf = new Notyf({
+          duration: 4000,
+          position: {
+            x: 'right',
+            y: 'bottom',
+          },
+          types: [
+            {
+              type: 'info',
+              background: useCssVar('--info').value,
+              icon: {
+                className: 'fas fa-info-circle',
+                tagName: 'i',
+                text: '',
+              },
+            },
+          ],
+        })
+        notyf.open({
+          type: 'info',
+          message: t('toast.info.currency_rate_is_set_to_1'),
+        })
+      }
+      currentConfirmPayment.value.currency_rate = currencyRate.value
+      currentConfirmPayment.value.iqd_cash_account_id = IQDcashAccountId.value != 0 ? IQDcashAccountId.value : undefined
+      currentConfirmPayment.value.usd_cash_account_id = USDcashAccountId.value != 0 ? USDcashAccountId.value : undefined
+      currentConfirmPayment.value.iqd_paid_amount = IQDcashAmount.value
+      currentConfirmPayment.value.usd_paid_amount = USDcashAmount.value
       currentConfirmPayment.value.ticket_id = ticketId.value
       const { success, message, ticket } = await confirmPaymentTicket(ticketId.value, currentConfirmPayment.value)
       if (success) {
@@ -201,11 +238,24 @@ export default defineComponent({
         notif.error(message)
       }
     })
+    watch(USDcashAmountInUSD, (value) => {
+      USDcashAmount.value = Number(value) * currencyRate.value
+    })
+    watch(currencyRate, (value) => {
+      USDcashAmount.value = Number(value) * USDcashAmountInUSD.value
+    })
+    watch(USDcashAmount, (value) => {
+      currentConfirmPayment.value.remaining_amount = currentTicket.value.total_amount - (Number(IQDcashAmount.value) + Number(value))
+
+    })
+    watch(IQDcashAmount, (value) => {
+      currentConfirmPayment.value.remaining_amount = currentTicket.value.total_amount - (Number(value) + Number(USDcashAmount.value))
+    })
 
     return {
       t, pageTitle, onSubmit, currentTicket, isLoading, customersList, viewWrapper, backRoute, ticketStore, updateRemainingAmount,
-      enableCurrencyRate, UserStatusConsts, cashAccountsList, updateCurrencyRate, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment,
-      IQDcashAmount, USDcashAmount, isCashier
+      enableCurrencyRate, UserStatusConsts, IQDcashAccountsList, USDcashAccountsList, currenciesList, servicesWithProviders, getCustomersList, requestedServicesHelper, currentConfirmPayment,
+      IQDcashAmount, USDcashAmount, isCashier, USDcashAccountId, IQDcashAccountId, USDcashAmountInUSD, currencyRate
     };
   },
   components: { ErrorMessage }
@@ -230,22 +280,39 @@ export default defineComponent({
             </div>
             <div class="columns is-multiline">
               <div class="column is-12">
-                <VField id="customer_id">
+                <VField>
                   <VLabel class="required">{{ t('ticket.form.customer') }}</VLabel>
                   <VControl>
-
                     <VSelect disabled v-model="currentTicket.customer_id">
                       <VOption v-for="customer in customersList" :value="customer.id">
                         {{ customer.user.first_name }} {{ customer.user.last_name }}
                       </VOption>
                     </VSelect>
                   </VControl>
-                  <ErrorMessage class="help is-danger" name="customer_id" />
                 </VField>
               </div>
-              <div class="column is-12 pb-0 mb-3">
+              <div class="column is-12 pb-0 my-0">
                 <p class="required label is-size-6">{{ t('ticket.form.services') }}</p>
-
+                <div class="columns mb-0">
+                  <div class="column is-4">
+                    <div class="mb-3">
+                      <p class="label">
+                        {{ t('ticket.form.service') }}</p>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="mb-3">
+                      <p class="label">
+                        {{ t('ticket.form.provider') }}</p>
+                    </div>
+                  </div>
+                  <div class="column is-4">
+                    <div class="mb-3">
+                      <p class="label">
+                        {{ t('ticket.form.sell_price') }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="column is-12 py-0 my-0">
                 <div class="columns mb-0" v-for="(record, mainIndex) in requestedServicesHelper" :key="mainIndex">
@@ -303,17 +370,15 @@ export default defineComponent({
                   </div>
                 </div>
               </div>
-
               <div class="column is-12">
-                <VField id="total_amount">
+                <VField>
                   <VLabel class="required">{{ t('ticket.form.total_amount') }}</VLabel>
                   <VControl>
                     <VInput disabled v-model="currentTicket.total_amount" placeholder="" type="number" />
-                    <ErrorMessage class="help is-danger" name="total_amount" />
                   </VControl>
                 </VField>
               </div>
-              <div class="column is-12 columns p-0 m-0 py-2">
+              <div class="column is-12 columns p-0 m-0 py-2 ">
                 <div class="column is-6 columns is-multiline m-0 p-0 my-2 split-border">
                   <div class="column is-12">
                     <VField id="iqd_amount">
@@ -331,7 +396,7 @@ export default defineComponent({
                       </VLabel>
                       <VControl>
                         <VSelect :disabled="isCashier" v-model="IQDcashAccountId">
-                          <VOption :value="0"> {{ t('customer_cash_receipt.form.select_account')
+                          <VOption :value="0"> {{ t('ticket.form.select_account')
                           }}</VOption>
                           <VOption v-for="account in IQDcashAccountsList" :value="account.id">
                             {{ account.code }} - {{ account.name }}
@@ -341,21 +406,11 @@ export default defineComponent({
                       </VControl>
                     </VField>
                   </div>
-                  <div class="column is-12">
-                    <VField id="iqd_currency_rate">
-                      <VLabel class="required">{{ t('customer_cash_receipt.form.iqd_currency_rate') }}
-                      </VLabel>
-                      <VControl icon="feather:dollar-sign">
-                        <VInput disabled v-model="IQDcurrencyRate" placeholder="" type="number" />
-                        <ErrorMessage class="help is-danger" name="iqd_currency_rate" />
-                      </VControl>
-                    </VField>
-                  </div>
                 </div>
                 <div class="column is-6 columns is-multiline m-0 p-0 my-2">
                   <div class="column is-12">
                     <VField id="usd_amount">
-                      <VLabel class="required">{{ t('customer_cash_receipt.form.usd_amount') }}
+                      <VLabel class="required">{{ t('ticket.form.usd_amount') }}
                       </VLabel>
                       <VControl>
                         <VInput v-model="USDcashAmountInUSD" placeholder="" type="number" />
@@ -365,11 +420,11 @@ export default defineComponent({
                   </div>
                   <div class="column is-12">
                     <VField id="usd_cash_account">
-                      <VLabel>{{ t('customer_cash_receipt.form.usd_cash_account') }}
+                      <VLabel>{{ t('ticket.form.usd_cash_account') }}
                       </VLabel>
                       <VControl>
                         <VSelect :disabled="isCashier" v-model="USDcashAccountId">
-                          <VOption :value="0"> {{ t('customer_cash_receipt.form.select_account')
+                          <VOption :value="0"> {{ t('ticket.form.select_account')
                           }}</VOption>
                           <VOption v-for="account in USDcashAccountsList" :value="account.id">
                             {{ account.code }} - {{ account.name }}
@@ -379,79 +434,32 @@ export default defineComponent({
                       </VControl>
                     </VField>
                   </div>
-                  <div class="column is-12">
-                    <VField id="usd_currency_rate">
-                      <VLabel class="required">{{ t('customer_cash_receipt.form.usd_currency_rate') }}
-                      </VLabel>
-                      <VControl icon="feather:dollar-sign">
-                        <VInput v-model="USDcurrencyRate" placeholder="" type="number" />
-                        <ErrorMessage class="help is-danger" name="usd_currency_rate" />
-                      </VControl>
-                    </VField>
-                  </div>
                 </div>
-
-                <!-- <div class="column is-6">
-                <VField id="cash_account_id">
-                  <VLabel class="required">{{ t('ticket.form.cash_account') }}</VLabel>
-                  <VControl>
-                    <VSelect v-model="currentConfirmPayment.cash_account_id">
-                      <VOption :value="0"> {{ t('ticket.form.select_cash_account')
-                      }}</VOption>
-                      <VOption v-for="account in cashAccountsList" :value="account.id">
-                        {{ account.code }} - {{ account.name }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="cash_account_id" />
-                  </VControl>
-                </VField>
               </div>
               <div class="column is-6">
-                <VField id="currency_id">
-                  <VLabel class="required">{{ t('ticket.form.currency') }}</VLabel>
-                  <VControl>
-                    <VSelect @change="updateCurrencyRate" v-model="currentConfirmPayment.currency_id">
-                      <VOption v-for="currency in currenciesList" :value="currency.id">
-                        {{ currency.code }} - {{ currency.name }}
-                      </VOption>
-                    </VSelect>
-                    <ErrorMessage class="help is-danger" name="currency_id" />
-                  </VControl>
-                </VField>
-              </div>
-              <div class="column is-6">
-                <VField id="currency_rate" v-slot="{ field }">
-                  <VLabel class="required">{{ t('ticket.form.currency_rate') }}</VLabel>
+                <VField id="currency_rate">
+                  <VLabel class="required">{{ t('ticket.form.currency_rate') }}
+                  </VLabel>
                   <VControl icon="feather:dollar-sign">
-                    <VInput :disabled="!enableCurrencyRate" v-model="currentConfirmPayment.currency_rate" placeholder=""
-                      type="number" />
+                    <VInput v-model="currencyRate" placeholder="" type="number" />
                     <ErrorMessage class="help is-danger" name="currency_rate" />
                   </VControl>
                 </VField>
               </div>
+
               <div class="column is-6">
-                <VField id="paid_amount">
-                  <VLabel class="required">{{ t('ticket.form.paid_amount') }}</VLabel>
+                <VField id="remaining_amount">
+                  <VLabel class="required">{{ t('ticket.form.remaining_amount') }}</VLabel>
                   <VControl>
-                    <VInput @input="updateRemainingAmount" v-model="currentConfirmPayment.paid_amount" placeholder=""
-                      type="number" />
-                    <ErrorMessage class="help is-danger" name="paid_amount" />
+                    <VInput disabled v-model="currentConfirmPayment.remaining_amount" placeholder="" type="number" />
+                    <ErrorMessage class="help is-danger" name="remaining_amount" />
                   </VControl>
                 </VField>
-              </div> -->
-                <div class="column is-6">
-                  <VField id="remaining_amount">
-                    <VLabel class="required">{{ t('ticket.form.remaining_amount') }}</VLabel>
-                    <VControl>
-                      <VInput disabled v-model="currentConfirmPayment.remaining_amount" placeholder="" type="number" />
-                      <ErrorMessage class="help is-danger" name="remaining_amount" />
-                    </VControl>
-                  </VField>
-                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </form>
   </div>
 </template>
@@ -472,5 +480,16 @@ export default defineComponent({
 .load {
   height: 400px;
   width: 500px;
+}
+
+.split-border {
+  border-left: 3px solid var(--fade-grey-dark-3);
+}
+
+.is-dark {
+  .split-border {
+    border-color: var(--dark-sidebar-light-12) !important;
+
+  }
 }
 </style>

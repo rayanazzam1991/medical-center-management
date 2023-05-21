@@ -48,18 +48,20 @@ export interface UpdateTicket {
 }
 export interface ConfirmPaymentTicket {
   ticket_id: number
-  cash_account_id: number
-  currency_id: number
+  usd_cash_account_id?: number
+  iqd_cash_account_id?: number
   currency_rate: number
-  paid_amount: number
+  usd_paid_amount: number
+  iqd_paid_amount: number
   remaining_amount: number
 }
 export const defaultConfirmPaymentTicket: ConfirmPaymentTicket = {
   ticket_id: 0,
-  cash_account_id: 0,
-  currency_id: 0,
+  usd_cash_account_id: undefined,
+  iqd_cash_account_id: undefined,
   currency_rate: 1,
-  paid_amount: 0,
+  usd_paid_amount: 0,
+  iqd_paid_amount: 0,
   remaining_amount: 0
 }
 

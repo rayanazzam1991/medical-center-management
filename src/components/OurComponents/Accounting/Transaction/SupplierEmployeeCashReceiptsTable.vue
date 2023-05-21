@@ -29,6 +29,8 @@ import { defaultPagination } from '/@src/utils/response';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
 import { boolean } from 'zod';
+import { useAuth } from '/@src/stores/Others/User/authStore';
+import ReceiptsDropDown from './ReceiptsDropDown.vue';
 
 export interface SupplierEmployeeCashReceiptsTableProps {
   isForEmployee: boolean,
@@ -61,11 +63,15 @@ const transactionStore = useTransaction()
 const keyIncrement = ref(0)
 const default_per_page = ref(1)
 const selectedReceiptForPrint = ref(defaultTransaction)
+const keyIncrementDetailsModal = ref(0)
+const selectedReceiptsForDetails = ref(defaultTransaction)
+const receiptDetailsPopup = ref(false)
 
 onMounted(async () => {
   if (props.is_on_day == true) {
     searchFilter.value.isOnDay = true
   }
+
   const { suppliers_cash_receipts, suppliersPagination } = await getSuppliersCashReceiptsList(searchFilter.value)
   suppliersCashReceiptsList.value = suppliers_cash_receipts
   paginationVar.value = suppliersPagination
@@ -78,7 +84,7 @@ onMounted(async () => {
 const { printDiv8CM } = usePrint8CM('');
 const print = async () => {
   await sleep(500)
-  printDiv8CM('printerable', t('supplier_cash_receipt.table.print_title'))
+  printDiv8CM('printerable_supplier', t('supplier_cash_receipt.table.print_title'))
 }
 
 const search = async (newSearchFilter: SuppliersCashReceiptsSearchFilter) => {
@@ -127,6 +133,9 @@ const suppliersReceiptSort = async (value: string) => {
   await search(searchFilter.value)
 
 }
+const popUpTrigger = (value: boolean) => {
+  receiptDetailsPopup.value = value
+}
 
 const columns = {
   name: {
@@ -147,25 +156,6 @@ const columns = {
     label: t('customer_cash_receipt.table.columns.amount'),
     renderRow: (row: Transaction) =>
       h('span', row.amount),
-  },
-  currency: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency.name),
-  },
-  currency_rate: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.currency_rate'),
-    renderRow: (row: Transaction) =>
-      h('span', row.currency_rate),
-  },
-  cash_account: {
-    align: 'center',
-    label: t('customer_cash_receipt.table.columns.cash_account'),
-    renderRow: (row: Transaction) =>
-      h('span', row.entries.find((entry) => entry.account.chart_account?.code == AccountConsts.CASH_CODE)?.account.name),
-    grow: true,
   },
   note: {
     align: 'center',
@@ -201,12 +191,18 @@ const columns = {
     align: 'center',
     label: t('customer_cash_receipt.table.columns.actions'),
     renderRow: (row: Transaction) =>
-      h(PrintDropDown, {
-        printPermission: Permissions.TRANSACTION_SHOW,
+      h(ReceiptsDropDown, {
+        printPermission: Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_SHOW,
+        detailsPermission: Permissions.SUPPLIER_EMPLOYEE_CASH_RECEIPT_SHOW,
         onPrint: async () => {
           selectedReceiptForPrint.value = row
           keyIncrement.value++
           await print()
+        },
+        onShow: async () => {
+          selectedReceiptsForDetails.value = row
+          receiptDetailsPopup.value = !receiptDetailsPopup.value
+          keyIncrementDetailsModal.value++
         },
       }),
   },
@@ -216,8 +212,9 @@ const columns = {
 
 <template>
   <SuppliersCashReceiptsTableHeader :is_on_day="$props.is_on_day" :is_for_show="$props.is_for_show"
-    :with_title="$props.withTitle" :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search"
-    :pagination="paginationVar" :default_per_page="default_per_page" @resetFilter="resetFilter" />
+    :is_for_employee="$props.isForEmployee" :employee_id="$props.employeeId" :with_title="$props.withTitle"
+    :key="keyIncrement" :title="viewWrapper.pageTitle" @search="search" :pagination="paginationVar"
+    :default_per_page="default_per_page" @resetFilter="resetFilter" />
   <VFlexTableWrapper :columns="columns" :data="suppliersCashReceiptsList" :limit="searchFilter.per_page"
     @update:sort="suppliersReceiptSort">
     <VFlexTable separators clickable>
@@ -255,6 +252,9 @@ const columns = {
         }) }}</h6>
     <VPlaceloadText v-if="transactionStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
   </VFlexTableWrapper>
+  <SupplierEmployeeCashReceiptsDetailsModal :key="keyIncrementDetailsModal" :openModal="receiptDetailsPopup"
+    @openModal="popUpTrigger" :receipt="selectedReceiptsForDetails" />
+
   <SupplierEmployeeCashReceiptPrint :key="keyIncrement" :cash-receipt="selectedReceiptForPrint" />
 </template>
 <style lang="scss">

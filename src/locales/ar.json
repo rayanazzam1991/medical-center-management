@@ -334,6 +334,8 @@
       "no_permission": "لا يمتلك المستخدم الخاص بك الأذونات المطلوبة لتنفيذ هذا الإجراء",
       "password_dont_match_pattern": "كلمة المرور الجديدة يجب أن تتألف على الأقل من 8 محارف وتتضمن حرف واحد ورقم واحد على الأقل.",
       "cannot_access_waiting_list": "لا يمكنك الوصول لمعومات هذه الصفحة",
+      "please_select_at_least_iqd_or_usd": "يرجى اضافة مبلغ واحد على الأقل (دينار عراقي أو/و دولار أمريكي) ",
+      "please_select_cash_account": "يرجى تحديد حساب النقد",
       "Attendance": {
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
@@ -395,6 +397,9 @@
         "account_required": "يرجى تحديد الحساب المطلوب",
         "count_must_be_integer_positive": "حقل عدد النتائج يجب أن يكون رقم صحيح أكبر أو يساوي الصفر"
       }
+    },
+    "info": {
+      "currency_rate_is_set_to_1": "حساب الزبون وحساب النقد بعملة الدينار العراقي تم تحديد قيمة سعر الصرف (1)"
     },
     "file": {
       "type": "الرجاء اختيار نمط ملف مقبول",
@@ -681,7 +686,8 @@
         "tickets": "التذاكر",
         "services": "الخدمات",
         "reminders": "قائمة التذكيرات",
-        "cash_receipts": "الإيصالات النقدية"
+        "cash_receipts": "الإيصالات النقدية",
+        "balances": "الأرصدة"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "الاسم",
@@ -695,6 +701,7 @@
       "emergency_contact_phone": "اسم شخص للطوارئ",
       "address": "عنوان السكن",
       "is_completed": "منتهية",
+      "current_balance": "الرصيد الحالي : ",
       "status": "الحالة",
       "birth_date": "تاريخ الميلاد",
       "medical_info": "المعلومات الطبية",
@@ -2372,7 +2379,13 @@
       "select_currency": "اختيار العملة",
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
-      "note": "ملاحظات"
+      "note": "ملاحظات",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "iqd_currency_rate": "سعر الصرف",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "usd_currency_rate": "سعر الصرف"
     },
     "table": {
       "title": "الإيصالات النقدية للزبائن",
@@ -2387,7 +2400,12 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "account": "الحساب",
+        "cash_amount": "المبلغ",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "currency_difference": "فروقات العملة"
       }
     },
     "add_customer_cash_receipts_button": "إضافة إيصال نقدي لزبون",
@@ -2436,6 +2454,13 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
+        "supplier_name": "المورد",
+        "employee_name": "الموظف",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "cash_amount": "المبلغ",
+        "account": "الحساب",
+        "currency_difference": "فروقات العملة",
         "type": {
           "title": "النوع",
           "supplier": "مورد",
@@ -2444,6 +2469,7 @@
       }
     },
     "add_supplier_employee_cash_receipts_button": "إضافة إيصال نقدي لمورد / موظف ",
+    "add_employee_cash_receipts_button": "إضافة إيصال نقدي للموظف ",
     "search_filter": {
       "title": "تصفية الايصالات النقدية للموردين والموظفين",
       "note": "ملاحظات...",
@@ -2510,6 +2536,13 @@
       "add_new_service": "إضافة خدمة جديدة",
       "provider_available": "المخدم متواجد حالياً",
       "provider_not_available": "المخدم غير متواجد حالياً",
+      "provider": "المخدم",
+      "service": "الخدمة",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "select_account": "اختيار الحساب",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
@@ -2835,11 +2868,14 @@
     },
     "customer_cash_receipt": {
       "for_customer": "للسيد/ة ",
+      "from_customer": "من السيد/ة",
       "cash_account": ":حساب النقد ",
       "amount": ":المبلغ ",
       "note": ":ملاحظات ",
       "for": ":لقاء ",
-      "date": ":التاريخ "
+      "date": ":التاريخ ",
+      "iqd_amount": ":مبلغ الدينار العراقي ",
+      "usd_amount": ":مبلغ الدولار الأمريكي "
     },
     "ticket": {
       "ticket": "التذكرة #",
