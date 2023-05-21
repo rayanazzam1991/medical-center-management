@@ -128,7 +128,7 @@ export function resetClientsCashReceiptsSearchFilter() {
     currency_id: undefined,
     note: undefined,
     customer_id: undefined,
-    isOnDay:undefined
+    isOnDay: undefined,
   }
 
   return blankSearchFilter
@@ -145,7 +145,7 @@ export function resetEmployeeSuppliersCashReceiptsSearchFilter() {
     note: undefined,
     supplier_name: undefined,
     employee_id: undefined,
-    isOnDay:undefined
+    isOnDay: undefined,
 
   }
 

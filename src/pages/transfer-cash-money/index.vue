@@ -19,13 +19,14 @@ import { Account, AccountSearchFilter, AccountConsts, defaultAccount } from '/@s
 import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
 import { transferCashMoneyValidationSchema } from '../../rules/Accounting/Transaction/transferCashMoneyValidation';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { create } from 'node:domain';
 import { Currency, CurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 
 
@@ -50,13 +51,22 @@ const currencyDifferencesAmount = ref<number>(0)
 const currencyRate = ref<number>(1)
 const currenciesList = ref<Currency[]>([])
 const createRecord = ref<CreateRecords>(createRecordsWithDefault)
+const userAuth = useAuth();
+const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
+const isCashier = haveCashierRole ? true : false
+
 onMounted(async () => {
+    if (isCashier) {
+        const { cashierAccounts } = await getAuthenticatedCashierAccounts()
+        cashAccountsList.value = cashierAccounts
+    }
+
     let accountSearchFilter = {} as AccountSearchFilter
     accountSearchFilter.status = AccountConsts.ACTIVE
     accountSearchFilter.per_page = 500
     const { accounts } = await getAccountsList(accountSearchFilter)
     accounts.forEach((account) => {
-        if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
+        if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && !isCashier) {
             cashAccountsList.value.push(account)
         } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
             currencyDifferencesAccountId.value = account.id ?? 0

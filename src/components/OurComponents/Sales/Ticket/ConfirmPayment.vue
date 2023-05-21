@@ -11,7 +11,7 @@ import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
 import { defaultCreateTicket, defaultConfirmPaymentTicket, ConfirmPaymentTicket } from '/@src/models/Sales/Ticket/ticket';
 import { CreateTicketServiceHelper, TicketServiceConsts } from '/@src/models/Sales/TicketService/ticketService';
 import { confirmPaymentTicketValidationSchema } from '/@src/rules/Sales/Ticket/confirmPaymentTicketValidationSchema';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { getCustomersList } from '/@src/services/CRM/Customer/customerService';
 import { useTicket } from '/@src/stores/Sales/Ticket/ticketStore';
@@ -22,6 +22,7 @@ import { getServicesWithProviders } from '/@src/services/Others/Service/serviceS
 import { createTicket, getTicket, confirmPaymentTicket } from '/@src/services/Sales/Ticket/ticketService';
 import { UpdateTicket } from '/@src/models/Sales/Ticket/ticket';
 import sleep from '/@src/utils/sleep';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 export default defineComponent({
   props: {
@@ -59,6 +60,9 @@ export default defineComponent({
     const currenciesList = ref<Currency[]>([])
     const cashAccountsList = ref<Account[]>([])
     const isLoading = ref(false)
+    const userAuth = useAuth();
+    const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
+    const isCashier = haveCashierRole ? true : false
 
     const getCurrentTicket = async () => {
       if (ticketId.value > 0) {
@@ -77,6 +81,11 @@ export default defineComponent({
     }
     onMounted(async () => {
       isLoading.value = true
+      if (isCashier) {
+        const { cashierAccounts } = await getAuthenticatedCashierAccounts()
+        cashAccountsList.value = cashierAccounts
+      }
+
       getCurrentTicket();
       const customerSearchFilter = {
         user_status_id: UserStatusConsts.ACTIVE,
@@ -97,7 +106,7 @@ export default defineComponent({
       } as AccountSearchFilter
       const { accounts } = await getAccountsList(accountSearchFilter)
       accounts.forEach((account) => {
-        if (account.chart_account?.code == AccountConsts.CASH_CODE) {
+        if (account.chart_account?.code == AccountConsts.CASH_CODE && !isCashier) {
           cashAccountsList.value.push(account)
         }
       });

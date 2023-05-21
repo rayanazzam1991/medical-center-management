@@ -1,5 +1,6 @@
 
 import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultIncomeStatment, defaultTrialBalance, IncomeStatment, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { GetAccountIdByContactIdRequestData } from "/@src/models/Accounting/AccountContact/accountContact"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
 import { defaultPagination, Pagination } from "/@src/utils/response"
 
@@ -57,12 +58,12 @@ export async function generateBalanceSheetReport() {
 }
 
 export async function generateIncomeStatmentReport() {
-  const accountResponse = useAccount()
-  let income_statment: IncomeStatment = await accountResponse.generateIncomeStatmentReportStore() ?? defaultIncomeStatment
-  let success: boolean = accountResponse.success ?? false
-  let error_code: string = accountResponse.error_code ?? ''
-  let message: string = accountResponse.message ?? ''
-  return { success, error_code, message, income_statment }
+    const accountResponse = useAccount()
+    let income_statment: IncomeStatment = await accountResponse.generateIncomeStatmentReportStore() ?? defaultIncomeStatment
+    let success: boolean = accountResponse.success ?? false
+    let error_code: string = accountResponse.error_code ?? ''
+    let message: string = accountResponse.message ?? ''
+    return { success, error_code, message, income_statment }
 
 }
 export async function updateAccountCurrency(account_id: number, updateAccountCurrencyData: UpdateAccountCurrency) {
@@ -76,12 +77,33 @@ export async function updateAccountCurrency(account_id: number, updateAccountCur
 }
 
 export async function changeAccountStatus(accountData: ChangeAccountStatus) {
-  const accountResponse = useAccount()
-  await accountResponse.changeAccountStatusStore(accountData)
-  var success: boolean = accountResponse.success ?? false
-  var error_code: string = accountResponse.error_code ?? ''
-  var message: string = accountResponse.message ?? ''
-  return { success, error_code, message }
+    const accountResponse = useAccount()
+    await accountResponse.changeAccountStatusStore(accountData)
+    var success: boolean = accountResponse.success ?? false
+    var error_code: string = accountResponse.error_code ?? ''
+    var message: string = accountResponse.message ?? ''
+    return { success, error_code, message }
+}
+
+
+export async function getAuthenticatedCashierAccounts() {
+    const accountResponse = useAccount()
+    await accountResponse.getAuthenticatedCashierAccountsStore()
+    const cashierAccounts = accountResponse.cashierAccounts
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, cashierAccounts }
+}
+
+export async function getAccountIdByContactId(data: GetAccountIdByContactIdRequestData) {
+    const accountResponse = useAccount()
+    await accountResponse.getAccountIdByContactIdStore(data)
+    const account_id = accountResponse.accountIdByContactId
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, account_id }
 }
 
 

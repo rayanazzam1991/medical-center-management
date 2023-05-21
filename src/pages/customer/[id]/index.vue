@@ -49,6 +49,7 @@ import { Notyf } from 'notyf'
 import { useI18n } from 'vue-i18n'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 import { checkPermission } from '/@src/composable/checkPermission'
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers'
 
 const route = useRoute()
 const router = useRouter()
@@ -75,6 +76,9 @@ const uploadLoading = ref(false)
 const CKEditor = CKE.component
 const editorData = ref()
 const keyIncrement = ref(1)
+const customerAccountCurrentBalance = ref('0')
+const customerAccountCurrency = ref('')
+
 const config = {
   fontFamily: {
     options: ['"Montserrat", sans-serif', '"Roboto", sans-serif'],
@@ -476,8 +480,11 @@ const permissionCheck = async () => {
   if (tab.value == 'Balances' && !checkPermission(Permissions.JOURNAL_ENTRY_LIST)) {
     notif.error({ message: t('toast.error.no_permission'), duration: 4000 })
   }
-
-
+}
+const setAccountBalance = (accountBalance: string, accountCurrency: string) => {
+  console.log('as')
+  customerAccountCurrentBalance.value = accountBalance
+  customerAccountCurrency.value = accountCurrency
 }
 
 </script>
@@ -504,7 +511,7 @@ const permissionCheck = async () => {
             <i aria-hidden="true" class="lnil lnil-checkmark-circle"></i>
             <span>{{ t('customer.details.status') }}:
               <span :class="`has-text-${UserStatusConsts.getStatusColor(currentCustomer.user.status.id)}`
-              ">{{ UserStatusConsts.getStatusName(currentCustomer.user.status.id) }}</span></span>
+                ">{{ UserStatusConsts.getStatusName(currentCustomer.user.status.id) }}</span></span>
           </div>
         </div>
       </div>
@@ -557,7 +564,7 @@ const permissionCheck = async () => {
               </li>
               <li @click="permissionCheck()" :class="[tab === 'Balances' && 'is-active']">
                 <a tabindex="0" @keydown.space.prevent="tab = 'Balances'" @click="tab = 'Balances'"><span>{{
-                  t('employee.details.tabs.balances')
+                  t('customer.details.tabs.balances')
                 }} </span></a>
               </li>
 
@@ -592,11 +599,10 @@ const permissionCheck = async () => {
                     </p>
                   </div>
                   <div class="project-feature">
-                    <i aria-hidden="true" :class="
-                      currentCustomer.user.gender == 'Male'
-                        ? 'lnir lnir-male'
-                        : 'lnir lnir-female'
-                    "></i>
+                    <i aria-hidden="true" :class="currentCustomer.user.gender == 'Male'
+                      ? 'lnir lnir-male'
+                      : 'lnir lnir-female'
+                      "></i>
                     <h4>{{ t('customer.details.gender') }}</h4>
                     <p>
                       {{
@@ -665,18 +671,12 @@ const permissionCheck = async () => {
                       <div class="file-box">
                         <div class="meta full-width">
                           <div
-                            class="
-                                                                                                                                                                                                                                                        is-justify-content-space-between
-                                                                                                                                                                                                                                                        is-align-items-center
-                                                                                                                                                                                                                                                        is-flex
-                                                                                                                                                                                                                                                        mt-2
-                                                                                                                                                                                                                                                      ">
+                            class="                      is-justify-content-space-between                                                  is-align-items-center                                                   is-flex mt-2                                                  ">
                             <span class="mb-2">{{ t('customer.details.note') }}</span>
                             <VIconButton v-permission="Permissions.CUSTOMER_EDIT" class="mb-3" size="small"
                               icon="feather:edit-3" tabindex="0" @click="openNotesEditor" />
                           </div>
                           <VFlex class="mb-3">
-                            <!-- use any components inside --->
                             <VCard>
                               <div v-html="currentCustomer.notes ?? t('place_holder.none')" class="ml-3 mb-3"></div>
                               <div v-if="currentCustomer.notes != undefined" class="has-text-primary">
@@ -972,13 +972,21 @@ const permissionCheck = async () => {
         <div v-if="tab === 'Balances'" class="tab-content is-active">
           <div class="columns project-details-inner">
             <div class="column is-12">
+              <div class="project-details-card py-5">
+                <div class="card-head my-1">
+                  <div class="title-wrap">
+                    <h3>{{ t('customer.details.current_balance') }} <span
+                        :class="customerAccountCurrentBalance.includes('-') ? 'has-text-danger' : 'has-text-primary'">{{
+                          customerAccountCurrentBalance }}</span> {{ addParenthesisToString(customerAccountCurrency) }}</h3>
+                  </div>
+                </div>
+              </div>
               <div class="project-details-card">
-                <JournalEntryTable is-for-customer :customer-id="customerId" />
+                <JournalEntryTable is-for-customer :customer-id="customerId" @update-balance="setAccountBalance" />
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -986,7 +994,6 @@ const permissionCheck = async () => {
     @close="changeStatusPopup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
-        <!--Fieldset-->
         <div class="form-fieldset">
           <div class="columns is-multiline">
             <div class="column is-12">

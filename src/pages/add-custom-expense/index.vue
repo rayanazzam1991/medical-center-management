@@ -19,7 +19,7 @@ import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/cha
 import { Currency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency';
 import { CreateRecords, createRecordsWithDefault, TransactionConsts } from '/@src/models/Accounting/Transaction/record';
 import { transferCashMoneyValidationSchema } from '../../rules/Accounting/Transaction/transferCashMoneyValidation';
-import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { getAccountsList, getAuthenticatedCashierAccounts } from '/@src/services/Accounting/Account/accountService';
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService';
 import { useTransaction } from '/@src/stores/Accounting/Transaction/transactionStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
@@ -28,6 +28,7 @@ import { addCustomExpenseValidationSchema } from '/@src/rules/Accounting/Transac
 import { createRecords } from '/@src/services/Accounting/Transaction/transactionService';
 import { getSuppliersList } from '/@src/services/Others/Supplier/supplierService';
 import { Supplier, SupplierSearchFilter } from '/@src/models/Others/Supplier/supplier';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 
 
@@ -58,14 +59,22 @@ const remainAmount = ref(0)
 const createRecord = ref<CreateRecords>(createRecordsWithDefault)
 const currencyDifferencesAccountId = ref<number>(0)
 const currencyDifferencesAmount = ref<number>(0)
+const userAuth = useAuth();
+const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
+const isCashier = haveCashierRole ? true : false
 
 onMounted(async () => {
+    if (isCashier) {
+        const { cashierAccounts } = await getAuthenticatedCashierAccounts()
+        cashAccountsList.value = cashierAccounts
+    }
+
     let accountSearchFilter = {} as AccountSearchFilter
     accountSearchFilter.status = AccountConsts.ACTIVE
     accountSearchFilter.per_page = 500
     const { accounts } = await getAccountsList(accountSearchFilter)
     accounts.forEach((account) => {
-        if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
+        if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && !isCashier) {
             cashAccountsList.value.push(account)
         } else if (account.chart_account?.code == ChartOfAccountConsts.CURRENCY_DIFFERENCES_CODE) {
             currencyDifferencesAccountId.value = account.id ?? 0
