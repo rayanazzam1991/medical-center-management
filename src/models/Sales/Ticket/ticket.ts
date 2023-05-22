@@ -17,12 +17,14 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
 export interface Ticket {
   id: number
   customer: Customer
+  close_time?: string
   total_amount: number
-  currency?: Currency
   currency_rate?: number
-  paid_amount?: number
-  remaining_amount?: number
-  cash_account?: Account
+  iqd_paid_amount?: string
+  usd_paid_amount?: string
+  remaining_amount?: string
+  iqd_cash_account?: Account
+  usd_cash_account?: Account
   status: number
   created_at: string
   created_by: User
@@ -73,21 +75,23 @@ export const defaultCreateTicket: CreateTicket = {
 
 }
 export const defaultTicket: Ticket = {
-  cash_account: undefined,
   created_at: '',
   created_by: defaultUser,
-  currency: undefined,
   currency_rate: undefined,
   customer: defaultCustomer,
   id: 0,
-  paid_amount: undefined,
   remaining_amount: undefined,
   requested_services: [],
   status: 1,
   total_amount: 0,
   services_count: undefined,
   current_service_provider: undefined,
-  barcode: 0
+  barcode: 0,
+  close_time: undefined,
+  iqd_cash_account: undefined,
+  iqd_paid_amount: undefined,
+  usd_cash_account: undefined,
+  usd_paid_amount: undefined
 }
 
 export interface TicketSearchFilter {
