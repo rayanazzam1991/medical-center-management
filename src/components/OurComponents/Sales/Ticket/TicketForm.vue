@@ -129,7 +129,10 @@ export default defineComponent({
     }
 
     const updateTotalAmount = () => {
-      debouncedTotalAmount();
+      currentTicket.value.total_amount = 0
+      requestedServicesHelper.value.forEach((element) => {
+        currentTicket.value.total_amount += element.sell_price
+      })
     }
 
 

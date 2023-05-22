@@ -11,6 +11,7 @@ import { Notyf } from 'notyf';
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 const router = useRouter()
 const notif = useNotyf() as Notyf
@@ -80,26 +81,6 @@ const goToAddReminder = (ticketServiceId: number) => {
   router.push({ path: `/reminder/add`, query: { customer_id: currentTicket.value.customer.id, ticket_service_id: ticketServiceId } })
 }
 
-const columns = {
-  service_name: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.service_name"),
-    renderRow: (row: TicketService) =>
-      h('span', row?.service.name),
-  },
-  service_price: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.service_price"),
-    renderRow: (row: TicketService) =>
-      h('span', row?.sell_price),
-  },
-  currency: {
-    align: 'center',
-    label: t("ticket.details.current_services.columns.currency"),
-    renderRow: (row: TicketService) =>
-      h('span', currentTicket.value.currency?.name ?? t('place_holder.none')),
-  },
-} as const
 </script>
 <template>
   <div class="profile-wrapper">
@@ -198,7 +179,7 @@ const columns = {
                 <div v-else class="project-feature">
                   <p> 0 </p>
                 </div>
-                <div class="project-feature">
+                <div v-permission="Permissions.REMINDER_CREATE" class="project-feature">
                   <VButton @click="goToAddReminder(service.id)" color="primary" outlined icon="lnir lnir-alarm-2">{{
                     t('reminder.add_button') }}</VButton>
                 </div>
@@ -216,9 +197,39 @@ const columns = {
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
-                                    <span>{{ t('ticket.details.paid_amount') }}</span>
+                                    <span>{{ t('ticket.details.iqd_cash_account') }}</span>
                                     <span>
-                                      {{ currentTicket.paid_amount ?? t('place_holder.none') }}
+                                      {{ currentTicket.iqd_cash_account?.name ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.usd_cash_account') }}</span>
+                                    <span>
+                                      {{ currentTicket.usd_cash_account?.name ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.iqd_paid_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.iqd_paid_amount ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.usd_paid_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.usd_paid_amount ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
@@ -236,16 +247,6 @@ const columns = {
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
-                                    <span>{{ t('ticket.details.currency') }}</span>
-                                    <span>
-                                      {{ currentTicket.currency?.name ?? t('place_holder.none') }}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="column is-6">
-                                <div class="file-box">
-                                  <div class="meta">
                                     <span>{{ t('ticket.details.currency_rate') }}</span>
                                     <span>
                                       {{ currentTicket.currency_rate ?? t('place_holder.none') }}
@@ -253,13 +254,22 @@ const columns = {
                                   </div>
                                 </div>
                               </div>
-
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
                                     <span>{{ t('ticket.details.created_at') }}</span>
                                     <span>
                                       {{ currentTicket.created_at }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.close_time') }}</span>
+                                    <span>
+                                      {{ currentTicket.close_time ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
