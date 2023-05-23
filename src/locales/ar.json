@@ -248,6 +248,10 @@
     "confirm_payment_for_tickets": {
       "confirm_payment_for_tickets": "تأكيد عملية الدفع للتذاكر",
       "pending_tickets": "التذاكر المعلّقة"
+    },
+    "reset_cash_account": {
+      "reset_cash_account": "تصفير الحسابات",
+      "reset_cash_account_list": "عمليات تصفير الحسابات"
     }
   },
   "reporting_subnav": {
