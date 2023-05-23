@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { ConfirmPaymentTicket, CreateTicket, Ticket, TicketSearchFilter, UpdateTicket } from "/@src/models/Sales/Ticket/ticket"
-import { closeTicketApi, confirmPaymentTicketApi, createTicketApi, getPendingTicketsListApi, getTicketApi, getTicketsListApi, moveTicketToNextWaitingListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
+import { ConfirmPaymentTicket, CreateTicket, Ticket, TicketSearchFilter, UpdateTicket, defaultTicket } from "/@src/models/Sales/Ticket/ticket"
+import { closeTicketApi, confirmPaymentTicketApi, createTicketApi, getPendingTicketByBarcodeApi, getPendingTicketsListApi, getTicketApi, getTicketsListApi, moveTicketToNextWaitingListApi, updateTicketApi } from "/@src/utils/api/Sales/Ticket"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 import sleep from "/@src/utils/sleep"
 
@@ -13,6 +13,7 @@ export const useTicket = defineStore('ticket', () => {
   const error_code = ref<string>()
   const message = ref<string>()
   const tickets = ref<Ticket[]>([])
+  const ticketByBarcode = ref<Ticket>(defaultTicket)
   const pagination = ref<Pagination>(defaultPagination)
 
   async function createTicketStore(ticket: CreateTicket) {
@@ -168,30 +169,54 @@ export const useTicket = defineStore('ticket', () => {
     }
   }
 
-    async function moveTicketToNextWaitingListStore(ticketId: number) {
-        if (loading.value) return
+  async function moveTicketToNextWaitingListStore(ticketId: number) {
+    if (loading.value) return
 
-        loading.value = true
-        sleep(2000)
+    loading.value = true
+    sleep(2000)
 
 
-        try {
-            const response = await moveTicketToNextWaitingListApi(api, ticketId)
-            success.value = response.response.success
-            error_code.value = response.response.error_code
-            message.value = response.response.message
+    try {
+      const response = await moveTicketToNextWaitingListApi(api, ticketId)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
 
-        }
-        catch (error: any) {
-            success.value = error?.response.data.success
-            error_code.value = error?.response.data.error_code
-            message.value = error?.response.data.message
-
-        }
-        finally {
-            loading.value = false
-        }
     }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getPendingTicketByBarcodeStore(ticketBarcode: number) {
+    if (loading.value) return
+
+    loading.value = true
+    sleep(2000)
+
+
+    try {
+      const response = await getPendingTicketByBarcodeApi(api, ticketBarcode)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      ticketByBarcode.value = response.response.data
+    }
+    catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
 
   return {
@@ -201,6 +226,7 @@ export const useTicket = defineStore('ticket', () => {
     loading,
     pagination,
     tickets,
+    ticketByBarcode,
     createTicketStore,
     getTicketStore,
     updateTicketStore,
@@ -208,7 +234,8 @@ export const useTicket = defineStore('ticket', () => {
     closeTicketStore,
     moveTicketToNextWaitingListStore,
     getPendingTicketsListStore,
-    confirmPaymentTicketStore
+    confirmPaymentTicketStore,
+    getPendingTicketByBarcodeStore
   } as const
 })
 

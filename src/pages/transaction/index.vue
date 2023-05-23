@@ -149,7 +149,7 @@ const columns = {
 } as const
 const entriesColumns = {
     account: {
-        align: 'start',
+        align: 'center',
         label: t('transaction.table.entries.columns.account'),
         grow: true,
         renderRow: (row: JournalEntry) =>

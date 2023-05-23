@@ -162,7 +162,10 @@ export default defineComponent({
     }
 
     const updateTotalAmount = () => {
-      debouncedTotalAmount();
+      currentTicket.value.total_amount = 0
+      requestedServicesHelper.value.forEach((element) => {
+        currentTicket.value.total_amount += element.sell_price
+      })
     }
 
     const debouncedTotalAmount = debounce(() => {
@@ -778,5 +781,9 @@ export default defineComponent({
 .load {
   height: 400px;
   width: 500px;
+}
+
+.delete-column-margin {
+  margin-top: -7px;
 }
 </style>

@@ -17,6 +17,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    customer_id: {
+      type: Number,
+      default: 0,
+    },
     with_title: {
       type: Boolean,
       default: false,
@@ -33,6 +37,7 @@ export default defineComponent({
 
   setup(props, context) {
     const { t } = useI18n()
+    const router = useRouter()
     const onOpen = () => {
       searchFilterPop.value = !searchFilterPop.value
       searchNote.value = ''
@@ -87,8 +92,15 @@ export default defineComponent({
 
       context.emit('resetFilter', searchFilter.value)
     }
+    const goToClientsCashReceipts = () => {
+      if (props.is_for_customer) {
+        router.push({ path: "/transaction/customer-cash-receipt/add", query: { customer_id: props.customer_id } })
+      } else {
+        router.push({ path: "/transaction/customer-cash-receipt/add" })
+      }
+    }
 
-    return { t, resetFilter, search, default_per_page, Permissions, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
+    return { t, resetFilter, search, goToClientsCashReceipts, default_per_page, Permissions, searchNote, perPage, pagination, keyIncrement, searchFilterPop, popUpTrigger, onOpen, search_filter, resetFilter_popup }
   },
 
 
@@ -138,8 +150,8 @@ export default defineComponent({
                 </div>
               </VControl>
               <VControl v-if="$props.is_for_show">
-                <VButton v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE" class=""
-                  to="/transaction/customer-cash-receipt/add" color="primary"> {{
+                <VButton v-permission="Permissions.CLIENT_CASH_RECEIPT_CREATE" class="" @click="goToClientsCashReceipts"
+                  color="primary"> {{
                     t('customer_cash_receipt.add_customer_cash_receipts_button') }}
                 </VButton>
               </VControl>

@@ -225,6 +225,7 @@ declare module 'vue-router/auto/routes' {
     '/transaction/': RouteRecordInfo<'/transaction/', '/transaction/', Record<never, never>, Record<never, never>>,
     '/transaction/customer-cash-receipt/': RouteRecordInfo<'/transaction/customer-cash-receipt/', '/transaction/customer-cash-receipt/', Record<never, never>, Record<never, never>>,
     '/transaction/customer-cash-receipt/add': RouteRecordInfo<'/transaction/customer-cash-receipt/add', '/transaction/customer-cash-receipt/add', Record<never, never>, Record<never, never>>,
+    '/transaction/reset-cash-account/': RouteRecordInfo<'/transaction/reset-cash-account/', '/transaction/reset-cash-account/', Record<never, never>, Record<never, never>>,
     '/transaction/supplier-employee-cash-receipt/': RouteRecordInfo<'/transaction/supplier-employee-cash-receipt/', '/transaction/supplier-employee-cash-receipt/', Record<never, never>, Record<never, never>>,
     '/transaction/supplier-employee-cash-receipt/add': RouteRecordInfo<'/transaction/supplier-employee-cash-receipt/add', '/transaction/supplier-employee-cash-receipt/add', Record<never, never>, Record<never, never>>,
     '/transfer-cash-money': RouteRecordInfo<'/transfer-cash-money', '/transfer-cash-money', Record<never, never>, Record<never, never>>,

@@ -3,7 +3,7 @@
     "meta": {
         "requiresAuth": true,
         "permissions": [
-            "reservation_list"
+            "reservation_create"
         ]
     }
 }
@@ -568,17 +568,17 @@ const columns = {
                                     :close-on-select="true" ref="customer_id" :filter-results="false" :min-chars="0"
                                     :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true" :max="1"
                                     :clear-on-search="true" :delay="0" :searchable="true" :canClear="false" :options="async (query: any) => {
-                                            let customerSearchFilter: CustomerSearchFilter = {
-                                                user_status_id: UserStatusConsts.ACTIVE,
-                                                name: query,
-                                            }
-                                            // @ts-ignore
-                                            const data = await getCustomersList(customerSearchFilter)
-                                            // @ts-ignore
-                                            return data.customers.map((customer: Customer) => {
-                                                return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
-                                            })
-                                        }"
+                                        let customerSearchFilter: CustomerSearchFilter = {
+                                            user_status_id: UserStatusConsts.ACTIVE,
+                                            name: query,
+                                        }
+                                        // @ts-ignore
+                                        const data = await getCustomersList(customerSearchFilter)
+                                        // @ts-ignore
+                                        return data.customers.map((customer: Customer) => {
+                                            return { value: customer.id, label: customer.user.first_name + ' ' + customer.user.last_name }
+                                        })
+                                    }"
                                     @open="(select$: any) => { if (select$.noOptions) { select$.resolveOptions() } }" />
                             </VControl>
                         </VField>

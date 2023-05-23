@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n';
 import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
 
-type TabId = 'warehouse' | 'templates'
+type TabId = 'warehouse'
 const activeTab = ref<TabId>('warehouse')
 const emits = defineEmits<{
   (e: 'close'): void
@@ -21,18 +21,13 @@ const { t, locale } = useI18n()
         <div class="tab-content-inner">
           <div class="center has-slimscroll">
             <div class="columns">
-              <div class="column is-4"
-                v-if="checkPermission(Permissions.CATEGORY_ACCESS) || checkPermission(Permissions.ITEM_ACCESS)">
-                <h4 v-permission="Permissions.CATEGORY_ACCESS" class="column-heading">{{
-                  t('warehouse_subnav.category.categories') }}</h4>
+              <div class="column is-4" v-if="checkPermission(Permissions.CATEGORY_CREATE) ||
+                checkPermission(Permissions.CATEGORY_LIST) ||
+                checkPermission(Permissions.ITEM_CREATE) ||
+                checkPermission(Permissions.ITEM_LIST)">
+                <h4 class="column-heading">{{
+                  t('warehouse_subnav.categories_and_items') }}</h4>
                 <ul>
-                  <li v-permission="Permissions.CATEGORY_LIST">
-                    <RouterLink to="/category">
-                      <i class="lnir lnir-briefcase" aria-hidden="true"></i>
-                      <span>{{ t('warehouse_subnav.category.categories') }}</span>
-                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
-                    </RouterLink>
-                  </li>
                   <li v-permission="Permissions.CATEGORY_CREATE">
                     <RouterLink to="/category/add">
                       <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
@@ -40,14 +35,10 @@ const { t, locale } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul><br v-permission="Permissions.CATEGORY_ACCESS" />
-                <h4 v-permission="Permissions.ITEM_ACCESS" class="column-heading">{{ t('warehouse_subnav.item.items') }}
-                </h4>
-                <ul>
-                  <li v-permission="Permissions.ITEM_LIST">
-                    <RouterLink to="/item">
-                      <i class="lnir lnir-diamond-alt" aria-hidden="true"></i>
-                      <span>{{ t('warehouse_subnav.item.items') }}</span>
+                  <li v-permission="Permissions.CATEGORY_LIST">
+                    <RouterLink to="/category">
+                      <i class="lnir lnir-briefcase" aria-hidden="true"></i>
+                      <span>{{ t('warehouse_subnav.category.categories') }}</span>
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
@@ -58,10 +49,17 @@ const { t, locale } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
+                  <li v-permission="Permissions.ITEM_LIST">
+                    <RouterLink to="/item">
+                      <i class="lnir lnir-diamond-alt" aria-hidden="true"></i>
+                      <span>{{ t('warehouse_subnav.item.items') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
                 </ul>
               </div>
               <div class="column is-4" v-if="checkPermission(Permissions.INVENTORY_ITEM_CREATE)">
-                <h4 v-permission="Permissions.INVENTORY_ITEM_CREATE" class="column-heading">{{
+                <h4 class="column-heading">{{
                   t('warehouse_subnav.quantity.quantity') }}</h4>
                 <ul>
                   <li v-permission="Permissions.INVENTORY_ITEM_CREATE">
@@ -101,9 +99,9 @@ const { t, locale } = useI18n()
                 </ul>
               </div>
               <div class="column is-4"
-                v-if="checkPermission(Permissions.INVENTORY_ACCESS) || checkPermission(Permissions.INVENTORY_ITEM_HISTORY_ACCESS)">
-                <h4 v-permission="Permissions.INVENTORY_ACCESS" class="column-heading">{{
-                  t('warehouse_subnav.inventory.inventory') }}</h4>
+                v-if="checkPermission(Permissions.INVENTORY_LIST) || checkPermission(Permissions.INVENTORY_ITEM_HISTORY_LIST)">
+                <h4 class="column-heading">{{
+                  t('warehouse_subnav.inventory.inventories') }}</h4>
                 <ul>
                   <li v-permission="Permissions.INVENTORY_LIST">
                     <RouterLink to="/inventory">
@@ -112,10 +110,6 @@ const { t, locale } = useI18n()
                       <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
                     </RouterLink>
                   </li>
-                </ul><br />
-                <h4 v-permission="Permissions.INVENTORY_ITEM_HISTORY_ACCESS" class="column-heading">
-                  {{ t('warehouse_subnav.inventory_item_history.inventory_item_history') }}</h4>
-                <ul>
                   <li v-permission="Permissions.INVENTORY_ITEM_HISTORY_LIST">
                     <RouterLink to="/list-inventory-movement">
                       <i class="lnir lnir-reload-alt" aria-hidden="true"></i>

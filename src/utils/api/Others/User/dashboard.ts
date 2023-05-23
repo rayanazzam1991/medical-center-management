@@ -40,3 +40,10 @@ export async function getReceptionistDashboadApi(
 
     return { response }
 }
+export async function getCashierDashboadApi(
+    api: AxiosInstance,
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`dashboard/getCashierDashboard`)
+
+    return { response }
+}

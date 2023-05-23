@@ -275,7 +275,7 @@ const calcCurrencyDifferences = debounce(() => {
     const account = accountsListDropDown.value.find((account) => account.id == entry.account_id) ?? defaultAccount
     if (!account?.currency?.is_main) {
       if (entry.credit_amount) {
-        if (account.chart_account?.account_type == AccountConsts.DEBIT_TYPE) {
+        if (account.chart_account?.account_type == AccountConsts.DEBIT_TYPE) {  
           entry.difference_amount = entry.credit_amount - (entry.credit_amount * account.currency_rate / currencyRate.value)
           totalCreditCurrenciesDifferenceAmount.value += entry.difference_amount
         } else {
