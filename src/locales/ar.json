@@ -401,6 +401,9 @@
         "count_must_be_integer_positive": "حقل عدد النتائج يجب أن يكون رقم صحيح أكبر أو يساوي الصفر"
       }
     },
+    "info": {
+      "currency_rate_is_set_to_1": "حساب الزبون وحساب النقد بعملة الدينار العراقي تم تحديد قيمة سعر الصرف (1)"
+    },
     "file": {
       "type": "الرجاء اختيار نمط ملف مقبول",
       "size": "لا يجب ان يتجاوز حجم الملف ال 2 ميغا",
@@ -2549,6 +2552,13 @@
       "add_new_service": "إضافة خدمة جديدة",
       "provider_available": "المخدم متواجد حالياً",
       "provider_not_available": "المخدم غير متواجد حالياً",
+      "provider": "المخدم",
+      "service": "الخدمة",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "select_account": "اختيار الحساب",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
@@ -2598,13 +2608,18 @@
       "currency_rate": "سعر الصرف",
       "currency": "العملة",
       "paid_amount": "المبلغ المدفوع",
-      "remaining_amount": "المبلغ المتبقي",
+      "remaining_amount": "المبلغ المتبقي (دينار عراقي)",
       "created_at": "تاريخ الإنشاء ",
       "created_by": " بواسطة",
       "view_current_service_card": "عرض بطاقة الدور الحالي",
       "current_service_card_modal": "بطاقة الدور الحالي",
       "turn_number": "الدور : ",
       "date_time": "تاريخ ووقت الانشاء",
+      "close_time": "تاريخ ووقت الإغلاق",
+      "iqd_paid_amount": "المبلغ المدفوع (دينار عراقي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "usd_paid_amount": "المبلغ المدفوع (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
       "current_services": {
         "columns": {
           "service_name": "الخدمة",
