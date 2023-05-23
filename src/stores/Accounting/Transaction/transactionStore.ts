@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { useApi } from "/@src/composable/useApi";
-import { ClientsCashReceiptsSearchFilter, CreateRecords, SuppliersCashReceiptsSearchFilter, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record";
-import { createRecordsApi, getClientsCashReceiptsListApi, getSuppliersCashReceiptsListApi, getTransactionsListApi } from "/@src/utils/api/Accounting/Transaction/transaction";
+import { ClientsCashReceiptsSearchFilter, CreateRecords, ResetCashAccountsListSearchFilter, SuppliersCashReceiptsSearchFilter, Transaction, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record";
+import { createRecordsApi, getClientsCashReceiptsListApi, getResetCashAccountsListApi, getSuppliersCashReceiptsListApi, getTransactionsListApi } from "/@src/utils/api/Accounting/Transaction/transaction";
 import { defaultPagination, Pagination } from "/@src/utils/response";
 import sleep from "/@src/utils/sleep";
 
@@ -12,6 +12,7 @@ export const useTransaction = defineStore('transaction', () => {
     const success = ref<boolean>()
     const error_code = ref<string>()
     const message = ref<string>()
+    const resetCashAccountTransactions = ref<Transaction[]>([])
     const pagination = ref<Pagination>(defaultPagination)
     async function createRecords(records: CreateRecords) {
         if (loading.value) return
@@ -72,27 +73,47 @@ export const useTransaction = defineStore('transaction', () => {
         } finally {
             loading.value = false
         }
-  }
-  async function getSuppliersCashReceiptsListStore(searchFilter: SuppliersCashReceiptsSearchFilter) {
-    if (loading.value) return
-    loading.value = true
-    sleep(1000)
-    try {
-        const response = await getSuppliersCashReceiptsListApi(api, searchFilter)
-        pagination.value = response.response.pagination
-        success.value = response.response.success
-        error_code.value = response.response.error_code
-        message.value = response.response.message
-        return response.response.data
-    } catch (error: any) {
-        success.value = error?.response.data.success
-        error_code.value = error?.response.data.error_code
-        message.value = error?.response.data.message
-
-    } finally {
-        loading.value = false
     }
-}
+    async function getSuppliersCashReceiptsListStore(searchFilter: SuppliersCashReceiptsSearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        sleep(1000)
+        try {
+            const response = await getSuppliersCashReceiptsListApi(api, searchFilter)
+            pagination.value = response.response.pagination
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+            return response.response.data
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        } finally {
+            loading.value = false
+        }
+    }
+    async function getResetCashAccountsListStore(searchFilter: ResetCashAccountsListSearchFilter) {
+        if (loading.value) return
+        loading.value = true
+        sleep(1000)
+        try {
+            const response = await getResetCashAccountsListApi(api, searchFilter)
+            pagination.value = response.response.pagination
+            success.value = response.response.success
+            error_code.value = response.response.error_code
+            message.value = response.response.message
+            resetCashAccountTransactions.value = response.response.data
+        } catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+
+        } finally {
+            loading.value = false
+        }
+    }
 
 
     return {
@@ -101,10 +122,12 @@ export const useTransaction = defineStore('transaction', () => {
         error_code,
         message,
         pagination,
+        resetCashAccountTransactions,
         createRecords,
         getTransactionsListStore,
-      getClientsCashReceiptsListStore,
-      getSuppliersCashReceiptsListStore
+        getClientsCashReceiptsListStore,
+        getSuppliersCashReceiptsListStore,
+        getResetCashAccountsListStore
     } as const
 })
 

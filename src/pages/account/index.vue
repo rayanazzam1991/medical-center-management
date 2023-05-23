@@ -175,8 +175,6 @@ const updateAccountStatus = async () => {
     accountChangeStatus.value.status = newStatus.value
   } else {
     await sleep(200);
-    // @ts-ignore
-
     notif.error(message)
   }
   changeStatusPopup.value = false
@@ -197,7 +195,6 @@ const popUpTrigger = (value: boolean) => {
 const cashAccountPostReset = async () => {
   resetCashAccountPopup.value = false
   await search(searchFilter.value)
-
 }
 const columns = {
 
@@ -301,7 +298,7 @@ const columns = {
         changeCurrencyPermission: Permissions.ACCOUNT_EDIT,
         changeStatusPermission: Permissions.ACCOUNT_EDIT,
         isCashierCash: row.is_cashier_cash_account,
-        cashResetPermission: Permissions.ACCOUNT_EDIT,
+        cashResetPermission: Permissions.CASH_ACCOUNT_RESET,
         onChangeCurrency: () => {
           selectedAccount.value = row
           changeAccountCurrencyPopup.value = true

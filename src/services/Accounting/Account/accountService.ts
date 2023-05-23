@@ -116,6 +116,15 @@ export async function getCashierAccountsByAccountId(accountId: number) {
     const message: string = accountResponse.message ?? ''
     return { success, error_code, message, cashier_accounts }
 }
+export async function getCashierAccountsByCashierId(cashierId: number) {
+    const accountResponse = useAccount()
+    await accountResponse.getCashierAccountsByCashierIdStore(cashierId)
+    const cashier_accounts = accountResponse.cashierAccounts
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, cashier_accounts }
+}
 export async function resetCashAccounts(data: ResetCashAccountsData) {
     const accountResponse = useAccount()
     await accountResponse.resetCashAccountsStore(data)

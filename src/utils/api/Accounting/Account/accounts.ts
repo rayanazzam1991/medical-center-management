@@ -74,6 +74,13 @@ export async function getCashierAccountsByAccountIdApi(
   const { data: response, headers } = await api.get(`account/getCashierAccountsByAccountId/${account_id}`)
   return { response }
 }
+export async function getCashierAccountsByCashierIdApi(
+  api: AxiosInstance,
+  cashier_id: number
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`account/getCashierAccountsByCashierId/${cashier_id}`)
+  return { response }
+}
 export async function resetCashAccountsApi(
   api: AxiosInstance,
   data: ResetCashAccountsData

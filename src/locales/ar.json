@@ -2217,7 +2217,7 @@
     },
     "reset_cash_account_modal": {
       "title": "تصفير حسابات أمين الصندوق",
-      "cashier_name": "اسم أمين الصندوق",
+      "cashier_name": "أمين الصندوق",
       "balance": "الرصيد",
       "iqd_cash_account": "الى حساب (دينار عراقي)",
       "usd_cash_account": "الى حساب (دولار أمريكي)",
@@ -2225,7 +2225,8 @@
       "date": "التاريخ",
       "note": "ملاحظات",
       "iqd": "دينار عراقي",
-      "usd": "دولار أمريكي"
+      "usd": "دولار أمريكي",
+      "select_cashier": "اختيار أمين الصندوق"
     }
   },
   "trial_balance_report": {
@@ -3055,7 +3056,8 @@
       "total_amount": "المجموع",
       "more_since_last_day": "أكثر من اليوم السابق",
       "less_since_last_day": "أقل من اليوم السابق",
-      "roles": "عدد مستخدميّ الأدوار"
+      "roles": "عدد مستخدميّ الأدوار",
+      "reset_cash": "تصفير حساب نقد"
     },
     "accountant": {
       "supplier_cash_receipt": "إضافة إيصال نقدي لمورد/موظف",
@@ -3063,6 +3065,7 @@
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
       "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم",
       "confirm_ticket_payment": "تأكيد الدفع لتذكرة",
+      "reset_cash": "تصفير حساب نقد",
       "scan_barcode_helper": "يرجى مسح الباركود الموجود على إيصال التذكرة للانتقال إلى صفحة تأكيد دفع التذكرة"
     },
     "receptionist": {
@@ -3191,6 +3194,29 @@
       "provider": "المخدم",
       "is_available": " متواجد ",
       "is_not_available": "غير متواجد"
+    }
+  },
+  "reset_cash_accounts": {
+    "table": {
+      "title": "عمليات تصفير الحسابات",
+      "columns": {
+        "cashier": "أمين الصندوق",
+        "amount": "المبلغ",
+        "currency": "العملة",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "target_account": "إلى حساب"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية عمليات تصفير الحسابات",
+      "cashier_name": "اسم أمين الصندوق...",
+      "target_cash_account_id": "إلى حساب",
+      "action_date": "تاريخ الإجراء",
+      "from": "من: ",
+      "to": ":إلى "
     }
   }
 }

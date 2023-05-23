@@ -4,9 +4,9 @@ import { CurrencyConsts } from "/@src/models/Accounting/Currency/currency"
 import { AccountConsts, Account } from "/@src/models/Accounting/Account/account"
 import { ChartOfAccountConsts } from "/@src/models/Accounting/ChartOfAccount/chartOfAccount"
 import { addParenthesisToString } from "/@src/composable/helpers/stringHelpers"
-import { Employee } from "/@src/models/Employee/employee"
+import { Employee, defaultEmployee } from "/@src/models/Employee/employee"
 import { resetResetCashAccountsData } from "/@src/services/Accounting/Account/accountService"
-import { resetCashAccounts } from "/@src/services/Accounting/Account/accountService"
+import { resetCashAccounts, getCashierAccountsByCashierId } from "/@src/services/Accounting/Account/accountService"
 import { useNotyf } from "/@src/composable/useNotyf"
 import { Notyf } from "notyf"
 
@@ -24,6 +24,12 @@ export default defineComponent({
         usdCashAccounts: {
             default: [] as Account[],
         },
+        inDashboard: {
+            default: false,
+        },
+        cashiersList: {
+            default: [] as Employee[]
+        }
 
 
     },
@@ -31,26 +37,34 @@ export default defineComponent({
 
     setup(props, context) {
         const notif = useNotyf() as Notyf
-        const cashAccounts = props.cashAccounts
-        const accountContact = cashAccounts[0]?.contact as Employee
-        const resetCashAccountsData = ref(resetResetCashAccountsData())
-        const IQDcashAccountsList = props.iqdCashAccounts
-        const USDcashAccountsList = props.usdCashAccounts
-        resetCashAccountsData.value.iqd_source_account_id = cashAccounts.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.id
-        resetCashAccountsData.value.usd_source_account_id = cashAccounts.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.id
-        const usdAccountBalance = cashAccounts.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.balance
-        const iqdAccountBalance = cashAccounts.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.balance
         const IQDcashAccountsListFiltered = ref<Account[]>([])
         const USDcashAccountsListFiltered = ref<Account[]>([])
-        onMounted(() => {
-            IQDcashAccountsListFiltered.value = IQDcashAccountsList.filter(account => {
+        const IQDcashAccountsList = ref<Account[]>([])
+        const USDcashAccountsList = ref<Account[]>([])
+        const accountContact = ref<Employee>(defaultEmployee)
+        const resetCashAccountsData = ref(resetResetCashAccountsData())
+        const usdAccountBalance = ref('')
+        const iqdAccountBalance = ref('')
+        const loading = ref({ fetch: false, submit: false })
+        const cashAccounts = ref<Account[]>([])
+        IQDcashAccountsList.value = props.iqdCashAccounts
+        USDcashAccountsList.value = props.usdCashAccounts
+        const cashiersList = props.cashiersList
+        if (!props.inDashboard) {
+            cashAccounts.value = props.cashAccounts
+            accountContact.value = cashAccounts.value[0]?.contact as Employee
+            resetCashAccountsData.value.iqd_source_account_id = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.id
+            resetCashAccountsData.value.usd_source_account_id = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.id
+            usdAccountBalance.value = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.balance ?? ''
+            iqdAccountBalance.value = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.balance ?? ''
+            IQDcashAccountsListFiltered.value = IQDcashAccountsList.value.filter(account => {
                 return account.id !== resetCashAccountsData.value.iqd_source_account_id
             })
-            USDcashAccountsListFiltered.value = USDcashAccountsList.filter(account => {
+            USDcashAccountsListFiltered.value = USDcashAccountsList.value.filter(account => {
                 return account.id !== resetCashAccountsData.value.usd_source_account_id
             })
-        })
 
+        }
         const { t } = useI18n()
         let openModal = computed({
             get: () => props.openModal as boolean,
@@ -75,6 +89,7 @@ export default defineComponent({
                 notif.error({ message: t('toast.error.date_is_required'), duration: 3000 })
                 return
             }
+            loading.value.submit = true
             const { message, success } = await resetCashAccounts(resetCashAccountsData.value)
             if (success) {
                 notif.success(t('toast.success.reset'))
@@ -83,13 +98,38 @@ export default defineComponent({
             } else {
                 notif.error({ message: message, duration: 3000 })
             }
+            loading.value.submit = false
+
 
 
 
         }
+        watch(accountContact, async (value) => {
+            if (props.inDashboard && value && value.id != 0 && value.id) {
+                loading.value.fetch = true
+                const { cashier_accounts, message, success } = await getCashierAccountsByCashierId(value.id)
+                if (success) {
+                    cashAccounts.value = cashier_accounts
+                    resetCashAccountsData.value.iqd_source_account_id = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.id
+                    resetCashAccountsData.value.usd_source_account_id = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.id
+                    usdAccountBalance.value = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.USD_CODE)?.balance ?? ''
+                    iqdAccountBalance.value = cashAccounts.value.find((account) => account.chart_account?.code == ChartOfAccountConsts.CASH_CODE && account.currency?.code == CurrencyConsts.IQD_CODE)?.balance ?? ''
+                    IQDcashAccountsListFiltered.value = IQDcashAccountsList.value.filter(account => {
+                        return account.id !== resetCashAccountsData.value.iqd_source_account_id
+                    })
+                    USDcashAccountsListFiltered.value = USDcashAccountsList.value.filter(account => {
+                        return account.id !== resetCashAccountsData.value.usd_source_account_id
+                    })
+                } else {
+                    notif.error(message)
+                }
+                loading.value.fetch = false
+            }
+        })
+
         return {
             t, cashAccounts, openModal, AccountConsts, CurrencyConsts, accountContact, usdAccountBalance, iqdAccountBalance, resetCashAccountsData, USDcashAccountsListFiltered, IQDcashAccountsListFiltered,
-            resetAccounts, addParenthesisToString
+            resetAccounts, addParenthesisToString, cashiersList, loading, defaultEmployee
         }
     },
 })
@@ -104,7 +144,7 @@ export default defineComponent({
         @close="openModal = false" :cancel-label="t('transaction.table.entries.cancel_label')">
         <template #content>
             <div class="columns is-multiline p-2">
-                <div class="column is-12">
+                <div v-if="!$props.inDashboard" class="column is-12">
                     <p> {{ t('account.reset_cash_account_modal.cashier_name') }} :
                         <span class="has-text-primary">
                             {{ accountContact?.user.first_name }}
@@ -112,90 +152,119 @@ export default defineComponent({
                         </span>
                     </p>
                 </div>
-                <div class="column is-12 columns p-0 m-0 py-2">
-                    <div class="column is-6 columns is-multiline m-0 p-0 my-2 split-border">
-                        <div class="column is-12">
-                            <p> {{ t('account.reset_cash_account_modal.balance') }} :
-                                <span class="has-text-primary">
-                                    {{ iqdAccountBalance }}
-                                </span>
-                                {{ addParenthesisToString(t('account.reset_cash_account_modal.iqd')) }}
-
-                            </p>
-                        </div>
-                        <div class="column is-12">
-                            <VField>
-                                <VLabel>{{ t('account.reset_cash_account_modal.iqd_cash_account') }}
-                                </VLabel>
-                                <VControl>
-                                    <VSelect v-model="resetCashAccountsData.iqd_target_account_id">
-                                        <VOption value=""> {{ t('account.reset_cash_account_modal.select_account')
-                                        }}</VOption>
-                                        <VOption v-for="account in IQDcashAccountsListFiltered" :value="account.id">
-                                            {{ account.code }} - {{ account.name }}
-                                        </VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                        </div>
-                    </div>
-                    <div class="column is-6 columns is-multiline m-0 p-0 my-2">
-                        <div class="column is-12">
-                            <p> {{ t('account.reset_cash_account_modal.balance') }} :
-                                <span class="has-text-primary">
-                                    {{ usdAccountBalance }}
-                                </span>
-                                {{ addParenthesisToString(t('account.reset_cash_account_modal.usd')) }}
-
-                            </p>
-                        </div>
-                        <div class="column is-12">
-                            <VField id="usd_cash_account">
-                                <VLabel>{{ t('account.reset_cash_account_modal.usd_cash_account') }}
-                                </VLabel>
-                                <VControl>
-                                    <VSelect v-model="resetCashAccountsData.usd_target_account_id">
-                                        <VOption value=""> {{ t('account.reset_cash_account_modal.select_account')
-                                        }}</VOption>
-                                        <VOption v-for="account in USDcashAccountsListFiltered" :value="account.id">
-                                            {{ account.code }} - {{ account.name }}
-                                        </VOption>
-                                    </VSelect>
-                                </VControl>
-                            </VField>
-                        </div>
-                    </div>
-                </div>
-                <div class="column is-12">
+                <div v-else class="column is-12">
                     <VField>
-                        <VLabel class="required">{{ t('account.reset_cash_account_modal.date') }}
+                        <VLabel class="required">{{ t('account.reset_cash_account_modal.cashier_name') }}
                         </VLabel>
                         <VControl>
-                            <VInput v-model="resetCashAccountsData.date" type="date" />
+                            <VSelect v-model="accountContact">
+                                <VOption :value="defaultEmployee"> {{ t('account.reset_cash_account_modal.select_cashier')
+                                }}</VOption>
+                                <VOption v-for="cashier in cashiersList" :value="cashier">
+                                    {{ cashier.user.first_name }} {{ cashier.user.last_name }}
+                                </VOption>
+                            </VSelect>
                         </VControl>
                     </VField>
                 </div>
                 <div class="column is-12">
-                    <VField>
-                        <VLabel>{{ t('account.reset_cash_account_modal.note') }}
-                        </VLabel>
-                        <VControl>
-                            <VTextarea v-model="resetCashAccountsData.note" rows="2" class="is-primary-focus"
-                                :placeholder="t('account.reset_cash_account_modal.note')">
-                            </VTextarea>
-                        </VControl>
-                    </VField>
+                    <VLoader :hidden="!loading.fetch" size="xl" :active="loading.fetch">
+                        <div class="load">
+                        </div>
+                    </VLoader>
                 </div>
 
+                <div v-if="accountContact && accountContact?.id != 0 && !loading.fetch">
+                    <div class="column is-12 columns p-0 m-0 py-2">
+                        <div class="column is-6 columns is-multiline m-0 p-0 my-2 split-border">
+                            <div class="column is-12">
+                                <p> {{ t('account.reset_cash_account_modal.balance') }} :
+                                    <span class="has-text-primary">
+                                        {{ iqdAccountBalance }}
+                                    </span>
+                                    {{ addParenthesisToString(t('account.reset_cash_account_modal.iqd')) }}
+
+                                </p>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>{{ t('account.reset_cash_account_modal.iqd_cash_account') }}
+                                    </VLabel>
+                                    <VControl>
+                                        <VSelect v-model="resetCashAccountsData.iqd_target_account_id">
+                                            <VOption value=""> {{ t('account.reset_cash_account_modal.select_account')
+                                            }}</VOption>
+                                            <VOption v-for="account in IQDcashAccountsListFiltered" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
+                                            </VOption>
+                                        </VSelect>
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                        <div class="column is-6 columns is-multiline m-0 p-0 my-2">
+                            <div class="column is-12">
+                                <p> {{ t('account.reset_cash_account_modal.balance') }} :
+                                    <span class="has-text-primary">
+                                        {{ usdAccountBalance }}
+                                    </span>
+                                    {{ addParenthesisToString(t('account.reset_cash_account_modal.usd')) }}
+
+                                </p>
+                            </div>
+                            <div class="column is-12">
+                                <VField>
+                                    <VLabel>{{ t('account.reset_cash_account_modal.usd_cash_account') }}
+                                    </VLabel>
+                                    <VControl>
+                                        <VSelect v-model="resetCashAccountsData.usd_target_account_id">
+                                            <VOption value=""> {{ t('account.reset_cash_account_modal.select_account')
+                                            }}</VOption>
+                                            <VOption v-for="account in USDcashAccountsListFiltered" :value="account.id">
+                                                {{ account.code }} - {{ account.name }}
+                                            </VOption>
+                                        </VSelect>
+                                    </VControl>
+                                </VField>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-12">
+                        <VField>
+                            <VLabel class="required">{{ t('account.reset_cash_account_modal.date') }}
+                            </VLabel>
+                            <VControl>
+                                <VInput v-model="resetCashAccountsData.date" type="date" />
+                            </VControl>
+                        </VField>
+                    </div>
+                    <div class="column is-12">
+                        <VField>
+                            <VLabel>{{ t('account.reset_cash_account_modal.note') }}
+                            </VLabel>
+                            <VControl>
+                                <VTextarea v-model="resetCashAccountsData.note" rows="2" class="is-primary-focus"
+                                    :placeholder="t('account.reset_cash_account_modal.note')">
+                                </VTextarea>
+                            </VControl>
+                        </VField>
+                    </div>
+                </div>
             </div>
         </template>
         <template #action="{ close }">
-            <VButton color="primary" raised @click="resetAccounts">{{ t('modal.buttons.confirm') }}</VButton>
+            <VButton :disabled="!(accountContact && accountContact?.id != 0 && !loading.fetch)" color="primary" raised
+                :loading="loading.submit" @click="resetAccounts">{{ t('modal.buttons.confirm') }}</VButton>
         </template>
 
     </VModal>
 </template>
 <style  scoped lang="scss">
+.load {
+    height: 400px;
+    width: 500px;
+}
+
 .split-border {
     border-left: 1px solid var(--fade-grey-dark-3);
 }
