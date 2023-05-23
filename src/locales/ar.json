@@ -326,7 +326,8 @@
       "update_ticket": "تم تعديل التذكرة رقم {ticket_id} بنجاح",
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
-      "dismiss": "تمت عملية إقالة الموظف بنجاح"
+      "dismiss": "تمت عملية إقالة الموظف بنجاح",
+      "reset": "تمت عملية تصفير الحسابات بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -336,6 +337,8 @@
       "cannot_access_waiting_list": "لا يمكنك الوصول لمعومات هذه الصفحة",
       "please_select_at_least_iqd_or_usd": "يرجى اضافة مبلغ واحد على الأقل (دينار عراقي أو/و دولار أمريكي) ",
       "please_select_cash_account": "يرجى تحديد حساب النقد",
+      "please_select_target_cash_account": "يرجى تحديد حساب نقد واحد على الأقل",
+      "date_is_required": "حقل التاريخ مطلوب",
       "Attendance": {
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
@@ -2196,7 +2199,8 @@
     },
     "drop_down": {
       "change_currency": "تغيير عملة الحساب",
-      "change_status": "تغيير الحالة"
+      "change_status": "تغيير الحالة",
+      "reset_cash": "تصفير الحساب"
     },
     "cash": {
       "form": {
@@ -2207,6 +2211,18 @@
     "model": {
       "title": " حالة الحساب",
       "status": "تغيير حالة الحساب"
+    },
+    "reset_cash_account_modal": {
+      "title": "تصفير حسابات أمين الصندوق",
+      "cashier_name": "اسم أمين الصندوق",
+      "balance": "الرصيد",
+      "iqd_cash_account": "الى حساب (دينار عراقي)",
+      "usd_cash_account": "الى حساب (دولار أمريكي)",
+      "select_account": "اختيار الحساب",
+      "date": "التاريخ",
+      "note": "ملاحظات",
+      "iqd": "دينار عراقي",
+      "usd": "دولار أمريكي"
     }
   },
   "trial_balance_report": {

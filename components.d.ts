@@ -190,6 +190,7 @@ declare module '@vue/runtime-core' {
     ReminderTable: typeof import('./src/components/OurComponents/Sales/Reminder/ReminderTable.vue')['default']
     ReminderTableHeader: typeof import('./src/components/OurComponents/Sales/Reminder/ReminderTableHeader.vue')['default']
     ReportingSubnav: typeof import('./src/layouts/navbar-items/ReportingSubnav.vue')['default']
+    ResetCashAccountsModal: typeof import('./src/components/OurComponents/Accounting/Account/ResetCashAccountsModal.vue')['default']
     RoleDetails: typeof import('./src/components/OurComponents/Others/Role/RoleDetails.vue')['default']
     RoleForm: typeof import('./src/components/OurComponents/Others/Role/RoleForm.vue')['default']
     RoleHeader: typeof import('./src/components/OurComponents/Others/Role/RoleHeader.vue')['default']
