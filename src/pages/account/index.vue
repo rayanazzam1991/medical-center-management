@@ -18,14 +18,15 @@ import VTag from '/@src/components/base/tags/VTag.vue'
 import AccountDropDown from '/@src/components/OurComponents/Accounting/Account/AccountDropDown.vue'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Account, AccountConsts, AccountSearchFilter, defaultAccount, defaultAccountSearchFilter, UpdateAccountCurrency, ChangeAccountStatus } from '/@src/models/Accounting/Account/account'
-import { Currency, defaultCurrency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
-import { changeAccountStatus, getAccountsList, updateAccountCurrency } from '/@src/services/Accounting/Account/accountService'
+import { Currency, CurrencyConsts, defaultCurrency, defaultCurrencySearchFilter } from '/@src/models/Accounting/Currency/currency'
+import { changeAccountStatus, getAccountsList, updateAccountCurrency, getCashierAccountsByAccountId } from '/@src/services/Accounting/Account/accountService'
 import { getCurrenciesList } from '/@src/services/Accounting/Currency/currencyService'
 import { useAccount } from '/@src/stores/Accounting/Account/accountStore'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 import { defaultPagination } from '/@src/utils/response'
 import sleep from '/@src/utils/sleep'
 import { Permissions } from '/@src/utils/consts/rolesPermissions'
+import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount'
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('account.table.title'))
@@ -42,6 +43,7 @@ const accountsList = ref<Array<Account>>([])
 const currenciesList = ref<Array<Currency>>([])
 const paginationVar = ref(defaultPagination)
 const keyIncrement = ref(0)
+const keyIncrementResetCashAccounts = ref(0)
 const changeCurrencyKeyIncrement = ref(0)
 const changeAccountCurrencyPopup = ref(false)
 const selectedAccount = ref<Account>(defaultAccount)
@@ -49,8 +51,14 @@ const selectedAccountCurrency = ref<Currency>(defaultCurrency)
 const selectedCurrencyRate = ref<number>(1)
 const enableCurrencyRate = ref(false)
 const default_per_page = ref(1)
-
+const selectedResetCashAccountId = ref(0)
+const resetCashAccountPopup = ref(false)
+const resetCashAccounts = ref<Array<Account>>([])
+const IQDcashAccountsList = ref<Account[]>([])
+const USDcashAccountsList = ref<Account[]>([])
+const loading = ref(false)
 onMounted(async () => {
+  loading.value = true
   const { accounts, pagination } = await getAccountsList(searchFilter.value)
   accountsList.value = accounts
   paginationVar.value = pagination
@@ -58,10 +66,25 @@ onMounted(async () => {
   default_per_page.value = pagination.per_page
   const { currencies } = await getCurrenciesList(defaultCurrencySearchFilter)
   currenciesList.value = currencies
-
-
+  await getAllAccounts()
+  loading.value = false
 });
+const getAllAccounts = async () => {
+  let accountSearchFilter = {} as AccountSearchFilter
+  accountSearchFilter.status = AccountConsts.ACTIVE
+  accountSearchFilter.per_page = 5000
+  const { accounts } = await getAccountsList(accountSearchFilter)
+  accounts.forEach((account) => {
+    if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
+      if (account.currency?.code == CurrencyConsts.IQD_CODE) {
+        IQDcashAccountsList.value.push(account)
+      } else {
+        USDcashAccountsList.value.push(account)
+      }
+    }
+  });
 
+}
 
 const search = async (searchFilter2: AccountSearchFilter) => {
   paginationVar.value.per_page = searchFilter2.per_page ?? paginationVar.value.per_page
@@ -152,13 +175,27 @@ const updateAccountStatus = async () => {
     accountChangeStatus.value.status = newStatus.value
   } else {
     await sleep(200);
-    // @ts-ignore
-
     notif.error(message)
   }
   changeStatusPopup.value = false
 }
-
+const resetCashAccountSetup = async () => {
+  const { cashier_accounts, success, message } = await getCashierAccountsByAccountId(selectedResetCashAccountId.value)
+  if (success) {
+    resetCashAccounts.value = cashier_accounts
+    keyIncrementResetCashAccounts.value++
+    resetCashAccountPopup.value = true
+  } else {
+    notif.error(message)
+  }
+}
+const popUpTrigger = (value: boolean) => {
+  resetCashAccountPopup.value = value
+}
+const cashAccountPostReset = async () => {
+  resetCashAccountPopup.value = false
+  await search(searchFilter.value)
+}
 const columns = {
 
   code: {
@@ -260,6 +297,8 @@ const columns = {
       h(AccountDropDown, {
         changeCurrencyPermission: Permissions.ACCOUNT_EDIT,
         changeStatusPermission: Permissions.ACCOUNT_EDIT,
+        isCashierCash: row.is_cashier_cash_account,
+        cashResetPermission: Permissions.CASH_ACCOUNT_RESET,
         onChangeCurrency: () => {
           selectedAccount.value = row
           changeAccountCurrencyPopup.value = true
@@ -271,6 +310,10 @@ const columns = {
           accountChangeStatus.value = row
           newStatus.value = row.status
           changeStatusPopup.value = true
+        },
+        onResetCash: async () => {
+          selectedResetCashAccountId.value = row.id ?? 0
+          await resetCashAccountSetup()
         }
 
       }),
@@ -290,7 +333,7 @@ const columns = {
 
     <VFlexTable separators clickable>
       <template #body>
-        <div v-if="accountStore?.loading" class="flex-list-inner">
+        <div v-if="accountStore?.loading || loading" class="flex-list-inner">
           <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
             <VFlexTableCell>
               <VPlaceload />
@@ -309,7 +352,7 @@ const columns = {
     <VFlexPagination v-if="(accountsList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getAccountsPerPage" />
-    <h6 class="pt-2 is-size-7" v-if="accountsList.length != 0 && !accountStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="accountsList.length != 0 && !accountStore?.loading && !loading">
       {{
         t('tables.pagination_footer', {
           from_number: paginationVar.page !=
@@ -322,7 +365,7 @@ const columns = {
             paginationVar.page *
             paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
         }) }}</h6>
-    <VPlaceloadText v-if="accountStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
+    <VPlaceloadText v-if="accountStore?.loading || loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
   <VModal :key="changeCurrencyKeyIncrement" :title="t('account.table.change_currency.title')"
@@ -392,5 +435,8 @@ const columns = {
         t('modal.buttons.confirm') }}</VButton>
     </template>
   </VModal>
+  <ResetCashAccountsModal :key="keyIncrementResetCashAccounts" :openModal="resetCashAccountPopup"
+    @reseted="cashAccountPostReset" :iqd-cash-accounts="IQDcashAccountsList" :usd-cash-accounts="USDcashAccountsList"
+    @openModal="popUpTrigger" :cash-accounts="resetCashAccounts" />
 </template>
 

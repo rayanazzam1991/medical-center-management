@@ -17,6 +17,10 @@ export interface AccountContact {
     account: Account
     is_expense_account: boolean
 }
+export interface GetAccountIdByContactIdRequestData {
+    contact_id: number
+    contact_type: 'Customer' | 'Employee' | 'Supplier'
+}
 
 export const defaultAccountContact: AccountContact = {
     id: 0,

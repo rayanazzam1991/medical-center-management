@@ -41,7 +41,7 @@ export interface ClientsCashReceiptsSearchFilter {
   customer_id?: number
   client_name?: string
   note?: string
-  isOnDay?:boolean | number
+  isOnDay?: boolean | number
   currency_id?: number
   cash_account_id?: number
   page?: number
@@ -53,9 +53,19 @@ export interface SuppliersCashReceiptsSearchFilter {
   employee_id?: number
   supplier_name?: string
   note?: string
-  isOnDay?:boolean |number
+  isOnDay?: boolean | number
   currency_id?: number
   cash_account_id?: number
+  page?: number
+  per_page?: number
+  order_by?: string
+  order?: string
+}
+export interface ResetCashAccountsListSearchFilter {
+  date_from?: string
+  date_to?: string
+  cashier_name?: string
+  target_cash_account_id?: string
   page?: number
   per_page?: number
   order_by?: string
@@ -64,7 +74,8 @@ export interface SuppliersCashReceiptsSearchFilter {
 
 export const defaultTransactionSearchFilter: Partial<TransactionSearchFilter> = {}
 export const defaultClientsCashReceiptsSearchFilter: Partial<ClientsCashReceiptsSearchFilter> = {}
- export const defaultSuppliersCashReceiptsSearchFilter: Partial<SuppliersCashReceiptsSearchFilter> = {}
+export const defaultSuppliersCashReceiptsSearchFilter: Partial<SuppliersCashReceiptsSearchFilter> = {}
+export const defaultResetCashAccountsListSearchFilter: Partial<ResetCashAccountsListSearchFilter> = {}
 
 
 export const defaultTransaction: Transaction = {

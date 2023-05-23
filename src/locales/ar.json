@@ -253,6 +253,10 @@
     "confirm_payment_for_tickets": {
       "confirm_payment_for_tickets": "تأكيد عملية الدفع للتذاكر",
       "pending_tickets": "التذاكر المعلّقة"
+    },
+    "reset_cash_account": {
+      "reset_cash_account": "تصفير الحسابات",
+      "reset_cash_account_list": "عمليات تصفير الحسابات"
     }
   },
   "reporting_subnav": {
@@ -332,6 +336,7 @@
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
       "dismiss": "تمت عملية إقالة الموظف بنجاح",
+      "reset": "تمت عملية تصفير الحسابات بنجاح",
       "deactivate_reservation": "تم انهاء تفعيل الحجز بنجاح",
       "cancel_reservation": "تم الغاء الحجز بنجاح",
       "change_waiting_list_order": "تم تغيير الترتيب بنجاح"
@@ -343,6 +348,10 @@
       "password_dont_match_pattern": "كلمة المرور الجديدة يجب أن تتألف على الأقل من 8 محارف وتتضمن حرف واحد ورقم واحد على الأقل.",
       "phone_number_and_password_required": "يرجى إدخال معلومات تسجيل الدخول.",
       "cannot_access_waiting_list": "لا يمكنك الوصول لمعومات هذه الصفحة",
+      "please_select_at_least_iqd_or_usd": "يرجى اضافة مبلغ واحد على الأقل (دينار عراقي أو/و دولار أمريكي) ",
+      "please_select_cash_account": "يرجى تحديد حساب النقد",
+      "please_select_target_cash_account": "يرجى تحديد حساب نقد واحد على الأقل",
+      "date_is_required": "حقل التاريخ مطلوب",
       "Attendance": {
         "time": "لا يمكن أن يكون وقت البدء بعد وقت الانتهاء",
         "check_in": "لا يمكن أن يكون تسجيل الوصول الجديد بعد تسجيل الوصول الاصلي",
@@ -410,6 +419,9 @@
         "cancellation_reason_too_long": "سبب الالغاء يجب أن يكون أقل من 255 محرف",
         "reservations_delay_limit": "سماحية التأخير عن موعد الحجز يجب أن يكون أكبر أو يساوي الصفر"
       }
+    },
+    "info": {
+      "currency_rate_is_set_to_1": "حساب الزبون وحساب النقد بعملة الدينار العراقي تم تحديد قيمة سعر الصرف (1)"
     },
     "file": {
       "type": "الرجاء اختيار نمط ملف مقبول",
@@ -699,7 +711,8 @@
         "tickets": "التذاكر",
         "services": "الخدمات",
         "reminders": "قائمة التذكيرات",
-        "cash_receipts": "الإيصالات النقدية"
+        "cash_receipts": "الإيصالات النقدية",
+        "balances": "الأرصدة"
       },
       "main_details": "المعلومات الرئيسية",
       "name": "الاسم",
@@ -713,6 +726,7 @@
       "emergency_contact_phone": "اسم شخص للطوارئ",
       "address": "عنوان السكن",
       "is_completed": "منتهية",
+      "current_balance": "الرصيد الحالي : ",
       "status": "الحالة",
       "birth_date": "تاريخ الميلاد",
       "medical_info": "المعلومات الطبية",
@@ -2221,7 +2235,8 @@
     },
     "drop_down": {
       "change_currency": "تغيير عملة الحساب",
-      "change_status": "تغيير الحالة"
+      "change_status": "تغيير الحالة",
+      "reset_cash": "تصفير الحساب"
     },
     "cash": {
       "form": {
@@ -2232,6 +2247,19 @@
     "model": {
       "title": " حالة الحساب",
       "status": "تغيير حالة الحساب"
+    },
+    "reset_cash_account_modal": {
+      "title": "تصفير حسابات أمين الصندوق",
+      "cashier_name": "أمين الصندوق",
+      "balance": "الرصيد",
+      "iqd_cash_account": "الى حساب (دينار عراقي)",
+      "usd_cash_account": "الى حساب (دولار أمريكي)",
+      "select_account": "اختيار الحساب",
+      "date": "التاريخ",
+      "note": "ملاحظات",
+      "iqd": "دينار عراقي",
+      "usd": "دولار أمريكي",
+      "select_cashier": "اختيار أمين الصندوق"
     }
   },
   "trial_balance_report": {
@@ -2401,7 +2429,13 @@
       "select_currency": "اختيار العملة",
       "currency_rate": "سعر الصرف",
       "date": "التاريخ",
-      "note": "ملاحظات"
+      "note": "ملاحظات",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "iqd_currency_rate": "سعر الصرف",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "usd_currency_rate": "سعر الصرف"
     },
     "table": {
       "title": "الإيصالات النقدية للزبائن",
@@ -2416,7 +2450,12 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "account": "الحساب",
+        "cash_amount": "المبلغ",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "currency_difference": "فروقات العملة"
       }
     },
     "add_customer_cash_receipts_button": "إضافة إيصال نقدي لزبون",
@@ -2465,6 +2504,13 @@
         "action_date": "تاريخ الإجراء",
         "created_at": "تاريخ الإنشاء",
         "created_by": "بواسطة",
+        "supplier_name": "المورد",
+        "employee_name": "الموظف",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "cash_amount": "المبلغ",
+        "account": "الحساب",
+        "currency_difference": "فروقات العملة",
         "type": {
           "title": "النوع",
           "supplier": "مورد",
@@ -2473,6 +2519,7 @@
       }
     },
     "add_supplier_employee_cash_receipts_button": "إضافة إيصال نقدي لمورد / موظف ",
+    "add_employee_cash_receipts_button": "إضافة إيصال نقدي للموظف ",
     "search_filter": {
       "title": "تصفية الايصالات النقدية للموردين والموظفين",
       "note": "ملاحظات...",
@@ -2540,6 +2587,13 @@
       "add_new_service": "إضافة خدمة جديدة",
       "provider_available": "المخدم متواجد حالياً",
       "provider_not_available": "المخدم غير متواجد حالياً",
+      "provider": "المخدم",
+      "service": "الخدمة",
+      "iqd_amount": "المبلغ (دينار عراقي)",
+      "usd_amount": "المبلغ (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "select_account": "اختيار الحساب",
       "confirm_payment": {
         "page_title": "تأكيد عملية الدفع",
         "edit_form_header": "تأكيد عملية الدفع للتذكرة رقم #{ticket_id}"
@@ -2598,13 +2652,18 @@
       "currency_rate": "سعر الصرف",
       "currency": "العملة",
       "paid_amount": "المبلغ المدفوع",
-      "remaining_amount": "المبلغ المتبقي",
+      "remaining_amount": "المبلغ المتبقي (دينار عراقي)",
       "created_at": "تاريخ الإنشاء ",
       "created_by": " بواسطة",
       "view_current_service_card": "عرض بطاقة الدور الحالي",
       "current_service_card_modal": "بطاقة الدور الحالي",
       "turn_number": "الدور : ",
       "date_time": "تاريخ ووقت الانشاء",
+      "close_time": "تاريخ ووقت الإغلاق",
+      "iqd_paid_amount": "المبلغ المدفوع (دينار عراقي)",
+      "iqd_cash_account": "حساب النقد (دينار عراقي)",
+      "usd_paid_amount": "المبلغ المدفوع (دولار أمريكي)",
+      "usd_cash_account": "حساب النقد (دولار أمريكي)",
       "current_services": {
         "columns": {
           "service_name": "الخدمة",
@@ -2874,11 +2933,14 @@
     },
     "customer_cash_receipt": {
       "for_customer": "للسيد/ة ",
+      "from_customer": "من السيد/ة",
       "cash_account": ":حساب النقد ",
       "amount": ":المبلغ ",
       "note": ":ملاحظات ",
       "for": ":لقاء ",
-      "date": ":التاريخ "
+      "date": ":التاريخ ",
+      "iqd_amount": ":مبلغ الدينار العراقي ",
+      "usd_amount": ":مبلغ الدولار الأمريكي "
     },
     "ticket": {
       "ticket": "التذكرة #",
@@ -3037,7 +3099,8 @@
       "total_amount": "المجموع",
       "more_since_last_day": "أكثر من اليوم السابق",
       "less_since_last_day": "أقل من اليوم السابق",
-      "roles": "عدد مستخدميّ الأدوار"
+      "roles": "عدد مستخدميّ الأدوار",
+      "reset_cash": "تصفير حساب نقد"
     },
     "accountant": {
       "supplier_cash_receipt": "إضافة إيصال نقدي لمورد/موظف",
@@ -3045,6 +3108,7 @@
       "client_cash_receipt_list": "الإيصالات النقدية للزبائن هذا اليوم",
       "supplier_cash_receipt_list": "الإيصالات النقدية للموردين والموظفين هذا اليوم",
       "confirm_ticket_payment": "تأكيد الدفع لتذكرة",
+      "reset_cash": "تصفير حساب نقد",
       "scan_barcode_helper": "يرجى مسح الباركود الموجود على إيصال التذكرة للانتقال إلى صفحة تأكيد دفع التذكرة"
     },
     "receptionist": {
@@ -3266,6 +3330,29 @@
       "provider": "المخدم",
       "is_available": " متواجد ",
       "is_not_available": "غير متواجد"
+    }
+  },
+  "reset_cash_accounts": {
+    "table": {
+      "title": "عمليات تصفير الحسابات",
+      "columns": {
+        "cashier": "أمين الصندوق",
+        "amount": "المبلغ",
+        "currency": "العملة",
+        "iqd": "دينار عراقي",
+        "usd": "دولار أمريكي",
+        "note": "ملاحظات",
+        "action_date": "تاريخ الإجراء",
+        "target_account": "إلى حساب"
+      }
+    },
+    "search_filter": {
+      "title": "تصفية عمليات تصفير الحسابات",
+      "cashier_name": "اسم أمين الصندوق...",
+      "target_cash_account_id": "إلى حساب",
+      "action_date": "تاريخ الإجراء",
+      "from": "من: ",
+      "to": ":إلى "
     }
   }
 }

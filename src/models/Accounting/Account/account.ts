@@ -2,6 +2,9 @@ import { ChartOfAccount } from "../ChartOfAccount/chartOfAccount"
 import { Currency } from "../Currency/currency"
 import { createI18n, DefaultLocaleMessageSchema } from 'vue-i18n';
 import messages from "@intlify/vite-plugin-vue-i18n/messages";
+import { Employee } from "../../Employee/employee";
+import { Customer } from "../../CRM/Customer/customer";
+import { Supplier } from "../../Others/Supplier/supplier";
 
 const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
   locale: 'ar',
@@ -19,6 +22,8 @@ export interface Account {
   currency?: Currency
   currency_rate: number
   description?: string
+  is_cashier_cash_account?: boolean,
+  contact?: Employee | Customer | Supplier
 }
 
 export interface CreateAccount {
@@ -29,6 +34,14 @@ export interface CreateAccount {
   currency_rate: number
   chart_of_account_id: number
   description?: string
+}
+export interface ResetCashAccountsData {
+  iqd_source_account_id?: number
+  usd_source_account_id?: number
+  iqd_target_account_id?: number
+  usd_target_account_id?: number
+  date: string
+  note?: string
 }
 export interface UpdateAccountCurrency {
   currency_id: number
@@ -46,7 +59,9 @@ export const defaultAccount: Account = {
   chart_account: undefined,
   currency: undefined,
   currency_rate: 1,
-  description: ''
+  description: '',
+  is_cashier_cash_account: undefined,
+  contact: undefined
 
 }
 

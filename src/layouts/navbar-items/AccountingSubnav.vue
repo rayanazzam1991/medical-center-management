@@ -175,7 +175,10 @@ const { t } = useI18n()
               <div class="column is-4" v-if="checkPermission(Permissions.TRANSACTION_CREATE) ||
                 checkPermission(Permissions.TRANSACTION_LIST) ||
                 checkPermission(Permissions.PENDING_TICKET_LIST) ||
-                checkPermission(Permissions.TRANSACTION_CREATE)">
+                checkPermission(Permissions.CUSTOM_EXPENSE_CREATE) ||
+                checkPermission(Permissions.CASH_MONEY_TRANSFER) ||
+                checkPermission(Permissions.CASH_ACCOUNT_RESET_LIST) ||
+                checkPermission(Permissions.CUSTOM_REVENUE_CREATE)">
                 <h4 v-if="checkPermission(Permissions.TRANSACTION_CREATE) ||
                   checkPermission(Permissions.TRANSACTION_LIST) ||
                   checkPermission(Permissions.CUSTOM_REVENUE_CREATE) ||
@@ -247,6 +250,21 @@ const { t } = useI18n()
                     </RouterLink>
                   </li>
                 </ul>
+                <br v-if="checkPermission(Permissions.PENDING_TICKET_LIST)" />
+                <h4 v-permission="Permissions.CASH_ACCOUNT_RESET_LIST" class="column-heading">{{
+                  t('accounting_subnav.reset_cash_account.reset_cash_account') }}</h4>
+                <ul>
+                  <li v-permission="Permissions.CASH_ACCOUNT_RESET_LIST">
+                    <RouterLink to="/transaction/reset-cash-account/">
+                      <i aria-hidden="true" class="fas fa-cash-register mx-3"></i>
+                      <span>{{
+                        t('accounting_subnav.reset_cash_account.reset_cash_account_list')
+                      }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul>
+
               </div>
             </div>
           </div>

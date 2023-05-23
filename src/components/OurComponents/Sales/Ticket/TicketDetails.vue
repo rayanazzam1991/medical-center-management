@@ -11,6 +11,7 @@ import { Notyf } from 'notyf';
 import { TicketService } from '/@src/models/Sales/TicketService/ticketService';
 import sleep from '/@src/utils/sleep';
 import usePrint8CM from '/@src/composable/usePrint8CM';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
 
 const router = useRouter()
 const notif = useNotyf() as Notyf
@@ -189,7 +190,7 @@ const goToAddReminder = (ticketServiceId: number) => {
                     </p>
                   </div>
                 </div>
-                <div class="project-feature">
+                <div v-permission="Permissions.REMINDER_CREATE" class="project-feature">
                   <VButton @click="goToAddReminder(service.id)" color="primary" outlined icon="lnir lnir-alarm-2">{{
                     t('reminder.add_button') }}</VButton>
                 </div>
@@ -206,9 +207,39 @@ const goToAddReminder = (ticketServiceId: number) => {
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
-                                    <span>{{ t('ticket.details.paid_amount') }}</span>
+                                    <span>{{ t('ticket.details.iqd_cash_account') }}</span>
                                     <span>
-                                      {{ currentTicket.paid_amount ?? t('place_holder.none') }}
+                                      {{ currentTicket.iqd_cash_account?.name ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.usd_cash_account') }}</span>
+                                    <span>
+                                      {{ currentTicket.usd_cash_account?.name ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.iqd_paid_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.iqd_paid_amount ?? t('place_holder.none') }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.usd_paid_amount') }}</span>
+                                    <span>
+                                      {{ currentTicket.usd_paid_amount ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>
@@ -226,16 +257,6 @@ const goToAddReminder = (ticketServiceId: number) => {
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
-                                    <span>{{ t('ticket.details.currency') }}</span>
-                                    <span>
-                                      {{ currentTicket.currency?.name ?? t('place_holder.none') }}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="column is-6">
-                                <div class="file-box">
-                                  <div class="meta">
                                     <span>{{ t('ticket.details.currency_rate') }}</span>
                                     <span>
                                       {{ currentTicket.currency_rate ?? t('place_holder.none') }}
@@ -243,13 +264,22 @@ const goToAddReminder = (ticketServiceId: number) => {
                                   </div>
                                 </div>
                               </div>
-
                               <div class="column is-6">
                                 <div class="file-box">
                                   <div class="meta">
                                     <span>{{ t('ticket.details.created_at') }}</span>
                                     <span>
                                       {{ currentTicket.created_at }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="column is-6">
+                                <div class="file-box">
+                                  <div class="meta">
+                                    <span>{{ t('ticket.details.close_time') }}</span>
+                                    <span>
+                                      {{ currentTicket.close_time ?? t('place_holder.none') }}
                                     </span>
                                   </div>
                                 </div>

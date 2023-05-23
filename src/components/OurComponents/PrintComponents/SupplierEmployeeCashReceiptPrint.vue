@@ -3,6 +3,7 @@ import { useI18n } from "vue-i18n"
 import { addParenthesisToString } from "/@src/composable/helpers/stringHelpers"
 import { AccountConsts, defaultBalanceSheet } from "/@src/models/Accounting/Account/account"
 import { defaultTransaction } from "/@src/models/Accounting/Transaction/record"
+import { CurrencyConsts } from "/@src/models/Accounting/Currency/currency"
 
 
 export default defineComponent({
@@ -17,8 +18,21 @@ export default defineComponent({
         const { t } = useI18n()
         const cashReceipt = ref(defaultTransaction)
         cashReceipt.value = props.cashReceipt
+        const IQDAmount = cashReceipt.value.entries.find((entry) => (entry.account.chart_account?.code
+            == AccountConsts.CASH_CODE && entry.account.currency?.code ==
+            CurrencyConsts.IQD_CODE))?.amount ?? '-'
 
-        return { t, cashReceipt, AccountConsts, addParenthesisToString }
+        const USDAmountInIQD = cashReceipt.value?.entries?.find(
+            (entry) =>
+                entry.account?.chart_account?.code === AccountConsts.CASH_CODE &&
+                entry.account?.currency?.code === CurrencyConsts.USD_CODE
+        )?.amount
+        const USDAmount = USDAmountInIQD ? (Number(USDAmountInIQD.replace(/,/g, '')) / cashReceipt.value.currency_rate).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }) : '-'
+
+        return { t, cashReceipt, AccountConsts, addParenthesisToString, USDAmount, IQDAmount }
     },
 
 
@@ -30,16 +44,16 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="is-hidden" id="printerable">
+    <div class="is-hidden" id="printerable_supplier">
         <div style="display: flex; justify-content: space-between;">
 
             <h1 style="font-weight: normal; font-size: 10px;text-align: center;">{{ t('print.date') }} {{ new
                 Date().toLocaleDateString() }}
             </h1>
-            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="41" height="11">
+            <img src="/images/logos/logo/logo.png" alt="SBC LOGO" width="123" height="33">
 
         </div>
-        <h1 style="font-weight: 600;text-align: center; margin:2px; padding: 2px; font-size: 12px;">{{
+        <h1 style="font-weight: 600;text-align: center; margin:2px; padding: 2px; font-size: 12px; margin-bottom: 5px;">{{
             t('customer_cash_receipt.table.print_title') }}
         </h1>
         <table style="width: 100%; font-size: 10px; border-collapse: collapse;">
@@ -56,7 +70,7 @@ export default defineComponent({
                     </strong>
                 </td>
                 <tr>
-                    <td style="width: 75%; padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
+                    <td style="width: 60%; padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
                         cashReceipt.date }}
                     </td>
 
@@ -66,30 +80,20 @@ export default defineComponent({
                 </tr>
                 <tr>
                     <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
-                        cashReceipt.amount }} {{ addParenthesisToString(cashReceipt.currency.name) }}
+                        IQDAmount }}
                     </td>
 
                     <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('print.customer_cash_receipt.amount') }}</strong>
+                        <strong>{{ t('print.customer_cash_receipt.iqd_amount') }}</strong>
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
-                        cashReceipt.entries.find((entry) => entry.account.chart_account?.code ==
-                            AccountConsts.CASH_CODE)?.account.name }}
+                        USDAmount }}
                     </td>
 
                     <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('print.customer_cash_receipt.cash_account') }}</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 3px; border-bottom: 1px solid #ddd;text-align: right;">{{
-                        cashReceipt.title }}
-                    </td>
-
-                    <td colspan="2" style="text-align: right; padding: 3px; border-bottom: 1px solid #ddd;">
-                        <strong>{{ t('print.customer_cash_receipt.for') }}</strong>
+                        <strong>{{ t('print.customer_cash_receipt.usd_amount') }}</strong>
                     </td>
                 </tr>
                 <tr>

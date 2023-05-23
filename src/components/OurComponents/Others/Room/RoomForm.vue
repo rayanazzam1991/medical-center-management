@@ -43,6 +43,10 @@ export default defineComponent({
         const backRoute = '/room'
         const currentRoom = ref(defaultRoom)
         const currentCreateUpdateRoom = ref(defaultCreateUpdateRoom)
+        const currentRoomDepartment = ref({
+            value: 0, label: t('room.form.department')
+        })
+
         const roomId = ref(0)
         // @ts-ignore
         roomId.value = route.params?.id as number ?? 0
@@ -56,17 +60,17 @@ export default defineComponent({
             }
             const { room } = await getRoom(roomId.value)
             currentRoom.value = room != undefined ? room : defaultRoom
+            currentRoomDepartment.value.value = currentRoom.value.department?.id ?? 0
+            currentRoomDepartment.value.label = currentRoom.value.department?.name ?? ''
             setDepartmentId()
         }
         const departmentsList = ref<Department[]>([])
         onMounted(async () => {
+            await getCurrentRoom()
             let departmentSearchFilter = {} as DepartmentSearchFilter
             departmentSearchFilter.status = BaseConsts.ACTIVE
             const { departments } = await getDepartmentsList(departmentSearchFilter)
             departmentsList.value = departments
-        })
-        onMounted(() => {
-            getCurrentRoom()
         })
         const validationSchema = roomvalidationSchema
 
@@ -76,12 +80,12 @@ export default defineComponent({
                 number: currentRoom.value.number ?? undefined,
                 floor: currentRoom.value.floor ?? undefined,
                 status: currentRoom.value.status ?? 1,
-                department_id: currentRoom.value?.department?.id ?? 0,
+                department_id: { value: currentRoom.value?.department?.id ?? 0, label: currentRoom.value.department?.name },
             } : {
                 number: '',
                 floor: '',
                 status: 1,
-                department_id: 0,
+                department_id: { value: 0, label: t('room.form.department') },
             },
         })
 
@@ -96,26 +100,19 @@ export default defineComponent({
             else return
         }
         const setDepartmentId = () => {
-            setFieldValue('department_id', currentRoom.value.department?.id ?? 0)
+            setFieldValue('department_id', currentRoomDepartment.value)
         }
 
         const onSubmitAdd = handleSubmit(async (values) => {
 
-            var roomData = currentRoom.value
-            var roomForm = currentCreateUpdateRoom.value
+            let roomData = currentRoom.value
+            let roomForm = currentCreateUpdateRoom.value
             roomForm.floor = roomData.floor
             roomForm.number = roomData.number
-            roomForm.department_id = roomData.department?.id
+            roomForm.department_id = currentRoomDepartment.value.value
             roomForm.status = roomData.status
             const { room, success, message } = await addRoom(roomForm)
             if (success) {
-
-                // @ts-ignore
-                notif.dismissAll()
-                await sleep(200);
-
-                // @ts-ignore
-
                 notif.success(t('toast.success.add'))
                 await sleep(500)
                 router.push({ path: `/room/${room.id}` })
@@ -128,35 +125,24 @@ export default defineComponent({
         })
         const onSubmitEdit = async () => {
             const roomData = currentRoom.value
-            var roomForm = currentCreateUpdateRoom.value
+            let roomForm = currentCreateUpdateRoom.value
             roomForm.id = roomData.id
             roomForm.floor = roomData.floor
             roomForm.number = roomData.number
-            roomForm.department_id = roomData.department?.id
+            roomForm.department_id = currentRoomDepartment.value.value
             roomForm.status = roomData.status
             const { success, message } = await editRoom(roomForm)
             if (success) {
-
-                // @ts-ignore
-
-                notif.dismissAll()
-                await sleep(200);
-
-                // @ts-ignore
-
                 notif.success(t('toast.success.edit'))
-                await sleep(500)
                 router.push({ path: `/room/${roomData.id}` })
             } else {
-                await sleep(200);
-
                 notif.error(message)
             }
 
 
         }
 
-        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore, setDepartmentId, DepartmentConsts, getDepartmentsList }
+        return { t, pageTitle, onSubmit, currentRoom, viewWrapper, backRoute, RoomConsts, departmentsList, roomStore, setDepartmentId, DepartmentConsts, getDepartmentsList, currentRoomDepartment }
     },
 
 
@@ -213,12 +199,12 @@ export default defineComponent({
                                 <VField id="department_id">
                                     <VLabel class="required">{{ t('room.form.department') }}</VLabel>
                                     <VControl>
-                                        <Multiselect v-if="currentRoom.department" v-model="currentRoom.department.id"
-                                            mode="single" :placeholder="t('room.form.department')" :close-on-select="true"
-                                            ref="department_id" @select="setDepartmentId()" :filter-results="false"
-                                            :min-chars="0" :resolve-on-load="false" :infinite="true" :limit="20" :rtl="true"
-                                            :max="1" :clear-on-search="true" :delay="0" :searchable="true" :canClear="false"
-                                            :options="async (query: any) => {
+                                        <Multiselect v-if="currentRoom.department" ref="department_id"
+                                            @select="setDepartmentId()" v-model="currentRoomDepartment" mode="single"
+                                            :filter-results="false" :placeholder="t('room.form.department')"
+                                            :close-on-select="true" :rtl="true" :canClear="false" :searchable="true"
+                                            :object="true" :resolve-on-load="false" :max="1" :infinite="true" :limit="20"
+                                            :clear-on-search="true" :delay="0" :min-chars="0" :options="async (query: any) => {
                                                 let departmentSearchFilter = {
                                                     name: query,
                                                     status: DepartmentConsts.ACTIVE,

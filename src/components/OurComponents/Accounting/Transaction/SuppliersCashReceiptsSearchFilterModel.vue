@@ -3,8 +3,9 @@ import { useI18n } from "vue-i18n"
 import { Currency } from "/@src/models/Accounting/Currency/currency"
 import { getCurrenciesFromStorage } from "/@src/services/Accounting/Currency/currencyService"
 import { Account, AccountSearchFilter, AccountConsts } from "/@src/models/Accounting/Account/account"
-import { getAccountsList } from "/@src/services/Accounting/Account/accountService"
+import { getAccountsList, getAuthenticatedCashierAccounts } from "/@src/services/Accounting/Account/accountService"
 import { defaultSuppliersCashReceiptsSearchFilter } from "/@src/models/Accounting/Transaction/record"
+import { useAuth } from "/@src/stores/Others/User/authStore"
 
 export default defineComponent({
   props: {
@@ -14,6 +15,11 @@ export default defineComponent({
     is_reseted: {
       type: Boolean,
       default: false,
+    },
+    is_for_employee: {
+      type: Boolean,
+      default: false,
+
     }
 
   },
@@ -25,6 +31,10 @@ export default defineComponent({
     const searchCurrencyId = ref()
     const searchCashAccountId = ref()
     const searchFilter = ref(defaultSuppliersCashReceiptsSearchFilter)
+    const userAuth = useAuth();
+    const haveCashierRole = userAuth.getUser()?.roles?.find((role) => role.name == 'Cashier')
+    const isCashier = haveCashierRole ? true : false
+
     let search_filter_popup = computed({
       get: () => props.search_filter_popup as boolean,
       set(value) {
@@ -59,18 +69,24 @@ export default defineComponent({
     const currenciesList = ref<Currency[]>([])
     const cashAccountsList = ref<Account[]>([])
     onMounted(async () => {
-      const currencies = await getCurrenciesFromStorage()
+      const currencies = getCurrenciesFromStorage()
       currenciesList.value = currencies
-      const accountSearchFilter = {
-        per_page: 500
-      } as AccountSearchFilter
-      const { accounts } = await getAccountsList(accountSearchFilter)
-      accounts.forEach((account) => {
-        if (account.chart_account?.code == AccountConsts.CASH_CODE) {
-          cashAccountsList.value.push(account)
+      if (!isCashier) {
+        const accountSearchFilter = {
+          per_page: 500
+        } as AccountSearchFilter
+        const { accounts } = await getAccountsList(accountSearchFilter)
+        accounts.forEach((account) => {
+          if (account.chart_account?.code == AccountConsts.CASH_CODE) {
+            cashAccountsList.value.push(account)
+          }
+        });
+      } else {
+        if (isCashier) {
+          const { cashierAccounts } = await getAuthenticatedCashierAccounts()
+          cashAccountsList.value = cashierAccounts
         }
-      });
-
+      }
     })
     return { t, search, resetFilter, search_filter_popup, cashAccountsList, currenciesList, searchNote, searchCurrencyId, searchSupplierName, searchCashAccountId }
   },
@@ -82,7 +98,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <VModal :title="t('customer_cash_receipt.search_filter.title')" :open="search_filter_popup" actions="center"
+  <VModal :title="t('supplier_cash_receipt.search_filter.title')" :open="search_filter_popup" actions="center"
     @close="search_filter_popup = false">
     <template #content>
       <form class="form-layout" @submit.prevent="">
@@ -92,7 +108,7 @@ export default defineComponent({
               :placeholder="t('customer_cash_receipt.search_filter.note')" />
           </VControl>
         </VField>
-        <VField class="column filter">
+        <VField v-if="!$props.is_for_employee" class="column filter">
           <VControl icon="feather:search">
             <input v-model="searchSupplierName" type="text" class="input"
               :placeholder="t('supplier_cash_receipt.search_filter.supplier_name')" />

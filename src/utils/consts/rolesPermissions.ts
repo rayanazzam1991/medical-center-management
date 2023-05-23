@@ -419,6 +419,9 @@ export enum Permissions {
   EMPLOYEES_CURRENT_AVAILABILITY_LIST = 'employees_current_availability_list',
   EMPLOYEES_AVAILABILITY_HISTORY_LIST = 'employees_availability_history_list',
 
+  CASH_ACCOUNT_RESET = 'cash_account_reset',
+  CASH_ACCOUNT_RESET_LIST = 'cash_account_reset_list',
+
   ACCOUNTING_ACCESS = 'accounting_access',
   HR_ACCESS = 'hr_access',
   OTHERS_ACCESS = 'others_access',

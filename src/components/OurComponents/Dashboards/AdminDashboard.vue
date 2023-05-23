@@ -7,18 +7,84 @@ import { AdminDashboard, defaultAdminDashboard, defaultAnalystDashboard } from '
 import { getAdminDashboardData } from '../../../services/Others/User/dashboardService';
 import { useDashboard } from '/@src/stores/Others/User/dashboardStore';
 import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
+import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import { useNotyf } from '/@src/composable/useNotyf';
+import { Notyf } from 'notyf';
+import { Account, AccountConsts, AccountSearchFilter } from '/@src/models/Accounting/Account/account';
+import { Employee } from '/@src/models/Employee/employee';
+import { getEmployeesList } from '/@src/services/Employee/employeeService';
+import { EmployeeSearchFilter } from '/@src/models/Employee/employee';
+import { UserStatusConsts } from '/@src/models/Others/UserStatus/userStatus';
+import { getAccountsList } from '/@src/services/Accounting/Account/accountService';
+import { ChartOfAccountConsts } from '/@src/models/Accounting/ChartOfAccount/chartOfAccount';
+import { CurrencyConsts } from '/@src/models/Accounting/Currency/currency';
+import sleep from '/@src/utils/sleep';
+import { useEmployee } from '/@src/stores/Employee/employeeStore';
 
 const adminDashboardData = ref<AdminDashboard>(defaultAdminDashboard)
+const notif = useNotyf() as Notyf
 const keyIncrement = ref(0)
 const { t } = useI18n()
 const router = useRouter()
 const dashboardStore = useDashboard()
+const IQDcashAccountsList = ref<Account[]>([])
+const USDcashAccountsList = ref<Account[]>([])
+const keyIncrementResetCashAccounts = ref(0)
+const resetCashAccountPopup = ref(false)
+const cashiersList = ref<Employee[]>()
+const resetCashSetupLoading = ref(false)
+const employeeStore = useEmployee()
+
 onMounted(async () => {
 
   const { dashboard_data } = await getAdminDashboardData()
   adminDashboardData.value = dashboard_data
   keyIncrement.value = keyIncrement.value + 1
+  await getAllAccounts()
 });
+const resetCashAccountSetup = async () => {
+  resetCashSetupLoading.value = true
+  while (employeeStore.loading) {
+    await sleep()
+  }
+
+  const employeesSearchFilter: EmployeeSearchFilter = {
+    is_cashier: true,
+    user_status_id: UserStatusConsts.ACTIVE,
+    per_page: 5000
+  }
+  const { employees, success, message } = await getEmployeesList(employeesSearchFilter)
+  if (success) {
+    cashiersList.value = employees
+    keyIncrementResetCashAccounts.value++
+    resetCashAccountPopup.value = true
+  } else {
+    notif.error(message)
+  }
+  resetCashSetupLoading.value = false
+}
+const getAllAccounts = async () => {
+  let accountSearchFilter = {} as AccountSearchFilter
+  accountSearchFilter.status = AccountConsts.ACTIVE
+  accountSearchFilter.per_page = 5000
+  const { accounts } = await getAccountsList(accountSearchFilter)
+  accounts.forEach((account) => {
+    if (account.chart_account?.code == ChartOfAccountConsts.CASH_CODE) {
+      if (account.currency?.code == CurrencyConsts.IQD_CODE) {
+        IQDcashAccountsList.value.push(account)
+      } else {
+        USDcashAccountsList.value.push(account)
+      }
+    }
+  });
+}
+const cashAccountPostReset = async () => {
+  resetCashAccountPopup.value = false
+}
+const popUpTrigger = (value: boolean) => {
+  resetCashAccountPopup.value = value
+}
+
 </script>
 
 <template>
@@ -83,7 +149,23 @@ addParenthesisToString(t('dashboards.admin.total_amount'))]"
               adminDashboardData.cash_amount_stats.USD_stats.is_increase ? t('dashboards.admin.more_since_last_day') : t('dashboards.admin.less_since_last_day'),
               adminDashboardData.cash_amount_stats.total_stats.is_increase ? t('dashboards.admin.more_since_last_day') : t('dashboards.admin.less_since_last_day')]" />
           </div>
-
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-12">
+            <div class="asset-category">
+              <div v-permission="Permissions.CASH_ACCOUNT_RESET" class="category" @click="resetCashAccountSetup">
+                <div class="asset">
+                  <div class="asset-logo">
+                    <i aria-hidden="true" class="fas fa-cash-register"></i>
+                  </div>
+                </div>
+                <div class="asset-name">{{ t('dashboards.admin.reset_cash') }}
+                  <div v-if="resetCashSetupLoading" class="loader is-loading reset-loader">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="columns is-multiline pt-0">
           <div class="column is-6">
@@ -96,8 +178,17 @@ addParenthesisToString(t('dashboards.admin.total_amount'))]"
       </div>
     </div>
   </div>
+  <ResetCashAccountsModal :key="keyIncrementResetCashAccounts" :openModal="resetCashAccountPopup" :in-dashboard="true"
+    @reseted="cashAccountPostReset" :iqd-cash-accounts="IQDcashAccountsList" :usd-cash-accounts="USDcashAccountsList"
+    @openModal="popUpTrigger" :cashiers-list="cashiersList" />
 </template>
 
 <style scoped lang="scss">
 @import '/@src/scss/Styles/Dashboards/analystDashboard.scss';
+
+.reset-loader {
+  bottom: 20px;
+  right: 110px;
+  margin-bottom: -15px;
+}
 </style>

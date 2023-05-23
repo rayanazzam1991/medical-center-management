@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { ClientsCashReceiptsSearchFilter, CreateRecords, SuppliersCashReceiptsSearchFilter, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
+import { ClientsCashReceiptsSearchFilter, CreateRecords, ResetCashAccountsListSearchFilter, SuppliersCashReceiptsSearchFilter, TransactionSearchFilter } from "/@src/models/Accounting/Transaction/record"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 
@@ -30,11 +30,20 @@ export async function getClientsCashReceiptsListApi(
     return { response }
 }
 export async function getSuppliersCashReceiptsListApi(
-  api: AxiosInstance,
-  searchFilter: SuppliersCashReceiptsSearchFilter
+    api: AxiosInstance,
+    searchFilter: SuppliersCashReceiptsSearchFilter
 ): Promise<{ response: CustomResponseCollection }> {
-  const { data: response, headers } = await api.get(`transaction/getSuppliersCashReceiptsList`, {
-      params: searchFilter
-  })
-  return { response }
+    const { data: response, headers } = await api.get(`transaction/getSuppliersCashReceiptsList`, {
+        params: searchFilter
+    })
+    return { response }
+}
+export async function getResetCashAccountsListApi(
+    api: AxiosInstance,
+    searchFilter: ResetCashAccountsListSearchFilter
+): Promise<{ response: CustomResponseCollection }> {
+    const { data: response, headers } = await api.get(`transaction/getResetCashAccountsList`, {
+        params: searchFilter
+    })
+    return { response }
 }
