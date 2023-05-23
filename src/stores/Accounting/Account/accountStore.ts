@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { changeAccountStatusApi, generateIncomeStatmentReportApi } from "/@src/utils/api/Accounting/Account/accounts"
+import { changeAccountStatusApi, generateIncomeStatmentReportApi, getCashierAccountsByAccountIdApi, getCashierAccountsByCashierIdApi, resetCashAccountsApi } from "/@src/utils/api/Accounting/Account/accounts"
 
 import {
   Account,
@@ -10,7 +10,8 @@ import {
   CreateAccount,
   TrialBalance,
   UpdateAccountCurrency,
-  IncomeStatment
+  IncomeStatment,
+  ResetCashAccountsData
 } from "/@src/models/Accounting/Account/account"
 import {
   addAccountApi,
@@ -69,7 +70,6 @@ export const useAccount = defineStore('account', () => {
   async function getAccountsListStore(searchFilter: AccountSearchFilter) {
     if (loading.value) return
     loading.value = true
-    sleep(1000)
     try {
       const response = await getAccountsListApi(api, searchFilter)
       accounts.value = response.response.data
@@ -249,6 +249,60 @@ export const useAccount = defineStore('account', () => {
       loading.value = false
     }
   }
+  async function getCashierAccountsByAccountIdStore(accountId: number) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await getCashierAccountsByAccountIdApi(api, accountId)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      cashierAccounts.value = response.response.data
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  async function getCashierAccountsByCashierIdStore(cashierId: number) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await getCashierAccountsByCashierIdApi(api, cashierId)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+      cashierAccounts.value = response.response.data
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
+
+  async function resetCashAccountsStore(data: ResetCashAccountsData) {
+    if (loading.value) return
+    loading.value = true
+    try {
+      const response = await resetCashAccountsApi(api, data)
+      success.value = response.response.success
+      error_code.value = response.response.error_code
+      message.value = response.response.message
+    } catch (error: any) {
+      success.value = error?.response.data.success
+      error_code.value = error?.response.data.error_code
+      message.value = error?.response.data.message
+    }
+    finally {
+      loading.value = false
+    }
+  }
 
   return {
     success,
@@ -268,8 +322,10 @@ export const useAccount = defineStore('account', () => {
     updateAccountCurrencyStore,
     changeAccountStatusStore,
     getAuthenticatedCashierAccountsStore,
-    getAccountIdByContactIdStore
-
+    getAccountIdByContactIdStore,
+    getCashierAccountsByAccountIdStore,
+    resetCashAccountsStore,
+    getCashierAccountsByCashierIdStore
   } as const
 })
 

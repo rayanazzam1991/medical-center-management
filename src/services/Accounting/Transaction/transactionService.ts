@@ -1,6 +1,7 @@
 import {
   ClientsCashReceiptsSearchFilter,
   CreateRecords,
+  ResetCashAccountsListSearchFilter,
   SuppliersCashReceiptsSearchFilter,
   Transaction,
   TransactionConsts,
@@ -115,6 +116,16 @@ export async function getSuppliersCashReceiptsList(searchFilter: SuppliersCashRe
   let suppliersPagination: Pagination = transactionResponse.pagination ?? defaultPagination
   let message: string = transactionResponse.message ?? ''
   return { success, error_code, message, suppliers_cash_receipts, suppliersPagination }
+}
+export async function getResetCashAccountsList(searchFilter: ResetCashAccountsListSearchFilter) {
+  const transactionResponse = useTransaction()
+  await transactionResponse.getResetCashAccountsListStore(searchFilter)
+  const reset_cash_account_transactions = transactionResponse.resetCashAccountTransactions
+  const success: boolean = transactionResponse.success ?? false
+  const error_code: string = transactionResponse.error_code ?? ''
+  const pagination: Pagination = transactionResponse.pagination ?? defaultPagination
+  const message: string = transactionResponse.message ?? ''
+  return { success, error_code, message, reset_cash_account_transactions, pagination }
 }
 
 export function resetClientsCashReceiptsSearchFilter() {

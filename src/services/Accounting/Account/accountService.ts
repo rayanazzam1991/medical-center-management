@@ -1,5 +1,5 @@
 
-import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultIncomeStatment, defaultTrialBalance, IncomeStatment, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { Account, AccountSearchFilter, BalanceSheet, ChangeAccountStatus, CreateAccount, defaultAccount, defaultBalanceSheet, defaultIncomeStatment, defaultTrialBalance, IncomeStatment, ResetCashAccountsData, TrialBalance, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
 import { GetAccountIdByContactIdRequestData } from "/@src/models/Accounting/AccountContact/accountContact"
 import { useAccount } from "/@src/stores/Accounting/Account/accountStore"
 import { defaultPagination, Pagination } from "/@src/utils/response"
@@ -107,3 +107,43 @@ export async function getAccountIdByContactId(data: GetAccountIdByContactIdReque
 }
 
 
+export async function getCashierAccountsByAccountId(accountId: number) {
+    const accountResponse = useAccount()
+    await accountResponse.getCashierAccountsByAccountIdStore(accountId)
+    const cashier_accounts = accountResponse.cashierAccounts
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, cashier_accounts }
+}
+export async function getCashierAccountsByCashierId(cashierId: number) {
+    const accountResponse = useAccount()
+    await accountResponse.getCashierAccountsByCashierIdStore(cashierId)
+    const cashier_accounts = accountResponse.cashierAccounts
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message, cashier_accounts }
+}
+export async function resetCashAccounts(data: ResetCashAccountsData) {
+    const accountResponse = useAccount()
+    await accountResponse.resetCashAccountsStore(data)
+    const success: boolean = accountResponse.success ?? false
+    const error_code: string = accountResponse.error_code ?? ''
+    const message: string = accountResponse.message ?? ''
+    return { success, error_code, message }
+}
+
+export function resetResetCashAccountsData() {
+    const blank: ResetCashAccountsData = {
+        date: new Date().toISOString().substring(0, 10),
+        iqd_source_account_id: undefined,
+        iqd_target_account_id: undefined,
+        note: undefined,
+        usd_source_account_id: undefined,
+        usd_target_account_id: undefined
+    }
+
+    return blank
+
+}

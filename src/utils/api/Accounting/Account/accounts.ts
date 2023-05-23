@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import { AccountSearchFilter, ChangeAccountStatus, CreateAccount, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
+import { AccountSearchFilter, ChangeAccountStatus, CreateAccount, ResetCashAccountsData, UpdateAccountCurrency } from "/@src/models/Accounting/Account/account"
 import { CustomResponseCollection, CustomResponseSingle } from "/@src/utils/response"
 
 export async function generateTrailBalanceReportApi(
@@ -59,13 +59,32 @@ export async function changeAccountStatusApi(
   )
   return { response }
 }
-
-
 export async function updateAccountCurrencyApi(
   api: AxiosInstance,
   account_id: number,
   updateAccountCurrencyData: UpdateAccountCurrency
 ): Promise<{ response: CustomResponseSingle }> {
   const { data: response, headers } = await api.put(`account/updateAccountCurrency/${account_id}`, updateAccountCurrencyData)
+  return { response }
+}
+export async function getCashierAccountsByAccountIdApi(
+  api: AxiosInstance,
+  account_id: number
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`account/getCashierAccountsByAccountId/${account_id}`)
+  return { response }
+}
+export async function getCashierAccountsByCashierIdApi(
+  api: AxiosInstance,
+  cashier_id: number
+): Promise<{ response: CustomResponseCollection }> {
+  const { data: response, headers } = await api.get(`account/getCashierAccountsByCashierId/${cashier_id}`)
+  return { response }
+}
+export async function resetCashAccountsApi(
+  api: AxiosInstance,
+  data: ResetCashAccountsData
+): Promise<{ response: CustomResponseSingle }> {
+  const { data: response, headers } = await api.post(`account/resetCashAccounts`, data)
   return { response }
 }
