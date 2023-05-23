@@ -50,8 +50,7 @@ const availableCurrenciesList = ref<Currency[]>([])
 const supplierEmployeeAccountId = ref<number>(0)
 const USDcashAccountId = ref<number>(0)
 const IQDcashAccountId = ref<number>(0)
-const USDcurrencyRate = ref<number>(1)
-const IQDcurrencyRate = ref<number>(1)
+const currencyRate = ref<number>(1)
 const enableSelectSupplierEmployee = ref(false)
 const enableSelectIsEmployee = ref(false)
 const IQDcashAmount = ref(0)
@@ -124,7 +123,7 @@ onMounted(async () => {
   availableCurrenciesList.value = currencies
   const usdCurrency = currenciesList.value.find((currency) => !currency.is_main)
   if (usdCurrency) {
-    USDcurrencyRate.value = usdCurrency.rate
+    currencyRate.value = usdCurrency.rate
   }
   createRecord.value.date = new Date().toISOString().substring(0, 10)
   if (employeeId.value != 0) {
@@ -152,8 +151,7 @@ const { handleSubmit, setFieldValue } = useForm({
     iqd_amount: 0,
     usd_amount: 0,
     currency_id: 0,
-    iqd_currency_rate: 1,
-    usd_currency_rate: USDcurrencyRate.value,
+    currency_rate: currencyRate.value,
     date: new Date().toISOString().substring(0, 10),
     note: undefined
   }
@@ -173,10 +171,65 @@ const onSubmitConfirmation = handleSubmit(async () => {
     return
 
   }
+  if (isEmployee.value) {
+    const employeeAccount = employeesAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value)
+    if (USDcashAmount.value == 0 && employeeAccount?.currency?.code == CurrencyConsts.IQD_CODE) {
+      currencyRate.value = 1
+      const notyf = new Notyf({
+        duration: 4000,
+        position: {
+          x: 'right',
+          y: 'bottom',
+        },
+        types: [
+          {
+            type: 'info',
+            background: useCssVar('--info').value,
+            icon: {
+              className: 'fas fa-info-circle',
+              tagName: 'i',
+              text: '',
+            },
+          },
+        ],
+      })
+      notyf.open({
+        type: 'info',
+        message: t('toast.info.currency_rate_is_set_to_1'),
+      })
+    }
+  } else {
+    const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value)
+    if (USDcashAmount.value == 0 && supplierAccount?.currency?.code == CurrencyConsts.IQD_CODE) {
+      currencyRate.value = 1
+      const notyf = new Notyf({
+        duration: 4000,
+        position: {
+          x: 'right',
+          y: 'bottom',
+        },
+        types: [
+          {
+            type: 'info',
+            background: useCssVar('--info').value,
+            icon: {
+              className: 'fas fa-info-circle',
+              tagName: 'i',
+              text: '',
+            },
+          },
+        ],
+      })
+      notyf.open({
+        type: 'info',
+        message: t('toast.info.currency_rate_is_set_to_1'),
+      })
+    }
 
+  }
   const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == USDcashAccountId.value) ?? defaultAccount
   if (USDcashAmount.value != 0) {
-    currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / USDcurrencyRate.value)
+    currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / currencyRate.value)
   } else {
     currencyDifferencesCashAmount.value = 0
   }
@@ -184,7 +237,7 @@ const onSubmitConfirmation = handleSubmit(async () => {
     const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
 
     if (!supplierAccount.currency?.is_main) {
-      currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / USDcurrencyRate.value)
+      currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / currencyRate.value)
     } else {
       currencyDifferencesSupplierAmount.value = 0
     }
@@ -201,13 +254,12 @@ const onSubmitConfirmation = handleSubmit(async () => {
 
 })
 const onSubmit = async () => {
-
   createRecord.value.accounts = []
   if (isEmployee.value) {
     if (USDcashAmount.value != 0) {
       createRecord.value.accounts.push({ account_id: USDcashAccountId.value, amount: USDcashAmount.value - currencyDifferencesCashAmount.value, type: AccountConsts.CREDIT_TYPE })
       createRecord.value.currency_id = currenciesList.value.find((currency) => !currency.is_main)?.id ?? 0
-      createRecord.value.currency_rate = USDcurrencyRate.value
+      createRecord.value.currency_rate = currencyRate.value
     } else {
       createRecord.value.currency_rate = 1
       createRecord.value.currency_id = currenciesList.value.find((currency) => currency.is_main)?.id ?? 0
@@ -232,7 +284,7 @@ const onSubmit = async () => {
     if (USDcashAmount.value != 0) {
       createRecord.value.accounts.push({ account_id: USDcashAccountId.value, amount: USDcashAmount.value - currencyDifferencesCashAmount.value, type: AccountConsts.CREDIT_TYPE })
       createRecord.value.currency_id = currenciesList.value.find((currency) => !currency.is_main)?.id ?? 0
-      createRecord.value.currency_rate = USDcurrencyRate.value
+      createRecord.value.currency_rate = currencyRate.value
     } else {
       createRecord.value.currency_rate = 1
       createRecord.value.currency_id = currenciesList.value.find((currency) => currency.is_main)?.id ?? 0
@@ -273,7 +325,7 @@ watch(supplierEmployeeAccountId, (value) => {
   if (value != 0) {
     const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == USDcashAccountId.value) ?? defaultAccount
     if (USDcashAmount.value != 0) {
-      currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / USDcurrencyRate.value)
+      currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / currencyRate.value)
     } else {
       currencyDifferencesCashAmount.value = 0
     }
@@ -281,7 +333,7 @@ watch(supplierEmployeeAccountId, (value) => {
       const supplierAccount = suppliersAccountsList.value.find((account) => account.id == value) ?? defaultAccount
 
       if (!supplierAccount.currency?.is_main) {
-        currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / USDcurrencyRate.value)
+        currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / currencyRate.value)
       } else {
         currencyDifferencesSupplierAmount.value = 0
       }
@@ -296,7 +348,7 @@ watch(USDcashAccountId, (value) => {
   if (value != 0) {
     const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == value) ?? defaultAccount
     if (USDcashAmount.value != 0) {
-      currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / USDcurrencyRate.value)
+      currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / currencyRate.value)
     } else {
       currencyDifferencesCashAmount.value = 0
     }
@@ -304,7 +356,7 @@ watch(USDcashAccountId, (value) => {
       const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
 
       if (!supplierAccount.currency?.is_main) {
-        currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / USDcurrencyRate.value)
+        currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(IQDcashAmount.value)) - ((Number(USDcashAmount.value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / currencyRate.value)
       } else {
         currencyDifferencesSupplierAmount.value = 0
       }
@@ -315,7 +367,7 @@ watch(USDcashAccountId, (value) => {
     currencyDifferencesAmount.value = currencyDifferencesCashAmount.value - currencyDifferencesSupplierAmount.value
   }
 })
-watch(USDcurrencyRate, (value) => {
+watch(currencyRate, (value) => {
   USDcashAmount.value = USDcashAmountInUSD.value * value
   const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == USDcashAccountId.value) ?? defaultAccount
   if (USDcashAmount.value != 0) {
@@ -340,7 +392,7 @@ watch(USDcurrencyRate, (value) => {
 watch(USDcashAmount, (value) => {
   const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == USDcashAccountId.value) ?? defaultAccount
   if (value != 0) {
-    currencyDifferencesCashAmount.value = (Number(value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / USDcurrencyRate.value)
+    currencyDifferencesCashAmount.value = (Number(value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / currencyRate.value)
   } else {
     currencyDifferencesCashAmount.value = 0
   }
@@ -348,7 +400,7 @@ watch(USDcashAmount, (value) => {
     const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
 
     if (!supplierAccount.currency?.is_main) {
-      currencyDifferencesSupplierAmount.value = (Number(value) + Number(IQDcashAmount.value)) - ((Number(value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / USDcurrencyRate.value)
+      currencyDifferencesSupplierAmount.value = (Number(value) + Number(IQDcashAmount.value)) - ((Number(value) + Number(IQDcashAmount.value)) * supplierAccount.currency_rate / currencyRate.value)
     } else {
       currencyDifferencesSupplierAmount.value = 0
     }
@@ -360,7 +412,7 @@ watch(USDcashAmount, (value) => {
 watch(IQDcashAmount, (value) => {
   const USDcashAccount = USDcashAccountsList.value.find((account) => account.id == USDcashAccountId.value) ?? defaultAccount
   if (USDcashAmount.value != 0) {
-    currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / USDcurrencyRate.value)
+    currencyDifferencesCashAmount.value = (Number(USDcashAmount.value)) - ((Number(USDcashAmount.value)) * USDcashAccount.currency_rate / currencyRate.value)
   } else {
     currencyDifferencesCashAmount.value = 0
   }
@@ -368,7 +420,7 @@ watch(IQDcashAmount, (value) => {
     const supplierAccount = suppliersAccountsList.value.find((account) => account.id == supplierEmployeeAccountId.value) ?? defaultAccount
 
     if (!supplierAccount.currency?.is_main) {
-      currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(value)) - ((Number(USDcashAmount.value) + Number(value)) * supplierAccount.currency_rate / USDcurrencyRate.value)
+      currencyDifferencesSupplierAmount.value = (Number(USDcashAmount.value) + Number(value)) - ((Number(USDcashAmount.value) + Number(value)) * supplierAccount.currency_rate / currencyRate.value)
     } else {
       currencyDifferencesSupplierAmount.value = 0
     }
@@ -378,7 +430,7 @@ watch(IQDcashAmount, (value) => {
   currencyDifferencesAmount.value = currencyDifferencesCashAmount.value - currencyDifferencesSupplierAmount.value
 })
 watch(USDcashAmountInUSD, (value) => {
-  USDcashAmount.value = value * USDcurrencyRate.value
+  USDcashAmount.value = value * currencyRate.value
 })
 
 
@@ -481,16 +533,6 @@ watch(USDcashAmountInUSD, (value) => {
                       </VControl>
                     </VField>
                   </div>
-                  <div class="column is-12">
-                    <VField id="iqd_currency_rate">
-                      <VLabel class="required">{{ t('customer_cash_receipt.form.iqd_currency_rate') }}
-                      </VLabel>
-                      <VControl icon="feather:dollar-sign">
-                        <VInput disabled v-model="IQDcurrencyRate" placeholder="" type="number" />
-                        <ErrorMessage class="help is-danger" name="iqd_currency_rate" />
-                      </VControl>
-                    </VField>
-                  </div>
                 </div>
                 <div class="column is-6 columns is-multiline m-0 p-0 my-2">
                   <div class="column is-12">
@@ -519,17 +561,17 @@ watch(USDcashAmountInUSD, (value) => {
                       </VControl>
                     </VField>
                   </div>
-                  <div class="column is-12">
-                    <VField id="usd_currency_rate">
-                      <VLabel class="required">{{ t('customer_cash_receipt.form.usd_currency_rate') }}
-                      </VLabel>
-                      <VControl icon="feather:dollar-sign">
-                        <VInput v-model="USDcurrencyRate" placeholder="" type="number" />
-                        <ErrorMessage class="help is-danger" name="usd_currency_rate" />
-                      </VControl>
-                    </VField>
-                  </div>
                 </div>
+              </div>
+              <div class="column is-12">
+                <VField id="currency_rate">
+                  <VLabel class="required">{{ t('supplier_cash_receipt.form.currency_rate') }}
+                  </VLabel>
+                  <VControl icon="feather:dollar-sign">
+                    <VInput v-model="currencyRate" placeholder="" type="number" />
+                    <ErrorMessage class="help is-danger" name="currency_rate" />
+                  </VControl>
+                </VField>
               </div>
               <div v-if="currencyDifferencesAmount != 0 && IQDcashAmount + USDcashAmount != 0"
                 class="column is-12 is-flex is-justify-content-center">

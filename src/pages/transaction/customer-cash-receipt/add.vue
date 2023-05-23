@@ -51,8 +51,7 @@ const availableCurrenciesList = ref<Currency[]>([])
 const clientAccountId = ref<number>(0)
 const USDcashAccountId = ref<number>(0)
 const IQDcashAccountId = ref<number>(0)
-const USDcurrencyRate = ref<number>(1)
-const IQDcurrencyRate = ref<number>(1)
+const currencyRate = ref<number>(1)
 const IQDcashAmount = ref(0)
 const USDcashAmount = ref(0)
 const USDcashAmountInUSD = ref(0)
@@ -113,7 +112,7 @@ onMounted(async () => {
     availableCurrenciesList.value = currencies
     const usdCurrency = currenciesList.value.find((currency) => !currency.is_main)
     if (usdCurrency) {
-        USDcurrencyRate.value = usdCurrency.rate
+        currencyRate.value = usdCurrency.rate
     }
     createRecord.value.date = new Date().toISOString().substring(0, 10)
     if (customerId.value != 0) {
@@ -140,8 +139,7 @@ const { handleSubmit } = useForm({
         usd_cash_account: USDcashAccountId.value,
         iqd_amount: 0,
         usd_amount: 0,
-        iqd_currency_rate: 1,
-        usd_currency_rate: USDcurrencyRate.value,
+        currency_rate: currencyRate.value,
         date: new Date().toISOString().substring(0, 10),
         note: undefined
     }
@@ -154,16 +152,40 @@ const onSubmit = handleSubmit(async () => {
     if (IQDcashAmount.value != 0 && IQDcashAccountId.value == 0) {
         notif.error({ message: t('toast.error.please_select_cash_account') })
         return
-
     }
     if (USDcashAmount.value != 0 && USDcashAccountId.value == 0) {
         notif.error({ message: t('toast.error.please_select_cash_account') })
         return
-
     }
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
+    if (USDcashAmount.value == 0 && clientAccount?.currency?.code == CurrencyConsts.IQD_CODE) {
+        currencyRate.value = 1
+        const notyf = new Notyf({
+            duration: 4000,
+            position: {
+                x: 'right',
+                y: 'bottom',
+            },
+            types: [
+                {
+                    type: 'info',
+                    background: useCssVar('--info').value,
+                    icon: {
+                        className: 'fas fa-info-circle',
+                        tagName: 'i',
+                        text: '',
+                    },
+                },
+            ],
+        })
+        notyf.open({
+            type: 'info',
+            message: t('toast.info.currency_rate_is_set_to_1'),
+        })
+    }
+
     if (!clientAccount.currency?.is_main) {
-        currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(USDcashAmount.value) - (Number(IQDcashAmount.value) + Number(USDcashAmount.value) * clientAccount.currency_rate / USDcurrencyRate.value)
+        currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(USDcashAmount.value) - (Number(IQDcashAmount.value) + Number(USDcashAmount.value) * clientAccount.currency_rate / currencyRate.value)
     } else {
         currencyDifferencesAmount.value = 0
     }
@@ -172,7 +194,7 @@ const onSubmit = handleSubmit(async () => {
     if (USDcashAmount.value != 0) {
         createRecord.value.accounts.push({ account_id: USDcashAccountId.value, amount: USDcashAmount.value, type: AccountConsts.DEBIT_TYPE })
         createRecord.value.currency_id = currenciesList.value.find((currency) => !currency.is_main)?.id ?? 0
-        createRecord.value.currency_rate = USDcurrencyRate.value
+        createRecord.value.currency_rate = currencyRate.value
     } else {
         createRecord.value.currency_rate = 1
         createRecord.value.currency_id = currenciesList.value.find((currency) => currency.is_main)?.id ?? 0
@@ -206,13 +228,13 @@ watch(clientAccountId, (value) => {
     if (value != 0) {
         const clientAccount = clientsAccountsList.value.find((account) => account.id == value) ?? defaultAccount
         if (!clientAccount.currency?.is_main) {
-            currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(USDcashAmount.value) - (Number(IQDcashAmount.value) + Number(USDcashAmount.value) * clientAccount.currency_rate / USDcurrencyRate.value)
+            currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(USDcashAmount.value) - (Number(IQDcashAmount.value) + Number(USDcashAmount.value) * clientAccount.currency_rate / currencyRate.value)
         } else {
             currencyDifferencesAmount.value = 0
         }
     }
 })
-watch(USDcurrencyRate, (value) => {
+watch(currencyRate, (value) => {
     USDcashAmount.value = USDcashAmountInUSD.value * value
 
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
@@ -227,7 +249,7 @@ watch(USDcashAmount, (value) => {
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
 
     if (!clientAccount.currency?.is_main) {
-        currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(value) - (Number(IQDcashAmount.value) + Number(value) * clientAccount.currency_rate / USDcurrencyRate.value)
+        currencyDifferencesAmount.value = Number(IQDcashAmount.value) + Number(value) - (Number(IQDcashAmount.value) + Number(value) * clientAccount.currency_rate / currencyRate.value)
     } else {
         currencyDifferencesAmount.value = 0
     }
@@ -236,13 +258,13 @@ watch(IQDcashAmount, (value) => {
     const clientAccount = clientsAccountsList.value.find((account) => account.id == clientAccountId.value) ?? defaultAccount
 
     if (!clientAccount.currency?.is_main) {
-        currencyDifferencesAmount.value = Number(value) + Number(USDcashAmount.value) - (Number(value) + Number(USDcashAmount.value) * clientAccount.currency_rate / USDcurrencyRate.value)
+        currencyDifferencesAmount.value = Number(value) + Number(USDcashAmount.value) - (Number(value) + Number(USDcashAmount.value) * clientAccount.currency_rate / currencyRate.value)
     } else {
         currencyDifferencesAmount.value = 0
     }
 })
 watch(USDcashAmountInUSD, (value) => {
-    USDcashAmount.value = value * USDcurrencyRate.value
+    USDcashAmount.value = value * currencyRate.value
 })
 
 
@@ -323,16 +345,6 @@ watch(USDcashAmountInUSD, (value) => {
                                             </VControl>
                                         </VField>
                                     </div>
-                                    <div class="column is-12">
-                                        <VField id="iqd_currency_rate">
-                                            <VLabel class="required">{{ t('customer_cash_receipt.form.iqd_currency_rate') }}
-                                            </VLabel>
-                                            <VControl icon="feather:dollar-sign">
-                                                <VInput disabled v-model="IQDcurrencyRate" placeholder="" type="number" />
-                                                <ErrorMessage class="help is-danger" name="iqd_currency_rate" />
-                                            </VControl>
-                                        </VField>
-                                    </div>
                                 </div>
                                 <div class="column is-6 columns is-multiline m-0 p-0 my-2">
                                     <div class="column is-12">
@@ -361,17 +373,17 @@ watch(USDcashAmountInUSD, (value) => {
                                             </VControl>
                                         </VField>
                                     </div>
-                                    <div class="column is-12">
-                                        <VField id="usd_currency_rate">
-                                            <VLabel class="required">{{ t('customer_cash_receipt.form.usd_currency_rate') }}
-                                            </VLabel>
-                                            <VControl icon="feather:dollar-sign">
-                                                <VInput v-model="USDcurrencyRate" placeholder="" type="number" />
-                                                <ErrorMessage class="help is-danger" name="usd_currency_rate" />
-                                            </VControl>
-                                        </VField>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="column is-12">
+                                <VField id="currency_rate">
+                                    <VLabel class="required">{{ t('supplier_cash_receipt.form.currency_rate') }}
+                                    </VLabel>
+                                    <VControl icon="feather:dollar-sign">
+                                        <VInput v-model="currencyRate" placeholder="" type="number" />
+                                        <ErrorMessage class="help is-danger" name="currency_rate" />
+                                    </VControl>
+                                </VField>
                             </div>
                             <div v-if="currencyDifferencesAmount != 0 && IQDcashAmount + USDcashAmount != 0"
                                 class="column is-12 is-flex is-justify-content-center">
