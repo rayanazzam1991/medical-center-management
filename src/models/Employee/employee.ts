@@ -66,6 +66,7 @@ export interface EmployeeSearchFilter {
     quick_search?: boolean
     is_salaries_related?: boolean
     is_service_provider?: boolean
+    is_cashier?: boolean
 }
 export interface EmployeeService {
     id: number
