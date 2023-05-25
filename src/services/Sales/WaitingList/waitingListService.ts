@@ -55,7 +55,15 @@ export async function getServiceCardsList(searchFilter: ServiceCardsListSearchFi
     let message: string = response.message ?? ''
 
     return { service_cards, pagination, success, error_code, message }
+}
+export async function sendAlertToProvider(providerId: number) {
+    const response = useWaitingList()
+    await response.sendAlertToProviderStore(providerId)
+    let success: boolean = response.success ?? false
+    let error_code: string = response.error_code ?? ''
+    let message: string = response.message ?? ''
 
+    return { success, error_code, message }
 }
 export async function changeWaitingListOrdering(data: ChangeWaitingListOrderingData) {
     const response = useWaitingList()
@@ -67,6 +75,9 @@ export async function changeWaitingListOrdering(data: ChangeWaitingListOrderingD
     return { success, error_code, message }
 
 }
+
+
+
 export function resetServiceCardsListSearchFilter() {
     const blankSearchFilter: ServiceCardsListSearchFilter = {
         customer_name: undefined,

@@ -46,6 +46,15 @@ export async function getServiceCardsListApi(
     return { response }
 }
 
+export async function sendAlertToProviderApi(
+    api: AxiosInstance,
+    providerId: number
+): Promise<{ response: CustomResponseSingle }> {
+    const { data: response, headers } = await api.get(`waitingList/sendAlertToProvider/${providerId}`)
+
+    return { response }
+}
+
 export async function changeWaitingListOrderingApi(
     api: AxiosInstance,
     data: ChangeWaitingListOrderingData

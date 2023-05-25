@@ -198,6 +198,7 @@ declare module '@vue/runtime-core' {
     ReservationTableCell: typeof import('./src/components/OurComponents/Sales/Reservation/ReservationTableCell.vue')['default']
     ResetCashAccountsModal: typeof import('./src/components/OurComponents/Accounting/Account/ResetCashAccountsModal.vue')['default']
     ResetCashAccountsSearchFilterModal: typeof import('./src/components/OurComponents/Accounting/Transaction/ResetCashAccountsSearchFilterModal.vue')['default']
+    ResetCashAccountsTable: typeof import('./src/components/OurComponents/Accounting/Transaction/ResetCashAccountsTable.vue')['default']
     ResetCashAccountsTableHeader: typeof import('./src/components/OurComponents/Accounting/Transaction/ResetCashAccountsTableHeader.vue')['default']
     RoleDetails: typeof import('./src/components/OurComponents/Others/Role/RoleDetails.vue')['default']
     RoleForm: typeof import('./src/components/OurComponents/Others/Role/RoleForm.vue')['default']
