@@ -205,11 +205,11 @@ const columns = {
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 150px;
+    min-width: 150px;
     background-color: white;
     text-align: center;
     border-radius: 6px;
-    padding: 5px;
+    padding: 10px;
     word-break: keep-all;
     white-space: normal;
 
