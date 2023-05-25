@@ -11,6 +11,7 @@ const i18n = createI18n<[DefaultLocaleMessageSchema], 'ar' | 'en'>({
     messages: messages
 })
 export interface WaitingList {
+    current_turn_number?: number
     provider: Employee
     waiting_list: EmployeeWaitingList[]
 }

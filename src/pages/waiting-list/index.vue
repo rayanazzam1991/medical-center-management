@@ -19,9 +19,14 @@ import { getWaitingLists } from '/@src/services/Sales/WaitingList/waitingListSer
 import { useWaitingList } from '/@src/stores/Sales/WaitingList/waitingListStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
 import { toggleEmployeeAvailability } from '/@src/services/Employee/employeeService';
+import Echo from 'laravel-echo'
+import Socket from 'socket.io-client'
+import { useAuth } from '/@src/stores/Others/User/authStore';
+import EmployeeWaitingList from '/@src/components/OurComponents/Employee/EmployeeWaitingList.vue';
+import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
 
 
-
+window.io = Socket
 const viewWrapper = useViewWrapper()
 const { t } = useI18n()
 viewWrapper.setPageTitle(t('waiting_list.title'))
@@ -32,10 +37,38 @@ const waitingListStore = useWaitingList()
 const waitingListLists = ref<WaitingList[]>([])
 const searchFilter = ref(defaultWaitingListSearchFilter)
 const keyIncrement = ref(0)
+const userAuth = useAuth()
 onMounted(async () => {
     const { waiting_lists } = await getWaitingLists(searchFilter.value)
     waitingListLists.value = waiting_lists
     keyIncrement.value++
+
+    let echo = new Echo({
+        broadcaster: 'socket.io',
+        host: window.location.hostname + ':6001',
+        authEndpoint: window.location.hostname + '/broadcasting/auth',
+        auth:
+        {
+            headers:
+            {
+                'Accept': 'application/json',
+                Authorization: `Bearer ${userAuth.token}`,
+            }
+        },
+        rejectUnauthorized: false,
+    });
+    echo.private('waitingList')
+        .listen("WaitingListsEvent", (e: any) => {
+            waitingListLists.value = waitingListLists.value.map((el) => {
+                if (el.provider.id === e.employee_id) {
+                    return e.waiting_list;
+                } else {
+                    return el;
+                }
+            });
+
+        });
+
 });
 
 const search = async (newSearchFilter: WaitingListSearchFilter) => {
@@ -84,7 +117,7 @@ const toggleAvailability = async (employeeId: number) => {
             <div :key="keyIncrement" class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent v-for="(waitingList, index) in waitingListLists" :key="index" withChangeAvailability
                     @toggleAvailability="toggleAvailability" :waiting_list="waitingList.waiting_list"
-                    :provider="waitingList.provider" />
+                    :current_turn_number="waitingList.current_turn_number" :provider="waitingList.provider" />
             </div>
         </div>
         <div v-else>
