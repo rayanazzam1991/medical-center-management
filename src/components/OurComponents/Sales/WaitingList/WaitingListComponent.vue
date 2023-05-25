@@ -2,36 +2,98 @@
 import { useI18n } from 'vue-i18n';
 import { defaultEmployee, Employee } from '/@src/models/Employee/employee';
 import { TicketConsts } from '/@src/models/Sales/Ticket/ticket';
-import { defaultWaitingList, EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
+import { EmployeeWaitingList } from '/@src/models/Sales/WaitingList/waitingList';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import Echo from 'laravel-echo'
+import Socket from 'socket.io-client'
+import { useAuth } from '/@src/stores/Others/User/authStore';
+import { sendAlertToProvider } from '/@src/services/Sales/WaitingList/waitingListService'
+import { useNotyf } from '/@src/composable/useNotyf';
+import { Notyf } from 'notyf';
 
 
 export interface WaitingListComponentProps {
     waiting_list: EmployeeWaitingList[],
     provider: Employee,
-    withChangeAvailability: boolean
+    current_turn_number: number,
+    withChangeAvailability: boolean,
+    withAlertProvider: boolean,
 }
 const emits = defineEmits<{
     (e: 'toggleAvailability', employeeId: number): void
 }>()
-
-
+window.io = Socket
+const userAuth = useAuth()
+const keyIncrement = ref(0)
 const props = withDefaults(defineProps<WaitingListComponentProps>(), {
     waiting_list: () => [],
     provider: () => defaultEmployee,
-    withChangeAvailability: false
+    current_turn_number: undefined,
+    withChangeAvailability: false,
+    withAlertProvider: false,
+
 })
+
+onMounted(async () => {
+
+    let echo = new Echo({
+        broadcaster: 'socket.io',
+        host: window.location.hostname + ':6001',
+        authEndpoint: window.location.hostname + '/broadcasting/auth',
+        auth:
+        {
+            headers:
+            {
+                'Accept': 'application/json',
+                Authorization: `Bearer ${userAuth.token}`,
+            }
+        },
+        rejectUnauthorized: false,
+    });
+    echo.private('waitingList')
+        .listen("WaitingListsEvent", async (e: any) => {
+
+            if (provider.value.id === e.employee_id) {
+                if (provider.value.is_available !== e.waiting_list.provider.is_available) {
+                    provider.value = e.waiting_list.provider;
+                }
+                if (props.current_turn_number !== e.waiting_list.current_turn_number) {
+                    props.current_turn_number = e.waiting_list.current_turn_number
+                }
+            }
+
+        });
+
+});
+
 const { t } = useI18n()
 const waitingList = ref<EmployeeWaitingList[]>([])
-const provider = ref<Employee>()
+const provider = ref<Employee>(defaultEmployee)
+const notif = useNotyf() as Notyf
 waitingList.value = props.waiting_list
 provider.value = props.provider
-const currentTurnNumber = ref(0)
-currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? 0
 
 const toggleAvailability = () => {
     emits('toggleAvailability', provider.value?.id ?? 0)
 }
+const alertProvider = async () => {
+    if (provider.value.id) {
+        const { message, success } = await sendAlertToProvider(provider.value.id)
+        if (success) {
+            notif.success(t('toast.success.provider_alerted'))
+        } else {
+            notif.error({ message: message, duration: 3000 })
+        }
+    }
+}
+const canAlert = computed(() => {
+    if (provider.value.is_available && props.current_turn_number) {
+        return true
+    } else {
+        return false
+    }
+})
+
 </script>
 
 <template>
@@ -54,13 +116,15 @@ const toggleAvailability = () => {
                             </p>
                             <p class="column-name has-text-centered is-size-6 has-text-info">{{
                                 t('waiting_list.current_turn_number') }}
-                                {{ currentTurnNumber == 0 ? '-' : currentTurnNumber }}
+                                {{ $props.current_turn_number == undefined ? '-' : $props.current_turn_number }}
                             </p>
                         </h3>
-                        <div v-if="$props.withChangeAvailability" class="dropdown">
-                            <WaitingListDropDown @change-availability="toggleAvailability"
+                        <div v-if="$props.withChangeAvailability || $props.withAlertProvider" class="dropdown">
+                            <WaitingListDropDown @change-availability="toggleAvailability" @alert-provider="alertProvider"
                                 :employee-availability="provider.is_available"
-                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" />
+                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE"
+                                :alert-provider-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE"
+                                :show-alert="canAlert" />
 
                         </div>
                     </div>

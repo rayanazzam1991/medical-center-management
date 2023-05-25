@@ -18,9 +18,14 @@ import { defaultServiceHistoryScreenDetails } from '/@src/models/Sales/ServiceHi
 import { getServiceHistoryScreen } from '/@src/services/Sales/ServiceHistoryScreen/serviceHistoryScreenService';
 import { useServiceHistoryScreen } from '/@src/stores/Sales/ServiceHistoryScreen/serviceHistoryScreenStore';
 import { useViewWrapper } from '/@src/stores/viewWrapper';
+import Echo from 'laravel-echo'
+import Socket from 'socket.io-client'
+import { useAuth } from '/@src/stores/Others/User/authStore';
 
 
 
+window.io = Socket
+const userAuth = useAuth()
 const viewWrapper = useViewWrapper()
 const { t, locale } = useI18n()
 const iconArrow = locale.value == "ar" ? "lnir-arrow-right" : "lnir-arrow-left"
@@ -39,6 +44,34 @@ onMounted(async () => {
   const { screen } = await getServiceHistoryScreen(screenServiceId.value)
   currentScreenService.value = screen
   keyIncrement.value++
+
+
+  let echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001',
+    authEndpoint: window.location.hostname + '/broadcasting/auth',
+    auth:
+    {
+      headers:
+      {
+        'Accept': 'application/json',
+        Authorization: `Bearer ${userAuth.token}`,
+      }
+    },
+    rejectUnauthorized: false,
+  });
+  echo.private('waitingList')
+    .listen("WaitingListsEvent", (e: any) => {
+      currentScreenService.value.waiting_lists = currentScreenService.value.waiting_lists.map((el) => {
+        if (el.provider.id === e.employee_id) {
+          return e.waiting_list;
+        } else {
+          return el;
+        }
+      });
+
+    });
+
 });
 
 

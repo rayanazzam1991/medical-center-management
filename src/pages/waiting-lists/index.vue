@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import Echo from 'laravel-echo'
 import Socket from 'socket.io-client'
 import { onMounted } from 'vue';
+import { useAuth } from '/@src/stores/Others/User/authStore';
 window.io = Socket
 
 interface TodoList {
@@ -23,6 +24,8 @@ list.value.push({
     number: 3,
     title: "Third"
 })
+const userAuth = useAuth()
+
 onMounted(() => {
     let echo = new Echo({
         broadcaster: 'socket.io',
@@ -33,7 +36,7 @@ onMounted(() => {
             headers:
             {
                 'Accept': 'application/json',
-                Authorization: "Bearer " + "4|5xrRAEVWgOezWomfvdDoadP8h9KjAXtKPetem5gK",
+                Authorization: `Bearer ${userAuth.token}`,
             }
         },
         rejectUnauthorized: false,

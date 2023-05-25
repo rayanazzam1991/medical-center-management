@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useApi } from "/@src/composable/useApi"
 import { ServiceCard, ServiceCardsListSearchFilter, WaitingListSearchFilter } from "/@src/models/Sales/WaitingList/waitingList"
-import { getServiceCardsListApi, getWaitingListByProviderIdApi, getWaitingListByTicketIdApi, getWaitingListsListApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
+import { getServiceCardsListApi, getWaitingListByProviderIdApi, getWaitingListByTicketIdApi, getWaitingListsListApi, sendAlertToProviderApi, serveNextTicketInProviderWaitingListApi } from "/@src/utils/api/Sales/WaitingList"
 import { Pagination, defaultPagination } from "/@src/utils/response"
 
 
@@ -123,6 +123,24 @@ export const useWaitingList = defineStore('waitingList', () => {
             loading.value = false
         }
     }
+    async function sendAlertToProviderStore(providerId: number) {
+        if (loading.value) return
+        loading.value = true
+        try {
+            const returnedResponse = await sendAlertToProviderApi(api, providerId)
+            success.value = returnedResponse.response.success
+            error_code.value = returnedResponse.response.error_code
+            message.value = returnedResponse.response.message
+        }
+        catch (error: any) {
+            success.value = error?.response.data.success
+            error_code.value = error?.response.data.error_code
+            message.value = error?.response.data.message
+        }
+        finally {
+            loading.value = false
+        }
+    }
 
 
 
@@ -137,7 +155,8 @@ export const useWaitingList = defineStore('waitingList', () => {
         getWaitingListByProviderStore,
         serveNextTicketInProviderWaitingListStore,
         getWaitingListByTicketIdStore,
-        getServiceCardsListStore
+        getServiceCardsListStore,
+        sendAlertToProviderStore
     } as const
 })
 
