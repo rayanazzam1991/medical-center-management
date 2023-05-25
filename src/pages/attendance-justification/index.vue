@@ -1,15 +1,16 @@
 <route lang="json">
-    {
-      "meta": {
+{
+    "meta": {
         "requiresAuth": true,
         "permissions": [
-          "attendance_justification_list"
+            "attendance_justification_list"
         ]
-      }
     }
-    </route>
+}
+</route>
   
-<script setup lang="ts">import { useHead } from '@vueuse/head';
+<script setup lang="ts">
+import { useHead } from '@vueuse/head';
 import { Notyf } from 'notyf';
 import { useI18n } from 'vue-i18n';
 import IconButton from '/@src/components/OurComponents/Warehouse/InventoryItemHistory/IconButton.vue';
@@ -160,8 +161,7 @@ const columns = {
         :default_per_page="default_per_page" @resetFilter="resetFilter" />
 
 
-    <VFlexTableWrapper :columns="columns" :data="attendanceJustificationsList"
-        @update:sort="attendanceJustificationSort">
+    <VFlexTableWrapper :columns="columns" :data="attendanceJustificationsList" @update:sort="attendanceJustificationSort">
 
         <VFlexTable separators clickable>
             <template #body>
@@ -173,8 +173,8 @@ const columns = {
                     </div>
                 </div>
                 <div v-else-if="attendanceJustificationsList.length === 0" class="flex-list-inner">
-                    <VPlaceholderSection :title="t('tables.placeholder.title')"
-                        :subtitle="t('tables.placeholder.subtitle')" class="my-6">
+                    <VPlaceholderSection :title="t('tables.placeholder.title')" :subtitle="t('tables.placeholder.subtitle')"
+                        class="my-6">
                     </VPlaceholderSection>
                 </div>
 
@@ -185,30 +185,26 @@ const columns = {
             :current-page="paginationVar.page" class="mt-6" :item-per-page="paginationVar.per_page"
             :total-items="paginationVar.total" :max-links-displayed="3" no-router
             @update:current-page="getAttendanceJustificationsPerPage" />
-        <h6 class="pt-2 is-size-7" v-if="attendanceJustificationsList.length != 0 && !attendanceJustificationStore?.loading">
+        <h6 class="pt-2 is-size-7"
+            v-if="attendanceJustificationsList.length != 0 && !attendanceJustificationStore?.loading">
             {{
-                t('tables.pagination_footer', { from_number: paginationVar.page !=
-                    paginationVar.max_page
-                    ?
-                    (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
-                        ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
-                , to_number: paginationVar.page !=
-                    paginationVar.max_page ?
-                    paginationVar.page *
-                    paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
-            })}}</h6>
+                t('tables.pagination_footer', {
+                    from_number: paginationVar.page !=
+                        paginationVar.max_page
+                        ?
+                        (1 + ((paginationVar.page - 1) * paginationVar.count)) : paginationVar.page == paginationVar.max_page ? (1 +
+                            ((paginationVar.page - 1) * paginationVar.per_page)) : paginationVar.page == 1 ? 1 : paginationVar.total
+                    , to_number: paginationVar.page !=
+                        paginationVar.max_page ?
+                        paginationVar.page *
+                        paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
+                }) }}</h6>
         <VPlaceloadText v-if="attendanceJustificationStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
     </VFlexTableWrapper>
-
-
-
-
-
 </template>
 
 <style lang="scss">
-
 .tooltip {
     position: relative;
     display: inline-block;
@@ -216,11 +212,11 @@ const columns = {
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 150px;
+    min-width: 150px;
     background-color: white;
     text-align: center;
     border-radius: 6px;
-    padding: 5px;
+    padding: 10px;
     word-break: keep-all;
     white-space: normal;
 
@@ -241,5 +237,4 @@ const columns = {
         background-color: rgb(43, 41, 41);
     }
 }
-
 </style>
