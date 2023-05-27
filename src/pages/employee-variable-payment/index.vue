@@ -427,7 +427,7 @@ const columns = {
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 150px;
+  min-width: fit-content;
   background-color: white;
   text-align: center;
   border-radius: 6px;

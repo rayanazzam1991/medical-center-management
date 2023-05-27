@@ -339,7 +339,8 @@
       "reset": "تمت عملية تصفير الحسابات بنجاح",
       "deactivate_reservation": "تم انهاء تفعيل الحجز بنجاح",
       "cancel_reservation": "تم الغاء الحجز بنجاح",
-      "change_waiting_list_order": "تم تغيير الترتيب بنجاح"
+      "change_waiting_list_order": "تم تغيير الترتيب بنجاح",
+      "provider_alerted": "تم ارسال التنبيه للمخدم بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -482,7 +483,8 @@
     "view_reservation_calendar": "عرض الحجوزات",
     "change_provider_availability": "تعديل الحالة إلى  ",
     "is_available": " متواجد ",
-    "is_not_available": "غير متواجد"
+    "is_not_available": "غير متواجد",
+    "alert_provider": "ارسال تنبيه تأخير للمخدم"
   },
   "add_quantity": {
     "form": {

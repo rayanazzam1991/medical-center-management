@@ -190,6 +190,9 @@ const debouncedTotalAmount = debounce(async () => {
           <div class="column is-12">
             <CashReceiptsTables with-title :is_for_show="false" :is_on_day="true" />
           </div>
+          <div class="column is-12">
+            <ResetCashAccountsTable with-title />
+          </div>
         </div>
       </div>
     </div>

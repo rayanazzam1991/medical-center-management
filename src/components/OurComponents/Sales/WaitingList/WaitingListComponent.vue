@@ -9,20 +9,35 @@ import { useNotyf } from '/@src/composable/useNotyf';
 import { Notyf } from 'notyf';
 import { checkPermission } from '/@src/composable/checkPermission';
 import { Permissions } from '/@src/utils/consts/rolesPermissions';
+import Echo from 'laravel-echo'
+import Socket from 'socket.io-client'
+import { useAuth } from '/@src/stores/Others/User/authStore';
+import { sendAlertToProvider } from '/@src/services/Sales/WaitingList/waitingListService'
+import { ReservationConsts } from '/@src/models/Sales/Reservation/reservation';
 
 
 export interface WaitingListComponentProps {
     waiting_list: EmployeeWaitingList[],
     provider: Employee,
     draggable?: boolean,
-    withChangeAvailability: boolean
+    current_turn_number: string,
+    current_is_reserve: boolean,
+    withChangeAvailability: boolean,
+    withAlertProvider: boolean,
 }
-
+window.io = Socket
+const userAuth = useAuth()
+const keyIncrement = ref(0)
+const container = ref<Element>();
 const props = withDefaults(defineProps<WaitingListComponentProps>(), {
     waiting_list: () => [],
     provider: () => defaultEmployee,
+    current_turn_number: undefined,
+    current_is_reserve: undefined,
     draggable: false,
-    withChangeAvailability: false
+    withChangeAvailability: false,
+    withAlertProvider: false,
+
 })
 const emits = defineEmits<{
     (e: 'refresh'): void
@@ -85,16 +100,45 @@ onMounted(() => {
             drake.on('drop', onDrop);
         }
     })
+    let echo = new Echo({
+        broadcaster: 'socket.io',
+        host: window.location.hostname + ':6001',
+        authEndpoint: window.location.hostname + '/broadcasting/auth',
+        auth:
+        {
+            headers:
+            {
+                'Accept': 'application/json',
+                Authorization: `Bearer ${userAuth.token}`,
+            }
+        },
+        rejectUnauthorized: false,
+    });
+    echo.private('waitingList')
+        .listen("WaitingListsEvent", async (e: any) => {
+            if (provider.value.id === e.employee_id) {
+                if (provider.value.is_available !== e.waiting_list.provider.is_available) {
+                    provider.value = e.waiting_list.provider;
+                }
+                if (props.current_turn_number !== e.waiting_list.current_turn_number) {
+                    props.current_turn_number = e.waiting_list.current_turn_number
+                    props.current_is_reserve = e.waiting_list.current_is_reserve
+                }
+            }
+
+        });
+
+
 })
-const notif = useNotyf() as Notyf
-const container = ref<Element>();
+
 const { t } = useI18n()
 const waitingList = ref<EmployeeWaitingList[]>([])
-const provider = ref<Employee>()
+const provider = ref<Employee>(defaultEmployee)
+const notif = useNotyf() as Notyf
 waitingList.value = props.waiting_list
 provider.value = props.provider
-const currentTurnNumber = ref('-')
-const currentIsReserve = ref(false)
+// const currentTurnNumber = ref('-')
+// const currentIsReserve = ref(false)
 
 const checkTicketIsEmergency = (requestedServices: TicketService[]) => {
     let isEmergency = false
@@ -114,13 +158,31 @@ const checkTicketIsReserve = (requestedServices: TicketService[]) => {
     });
     return isReserve
 }
-currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? '-'
-currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.ticket.requested_services ?? [])
+// currentTurnNumber.value = waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.turn_number ?? '-'
+// currentIsReserve.value = checkTicketIsReserve(waitingList.value.find((waitingListEl) => waitingListEl.ticket.status == TicketConsts.SERVING)?.ticket.requested_services ?? [])
 
 
 const toggleAvailability = () => {
     emits('toggleAvailability', provider.value?.id ?? 0)
 }
+const alertProvider = async () => {
+    if (provider.value.id) {
+        const { message, success } = await sendAlertToProvider(provider.value.id)
+        if (success) {
+            notif.success(t('toast.success.provider_alerted'))
+        } else {
+            notif.error({ message: message, duration: 3000 })
+        }
+    }
+}
+const canAlert = computed(() => {
+    if (provider.value.is_available && props.current_turn_number) {
+        return true
+    } else {
+        return false
+    }
+})
+
 </script>
 
 <template>
@@ -145,15 +207,19 @@ const toggleAvailability = () => {
                             </p>
                             <p class="column-name has-text-centered is-size-6">{{
                                 t('waiting_list.current_turn_number') }}
-                                <span :class="currentIsReserve ? 'has-text-primary' : 'has-text-info'"> {{ currentTurnNumber
-                                    == '-' ? '-' : currentTurnNumber }}
+                                <span :class="$props.current_is_reserve ? 'has-text-primary' : 'has-text-info'">
+                                    {{
+                                        $props.current_turn_number
+                                    }}
                                 </span>
                             </p>
                         </h3>
-                        <div v-if="$props.withChangeAvailability" class="dropdown">
-                            <WaitingListDropDown @change-availability="toggleAvailability"
+                        <div v-if="$props.withChangeAvailability || $props.withAlertProvider" class="dropdown">
+                            <WaitingListDropDown @change-availability="toggleAvailability" @alert-provider="alertProvider"
                                 :employee-availability="provider.is_available"
-                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE" />
+                                :change-availability-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE"
+                                :alert-provider-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE"
+                                :show-alert="canAlert" />
 
                         </div>
                     </div>

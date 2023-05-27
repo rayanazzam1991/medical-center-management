@@ -19,6 +19,12 @@ import { toggleEmployeeAvailability } from '/@src/services/Employee/employeeServ
 import { ServiceProvider, defaultServiceProvider } from '/@src/models/Sales/ServiceProvider/serviceProvider';
 import { getEmployee } from '/@src/services/Employee/employeeService';
 import { defaultService } from '/@src/models/Others/Service/service';
+import Echo from 'laravel-echo'
+import Socket from 'socket.io-client'
+import { useAuth } from '/@src/stores/Others/User/authStore';
+import sleep from '/@src/utils/sleep';
+import { addParenthesisToString } from '/@src/composable/helpers/stringHelpers';
+
 export interface EmployeeWaitingListProps {
     employeeIdFromRoute: boolean,
     employeeId: number | undefined
@@ -28,6 +34,7 @@ const props = withDefaults(defineProps<EmployeeWaitingListProps>(), {
     employeeId: undefined,
 
 })
+window.io = Socket
 const { t } = useI18n()
 const notif = useNotyf() as Notyf
 const waitingListStore = useWaitingList()
@@ -57,7 +64,10 @@ const isAvailable = ref()
 const isMounting = ref(false)
 const disableAvailabilitySwitch = ref(true)
 loggedEmployee.value = employeeStore.getEmployee()
-
+const userAuth = useAuth()
+const isRefreshingIsAvailable = ref(false)
+const alertMessage = ref<string | undefined>(undefined)
+const alertCount = ref(0)
 if (props.employeeIdFromRoute) {
     // @ts-ignore
     employeeId.value = route.params.id as number ?? 0
@@ -78,6 +88,46 @@ onMounted(async () => {
         intialLoading.value = false
     }
     disableAvailabilitySwitch.value = false
+    let echo = new Echo({
+        broadcaster: 'socket.io',
+        host: window.location.hostname + ':6001',
+        authEndpoint: window.location.hostname + '/broadcasting/auth',
+        auth:
+        {
+            headers:
+            {
+                'Accept': 'application/json',
+                Authorization: `Bearer ${userAuth.token}`,
+            }
+        },
+        rejectUnauthorized: false,
+    });
+    echo.private('waitingList')
+        .listen("WaitingListsEvent", async (e: any) => {
+            if (employeeId.value == e.employee_id) {
+                if (isAvailable.value !== e.waiting_list.provider.is_available) {
+                    isRefreshingIsAvailable.value = true
+                    isAvailable.value = Boolean(e.waiting_list.provider.is_available) ?? isAvailable.value;
+                    employeeWaitingList.value.provider.is_available = Boolean(e.waiting_list.provider.is_available) ?? isAvailable.value;
+                    isRefreshingIsAvailable.value = false
+                }
+                employeeWaitingList.value = e.waiting_list;
+                keyIncrement.value++
+            }
+
+        });
+    echo.private('providerAlert')
+        .listen("ProviderAlertEvent", async (e: any) => {
+            if (employeeId.value == e.employee_id) {
+                alertCount.value++
+                if (alertCount.value == 1) {
+                    alertMessage.value = e.alert
+                } else {
+                    alertMessage.value = e.alert + addParenthesisToString(alertCount.value.toString())
+                }
+            }
+
+        });
 
 });
 
@@ -142,6 +192,8 @@ const ticketServingDone = async () => {
     const { success, message } = await moveTicketToNextWaitingList(servingTicket.value.id)
     if (success) {
         await refreshWaitingList()
+        dismissAlerts()
+        await resetAlertCount()
         keyIncrement.value++
     } else {
         notif.error({ message: message, duration: 3000 })
@@ -186,27 +238,30 @@ const serveConfirmation = (requestedServiceId: number) => {
     selectedServeServiceId.value = requestedServiceId
     serveServiceConfirmationPopup.value = true
 }
-watch(isAvailable, async (value) => {
-    disableAvailabilitySwitch.value = true
-    if (isMounting.value && !employeeStore.loading && !waitingListStore.loading) {
-        const { message, success } = await toggleEmployeeAvailability(employeeWaitingList.value.provider.id ?? 0)
-        if (success) {
-            notif.success(t('toast.success.edit'))
-            await refreshWaitingList()
-            keyIncrement.value++
-        } else {
-            isAvailable.value = Boolean(employeeWaitingList.value.provider.is_available) ?? false
-            notif.error({ message: message, duration: 3000 })
-        }
-    }
-    isMounting.value = true
-    disableAvailabilitySwitch.value = false
-
-})
-const checkIsThereServingTicket = () => {
+const checkIsThereServingTicket = async (value: boolean) => {
     if (isThereServingTicket.value) {
         notif.dismissAll()
         notif.error({ message: t('toast.error.employee.cannot_change_avaiability'), duration: 3000 })
+    } else {
+        disableAvailabilitySwitch.value = true
+        if (isMounting.value && !employeeStore.loading && !waitingListStore.loading) {
+            if (!isRefreshingIsAvailable.value) {
+                const { message, success } = await toggleEmployeeAvailability(employeeWaitingList.value.provider.id ?? 0)
+                if (success) {
+                    notif.success(t('toast.success.edit'))
+                    await refreshWaitingList()
+                    keyIncrement.value++
+                } else {
+                    isAvailable.value = Boolean(employeeWaitingList.value.provider.is_available) ?? false
+                    notif.error({ message: message, duration: 3000 })
+                }
+            } else {
+                await refreshWaitingList()
+            }
+        }
+        isMounting.value = true
+        disableAvailabilitySwitch.value = false
+
     }
 }
 const removeService = (requestedServiceId: number) => {
@@ -220,6 +275,14 @@ const addNewService = () => {
     keyIncrementAddServiceModal.value++
     addServicePopup.value = true
 }
+const dismissAlerts = () => {
+    alertMessage.value = undefined
+
+}
+const resetAlertCount = async () => {
+    await sleep(1000)
+    alertCount.value = 0
+}
 watch(selectedServiceProviderId, (value) => {
     let selectedService = serviceProviderServices.value.find((service) => service.id == value)
     if (selectedService) {
@@ -229,18 +292,18 @@ watch(selectedServiceProviderId, (value) => {
 </script>
 <template>
     <div class="header is-flex is-justify-content-space-between is-align-items-center">
-        <h1>{{ t('employee.waiting_list.header_title') }} {{ employeeName }}</h1>
-        <VField v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE">
+        <div>
+            <h1>{{ t('employee.waiting_list.header_title') }} {{ employeeName }}</h1>
+        </div>
+        <VField class="is-align-self-start" v-permission="Permissions.EMPLOYEE_AVAILABILITY_TOGGLE">
             <VControl>
                 <VSwitchSegment :disabled="waitingListStore.loading || isThereServingTicket || disableAvailabilitySwitch"
-                    color="success" @click="checkIsThereServingTicket"
+                    color="success" @click="checkIsThereServingTicket(isAvailable)"
                     :label-false="t('employee.waiting_list.is_not_available')"
                     :label-true="t('employee.waiting_list.is_available')" v-model="isAvailable" />
             </VControl>
         </VField>
-
     </div>
-
     <div class="waiting-list-outer-layout is-flex is-align-items-center is-justify-content-center ">
         <div v-if="intialLoading">
             <div class="columns is-multiline placeholder">
@@ -259,7 +322,8 @@ watch(selectedServiceProviderId, (value) => {
         <div v-else-if="employeeWaitingList.waiting_list.length > 0" class="waiting-list-inner">
             <div class="waiting-lists-container is-flex has-slimscroll">
                 <WaitingListComponent :key="keyIncrement" :waiting_list="employeeWaitingList.waiting_list"
-                    :provider="employeeWaitingList.provider" />
+                    :current_turn_number="employeeWaitingList.current_turn_number"
+                    :current_is_reserve="employeeWaitingList.current_is_reserve" :provider="employeeWaitingList.provider" />
             </div>
         </div>
         <div v-else>
@@ -404,6 +468,15 @@ watch(selectedServiceProviderId, (value) => {
             </div>
         </div>
     </div>
+    <transition name="slide">
+        <div class="alert-provider-notif"
+            :class="[alertCount == 1 && 'is-warning', alertCount > 1 && 'is-danger', !alertMessage && 'alert-provider-notif-reverse', alertMessage && 'alert-provider-notif-slide']">
+            <VIconButton
+                :class="[!alertMessage && 'is-hidden', alertCount > 1 && 'is-danger', alertCount == 1 && 'is-warning']"
+                class="dismiss-alert-button" icon="fas fa-times" @click="dismissAlerts" />
+            {{ alertMessage }}
+        </div>
+    </transition>
     <VModal :title="t('employee.waiting_list.serve_confirmation.title')" :open="serveServiceConfirmationPopup"
         actions="center" @close="serveServiceConfirmationPopup = false">
         <template #content>
@@ -438,7 +511,7 @@ watch(selectedServiceProviderId, (value) => {
                             <VLabel>{{ t('employee.waiting_list.add_service_modal.service') }}</VLabel>
                             <VControl>
                                 <VSelect v-model="selectedServiceProviderId">
-                                    <VOption v-for="service in serviceProviderServices" :key="service.id"
+                                    <VOption v-for=" service  in  serviceProviderServices " :key="service.id"
                                         :value="service.id">
                                         {{
                                             service.service.name
@@ -465,6 +538,74 @@ watch(selectedServiceProviderId, (value) => {
 </template>
     
 <style  lang="scss">
+@keyframes notifSlide {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+
+    }
+}
+
+@keyframes notifSlideOut {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.alert-provider-notif {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    padding: 1rem;
+    border-top-left-radius: var(--radius-large);
+    border-top-right-radius: var(--radius-large);
+    color: var(--white);
+    font-family: var(--font-alt);
+    font-weight: 400;
+    text-align: center;
+    min-height: 55px;
+    transform: translateY(0%);
+
+    &.is-danger {
+        background-color: var(--danger);
+
+    }
+
+    &.is-warning {
+        background-color: var(--warning);
+    }
+
+    .dismiss-alert-button {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+
+        &.is-danger {
+            background-color: var(--danger);
+        }
+
+
+    }
+}
+
+.alert-provider-notif-reverse {
+    animation: notifSlideOut .5s ease-in-out;
+    transform: translateY(100%);
+}
+
+.alert-provider-notif-slide {
+    animation: notifSlide .5s ease-in-out;
+}
+
+
 .header {
     background-color: var(--white);
     min-height: 50px;
