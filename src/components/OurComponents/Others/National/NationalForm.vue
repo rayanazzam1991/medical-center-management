@@ -26,7 +26,7 @@ export default defineComponent({
     const head = useHead({
       title: t('national.form.page_title'),
     });
-
+  
     const notif = useNotyf() as Notyf;
     const formType = ref("");
     formType.value = props.formType;
@@ -48,11 +48,13 @@ export default defineComponent({
         return;
       }
       const { national } = await _nationalService.show(nationalId.value);
+      console.table(national)
       currentNational.value = national;
     };
     onMounted(() => {
       getCurrentNational();
     });
+
     const validationSchema = nationalvalidationSchema
     const { handleSubmit } = useForm({
       validationSchema,

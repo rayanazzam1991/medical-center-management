@@ -33,7 +33,7 @@ const notif = useNotyf() as Notyf
 const searchFilter = ref(defaultNationalSearchFilter)
 const NationalList = ref<Array<National>>([])
 const paginationVar = ref(defaultPagination)
-const departmentStore = nationalStore()
+const _nationalStore = nationalStore()
 
 const default_per_page = ref(1)
 const keyIncrement = ref(0)
@@ -114,6 +114,7 @@ const columns = {
               : row.status === NationalConsts.ACTIVE
                 ? 'success'
                 : undefined,
+
         },
         {
           default() {
@@ -150,7 +151,7 @@ const columns = {
 
     <VFlexTable separators clickable>
       <template #body>
-        <div v-if="departmentStore?.loading" class="flex-list-inner">
+        <div v-if="_nationalStore?.loading" class="flex-list-inner">
           <div v-for="key in paginationVar.per_page" :key="key" class="flex-table-item">
             <VFlexTableCell>
               <VPlaceload />
@@ -169,7 +170,7 @@ const columns = {
     <VFlexPagination v-if="(NationalList.length != 0 && paginationVar.max_page != 1)" :current-page="paginationVar.page"
       class="mt-6" :item-per-page="paginationVar.per_page" :total-items="paginationVar.total" :max-links-displayed="3"
       no-router @update:current-page="getNationalsPerPage" />
-    <h6 class="pt-2 is-size-7" v-if="NationalList.length != 0 && !departmentStore?.loading">
+    <h6 class="pt-2 is-size-7" v-if="NationalList.length != 0 && !_nationalStore?.loading">
 
       {{
         t('tables.pagination_footer', {
@@ -183,7 +184,7 @@ const columns = {
             paginationVar.page *
             paginationVar.per_page : paginationVar.total, all_number: paginationVar.total
         }) }}</h6>
-    <VPlaceloadText v-if="departmentStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
+    <VPlaceloadText v-if="_nationalStore?.loading" :lines="1" last-line-width="20%" class="mx-2" />
 
   </VFlexTableWrapper>
 </template>
