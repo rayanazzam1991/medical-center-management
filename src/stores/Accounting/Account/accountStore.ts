@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { useApi } from "/@src/composable/useApi"
-import { changeAccountStatusApi, generateIncomeStatmentReportApi } from "/@src/utils/api/Accounting/Account/accounts"
+import { changeAccountStatusApi, generateIncomeStatmentReportApi } from "/@src/utils/api/Accounting/Account"
 
 import {
   Account,

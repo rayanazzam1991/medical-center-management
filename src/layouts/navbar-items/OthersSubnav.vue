@@ -60,6 +60,24 @@ const emits = defineEmits<{
                     </RouterLink>
                   </li>
                 </ul>
+                <h4 v-permission="Permissions.SERVICE_ACCESS" class="column-heading">{{
+                  t('national.national_subnav.nationals') }}</h4>
+                <ul>
+                  <li v-permission="Permissions.SERVICE_LIST">
+                    <RouterLink to="/national">
+                      <i class="lnir lnir-briefcase-alt" aria-hidden="true"></i>
+                      <span>{{ t('national.national_subnav.nationals') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                  <li v-permission="Permissions.SERVICE_CREATE">
+                    <RouterLink to="/national/add">
+                      <i aria-hidden="true" class="lnir lnir-circle-plus"></i>
+                      <span>{{ t('national.national_subnav.create_national') }}</span>
+                      <i aria-hidden="true" class="iconify" data-icon="feather:circle"></i>
+                    </RouterLink>
+                  </li>
+                </ul><br />
               </div>
               <div class="column is-4"
                 v-if="checkPermission(Permissions.DEPARTMENT_ACCESS) || checkPermission(Permissions.ROOM_ACCESS)">

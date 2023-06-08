@@ -290,6 +290,31 @@
       "status": "Status"
     }
   },
+  "national": {
+    "table": {
+      "title": "National",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "modal_title": "Remove National"
+    },
+    "details": {
+      "title": "National",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    },
+    "form": {
+      "page_title": "National",
+      "form_header": "{type} National",
+      "add_city_title": "Add National",
+      "edit_city_title": "Edit National",
+      "name": "Name",
+      "status": "Status"
+    }
+  },
   "contractor": {
     "table": {
       "title": "Contractor",

@@ -201,6 +201,7 @@ watch(
               route.path.startsWith('/userStatus') ||
               route.path.startsWith('/service/') ||
               route.path == ('/service') ||
+              route.path == ('/national') ||
               route.path.startsWith('/room') ||
               route.path.startsWith('/settings') ||
               route.path.startsWith('/role') ||

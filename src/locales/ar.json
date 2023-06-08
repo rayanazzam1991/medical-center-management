@@ -669,6 +669,38 @@
     },
     "header_button": "إضافة أخصّائي"
   },
+  "national": {
+    "header_button": "إضافة جنسية",
+    "search_for_national_title": "البحث عن الجنسيات",
+    "status": "الحالة",
+    "national_subnav": {
+      "nationals": "الجنسيات",
+      "create_national": "إنشاء جنسية"
+    },
+    "table": {
+      "title": "National",
+      "columns": {
+        "id": "رقم المعرّف",
+        "name": "الاسم ",
+        "status": "الحالة",
+        "actions": "الاجراءات"
+      },
+      "modal_title": "Remove National"
+    },
+    "details": {
+      "title": "National",
+      "name": "{title} Name",
+      "status": "{title} Status"
+    },
+    "form": {
+      "page_title": "جنسية",
+      "form_header": "{type} جنسية",
+      "add_national_title": " إضافة جنسية",
+      "edit_national_title": " تعديل جنسية",
+      "name": "الاسم ",
+      "status": "الحالة"
+    }
+  },
   "customer": {
     "table": {
       "title": "الزبائن",

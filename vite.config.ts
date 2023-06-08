@@ -37,7 +37,7 @@ export default defineConfig({
   // development server configuration
   server: {
     // Vite 3 now defaults to 5173, but you can override it with the port option.
-    port: 5000,
+    port: 4000,
   },
   /**
    * By default, Vite will crawl your index.html to detect dependencies that
@@ -224,10 +224,10 @@ export default defineConfig({
     !process.env.GTM_ID
       ? undefined
       : ViteRadar({
-          gtm: {
-            id: process.env.GTM_ID,
-          },
-        }),
+        gtm: {
+          id: process.env.GTM_ID,
+        },
+      }),
 
     /**
      * vite-plugin-pwa generate manifest.json and register services worker to enable PWA
@@ -297,33 +297,33 @@ export default defineConfig({
     !MINIFY_IMAGES
       ? undefined
       : ImageMin({
-          verbose: VERBOSE,
-          gifsicle: {
-            optimizationLevel: 7,
-            interlaced: false,
-          },
-          optipng: {
-            optimizationLevel: 7,
-          },
-          mozjpeg: {
-            quality: 60,
-          },
-          pngquant: {
-            quality: [0.8, 0.9],
-            speed: 4,
-          },
-          svgo: {
-            plugins: [
-              {
-                name: 'removeViewBox',
-                active: false,
-              },
-              {
-                name: 'removeEmptyAttrs',
-                active: false,
-              },
-            ],
-          },
-        }),
+        verbose: VERBOSE,
+        gifsicle: {
+          optimizationLevel: 7,
+          interlaced: false,
+        },
+        optipng: {
+          optimizationLevel: 7,
+        },
+        mozjpeg: {
+          quality: 60,
+        },
+        pngquant: {
+          quality: [0.8, 0.9],
+          speed: 4,
+        },
+        svgo: {
+          plugins: [
+            {
+              name: 'removeViewBox',
+              active: false,
+            },
+            {
+              name: 'removeEmptyAttrs',
+              active: false,
+            },
+          ],
+        },
+      }),
   ],
 })
