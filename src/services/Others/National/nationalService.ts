@@ -3,11 +3,7 @@ import { defaultNational, National, NationalSearchFilter } from '/@src/models/Ot
 import { Pagination } from '/@src/utils/response'
 
 export class nationalService {
-  _nationalStore;
-
-  constructor() {
-    this._nationalStore = nationalStore()
-  }
+  _nationalStore = nationalStore();
 
   async get(searchFilter: NationalSearchFilter) {
     await this._nationalStore.get(searchFilter)
@@ -36,7 +32,7 @@ export class nationalService {
   }
 
   async update(_national: National) {
-    var national: National = await this._nationalStore.update(_national) ?? defaultNational
+    var national: National = await this._nationalStore.up(_national) ?? defaultNational
     var success: boolean = this._nationalStore.success ?? false
     var error_code: string = this._nationalStore.error_code ?? ''
     var message: string = this._nationalStore.message ?? ''
