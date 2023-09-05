@@ -35,11 +35,11 @@ const props = withDefaults(defineProps<WaitingListComponentProps>(), {
 })
 
 onMounted(async () => {
-
+    let hostName = import.meta.env.VITE_SOCEKT_HOST;
     let echo = new Echo({
         broadcaster: 'socket.io',
-        host: window.location.hostname + ':6001',
-        authEndpoint: window.location.hostname + '/broadcasting/auth',
+        host: hostName + ':6001',
+        authEndpoint: hostName + '/broadcasting/auth',
         auth:
         {
             headers:
