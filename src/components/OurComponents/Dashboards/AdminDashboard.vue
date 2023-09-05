@@ -174,7 +174,11 @@ addParenthesisToString(t('dashboards.admin.total_amount'))]"
           <div class="column is-6">
             <ActivityLogTable with-title />
           </div>
+          <div class="column is-12">
+            <ResetCashAccountsTable with-title />
+          </div>
         </div>
+
       </div>
     </div>
   </div>

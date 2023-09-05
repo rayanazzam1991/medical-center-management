@@ -331,7 +331,8 @@
       "reset_password": "تم إعادة تعيين كلمة مرور المستخدم بنجاح",
       "password_changed": "تم تعديل كلمة المرور بنجاح",
       "dismiss": "تمت عملية إقالة الموظف بنجاح",
-      "reset": "تمت عملية تصفير الحسابات بنجاح"
+      "reset": "تمت عملية تصفير الحسابات بنجاح",
+      "provider_alerted": "تم ارسال التنبيه للمخدم بنجاح"
     },
     "error": {
       "steps_error": "الرجاء إضافة بعض البيانات او تخطي هذه الخطوة",
@@ -464,7 +465,8 @@
     "deactivate_employee_variable_payment": "الغاء تفعيل المتغير المالي",
     "change_provider_availability": "تعديل الحالة إلى  ",
     "is_available": " متواجد ",
-    "is_not_available": "غير متواجد"
+    "is_not_available": "غير متواجد",
+    "alert_provider": "ارسال تنبيه تأخير للمخدم"
   },
   "add_quantity": {
     "form": {
