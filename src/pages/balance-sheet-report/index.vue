@@ -159,5 +159,5 @@ const toggle = () => {
 </template>
 
 <style lang="scss">
-@import '/@src/scss/Styles/BalanceSheetReport/balanceSheet.scss';
+@import '/@src/scss/styles/BalanceSheetReport/balanceSheet.scss';
 </style>

@@ -96,5 +96,5 @@ const toggleAvailability = (employeeId: number) => {
 
 <style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
-@import '/@src/scss/Styles/TrialBalanceReport/trialBalanceCollapse.scss';
+@import '/@src/scss/styles/TrialBalanceReport/trialBalanceCollapse.scss';
 </style>

@@ -118,5 +118,5 @@ const toReturnToMainInventory = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '/@src/scss/Styles/Dashboards/inventoryDashboard.scss';
+@import '/@src/scss/styles/Dashboards/inventoryDashboard.scss';
 </style>

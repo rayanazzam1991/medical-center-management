@@ -51,7 +51,7 @@ useHead({
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/wizardForm.scss';
+@import '/@src/scss/styles/wizardForm.scss';
 
 .buttons-width {
     max-width: 45%;

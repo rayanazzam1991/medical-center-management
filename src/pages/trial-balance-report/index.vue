@@ -120,5 +120,5 @@ const print = () => printDiv('printerable', t('trial_balance_report.title'))
 </template>
 
 <style   lang="scss">
-@import '/@src/scss/Styles/TrialBalanceReport/trialBalance.scss';
+@import '/@src/scss/styles/TrialBalanceReport/trialBalance.scss';
 </style>

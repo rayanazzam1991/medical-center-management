@@ -122,5 +122,5 @@ const toGenerateSalary = () => {
 </template>
 
 <style lang="scss" scoped>
-@import '/@src/scss/Styles/Dashboards/hrDashboard.scss';
+@import '/@src/scss/styles/Dashboards/hrDashboard.scss';
 </style>

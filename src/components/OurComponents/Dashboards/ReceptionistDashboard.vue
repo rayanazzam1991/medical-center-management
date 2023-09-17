@@ -104,5 +104,5 @@ const toWaitingRooms = () => {
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/Dashboards/receptionistDashboard.scss';
+@import '/@src/scss/styles/Dashboards/receptionistDashboard.scss';
 </style>

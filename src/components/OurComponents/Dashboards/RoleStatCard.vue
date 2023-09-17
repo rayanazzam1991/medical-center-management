@@ -58,7 +58,7 @@ const props = withDefaults(defineProps<RoleStatCard>(), {
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/Dashboards/statCard.scss';
+@import '/@src/scss/styles/Dashboards/statCard.scss';
 
 .dashboard-tile {
     min-height: 180px;

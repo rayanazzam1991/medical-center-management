@@ -88,5 +88,5 @@ addParenthesisToString(t('dashboards.analyst.total_amount'))]"
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/Dashboards/analystDashboard.scss';
+@import '/@src/scss/styles/Dashboards/analystDashboard.scss';
 </style>

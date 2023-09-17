@@ -203,7 +203,7 @@ const debouncedTotalAmount = debounce(async () => {
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/Dashboards/accountantDashboard.scss';
+@import '/@src/scss/styles/Dashboards/accountantDashboard.scss';
 
 .custom-loader {
   padding: 1rem;

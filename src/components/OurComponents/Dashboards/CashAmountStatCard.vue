@@ -106,5 +106,5 @@ const percentagesColors = computed(() => {
 </template>
 
 <style scoped lang="scss">
-@import '/@src/scss/Styles/Dashboards/statCard.scss';
+@import '/@src/scss/styles/Dashboards/statCard.scss';
 </style>

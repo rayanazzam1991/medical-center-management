@@ -110,7 +110,7 @@ const toggleAvailability = (employeeId: number) => {
 
 <style scoped lang="scss">
 @import '/@src/scss/abstracts/all';
-@import '/@src/scss/Styles/TrialBalanceReport/trialBalanceLvl1Collapse.scss';
+@import '/@src/scss/styles/TrialBalanceReport/trialBalanceLvl1Collapse.scss';
 
 .account-details {
     padding-top: 36px !important;

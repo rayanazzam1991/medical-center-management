@@ -66,5 +66,5 @@ const { t } = useI18n()
 </template>
 
 <style lang="scss" scoped>
-@import '/@src/scss/Styles/Dashboards/statCard.scss';
+@import '/@src/scss/styles/Dashboards/statCard.scss';
 </style>
