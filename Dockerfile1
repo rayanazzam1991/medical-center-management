@@ -26,6 +26,6 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY --from=build /app .
 
-EXPOSE 3000 8080
+EXPOSE 3000
 
 CMD ["pnpm", "ssr:serve"]
